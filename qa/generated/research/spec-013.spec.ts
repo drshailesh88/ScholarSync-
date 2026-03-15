@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-013
  * Source: e2e/specs/research/spec-013.md
- * Generated: 2026-03-14T08:51:39.951Z
+ * Generated: 2026-03-15T17:30:35.125Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 `src/components/research/PaperDetailPanel.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "`src/components/research/PaperDetailPanel.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 `src/components/research/EvidenceTable.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "`src/components/research/EvidenceTable.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 `src/components/research/SynthesisDialog.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "`src/components/research/SynthesisDialog.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 `src/components/research/ResearchSidebar.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "`src/components/research/ResearchSidebar.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 `src/components/research/ChatTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "`src/components/research/ChatTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 `src/components/research/LibraryTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "`src/components/research/LibraryTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 `src/components/research/SearchTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "`src/components/research/SearchTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 `src/components/research/ResearchPlan.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "`src/components/research/ResearchPlan.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 `src/components/research/FilterPanel.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "`src/components/research/FilterPanel.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 `src/components/research/AISummaryCard.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "`src/components/research/AISummaryCard.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 `src/components/research/VerificationBadge.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "`src/components/research/VerificationBadge.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 `src/components/research/ScopeSelector.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "`src/components/research/ScopeSelector.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 `src/components/research/citation-network.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "`src/components/research/citation-network.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 `readSession()` returns `null` when stored JSON is corrupt or cannot be parsed — the `catch` block silently swallows `JSON.parse` errors');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "`readSession()` returns `null` when stored JSON is corrupt or cannot be parsed — the `catch` block silently swallows `JSON.parse` errors");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 `writeSession()` catch block comment documents the failure reason as `quota exceeded — ignore`');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "`writeSession()` catch block comment documents the failure reason as `quota exceeded — ignore`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Session persistence does NOT include `similarResults`, `similarErrors`, `similarEmpty`, `loadingSimilar`, `showCopilot`, `showSortDropdown`, `showAugmented`, `chatInput`, or `chatMessages` — these all reset on page refresh');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Session persistence does NOT include `similarResults`, `similarErrors`, `similarEmpty`, `loadingSimilar`, `showCopilot`, `showSortDropdown`, `showAugmented`, `chatInput`, or `chatMessages` — these all reset on page refresh");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 The `saved` Set (tracking which papers the user has saved this session) is not persisted in sessionStorage and resets on refresh');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "The `saved` Set (tracking which papers the user has saved this session) is not persisted in sessionStorage and resets on refresh");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 `showAugmented` (augmented-queries disclosure state) is not persisted in session; the disclosure collapses on refresh even if previously expanded');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "`showAugmented` (augmented-queries disclosure state) is not persisted in session; the disclosure collapses on refresh even if previously expanded");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 `userPlan` initializes as `null` before `getUserUsageStats()` resolves, meaning `isFree` in AISynthesisPanel evaluates to `false` during the initial render window');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "`userPlan` initializes as `null` before `getUserUsageStats()` resolves, meaning `isFree` in AISynthesisPanel evaluates to `false` during the initial render window");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 `similarResults` is stored as a `Record<string, UnifiedSearchResult[]>` keyed by `r.s2Id || r.doi || r.title`, not by a numeric index');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "`similarResults` is stored as a `Record<string, UnifiedSearchResult[]>` keyed by `r.s2Id || r.doi || r.title`, not by a numeric index");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Empty-state data load useEffect has a `cancelled` boolean race-condition guard; the cleanup function sets `cancelled = true` to prevent state updates after unmount');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Empty-state data load useEffect has a `cancelled` boolean race-condition guard; the cleanup function sets `cancelled = true` to prevent state updates after unmount");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Empty-state `getRecentSearches()` failure silently returns empty array `[]` via `.catch(() => [])`');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Empty-state `getRecentSearches()` failure silently returns empty array `[]` via `.catch(() => [])`");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Empty-state `getUserPapers()` failure silently returns empty array `[]` via `.catch(() => [])`');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Empty-state `getUserPapers()` failure silently returns empty array `[]` via `.catch(() => [])`");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 When the `authors` field on a recently saved paper is not an array, the author mapping falls back to empty string `""`');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "When the `authors` field on a recently saved paper is not an array, the author mapping falls back to empty string `\"\"`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 `emptyStateLoaded` is set to `true` inside a `finally` block, ensuring it updates even when the data-load promise rejects');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "`emptyStateLoaded` is set to `true` inside a `finally` block, ensuring it updates even when the data-load promise rejects");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Empty-state "Recent Searches" heading text reads exactly `Recent Searches` with `text-xs font-semibold text-ink-muted uppercase tracking-wider` styling');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Empty-state \"Recent Searches\" heading text reads exactly `Recent Searches` with `text-xs font-semibold text-ink-muted uppercase tracking-wider` styling");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Empty-state "Recently Saved" heading text reads exactly `Recently Saved`');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Empty-state \"Recently Saved\" heading text reads exactly `Recently Saved`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Empty-state "Try searching for" heading text reads exactly `Try searching for`');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Empty-state \"Try searching for\" heading text reads exactly `Try searching for`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Empty-state "Recent Searches" heading is prefixed with a `ClockCounterClockwise` icon (size 14)');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Empty-state \"Recent Searches\" heading is prefixed with a `ClockCounterClockwise` icon (size 14)");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 Empty-state "Recently Saved" heading is prefixed with a `BookmarkSimple` icon (size 14)');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "Empty-state \"Recently Saved\" heading is prefixed with a `BookmarkSimple` icon (size 14)");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 Empty-state "Try searching for" heading is prefixed with a `Lightbulb` icon (size 14)');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "Empty-state \"Try searching for\" heading is prefixed with a `Lightbulb` icon (size 14)");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 Recently saved papers are rendered in a 2-column grid layout (`grid grid-cols-2 gap-3`)');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "Recently saved papers are rendered in a 2-column grid layout (`grid grid-cols-2 gap-3`)");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 Recently saved paper titles are clamped to 2 lines via `line-clamp-2`');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "Recently saved paper titles are clamped to 2 lines via `line-clamp-2`");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 Recently saved journal and year are joined with `" · "` separator, with falsy values filtered out via `filter(Boolean)` before joining');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "Recently saved journal and year are joined with `\" · \"` separator, with falsy values filtered out via `filter(Boolean)` before joining");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 Recent search rows show a `MagnifyingGlass` icon (size 14) on the left of each query text');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "Recent search rows show a `MagnifyingGlass` icon (size 14) on the left of each query text");
     }
 
 

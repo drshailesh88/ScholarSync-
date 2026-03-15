@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-015
  * Source: e2e/specs/research/spec-015.md
- * Generated: 2026-03-14T08:53:07.972Z
+ * Generated: 2026-03-15T17:33:20.458Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 AISynthesisPanel outer container uses a gradient background: `bg-gradient-to-br from-brand/[0.04] via-transparent to-brand/[0.02]` with `backdrop-blur-sm`');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "AISynthesisPanel outer container uses a gradient background: `bg-gradient-to-br from-brand/[0.04] via-transparent to-brand/[0.02]` with `backdrop-blur-sm`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 `onSynthesisChange` callback is called progressively during streaming with each accumulated text chunk, not just once at the end');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "`onSynthesisChange` callback is called progressively during streaming with each accumulated text chunk, not just once at the end");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Skeleton placeholder during initial streaming shows exactly 4 lines with widths `w-full`, `w-[92%]`, `w-[85%]`, `w-[60%]`');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Skeleton placeholder during initial streaming shows exactly 4 lines with widths `w-full`, `w-[92%]`, `w-[85%]`, `w-[60%]`");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 GET handler requires authentication, returns 401 `{ error: "Authentication required" }` when unauthenticated');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "GET handler requires authentication, returns 401 `{ error: \"Authentication required\" }` when unauthenticated");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 GET handler applies rate limit with key `"search"` and `RATE_LIMITS.search` (120 req/hour)');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "GET handler applies rate limit with key `\"search\"` and `RATE_LIMITS.search` (120 req/hour)");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 GET handler returns 400 `{ error: "Query parameter \'paperId\' is required" }` when `paperId` query param is missing');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "GET handler returns 400 `{ error: \"Query parameter 'paperId' is required\" }` when `paperId` query param is missing");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 GET handler accepts optional `paperTitle` query parameter used as fallback for title-based search');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "GET handler accepts optional `paperTitle` query parameter used as fallback for title-based search");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 GET handler defaults `limit` to `10` and caps it at `100` via `Math.min(parseInt(...), 100)`');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "GET handler defaults `limit` to `10` and caps it at `100` via `Math.min(parseInt(...), 100)`");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 GET handler returns 500 `{ error: "S2 recommendations failed" }` on unhandled errors');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "GET handler returns 500 `{ error: \"S2 recommendations failed\" }` on unhandled errors");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 POST handler exists on the same endpoint for list-based recommendations using positive/negative paper IDs');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "POST handler exists on the same endpoint for list-based recommendations using positive/negative paper IDs");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 POST handler requires a non-empty `positivePaperIds` array, returns 400 `{ error: "positivePaperIds is required" }` when empty or missing');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "POST handler requires a non-empty `positivePaperIds` array, returns 400 `{ error: \"positivePaperIds is required\" }` when empty or missing");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 POST handler accepts optional `negativePaperIds` array (defaults to `[]`) and optional `limit` (defaults to `10`, caps at `100`)');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "POST handler accepts optional `negativePaperIds` array (defaults to `[]`) and optional `limit` (defaults to `10`, caps at `100`)");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 POST handler returns 500 `{ error: "S2 recommendations failed" }` on unhandled errors');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "POST handler returns 500 `{ error: \"S2 recommendations failed\" }` on unhandled errors");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 Research-agent rate limit uses key `"research-agent"` with `RATE_LIMITS.ai` (60 req/hour), not `RATE_LIMITS.search`');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "Research-agent rate limit uses key `\"research-agent\"` with `RATE_LIMITS.ai` (60 req/hour), not `RATE_LIMITS.search`");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 Research-agent uses `getModel()` (main model) for streaming, not `getSmallModel()`');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "Research-agent uses `getModel()` (main model) for streaming, not `getSmallModel()`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Research-agent response is streamed via `result.toTextStreamResponse()`');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Research-agent response is streamed via `result.toTextStreamResponse()`");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 System prompt defines the agent role as `a medical research librarian AI` that conducts `systematic literature searches`');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "System prompt defines the agent role as `a medical research librarian AI` that conducts `systematic literature searches`");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 System prompt specifies a 4-phase search strategy: BROAD SWEEP (3-4 tool calls), ASSESS COVERAGE, TARGETED SEARCH (2-3 tool calls), SYNTHESIZE');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "System prompt specifies a 4-phase search strategy: BROAD SWEEP (3-4 tool calls), ASSESS COVERAGE, TARGETED SEARCH (2-3 tool calls), SYNTHESIZE");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 System prompt instructs "Try at least 2 different query formulations per source"');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "System prompt instructs \"Try at least 2 different query formulations per source\"");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 System prompt instructs to "ALWAYS include the openAccessUrl if one is available" when saving papers to the library');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "System prompt instructs to \"ALWAYS include the openAccessUrl if one is available\" when saving papers to the library");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 System prompt stopping criterion: "new searches return mostly papers already found, OR all key aspects covered"');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "System prompt stopping criterion: \"new searches return mostly papers already found, OR all key aspects covered\"");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 System prompt instructs to "Always cite paper titles and key findings when discussing results"');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "System prompt instructs to \"Always cite paper titles and key findings when discussing results\"");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 When `context.savedPaperIds` is provided and non-empty, the system prompt appends only a count (`The user has {N} papers saved in their library.`), not the actual paper IDs or titles');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "When `context.savedPaperIds` is provided and non-empty, the system prompt appends only a count (`The user has {N} papers saved in their library.`), not the actual paper IDs or titles");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Unhandled synthesis errors return 500 `{ error: "Synthesis failed" }` — error is logged via `console.error`, not the structured `logger`');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Unhandled synthesis errors return 500 `{ error: \"Synthesis failed\" }` — error is logged via `console.error`, not the structured `logger`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Synthesize request body also accepts optional `customInstructions` (string) and `targetWordCount` (number) fields beyond `papers`, `reportType`, and `mode`');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Synthesize request body also accepts optional `customInstructions` (string) and `targetWordCount` (number) fields beyond `papers`, `reportType`, and `mode`");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Synthesize streaming response for generate mode is returned via `result.toTextStreamResponse()`');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Synthesize streaming response for generate mode is returned via `result.toTextStreamResponse()`");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Rate limit error response body is exactly `{ error: "Rate limit exceeded. Please try again later." }` with HTTP 429 status');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Rate limit error response body is exactly `{ error: \"Rate limit exceeded. Please try again later.\" }` with HTTP 429 status");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Rate limit response includes `X-RateLimit-Remaining` header with the remaining request count as a string');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Rate limit response includes `X-RateLimit-Remaining` header with the remaining request count as a string");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Rate limit key format is `${userId}:${endpoint}` — e.g., `user_123:search`');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Rate limit key format is `${userId}:${endpoint}` — e.g., `user_123:search`");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 `RATE_LIMITS.search` allows 120 requests per 3600 seconds (120/hour)');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "`RATE_LIMITS.search` allows 120 requests per 3600 seconds (120/hour)");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 `RATE_LIMITS.ai` allows 60 requests per 3600 seconds (60/hour)');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "`RATE_LIMITS.ai` allows 60 requests per 3600 seconds (60/hour)");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 In-memory rate limiter (development/Upstash-unavailable fallback) uses a fixed-window counter with a `Map<string, { count, resetAt }>` store');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "In-memory rate limiter (development/Upstash-unavailable fallback) uses a fixed-window counter with a `Map<string, { count, resetAt }>` store");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 In-memory rate limiter cleans up expired entries every 60 seconds via a `setInterval` loop');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "In-memory rate limiter cleans up expired entries every 60 seconds via a `setInterval` loop");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 Production rate limiter uses Upstash Redis with `@upstash/ratelimit` sliding window and prefix `"scholarsync"`');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "Production rate limiter uses Upstash Redis with `@upstash/ratelimit` sliding window and prefix `\"scholarsync\"`");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 Rate limiter falls through to in-memory when Upstash Redis env vars (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`) are missing or when the Upstash request throws');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "Rate limiter falls through to in-memory when Upstash Redis env vars (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`) are missing or when the Upstash request throws");
     }
 
 

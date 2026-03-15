@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-014
  * Source: e2e/specs/research/spec-014.md
- * Generated: 2026-03-14T08:07:29.174Z
+ * Generated: 2026-03-15T17:31:57.244Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 Recent search result-count suffix is formatted with `toLocaleString()` so numbers include thousands separators');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "Recent search result-count suffix is formatted with `toLocaleString()` so numbers include thousands separators");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 `Last 5 Years` filter dynamically computes yearStart as `new Date().getFullYear() - 5` — it is not hardcoded to a specific year');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "`Last 5 Years` filter dynamically computes yearStart as `new Date().getFullYear() - 5` — it is not hardcoded to a specific year");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Filter/sort auto-re-search useEffect dependency array is exactly `[filters, sort]` — changes to `query` alone do NOT trigger auto-re-search');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Filter/sort auto-re-search useEffect dependency array is exactly `[filters, sort]` — changes to `query` alone do NOT trigger auto-re-search");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 When the API returns a non-OK status and no JSON error body can be parsed, the error message fallback is `Search failed (status ${statusCode})` — not `Search failed. Please try again.`');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "When the API returns a non-OK status and no JSON error body can be parsed, the error message fallback is `Search failed (status ${statusCode})` — not `Search failed. Please try again.`");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 The fallback `Search failed. Please try again.` only appears for non-`Error` exception types in the catch block (when `err instanceof Error` is false)');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "The fallback `Search failed. Please try again.` only appears for non-`Error` exception types in the catch block (when `err instanceof Error` is false)");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 `highImpact` filter overrides `sort` in the URL by calling `params.set("sort", "citations")` after the original sort is already set — this means the API receives `sort=citations` even if the user selected a different sort option');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "`highImpact` filter overrides `sort` in the URL by calling `params.set(\"sort\", \"citations\")` after the original sort is already set — this means the API receives `sort=citations` even if the user selected a different sort option");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 `buildSearchUrl` includes `perPage` as `perPage.toString()` (always `"20"`) in every search request URL');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "`buildSearchUrl` includes `perPage` as `perPage.toString()` (always `\"20\"`) in every search request URL");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 `handleSearch` clears `aiSummary` to `null` before each new search, forcing the AISynthesisPanel to re-synthesize even if the same query is rerun');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "`handleSearch` clears `aiSummary` to `null` before each new search, forcing the AISynthesisPanel to re-synthesize even if the same query is rerun");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 The search-history `saveSearchQuery` call uses `.catch(() => {})` so history-save failures are completely silent and non-blocking');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "The search-history `saveSearchQuery` call uses `.catch(() => {})` so history-save failures are completely silent and non-blocking");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 DOI link in the metadata row calls `e.stopPropagation()` on click to prevent triggering any parent click handlers');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "DOI link in the metadata row calls `e.stopPropagation()` on click to prevent triggering any parent click handlers");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 Result card wrapper includes `id="paper-result-{idx}"` as a DOM id for scroll-to targeting from synthesis citations');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "Result card wrapper includes `id=\"paper-result-{idx}\"` as a DOM id for scroll-to targeting from synthesis citations");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 Result card wrapper has `transition-[box-shadow] duration-500` enabling smooth 500ms ring highlight transitions when synthesis citations target it');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "Result card wrapper has `transition-[box-shadow] duration-500` enabling smooth 500ms ring highlight transitions when synthesis citations target it");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 Result card React `key` attribute is `${identityKey}-${idx}` — the array index is appended for uniqueness in case duplicate identity keys exist');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "Result card React `key` attribute is `${identityKey}-${idx}` — the array index is appended for uniqueness in case duplicate identity keys exist");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 When `citationCount` is exactly `0`, the " · N citations" suffix is omitted because the render branch checks truthiness (`r.citationCount ? ...`)');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "When `citationCount` is exactly `0`, the \" · N citations\" suffix is omitted because the render branch checks truthiness (`r.citationCount ? ...`)");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 Saving state button uses `cursor-wait` class to show the wait cursor while a save is in progress');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "Saving state button uses `cursor-wait` class to show the wait cursor while a save is in progress");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Similar-paper lookup key uses `r.s2Id || r.doi || r.title`, which differs from the save key that uses `r.doi || r.pmid || r.s2Id || r.title`');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Similar-paper lookup key uses `r.s2Id || r.doi || r.title`, which differs from the save key that uses `r.doi || r.pmid || r.s2Id || r.title`");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Similar-paper section header reads `Similar Papers` in `text-[10px] text-ink-muted uppercase tracking-wider font-medium`');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Similar-paper section header reads `Similar Papers` in `text-[10px] text-ink-muted uppercase tracking-wider font-medium`");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Result author row renders `r.authors.slice(0, 3).join(", ")` — if the original `authors` array is empty, an empty `<p>` element still renders');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Result author row renders `r.authors.slice(0, 3).join(\", \")` — if the original `authors` array is empty, an empty `<p>` element still renders");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Copilot sidebar is rendered as an `<aside>` HTML element, not a `<div>`');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Copilot sidebar is rendered as an `<aside>` HTML element, not a `<div>`");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Copilot sidebar width is exactly `w-96` (384px / 24rem)');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Copilot sidebar width is exactly `w-96` (384px / 24rem)");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Copilot sidebar close button uses the `X` icon from Phosphor Icons (size 16)');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Copilot sidebar close button uses the `X` icon from Phosphor Icons (size 16)");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Copilot send button uses the `PaperPlaneTilt` icon from Phosphor Icons (size 16)');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Copilot send button uses the `PaperPlaneTilt` icon from Phosphor Icons (size 16)");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 User chat messages are styled with `bg-brand/10 text-ink ml-8` (indented from left)');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "User chat messages are styled with `bg-brand/10 text-ink ml-8` (indented from left)");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Assistant chat messages are styled with `bg-surface-raised text-ink mr-4` (indented from right)');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Assistant chat messages are styled with `bg-surface-raised text-ink mr-4` (indented from right)");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Chat message text renders with `whitespace-pre-wrap` preserving line breaks and whitespace in AI responses');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Chat message text renders with `whitespace-pre-wrap` preserving line breaks and whitespace in AI responses");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Copilot welcome card shows a `Sparkle` icon (size 14) with uppercase `Research Assistant` label text');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Copilot welcome card shows a `Sparkle` icon (size 14) with uppercase `Research Assistant` label text");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Copilot welcome message body reads exactly `Ask me to find papers on any topic. I\'ll search across PubMed, Semantic Scholar, and OpenAlex using systematic search strategies.`');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Copilot welcome message body reads exactly `Ask me to find papers on any topic. I'll search across PubMed, Semantic Scholar, and OpenAlex using systematic search strategies.`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Copilot AI status indicator shows a pulsing emerald dot (`w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse`) with `AI` text in `text-emerald-500`');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Copilot AI status indicator shows a pulsing emerald dot (`w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse`) with `AI` text in `text-emerald-500`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Copilot header uses `Brain` icon (size 18) in `text-brand` color');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Copilot header uses `Brain` icon (size 18) in `text-brand` color");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 Synthesis streaming uses `ReadableStream.getReader()` with `TextDecoder` `stream: true` option for progressive multi-chunk decoding');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "Synthesis streaming uses `ReadableStream.getReader()` with `TextDecoder` `stream: true` option for progressive multi-chunk decoding");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 "Generating..." indicator text appears next to the header during streaming, shown as a pulsing brand dot + `text-[10px] text-brand/70` label');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "\"Generating...\" indicator text appears next to the header during streaming, shown as a pulsing brand dot + `text-[10px] text-brand/70` label");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 Citation `et al.` suffix is added when a paper has more than 1 author (`p.authors.length > 1`), not the 2-author or 3-author threshold used elsewhere in the codebase');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "Citation `et al.` suffix is added when a paper has more than 1 author (`p.authors.length > 1`), not the 2-author or 3-author threshold used elsewhere in the codebase");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 AISynthesisPanel `paperCount` is computed as `Math.min(results.length, 5)` — if fewer than 5 results exist, the header reads `Answer from top {actual count} papers`');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "AISynthesisPanel `paperCount` is computed as `Math.min(results.length, 5)` — if fewer than 5 results exist, the header reads `Answer from top {actual count} papers`");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 Free-plan blur overlay gradient direction is `bg-gradient-to-t from-surface via-surface/90 to-transparent` (bottom-to-top fade)');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "Free-plan blur overlay gradient direction is `bg-gradient-to-t from-surface via-surface/90 to-transparent` (bottom-to-top fade)");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 Free-plan upgrade link text reads `Upgrade to Pro` with `text-brand hover:text-brand-hover` styling');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "Free-plan upgrade link text reads `Upgrade to Pro` with `text-brand hover:text-brand-hover` styling");
     }
 
 

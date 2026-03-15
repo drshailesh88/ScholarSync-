@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-011
  * Source: e2e/specs/research/spec-011.md
- * Generated: 2026-03-14T08:48:42.290Z
+ * Generated: 2026-03-15T17:27:47.711Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 AI synthesis does not rerun when only non-title metadata changes on the same top 5 papers because the fingerprint only tracks query text and titles');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "AI synthesis does not rerun when only non-title metadata changes on the same top 5 papers because the fingerprint only tracks query text and titles");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 AI synthesis request body includes only `title`, `authors`, `year`, `journal`, `abstract`, `pmid`, `doi`, and `studyType` for the top 5 papers');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "AI synthesis request body includes only `title`, `authors`, `year`, `journal`, `abstract`, `pmid`, `doi`, and `studyType` for the top 5 papers");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 AI synthesis sends an empty string for `abstract` when a result has no abstract');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "AI synthesis sends an empty string for `abstract` when a result has no abstract");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 AI synthesis aborts any previous streaming request before starting a new one');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "AI synthesis aborts any previous streaming request before starting a new one");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 AI synthesis marks the panel as failed and hides it when `/api/research/synthesize` returns a non-OK response or no response body');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "AI synthesis marks the panel as failed and hides it when `/api/research/synthesize` returns a non-OK response or no response body");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 AI synthesis treats `AbortError` as a silent cancellation and does not mark the panel as failed');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "AI synthesis treats `AbortError` as a silent cancellation and does not mark the panel as failed");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 AI synthesis `useEffect` cleanup aborts the in-flight synthesis request on unmount or dependency change');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "AI synthesis `useEffect` cleanup aborts the in-flight synthesis request on unmount or dependency change");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 Citation parsing uses the exact regex `/\\[(\\d+)\\]/g`');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "Citation parsing uses the exact regex `/\\\\[(\\\\d+)\\\\]/g`");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 Citation markers that do not map to one of the top 5 results remain literal bracket text in the rendered synthesis body');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "Citation markers that do not map to one of the top 5 results remain literal bracket text in the rendered synthesis body");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 Citation labels are built from the last token of the first author string plus optional ` et al.` and the year');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "Citation labels are built from the last token of the first author string plus optional ` et al.` and the year");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 A paper with no authors in the top 5 citation map renders the fallback label prefix `Unknown`');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "A paper with no authors in the top 5 citation map renders the fallback label prefix `Unknown`");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 Inline synthesis citation buttons set a `title` attribute of `Scroll to: {paper title}`');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "Inline synthesis citation buttons set a `title` attribute of `Scroll to: {paper title}`");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 Clicking a synthesis citation applies `ring-2 ring-brand/50` to the target result card and removes those classes after exactly `2000ms`');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "Clicking a synthesis citation applies `ring-2 ring-brand/50` to the target result card and removes those classes after exactly `2000ms`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 Overflow detection uses `contentRef.current.scrollHeight > 96` after render and falls back to `synthesis.length > 400` before the ref is measured');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "Overflow detection uses `contentRef.current.scrollHeight > 96` after render and falls back to `synthesis.length > 400` before the ref is measured");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 Read-more clamping uses `max-h-24 overflow-hidden`');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "Read-more clamping uses `max-h-24 overflow-hidden`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Free-plan overlay is not shown while the synthesis is still streaming and `synthesis` is empty');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Free-plan overlay is not shown while the synthesis is still streaming and `synthesis` is empty");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Free-plan users never receive the `Read More` / `Show Less` toggle even when the synthesis overflows');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Free-plan users never receive the `Read More` / `Show Less` toggle even when the synthesis overflows");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 The current AI synthesis panel has no retry button, error copy, or recovery CTA after a failed synthesis request');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "The current AI synthesis panel has no retry button, error copy, or recovery CTA after a failed synthesis request");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 `/api/research/synthesize` requires authentication through `getCurrentUserId()`');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "`/api/research/synthesize` requires authentication through `getCurrentUserId()`");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 `/api/research/synthesize` rate-limits with key `"research"` and `RATE_LIMITS.ai`');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "`/api/research/synthesize` rate-limits with key `\"research\"` and `RATE_LIMITS.ai`");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 `/api/research/synthesize` returns HTTP 400 with `Missing required field: papers` when `papers` is absent or not an array');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "`/api/research/synthesize` returns HTTP 400 with `Missing required field: papers` when `papers` is absent or not an array");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 `/api/research/synthesize` returns HTTP 503 with `AI not configured` when no model is available');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "`/api/research/synthesize` returns HTTP 503 with `AI not configured` when no model is available");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 `mode === "plan"` uses `getSmallModel()` with temperature `0.3`');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "`mode === \"plan\"` uses `getSmallModel()` with temperature `0.3`");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 `mode !== "plan"` uses `getModel()` with temperature `0.4`');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "`mode !== \"plan\"` uses `getModel()` with temperature `0.4`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Plan-mode fenced JSON is stripped with `/```(?:json)?\\s*([\\s\\S]*?)```/` before parsing');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Plan-mode fenced JSON is stripped with `/```(?:json)?\\\\s*([\\\\s\\\\S]*?)```/` before parsing");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Invalid plan-mode JSON falls back to `{ sections: [], estimatedWordCount: 0 }`');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Invalid plan-mode JSON falls back to `{ sections: [], estimatedWordCount: 0 }`");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 `buildSynthesisPrompt()` uses default word targets of `250` for `quick_summary`, `800` for `literature_review`, and `500` for `evidence_summary`');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "`buildSynthesisPrompt()` uses default word targets of `250` for `quick_summary`, `800` for `literature_review`, and `500` for `evidence_summary`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 `buildSynthesisPrompt()` uses the fallback instruction `Generate a literature synthesis.` when `reportType === "custom"` and `customInstructions` is missing');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "`buildSynthesisPrompt()` uses the fallback instruction `Generate a literature synthesis.` when `reportType === \"custom\"` and `customInstructions` is missing");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 `buildPaperContext()` truncates author display to the first 3 authors plus optional ` et al.`');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "`buildPaperContext()` truncates author display to the first 3 authors plus optional ` et al.`");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 `buildPaperContext()` substitutes `Unknown`, `N/A`, and `No abstract available` fallback strings when paper fields are missing');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "`buildPaperContext()` substitutes `Unknown`, `N/A`, and `No abstract available` fallback strings when paper fields are missing");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 `saveSearchQuery()` stores `queryType` as `"user"` by default when the caller does not provide one');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "`saveSearchQuery()` stores `queryType` as `\"user\"` by default when the caller does not provide one");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 `saveSearchQuery()` stores `source` as `"all"` by default when the caller does not provide one');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "`saveSearchQuery()` stores `source` as `\"all\"` by default when the caller does not provide one");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 `saveSearchQuery()` stores `augmentedQueries`, `filtersApplied`, and `parentQueryId` as `null` when the caller omits them');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "`saveSearchQuery()` stores `augmentedQueries`, `filtersApplied`, and `parentQueryId` as `null` when the caller omits them");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 `getRecentSearches()` first selects up to 20 history rows, then de-duplicates on lowercase `original_query`, then returns only the 5 most recent unique queries');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "`getRecentSearches()` first selects up to 20 history rows, then de-duplicates on lowercase `original_query`, then returns only the 5 most recent unique queries");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 `getRecentSearches()` returns rows shaped as `{ query, resultCount, searchedAt }`');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "`getRecentSearches()` returns rows shaped as `{ query, resultCount, searchedAt }`");
     }
 
 
