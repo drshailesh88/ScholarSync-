@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-010
  * Source: e2e/specs/feeds/spec-010.md
- * Generated: 2026-03-14T18:59:03.251Z
+ * Generated: 2026-03-15T13:01:28.141Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 Route-level error boundary message reads `We couldn\'t load your feeds. Please try again.`');
+      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "Route-level error boundary message reads `We couldn't load your feeds. Please try again.`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 Default view filter is `Unread`, not `All Articles`.');
+      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "Default view filter is `Unread`, not `All Articles`.");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 The page-level header always marks all visible feeds read globally; there is no page-level picker for a specific-feed mark-all-read action.');
+      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "The page-level header always marks all visible feeds read globally; there is no page-level picker for a specific-feed mark-all-read action.");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 Search is not debounced in the current store; each change immediately triggers `loadArticles()`.');
+      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Search is not debounced in the current store; each change immediately triggers `loadArticles()`.");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 `Clear all filters` does not clear the search query.');
+      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "`Clear all filters` does not clear the search query.");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 Advanced `Sort by` options do not preserve a distinct `Added` or `Title` state in the store; they normalize back into the legacy feed sort modes.');
+      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "Advanced `Sort by` options do not preserve a distinct `Added` or `Title` state in the store; they normalize back into the legacy feed sort modes.");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 Import/export feedback uses `alert(...)` or silent failure, not toast notifications.');
+      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "Import/export feedback uses `alert(...)` or silent failure, not toast notifications.");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 Feed mute/unmute is not optimistic in the current implementation; it waits for a PATCH then reloads subscriptions.');
+      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "Feed mute/unmute is not optimistic in the current implementation; it waits for a PATCH then reloads subscriptions.");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 Copilot-related fetch failures generally clear loading state without rendering a dedicated inline error panel.');
+      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "Copilot-related fetch failures generally clear loading state without rendering a dedicated inline error panel.");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 Page container height is `h-[calc(100vh-7rem)]`');
+      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Page container height is `h-[calc(100vh-7rem)]`");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 `hasSubscriptions` check includes `isLoadingSubscriptions` — content layout shown while subscriptions still loading (never flashes empty state during load)');
+      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "`hasSubscriptions` check includes `isLoadingSubscriptions` — content layout shown while subscriptions still loading (never flashes empty state during load)");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 CopilotPanel and ArticleReader are mutually exclusive via ternary: when `copilotOpen && selectedArticleId`, CopilotPanel replaces ArticleReader');
+      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "CopilotPanel and ArticleReader are mutually exclusive via ternary: when `copilotOpen && selectedArticleId`, CopilotPanel replaces ArticleReader");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 onAI handler in ArticleList sets selected article FIRST, then opens copilot after 50ms `setTimeout` delay');
+      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "onAI handler in ArticleList sets selected article FIRST, then opens copilot after 50ms `setTimeout` delay");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 `citeArticle` state is `FeedArticleWithStatus | null`; CitationModal visibility controlled by non-null citeArticle');
+      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "`citeArticle` state is `FeedArticleWithStatus | null`; CitationModal visibility controlled by non-null citeArticle");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 CitationModal `onClose` sets `citeArticle` to `null`');
+      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "CitationModal `onClose` sets `citeArticle` to `null`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 AddFeedModal `onClose` sets `showAddModal` to `false`');
+      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "AddFeedModal `onClose` sets `showAddModal` to `false`");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 Main content area uses `flex gap-4 flex-1 min-h-0`');
+      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Main content area uses `flex gap-4 flex-1 min-h-0`");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 Header title `text-xl font-bold text-ink`');
+      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "Header title `text-xl font-bold text-ink`");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 Unread text `text-xs text-ink-muted mt-0.5`');
+      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "Unread text `text-xs text-ink-muted mt-0.5`");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 Unread text singular form: "1 unread article" (no trailing "s" when `totalUnread === 1`)');
+      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "Unread text singular form: \"1 unread article\" (no trailing \"s\" when `totalUnread === 1`)");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 Export button icon: `Export` from phosphor-icons (not Download)');
+      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "Export button icon: `Export` from phosphor-icons (not Download)");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 Export button label text: "Export" (visible inline text, not tooltip-only)');
+      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "Export button label text: \"Export\" (visible inline text, not tooltip-only)");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 Import button icon: `Upload` from phosphor-icons');
+      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "Import button icon: `Upload` from phosphor-icons");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 Import button label text: "Import" (visible inline text, not tooltip-only)');
+      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "Import button label text: \"Import\" (visible inline text, not tooltip-only)");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 Mark all read icon: `Checks` from phosphor-icons');
+      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Mark all read icon: `Checks` from phosphor-icons");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 Mark all read label text: "Mark all read" (visible inline)');
+      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Mark all read label text: \"Mark all read\" (visible inline)");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 Add Feed button uses `Plus` icon with `weight="bold"`');
+      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Add Feed button uses `Plus` icon with `weight=\"bold\"`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 Add Feed button is primary styled: `bg-brand text-white text-sm font-medium`');
+      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Add Feed button is primary styled: `bg-brand text-white text-sm font-medium`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 All other header buttons use `text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised`');
+      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "All other header buttons use `text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised`");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 Sort segmented control container: `bg-surface-raised rounded-xl p-0.5`');
+      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Sort segmented control container: `bg-surface-raised rounded-xl p-0.5`");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 Layout control container: `bg-surface-raised rounded-lg p-0.5` (different rounding from sort)');
+      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "Layout control container: `bg-surface-raised rounded-lg p-0.5` (different rounding from sort)");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 Active sort button styling: `bg-surface text-ink shadow-sm`');
+      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "Active sort button styling: `bg-surface text-ink shadow-sm`");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 Inactive sort button styling: `text-ink-muted hover:text-ink`');
+      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Inactive sort button styling: `text-ink-muted hover:text-ink`");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 Layout buttons have `aria-label` attributes matching their label values');
+      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Layout buttons have `aria-label` attributes matching their label values");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 Error banner full styling: `bg-red-500/10 border border-red-500/20 text-red-400 text-sm`');
+      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "Error banner full styling: `bg-red-500/10 border border-red-500/20 text-red-400 text-sm`");
     }
 
 

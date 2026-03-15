@@ -46,13 +46,13 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       }
     ],
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.56.0",
+    "version": "1.56.1",
     "workers": 1,
     "webServer": {
       "command": "PORT=3001 npm run dev",
@@ -79,11 +79,11 @@
           "specs": [
             {
               "title": "cp-000: Active tab Tabs component applies bg-surface-raised text-ink border border-borde",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -92,53 +92,24 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 24044,
-                      "error": {
-                        "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/analysis\", waiting until \"domcontentloaded\"\u001b[22m\n",
-                        "stack": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/analysis\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:54:16",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 16,
-                          "line": 54
-                        },
-                        "snippet": "  52 |\n  53 |     // Navigate to the page\n> 54 |     await page.goto('/analysis', { waitUntil: 'domcontentloaded' });\n     |                ^\n  55 |     await page.waitForLoadState('networkidle').catch(() => {});\n  56 |\n  57 |     // Take a screenshot as proof of page load"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 16,
-                            "line": 54
-                          },
-                          "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/analysis\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  52 |\n  53 |     // Navigate to the page\n> 54 |     await page.goto('/analysis', { waitUntil: 'domcontentloaded' });\n     |                ^\n  55 |     await page.waitForLoadState('networkidle').catch(() => {});\n  56 |\n  57 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:54:16"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1907,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:37:59.281Z",
+                      "startTime": "2026-03-15T12:53:28.114Z",
                       "annotations": [],
                       "attachments": [
                         {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4de16-ext-ink-border-border-borde-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4de16-ext-ink-border-border-borde-qa-chromium/trace.zip"
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4de16-ext-ink-border-border-borde-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 16,
-                        "line": 54
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-32d75d074ea847d80c7e",
@@ -152,22 +123,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2730,
+                      "duration": 1799,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:32.923Z",
+                      "startTime": "2026-03-15T12:53:30.098Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -192,22 +163,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2257,
+                      "duration": 1789,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:35.821Z",
+                      "startTime": "2026-03-15T12:53:31.914Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -232,22 +203,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2303,
+                      "duration": 1804,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:38.094Z",
+                      "startTime": "2026-03-15T12:53:33.714Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -272,22 +243,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2336,
+                      "duration": 1793,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:40.415Z",
+                      "startTime": "2026-03-15T12:53:35.527Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -312,22 +283,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2227,
+                      "duration": 1792,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:42.766Z",
+                      "startTime": "2026-03-15T12:53:37.328Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -352,22 +323,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1972,
+                      "duration": 1805,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:45.008Z",
+                      "startTime": "2026-03-15T12:53:39.128Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -392,22 +363,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2079,
+                      "duration": 1838,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:46.993Z",
+                      "startTime": "2026-03-15T12:53:40.946Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -432,22 +403,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2047,
+                      "duration": 1845,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:49.089Z",
+                      "startTime": "2026-03-15T12:53:42.796Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -472,22 +443,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1953,
+                      "duration": 1894,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:51.154Z",
+                      "startTime": "2026-03-15T12:53:44.656Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -512,22 +483,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2066,
+                      "duration": 1783,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:53.117Z",
+                      "startTime": "2026-03-15T12:53:46.562Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -552,22 +523,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1935,
+                      "duration": 1830,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:55.192Z",
+                      "startTime": "2026-03-15T12:53:48.354Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -592,22 +563,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2056,
+                      "duration": 1826,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:57.137Z",
+                      "startTime": "2026-03-15T12:53:50.192Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -632,22 +603,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2042,
+                      "duration": 1812,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:38:59.203Z",
+                      "startTime": "2026-03-15T12:53:52.026Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -672,22 +643,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2119,
+                      "duration": 1820,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:01.254Z",
+                      "startTime": "2026-03-15T12:53:53.847Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -712,22 +683,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1971,
+                      "duration": 1787,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:03.383Z",
+                      "startTime": "2026-03-15T12:53:55.676Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -752,22 +723,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1907,
+                      "duration": 1803,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:05.364Z",
+                      "startTime": "2026-03-15T12:53:57.474Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -792,22 +763,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1958,
+                      "duration": 1810,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:07.283Z",
+                      "startTime": "2026-03-15T12:53:59.292Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -832,22 +803,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1943,
+                      "duration": 1806,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:09.251Z",
+                      "startTime": "2026-03-15T12:54:01.111Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -872,22 +843,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1946,
+                      "duration": 1810,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:11.203Z",
+                      "startTime": "2026-03-15T12:54:02.926Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -912,22 +883,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1913,
+                      "duration": 1839,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:13.158Z",
+                      "startTime": "2026-03-15T12:54:04.745Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -952,22 +923,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2075,
+                      "duration": 1796,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:15.080Z",
+                      "startTime": "2026-03-15T12:54:06.595Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -992,22 +963,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1958,
+                      "duration": 1796,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:17.167Z",
+                      "startTime": "2026-03-15T12:54:08.403Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1032,22 +1003,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1913,
+                      "duration": 1821,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:19.134Z",
+                      "startTime": "2026-03-15T12:54:10.214Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1072,22 +1043,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1938,
+                      "duration": 1826,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:21.059Z",
+                      "startTime": "2026-03-15T12:54:12.043Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1112,22 +1083,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1909,
+                      "duration": 1858,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:23.017Z",
+                      "startTime": "2026-03-15T12:54:13.879Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1152,22 +1123,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1904,
+                      "duration": 1805,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:24.935Z",
+                      "startTime": "2026-03-15T12:54:15.745Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1187,33 +1158,33 @@
               "column": 3
             },
             {
-              "title": "cp-027: Title titleAnalysis unavailable passed to ErrorDisplay component Verified in src",
+              "title": "cp-027: Smooth appearance loadingtsx uses same flex flex-col h-calc100vh-7rem layout as ",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1909,
+                      "duration": 1777,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:26.849Z",
+                      "startTime": "2026-03-15T12:54:17.559Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-5be81-y-component-Verified-in-src-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-e72f7-h-calc100vh-7rem-layout-as--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1221,39 +1192,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "0ad711391dd6d152a1fb-aaeafdbbdc65c6c7c775",
+              "id": "0ad711391dd6d152a1fb-3b79046f9725c2c7b659",
               "file": "analysis/spec-002.spec.ts",
               "line": 1399,
               "column": 3
             },
             {
-              "title": "cp-028: Message messageWe couldnt load the writing analysis tool Please try again Verifi",
+              "title": "cp-028: Title titleAnalysis unavailable passed to ErrorDisplay component Verified in src",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1936,
+                      "duration": 1827,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:28.767Z",
+                      "startTime": "2026-03-15T12:54:19.344Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-1dd69-ool-Please-try-again-Verifi-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-e7e1e-y-component-Verified-in-src-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1261,39 +1232,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "0ad711391dd6d152a1fb-7d03641deaa3a6be7b5c",
+              "id": "0ad711391dd6d152a1fb-a16e6cc8becedb7aa178",
               "file": "analysis/spec-002.spec.ts",
               "line": 1449,
               "column": 3
             },
             {
-              "title": "cp-029: Retry option onRetryreset passes Nextjs error boundary reset function to ErrorDi",
+              "title": "cp-029: Message messageWe couldnt load the writing analysis tool Please try again Verifi",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2190,
+                      "duration": 1821,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:30.716Z",
+                      "startTime": "2026-03-15T12:54:21.179Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-27c74-y-reset-function-to-ErrorDi-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-7022a-ool-Please-try-again-Verifi-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1301,39 +1272,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "0ad711391dd6d152a1fb-52b59e95e77555678abf",
+              "id": "0ad711391dd6d152a1fb-45cf2b5f82894454394d",
               "file": "analysis/spec-002.spec.ts",
               "line": 1499,
               "column": 3
             },
             {
-              "title": "cp-030: Empty text analyze button disabledloading effectiveTexttrimlength 50 empty text ",
+              "title": "cp-030: Retry option onRetryreset passes Nextjs error boundary reset function to ErrorDi",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1942,
+                      "duration": 1843,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:32.915Z",
+                      "startTime": "2026-03-15T12:54:23.011Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-018b1-xttrimlength-50-empty-text--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-31b12-y-reset-function-to-ErrorDi-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1341,39 +1312,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "0ad711391dd6d152a1fb-9ca9d3f19128a975756f",
+              "id": "0ad711391dd6d152a1fb-a11aae55616748e5adf6",
               "file": "analysis/spec-002.spec.ts",
               "line": 1549,
               "column": 3
             },
             {
-              "title": "cp-031: Text 50 characters same disabled check trimlength 50 disables button with disabl",
+              "title": "cp-031: Empty text analyze button disabledloading effectiveTexttrimlength 50 empty text ",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1938,
+                      "duration": 1803,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:34.868Z",
+                      "startTime": "2026-03-15T12:54:24.864Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-c769a-disables-button-with-disabl-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-32e23-xttrimlength-50-empty-text--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1381,39 +1352,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "0ad711391dd6d152a1fb-2de33a8496beedba5d1a",
+              "id": "0ad711391dd6d152a1fb-286674fa073d43567a92",
               "file": "analysis/spec-002.spec.ts",
               "line": 1599,
               "column": 3
             },
             {
-              "title": "cp-032: Only whitespace effectiveTextsplitsfilterBooleanlength shows 0 words trimlength ",
+              "title": "cp-032: Text 50 characters same disabled check trimlength 50 disables button with disabl",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1907,
+                      "duration": 1821,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T20:39:36.815Z",
+                      "startTime": "2026-03-15T12:54:26.678Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-1e3b8-h-shows-0-words-trimlength--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-cf637-disables-button-with-disabl-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1421,9 +1392,89 @@
                   "status": "expected"
                 }
               ],
-              "id": "0ad711391dd6d152a1fb-5d38bbb8b79917698df4",
+              "id": "0ad711391dd6d152a1fb-afd864e72546efbe54a8",
               "file": "analysis/spec-002.spec.ts",
               "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Text 50000 characters API schema validates max50000 returning 400 Verified in sr",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1791,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T12:54:28.508Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-f02e7-eturning-400-Verified-in-sr-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0ad711391dd6d152a1fb-e878f891fe4d08df988d",
+              "file": "analysis/spec-002.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Only whitespace effectiveTextsplitsfilterBooleanlength shows 0 words trimlength ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1778,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T12:54:30.308Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4c086-h-shows-0-words-trimlength--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0ad711391dd6d152a1fb-f0669be2518a44d50806",
+              "file": "analysis/spec-002.spec.ts",
+              "line": 1749,
               "column": 3
             }
           ]
@@ -1433,11 +1484,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T20:37:56.470Z",
-    "duration": 102956.979,
-    "expected": 32,
+    "startTime": "2026-03-15T12:53:27.045Z",
+    "duration": 65164.598000000005,
+    "expected": 35,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

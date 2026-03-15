@@ -6,15 +6,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-000.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 10582
+      "duration_ms": 4539
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-001",
@@ -23,15 +23,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-001.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1858
+      "duration_ms": 1627
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-002",
@@ -40,15 +40,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-002.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1832
+      "duration_ms": 1705
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-003",
@@ -57,32 +57,32 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-003.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1814
+      "duration_ms": 1651
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-004",
     "spec_id": "spec-001",
     "module": "feeds",
-    "verdict": "FAIL",
+    "verdict": "PASS",
     "proof": {
-      "playwright_status": "failed",
-      "playwright_exit_code": 1,
+      "playwright_status": "passed",
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-004.png",
       "trace_exists": false,
       "trace_path": "",
-      "error_message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Rss\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:723:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:268:27",
-      "duration_ms": 1777
+      "error_message": null,
+      "duration_ms": 1695
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-005",
@@ -91,49 +91,49 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-005.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1848
+      "duration_ms": 1669
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-006",
     "spec_id": "spec-001",
     "module": "feeds",
-    "verdict": "FAIL",
+    "verdict": "PASS",
     "proof": {
-      "playwright_status": "failed",
-      "playwright_exit_code": 1,
+      "playwright_status": "passed",
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-006.png",
       "trace_exists": false,
       "trace_path": "",
-      "error_message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Subscribe to medical journals\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:728:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:368:27",
-      "duration_ms": 1763
+      "error_message": null,
+      "duration_ms": 1627
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-007",
     "spec_id": "spec-001",
     "module": "feeds",
-    "verdict": "FAIL",
+    "verdict": "PASS",
     "proof": {
-      "playwright_status": "failed",
-      "playwright_exit_code": 1,
+      "playwright_status": "passed",
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-007.png",
       "trace_exists": false,
       "trace_path": "",
-      "error_message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Add Your First Feed\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:733:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:418:27",
-      "duration_ms": 1900
+      "error_message": null,
+      "duration_ms": 1626
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-008",
@@ -142,15 +142,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-008.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1844
+      "duration_ms": 1687
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-009",
@@ -159,15 +159,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-009.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1727
+      "duration_ms": 1611
     },
-    "timestamp": "2026-03-14T18:51:20.845Z"
+    "timestamp": "2026-03-15T13:00:26.261Z"
   },
   {
     "checkpoint_id": "cp-010",
@@ -176,15 +176,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-010.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1832
+      "duration_ms": 1654
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-011",
@@ -193,15 +193,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-011.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1743
+      "duration_ms": 1590
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-012",
@@ -210,15 +210,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-012.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1757
+      "duration_ms": 1625
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-013",
@@ -227,15 +227,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-013.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1770
+      "duration_ms": 1626
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-014",
@@ -244,15 +244,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-014.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1761
+      "duration_ms": 1688
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-015",
@@ -261,15 +261,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-015.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1773
+      "duration_ms": 1604
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-016",
@@ -278,15 +278,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-016.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1805
+      "duration_ms": 1692
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-017",
@@ -295,15 +295,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-017.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1785
+      "duration_ms": 1642
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-018",
@@ -312,15 +312,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-018.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1771
+      "duration_ms": 1656
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-019",
@@ -329,15 +329,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-019.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1805
+      "duration_ms": 1574
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-020",
@@ -346,15 +346,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-020.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1836
+      "duration_ms": 1625
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-021",
@@ -363,15 +363,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-021.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1913
+      "duration_ms": 1644
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-022",
@@ -380,15 +380,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-022.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1789
+      "duration_ms": 1653
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-023",
@@ -397,15 +397,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-023.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1786
+      "duration_ms": 1626
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-024",
@@ -414,15 +414,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-024.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1794
+      "duration_ms": 1688
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-025",
@@ -431,15 +431,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-025.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1838
+      "duration_ms": 1626
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-026",
@@ -448,15 +448,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-026.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1807
+      "duration_ms": 1672
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-027",
@@ -465,15 +465,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-027.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1773
+      "duration_ms": 1645
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-028",
@@ -482,15 +482,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-028.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1771
+      "duration_ms": 1598
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-029",
@@ -499,15 +499,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-029.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1793
+      "duration_ms": 1610
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-030",
@@ -516,15 +516,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-030.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1797
+      "duration_ms": 1672
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-031",
@@ -533,15 +533,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-031.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1806
+      "duration_ms": 1593
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-032",
@@ -550,15 +550,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-032.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1858
+      "duration_ms": 1670
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-033",
@@ -567,15 +567,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-033.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1792
+      "duration_ms": 1647
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.262Z"
   },
   {
     "checkpoint_id": "cp-034",
@@ -584,14 +584,14 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 1,
+      "playwright_exit_code": 0,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/feeds/spec-001/cp-034.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1821
+      "duration_ms": 1629
     },
-    "timestamp": "2026-03-14T18:51:20.846Z"
+    "timestamp": "2026-03-15T13:00:26.264Z"
   }
 ]

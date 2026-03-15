@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-005
  * Source: e2e/specs/deep-research/spec-005.md
- * Generated: 2026-03-14T18:36:18.025Z
+ * Generated: 2026-03-15T12:55:41.518Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 Headings: font-size (24–14px), font-weight, margins');
+      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "Headings: font-size (24–14px), font-weight, margins");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 Paragraphs: line-height 1.6, color #333');
+      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "Paragraphs: line-height 1.6, color #333");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 Tables: border-collapse, cell padding, borders (#ccc)');
+      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "Tables: border-collapse, cell padding, borders (#ccc)");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 Blockquotes: 3px left border (#ccc), italic');
+      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "Blockquotes: 3px left border (#ccc), italic");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 Superscript citations: 10px, color #2563eb');
+      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "Superscript citations: 10px, color #2563eb");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 Shows "Copied" confirmation for 2 seconds');
+      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "Shows \"Copied\" confirmation for 2 seconds");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 Fallback to plain text on older browsers');
+      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "Fallback to plain text on older browsers");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 Downloads as `{topic}_references.bib`');
+      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "Downloads as `{topic}_references.bib`");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 Citation key format: `{firstAuthorFirstSegment}{year}{firstTitleWord}` (lowercase), with fallback `ref{n}`');
+      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "Citation key format: `{firstAuthorFirstSegment}{year}{firstTitleWord}` (lowercase), with fallback `ref{n}`");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 Fields: author, title, journal, year, doi, pmid, abstract');
+      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "Fields: author, title, journal, year, doi, pmid, abstract");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 All sources included');
+      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "All sources included");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 Downloads as `{topic}_references.ris`');
+      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "Downloads as `{topic}_references.ris`");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 Fields: TY, TI, AU (per author), JO, PY, DO, AN, AB, UR, ER');
+      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "Fields: TY, TI, AU (per author), JO, PY, DO, AN, AB, UR, ER");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 Compatible with Mendeley / EndNote');
+      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "Compatible with Mendeley / EndNote");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 All sources included');
+      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "All sources included");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 Button visible in `done` state header');
+      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "Button visible in `done` state header");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 States:');
+      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "States:");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 Calls `POST /api/deep-research/save`');
+      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "Calls `POST /api/deep-research/save`");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 Disabled if not logged in or research incomplete');
+      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "Disabled if not logged in or research incomplete");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 Error tooltip appears on failure');
+      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "Error tooltip appears on failure");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 Auto-disables after successful save');
+      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "Auto-disables after successful save");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 Saved session appears in Past Research on next visit');
+      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "Saved session appears in Past Research on next visit");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 Export option: "Open in Studio"');
+      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "Export option: \"Open in Studio\"");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 Calls `POST /api/deep-research/open-in-studio`');
+      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "Calls `POST /api/deep-research/open-in-studio`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 Process:');
+      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "Process:");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 Redirects to `/studio?projectId={projectId}`');
+      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "Redirects to `/studio?projectId={projectId}`");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 Loading spinner during creation');
+      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "Loading spinner during creation");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 Error state with retry capability');
+      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "Error state with retry capability");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 Fallback for reports without markdown format');
+      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "Fallback for reports without markdown format");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 Renders card-based display with sections:');
+      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "Renders card-based display with sections:");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 PubMed search returns results');
+      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "PubMed search returns results");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 Semantic Scholar search returns results');
+      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "Semantic Scholar search returns results");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 OpenAlex search returns results');
+      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "OpenAlex search returns results");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 Results deduplicated across sources');
+      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "Results deduplicated across sources");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 Forward citations fetched via Semantic Scholar API');
+      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "Forward citations fetched via Semantic Scholar API");
     }
 
 

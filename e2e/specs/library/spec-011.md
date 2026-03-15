@@ -1,6 +1,6 @@
 # library — Spec 011
 
-STATUS: PASS
+STATUS: DONE
 TESTED: 30/30
 PASS: 30
 FAIL: 0
