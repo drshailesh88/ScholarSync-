@@ -1,9 +1,9 @@
 # poster — Spec 002
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -18,12 +18,12 @@ MODULE: poster
 - [x] PASS: Additional instructions textarea is present with 3 rows
 - [x] PASS: Additional instructions placeholder reads "e.g., Emphasize results section, include forest plot..."
 - [x] PASS: "Generate Poster" button is displayed with Sparkle icon
-- [ ] FAIL: "Generate Poster" button triggers generation (advances to Step 3)
-- [ ] FAIL: Cannot proceed without filling in the title field
+- [x] PASS: "Generate Poster" button triggers generation (advances to Step 3)
+- [x] PASS: Cannot proceed without filling in the title field
 
 ### New Poster Wizard — Step 3: Generation
 #### Progress Items
-- [ ] FAIL: Step 3 displays the heading "Generating Poster"
+- [x] PASS: Step 3 displays the heading "Generating Poster"
 - [x] PASS: "Preprocessing content" progress item appears first
 - [x] PASS: "Generating poster sections" auto-triggers 500ms after preprocessing completes
 - [x] PASS: Progress indicators animate during processing

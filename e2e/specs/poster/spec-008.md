@@ -1,9 +1,9 @@
 # poster — Spec 008
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -17,9 +17,9 @@ MODULE: poster
 - [x] PASS: Selecting `From URL` leaves `Next` disabled because Step 0 validation does not include the `url` source type
 - [x] PASS: Step 0 back navigation uses a `Link` with `href="/poster"` rather than a wizard-local step reset
 - [x] PASS: Step 1 opens with `A0 Portrait (841 x 1189 mm)` selected by default
-- [ ] FAIL: Step 1 opens with `Three Column` selected by default
-- [ ] FAIL: Step 1 opens with no template selected
-- [ ] FAIL: Poster size options are rendered as clickable buttons rather than radios or a select input
+- [x] PASS: Step 1 opens with `Three Column` selected by default
+- [x] PASS: Step 1 opens with no template selected
+- [x] PASS: Poster size options are rendered as clickable buttons rather than radios or a select input
 - [x] PASS: Each poster size card shows only the human-readable label from `POSTER_SIZES`
 - [x] PASS: Selected poster size card uses `border-brand bg-brand/5`
 - [x] PASS: Grid layout cards show both label and description from `POSTER_GRID_LAYOUTS`

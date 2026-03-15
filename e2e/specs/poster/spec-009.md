@@ -1,9 +1,9 @@
 # poster — Spec 009
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -19,9 +19,9 @@ MODULE: poster
 - [x] PASS: `Preprocessing content` shows a pending hollow circle before preprocessing begins
 - [x] PASS: `Preprocessing content` swaps to a spinning `CircleNotch` while `preprocessing` is true
 - [x] PASS: `Preprocessing content` swaps to a green `Check` after streamed preprocess output populates `preprocessedData`
-- [ ] FAIL: `Preprocessing content` swaps to a red `Warning` when preprocess fails before any output is captured
-- [ ] FAIL: `Generating poster sections` remains pending until preprocess completes successfully
-- [ ] FAIL: `Generating poster sections` swaps to a spinning `CircleNotch` while `generating` is true
+- [x] PASS: `Preprocessing content` swaps to a red `Warning` when preprocess fails before any output is captured
+- [x] PASS: `Generating poster sections` remains pending until preprocess completes successfully
+- [x] PASS: `Generating poster sections` swaps to a spinning `CircleNotch` while `generating` is true
 - [x] PASS: `Generating poster sections` swaps to a green `Check` after `generationResult` is received
 - [x] PASS: `Generating poster sections` swaps to a red `Warning` when generation fails after preprocess has succeeded
 - [x] PASS: Entering Step 3 calls `handlePreprocess()` immediately via `handleStartGeneration`

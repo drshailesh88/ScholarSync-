@@ -1,9 +1,9 @@
 # poster — Spec 007
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -15,9 +15,9 @@ MODULE: poster
 - [x] PASS: Step 0 opens with `From Text` selected by default
 - [x] PASS: Step 0 renders the six `SourceSelector` cards in a responsive `2 / 3 / 6` column grid depending on viewport width
 - [x] PASS: Step 0 renders `From Deep Research` as a separate full-width card below the main source grid
-- [ ] FAIL: `Next` on Step 0 is disabled on first load because `rawText` is empty
-- [ ] FAIL: Step 0 `Next` uses disabled styling `bg-surface-raised text-ink-muted cursor-not-allowed` when requirements are not met
-- [ ] FAIL: Switching between source cards changes selection styling immediately without changing the current step
+- [x] PASS: `Next` on Step 0 is disabled on first load because `rawText` is empty
+- [x] PASS: Step 0 `Next` uses disabled styling `bg-surface-raised text-ink-muted cursor-not-allowed` when requirements are not met
+- [x] PASS: Switching between source cards changes selection styling immediately without changing the current step
 - [x] PASS: Step 0 selection styling uses `border-brand bg-brand/5` for the active source card
 - [x] PASS: `From Papers` shows a `Paper IDs` text input with helper text `(comma-separated)`
 - [x] PASS: `Paper IDs` input accepts comma-separated values and filters out tokens that parse to `NaN`

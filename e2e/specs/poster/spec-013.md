@@ -1,9 +1,9 @@
 # poster — Spec 013
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -38,10 +38,10 @@ MODULE: poster
 - [x] PASS: Authors text uses `opacity-90`
 - [x] PASS: Affiliations text uses `opacity-75`
 - [x] PASS: Title section renders its own `contentBlocks` below affiliations if any exist, with text forced to white
-- [ ] FAIL: Title bar has `rounded-[0.4em]` with `mb-[1em]` bottom margin and `p-[1.2em]` padding
+- [x] PASS: Title bar has `rounded-[0.4em]` with `mb-[1em]` bottom margin and `p-[1.2em]` padding
 #### Section Card Rendering Specifics
-- [ ] FAIL: Section card body background is `theme.surfaceColor ?? theme.backgroundColor`
-- [ ] FAIL: Section header has a bottom border: `2px solid ${theme.primaryColor}30` (separate from the outer card border)
+- [x] PASS: Section card body background is `theme.surfaceColor ?? theme.backgroundColor`
+- [x] PASS: Section header has a bottom border: `2px solid ${theme.primaryColor}30` (separate from the outer card border)
 - [x] PASS: Section heading renders at `text-[1em] font-bold` in `theme.primaryColor`
 - [x] PASS: Sections with `colSpan` use CSS `gridColumn: span N` to span multiple grid columns
 - [x] PASS: Section content area has `p-[0.8em]` padding

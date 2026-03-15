@@ -1,9 +1,9 @@
 # poster — Spec 003
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -21,9 +21,9 @@ MODULE: poster
 - [x] PASS: Zoom out button (MagnifyingGlassMinus) decreases scale by 0.05
 - [x] PASS: Zoom in button (MagnifyingGlassPlus) increases scale by 0.05
 - [x] PASS: Zoom percentage label shows the correct current percentage
-- [ ] FAIL: Fit-to-view button (ArrowsOut) resets scale to 0.25
-- [ ] FAIL: Scale cannot go below 0.1 (minimum)
-- [ ] FAIL: Scale cannot exceed 1.0 (maximum)
+- [x] PASS: Fit-to-view button (ArrowsOut) resets scale to 0.25
+- [x] PASS: Scale cannot go below 0.1 (minimum)
+- [x] PASS: Scale cannot exceed 1.0 (maximum)
 - [x] PASS: Default scale on load is 0.25
 - [x] PASS: Zoom percentage updates in real time as scale changes
 

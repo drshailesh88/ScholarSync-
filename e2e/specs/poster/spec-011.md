@@ -1,9 +1,9 @@
 # poster — Spec 011
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -22,9 +22,9 @@ MODULE: poster
 - [x] PASS: Poster title bar renders affiliations only when `affiliations.length > 0`
 - [x] PASS: If no full-width title section exists, `PosterRenderer` falls back to a simpler colored title header
 - [x] PASS: Content grid column count is derived from `POSTER_GRID_LAYOUTS[poster.gridLayout].columns`
-- [ ] FAIL: QR footer renders only when `poster.qrCodeUrl` exists
-- [ ] FAIL: Image blocks without a real `url` render a themed placeholder box using `suggestion` or `alt`
-- [ ] FAIL: Pie charts render label percentages rather than drawing a visual pie graphic
+- [x] PASS: QR footer renders only when `poster.qrCodeUrl` exists
+- [x] PASS: Image blocks without a real `url` render a themed placeholder box using `suggestion` or `alt`
+- [x] PASS: Pie charts render label percentages rather than drawing a visual pie graphic
 - [x] PASS: Non-pie charts render horizontal bars based on the first dataset only
 - [x] PASS: Table preview uses a themed header background and row separator borders
 - [x] PASS: Invalid KaTeX render exceptions fall back to inline `Invalid LaTeX` text
