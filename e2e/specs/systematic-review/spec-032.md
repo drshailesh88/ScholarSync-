@@ -1,6 +1,6 @@
 # systematic-review — Spec 032
 
-STATUS: PENDING
+STATUS: DONE
 TESTED: 0/15
 PASS: 0
 FAIL: 0

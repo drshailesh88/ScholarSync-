@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for illustrate/spec-005
  * Source: e2e/specs/illustrate/spec-005.md
- * Generated: 2026-03-14T10:22:15.019Z
+ * Generated: 2026-03-15T05:07:38.948Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output

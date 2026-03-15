@@ -6,14 +6,55 @@ import { ArrowLeft, Sparkle, CircleNotch, CaretDown, FileText } from "@phosphor-
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
 import { CircularGauge } from "@/components/ui/circular-gauge";
-import type { IntegrityCheckResult } from "@/lib/integrity/types";
 import { analyzeWriting, type WritingIssue, type WritingMetrics } from "@/lib/writing-analysis";
 import {
   getActiveDocumentForAnalysis,
   listProjectsForAnalysis,
   type DocumentForAnalysis,
 } from "@/lib/actions/analysis";
-type AnalysisResult = IntegrityCheckResult;
+
+/** Local UI shape for analysis results */
+interface AnalysisResult {
+  humanScore: number;
+  aiScore: number;
+  overallRisk: "low" | "medium" | "high";
+  paragraphAnalysis: Array<{
+    paragraphIndex: number;
+    humanProbability: number;
+    flags: string[];
+    suggestion?: string;
+  }>;
+  plagiarismIndicators: Array<{
+    excerpt: string;
+    concern: string;
+    severity: "low" | "medium" | "high";
+  }>;
+  aiDetection: {
+    humanScore: number;
+    aiScore: number;
+    overallRisk: "low" | "medium" | "high";
+    paragraphs: Array<{
+      paragraphIndex: number;
+      humanProbability: number;
+      flags: string[];
+      suggestion?: string;
+    }>;
+  };
+  plagiarism: {
+    matches: Array<{
+      excerpt: string;
+      source: { title?: string; authors?: string[]; doi?: string; year?: number };
+      similarity: number;
+      severity: "low" | "medium" | "high";
+    }>;
+  } | null;
+  writingQuality: {
+    passiveVoiceCount: number;
+    averageSentenceLength: number;
+    readabilityGrade: number;
+    suggestions: string[];
+  };
+}
 
 type SourceMode = "document" | "paste";
 
@@ -172,6 +213,18 @@ export default function AnalysisPage() {
             : "",
           severity: (m.severity as "low" | "medium" | "high") ?? "low",
         })),
+        aiDetection: {
+          humanScore: data.aiDetection?.humanScore ?? 0,
+          aiScore: data.aiDetection?.aiScore ?? 0,
+          overallRisk: data.aiDetection?.overallRisk ?? "low",
+          paragraphs: (data.aiDetection?.paragraphs ?? []).map((p: { paragraphIndex: number; humanProbability: number; flags: string[]; suggestion?: string }) => ({
+            paragraphIndex: p.paragraphIndex,
+            humanProbability: p.humanProbability,
+            flags: p.flags ?? [],
+            suggestion: p.suggestion,
+          })),
+        },
+        plagiarism: data.plagiarism ?? null,
         writingQuality: {
           passiveVoiceCount: data.writingQuality?.passiveVoiceCount ?? 0,
           averageSentenceLength: data.writingQuality?.averageSentenceLength ?? 0,

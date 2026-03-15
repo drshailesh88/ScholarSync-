@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-03-14T09:03:35.887Z",
-  "composite": 46.46,
+  "timestamp": "2026-03-15T05:50:24.246Z",
+  "composite": 58.75,
   "temperature": "WARM",
   "currentPhase": 1,
   "phaseAverages": {
-    "1": 68,
-    "2": 24,
+    "1": 54,
+    "2": 60,
     "3": 60,
     "4": 80,
     "5": 0
@@ -19,7 +19,7 @@
     "typescriptStrict": {
       "score": 0,
       "details": {
-        "errors": 7,
+        "errors": 0,
         "anyCount": 279,
         "strictEnabled": true
       },
@@ -28,10 +28,10 @@
       "label": "TypeScript Strict"
     },
     "lintClean": {
-      "score": 100,
+      "score": 41.5,
       "details": {
-        "errors": 0,
-        "warnings": 0
+        "errors": 14,
+        "warnings": 33
       },
       "weight": 0.05,
       "phase": 1,
@@ -62,30 +62,30 @@
       "label": "API Route Hardening"
     },
     "specPassRate": {
-      "score": 25.8,
+      "score": 65.69,
       "details": {
         "totalSpecs": 376,
-        "passingSpecs": 97
+        "passingSpecs": 247
       },
       "weight": 0.12,
       "phase": 2,
       "label": "Spec Pass Rate"
     },
     "checkpointPassRate": {
-      "score": 25.12,
+      "score": 65.87,
       "details": {
         "totalCheckpoints": 12804,
-        "passingCheckpoints": 3217
+        "passingCheckpoints": 8434
       },
       "weight": 0.1,
       "phase": 2,
       "label": "Checkpoint Pass Rate"
     },
     "moduleCoverage": {
-      "score": 30,
+      "score": 75,
       "details": {
         "totalModules": 20,
-        "coveredModules": 6,
+        "coveredModules": 15,
         "modules": [
           "dashboard",
           "onboarding",
@@ -114,11 +114,11 @@
       "label": "Module Coverage"
     },
     "assertionModuleCoverage": {
-      "score": 40,
+      "score": 95,
       "details": {
         "totalModules": 20,
-        "assertionFiles": 8,
-        "coveredAssertionFiles": 8
+        "assertionFiles": 19,
+        "coveredAssertionFiles": 19
       },
       "weight": 0.05,
       "phase": 2,
@@ -153,7 +153,7 @@
       "score": 13.15,
       "details": {
         "emptyStateComponents": 112,
-        "dataDisplayComponents": 2555
+        "dataDisplayComponents": 2556
       },
       "weight": 0.03,
       "phase": 3,

@@ -1,8 +1,8 @@
 # illustrate — Spec 008
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
@@ -11,42 +11,42 @@ MODULE: illustrate
 ---
 ### Right Panel — Properties Tab
 #### Transform Properties
-- [ ] **X** — Numeric input for horizontal position
-- [ ] **Y** — Numeric input for vertical position
-- [ ] **Width** — Numeric input for object width
-- [ ] **Height** — Numeric input for object height
-- [ ] **Rotation** — Numeric input for rotation angle (degrees)
-- [ ] Editing any field updates the object live on canvas
-- [ ] Values update when object is dragged/resized on canvas
+- [x] PASS: **X** — Numeric input for horizontal position
+- [x] PASS: **Y** — Numeric input for vertical position
+- [x] PASS: **Width** — Numeric input for object width
+- [x] PASS: **Height** — Numeric input for object height
+- [x] PASS: **Rotation** — Numeric input for rotation angle (degrees)
+- [x] PASS: Editing any field updates the object live on canvas
+- [x] PASS: Values update when object is dragged/resized on canvas
 #### Appearance
-- [ ] **Fill** — Color picker for object fill
-- [ ] **Stroke** — Color picker for stroke/border color
-- [ ] **Stroke Width** — Numeric input
-- [ ] **Opacity** — Slider 0%–100%
-- [ ] Changes apply immediately to selected object
+- [x] PASS: **Fill** — Color picker for object fill
+- [x] PASS: **Stroke** — Color picker for stroke/border color
+- [x] PASS: **Stroke Width** — Numeric input
+- [x] PASS: **Opacity** — Slider 0%–100%
+- [x] PASS: Changes apply immediately to selected object
 #### Alignment Tools
-- [ ] Align Left — Aligns selected objects to left edge
-- [ ] Align Center (H) — Centers objects horizontally
-- [ ] Align Right — Aligns to right edge
-- [ ] Align Top — Aligns to top edge
-- [ ] Align Center (V) — Centers objects vertically
-- [ ] Align Bottom — Aligns to bottom edge
-- [ ] Distribute Horizontally — Equal horizontal spacing
-- [ ] Distribute Vertically — Equal vertical spacing
-- [ ] Alignment requires 2+ selected objects (or aligns to canvas)
+- [x] PASS: Align Left — Aligns selected objects to left edge
+- [x] PASS: Align Center (H) — Centers objects horizontally
+- [x] PASS: Align Right — Aligns to right edge
+- [x] PASS: Align Top — Aligns to top edge
+- [x] PASS: Align Center (V) — Centers objects vertically
+- [x] PASS: Align Bottom — Aligns to bottom edge
+- [x] PASS: Distribute Horizontally — Equal horizontal spacing
+- [x] PASS: Distribute Vertically — Equal vertical spacing
+- [x] PASS: Alignment requires 2+ selected objects (or aligns to canvas)
 #### Text Properties (visible when text is selected)
-- [ ] Font family picker
-- [ ] Font size input
-- [ ] Font weight selector (normal, bold)
-- [ ] Text alignment (left, center, right, justify)
-- [ ] Line height input
-- [ ] Text color (may use fill color control)
+- [x] PASS: Font family picker
+- [x] PASS: Font size input
+- [x] PASS: Font weight selector (normal, bold)
+- [x] PASS: Text alignment (left, center, right, justify)
+- [x] PASS: Line height input
+- [x] PASS: Text color (may use fill color control)
 #### Effects
-- [ ] **Shadow** — Toggle shadow on/off
-- [ ] Shadow X offset
-- [ ] Shadow Y offset
-- [ ] Shadow blur radius
-- [ ] Shadow color picker
-- [ ] Shadow opacity
-- [ ] **Blur** — Blur amount slider
-- [ ] **Blend Mode** — Dropdown (normal, multiply, screen, overlay, etc.)
+- [x] PASS: **Shadow** — Toggle shadow on/off
+- [x] PASS: Shadow X offset
+- [x] PASS: Shadow Y offset
+- [x] PASS: Shadow blur radius
+- [x] PASS: Shadow color picker
+- [x] PASS: Shadow opacity
+- [x] PASS: **Blur** — Blur amount slider
+- [x] PASS: **Blend Mode** — Dropdown (normal, multiply, screen, overlay, etc.)

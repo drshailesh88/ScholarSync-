@@ -1,9 +1,9 @@
 # illustrate — Spec 007
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
-FAIL: 0
+STATUS: PARTIAL
+TESTED: 35/35
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -11,44 +11,44 @@ MODULE: illustrate
 ---
 ### Canvas — Drawing & Interaction
 #### Selection & Manipulation
-- [ ] Corner handles resize objects proportionally
-- [ ] Side handles resize non-proportionally
-- [ ] Rotation handle rotates object (visible above selection)
-- [ ] Double-click group to enter group editing
+- [x] PASS: Corner handles resize objects proportionally
+- [x] PASS: Side handles resize non-proportionally
+- [ ] FAIL: Rotation handle rotates object (visible above selection)
+- [x] PASS: Double-click group to enter group editing
 #### Navigation
-- [ ] Scroll wheel zooms in/out
-- [ ] `Space`+drag pans canvas
-- [ ] Middle mouse button drag pans canvas
-- [ ] Hand tool (`H`) enables pan mode on any drag
+- [x] PASS: Scroll wheel zooms in/out
+- [x] PASS: `Space`+drag pans canvas
+- [x] PASS: Middle mouse button drag pans canvas
+- [x] PASS: Hand tool (`H`) enables pan mode on any drag
 #### Drag & Drop
-- [ ] Drag image from desktop onto canvas inserts it
-- [ ] Supported image formats: PNG, JPG, SVG
-- [ ] Paste image from clipboard (`Ctrl+V`) inserts onto canvas
+- [x] PASS: Drag image from desktop onto canvas inserts it
+- [x] PASS: Supported image formats: PNG, JPG, SVG
+- [x] PASS: Paste image from clipboard (`Ctrl+V`) inserts onto canvas
 #### History (Undo/Redo)
-- [ ] Each object modification pushes state to history
-- [ ] `Ctrl+Z` undoes last action
-- [ ] `Ctrl+Y` redoes last undone action
-- [ ] History limited to 50 states
-- [ ] History clears on "New" canvas
+- [x] PASS: Each object modification pushes state to history
+- [x] PASS: `Ctrl+Z` undoes last action
+- [x] PASS: `Ctrl+Y` redoes last undone action
+- [x] PASS: History limited to 50 states
+- [x] PASS: History clears on "New" canvas
 #### Grid & Snap
-- [ ] Grid overlay renders when `gridVisible` is true
-- [ ] Grid size configurable (default 20px)
-- [ ] Objects snap to grid lines when `snapToGrid` is true
-- [ ] Snap behavior applies during drag/resize/create
+- [x] PASS: Grid overlay renders when `gridVisible` is true
+- [x] PASS: Grid size configurable (default 20px)
+- [x] PASS: Objects snap to grid lines when `snapToGrid` is true
+- [x] PASS: Snap behavior applies during drag/resize/create
 
 ### Right Panel — Layers Tab
-- [ ] Lists all canvas objects in hierarchical tree view
-- [ ] Object names/types displayed (Rectangle, Ellipse, Text, Group, etc.)
-- [ ] Clicking a layer entry selects the corresponding object on canvas
-- [ ] Selected object's layer entry is highlighted
-- [ ] **Visibility toggle** (eye icon):
-- [ ] Click to hide object on canvas
-- [ ] Click again to show
-- [ ] Hidden objects display dimmed in layer list
-- [ ] **Lock toggle** (lock icon):
-- [ ] Click to lock object (prevent selection/move)
-- [ ] Click again to unlock
-- [ ] Locked objects show lock indicator
-- [ ] **Drag-to-reorder**: dragging a layer entry changes z-order
-- [ ] Groups show expandable children
-- [ ] Layer order matches visual z-order on canvas
+- [x] PASS: Lists all canvas objects in hierarchical tree view
+- [x] PASS: Object names/types displayed (Rectangle, Ellipse, Text, Group, etc.)
+- [x] PASS: Clicking a layer entry selects the corresponding object on canvas
+- [x] PASS: Selected object's layer entry is highlighted
+- [x] PASS: **Visibility toggle** (eye icon):
+- [x] PASS: Click to hide object on canvas
+- [x] PASS: Click again to show
+- [x] PASS: Hidden objects display dimmed in layer list
+- [x] PASS: **Lock toggle** (lock icon):
+- [x] PASS: Click to lock object (prevent selection/move)
+- [x] PASS: Click again to unlock
+- [x] PASS: Locked objects show lock indicator
+- [x] PASS: **Drag-to-reorder**: dragging a layer entry changes z-order
+- [x] PASS: Groups show expandable children
+- [x] PASS: Layer order matches visual z-order on canvas
