@@ -221,6 +221,10 @@ function DraftTab() {
             </p>
           </div>
         )}
+        {/* empty state: no data, no results, nothing here */}
+        {messages.length === 0 && (
+          <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by asking a question.</p>
+        )}
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -405,6 +409,10 @@ function LearnTab() {
             </button>
           )}
           <div className="space-y-1">
+            {/* empty state: no data, no results, nothing here */}
+            {filteredConcepts.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-3">no results found. nothing here to display.</p>
+            )}
             {filteredConcepts.map((concept) => (
               <button
                 key={concept.id}

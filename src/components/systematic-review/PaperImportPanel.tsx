@@ -365,6 +365,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
           </div>
 
           <div className="space-y-2 max-h-[500px] overflow-y-auto">
+            {/* empty state: no data, no results, nothing here */}
             {papers.map((paper) => (
               <div
                 key={paper.ppId}

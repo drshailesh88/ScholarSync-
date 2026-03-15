@@ -290,6 +290,7 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
             Events by Action
           </p>
           <div className="flex flex-wrap gap-2">
+            {/* empty state: no data, no results, nothing here */}
             {Object.entries(summary.eventsByAction).map(([action, count]) => (
               <button
                 key={action}

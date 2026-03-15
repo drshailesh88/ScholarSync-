@@ -1,9 +1,9 @@
 # illustrate — Spec 016
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -17,8 +17,8 @@ MODULE: illustrate
 - [x] PASS: Prompt input is disabled while generation is in progress
 - [x] PASS: Send button is disabled when trimmed textarea value is empty
 - [x] PASS: Send button becomes enabled as soon as textarea contains non-whitespace text
-- [ ] FAIL: Clicking Send trims leading and trailing whitespace before request submission
-- [ ] FAIL: Successful send clears the textarea value immediately after dispatch
+- [x] PASS: Clicking Send trims leading and trailing whitespace before request submission
+- [x] PASS: Successful send clears the textarea value immediately after dispatch
 - [x] PASS: Successful send resets textarea inline height back to auto
 - [x] PASS: Pressing Enter without Shift submits the prompt
 - [x] PASS: Pressing Shift+Enter inserts a newline instead of submitting
@@ -26,7 +26,7 @@ MODULE: illustrate
 - [x] PASS: Stop button title is "Stop generation"
 - [x] PASS: Stop button calls `AbortController.abort()` on the in-flight request
 - [x] PASS: Aborting generation clears loading state without appending a cancellation assistant message
-- [ ] FAIL: Prompt input footer hint reads "Press Enter to send, Shift + Enter for new line"
+- [x] PASS: Prompt input footer hint reads "Press Enter to send, Shift + Enter for new line"
 - [x] PASS: Live prompt input does not expose a visible character counter
 - [x] PASS: Live prompt input does not enforce a local 4000-character limit in the component
 - [x] PASS: Live prompt input does not expose a style dropdown in the chat composer

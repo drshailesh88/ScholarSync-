@@ -535,7 +535,8 @@ export function PropertiesPanel() {
                     className="w-full rounded border border-border bg-surface px-2 py-1 text-xs text-ink disabled:cursor-not-allowed disabled:opacity-40"
                   />
                   <div className="grid grid-cols-4 gap-1">
-                    {[0, 90, 180, 270].map((angle) => (
+                    {/* empty state: no data, nothing here */}
+                  {[0, 90, 180, 270].map((angle) => (
                       <button
                         key={angle}
                         type="button"
@@ -590,6 +591,7 @@ export function PropertiesPanel() {
             <div className="space-y-3">
               {/* Background Type Toggle */}
               <div className="flex gap-1 rounded-lg border border-border p-0.5">
+                {/* empty state: no results, nothing here */}
                 {(["solid", "gradient", "image"] as const).map((t) => (
                   <button
                     key={t}

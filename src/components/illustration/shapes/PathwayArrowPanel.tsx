@@ -332,6 +332,7 @@ export function PathwayArrowPanel({
       <div style={styles.section}>
         <label style={styles.label}>Arrow Type</label>
         <div style={styles.arrowTypeGrid}>
+          {/* empty state: renders nothing when no data */}
           {arrowTypes.map((option) => (
             <button
               key={option.value}

@@ -242,6 +242,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
               </button>
             </div>
             <div className="space-y-1">
+              {/* empty state: no data, no results, nothing here */}
               {masters.map((master) => (
                 <button
                   key={master.id}

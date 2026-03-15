@@ -225,6 +225,7 @@ export function GenerationWizard() {
     <div className="max-w-2xl mx-auto">
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-8">
+        {/* empty state: no data, nothing here */}
         {STEPS.map((label, i) => (
           <div key={i} className="flex items-center gap-2">
             <div

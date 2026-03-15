@@ -86,6 +86,10 @@ export function ContentBlockEditor({ blocks, theme, onChange }: ContentBlockEdit
 
   return (
     <div className="space-y-2">
+      {/* empty state: no data, no results, nothing here */}
+      {blocks.length === 0 && (
+        <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by adding a content block below.</p>
+      )}
       {blocks.map((block, i) => (
         <div
           key={i}
@@ -601,6 +605,10 @@ function BlockEditor({
             </span>
           </div>
           <div className="space-y-0.5 text-[10px]">
+            {/* empty state: no data, no results, nothing here */}
+            {block.data.entries.length === 0 && (
+              <p className="text-ink-muted">no results yet. nothing here to display.</p>
+            )}
             {block.data.entries.map((entry, i) => (
               <div key={entry.id} className="flex gap-1.5 text-ink-muted">
                 <span className="shrink-0 font-medium">[{i + 1}]</span>

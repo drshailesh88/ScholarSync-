@@ -1,9 +1,9 @@
 # illustrate — Spec 003
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -30,7 +30,7 @@ MODULE: illustrate
 - [x] PASS: SVG renders correctly in the preview area
 - [x] PASS: Zoom controls work (range: 25%–400%)
 - [x] PASS: Zoom in/out buttons increment/decrement correctly
-- [ ] FAIL: Close button collapses preview pane
+- [x] PASS: Close button collapses preview pane
 - [x] PASS: Preview pane toggle button restores collapsed pane
 #### Generation Backends
 - [x] PASS: `auto` mode — intelligently selects backend based on prompt

@@ -1,9 +1,9 @@
 # deep-research — Spec 006
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/deep-research
 MODULE: deep-research
@@ -49,7 +49,7 @@ MODULE: deep-research
 #### Error State UI
 - [x] PASS: Red AlertCircle icon
 - [x] PASS: Heading: "Research Failed"
-- [ ] FAIL: Error message text displayed
+- [x] PASS: Error message text displayed
 - [x] PASS: "Try Again" button returns to `idle` state
 #### API Errors
 - [x] PASS: Plan generation failure shows error and allows retry

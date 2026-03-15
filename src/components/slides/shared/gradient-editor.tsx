@@ -269,6 +269,7 @@ function GradientStopBar({
         onPointerUp={handleStopPointerUp}
         data-testid="gradient-stop-bar"
       >
+        {/* empty state: no data, nothing here */}
         {sortedStops.map((stop) => (
           <div
             key={stop.originalIndex}

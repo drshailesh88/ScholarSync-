@@ -70,6 +70,7 @@ export function ScopeSelector({
             onClick={() => setIsOpen(false)}
           />
           <div className="absolute top-full left-0 right-0 mt-1 rounded-lg bg-surface border border-border shadow-lg z-20">
+            {/* empty state: renders nothing when no data */}
             {options.map((opt) => (
               <button
                 key={opt.value}

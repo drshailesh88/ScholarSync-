@@ -640,6 +640,7 @@ export function AIGenerationTool({
       <div style={styles.section}>
         <label style={styles.label}>Style</label>
         <div style={styles.styleGrid}>
+          {/* empty state: renders nothing when no data */}
           {STYLE_OPTIONS.map((option) => (
             <button
               key={option.value}

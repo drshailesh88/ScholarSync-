@@ -1,9 +1,9 @@
 # illustrate — Spec 019
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -38,7 +38,7 @@ MODULE: illustrate
 - [x] PASS: Ruler-corner unit toggle title is `Ruler units: {UNIT} (click to toggle)`
 #### Editor File Import, Canvas Interaction, and Toast Outcomes
 - [x] PASS: Creating a new document shows browser confirm text `Create new document? Unsaved changes will be lost.`
-- [ ] FAIL: Confirming New clears the canvas and shows info toast `New document created`
+- [x] PASS: Confirming New clears the canvas and shows info toast `New document created`
 - [x] PASS: Cancelling New leaves current canvas state intact
 - [x] PASS: Hidden Place Image picker accepts `.png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml`
 - [x] PASS: Unsupported image file selection shows error toast `Unsupported image file. Use PNG, JPG, or SVG.`

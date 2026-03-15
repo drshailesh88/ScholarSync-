@@ -1,9 +1,9 @@
 # illustrate — Spec 013
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -54,7 +54,7 @@ MODULE: illustrate
 - [x] PASS: React Error Boundary wraps entire editor
 - [x] PASS: Unhandled errors render fallback UI instead of white screen
 - [x] PASS: Fallback UI includes "Reset" button
-- [ ] FAIL: Clicking "Reset" recovers the editor to a working state
+- [x] PASS: Clicking "Reset" recovers the editor to a working state
 #### Toast Notifications
 - [x] PASS: **Info** (blue) — Status messages (e.g., "Diagram loaded")
 - [x] PASS: **Success** (green) — Completed operations (e.g., "Exported as PNG")

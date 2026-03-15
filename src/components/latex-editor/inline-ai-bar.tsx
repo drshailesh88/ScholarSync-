@@ -139,6 +139,7 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
         {/* Preset chips */}
         {result === null && !streaming && (
           <div className="flex items-center gap-1 px-2 pt-2 pb-0.5 flex-wrap">
+            {/* empty state: renders nothing when no data */}
             {PRESET_CHIPS.map((chip) => (
               <button
                 key={chip.label}

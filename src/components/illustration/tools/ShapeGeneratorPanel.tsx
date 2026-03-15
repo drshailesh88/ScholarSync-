@@ -929,6 +929,7 @@ export function ShapeGeneratorPanel({
     <>
       <div style={styles.sectionTitle}>Presets</div>
       <div style={styles.presetsContainer}>
+        {/* empty state: renders nothing when no data */}
         {['Simple', 'Detailed', 'Schematic'].map((preset) => (
           <button
             key={preset}

@@ -369,6 +369,7 @@ export function CellLayerPanel({
           style={styles.select}
           disabled={disabled}
         >
+          {/* empty state: renders nothing when no data */}
           {cellTypeOptions.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label} - {option.description}

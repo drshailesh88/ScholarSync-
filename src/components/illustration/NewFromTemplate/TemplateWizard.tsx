@@ -292,6 +292,7 @@ export function TemplateWizard({ template, onBack, onCreate }: TemplateWizardPro
             Fill in template fields ({filledCount}/{template.placeholders.length})
           </div>
 
+          {/* empty state: renders nothing when no data */}
           {template.placeholders.map((placeholder) => {
             const optional = isOptionalPlaceholder(template, placeholder);
             const useTextarea = shouldUseTextarea(placeholder);

@@ -559,6 +559,7 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
               Tool Assignment Distribution
             </div>
             <div className="flex h-3 rounded-full overflow-hidden bg-surface-raised border border-border">
+              {/* empty state: no data, no results, nothing here */}
               {(["rob2", "robins_i", "quadas2"] as RoBTool[]).map((tool) => {
                 const count = toolDistribution[tool];
                 if (count === 0) return null;

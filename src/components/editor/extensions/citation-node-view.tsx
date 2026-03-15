@@ -171,6 +171,7 @@ export function CitationNodeView(props: NodeViewProps) {
       {/* Tooltip on hover */}
       {showTooltip && !showPopover && refDetails.length > 0 && (
         <span className="absolute z-50 bottom-full left-0 mb-1 px-2.5 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-[11px] leading-snug shadow-lg max-w-xs pointer-events-none">
+          {/* empty state: no data, no results, nothing here */}
           {refDetails.map((ref, i) => (
             <span key={ref!.id} className="block">
               {ref!.authors.length > 0 && (

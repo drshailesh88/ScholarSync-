@@ -1,9 +1,9 @@
 # deep-research — Spec 008
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/deep-research
 MODULE: deep-research
@@ -37,7 +37,7 @@ MODULE: deep-research
 - [x] PASS: The preview header title is exactly `Research Plan`.
 - [x] PASS: The preview subtitle is exactly `Review and customize the research perspectives before starting`.
 - [x] PASS: The top-right button label is exactly `Regenerate`.
-- [ ] FAIL: The bottom-right primary button label is exactly `Confirm & Start Research`.
+- [x] PASS: The bottom-right primary button label is exactly `Confirm & Start Research`.
 - [x] PASS: Perspective-name inputs use the exact placeholder `Perspective name...`.
 - [x] PASS: Query inputs use the exact placeholder `Search query...`.
 - [x] PASS: Expanded cards show the exact section label `Search Queries`.

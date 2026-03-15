@@ -82,6 +82,7 @@ export function ThemePicker({ activeKey, onChange }: ThemePickerProps) {
           <div>
             <p className="text-[10px] text-ink-muted uppercase tracking-wider mb-1">Custom</p>
             <div className="grid grid-cols-3 gap-1.5">
+              {/* empty state: no data, no results, nothing here */}
               {customEntries.map(([key, config]) => (
                 <ThemeCell
                   key={key}

@@ -462,6 +462,7 @@ export const IconBrowser: React.FC<IconBrowserProps> = ({
           >
             All
           </button>
+          {/* empty state: no data, no results, nothing here */}
           {domainCategories.map(cat => (
             <button
               key={cat.name}

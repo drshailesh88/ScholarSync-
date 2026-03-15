@@ -328,6 +328,7 @@ export function GuideOverlay({
     () => ({
       horizontal:
         showGuides
+          /* empty state: renders nothing when no data */
           ? guides.horizontal.map((position, index) => ({
               index,
               position,

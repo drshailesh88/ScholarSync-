@@ -388,6 +388,7 @@ export default function LiveSessionPage() {
                 <div className="space-y-2">
                   {questions
                     .filter((q) => q.status !== "dismissed")
+                    /* empty state: no data, no results, nothing here */
                     .map((q) => (
                       <motion.div
                         key={q.id}

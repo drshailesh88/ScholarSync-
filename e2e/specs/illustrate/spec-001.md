@@ -1,9 +1,9 @@
 # illustrate — Spec 001
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -44,7 +44,7 @@ MODULE: illustrate
 ### Agent Mode — AI Diagram Generation (`/illustrate/agent`)
 #### Template Gallery (Left Sidebar)
 - [x] PASS: Sidebar renders with template categories
-- [ ] FAIL: Sidebar can be collapsed/expanded via toggle button
+- [x] PASS: Sidebar can be collapsed/expanded via toggle button
 - [x] PASS: **Medicine** category shows 3 templates:
 - [x] PASS: CONSORT — Clinical trial flow diagrams
 - [x] PASS: PRISMA — Systematic review flows

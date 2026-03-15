@@ -32,6 +32,7 @@ export function ProgressStepper({ stages, currentMessage, progress }: ProgressSt
 
         {/* Stage timeline */}
         <div className="space-y-0.5">
+          {/* empty state: renders nothing when no data */}
           {stages.map((stage, idx) => {
             const label = STAGE_LABELS[stage.id] || stage.label;
             const isActive = stage.status === "active";

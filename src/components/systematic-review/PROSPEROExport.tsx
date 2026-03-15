@@ -258,6 +258,10 @@ export function PROSPEROExport({ projectId }: PROSPEROExportProps) {
 
           {/* Fields list */}
           <div className="space-y-3">
+            {/* empty state: no data, no results, nothing here */}
+            {fields.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by generating the protocol.</p>
+            )}
             {fields.map((field) => {
               const isFilled = field.value.trim() !== "";
               return (

@@ -830,6 +830,10 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
               <div className="col-span-2"></div>
             </div>
 
+            {/* empty state: no data, no results, nothing here */}
+            {schema.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-3">nothing here yet. get started by adding extraction fields.</p>
+            )}
             {schema.map((field, i) => (
               <div key={i} className="grid grid-cols-12 gap-2">
                 <input aria-label="Text input"
@@ -961,6 +965,10 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
             </div>
           ) : (
             <div className="space-y-2 max-h-80 overflow-y-auto">
+              {/* empty state: no data, no results, nothing here */}
+              {papers.length === 0 && (
+                <p className="text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</p>
+              )}
               {papers.map((paper) => {
                 const isExtracting = extractingPaperIds.has(paper.paperId);
                 const hasLiveResult = liveExtractions.has(paper.paperId);

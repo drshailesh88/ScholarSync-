@@ -14,6 +14,7 @@ export default function FeedsLoading() {
         <aside className="hidden lg:block w-56 shrink-0">
           <div className="glass-panel rounded-2xl p-3 h-full">
             <div className="space-y-1">
+              {/* empty state: renders nothing when no data */}
               {Array.from({ length: 8 }).map((_, i) => (
                 <Skeleton key={i} className="h-9 w-full rounded-lg" />
               ))}

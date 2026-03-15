@@ -325,6 +325,10 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
 
           {/* Sections */}
           <div className="space-y-2">
+            {/* empty state: no data, no results, nothing here */}
+            {protocol.sections.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by generating protocol sections.</p>
+            )}
             {protocol.sections.map((section, idx) => {
               const expanded = expandedSections.has(section.id);
               const isEditing = editingSection === section.id;

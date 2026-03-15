@@ -99,6 +99,7 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-ink-muted">Color</label>
         <div className="flex flex-wrap gap-1.5">
+          {/* empty state: renders nothing when no data */}
           {allPresets.map((color) => (
             <button
               key={color}

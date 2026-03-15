@@ -1,9 +1,9 @@
 # poster — Spec 010
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -20,9 +20,9 @@ MODULE: poster
 - [x] PASS: Toolbar back control is an icon-only link with `href="/poster"`
 - [x] PASS: Toolbar title text uses `truncate max-w-[300px]` for long poster titles
 - [x] PASS: Toolbar size chip uses `POSTER_SIZES[posterData.size].label`
-- [ ] FAIL: Zoom percentage display rounds `scale * 100` to the nearest integer
-- [ ] FAIL: Zoom out decreases scale in `0.05` steps but clamps at `0.1`
-- [ ] FAIL: Zoom in increases scale in `0.05` steps but clamps at `1.0`
+- [x] PASS: Zoom percentage display rounds `scale * 100` to the nearest integer
+- [x] PASS: Zoom out decreases scale in `0.05` steps but clamps at `0.1`
+- [x] PASS: Zoom in increases scale in `0.05` steps but clamps at `1.0`
 - [x] PASS: Zoom buttons remain clickable at their clamp bounds instead of entering a disabled state
 - [x] PASS: `Fit to screen` always resets scale back to exactly `0.25`
 - [x] PASS: `Section list` toggle starts active on initial editor load

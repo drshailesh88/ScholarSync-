@@ -108,6 +108,7 @@ export function ResearchPlan({
             MeSH Terms
           </span>
           <div className="flex flex-wrap gap-1 mt-1">
+            {/* empty state: renders nothing when no data */}
             {plan.meshTerms.map((term, i) => (
               <span
                 key={i}

@@ -373,7 +373,10 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
           </div>
         )}
 
-        {/* Root files */}
+        {/* Root files — empty state: no data, nothing here */}
+        {rootFiles.length === 0 && (
+          <p className="text-[11px] text-ink-muted text-center py-3">nothing here yet. get started by adding a file.</p>
+        )}
         {rootFiles.map(renderFile)}
 
         {/* Folders */}

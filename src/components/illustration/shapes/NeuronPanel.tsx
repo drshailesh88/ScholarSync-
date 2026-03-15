@@ -355,6 +355,7 @@ export function NeuronPanel({
       <div style={styles.section}>
         <label style={styles.label}>Neuron Type</label>
         <div style={styles.neuronTypeGrid}>
+          {/* empty state: renders nothing when no data */}
           {neuronTypes.map((option) => (
             <button
               key={option.value}

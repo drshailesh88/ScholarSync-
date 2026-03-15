@@ -93,6 +93,7 @@ export default function EditorPage() {
     if (!editor || editor.isDestroyed) return;
 
     const referenceStore = useReferenceStore.getState();
+    /* empty state: no data, no results, nothing here */
     const referenceSnapshots = referenceIds
       .map((referenceId) => referenceStore.references.get(referenceId))
       .filter((reference): reference is NonNullable<typeof reference> =>

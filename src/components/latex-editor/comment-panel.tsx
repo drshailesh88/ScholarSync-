@@ -219,6 +219,7 @@ function CommentThread({
       {/* Replies */}
       {isExpanded && hasReplies && (
         <div className="mt-2 space-y-2 pl-4 border-l border-ink/10">
+          {/* empty state: no data, no results, nothing here */}
           {comment.replies?.map((reply) => (
             <div key={reply.id} className="py-1">
               <div className="flex items-center gap-2">

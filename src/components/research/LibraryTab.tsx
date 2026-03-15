@@ -73,6 +73,7 @@ export function LibraryTab({
         </div>
         <div className="flex items-center justify-between">
           <div className="flex gap-1">
+            {/* empty state: no data, no results, nothing here */}
             {(["recent", "title", "year"] as const).map((s) => (
               <button
                 key={s}

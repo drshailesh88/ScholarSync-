@@ -1,6 +1,6 @@
 # illustrate — Spec 035
 
-STATUS: DONE
+STATUS: PASS
 TESTED: 35/35
 PASS: 35
 FAIL: 0

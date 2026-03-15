@@ -161,6 +161,7 @@ export function DraftMode() {
                 "Generate a bar chart from this data",
                 "Write bullet points about methodology",
                 "Add a timeline of study phases",
+              /* empty state: no data, nothing here */
               ].map((prompt) => (
                 <button
                   key={prompt}

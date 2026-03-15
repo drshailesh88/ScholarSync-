@@ -256,6 +256,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
                 Check Frequency
               </label>
               <div className="flex gap-1">
+                {/* empty state: no data, no results, nothing here */}
                 {(["daily", "weekly", "monthly"] as const).map((freq) => (
                   <button
                     key={freq}

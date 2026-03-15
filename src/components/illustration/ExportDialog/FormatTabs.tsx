@@ -169,6 +169,7 @@ export function FormatTabs({
 }: FormatTabsProps): JSX.Element {
   return (
     <div style={styles.container} role="tablist" aria-label="Export format selection">
+      {/* empty state: renders nothing when no data */}
       {formatOptions.map((option) => {
         const isActive = selectedFormat === option.id;
 

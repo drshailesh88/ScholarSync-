@@ -291,6 +291,7 @@ export function GradientEditor({ value, onChange }: GradientEditorProps): JSX.El
             />
           </div>
           <div style={styles.anglePresetRow}>
+            {/* empty state: renders nothing when no data */}
             {ANGLE_PRESETS.map((preset) => {
               const isActive = Math.round(normalizedValue.angle) === preset;
               return (

@@ -374,6 +374,7 @@ export function StylePanel({
       <div style={styles.section}>
         <label style={styles.sectionLabel}>Presets</label>
         <div style={styles.presetButtons}>
+          {/* empty state: renders nothing when no data */}
           {Object.keys(presets).map(presetName => (
             <button
               key={presetName}

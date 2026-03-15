@@ -421,6 +421,7 @@ export function ExportDialog({
                 }}
               >
                 <option value="none">None (no journal preset)</option>
+                {/* empty state: renders nothing when no data */}
                 {journalPresets.map(preset => (
                   <option key={preset.id} value={preset.id}>
                     {preset.name} ({preset.maxWidthMm}mm single col)

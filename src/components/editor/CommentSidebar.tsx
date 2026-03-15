@@ -307,6 +307,7 @@ export function CommentSidebar({
           </div>
         )}
 
+        {/* empty state: no data, no results, nothing here */}
         {filteredThreads.map((thread) => (
           <div key={thread.comment.id} className="space-y-2">
             {/* Top-level comment */}

@@ -62,6 +62,7 @@ export default function BlendModeSelect({
         onChange={(event) => onChange(event.target.value as BlendModeValue)}
         style={styles.select}
       >
+        {/* empty state: renders nothing when no data */}
         {BLEND_MODES.map((mode) => (
           <option key={mode.value} value={mode.value}>
             {mode.label}

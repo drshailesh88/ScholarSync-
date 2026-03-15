@@ -708,6 +708,10 @@ export function ScreeningPDFViewer({
               </h3>
 
               {/* Screening reasons with jump links */}
+              {/* empty state: no data, no results, nothing here */}
+              {screeningReasons.length === 0 && (
+                <p className="text-xs text-ink-muted py-2">no results yet. nothing here to display.</p>
+              )}
               {screeningReasons.length > 0 && (
                 <div className="space-y-2 mb-3">
                   {screeningReasons.map((reason, idx) => (

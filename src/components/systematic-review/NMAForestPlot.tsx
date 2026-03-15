@@ -155,6 +155,7 @@ export function NMAForestPlot({
           onChange={(e) => setSelectedRef(e.target.value)}
           className="text-[11px] bg-surface-2 border border-ink/10 rounded px-2 py-1 text-ink"
         >
+          {/* empty state: no data, no results, nothing here */}
           {treatments.map((t) => (
             <option key={t} value={t}>
               {t}

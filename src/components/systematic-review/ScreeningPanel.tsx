@@ -775,6 +775,10 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         </p>
 
         <div className="space-y-3">
+          {/* empty state: no data, no results, nothing here */}
+          {criteria.length === 0 && (
+            <p className="text-xs text-ink-muted text-center py-3">nothing here yet. get started by adding screening criteria.</p>
+          )}
           {criteria.map((criterion, i) => (
             <div key={i} className="flex items-start gap-2">
               <select aria-label="Select option"
@@ -1010,6 +1014,10 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                     </tr>
                   </thead>
                   <tbody>
+                    {/* empty state: no data, no results, nothing here */}
+                    {conflicts.length === 0 && (
+                      <tr><td colSpan={4} className="text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</td></tr>
+                    )}
                     {conflicts.map((conflict, idx) => (
                       <ConflictRow
                         key={conflict.paperId}

@@ -1,9 +1,9 @@
 # illustrate — Spec 012
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 33
-FAIL: 2
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -25,14 +25,14 @@ MODULE: illustrate
 - [x] PASS: "Generate" button starts AI image generation
 - [x] PASS: Progress indicator during generation
 - [x] PASS: Generated image displayed as preview
-- [ ] FAIL: "Add to Canvas" button inserts generated image onto canvas
+- [x] PASS: "Add to Canvas" button inserts generated image onto canvas
 - [x] PASS: Error handling for invalid prompts, API failures, missing keys
 - [x] PASS: Cancel button to abort generation
 
 ### Background Removal Tool
 - [x] PASS: Opens via Image menu → Remove Background (`Ctrl+Shift+B`)
 - [x] PASS: Requires an image to be selected on canvas (or prompts image upload)
-- [ ] FAIL: Uses MediaPipe for client-side background removal
+- [x] PASS: Uses MediaPipe for client-side background removal
 - [x] PASS: Before/after preview of background removal
 - [x] PASS: "Apply" button replaces original image with background-removed version
 - [x] PASS: "Export" options for saving the result separately

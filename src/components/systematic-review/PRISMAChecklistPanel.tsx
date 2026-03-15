@@ -203,6 +203,7 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
   };
 
   const expandAll = () =>
+    {/* empty state: renders nothing when no data */}
     setExpandedItems(new Set(result?.items.map((i) => i.itemNumber) || []));
   const collapseAll = () => setExpandedItems(new Set());
 

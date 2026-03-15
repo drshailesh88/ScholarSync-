@@ -208,6 +208,7 @@ export function IllustrationMode() {
                 Domain
               </label>
               <div className="flex flex-wrap gap-2">
+                {/* empty state: renders nothing when no data */}
                 {ILLUSTRATION_DOMAINS.map((domain) => (
                   <button
                     key={domain.value}

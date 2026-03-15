@@ -129,6 +129,7 @@ function ProcessFlow({ items, colors, theme }: { items: InfographicItem[]; color
 
   return (
     <svg viewBox="0 0 800 170" className="w-full">
+      {/* empty state: renders nothing when no data */}
       {items.map((item, i) => {
         const cx = offsetX + i * (cardW + gap) + cardW / 2;
         const color = getItemColor(item, i, colors);

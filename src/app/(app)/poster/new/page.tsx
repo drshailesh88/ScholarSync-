@@ -176,6 +176,7 @@ function NewPosterContent() {
 
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-8">
+        {/* empty state: no data, no results, nothing here */}
         {STEPS.map((label, i) => (
           <div key={i} className="flex items-center gap-2">
             <div

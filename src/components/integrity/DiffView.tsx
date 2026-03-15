@@ -64,6 +64,7 @@ export function DiffView({ paragraphs, result }: DiffViewProps) {
           {renderSentenceLevel(text, aiAnalysis, plagMatches)}
           {citationIssues.length > 0 && (
             <span className="inline-flex items-center gap-1 ml-1">
+              {/* empty state: no data, nothing here */}
               {citationIssues.map((issue, i) => (
                 <span
                   key={i}

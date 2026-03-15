@@ -154,6 +154,10 @@ export function CitationNetwork({ paperId, className }: CitationNetworkProps) {
         style={{ minHeight: 400 }}
       >
         {/* Edges */}
+        {/* empty state: no data, no results, nothing here */}
+        {edges.length === 0 && (
+          <text x={WIDTH / 2} y={HEIGHT / 2} textAnchor="middle" className="text-xs fill-current opacity-40">nothing here yet. no data to display.</text>
+        )}
         {edges.map((edge, i) => {
           const source = nodeMap.get(edge.source);
           const target = nodeMap.get(edge.target);

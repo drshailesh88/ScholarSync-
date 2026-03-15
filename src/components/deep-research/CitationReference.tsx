@@ -240,6 +240,7 @@ export function ParsedCitationText({
 
   return (
     <>
+      {/* empty state: renders nothing when no data */}
       {parts.map((part, i) =>
         part.kind === "text" ? (
           <span key={i}>{part.content}</span>

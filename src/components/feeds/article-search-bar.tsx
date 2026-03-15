@@ -1,5 +1,6 @@
 "use client";
 
+// optimistic search: updates UI immediately while debounced fetch runs
 import {
   MagnifyingGlass,
   FunnelSimple,
@@ -135,6 +136,7 @@ export function ArticleSearchBar() {
               className="w-full mt-1 px-2 py-1.5 rounded-lg bg-surface-raised border border-border text-ink text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
             >
               <option value="">All journals</option>
+              {/* empty state: renders nothing when no data */}
               {availableJournals.map((j) => (
                 <option key={j} value={j}>
                   {j}

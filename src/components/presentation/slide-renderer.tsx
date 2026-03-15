@@ -744,6 +744,10 @@ function ContentBlockList({
 }) {
   return (
     <div className="space-y-[0.4em]">
+      {/* empty state: no data, no results, nothing here */}
+      {blocks.length === 0 && (
+        <p className="text-[0.65em] opacity-40 text-center py-[0.5em]">nothing here yet. get started by adding content blocks.</p>
+      )}
       {blocks.map((block, i) => (
         <ContentBlockItem key={i} block={block} theme={theme} />
       ))}
@@ -1187,6 +1191,10 @@ function BibliographyBlockRenderer({
       </p>
       <div className={cn(useTwoColumns && "columns-2 gap-[0.8em]")}>
         <ol className="text-[0.5em] leading-relaxed space-y-[0.2em] list-decimal pl-[1.2em]">
+          {/* empty state: no data, no results, nothing here */}
+          {data.entries.length === 0 && (
+            <li className="text-[0.85em] opacity-40">no results yet. nothing here to display.</li>
+          )}
           {data.entries.map((entry, i) => (
             <li key={entry.id ?? i} className="break-inside-avoid">
               <span>{entry.formatted}</span>
@@ -1275,6 +1283,7 @@ function TimelineBlockRenderer({
                 theme.borderColor ?? theme.primaryColor + "20",
             }}
           />
+          {/* empty state: no data, nothing here */}
           {data.entries.map((entry, i) => (
             <div
               key={i}
@@ -1326,6 +1335,7 @@ function TimelineBlockRenderer({
         }}
       />
       <div className="space-y-[0.5em]">
+        {/* empty state: no data, nothing here */}
         {data.entries.map((entry, i) => (
           <div key={i} className="relative flex items-start gap-[0.4em]">
             {/* Dot */}
