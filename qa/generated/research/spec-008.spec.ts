@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-008
  * Source: e2e/specs/research/spec-008.md
- * Generated: 2026-03-14T07:47:30.267Z
+ * Generated: 2026-03-15T17:23:38.872Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 `/api/search/unified` treats query augmentation as enabled unless the request explicitly sends `augment=false`');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "`/api/search/unified` treats query augmentation as enabled unless the request explicitly sends `augment=false`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 `/api/search/unified` only attempts AI query augmentation when `augment !== "false"` and the raw query length is greater than `20`');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "`/api/search/unified` only attempts AI query augmentation when `augment !== \"false\"` and the raw query length is greater than `20`");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Query-augmentation failures fall back silently to the raw user query without surfacing an error in the response');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Query-augmentation failures fall back silently to the raw user query without surfacing an error in the response");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 `augmentQuery()` aborts its AI call after exactly `5000ms`');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "`augmentQuery()` aborts its AI call after exactly `5000ms`");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 `augmentQuery()` asks for three source-specific query strings plus optional `yearStart`, `yearEnd`, and `publicationTypes` suggestions');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "`augmentQuery()` asks for three source-specific query strings plus optional `yearStart`, `yearEnd`, and `publicationTypes` suggestions");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 Unified-search source fan-out computes `neededPerSource` as `Math.min((page + 1) * perPage, 100)`');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "Unified-search source fan-out computes `neededPerSource` as `Math.min((page + 1) * perPage, 100)`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 Unified-search PubMed fan-out always requests `page: 0` and uses `maxResults: neededPerSource`');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "Unified-search PubMed fan-out always requests `page: 0` and uses `maxResults: neededPerSource`");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 Unified-search Semantic Scholar fan-out always requests `offset: 0` and uses `limit: neededPerSource`');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "Unified-search Semantic Scholar fan-out always requests `offset: 0` and uses `limit: neededPerSource`");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 Unified-search OpenAlex fan-out always requests `page: 1` and uses `limit: neededPerSource`');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "Unified-search OpenAlex fan-out always requests `page: 1` and uses `limit: neededPerSource`");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 Unified-search ClinicalTrials fan-out requests only `limit: perPage`, not `neededPerSource`');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "Unified-search ClinicalTrials fan-out requests only `limit: perPage`, not `neededPerSource`");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 Each source fan-out call is wrapped in `withTimeout(..., 4500)` with per-source timeout strings like `PubMed timed out after 4500ms`');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "Each source fan-out call is wrapped in `withTimeout(..., 4500)` with per-source timeout strings like `PubMed timed out after 4500ms`");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 Unified search uses `Promise.allSettled(...)` so one degraded source does not abort the whole response');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "Unified search uses `Promise.allSettled(...)` so one degraded source does not abort the whole response");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 Unified search logs per-source degradation warnings instead of surfacing source-specific failures to the page');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "Unified search logs per-source degradation warnings instead of surfacing source-specific failures to the page");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 When all four source result sets are empty in development mode, unified search attempts fixture-based fallback results from `src/lib/search/__tests__/ralph-search/cache`');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "When all four source result sets are empty in development mode, unified search attempts fixture-based fallback results from `src/lib/search/__tests__/ralph-search/cache`");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 Development fallback is completely disabled when `NODE_ENV !== "development"`');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "Development fallback is completely disabled when `NODE_ENV !== \"development\"`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Development fallback ignores fixtures whose normalized query-match score is below `0.55`');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Development fallback ignores fixtures whose normalized query-match score is below `0.55`");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Reciprocal-rank fusion uses `k = 60` when combining source lists');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Reciprocal-rank fusion uses `k = 60` when combining source lists");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Duplicate papers merged during reciprocal-rank fusion accumulate `rrfScore` contributions from every matched source');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Duplicate papers merged during reciprocal-rank fusion accumulate `rrfScore` contributions from every matched source");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Reciprocal-rank fusion appends the new source name into `sources[]` only if that source is not already listed on the merged paper');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Reciprocal-rank fusion appends the new source name into `sources[]` only if that source is not already listed on the merged paper");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Cohere reranking is skipped entirely when `COHERE_API_KEY` is missing');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Cohere reranking is skipped entirely when `COHERE_API_KEY` is missing");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Cohere reranking is skipped entirely when the fused results array is empty');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Cohere reranking is skipped entirely when the fused results array is empty");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Cohere reranking posts to `https://api.cohere.com/v2/rerank` with model `rerank-v3.5`');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Cohere reranking posts to `https://api.cohere.com/v2/rerank` with model `rerank-v3.5`");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Cohere reranking truncates `top_n` to `Math.min(results.length, 50)` when no explicit `topN` is passed');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Cohere reranking truncates `top_n` to `Math.min(results.length, 50)` when no explicit `topN` is passed");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Cohere reranking falls back to the original fused order when the Cohere request throws');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Cohere reranking falls back to the original fused order when the Cohere request throws");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Unified search infers a missing `evidenceLevel` only when a result already has `studyType` but no evidence grade');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Unified search infers a missing `evidenceLevel` only when a result already has `studyType` but no evidence grade");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Unified search enriches each result with `journalQuartile` and `journalImpactProxy` only when `lookupJournalQuality(journal)` returns a match');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Unified search enriches each result with `journalQuartile` and `journalImpactProxy` only when `lookupJournalQuality(journal)` returns a match");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Study-type filtering is applied after rank fusion and reranking, not at the per-source adapter level');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Study-type filtering is applied after rank fusion and reranking, not at the per-source adapter level");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Open-access filtering is applied after rank fusion and reranking by checking `r.isOpenAccess`');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Open-access filtering is applied after rank fusion and reranking by checking `r.isOpenAccess`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Sort mode `citations` orders results by `(citationCount || 0)` descending');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Sort mode `citations` orders results by `(citationCount || 0)` descending");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 Sort mode `year` orders results by `(year || 0)` descending');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "Sort mode `year` orders results by `(year || 0)` descending");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 Sort mode `evidence` orders results by evidence map `I=1`, `II=2`, `III=3`, `IV=4`, `V=5`');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "Sort mode `evidence` orders results by evidence map `I=1`, `II=2`, `III=3`, `IV=4`, `V=5`");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 Results with missing or unrecognized evidence level are treated as Level V during backend evidence sorting');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "Results with missing or unrecognized evidence level are treated as Level V during backend evidence sorting");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 Unified search still contains a backend-only `impact` sort branch even though the current `/research` page never sends `sort=impact`');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "Unified search still contains a backend-only `impact` sort branch even though the current `/research` page never sends `sort=impact`");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 Unified-search pagination slices the filtered array with `start = page * perPage` and `end = start + perPage`');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "Unified-search pagination slices the filtered array with `start = page * perPage` and `end = start + perPage`");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 Unified-search `hasMore` becomes `true` only when `start + perPage < total`');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "Unified-search `hasMore` becomes `true` only when `start + perPage < total`");
     }
 
 
