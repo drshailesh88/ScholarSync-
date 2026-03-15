@@ -65,20 +65,100 @@
   },
   "suites": [
     {
-      "title": "editor/spec-021.spec.ts",
-      "file": "editor/spec-021.spec.ts",
+      "title": "editor/spec-022.spec.ts",
+      "file": "editor/spec-022.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "editor / spec-021",
-          "file": "editor/spec-021.spec.ts",
+          "title": "editor / spec-022",
+          "file": "editor/spec-022.spec.ts",
           "line": 36,
           "column": 6,
           "specs": [
             {
-              "title": "cp-000: Academic keyboard shortcut Mod-Shift- toggles subscript",
+              "title": "cp-000: Citation nodes also support an overrides attribute that defaults to null",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2265,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:09.012Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-649ac-ibute-that-defaults-to-null-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-b822f2957ca5945736e5",
+              "file": "editor/spec-022.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Citation keyboard shortcut Mod-Shift-C dispatches scholarsynceditor-action with ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2385,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:11.352Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-e5155-olarsynceditor-action-with--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-9a0846c01c21d87bcc0e",
+              "file": "editor/spec-022.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Citation chip hover waits 400 ms before opening the tooltip",
               "ok": true,
               "tags": [],
               "tests": [
@@ -98,13 +178,13 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:49:45.808Z",
+                      "startTime": "2026-03-15T16:51:13.754Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-4603a-od-Shift--toggles-subscript-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-0d620--before-opening-the-tooltip-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -112,93 +192,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-370ba24ee77941259543",
-              "file": "editor/spec-021.spec.ts",
-              "line": 49,
-              "column": 3
-            },
-            {
-              "title": "cp-001: Academic keyboard shortcut Mod-Shift-F opens windowpromptFootnote text",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2266,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:49:48.188Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-415af-s-windowpromptFootnote-text-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-a379f9b5b7c84b42fe15",
-              "file": "editor/spec-021.spec.ts",
-              "line": 99,
-              "column": 3
-            },
-            {
-              "title": "cp-002: Leaving the keyboard-shortcut footnote prompt empty inserts no footnote node",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2241,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:49:50.470Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-33668-ty-inserts-no-footnote-node-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-21b22a4f19f08f179609",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-734ea964467fab1cd66b",
+              "file": "editor/spec-022.spec.ts",
               "line": 149,
               "column": 3
             },
             {
-              "title": "cp-003: Academic keyboard shortcut Mod- dispatches scholarsynceditor-action with toggle-",
+              "title": "cp-003: Citation chip click toggles the popover open state and suppresses the hover tool",
               "ok": true,
               "tags": [],
               "tests": [
@@ -213,18 +213,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2239,
+                      "duration": 2697,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:49:52.721Z",
+                      "startTime": "2026-03-15T16:51:16.064Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-66e2b-ceditor-action-with-toggle--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-aced8-d-suppresses-the-hover-tool-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -232,13 +232,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-952e18c12dc72dec8b15",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-fa8cc4f23b4b77c71a55",
+              "file": "editor/spec-022.spec.ts",
               "line": 199,
               "column": 3
             },
             {
-              "title": "cp-004: Academic keyboard shortcut Mod-Shift-C dispatches scholarsynceditor-action with ",
+              "title": "cp-004: Citation chip fallback text is when a numeric citation has no assigned numbers",
               "ok": true,
               "tags": [],
               "tests": [
@@ -253,18 +253,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2273,
+                      "duration": 2292,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:49:54.969Z",
+                      "startTime": "2026-03-15T16:51:18.780Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-4a57d-olarsynceditor-action-with--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-23032-ion-has-no-assigned-numbers-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -272,373 +272,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-d3b5fb38d82d047fbfd8",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-58b6eb9c6b1d2b7c78f4",
+              "file": "editor/spec-022.spec.ts",
               "line": 249,
               "column": 3
             },
             {
-              "title": "cp-005: Academic keyboard shortcut Mod-Shift-R dispatches scholarsynceditor-action with ",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2341,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:49:57.252Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-aec3e-olarsynceditor-action-with--qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-6444b10890731e308aac",
-              "file": "editor/spec-021.spec.ts",
-              "line": 299,
-              "column": 3
-            },
-            {
-              "title": "cp-006: Academic keyboard shortcut Mod-Shift-Enter inserts a horizontal rule",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2357,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:49:59.602Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-052c5-r-inserts-a-horizontal-rule-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-d0605f37b3bcc08a210d",
-              "file": "editor/spec-021.spec.ts",
-              "line": 349,
-              "column": 3
-            },
-            {
-              "title": "cp-007: Academic keyboard shortcuts Mod-Shift-1 through Mod-Shift-4 toggle heading level",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2239,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:01.968Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-2a12d-hift-4-toggle-heading-level-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-e99137fb189e9b449675",
-              "file": "editor/spec-021.spec.ts",
-              "line": 399,
-              "column": 3
-            },
-            {
-              "title": "cp-008: Studio TiptapEditor supports heading levels 1 through 6",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2269,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:04.219Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-8a065--heading-levels-1-through-6-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-39b3060d99b3b0b1835d",
-              "file": "editor/spec-021.spec.ts",
-              "line": 449,
-              "column": 3
-            },
-            {
-              "title": "cp-009: Studio TiptapEditor placeholder text is Start typing or press for AI commands",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2224,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:06.501Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-ebbe3-ng-or-press-for-AI-commands-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-8ff115642ba7a5adcba8",
-              "file": "editor/spec-021.spec.ts",
-              "line": 499,
-              "column": 3
-            },
-            {
-              "title": "cp-010: Studio TiptapEditor uses Tableconfigure resizable true",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2325,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:08.734Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-08412-bleconfigure-resizable-true-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-eacd7589da78bf1a5930",
-              "file": "editor/spec-021.spec.ts",
-              "line": 549,
-              "column": 3
-            },
-            {
-              "title": "cp-011: Studio TiptapEditor allows base64 image insertion through Imageconfigure allowBa",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2238,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:11.068Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-b4fc0-ough-Imageconfigure-allowBa-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-f5fa19b31a5bdb87d7e3",
-              "file": "editor/spec-021.spec.ts",
-              "line": 599,
-              "column": 3
-            },
-            {
-              "title": "cp-012: Studio TiptapEditor enables autolink and link-on-paste behavior through the Link",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2235,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:13.315Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-36eab-e-behavior-through-the-Link-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-1c14cd3e75a7675d4b9b",
-              "file": "editor/spec-021.spec.ts",
-              "line": 649,
-              "column": 3
-            },
-            {
-              "title": "cp-013: Studio TiptapEditor enables nested task items",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2319,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:15.563Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-69f7a-r-enables-nested-task-items-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-1e3b6d75a1e5c4fe511d",
-              "file": "editor/spec-021.spec.ts",
-              "line": 699,
-              "column": 3
-            },
-            {
-              "title": "cp-014: Studio TiptapEditor mounts the same custom SlashCommandsExtension OutlinePlugin ",
+              "title": "cp-005: Citation chip fallback text is when an author-year citation has no resolved refe",
               "ok": true,
               "tags": [],
               "tests": [
@@ -658,13 +298,13 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:17.899Z",
+                      "startTime": "2026-03-15T16:51:21.081Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-6dd82-ndsExtension-OutlinePlugin--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-61064-tation-has-no-resolved-refe-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -672,13 +312,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-02f4ec98bf26038d37c6",
-              "file": "editor/spec-021.spec.ts",
-              "line": 749,
+              "id": "e4d5789c6f77bc921b22-8a7dce000fbb942a1047",
+              "file": "editor/spec-022.spec.ts",
+              "line": 299,
               "column": 3
             },
             {
-              "title": "cp-015: Neither AcademicEditor nor Studio TiptapEditor registers a custom math node or m",
+              "title": "cp-006: Numeric citation chips compress consecutive numbers into ranges such as 1-3",
               "ok": true,
               "tags": [],
               "tests": [
@@ -693,18 +333,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2239,
+                      "duration": 2358,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:20.184Z",
+                      "startTime": "2026-03-15T16:51:23.365Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-679e7-ers-a-custom-math-node-or-m-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-d4232-ers-into-ranges-such-as-1-3-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -712,13 +352,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-66ac09266abfa9c622e5",
-              "file": "editor/spec-021.spec.ts",
-              "line": 799,
+              "id": "e4d5789c6f77bc921b22-7533727568b8b3558a18",
+              "file": "editor/spec-022.spec.ts",
+              "line": 349,
               "column": 3
             },
             {
-              "title": "cp-016: Neither AcademicEditor nor Studio TiptapEditor registers a track-changes extensi",
+              "title": "cp-007: Citation popover View action opens the reference sidebar through the Zustand sto",
               "ok": true,
               "tags": [],
               "tests": [
@@ -733,18 +373,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2341,
+                      "duration": 2358,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:22.433Z",
+                      "startTime": "2026-03-15T16:51:25.732Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-b8fa1-ers-a-track-changes-extensi-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-1a3d0-bar-through-the-Zustand-sto-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -752,13 +392,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-38b76654f56d9e9dbcf3",
-              "file": "editor/spec-021.spec.ts",
-              "line": 849,
+              "id": "e4d5789c6f77bc921b22-83aa114f1b39e50ce8f7",
+              "file": "editor/spec-022.spec.ts",
+              "line": 399,
               "column": 3
             },
             {
-              "title": "cp-017: Footnote nodes are inline atomic nodes and cannot be edited directly in the docu",
+              "title": "cp-008: Citation popover Remove appears only when the citation node contains more than o",
               "ok": true,
               "tags": [],
               "tests": [
@@ -773,18 +413,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2257,
+                      "duration": 2324,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:24.782Z",
+                      "startTime": "2026-03-15T16:51:28.098Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-a3ce9-edited-directly-in-the-docu-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-c5e3a-n-node-contains-more-than-o-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -792,13 +432,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-89210570df4c19e1621d",
-              "file": "editor/spec-021.spec.ts",
-              "line": 899,
+              "id": "e4d5789c6f77bc921b22-a5709d7f813802e3458a",
+              "file": "editor/spec-022.spec.ts",
+              "line": 449,
               "column": 3
             },
             {
-              "title": "cp-018: New footnote ids are generated in the form fn_timestamp_random",
+              "title": "cp-009: Removing the final reference from a citation chip deletes the entire citation no",
               "ok": true,
               "tags": [],
               "tests": [
@@ -813,18 +453,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2438,
+                      "duration": 2328,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:27.048Z",
+                      "startTime": "2026-03-15T16:51:30.432Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-a1196-he-form-fn-timestamp-random-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-05b9a-etes-the-entire-citation-no-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -832,13 +472,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-448f68aa9641c16e3b56",
-              "file": "editor/spec-021.spec.ts",
-              "line": 949,
+              "id": "e4d5789c6f77bc921b22-e8c1a48930abd8ec327d",
+              "file": "editor/spec-022.spec.ts",
+              "line": 499,
               "column": 3
             },
             {
-              "title": "cp-019: New footnote numbers are assigned as existing footnote count plus one",
+              "title": "cp-010: Citation popover footer action label is Delete citation",
               "ok": true,
               "tags": [],
               "tests": [
@@ -853,18 +493,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2256,
+                      "duration": 2320,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:29.501Z",
+                      "startTime": "2026-03-15T16:51:32.769Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-dc3c2-ing-footnote-count-plus-one-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-69425-on-label-is-Delete-citation-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -872,93 +512,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-e3f76ec59f4a2969b9b5",
-              "file": "editor/spec-021.spec.ts",
-              "line": 999,
+              "id": "e4d5789c6f77bc921b22-246f7258c436c59eed80",
+              "file": "editor/spec-022.spec.ts",
+              "line": 549,
               "column": 3
             },
             {
-              "title": "cp-020: Removing a footnote command deletes the matching node by id",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2256,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:31.765Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-b821e-tes-the-matching-node-by-id-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-aa3f35a7697b1c78a8f1",
-              "file": "editor/spec-021.spec.ts",
-              "line": 1049,
-              "column": 3
-            },
-            {
-              "title": "cp-021: Footnote renumbering runs in a ProseMirror plugin appendTransaction",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2696,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:34.030Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-05b56-or-plugin-appendTransaction-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-9975d84253a06ffa024d",
-              "file": "editor/spec-021.spec.ts",
-              "line": 1099,
-              "column": 3
-            },
-            {
-              "title": "cp-022: Footnote renumbering updates every footnote node whose stored number no longer m",
+              "title": "cp-011: Citation numbering plugin debounces renumbering by 100 ms after editor updates",
               "ok": true,
               "tags": [],
               "tests": [
@@ -978,13 +538,13 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:36.733Z",
+                      "startTime": "2026-03-15T16:51:35.098Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-87e8d-e-stored-number-no-longer-m-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-373fc-100-ms-after-editor-updates-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -992,13 +552,453 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-fc2b073080292f8a26f3",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-75d8a7e5f90e7e88294c",
+              "file": "editor/spec-022.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Citation numbering assigns numbers on order of first appearance in the document",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2284,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:37.403Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-0a206--appearance-in-the-document-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-a3a4515d40b825741572",
+              "file": "editor/spec-022.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Bibliography insert command refuses to insert a second bibliography node when on",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2261,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:39.694Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-7e776-d-bibliography-node-when-on-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-3715cdee011168337643",
+              "file": "editor/spec-022.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Empty bibliography node view text reads References will appear here when you add",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2291,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:41.964Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-384b5-ll-appear-here-when-you-add-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-a05cddf56a5ebb775413",
+              "file": "editor/spec-022.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Bibliography node view heading label is References",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2241,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:44.263Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-abec7-heading-label-is-References-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-174e82528ea4a76a21cc",
+              "file": "editor/spec-022.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Bibliography view uses pre-formatted CSL bibliography entries when bibliographyE",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2293,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:46.512Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-bd454--entries-when-bibliographyE-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-b06931a9a34b2143f3d1",
+              "file": "editor/spec-022.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Bibliography view falls back to Vancouver-style text formatting when CSL bibliog",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2273,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:48.814Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-fbe3f-formatting-when-CSL-bibliog-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-4cef7ac773fb7ebc6295",
+              "file": "editor/spec-022.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Citation dialog default active tab is search every time the modal opens",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2256,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:51.096Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-43486--every-time-the-modal-opens-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-ef372a467fb2dfa1b227",
+              "file": "editor/spec-022.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Citation dialog clears searchQuery selectedIds DOI state search results and sear",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2796,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:53.360Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-7c98c-ate-search-results-and-sear-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-cfbb6a83f9e694dc5a33",
+              "file": "editor/spec-022.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Citation dialog focuses the search input shortly after opening via a 50 ms timeo",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2307,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:56.164Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-1dc35-r-opening-via-a-50-ms-timeo-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-ebbcec4c27ad01f2786e",
+              "file": "editor/spec-022.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: Citation dialog closes on backdrop click",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2327,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:51:58.479Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-174ec-og-closes-on-backdrop-click-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-12292a9baec896dcd735",
+              "file": "editor/spec-022.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Citation dialog closes on Escape",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2291,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:52:00.814Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-fa687-ion-dialog-closes-on-Escape-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-0cef16559e0766c0ac2b",
+              "file": "editor/spec-022.spec.ts",
               "line": 1149,
               "column": 3
             },
             {
-              "title": "cp-023: Footnote marker HTML renders as a sup containing the footnote number",
+              "title": "cp-023: Citation dialog header title is Insert Citation",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1013,18 +1013,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2318,
+                      "duration": 2392,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:39.038Z",
+                      "startTime": "2026-03-15T16:52:03.114Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-79ba3-taining-the-footnote-number-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-d48b6-er-title-is-Insert-Citation-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1032,173 +1032,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-3b43c56409d2b0ba9116",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-4b11f0b96962406ea26d",
+              "file": "editor/spec-022.spec.ts",
               "line": 1199,
               "column": 3
             },
             {
-              "title": "cp-024: Hovering a footnote marker waits 300 ms before showing the tooltip editor",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2242,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:41.365Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-f83f3--showing-the-tooltip-editor-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-17d53fa6b9350e6025f8",
-              "file": "editor/spec-021.spec.ts",
-              "line": 1249,
-              "column": 3
-            },
-            {
-              "title": "cp-025: Footnote tooltip title reads Footnote number",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2306,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:43.617Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-62520-title-reads-Footnote-number-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-a3f03577f92a50715a45",
-              "file": "editor/spec-021.spec.ts",
-              "line": 1299,
-              "column": 3
-            },
-            {
-              "title": "cp-026: Footnote tooltip textarea saves on blur rather than on every keystroke",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2258,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:45.932Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-79469-her-than-on-every-keystroke-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-a819714ef4c68d6a22c7",
-              "file": "editor/spec-021.spec.ts",
-              "line": 1349,
-              "column": 3
-            },
-            {
-              "title": "cp-027: Footnote tooltip delete button title is Remove footnote",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2243,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-15T16:50:48.198Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-ca898-on-title-is-Remove-footnote-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6cff4d11848233f3296f-52b02e3bd0ba6c473b9d",
-              "file": "editor/spec-021.spec.ts",
-              "line": 1399,
-              "column": 3
-            },
-            {
-              "title": "cp-028: FootnoteSection does not render at all when the editor has zero footnotes",
+              "title": "cp-024: Citation dialog tab labels are Your References Library Paste DOIPMID and Manual ",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1218,13 +1058,13 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:50.449Z",
+                      "startTime": "2026-03-15T16:52:05.515Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-f4ca4-e-editor-has-zero-footnotes-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-18830-y-Paste-DOIPMID-and-Manual--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1232,13 +1072,173 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-056562ff3bc4122bc559",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-eb9721dee33a3243a50c",
+              "file": "editor/spec-022.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Citation dialog search-input placeholder is Search references or paste DOIPMID",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2338,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:52:07.815Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-b579a-references-or-paste-DOIPMID-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-77337241492aabe529d0",
+              "file": "editor/spec-022.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Search queries starting with 10 or containing doiorg are treated as DOI identifi",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2299,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:52:10.160Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-2411d-are-treated-as-DOI-identifi-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-99ecc33c38d23798d30f",
+              "file": "editor/spec-022.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Search queries that are 1 to 8 digits only are treated as PMID identifiers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2337,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:52:12.468Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-12c2c-treated-as-PMID-identifiers-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-d6c6f33d72d9202c7913",
+              "file": "editor/spec-022.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Search-tab non-identifier PubMed search waits 350 ms after typing before request",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2237,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T16:52:14.814Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-d1b3f-after-typing-before-request-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e4d5789c6f77bc921b22-a7621dbe17574863f386",
+              "file": "editor/spec-022.spec.ts",
               "line": 1449,
               "column": 3
             },
             {
-              "title": "cp-029: FootnoteSection heading label is exactly Footnotes",
+              "title": "cp-029: Search-tab PubMed request body includes query page 1 pageSize 10 and documentId",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1253,18 +1253,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2258,
+                      "duration": 2395,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:52.746Z",
+                      "startTime": "2026-03-15T16:52:17.060Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-99a38--label-is-exactly-Footnotes-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-2c30c--pageSize-10-and-documentId-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1272,13 +1272,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-1ea7e52cf1e458aeb882",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-23608fceb962df1a37aa",
+              "file": "editor/spec-022.spec.ts",
               "line": 1499,
               "column": 3
             },
             {
-              "title": "cp-030: FootnoteSection sorts footnotes by numeric order before rendering",
+              "title": "cp-030: Search-tab search spinner shows while the PubMed request is pending",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1293,18 +1293,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2258,
+                      "duration": 2289,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:55.015Z",
+                      "startTime": "2026-03-15T16:52:19.464Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-00501-eric-order-before-rendering-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-c770e-e-PubMed-request-is-pending-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1312,13 +1312,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-3054e33b47ada135aeee",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-09c5b6389bf3e9144d73",
+              "file": "editor/spec-022.spec.ts",
               "line": 1549,
               "column": 3
             },
             {
-              "title": "cp-031: Clicking a footnote row in FootnoteSection focuses the editor and moves selectio",
+              "title": "cp-031: Search-tab error fallback string is PubMed search failed Please try again",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1333,18 +1333,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2323,
+                      "duration": 2356,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:57.284Z",
+                      "startTime": "2026-03-15T16:52:21.762Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-27df6-e-editor-and-moves-selectio-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-4b1a0-rch-failed-Please-try-again-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1352,13 +1352,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-d172e343ec29f58e81fe",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-7ab38cc68205f1030c69",
+              "file": "editor/spec-022.spec.ts",
               "line": 1599,
               "column": 3
             },
             {
-              "title": "cp-032: Outline plugin rebuilds the outline on every heading change with a 100 ms deboun",
+              "title": "cp-032: Search-tab empty state text is No PubMed or reference matches found when a typed",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1373,18 +1373,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2223,
+                      "duration": 2294,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:50:59.615Z",
+                      "startTime": "2026-03-15T16:52:24.128Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-c22c0-change-with-a-100-ms-deboun-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-81608--matches-found-when-a-typed-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1392,13 +1392,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-dbdd1fc034d4641b7335",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-870cee5e9e2f6073e38d",
+              "file": "editor/spec-022.spec.ts",
               "line": 1649,
               "column": 3
             },
             {
-              "title": "cp-033: Outline plugin still rebuilds section word counts on non-heading content changes",
+              "title": "cp-033: Search-tab empty state text is No references yet Add one using DOIPMID or manual",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1413,18 +1413,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2226,
+                      "duration": 2307,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:51:01.847Z",
+                      "startTime": "2026-03-15T16:52:26.431Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-8c42b-non-heading-content-changes-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-ccf11-one-using-DOIPMID-or-manual-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1432,13 +1432,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-ae42340af72f7aae0d94",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-ed2b87767526d2697884",
+              "file": "editor/spec-022.spec.ts",
               "line": 1699,
               "column": 3
             },
             {
-              "title": "cp-034: Citation nodes are inline atomic nodes with referenceIds defaulting to an empty ",
+              "title": "cp-034: Search-tab empty state text is No matching references found when local reference",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1453,18 +1453,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2244,
+                      "duration": 2288,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T16:51:04.082Z",
+                      "startTime": "2026-03-15T16:52:28.747Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/editor-spec-021-editor-spe-6b156-Ids-defaulting-to-an-empty--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/editor-spec-022-editor-spe-6e1c2--found-when-local-reference-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1472,8 +1472,8 @@
                   "status": "expected"
                 }
               ],
-              "id": "6cff4d11848233f3296f-8ce53aa4542da3016bb8",
-              "file": "editor/spec-021.spec.ts",
+              "id": "e4d5789c6f77bc921b22-f6556eaf039f1525e684",
+              "file": "editor/spec-022.spec.ts",
               "line": 1749,
               "column": 3
             }
@@ -1484,8 +1484,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-15T16:49:44.697Z",
-    "duration": 81753.707,
+    "startTime": "2026-03-15T16:51:08.024Z",
+    "duration": 83123.008,
     "expected": 35,
     "skipped": 0,
     "unexpected": 0,
