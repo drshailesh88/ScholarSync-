@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState } from "react";
@@ -124,7 +125,7 @@ export function CommentThread({
           {/* Reply input */}
           {replyTo === comment.id && (
             <div className="ml-6 flex gap-2">
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
@@ -153,7 +154,7 @@ export function CommentThread({
 
       {/* New comment input */}
       <form onSubmit={handleAddComment} className="flex gap-2 pt-2 border-t border-border/50">
-        <input
+        <input aria-label="Text input"
           type="text"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
@@ -209,9 +210,8 @@ function CommentBubble({
       {/* Header */}
       <div className="flex items-center gap-2 mb-1.5">
         {comment.userAvatar ? (
-          <Image
+          <Image alt=""
             src={comment.userAvatar}
-            alt=""
             width={20}
             height={20}
             className="w-5 h-5 rounded-full"

@@ -94,6 +94,9 @@ export function SlashCommandOverlay({
       <div className="px-3 py-1 text-[9px] uppercase tracking-wider text-ink-muted font-semibold">
         Insert Block
       </div>
+      {filtered.length === 0 && (
+        <p className="px-3 py-2 text-xs text-ink-muted">No results found.</p>
+      )}
       {filtered.map(({ type, entry }) => (
         <button
           key={type}

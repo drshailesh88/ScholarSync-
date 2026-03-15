@@ -233,7 +233,7 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
       <div key={file.id} className="group relative">
         {renamingId === file.id ? (
           <div className="px-2 py-1">
-            <input
+            <input aria-label="Text input"
               ref={renameInputRef}
               type="text"
               value={renameValue}
@@ -337,8 +337,7 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
         {/* New file input */}
         {showNewFile && (
           <div className="px-1 py-1 flex items-center gap-1.5">
-            <select
-              aria-label="New file type"
+            <select aria-label="New file type"
               value={newFileType}
               onChange={(e) => setNewFileType(e.target.value as NewFileType)}
               className="w-20 px-1.5 py-1 rounded text-[11px] bg-surface-raised border border-brand text-ink focus:outline-none"
@@ -349,7 +348,7 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
                 </option>
               ))}
             </select>
-            <input
+            <input aria-label="Text input"
               ref={newFileInputRef}
               type="text"
               value={newFileName}

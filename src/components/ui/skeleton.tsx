@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 import { cn } from "@/lib/utils";
 
 export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

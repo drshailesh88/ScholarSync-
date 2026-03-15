@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useEffect, useRef, useState, useId } from "react";
@@ -252,9 +253,8 @@ function renderLayout(
               }}
             >
               {imgBlock?.type === "image" && imgBlock.data.url ? (
-                <Image
+                <Image alt={imgBlock.data.alt}
                   src={imgBlock.data.url}
-                  alt={imgBlock.data.alt}
                   width={480}
                   height={360}
                   className="max-w-full max-h-full object-contain"
@@ -802,9 +802,8 @@ function ContentBlockItem({
       return (
         <div className="flex flex-col items-center">
           {block.data.url ? (
-            <Image
+            <Image alt={block.data.alt}
               src={block.data.url}
-              alt={block.data.alt}
               width={400}
               height={128}
               className="max-h-[8em] object-contain rounded-[0.2em]"

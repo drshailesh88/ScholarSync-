@@ -218,7 +218,7 @@ export function JournalBrowser() {
       </div>
 
       <div className="flex gap-2">
-        <select
+        <select aria-label="Select option"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="flex-1 rounded-xl border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
@@ -230,7 +230,7 @@ export function JournalBrowser() {
             </option>
           ))}
         </select>
-        <select
+        <select aria-label="Select option"
           value={specialty}
           onChange={(e) => setSpecialty(e.target.value)}
           className="flex-1 rounded-xl border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"

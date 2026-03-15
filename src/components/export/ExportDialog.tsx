@@ -154,7 +154,7 @@ export function ExportDialog({
           {/* Options */}
           <div className="space-y-3">
             <label className="flex items-center gap-3 cursor-pointer">
-              <input
+              <input aria-label="Checkbox"
                 type="checkbox"
                 checked={includePageNumbers}
                 onChange={(e) => setIncludePageNumbers(e.target.checked)}
@@ -164,7 +164,7 @@ export function ExportDialog({
             </label>
 
             <label className="flex items-center gap-3 cursor-pointer">
-              <input
+              <input aria-label="Checkbox"
                 type="checkbox"
                 checked={doubleSpaced}
                 onChange={(e) => setDoubleSpaced(e.target.checked)}

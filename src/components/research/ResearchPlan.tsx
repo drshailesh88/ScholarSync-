@@ -81,7 +81,7 @@ export function ResearchPlan({
           </button>
         </div>
         {isEditing ? (
-          <textarea
+          <textarea aria-label="Text area"
             value={editedQuery}
             onChange={(e) => setEditedQuery(e.target.value)}
             onBlur={() => {

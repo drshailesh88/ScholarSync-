@@ -638,13 +638,13 @@ export function BackgroundRemovalTool({
             <span style={styles.supportedFormats}>PNG, JPG, WebP up to 10MB</span>
           </div>
 
-          <input
+          <input aria-label="File upload"
             ref={fileInputRef}
             type="file"
             accept="image/png,image/jpeg,image/webp"
             style={styles.hiddenInput}
             onChange={handleFileInputChange}
-          />
+/>
 
           <div style={styles.info}>
             <InfoIcon />
@@ -664,9 +664,8 @@ export function BackgroundRemovalTool({
               <span style={styles.previewLabel}>Original</span>
               {originalPreview && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <img alt="Original"
                   src={originalPreview}
-                  alt="Original"
                   style={styles.previewImage}
                 />
               )}
@@ -675,9 +674,8 @@ export function BackgroundRemovalTool({
               <span style={styles.previewLabel}>Result</span>
               {resultPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <img alt="Background removed"
                   src={resultPreview}
-                  alt="Background removed"
                   style={{ ...styles.previewImage, ...styles.checkerboard }}
                 />
               ) : (

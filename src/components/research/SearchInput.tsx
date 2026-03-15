@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState, useRef, useCallback, KeyboardEvent } from "react";
@@ -56,7 +57,7 @@ export function SearchInput({
           size={14}
           className="absolute left-3 top-3 text-ink-muted"
         />
-        <textarea
+        <textarea aria-label="Text area"
           ref={textareaRef}
           data-research-search-input
           value={query}

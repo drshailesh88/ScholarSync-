@@ -627,7 +627,7 @@ export function ScreeningPDFViewer({
                 </div>
 
                 <div className="relative">
-                  <select
+                  <select aria-label="Select option"
                     value={exclusionDropdown}
                     onChange={(e) =>
                       setExclusionDropdown(e.target.value)
@@ -646,7 +646,7 @@ export function ScreeningPDFViewer({
                   />
                 </div>
 
-                <textarea
+                <textarea aria-label="Text area"
                   value={exclusionFreeText}
                   onChange={(e) => setExclusionFreeText(e.target.value)}
                   placeholder="Additional details (optional)..."

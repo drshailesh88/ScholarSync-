@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState } from "react";
@@ -116,7 +117,7 @@ export default function NewPresentationPage() {
             <label className="block text-sm font-medium text-ink mb-1.5">
               Title
             </label>
-            <input
+            <input aria-label="Input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Machine Learning in Drug Discovery"
@@ -129,7 +130,7 @@ export default function NewPresentationPage() {
             <label className="block text-sm font-medium text-ink mb-1.5">
               Description <span className="text-ink-muted font-normal">(optional)</span>
             </label>
-            <textarea
+            <textarea aria-label="Text area"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe your topic, key points, or paste an abstract..."

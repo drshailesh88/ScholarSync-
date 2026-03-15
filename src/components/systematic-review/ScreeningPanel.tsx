@@ -777,7 +777,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         <div className="space-y-3">
           {criteria.map((criterion, i) => (
             <div key={i} className="flex items-start gap-2">
-              <select
+              <select aria-label="Select option"
                 value={criterion.type}
                 onChange={(e) => updateCriterion(i, "type", e.target.value)}
                 className="px-2 py-2 bg-surface-raised border border-border rounded text-sm text-ink"
@@ -785,7 +785,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                 <option value="inclusion">Inclusion</option>
                 <option value="exclusion">Exclusion</option>
               </select>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={criterion.description}
                 onChange={(e) =>
@@ -1392,7 +1392,7 @@ function ConflictRow({ conflict, isResolving, onResolve, isEven }: ConflictRowPr
                 {" — "}
                 Add reason (optional):
               </span>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}

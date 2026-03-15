@@ -87,7 +87,7 @@ export function BlockInserterMenu({
             size={14}
             className="text-ink-muted shrink-0"
           />
-          <input
+          <input aria-label="Input"
             ref={inputRef}
             value={search}
             onChange={(e) => setSearch(e.target.value)}

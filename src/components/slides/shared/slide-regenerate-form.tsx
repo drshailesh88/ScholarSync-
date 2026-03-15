@@ -70,7 +70,7 @@ export function SlideRegenerateForm({
         >
           How should this slide be different?
         </label>
-        <textarea
+        <textarea aria-label="Regeneration instructions"
           id="slide-regenerate-instruction"
           value={instruction}
           onChange={(event) => onInstructionChange(event.target.value)}

@@ -539,9 +539,8 @@ export function Welcome(): JSX.Element {
                   <div style={styles.recentThumbnail}>
                     {diagram.thumbnail ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <img alt=""
                         src={diagram.thumbnail}
-                        alt=""
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         aria-hidden="true"
                       />

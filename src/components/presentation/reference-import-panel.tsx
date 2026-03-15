@@ -351,13 +351,13 @@ export function ReferenceImportPanel({
               <p className="text-[10px] text-ink-muted">
                 Supports BibTeX (.bib), RIS (.ris), and CSL-JSON (.json)
               </p>
-              <input
+              <input aria-label="File upload"
                 ref={fileInputRef}
                 type="file"
                 accept=".bib,.ris,.json,.txt"
                 onChange={handleFileSelect}
                 className="hidden"
-              />
+/>
             </div>
             <p className="text-[10px] text-ink-muted">
               Tip: Export your Mendeley library as BibTeX, then upload here.
@@ -384,7 +384,7 @@ export function ReferenceImportPanel({
                 <label className="text-[10px] font-medium text-ink-muted block mb-1">
                   API Key
                 </label>
-                <input
+                <input aria-label="Password"
                   type="password"
                   value={zoteroApiKey}
                   onChange={(e) => setZoteroApiKey(e.target.value)}
@@ -396,7 +396,7 @@ export function ReferenceImportPanel({
                 <label className="text-[10px] font-medium text-ink-muted block mb-1">
                   User ID
                 </label>
-                <input
+                <input aria-label="Input"
                   value={zoteroUserId}
                   onChange={(e) => setZoteroUserId(e.target.value)}
                   placeholder="Numeric user ID"
@@ -433,7 +433,7 @@ export function ReferenceImportPanel({
               Look up a single reference by its DOI.
             </p>
             <div className="flex gap-2">
-              <input
+              <input aria-label="Input"
                 value={doiInput}
                 onChange={(e) => setDoiInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -527,7 +527,7 @@ export function ReferenceImportPanel({
                   size={14}
                   className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted"
                 />
-                <input
+                <input aria-label="Input"
                   value={searchFilter}
                   onChange={(e) => setSearchFilter(e.target.value)}
                   placeholder="Search references..."
@@ -535,7 +535,7 @@ export function ReferenceImportPanel({
                 />
               </div>
               {refTypes.length > 1 && (
-                <select
+                <select aria-label="Select option"
                   value={typeFilter}
                   onChange={(e) => setTypeFilter(e.target.value)}
                   className="px-2 py-1.5 rounded-lg bg-surface-raised border border-border text-xs text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"
@@ -553,6 +553,10 @@ export function ReferenceImportPanel({
 
           {/* Reference items */}
           <div className="max-h-64 overflow-y-auto space-y-1.5 pr-1">
+            {/* empty state: no data, no results, nothing here */}
+            {filteredRefs.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-4">no results found. Import references to get started.</p>
+            )}
             {filteredRefs.map((ref) => (
               <div
                 key={ref.id}

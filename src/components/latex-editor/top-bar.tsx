@@ -105,7 +105,7 @@ export function TopBar({
         </Link>
 
         {editingTitle ? (
-          <input
+          <input aria-label="Text input"
             ref={titleInputRef}
             type="text"
             value={projectTitle}

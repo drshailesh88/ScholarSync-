@@ -248,7 +248,7 @@ export function DraftMode() {
           }}
           className="flex gap-2"
         >
-          <input
+          <input aria-label="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Describe content to generate..."

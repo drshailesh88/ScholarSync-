@@ -296,7 +296,7 @@ export function CopilotPanel() {
       {/* Input */}
       <div className="px-4 py-3 border-t border-border-subtle shrink-0">
         <form onSubmit={handleSubmit} className="flex gap-2">
-          <input
+          <input aria-label="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about this paper..."

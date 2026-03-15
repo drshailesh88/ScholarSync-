@@ -357,6 +357,10 @@ export function VersionDiffViewer({
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-3 content-start">
+              {/* empty state: no data, no results, nothing here */}
+              {deckDiff.slideDiffs.length === 0 && (
+                <p className="col-span-2 text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</p>
+              )}
               {deckDiff.slideDiffs.map((diff, idx) => {
                 const slide =
                   diff.status === "added"

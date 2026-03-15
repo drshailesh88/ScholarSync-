@@ -159,7 +159,7 @@ function FieldInput({
   type?: string;
 }) {
   return (
-    <input
+    <input aria-label="Input"
       type={type}
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -181,7 +181,7 @@ function FieldTextarea({
   rows?: number;
 }) {
   return (
-    <textarea
+    <textarea aria-label="Text area"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
@@ -201,7 +201,7 @@ function FieldSelect({
   options: { value: string; label: string }[];
 }) {
   return (
-    <select
+    <select aria-label="Select option"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
@@ -415,7 +415,7 @@ function TextEffectsEditor({
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
           <FieldLabel>Text Shadow</FieldLabel>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={shadowEnabled}
             onChange={(e) => {
@@ -460,7 +460,7 @@ function TextEffectsEditor({
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-ink-muted w-12">X</span>
-                <input
+                <input aria-label="Range slider"
                   type="range"
                   min={-10}
                   max={10}
@@ -476,7 +476,7 @@ function TextEffectsEditor({
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-ink-muted w-12">Y</span>
-                <input
+                <input aria-label="Range slider"
                   type="range"
                   min={-10}
                   max={10}
@@ -492,7 +492,7 @@ function TextEffectsEditor({
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-ink-muted w-12">Blur</span>
-                <input
+                <input aria-label="Range slider"
                   type="range"
                   min={0}
                   max={20}
@@ -529,7 +529,7 @@ function TextEffectsEditor({
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
           <FieldLabel>Text Outline</FieldLabel>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={outlineEnabled}
             onChange={(e) => {
@@ -546,7 +546,7 @@ function TextEffectsEditor({
           <div className="space-y-1 pl-1">
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-ink-muted w-12">Width</span>
-              <input
+              <input aria-label="Range slider"
                 type="range"
                 min={0.5}
                 max={3}
@@ -603,7 +603,7 @@ function TextEffectsEditor({
             {(letterSpacing ?? 0).toFixed(2)}em
           </span>
         </div>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min={-0.05}
           max={0.3}
@@ -821,7 +821,7 @@ function TableEditor({
 
         <label className="flex items-center justify-between rounded-md border border-border px-2 py-2 text-xs text-ink">
           <span>Striped Rows</span>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={data.tableStyle?.stripedRows ?? true}
             onChange={(event) => updateTableStyle({ stripedRows: event.target.checked })}
@@ -904,7 +904,7 @@ function TableEditor({
 
             <label className="flex items-center justify-between rounded-md border border-border px-2 py-2 text-xs text-ink">
               <span>Bold</span>
-              <input
+              <input aria-label="Checkbox"
                 type="checkbox"
                 checked={selectedCell.meta.fontWeight === "bold"}
                 onChange={(event) =>
@@ -1166,7 +1166,7 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
   return (
     <div className="space-y-3">
       <EditorSection title="Image">
-        <input
+        <input aria-label="File upload"
           ref={fileInputRef}
           type="file"
           accept={IMAGE_ACCEPT}
@@ -1280,7 +1280,7 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
         {data.versions && data.versions.length > 0 && (
           <div className="space-y-2">
             <FieldLabel>Previous Versions</FieldLabel>
-            <select
+            <select aria-label="Select option"
               value={selectedVersionIndex}
               onChange={(e) => setSelectedVersionIndex(e.target.value)}
               className="w-full rounded-md border border-border bg-surface px-2 py-1.5 text-xs text-ink"
@@ -1304,7 +1304,7 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
           <p className="text-[11px] text-ink-muted">{data.attribution}</p>
         )}
         <label className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={data.lockAspectRatio ?? false}
             onChange={(e) => update({ lockAspectRatio: e.target.checked })}
@@ -1384,7 +1384,7 @@ function ImageFilterSlider({
         <span className="text-[10px] text-ink-muted tabular-nums">{value}{unit}</span>
       </div>
       <div className="flex items-center gap-1.5">
-        <input
+        <input aria-label="Range slider"
           type="range"
           min={min}
           max={max}
@@ -1431,7 +1431,7 @@ function MathEditor({ block, onUpdate }: { block: MathBlock; onUpdate: (b: Conte
           />
         </div>
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={data.displayMode}
             onChange={(e) => update({ displayMode: e.target.checked })}
@@ -1503,7 +1503,7 @@ function CodeEditor({ block, onUpdate }: { block: CodeBlock; onUpdate: (b: Conte
           />
         </div>
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={data.showLineNumbers ?? false}
             onChange={(e) => update({ showLineNumbers: e.target.checked })}
@@ -1855,7 +1855,7 @@ function ShapeEditor({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <input
+              <input aria-label="Range slider"
                 type="range"
                 min={0}
                 max={12}
@@ -1872,7 +1872,7 @@ function ShapeEditor({
         <div>
           <FieldLabel>Opacity</FieldLabel>
           <div className="flex items-center gap-2">
-            <input
+            <input aria-label="Range slider"
               type="range"
               min={0}
               max={100}
@@ -2152,7 +2152,7 @@ function ToggleEditor({ block, onUpdate }: { block: ToggleBlock; onUpdate: (b: C
           />
         </div>
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={data.defaultOpen ?? false}
             onChange={(e) => update({ defaultOpen: e.target.checked })}
@@ -2310,7 +2310,7 @@ function AnimationSection({
           <>
             <div>
               <FieldLabel>Effect</FieldLabel>
-              <select
+              <select aria-label="Select option"
                 value={anim.type}
                 onChange={(e) => updateAnimation({ type: e.target.value as BlockAnimation["type"] })}
                 className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
@@ -2334,7 +2334,7 @@ function AnimationSection({
               <>
                 <div>
                   <FieldLabel>Trigger</FieldLabel>
-                  <select
+                  <select aria-label="Select option"
                     value={anim.trigger ?? "onClick"}
                     onChange={(e) => updateAnimation({ trigger: e.target.value as AnimationTrigger })}
                     className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
@@ -2386,7 +2386,7 @@ function AnimationSection({
           <>
             <div>
               <FieldLabel>Effect</FieldLabel>
-              <select
+              <select aria-label="Select option"
                 value={anim.emphasis?.type ?? "none"}
                 onChange={(e) => {
                   const emphType = e.target.value as EmphasisAnimationType;
@@ -2462,7 +2462,7 @@ function AnimationSection({
           <>
             <div>
               <FieldLabel>Effect</FieldLabel>
-              <select
+              <select aria-label="Select option"
                 value={anim.exit?.type ?? "none"}
                 onChange={(e) => {
                   const exitType = e.target.value as ExitAnimationType;
@@ -2647,7 +2647,7 @@ function InfographicEditor({
               <div className="flex gap-1 items-center">
                 {/* Color swatch */}
                 <label className="relative shrink-0 w-5 h-5 rounded border border-border cursor-pointer overflow-hidden" style={{ backgroundColor: item.color || "#888" }}>
-                  <input
+                  <input aria-label="Color picker"
                     type="color"
                     value={item.color || "#888888"}
                     onChange={(e) => updateItem(i, { color: e.target.value })}
@@ -2686,7 +2686,7 @@ function InfographicEditor({
               {/* Style toggles */}
               <div className="flex items-center gap-2 text-[10px]">
                 <label className="flex items-center gap-1 cursor-pointer text-text-secondary">
-                  <input
+                  <input aria-label="Checkbox"
                     type="checkbox"
                     checked={!!item.highlighted}
                     onChange={(e) => updateItem(i, { highlighted: e.target.checked })}
@@ -2695,7 +2695,7 @@ function InfographicEditor({
                   Highlight
                 </label>
                 <label className="flex items-center gap-1 cursor-pointer text-text-secondary">
-                  <input
+                  <input aria-label="Checkbox"
                     type="checkbox"
                     checked={!!item.bold}
                     onChange={(e) => updateItem(i, { bold: e.target.checked })}
@@ -2789,7 +2789,7 @@ function MediaEditor({ block, onUpdate }: { block: MediaBlock; onUpdate: (b: Con
 
         {data.source === "upload" ? (
           <div>
-            <input
+            <input aria-label="File upload"
               ref={inputRef}
               type="file"
               accept="video/*,audio/*"
@@ -2858,7 +2858,7 @@ function MediaEditor({ block, onUpdate }: { block: MediaBlock; onUpdate: (b: Con
 
       <EditorSection title="Playback">
         <label className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={data.autoplay ?? false}
             onChange={(e) => update({ autoplay: e.target.checked })}
@@ -2867,7 +2867,7 @@ function MediaEditor({ block, onUpdate }: { block: MediaBlock; onUpdate: (b: Con
           <span className="text-xs text-ink">Autoplay in presenter mode</span>
         </label>
         <label className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={data.loop ?? false}
             onChange={(e) => update({ loop: e.target.checked })}
@@ -2876,7 +2876,7 @@ function MediaEditor({ block, onUpdate }: { block: MediaBlock; onUpdate: (b: Con
           <span className="text-xs text-ink">Loop</span>
         </label>
         <label className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={data.muted ?? false}
             onChange={(e) => update({ muted: e.target.checked })}

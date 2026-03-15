@@ -783,7 +783,7 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
                         </span>
                       </td>
                       <td className="py-2 px-3">
-                        <select
+                        <select aria-label="Select option"
                           value={assignment?.assignedTool ?? "rob2"}
                           onChange={(e) =>
                             handleToolOverride(

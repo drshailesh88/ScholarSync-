@@ -77,7 +77,7 @@ export function SlideCanvasEditor({ isEditing }: SlideCanvasEditorProps) {
             <label className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">
               Title
             </label>
-            <input
+            <input aria-label="Input"
               value={activeSlide.title}
               onChange={(e) => updateSlide(activeSlide.id, { title: e.target.value })}
               className="w-full mt-1 px-3 py-2 rounded-lg bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"
@@ -93,7 +93,7 @@ export function SlideCanvasEditor({ isEditing }: SlideCanvasEditorProps) {
               <label className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">
                 Subtitle
               </label>
-              <input
+              <input aria-label="Input"
                 value={activeSlide.subtitle}
                 onChange={(e) =>
                   updateSlide(activeSlide.id, { subtitle: e.target.value })

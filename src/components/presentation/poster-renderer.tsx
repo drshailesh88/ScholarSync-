@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useEffect, useRef, useState, useId } from "react";
@@ -310,9 +311,8 @@ function PosterBlockItem({
       return (
         <div className="flex flex-col items-center">
           {block.data.url ? (
-            <Image
+            <Image alt={block.data.alt}
               src={block.data.url}
-              alt={block.data.alt}
               width={400}
               height={300}
               className="max-w-full max-h-[12em] object-contain rounded-[0.2em]"

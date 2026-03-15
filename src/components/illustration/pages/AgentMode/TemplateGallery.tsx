@@ -230,7 +230,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {/* Search */}
       <div style={styles.searchWrapper}>
         <span style={styles.searchIcon}><SearchIcon /></span>
-        <input
+        <input aria-label="Search templates..."
           type="text"
           placeholder="Search templates..."
           value={searchQuery}

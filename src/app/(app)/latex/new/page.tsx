@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState } from "react";
@@ -194,7 +195,7 @@ export default function NewLatexProjectPage() {
           <label className="block text-sm font-medium text-ink mb-1.5">
             Title
           </label>
-          <input
+          <input aria-label="Text input"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}

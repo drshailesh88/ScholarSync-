@@ -497,7 +497,7 @@ export function Toolbar({ onOpenShapeGenerator }: ToolbarProps): JSX.Element {
                 {tool.type === ToolType.POLYGON && openShapeConfig === ToolType.POLYGON && (
                   <div style={styles.configPopup}>
                     <p style={styles.configTitle}>Polygon sides</p>
-                    <input
+                    <input aria-label="Number input"
                       type="number"
                       min={3}
                       max={24}
@@ -515,7 +515,7 @@ export function Toolbar({ onOpenShapeGenerator }: ToolbarProps): JSX.Element {
                 {tool.type === ToolType.STAR && openShapeConfig === ToolType.STAR && (
                   <div style={styles.configPopup}>
                     <p style={styles.configTitle}>Star points</p>
-                    <input
+                    <input aria-label="Number input"
                       type="number"
                       min={3}
                       max={24}

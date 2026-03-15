@@ -227,13 +227,13 @@ export function GradientEditor({ value, onChange }: GradientEditorProps): JSX.El
 
       <div style={styles.section}>
         <div style={styles.row}>
-          <input
+          <input aria-label="Color picker"
             type="color"
             value={selectedStop?.color ?? '#000000'}
             onChange={(event) => handleStopColorChange(event.target.value)}
             style={styles.colorInput}
           />
-          <input
+          <input aria-label="Number input"
             type="number"
             min={0}
             max={100}
@@ -271,7 +271,7 @@ export function GradientEditor({ value, onChange }: GradientEditorProps): JSX.El
         <div style={styles.section}>
           <div style={styles.label}>Angle</div>
           <div style={styles.row}>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min={0}
               max={360}
@@ -280,7 +280,7 @@ export function GradientEditor({ value, onChange }: GradientEditorProps): JSX.El
               onChange={(event) => handleAngleChange(Number.parseFloat(event.target.value) || 0)}
               style={{ ...styles.input, padding: 0 }}
             />
-            <input
+            <input aria-label="Number input"
               type="number"
               min={0}
               max={360}
@@ -314,7 +314,7 @@ export function GradientEditor({ value, onChange }: GradientEditorProps): JSX.El
           <div style={styles.label}>Radial Center</div>
           <div style={styles.row}>
             <label style={{ ...styles.label, marginRight: 4, minWidth: 24 }}>CX</label>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min={0}
               max={100}
@@ -323,7 +323,7 @@ export function GradientEditor({ value, onChange }: GradientEditorProps): JSX.El
               onChange={(event) => handleCenterChange('cx', Number.parseFloat(event.target.value) || 0)}
               style={{ ...styles.input, padding: 0 }}
             />
-            <input
+            <input aria-label="Number input"
               type="number"
               min={0}
               max={100}
@@ -335,7 +335,7 @@ export function GradientEditor({ value, onChange }: GradientEditorProps): JSX.El
           </div>
           <div style={styles.row}>
             <label style={{ ...styles.label, marginRight: 4, minWidth: 24 }}>CY</label>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min={0}
               max={100}
@@ -344,7 +344,7 @@ export function GradientEditor({ value, onChange }: GradientEditorProps): JSX.El
               onChange={(event) => handleCenterChange('cy', Number.parseFloat(event.target.value) || 0)}
               style={{ ...styles.input, padding: 0 }}
             />
-            <input
+            <input aria-label="Number input"
               type="number"
               min={0}
               max={100}

@@ -227,7 +227,7 @@ export function ThemeCustomizer() {
       <div className="flex flex-col gap-1.5">
         <label className="flex items-center justify-between gap-2">
           <span className="text-[11px] text-ink-muted">Heading</span>
-          <select
+          <select aria-label="Select option"
             value={themeConfig.headingFontFamily ?? "Inter, sans-serif"}
             onChange={(e) => updateField("headingFontFamily", e.target.value)}
             className="text-[11px] bg-surface border border-border rounded px-1.5 py-1 text-ink w-[140px]"
@@ -241,7 +241,7 @@ export function ThemeCustomizer() {
         </label>
         <label className="flex items-center justify-between gap-2">
           <span className="text-[11px] text-ink-muted">Body</span>
-          <select
+          <select aria-label="Select option"
             value={themeConfig.fontFamily ?? "Inter, sans-serif"}
             onChange={(e) => updateField("fontFamily", e.target.value)}
             className="text-[11px] bg-surface border border-border rounded px-1.5 py-1 text-ink w-[140px]"

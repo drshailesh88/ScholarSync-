@@ -302,7 +302,7 @@ export function FindReplaceDialog() {
       {/* Find input */}
       <div className="space-y-2">
         <div className="relative">
-          <input
+          <input aria-label="Text input"
             ref={findInputRef}
             type="text"
             value={findText}
@@ -313,7 +313,7 @@ export function FindReplaceDialog() {
         </div>
 
         {/* Replace input */}
-        <input
+        <input aria-label="Text input"
           type="text"
           value={replaceText}
           onChange={(e) => setReplaceText(e.target.value)}
@@ -325,7 +325,7 @@ export function FindReplaceDialog() {
       {/* Options row */}
       <div className="flex items-center gap-3 mt-3">
         <label className="flex items-center gap-1.5 text-xs text-ink-muted cursor-pointer select-none">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={caseSensitive}
             onChange={(e) => handleCaseToggle(e.target.checked)}

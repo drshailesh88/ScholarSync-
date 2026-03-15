@@ -505,7 +505,7 @@ export default function ProjectsPage() {
         />
         <div className="relative">
           <FunnelSimple size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
-          <select
+          <select aria-label="Select option"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as ProjectStatus | "all")}
             className="pl-9 pr-4 py-2 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 appearance-none cursor-pointer"
@@ -647,7 +647,7 @@ export default function ProjectsPage() {
         <div className="space-y-4">
           <div>
             <label className="block text-sm text-ink-muted mb-1.5">Project Name</label>
-            <input
+            <input aria-label="Text input"
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
@@ -661,7 +661,7 @@ export default function ProjectsPage() {
           </div>
           <div>
             <label className="block text-sm text-ink-muted mb-1.5">Type</label>
-            <select
+            <select aria-label="Select option"
               value={newType}
               onChange={(e) => setNewType(e.target.value as ProjectType)}
               className="w-full px-4 py-2.5 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none focus:ring-2 focus:ring-brand/40"
@@ -675,7 +675,7 @@ export default function ProjectsPage() {
           </div>
           <div>
             <label className="block text-sm text-ink-muted mb-1.5">Target Journal <span className="text-ink-muted/60">(optional)</span></label>
-            <input
+            <input aria-label="Text input"
               type="text"
               value={newTargetJournal}
               onChange={(e) => setNewTargetJournal(e.target.value)}
@@ -686,7 +686,7 @@ export default function ProjectsPage() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm text-ink-muted mb-1.5">Deadline <span className="text-ink-muted/60">(optional)</span></label>
-              <input
+              <input aria-label="Date"
                 type="date"
                 value={newDeadline}
                 onChange={(e) => setNewDeadline(e.target.value)}
@@ -695,7 +695,7 @@ export default function ProjectsPage() {
             </div>
             <div>
               <label className="block text-sm text-ink-muted mb-1.5">Citation Style</label>
-              <select
+              <select aria-label="Select option"
                 value={newCitationStyle}
                 onChange={(e) => setNewCitationStyle(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none focus:ring-2 focus:ring-brand/40"

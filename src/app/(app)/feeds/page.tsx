@@ -144,7 +144,7 @@ export default function FeedsPage() {
           <label className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer">
             <Upload size={16} />
             Import
-            <input
+            <input aria-label="File upload"
               type="file"
               accept=".opml,.xml"
               className="hidden"

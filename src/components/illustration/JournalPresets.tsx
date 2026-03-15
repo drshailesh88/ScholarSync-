@@ -633,7 +633,7 @@ export function JournalPresets({ onPresetSelect, onExport, onInsertLabel, onInse
       <div style={styles.section}>
         <div style={styles.sectionTitle}>Figure Preparation</div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <select
+          <select aria-label="Figure label style"
             style={{ ...styles.button, flex: 1, textAlign: 'left' }}
             value={figLabelStyle}
             onChange={(e) => setFigLabelStyle(e.target.value as FigureLabelStyle)}
@@ -651,14 +651,14 @@ export function JournalPresets({ onPresetSelect, onExport, onInsertLabel, onInse
           </button>
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <input
+          <input aria-label="Number input"
             type="number"
             style={{ ...styles.button, width: '60px', textAlign: 'center' }}
             value={scaleBarValue}
             min={1}
             onChange={(e) => setScaleBarValue(parseInt(e.target.value) || 1)}
           />
-          <select
+          <select aria-label="Select option"
             style={{ ...styles.button }}
             value={scaleBarUnit}
             onChange={(e) => setScaleBarUnit(e.target.value)}

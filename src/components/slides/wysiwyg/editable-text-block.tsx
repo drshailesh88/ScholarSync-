@@ -548,7 +548,7 @@ export function EditableTextBlock({
             )}
             {isLinkPopoverOpen && (
               <div className="absolute left-1/2 top-full z-50 mt-2 w-72 -translate-x-1/2 rounded-md border border-gray-700 bg-gray-900 p-2 shadow-2xl">
-                <input
+                <input aria-label="Text input"
                   ref={linkInputRef}
                   type="text"
                   value={linkUrl}

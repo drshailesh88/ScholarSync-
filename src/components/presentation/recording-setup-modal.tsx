@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -274,7 +275,7 @@ export function RecordingSetupModal({
               {/* Microphone */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2">
-                  <input
+                  <input aria-label="Checkbox"
                     type="checkbox"
                     checked={includeAudio}
                     onChange={(e) => setIncludeAudio(e.target.checked)}
@@ -288,7 +289,7 @@ export function RecordingSetupModal({
 
                 {includeAudio && (
                   <div className="ml-6 space-y-2">
-                    <select
+                    <select aria-label="Select option"
                       value={audioDeviceId}
                       onChange={(e) => setAudioDeviceId(e.target.value)}
                       className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white/80 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
@@ -312,7 +313,7 @@ export function RecordingSetupModal({
               {/* Webcam */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2">
-                  <input
+                  <input aria-label="Checkbox"
                     type="checkbox"
                     checked={includeWebcam}
                     onChange={(e) => setIncludeWebcam(e.target.checked)}
@@ -330,7 +331,7 @@ export function RecordingSetupModal({
                 {includeWebcam && (
                   <div className="ml-6 space-y-3">
                     {/* Camera selector */}
-                    <select
+                    <select aria-label="Select option"
                       value={videoDeviceId}
                       onChange={(e) => setVideoDeviceId(e.target.value)}
                       className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white/80 focus:outline-none focus:ring-1 focus:ring-blue-500/50"

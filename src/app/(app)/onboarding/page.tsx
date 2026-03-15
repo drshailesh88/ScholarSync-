@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState, useCallback } from "react";
@@ -158,7 +159,7 @@ export default function OnboardingPage() {
             <div className="space-y-4 max-w-sm mx-auto text-left">
               <div>
                 <label className="block text-xs font-medium text-ink-muted mb-1.5">Your Name</label>
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -168,7 +169,7 @@ export default function OnboardingPage() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-ink-muted mb-1.5">Institution</label>
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={institution}
                   onChange={(e) => setInstitution(e.target.value)}

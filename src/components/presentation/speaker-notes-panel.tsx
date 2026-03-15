@@ -11,7 +11,7 @@ export function SpeakerNotesPanel({ notes, onChange }: SpeakerNotesPanelProps) {
       <label className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">
         Speaker Notes
       </label>
-      <textarea
+      <textarea aria-label="Text area"
         value={notes}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Add speaker notes for this slide..."

@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState } from "react";
@@ -82,7 +83,7 @@ export function EvidenceNotePopover({
             <label className="text-xs text-ink-muted block mb-1">
               Section
             </label>
-            <select
+            <select aria-label="Select option"
               value={targetSection}
               onChange={(e) =>
                 setTargetSection(e.target.value as TargetSection)
@@ -102,7 +103,7 @@ export function EvidenceNotePopover({
             <label className="text-xs text-ink-muted block mb-1">
               Your note (optional)
             </label>
-            <textarea
+            <textarea aria-label="Text area"
               value={userNote}
               onChange={(e) => setUserNote(e.target.value)}
               placeholder="Why is this important?"

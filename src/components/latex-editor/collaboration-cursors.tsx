@@ -40,9 +40,8 @@ export function CollaboratorAvatars() {
               title={user.name}
             >
               {user.avatar ? (
-                <Image
+                <Image alt={user.name}
                   src={user.avatar}
-                  alt={user.name}
                   width={32}
                   height={32}
                   className="w-full h-full object-cover"

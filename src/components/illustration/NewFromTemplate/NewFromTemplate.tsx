@@ -610,7 +610,7 @@ export function NewFromTemplate({
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
               </span>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

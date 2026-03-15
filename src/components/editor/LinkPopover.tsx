@@ -106,7 +106,7 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
     >
       {isEditing ? (
         <div className="flex items-center gap-1 p-1.5">
-          <input
+          <input aria-label="Input"
             ref={inputRef}
             value={url}
             onChange={(e) => setUrl(e.target.value)}

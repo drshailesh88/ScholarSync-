@@ -342,7 +342,7 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
               {studies.map((study) => (
                 <tr key={study.id} className="border-t border-ink/5">
                   <td className="py-1.5 pr-2">
-                    <input
+                    <input aria-label="Text input"
                       type="text"
                       value={study.studyId}
                       onChange={(e) =>
@@ -353,7 +353,7 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
                     />
                   </td>
                   <td className="py-1.5 pr-2">
-                    <input
+                    <input aria-label="Text input"
                       type="text"
                       value={study.treatment1}
                       onChange={(e) =>
@@ -364,7 +364,7 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
                     />
                   </td>
                   <td className="py-1.5 pr-2">
-                    <input
+                    <input aria-label="Text input"
                       type="text"
                       value={study.treatment2}
                       onChange={(e) =>
@@ -375,7 +375,7 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
                     />
                   </td>
                   <td className="py-1.5 pr-2">
-                    <input
+                    <input aria-label="Number input"
                       type="number"
                       step="any"
                       value={study.effect}
@@ -387,7 +387,7 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
                     />
                   </td>
                   <td className="py-1.5 pr-2">
-                    <input
+                    <input aria-label="Number input"
                       type="number"
                       step="any"
                       min="0.001"
@@ -519,7 +519,7 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
                     <label className="text-[11px] text-ink/60 font-medium">
                       Reference:
                     </label>
-                    <select
+                    <select aria-label="Select option"
                       value={referenceTreatment || result.treatments[0]}
                       onChange={(e) => setReferenceTreatment(e.target.value)}
                       className="text-[11px] bg-surface-2 border border-ink/10 rounded px-2 py-1 text-ink"

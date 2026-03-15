@@ -82,7 +82,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSend, onStop }) => {
   return (
     <div style={styles.container}>
       <div style={styles.wrapper}>
-        <textarea
+        <textarea aria-label="Agent prompt input"
           ref={textareaRef}
           value={value}
           onChange={handleChange}
@@ -91,7 +91,6 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSend, onStop }) => {
           style={styles.textarea}
           disabled={isLoading}
           rows={1}
-          aria-label="Agent prompt input"
         />
         {isLoading ? (
           <button

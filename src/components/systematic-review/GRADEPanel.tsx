@@ -314,7 +314,7 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
         <div className="flex items-center gap-3 flex-wrap">
           {/* Outcome input or selector */}
           {outcomeOptions.length > 0 ? (
-            <select
+            <select aria-label="Select option"
               value={selectedAnalysisId ?? ""}
               onChange={(e) => {
                 const val = e.target.value;
@@ -346,7 +346,7 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
             </select>
           ) : null}
 
-          <input
+          <input aria-label="Text input"
             type="text"
             value={selectedOutcome}
             onChange={(e) => {

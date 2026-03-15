@@ -83,7 +83,7 @@ export function NotebookPasswordGate({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <input
+            <input aria-label="Password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

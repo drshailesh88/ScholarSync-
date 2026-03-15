@@ -35,7 +35,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
           Date Range
         </label>
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Number input"
             type="number"
             value={filters.dateFrom}
             onChange={(e) =>
@@ -46,7 +46,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
             className="w-20 px-2 py-1 rounded bg-surface border border-border text-ink text-xs focus:outline-none focus:ring-1 focus:ring-brand/40"
           />
           <span className="text-xs text-ink-muted">to</span>
-          <input
+          <input aria-label="Number input"
             type="number"
             value={filters.dateTo}
             onChange={(e) =>
@@ -83,7 +83,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
 
       {/* Full text only */}
       <div className="flex items-center gap-2">
-        <input
+        <input aria-label="Full text only"
           type="checkbox"
           id="fullTextOnly"
           checked={filters.fullTextOnly}
@@ -102,7 +102,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
         </label>
         <div className="flex gap-2">
           <label className="flex items-center gap-1 text-xs text-ink-muted">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={filters.sources.includes("pubmed")}
               onChange={(e) => {
@@ -116,7 +116,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
             PubMed
           </label>
           <label className="flex items-center gap-1 text-xs text-ink-muted">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={filters.sources.includes("semantic_scholar")}
               onChange={(e) => {

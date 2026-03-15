@@ -889,7 +889,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
           {/* Data Input */}
           <div style={styles.section}>
             <span style={styles.sectionTitle}>Data (CSV format)</span>
-            <textarea
+            <textarea aria-label="Text area"
               style={styles.textarea}
               value={csvData}
               onChange={(e) => setCsvData(e.target.value)}
@@ -909,7 +909,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
         <div style={styles.row}>
           <div style={styles.column}>
             <label style={styles.label}>Title</label>
-            <input
+            <input aria-label="Text input"
               type="text"
               style={styles.input}
               value={chartState.title}
@@ -921,7 +921,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
         <div style={styles.row}>
           <div style={styles.column}>
             <label style={styles.label}>X Axis Label</label>
-            <input
+            <input aria-label="X Axis Label"
               type="text"
               style={styles.input}
               value={chartState.xAxisLabel}
@@ -930,7 +930,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
           </div>
           <div style={styles.column}>
             <label style={styles.label}>Y Axis Label</label>
-            <input
+            <input aria-label="Y Axis Label"
               type="text"
               style={styles.input}
               value={chartState.yAxisLabel}
@@ -942,7 +942,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
         <div style={styles.row}>
           <div style={styles.column}>
             <label style={styles.label}>Width (px)</label>
-            <input
+            <input aria-label="Number input"
               type="number"
               style={styles.input}
               value={chartState.width}
@@ -953,7 +953,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
           </div>
           <div style={styles.column}>
             <label style={styles.label}>Height (px)</label>
-            <input
+            <input aria-label="Number input"
               type="number"
               style={styles.input}
               value={chartState.height}
@@ -967,7 +967,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
         {/* Checkboxes */}
         <div style={styles.row}>
           <label style={styles.checkbox}>
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               style={styles.checkboxInput}
               checked={chartState.showLegend}
@@ -976,7 +976,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
             <span style={styles.label}>Show Legend</span>
           </label>
           <label style={styles.checkbox}>
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               style={styles.checkboxInput}
               checked={chartState.showGrid}

@@ -88,6 +88,10 @@ export function SlideOutlineSidebar({
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-2">
+        {/* empty state: no data, no results, nothing here */}
+        {slides.length === 0 && (
+          <p className="text-xs text-ink-muted text-center py-4">nothing here yet. Click + to get started.</p>
+        )}
         {slides.map((slide, idx) => {
           const counts = commentCounts?.get(slide.id);
           const hasUnresolved = (counts?.unresolved ?? 0) > 0;

@@ -302,7 +302,7 @@ export default function EditorPage() {
           </Link>
 
           <div className="flex items-center gap-2">
-            <input
+            <input aria-label="Text input"
               type="text"
               value={documentTitle}
               onChange={(e) => handleTitleChange(e.target.value)}

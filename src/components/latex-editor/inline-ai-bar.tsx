@@ -156,7 +156,7 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
 
         {/* Input bar */}
         <form onSubmit={handleFormSubmit} className="flex items-center gap-2 p-2">
-          <input
+          <input aria-label="Text input"
             ref={inputRef}
             type="text"
             value={instruction}

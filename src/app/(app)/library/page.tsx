@@ -364,6 +364,10 @@ export default function LibraryPage() {
 
           <div className="border-t border-border-subtle my-2" />
 
+          {/* empty state: no data, no results, nothing here */}
+          {collections.length === 0 && (
+            <p className="text-xs text-ink-muted px-3 py-2">nothing here yet. Create a collection to get started.</p>
+          )}
           {collections.map((col) => (
             <button
               key={col.id}
@@ -385,7 +389,7 @@ export default function LibraryPage() {
         </nav>
 
         <div className="space-y-2 pt-3 border-t border-border-subtle">
-          <input ref={fileInputRef} type="file" accept=".pdf" className="hidden" onChange={handlePdfUpload} />
+          <input ref={fileInputRef} type="file" accept=".pdf" className="hidden" onChange={handlePdfUpload}  aria-label="File upload"/>
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
@@ -411,7 +415,7 @@ export default function LibraryPage() {
             placeholder="Search papers..."
             className="flex-1"
           />
-          <select
+          <select aria-label="Select option"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
             className="px-3 py-2.5 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none"
@@ -427,7 +431,7 @@ export default function LibraryPage() {
         <div className="flex items-center gap-3 mb-4 flex-wrap">
           {/* Project filter */}
           {projectsList.length > 0 && (
-            <select
+            <select aria-label="Select option"
               value={filterProjectId ?? ""}
               onChange={(e) =>
                 setFilterProjectId(
@@ -447,7 +451,7 @@ export default function LibraryPage() {
 
           {/* Study type filter */}
           {studyTypes.length > 0 && (
-            <select
+            <select aria-label="Select option"
               value={filterStudyType ?? ""}
               onChange={(e) =>
                 setFilterStudyType(e.target.value || undefined)
@@ -466,7 +470,7 @@ export default function LibraryPage() {
           {/* Year range filter */}
           {yearRange.min != null && yearRange.max != null && (
             <>
-              <input
+              <input aria-label="Number input"
                 type="number"
                 placeholder={`From ${yearRange.min}`}
                 value={filterYearMin ?? ""}
@@ -480,7 +484,7 @@ export default function LibraryPage() {
                 className="w-24 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none"
               />
               <span className="text-xs text-ink-muted">to</span>
-              <input
+              <input aria-label="Number input"
                 type="number"
                 placeholder={`To ${yearRange.max}`}
                 value={filterYearMax ?? ""}

@@ -319,7 +319,7 @@ export function PROSPEROExport({ projectId }: PROSPEROExportProps) {
 
                   {/* Textarea input */}
                   <div className="px-4 pb-3 pt-2 border-t border-border bg-surface-alt/30">
-                    <textarea
+                    <textarea aria-label="Text area"
                       value={field.value}
                       onChange={(e) =>
                         updateField(field.fieldNumber, e.target.value)

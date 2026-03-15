@@ -973,7 +973,7 @@ export function PresenterMode({
                 }}
                 className="flex items-center gap-2"
               >
-                <input
+                <input aria-label="Text input"
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
@@ -985,7 +985,6 @@ export function PresenterMode({
                     if (digits) bumpJumpBufferTimeout();
                   }}
                   placeholder="Slide #"
-                  aria-label="Jump to slide"
                   className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/60"
                 />
                 <button

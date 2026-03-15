@@ -290,7 +290,7 @@ export function DNAHelixPanel({
       <div style={styles.section}>
         <label style={styles.label}>Length (px)</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="50"
             max="500"
@@ -308,7 +308,7 @@ export function DNAHelixPanel({
       <div style={styles.section}>
         <label style={styles.label}>Base Pairs</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="5"
             max="50"
@@ -326,7 +326,7 @@ export function DNAHelixPanel({
       <div style={styles.section}>
         <label style={styles.label}>Twist Angle (degrees per bp)</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="20"
             max="60"
@@ -385,7 +385,7 @@ export function DNAHelixPanel({
       <div style={styles.section}>
         <label style={styles.label}>Backbone Color</label>
         <div style={styles.colorPickerWrapper}>
-          <input
+          <input aria-label="Color picker"
             type="color"
             value={strokeColor}
             onChange={(e) => setStrokeColor(e.target.value)}
@@ -402,7 +402,7 @@ export function DNAHelixPanel({
           <div style={styles.colorPickers}>
             {(['a', 't', 'g', 'c'] as const).map((base) => (
               <div key={base} style={styles.colorPickerWrapper}>
-                <input
+                <input aria-label="Color picker"
                   type="color"
                   value={baseColors[base]}
                   onChange={(e) => handleColorChange(base, e.target.value)}

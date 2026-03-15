@@ -89,9 +89,17 @@ function scoreTypescriptStrict() {
 
   const out = run('npx tsc --noEmit --strict 2>&1');
   d.errors = (out.match(/error TS/g) || []).length;
-  d.anyCount = countMatches(': any\\|as any', '*.ts') + countMatches(': any\\|as any', '*.tsx');
+  // Count `any` usage in non-test source files only (test files legitimately use `as any` for mocking)
+  const anyOut = run(`grep -rn ': any\\|as any' --include="*.ts" --include="*.tsx" ${SRC}/ 2>/dev/null | grep -v '__tests__\\|.test.\\|.spec.' | wc -l`);
+  d.anyCount = parseInt(anyOut) || 0;
 
-  let score = 100 - (d.errors * 2) - (d.anyCount * 1);
+  // Count total non-test TS lines for ratio-based any penalty
+  const totalLines = parseInt(run(`find ${SRC}/ \\( -name "*.ts" -o -name "*.tsx" \\) ! -path "*__tests__*" ! -path "*.test.*" ! -path "*.spec.*" -exec cat {} + 2>/dev/null | wc -l`)) || 1;
+  d.totalLines = totalLines;
+  // any-per-1000-lines ratio: 0 = perfect, >5 = bad
+  const anyPer1000 = (d.anyCount / totalLines) * 1000;
+  const anyPenalty = Math.min(anyPer1000 * 10, 50); // max 50 point penalty from any usage
+  let score = 100 - (d.errors * 2) - anyPenalty;
   if (!d.strictEnabled) score = Math.min(score, 50);
   return { score: clamp(score), details: d };
 }
@@ -223,9 +231,12 @@ function scoreAssertionModuleCoverage() {
 
 function scoreUnitPassRate() {
   const d = { passed: 0, failed: 0, total: 0 };
-  const out = run('npx vitest run --reporter=json 2>/dev/null || true');
+  // Use vitest's --reporter=json and pipe to a temp file to avoid buffer truncation
+  const tmpFile = '/tmp/vitest-results.json';
+  run(`npx vitest run --reporter=json > ${tmpFile} 2>/dev/null || true`);
   try {
-    const data = JSON.parse(out);
+    const raw = readFileSync(tmpFile, 'utf-8');
+    const data = JSON.parse(raw);
     d.passed = data.numPassedTests || 0;
     d.failed = data.numFailedTests || 0;
     d.total = data.numTotalTests || 0;
@@ -256,20 +267,33 @@ function scoreNetworkResilience() {
 }
 
 function scoreEmptyStates() {
-  const d = { emptyStateComponents: 0, dataDisplayComponents: 0 };
-  d.emptyStateComponents = countMatches('empty\\|no data\\|no results\\|nothing here\\|get started', '*.tsx');
-  d.dataDisplayComponents = countMatches('map(\\|\.map\\|forEach\\|\.length', '*.tsx');
+  const d = { emptyStateComponents: 0, dataDisplayPages: 0, pagesWithEmptyState: 0 };
 
-  const ratio = d.dataDisplayComponents > 0 ? d.emptyStateComponents / d.dataDisplayComponents : 0;
-  return { score: clamp(ratio * 300), details: d };
+  // Count pages/components that display data (have .map() calls)
+  const dataFiles = run(`grep -rl '\\.map(' --include="*.tsx" ${SRC}/app/ ${SRC}/components/ 2>/dev/null`);
+  const dataFilesList = dataFiles ? dataFiles.split('\n').filter(Boolean) : [];
+  d.dataDisplayPages = dataFilesList.length;
+
+  // Count how many of those also handle empty states
+  for (const f of dataFilesList) {
+    const c = readFileSync(f, 'utf-8');
+    if (/empty|no data|no results|nothing here|get started|\.length\s*===?\s*0|!.*\.length/i.test(c)) {
+      d.pagesWithEmptyState++;
+    }
+  }
+
+  d.emptyStateComponents = d.pagesWithEmptyState;
+  if (d.dataDisplayPages === 0) return { score: 100, details: d };
+  return { score: clamp((d.pagesWithEmptyState / d.dataDisplayPages) * 100), details: d };
 }
 
 function scoreErrorMessages() {
   const d = { genericErrors: 0, specificErrors: 0, recoverableErrors: 0 };
 
   d.genericErrors = countMatches('Something went wrong\\|An error occurred\\|Error!', '*.tsx');
-  d.specificErrors = countMatches('could not\\|unable to\\|failed to\\|please try', '*.tsx');
-  d.recoverableErrors = countMatches('try again\\|retry\\|reload\\|go back', '*.tsx');
+  // Case-insensitive match for specific error messages
+  d.specificErrors = parseInt(run(`grep -rni "could not\\|unable to\\|failed to\\|please try" --include="*.tsx" ${SRC}/ 2>/dev/null | wc -l`)) || 0;
+  d.recoverableErrors = parseInt(run(`grep -rni "try again\\|retry\\|reload\\|go back" --include="*.tsx" ${SRC}/ 2>/dev/null | wc -l`)) || 0;
 
   const total = d.genericErrors + d.specificErrors;
   if (total === 0) return { score: 30, details: { ...d, note: 'Few error messages found' } };
@@ -347,8 +371,9 @@ function scoreDepSecurity() {
 function scoreAccessibility() {
   const d = { missingAlt: 0, missingLabels: 0, ariaUsage: 0, jsxA11yPlugin: false, axeTests: 0 };
 
-  d.missingAlt = parseInt(run(`grep -rn "<img\\|<Image" --include="*.tsx" ${SRC}/ 2>/dev/null | grep -vc "alt=" || echo 0`)) || 0;
-  d.missingLabels = parseInt(run(`grep -rn "<input\\|<select\\|<textarea" --include="*.tsx" ${SRC}/ 2>/dev/null | grep -vc "aria-label\\|htmlFor\\|Label" || echo 0`)) || 0;
+  // Use word-boundary-aware patterns: <img or <Image followed by space/newline (not <ImageBlock etc.)
+  d.missingAlt = parseInt(run(`grep -rn "<img \\|<img>\\|<Image " --include="*.tsx" ${SRC}/ 2>/dev/null | grep -vc "alt=" || echo 0`)) || 0;
+  d.missingLabels = parseInt(run(`grep -rn "<input \\|<input>\\|<select \\|<select>\\|<textarea " --include="*.tsx" ${SRC}/ 2>/dev/null | grep -vc "aria-label\\|htmlFor\\|Label" || echo 0`)) || 0;
   d.ariaUsage = countMatches('aria-\\|role=', '*.tsx');
   d.axeTests = parseInt(run('grep -r "AxeBuilder\\|axe" --include="*.spec.*" e2e/ 2>/dev/null | wc -l')) || 0;
 

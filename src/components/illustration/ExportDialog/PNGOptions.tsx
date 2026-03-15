@@ -190,14 +190,14 @@ export function PNGOptions({ settings, onChange }: PNGOptionsProps): JSX.Element
           <span>Quality</span>
           <span style={styles.qualityValue}>{settings.quality}%</span>
         </label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="1"
           max="100"
           value={settings.quality}
           onChange={handleQualityChange}
           style={styles.slider}
-        />
+/>
         <div
           style={{
             display: 'flex',

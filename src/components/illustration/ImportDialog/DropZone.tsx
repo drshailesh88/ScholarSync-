@@ -291,9 +291,8 @@ export function DropZone({
           <div style={styles.thumbnail}>
             {selectedFile.preview ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <img alt="Preview"
                 src={selectedFile.preview}
-                alt="Preview"
                 style={styles.thumbnailImage}
               />
             ) : (
@@ -350,13 +349,13 @@ export function DropZone({
 
         <span style={styles.hint}>SVG, PNG, JPEG, or GIF up to 50MB</span>
 
-        <input
+        <input aria-label="File upload"
           ref={fileInputRef}
           type="file"
           accept={ACCEPTED_EXTENSIONS.join(',')}
           style={styles.hiddenInput}
           onChange={handleFileInputChange}
-        />
+/>
       </div>
 
       {/* Error Message */}

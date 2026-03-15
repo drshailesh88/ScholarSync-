@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState } from "react";
@@ -202,7 +203,7 @@ function BlockEditor({
       return (
         <div>
           {isActive && (
-            <select
+            <select aria-label="Select option"
               value={block.data.style ?? "body"}
               onChange={(e) => onChange({ ...block, data: { ...block.data, style: e.target.value as "title" | "subtitle" | "body" | "caption" } })}
               className="text-[10px] mb-1 bg-transparent border border-border rounded px-1 py-0.5 text-ink-muted"
@@ -231,7 +232,7 @@ function BlockEditor({
         <div>
           {isActive && (
             <label className="flex items-center gap-1 text-[10px] text-ink-muted mb-1">
-              <input
+              <input aria-label="Checkbox"
                 type="checkbox"
                 checked={block.data.ordered ?? false}
                 onChange={(e) => onChange({ ...block, data: { ...block.data, ordered: e.target.checked } })}
@@ -313,13 +314,13 @@ function BlockEditor({
           />
           {isActive && (
             <div className="mt-1 flex gap-2">
-              <input
+              <input aria-label="Input"
                 value={block.data.doi ?? ""}
                 onChange={(e) => onChange({ ...block, data: { ...block.data, doi: e.target.value } })}
                 className="flex-1 text-[10px] px-1.5 py-0.5 rounded border border-border bg-transparent text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/30"
                 placeholder="DOI (e.g., 10.1000/xyz123)"
               />
-              <input
+              <input aria-label="Input"
                 value={block.data.year?.toString() ?? ""}
                 onChange={(e) => onChange({ ...block, data: { ...block.data, year: e.target.value ? parseInt(e.target.value) : undefined } })}
                 className="w-16 text-[10px] px-1.5 py-0.5 rounded border border-border bg-transparent text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/30"
@@ -421,7 +422,7 @@ function BlockEditor({
             <span className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">LaTeX Math</span>
             {isActive && (
               <label className="flex items-center gap-1 text-[10px] text-ink-muted ml-auto">
-                <input
+                <input aria-label="Checkbox"
                   type="checkbox"
                   checked={block.data.displayMode}
                   onChange={(e) => onChange({ ...block, data: { ...block.data, displayMode: e.target.checked } })}
@@ -431,7 +432,7 @@ function BlockEditor({
               </label>
             )}
           </div>
-          <textarea
+          <textarea aria-label="Text area"
             value={block.data.expression}
             onChange={(e) => onChange({ ...block, data: { ...block.data, expression: e.target.value } })}
             className="w-full px-2 py-1.5 rounded border border-border bg-surface-raised text-xs font-mono text-ink focus:outline-none focus:ring-1 focus:ring-brand/30 resize-none"
@@ -456,7 +457,7 @@ function BlockEditor({
             <TreeStructure size={12} className="text-ink-muted" />
             <span className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">Mermaid Diagram</span>
             {isActive && (
-              <select
+              <select aria-label="Select option"
                 value={block.data.diagramType}
                 onChange={(e) => onChange({ ...block, data: { ...block.data, diagramType: e.target.value as typeof block.data.diagramType } })}
                 className="text-[10px] ml-auto bg-transparent border border-border rounded px-1 py-0.5 text-ink-muted"
@@ -471,7 +472,7 @@ function BlockEditor({
               </select>
             )}
           </div>
-          <textarea
+          <textarea aria-label="Text area"
             value={block.data.syntax}
             onChange={(e) => onChange({ ...block, data: { ...block.data, syntax: e.target.value } })}
             className="w-full px-2 py-1.5 rounded border border-border bg-surface-raised text-xs font-mono text-ink focus:outline-none focus:ring-1 focus:ring-brand/30 resize-none"
@@ -488,7 +489,7 @@ function BlockEditor({
             <Code size={12} className="text-ink-muted" />
             <span className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">Code</span>
             {isActive && (
-              <input
+              <input aria-label="Input"
                 value={block.data.language}
                 onChange={(e) => onChange({ ...block, data: { ...block.data, language: e.target.value } })}
                 className="text-[10px] ml-auto w-20 bg-transparent border border-border rounded px-1 py-0.5 text-ink-muted"
@@ -496,7 +497,7 @@ function BlockEditor({
               />
             )}
           </div>
-          <textarea
+          <textarea aria-label="Text area"
             value={block.data.code}
             onChange={(e) => onChange({ ...block, data: { ...block.data, code: e.target.value } })}
             className="w-full px-2 py-1.5 rounded border border-border text-xs font-mono text-ink focus:outline-none focus:ring-1 focus:ring-brand/30 resize-none"
@@ -519,7 +520,7 @@ function BlockEditor({
           <div className="flex items-center gap-2 mb-1">
             <Megaphone size={12} style={{ color: getCalloutColor(block.data.type, theme) }} />
             {isActive && (
-              <select
+              <select aria-label="Select option"
                 value={block.data.type}
                 onChange={(e) => onChange({ ...block, data: { ...block.data, type: e.target.value as typeof block.data.type } })}
                 className="text-[10px] bg-transparent border border-border rounded px-1 py-0.5 text-ink-muted"
@@ -569,13 +570,13 @@ function BlockEditor({
             </div>
             {isActive && (
               <div className="space-y-1">
-                <input
+                <input aria-label="Input"
                   value={block.data.ci ?? ""}
                   onChange={(e) => onChange({ ...block, data: { ...block.data, ci: e.target.value } })}
                   className="w-full text-[10px] px-1.5 py-0.5 rounded border border-border bg-transparent text-ink-muted"
                   placeholder="95% CI"
                 />
-                <input
+                <input aria-label="Input"
                   value={block.data.pValue ?? ""}
                   onChange={(e) => onChange({ ...block, data: { ...block.data, pValue: e.target.value } })}
                   className="w-full text-[10px] px-1.5 py-0.5 rounded border border-border bg-transparent text-ink-muted"
@@ -641,7 +642,7 @@ function BlockEditor({
                         }}
                         className="text-xs font-medium flex-1"
                       />
-                      <input
+                      <input aria-label="Input"
                         value={entry.date ?? ""}
                         onChange={(e) => {
                           const entries = [...block.data.entries];

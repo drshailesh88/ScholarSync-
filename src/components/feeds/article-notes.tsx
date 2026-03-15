@@ -83,7 +83,7 @@ export function ArticleNotes({ articleId }: ArticleNotesProps) {
         )}
       </div>
 
-      <textarea
+      <textarea aria-label="Text area"
         value={localValue}
         onChange={(e) => handleChange(e.target.value)}
         onBlur={handleBlur}

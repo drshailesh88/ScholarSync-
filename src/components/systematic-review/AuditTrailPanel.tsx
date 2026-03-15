@@ -315,7 +315,7 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
       {/* Filter bar */}
       <div className="flex items-center gap-3">
         <div className="relative">
-          <select
+          <select aria-label="Select option"
             value={actionFilter}
             onChange={(e) => handleActionChange(e.target.value)}
             className={cn(

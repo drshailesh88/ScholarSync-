@@ -242,7 +242,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
             <label className="text-xs text-ink-muted font-medium block mb-1">
               Search Query
             </label>
-            <textarea
+            <textarea aria-label="Text area"
               value={newSearchString}
               onChange={(e) => setNewSearchString(e.target.value)}
               placeholder="Enter PubMed search query..."

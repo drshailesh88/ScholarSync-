@@ -172,7 +172,7 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
       setData(json);
       setIsGenerated(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : "Unable to load evidence data. Please try again.");
     } finally {
       setIsLoading(false);
     }
