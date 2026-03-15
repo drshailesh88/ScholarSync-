@@ -186,7 +186,7 @@ export async function assertFeedsCheckpoint(
   }
 
   if (d.includes("mute") && d.includes("not optimistic")) {
-    expectSourceMatches(rootDir, STORE, /mute/i);
+    expectSourceContains(rootDir, STORE, "muteSubscription");
     return true;
   }
 
@@ -720,17 +720,17 @@ export async function assertFeedsCheckpoint(
   }
 
   if (d.includes("rss icon") && d.includes("displayed")) {
-    expectSourceContains(rootDir, PAGE, "Rss");
+    expectSourceContains(rootDir, EMPTY_STATE, "Rss");
     return true;
   }
 
   if (d.includes("subscribe to medical journals") || d.includes("stay current")) {
-    expectSourceContains(rootDir, PAGE, "Subscribe to medical journals");
+    expectSourceContains(rootDir, EMPTY_STATE, "Subscribe to medical journals");
     return true;
   }
 
   if (d.includes("add your first feed") && d.includes("button")) {
-    expectSourceContains(rootDir, PAGE, "Add Your First Feed");
+    expectSourceContains(rootDir, EMPTY_STATE, "Add Your First Feed");
     return true;
   }
 

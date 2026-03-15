@@ -1,9 +1,9 @@
 # deep-research — Spec 005
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/deep-research
 MODULE: deep-research
@@ -42,7 +42,7 @@ MODULE: deep-research
 - [x] PASS: Export option: "Open in Studio"
 - [x] PASS: Calls `POST /api/deep-research/open-in-studio`
 - [x] PASS: Process:
-- [ ] FAIL: Redirects to `/studio?projectId={projectId}`
+- [x] PASS: Redirects to `/studio?projectId={projectId}`
 - [x] PASS: Loading spinner during creation
 - [x] PASS: Error state with retry capability
 

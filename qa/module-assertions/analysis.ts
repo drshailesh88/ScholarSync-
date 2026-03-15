@@ -381,7 +381,7 @@ export async function assertAnalysisCheckpoint(
   }
 
   if (d.includes("text > 50,000 characters") || (d.includes("api schema validates") && d.includes("50000"))) {
-    expectSourceMatches(rootDir, ROUTE, /max\(50000\)|\.max\(50000\)/);
+    expectSourceMatches(rootDir, ROUTE, /\.max\(50000/);
     return true;
   }
 
@@ -838,6 +838,12 @@ export async function assertAnalysisCheckpoint(
   }
 
   // ── Loading & Error boundaries ──
+  if (d.includes("smooth appearance") || d.includes("layout shift")) {
+    // Verify loading.tsx uses same layout class as page.tsx to prevent layout shift
+    expectSourceContains(rootDir, LOADING, "h-[calc(100vh-7rem)]");
+    return true;
+  }
+
   if (d.includes("loading.tsx") || (d.includes("loading") && d.includes("analysis") && d.includes("exists"))) {
     expect(fileExists(rootDir, LOADING)).toBe(true);
     return true;

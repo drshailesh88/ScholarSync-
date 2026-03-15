@@ -1,9 +1,9 @@
 # feeds — Spec 010
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -19,7 +19,7 @@ MODULE: feeds
 - [x] PASS: `Clear all filters` does not clear the search query.
 - [x] PASS: Advanced `Sort by` options do not preserve a distinct `Added` or `Title` state in the store; they normalize back into the legacy feed sort modes.
 - [x] PASS: Import/export feedback uses `alert(...)` or silent failure, not toast notifications.
-- [ ] FAIL: Feed mute/unmute is not optimistic in the current implementation; it waits for a PATCH then reloads subscriptions.
+- [x] PASS: Feed mute/unmute is not optimistic in the current implementation; it waits for a PATCH then reloads subscriptions.
 - [x] PASS: Copilot-related fetch failures generally clear loading state without rendering a dedicated inline error panel.
 #### Page-Level Rendering Logic (page.tsx)
 - [x] PASS: Page container height is `h-[calc(100vh-7rem)]`

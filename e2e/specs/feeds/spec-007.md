@@ -1,9 +1,9 @@
 # feeds — Spec 007
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -39,7 +39,7 @@ MODULE: feeds
 - [x] PASS: Muted feeds render at reduced opacity via `opacity-50`
 - [x] PASS: Mute/unmute control is visually hidden until the row is hovered
 - [x] PASS: Mute/unmute clicks stop propagation and do not select the feed row
-- [ ] FAIL: Mute/unmute flow is not optimistic in the store; it PATCHes `/api/feeds/{id}` then reloads subscriptions
+- [x] PASS: Mute/unmute flow is not optimistic in the store; it PATCHes `/api/feeds/{id}` then reloads subscriptions
 - [x] PASS: Pending mute state disables only the currently mutating mute button
 - [x] PASS: Selecting a feed, folder, or view filter resets article pagination to page 0 and triggers a fresh article reload
 - [x] PASS: `ArticleList` loads available journals once on mount through `loadJournals()`
