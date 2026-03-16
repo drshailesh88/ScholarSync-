@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for compliance/spec-013
  * Source: e2e/specs/compliance/spec-013.md
- * Generated: 2026-03-14T10:50:36.813Z
+ * Generated: 2026-03-15T18:37:29.517Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output

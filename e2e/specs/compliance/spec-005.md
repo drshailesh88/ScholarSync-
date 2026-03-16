@@ -1,8 +1,8 @@
 # compliance — Spec 005
 
 STATUS: DONE
-TESTED: 0/35
-PASS: 0
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/compliance
@@ -11,54 +11,54 @@ MODULE: compliance
 ---
 ### Download Report
 #### Report Contents
-- [ ] Citation Audit section with issues list (if paid)
-- [ ] Writing Quality section with metrics table and suggestions
-- [ ] Footer with generation timestamp
+- [x] PASS: Citation Audit section with issues list (if paid)
+- [x] PASS: Writing Quality section with metrics table and suggestions
+- [x] PASS: Footer with generation timestamp
 
 ### History Tab
-- [ ] **History loaded on tab switch** — fetches `GET /api/integrity-check/history?limit=20`
-- [ ] **Loading state** — CircleNotch spinner (24px brand), centered
-- [ ] **Empty state** — "No integrity checks found. Run your first check to see history here."
+- [x] PASS: **History loaded on tab switch** — fetches `GET /api/integrity-check/history?limit=20`
+- [x] PASS: **Loading state** — CircleNotch spinner (24px brand), centered
+- [x] PASS: **Empty state** — "No integrity checks found. Run your first check to see history here."
 #### Sparkline Trend
-- [ ] Visible only when `>=2` history entries exist
-- [ ] SVG polyline showing AI score trend over recent checks
-- [ ] Dots at each data point (3px radius, brand fill)
-- [ ] Label: "AI Score Trend (recent checks)"
-- [ ] Data displayed in chronological order (reversed from API's desc order)
+- [x] PASS: Visible only when `>=2` history entries exist
+- [x] PASS: SVG polyline showing AI score trend over recent checks
+- [x] PASS: Dots at each data point (3px radius, brand fill)
+- [x] PASS: Label: "AI Score Trend (recent checks)"
+- [x] PASS: Data displayed in chronological order (reversed from API's desc order)
 
 ### IntegrityPanel Component (Studio Embed)
 #### Results Layout
-- [ ] **Header** — "Integrity Report" label + "Re-run" link (ArrowClockwise icon)
-- [ ] **CircularGauge** — 90px, shows `humanScore`
-- [ ] **Free tier notice** — amber banner with Lock icon: "Free tier -- AI detection only. Upgrade for plagiarism scanning and citation verification."
+- [x] PASS: **Header** — "Integrity Report" label + "Re-run" link (ArrowClockwise icon)
+- [x] PASS: **CircularGauge** — 90px, shows `humanScore`
+- [x] PASS: **Free tier notice** — amber banner with Lock icon: "Free tier -- AI detection only. Upgrade for plagiarism scanning and citation verification."
 #### Locked Section State
-- [ ] Shows Lock icon (14px) in header instead of summary
-- [ ] Expanded content: Lock icon (14px) + "Available on paid plans" + "Upgrade to unlock" link
+- [x] PASS: Shows Lock icon (14px) in header instead of summary
+- [x] PASS: Expanded content: Lock icon (14px) + "Available on paid plans" + "Upgrade to unlock" link
 #### Collapsible Behavior
-- [ ] CaretDown (10px) when expanded, CaretRight (10px) when collapsed
-- [ ] Click header to toggle
-- [ ] All four sections default to expanded
+- [x] PASS: CaretDown (10px) when expanded, CaretRight (10px) when collapsed
+- [x] PASS: Click header to toggle
+- [x] PASS: All four sections default to expanded
 
 ### DiffView Component
 #### Synchronized Scrolling
-- [ ] Uses `useRef` for left/right panels
-- [ ] `isSyncing` guard prevents infinite scroll loops
-- [ ] Scroll sync uses `requestAnimationFrame`
+- [x] PASS: Uses `useRef` for left/right panels
+- [x] PASS: `isSyncing` guard prevents infinite scroll loops
+- [x] PASS: Scroll sync uses `requestAnimationFrame`
 #### Sentence-Level Rendering
-- [ ] When `aiAnalysis.sentences` array exists and is non-empty, renders sentence-by-sentence
-- [ ] Each sentence gets background based on paragraph's `humanProbability`
-- [ ] Gaps between sentences (non-analyzed text) rendered plain
-- [ ] Plagiarism overlap check: `sentenceText.includes(m.excerpt) || m.excerpt.includes(sentenceText)`
+- [x] PASS: When `aiAnalysis.sentences` array exists and is non-empty, renders sentence-by-sentence
+- [x] PASS: Each sentence gets background based on paragraph's `humanProbability`
+- [x] PASS: Gaps between sentences (non-analyzed text) rendered plain
+- [x] PASS: Plagiarism overlap check: `sentenceText.includes(m.excerpt) || m.excerpt.includes(sentenceText)`
 #### Paragraph-Level Rendering (fallback)
-- [ ] Used when no sentence breakdown available
-- [ ] Plagiarism highlights applied via `applyPlagiarismHighlights` — finds excerpt substrings and wraps in highlighted spans
-- [ ] Ranges sorted by start position, non-overlapping
+- [x] PASS: Used when no sentence breakdown available
+- [x] PASS: Plagiarism highlights applied via `applyPlagiarismHighlights` — finds excerpt substrings and wraps in highlighted spans
+- [x] PASS: Ranges sorted by start position, non-overlapping
 
 ### Realtime Integrity Hook
 #### Behavior
-- [ ] Returns `{ score: number | null, loading: boolean, error: string | null }`
-- [ ] Calls `POST /api/integrity-check` with `mode: "ai_detection"`
-- [ ] Extracts `aiDetection.humanScore` from response
-- [ ] Cancels in-flight requests via `AbortController` when new check starts
-- [ ] Ignores `AbortError` (not treated as error)
-- [ ] Cleans up on unmount (aborts controller, clears timer)
+- [x] PASS: Returns `{ score: number | null, loading: boolean, error: string | null }`
+- [x] PASS: Calls `POST /api/integrity-check` with `mode: "ai_detection"`
+- [x] PASS: Extracts `aiDetection.humanScore` from response
+- [x] PASS: Cancels in-flight requests via `AbortController` when new check starts
+- [x] PASS: Ignores `AbortError` (not treated as error)
+- [x] PASS: Cleans up on unmount (aborts controller, clears timer)
