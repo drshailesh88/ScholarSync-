@@ -1,6 +1,6 @@
 # poster — Spec 001
 
-STATUS: PASS
+STATUS: DONE
 TESTED: 35/35
 PASS: 35
 FAIL: 0

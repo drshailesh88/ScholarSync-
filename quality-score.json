@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-03-16T08:07:58.983Z",
-  "composite": 98,
+  "timestamp": "2026-03-16T19:22:01.421Z",
+  "composite": 96.16,
   "temperature": "FROZEN",
   "currentPhase": 5,
   "phaseAverages": {
     "1": 97,
-    "2": 98,
+    "2": 99,
     "3": 100,
-    "4": 100,
+    "4": 87,
     "5": 95
   },
   "weakest": {
-    "dimension": "apiHardening",
-    "label": "API Route Hardening",
-    "score": 92.14
+    "dimension": "authSecurity",
+    "label": "Auth Security",
+    "score": 60
   },
   "dimensions": {
     "typescriptStrict": {
@@ -22,7 +22,7 @@
         "errors": 0,
         "anyCount": 173,
         "strictEnabled": true,
-        "totalLines": 502512
+        "totalLines": 502486
       },
       "weight": 0.08,
       "phase": 1,
@@ -73,10 +73,10 @@
       "label": "Spec Pass Rate"
     },
     "checkpointPassRate": {
-      "score": 94.01,
+      "score": 99.59,
       "details": {
         "totalCheckpoints": 12804,
-        "passingCheckpoints": 12037
+        "passingCheckpoints": 12752
       },
       "weight": 0.1,
       "phase": 2,
@@ -183,10 +183,10 @@
       "label": "State Consistency"
     },
     "authSecurity": {
-      "score": 100,
+      "score": 60,
       "details": {
         "protectedRoutes": 14,
-        "withMiddleware": true,
+        "withMiddleware": false,
         "withCsrf": true,
         "properCookies": false
       },

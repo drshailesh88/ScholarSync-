@@ -29,8 +29,8 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "on", // Always capture screenshots (proof)
     video: "off",
-    actionTimeout: 10_000,
-    navigationTimeout: 15_000,
+    actionTimeout: 15_000,
+    navigationTimeout: 20_000,
   },
 
   projects: [

@@ -124,6 +124,11 @@ function getPagePath(pageUrl: string, moduleName: string): string {
     return "/studio";
   }
 
+  // /slides/ai is not a valid route — use /slides/new instead
+  if (pathname === "/slides/ai") {
+    return "/slides/new";
+  }
+
   return pathname;
 }
 
