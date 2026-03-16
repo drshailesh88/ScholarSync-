@@ -1,17 +1,17 @@
 # ScholarSync QA Progress
 
-Updated: 2026-03-16T11:37:05.839Z
+Updated: 2026-03-16T12:00:35.181Z
 
 ## Overall
 
-`[███████████████████████░░░░░░░] 77.7%`
+`[█████████████████████████░░░░░] 83.2%`
 
 | Metric | Count |
 |--------|-------|
 | Total specs | 376 |
 | Total checkpoints | 12804 |
-| Pending | 83 |
-| Pass 1 done | 292 |
+| Pending | 62 |
+| Pass 1 done | 313 |
 | Pass 2 done | 0 |
 | Blocked | 1 |
 
@@ -34,7 +34,7 @@ Updated: 2026-03-16T11:37:05.839Z
 | deep-research | 15 | 3 | 12 | 0 | 525 | 173/2/0 |
 | feeds | 19 | 19 | 0 | 0 | 658 | 658/0/0 |
 | slides | 24 | 24 | 0 | 0 | 819 | 819/0/0 |
-| slides-ai | 21 | 0 | 21 | 0 | 716 | 0/0/0 |
+| slides-ai | 21 | 21 | 0 | 0 | 716 | 716/0/0 |
 | poster | 15 | 13 | 2 | 0 | 509 | 491/18/0 |
 | presentation | 27 | 27 | 0 | 0 | 937 | 937/0/0 |
 | illustrate | 37 | 23 | 14 | 0 | 1284 | 1257/27/0 |
