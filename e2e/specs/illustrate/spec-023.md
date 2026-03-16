@@ -1,9 +1,9 @@
 # illustrate — Spec 023
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 29
-FAIL: 6
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -40,10 +40,10 @@ MODULE: illustrate
 - [x] PASS: Cell-layer defaults are `rows: 2`, `columns: 5`, `cellWidth: 40`, `cellHeight: 50`, `cellType: 'cuboidal'`, `showNuclei: true`, `junctions: true`, `stroke: '#6B7280'`, and `fill: '#FEF3C7'`
 - [x] PASS: Scientific arrow defaults are `type: 'activation'`, `curved: false`, `start: { x: 10, y: 50 }`, `end: { x: 190, y: 50 }`, `stroke: '#374151'`, and `strokeWidth: 2`
 - [x] PASS: Neuron defaults are `type: 'pyramidal'`, `dendrites: 5`, `axonLength: 150`, `showMyelin: true`, `stroke: '#374151'`, and `fill: '#FEF3C7'`
-- [ ] FAIL: Mitochondria defaults are `width: 120`, `height: 60`, `cristaCount: 5`, `showMatrix: true`, `stroke: '#374151'`, and `fill: '#FEF3C7'`
-- [ ] FAIL: Nucleus defaults are `diameter: 100`, `pores: 8`, `envelopeStyle: 'solid'`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#e2e8f0'`
+- [x] PASS: Mitochondria defaults are `width: 120`, `height: 60`, `cristaCount: 5`, `showMatrix: true`, `stroke: '#374151'`, and `fill: '#FEF3C7'`
+- [x] PASS: Nucleus defaults are `diameter: 100`, `pores: 8`, `envelopeStyle: 'solid'`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#e2e8f0'`
 - [x] PASS: Ribosome defaults are `size: 60`, `subunits: 'both'`, `showRna: true`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#fcd34d'`
-- [ ] FAIL: Vesicle defaults are `diameter: 80`, `cargo: 'dots'`, `membraneStyle: 'solid'`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#c4b5fd'`
-- [ ] FAIL: Virus defaults are `diameter: 100`, `type: 'icosahedral'`, `spikeLength: 15`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#10b981'`
-- [ ] FAIL: Bacteria defaults are `type: 'bacillus'`, `length: 100`, `width: 40`, `flagella: 2`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#34d399'`
-- [ ] FAIL: Golgi defaults are `size: 120`, `cisternae: 5`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#f472b6'`
+- [x] PASS: Vesicle defaults are `diameter: 80`, `cargo: 'dots'`, `membraneStyle: 'solid'`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#c4b5fd'`
+- [x] PASS: Virus defaults are `diameter: 100`, `type: 'icosahedral'`, `spikeLength: 15`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#10b981'`
+- [x] PASS: Bacteria defaults are `type: 'bacillus'`, `length: 100`, `width: 40`, `flagella: 2`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#34d399'`
+- [x] PASS: Golgi defaults are `size: 120`, `cisternae: 5`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#f472b6'`

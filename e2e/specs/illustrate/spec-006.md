@@ -1,9 +1,9 @@
 # illustrate — Spec 006
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 33
-FAIL: 2
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -42,7 +42,7 @@ MODULE: illustrate
 - [x] PASS: Arrow tool: click-drag creates line with arrowhead
 #### Path Drawing
 - [x] PASS: Pen tool: click to place anchor points
-- [ ] FAIL: Pen tool: click-drag to create bezier curves with control handles
+- [x] PASS: Pen tool: click-drag to create bezier curves with control handles
 - [x] PASS: Pen tool: click on first point to close path
 - [x] PASS: Brush tool: freehand drawing with natural brush strokes (perfect-freehand)
 - [x] PASS: Rough.js hand-drawn style toggle applies to drawn shapes
@@ -54,5 +54,5 @@ MODULE: illustrate
 #### Selection & Manipulation
 - [x] PASS: Click to select a single object
 - [x] PASS: Click on empty space to deselect
-- [ ] FAIL: `Ctrl/Cmd`+click to add/remove from multi-selection
+- [x] PASS: `Ctrl/Cmd`+click to add/remove from multi-selection
 - [x] PASS: Drag to move selected objects

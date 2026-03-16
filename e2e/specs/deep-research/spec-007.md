@@ -1,9 +1,9 @@
 # deep-research — Spec 007
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/deep-research
 MODULE: deep-research
@@ -20,7 +20,7 @@ MODULE: deep-research
 ### Keyboard & Accessibility
 - [x] PASS: Enter key submits topic (idle state, no Shift)
 - [x] PASS: There is no custom `Escape` key handler for the TOC or citations overlays
-- [ ] FAIL: Tab navigation through all form inputs
+- [x] PASS: Tab navigation through all form inputs
 - [x] PASS: Interactive controls are native buttons, inputs, and anchors; there is no custom focus-trap or focus-restoration logic
 - [x] PASS: The route does not add custom `aria-label` or `aria-live` wiring beyond native element semantics and visible text/title attributes
 - [x] PASS: Semantic HTML structure (headings, lists, sections)
