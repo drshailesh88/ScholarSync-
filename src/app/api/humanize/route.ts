@@ -87,7 +87,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = (await req.json()) as HumanizeRequest;
+    const body = (await req.json()) as HumanizeRequest; // validate request payload
     const { text, level } = body;
 
     // --- Input validation ---

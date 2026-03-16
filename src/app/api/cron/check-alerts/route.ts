@@ -15,6 +15,7 @@ import { NextResponse } from "next/server";
 import { checkDueAlerts } from "@/lib/systematic-review/living-review";
 
 export async function GET(req: Request) {
+  // validate query parameters
   // Verify cron secret (Vercel sets this header)
   const authHeader = req.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;

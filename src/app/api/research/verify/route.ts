@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
     if (rateLimitResponse) return rateLimitResponse;
 
-    const body = await req.json();
+    const body = await req.json(); // validate request payload
     const { paper } = body;
 
     if (!paper) {

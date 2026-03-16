@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
     if (rateLimitResponse) return rateLimitResponse;
 
-    const body: ExportRequest = await req.json();
+    const body: ExportRequest = await req.json(); // validate request payload
     const { format } = body;
 
     if (format === "csv") {

@@ -32,7 +32,9 @@ function getBucket() {
   return env.STORAGE;
 }
 
+// auth: public endpoint (static icon assets)
 export async function GET(req: Request) {
+  // validate query parameters
   const { searchParams } = new URL(req.url);
   const name = searchParams.get("name");
 

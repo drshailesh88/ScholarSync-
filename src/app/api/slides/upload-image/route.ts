@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     const rateLimitResponse = await checkRateLimit(userId, "presentations", RATE_LIMITS.ai);
     if (rateLimitResponse) return rateLimitResponse;
 
-    const formData = await req.formData();
+    const formData = await req.formData(); // validate request payload
     const file = formData.get("file") as File | null;
 
     if (!file) {

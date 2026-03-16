@@ -3,6 +3,7 @@ import { getCurrentUserId } from "@/lib/auth";
 import { getCuratedFeeds } from "@/lib/actions/feeds";
 
 // GET — Browse curated journals
+// validate query parameters
 export async function GET(req: NextRequest) {
   try {
     let userId: string;

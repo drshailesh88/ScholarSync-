@@ -1,10 +1,12 @@
 import { streamText } from "ai";
 import { getLatexUtilModel } from "@/lib/ai/models";
 import { NextRequest } from "next/server";
+import { getCurrentUserId } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const { context, currentLine } = await req.json();
+    await getCurrentUserId();
+    const { context, currentLine } = await req.json(); // validate request payload
 
     if (!context || !currentLine) {
       return new Response("Missing required fields", { status: 400 });

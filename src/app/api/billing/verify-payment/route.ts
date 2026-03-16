@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const rateLimitResponse = await checkRateLimit(userId, "billing", RATE_LIMITS.analysis);
     if (rateLimitResponse) return rateLimitResponse;
 
-    const { orderId, paymentId, signature, plan } = await req.json();
+    const { orderId, paymentId, signature, plan } = await req.json(); // validate request payload
 
     if (!orderId || !paymentId || !signature || !plan) {
       return NextResponse.json(

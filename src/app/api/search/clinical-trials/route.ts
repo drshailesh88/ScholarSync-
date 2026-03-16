@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
+import { getCurrentUserId } from "@/lib/auth";
 
 export async function GET(req: Request) {
+  await getCurrentUserId();
   const { searchParams } = new URL(req.url);
   const q = searchParams.get("q");
   const perPage = parseInt(searchParams.get("perPage") || "20", 10);

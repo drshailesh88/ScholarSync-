@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockGetSubscription = vi.hoisted(() => vi.fn());
 const mockGetUserUsageStats = vi.hoisted(() => vi.fn());
+const mockGetCurrentUserId = vi.hoisted(() => vi.fn().mockResolvedValue("user-1"));
 
 vi.mock("@/lib/actions/billing", () => ({
   getSubscription: mockGetSubscription,
@@ -9,6 +10,10 @@ vi.mock("@/lib/actions/billing", () => ({
 
 vi.mock("@/lib/actions/user", () => ({
   getUserUsageStats: mockGetUserUsageStats,
+}));
+
+vi.mock("@/lib/auth", () => ({
+  getCurrentUserId: mockGetCurrentUserId,
 }));
 
 import { GET } from "../route";
@@ -34,7 +39,7 @@ describe("GET /api/billing/subscription", () => {
       plan: "pro",
     });
 
-    const res = await GET();
+    const res = await GET(new Request("http://localhost/api/billing/subscription"));
 
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toMatchObject({
@@ -54,7 +59,7 @@ describe("GET /api/billing/subscription", () => {
     mockGetSubscription.mockRejectedValue(new Error("Not authenticated"));
     mockGetUserUsageStats.mockResolvedValue(null);
 
-    const res = await GET();
+    const res = await GET(new Request("http://localhost/api/billing/subscription"));
 
     expect(mockGetSubscription).toHaveBeenCalledOnce();
     expect(res.status).toBe(500);
@@ -65,7 +70,7 @@ describe("GET /api/billing/subscription", () => {
     mockGetSubscription.mockResolvedValue(null);
     mockGetUserUsageStats.mockResolvedValue(null);
 
-    const res = await GET();
+    const res = await GET(new Request("http://localhost/api/billing/subscription"));
 
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toEqual({
@@ -78,7 +83,7 @@ describe("GET /api/billing/subscription", () => {
     mockGetSubscription.mockResolvedValue(null);
     mockGetUserUsageStats.mockRejectedValue(new Error("DB failed"));
 
-    const res = await GET();
+    const res = await GET(new Request("http://localhost/api/billing/subscription"));
 
     expect(res.status).toBe(500);
     await expect(res.json()).resolves.toEqual({ error: "Failed to fetch subscription" });

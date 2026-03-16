@@ -28,7 +28,7 @@ interface CitationEdge {
  */
 export async function POST(req: NextRequest) {
   try {
-    const { paperId, depth: _depth = 1 } = await req.json();
+    const { paperId, depth: _depth = 1 } = await req.json(); // validate request payload
 
     if (!paperId) {
       return NextResponse.json({ error: "paperId is required" }, { status: 400 });

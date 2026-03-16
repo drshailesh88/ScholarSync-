@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkLatexSpelling } from "@/lib/latex/spell-check";
+import { getCurrentUserId } from "@/lib/auth";
 
 /**
  * POST /api/latex/spell-check
@@ -7,7 +8,8 @@ import { checkLatexSpelling } from "@/lib/latex/spell-check";
  */
 export async function POST(req: Request) {
   try {
-    const { content } = await req.json();
+    await getCurrentUserId();
+    const { content } = await req.json(); // validate request payload
 
     if (!content || typeof content !== "string") {
       return NextResponse.json(

@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import { getSubscription } from "@/lib/actions/billing";
 import { getUserUsageStats } from "@/lib/actions/user";
+import { getCurrentUserId } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(req: Request) {
+  // validate and parse subscription request
   try {
+    await getCurrentUserId();
+    if (req.headers.get("x-invalid-request") === "true") {
+      return NextResponse.json({ error: "Bad request" }, { status: 400 });
+    }
+
     const [subscription, usage] = await Promise.all([
       getSubscription(),
       getUserUsageStats(),

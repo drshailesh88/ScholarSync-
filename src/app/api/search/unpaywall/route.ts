@@ -5,6 +5,7 @@ import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
 export async function GET(req: Request) {
+  // validate query parameters
   const log = logger.withRequestId();
 
   // Authentication

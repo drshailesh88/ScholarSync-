@@ -69,11 +69,11 @@ describe("POST /api/webhooks/clerk", () => {
     expect(mockDb.insert).toHaveBeenCalledOnce();
   });
 
-  it("returns 500 when required payload shape is missing", async () => {
+  it("returns 400 when required payload shape is missing", async () => {
     const res = await POST(makeRequest({ type: "user.created", data: null }));
 
-    expect(res.status).toBe(500);
-    await expect(res.json()).resolves.toEqual({ error: "Webhook processing failed" });
+    expect(res.status).toBe(400);
+    await expect(res.json()).resolves.toEqual({ error: "Missing type or data" });
   });
 
   it("returns 500 when body is invalid json", async () => {

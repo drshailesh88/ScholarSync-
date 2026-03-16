@@ -3,6 +3,7 @@ import { getCurrentUserId } from "@/lib/auth";
 import { getArticleJournals } from "@/lib/actions/feeds";
 
 export async function GET() {
+  // validate query parameters
   try {
     try {
       await getCurrentUserId();

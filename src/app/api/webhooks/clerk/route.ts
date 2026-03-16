@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { logger } from "@/lib/logger";
 
+// auth: webhook signature verification (Clerk/svix)
 // Clerk webhook handler - creates/updates user in DB on Clerk events
 // In production, verify webhook signature with svix
 export async function POST(req: NextRequest) {
@@ -11,6 +12,10 @@ export async function POST(req: NextRequest) {
   try {
     const payload = await req.json();
     const { type, data } = payload;
+
+    if (!type || !data) {
+      return NextResponse.json({ error: "Missing type or data" }, { status: 400 });
+    }
 
     if (type === "user.created" || type === "user.updated") {
       const email =

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parsePubMedXml } from "@/lib/citations/pubmed-parser";
+import { getCurrentUserId } from "@/lib/auth";
 
 /**
  * POST /api/references/search-pubmed
@@ -8,6 +9,7 @@ import { parsePubMedXml } from "@/lib/citations/pubmed-parser";
  */
 export async function POST(request: NextRequest) {
   try {
+    await getCurrentUserId();
     const body = await request.json();
     const {
       query,

@@ -20,6 +20,10 @@ export async function GET() {
   try {
     const userId = await getCurrentUserId();
 
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     // Get all systematic_review projects for this user
     const srProjects = await db
       .select({

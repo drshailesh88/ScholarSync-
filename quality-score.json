@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-03-16T09:42:57.253Z",
-  "composite": 84.71,
+  "timestamp": "2026-03-16T15:26:11.833Z",
+  "composite": 85.76,
   "temperature": "COLD",
   "currentPhase": 5,
   "phaseAverages": {
-    "1": 97,
-    "2": 72,
+    "1": 99,
+    "2": 73,
     "3": 100,
     "4": 100,
-    "5": 95
+    "5": 100
   },
   "weakest": {
     "dimension": "specPassRate",
@@ -22,7 +22,7 @@
         "errors": 0,
         "anyCount": 173,
         "strictEnabled": true,
-        "totalLines": 502487
+        "totalLines": 502567
       },
       "weight": 0.08,
       "phase": 1,
@@ -50,13 +50,13 @@
       "label": "Error Boundaries"
     },
     "apiHardening": {
-      "score": 92.14,
+      "score": 100,
       "details": {
         "total": 168,
-        "withTryCatch": 165,
-        "withValidation": 141,
-        "withAuth": 154,
-        "withProperStatus": 161
+        "withTryCatch": 168,
+        "withValidation": 168,
+        "withAuth": 168,
+        "withProperStatus": 168
       },
       "weight": 0.07,
       "phase": 1,
@@ -115,21 +115,21 @@
       "label": "Module Coverage"
     },
     "assertionModuleCoverage": {
-      "score": 95,
+      "score": 100,
       "details": {
         "totalModules": 20,
-        "assertionFiles": 19,
-        "coveredAssertionFiles": 19
+        "assertionFiles": 20,
+        "coveredAssertionFiles": 20
       },
       "weight": 0.05,
       "phase": 2,
       "label": "Assertion Module Coverage"
     },
     "unitPassRate": {
-      "score": 99.97,
+      "score": 99.95,
       "details": {
-        "passed": 6046,
-        "failed": 0,
+        "passed": 6045,
+        "failed": 1,
         "total": 6048
       },
       "weight": 0.05,
@@ -198,7 +198,7 @@
       "score": 99.53,
       "details": {
         "zodUsage": 1637,
-        "manualValidation": 260,
+        "manualValidation": 287,
         "rawBodyUsage": 9
       },
       "weight": 0.05,
@@ -218,9 +218,9 @@
       "label": "Dependency Security"
     },
     "accessibility": {
-      "score": 95,
+      "score": 100,
       "details": {
-        "missingAlt": 1,
+        "missingAlt": 0,
         "missingLabels": 0,
         "ariaUsage": 825,
         "jsxA11yPlugin": true,

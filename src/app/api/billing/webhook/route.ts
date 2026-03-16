@@ -4,6 +4,7 @@ import { subscriptions } from "@/lib/db/schema";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
+// auth: webhook signature verification (Razorpay HMAC)
 export async function POST(req: NextRequest) {
   try {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;

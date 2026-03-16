@@ -5,6 +5,7 @@ import {
   crossrefToReference,
 } from "@/lib/citations/reference-utils";
 import { parsePubMedXml } from "@/lib/citations/pubmed-parser";
+import { getCurrentUserId } from "@/lib/auth";
 
 /**
  * POST /api/references/resolve
@@ -14,6 +15,7 @@ import { parsePubMedXml } from "@/lib/citations/pubmed-parser";
  */
 export async function POST(request: NextRequest) {
   try {
+    await getCurrentUserId();
     const body = await request.json();
     const { identifier, identifierType = "auto", documentId = "default" } = body;
 

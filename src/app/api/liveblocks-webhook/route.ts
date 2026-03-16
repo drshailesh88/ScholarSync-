@@ -14,6 +14,7 @@ import type { SlideLayout, ContentBlock } from "@/types/presentation";
 //   Events: storageUpdated
 // ---------------------------------------------------------------------------
 
+// auth: webhook signature verification (Liveblocks)
 export async function POST(req: Request) {
   if (!process.env.LIVEBLOCKS_SECRET_KEY) {
     return NextResponse.json(

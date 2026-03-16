@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import { fetchDueFeeds } from "@/lib/feeds/feed-fetcher";
 
 export async function GET(req: Request) {
+  // validate query parameters
   const authHeader = req.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
 

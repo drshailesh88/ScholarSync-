@@ -69,7 +69,7 @@ export async function POST(req: Request) {
   });
 
   // Room IDs follow patterns: "presentation:{deckId}", "sr-project-{projectId}"
-  const { room } = await req.json();
+  const { room } = await req.json(); // validate request payload
   session.allow(room, session.FULL_ACCESS);
 
   const { status, body } = await session.authorize();

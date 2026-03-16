@@ -12,28 +12,35 @@ import { queuePdfProcessing } from "@/lib/actions/pdf-pipeline";
  * This is a one-time migration endpoint. Protect it or remove after use.
  */
 export async function POST(req: Request) {
-  // Simple auth check — replace with proper admin auth
-  const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.MIGRATION_SECRET}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    // Simple auth check — replace with proper admin auth
+    const authHeader = req.headers.get("authorization");
+    if (authHeader !== `Bearer ${process.env.MIGRATION_SECRET}`) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const eligiblePapers = await db
+      .select({ id: papers.id, doi: papers.doi })
+      .from(papers)
+      .where(or(isNotNull(papers.doi), isNotNull(papers.open_access_url)))
+      .limit(100); // Process in batches of 100
+
+    let queued = 0;
+    for (const paper of eligiblePapers) {
+      queuePdfProcessing(paper.id);
+      queued++;
+      // Stagger to avoid rate limits on external APIs
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+
+    return NextResponse.json({
+      message: `Queued ${queued} papers for PDF processing`,
+      total: eligiblePapers.length,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Internal server error" },
+      { status: 500 },
+    );
   }
-
-  const eligiblePapers = await db
-    .select({ id: papers.id, doi: papers.doi })
-    .from(papers)
-    .where(or(isNotNull(papers.doi), isNotNull(papers.open_access_url)))
-    .limit(100); // Process in batches of 100
-
-  let queued = 0;
-  for (const paper of eligiblePapers) {
-    queuePdfProcessing(paper.id);
-    queued++;
-    // Stagger to avoid rate limits on external APIs
-    await new Promise((r) => setTimeout(r, 2000));
-  }
-
-  return NextResponse.json({
-    message: `Queued ${queued} papers for PDF processing`,
-    total: eligiblePapers.length,
-  });
 }

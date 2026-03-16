@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // ── Parse request ───────────────────────────────────────────────────
+  // ── parse and validate request ──────────────────────────────────────
   let body: ExecuteRequest;
   try {
     body = await req.json();

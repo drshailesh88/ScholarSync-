@@ -27,6 +27,13 @@ export async function GET(
 ) {
   const { sessionId } = await params;
 
+  if (!sessionId || sessionId.trim() === "") {
+    return new Response(JSON.stringify({ error: "Missing sessionId" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const encoder = new TextEncoder();
   let closed = false;
 

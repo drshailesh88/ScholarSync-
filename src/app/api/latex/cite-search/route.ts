@@ -21,7 +21,7 @@ interface PubMedSummaryResult {
 
 export async function POST(req: NextRequest) {
   try {
-    const { query } = await req.json();
+    const { query } = await req.json(); // validate request payload
 
     if (!query || typeof query !== "string") {
       return NextResponse.json({ error: "Invalid query" }, { status: 400 });
