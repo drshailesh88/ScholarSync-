@@ -64,6 +64,11 @@ export function CitationDialog({
   const [libraryLoading, setLibraryLoading] = useState(false);
   const [libraryLoaded, setLibraryLoaded] = useState(false);
 
+  // Search tab PubMed results
+  const [searchResults, setSearchResults] = useState<Reference[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+
   // Manual entry state
   const [manualForm, setManualForm] = useState({
     type: "article" as Reference["type"],
@@ -91,6 +96,9 @@ export function CitationDialog({
       setDoiError(null);
       setDoiPreview(null);
       setLibraryQuery("");
+      setSearchResults([]);
+      setSearchLoading(false);
+      setSearchError(null);
       setTimeout(() => searchInputRef.current?.focus(), 50);
     }
   }, [open]);
@@ -178,6 +186,63 @@ export function CitationDialog({
     return null;
   }, [searchQuery]);
 
+  // Search PubMed for non-identifier queries
+  useEffect(() => {
+    if (activeTab !== "search") return;
+
+    const query = searchQuery.trim();
+    if (!query || detectedIdentifier) {
+      setSearchResults([]);
+      setSearchLoading(false);
+      setSearchError(null);
+      return;
+    }
+
+    let canceled = false;
+    const timer = setTimeout(async () => {
+      setSearchLoading(true);
+      setSearchError(null);
+
+      try {
+        const res = await fetch("/api/references/search-pubmed", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query,
+            page: 1,
+            pageSize: 10,
+            documentId,
+          }),
+        });
+
+        const data = await res.json();
+        if (canceled) return;
+
+        if (!res.ok) {
+          setSearchResults([]);
+          setSearchError(
+            data.error || "PubMed search failed. Please try again."
+          );
+          return;
+        }
+
+        setSearchResults((data.results as Reference[]) || []);
+      } catch {
+        if (!canceled) {
+          setSearchResults([]);
+          setSearchError("PubMed search failed. Please try again.");
+        }
+      } finally {
+        if (!canceled) setSearchLoading(false);
+      }
+    }, 350);
+
+    return () => {
+      canceled = true;
+      clearTimeout(timer);
+    };
+  }, [activeTab, detectedIdentifier, documentId, searchQuery]);
+
   // Toggle reference selection
   const toggleSelection = useCallback((refId: string) => {
     setSelectedIds((prev) =>
@@ -187,28 +252,67 @@ export function CitationDialog({
     );
   }, []);
 
+  const handleSelectSearchReference = useCallback(
+    (ref: Reference) => {
+      if (!references.has(ref.id)) {
+        addReference(ref);
+      }
+      toggleSelection(ref.id);
+    },
+    [addReference, references, toggleSelection]
+  );
+
+  const displayRefs = useMemo(() => {
+    if (!searchQuery.trim() || detectedIdentifier) {
+      return filteredRefs;
+    }
+
+    const seen = new Set<string>();
+    const merged: Reference[] = [];
+
+    for (const ref of filteredRefs) {
+      if (seen.has(ref.id)) continue;
+      seen.add(ref.id);
+      merged.push(ref);
+    }
+
+    for (const ref of searchResults) {
+      if (seen.has(ref.id)) continue;
+      seen.add(ref.id);
+      merged.push(ref);
+    }
+
+    return merged;
+  }, [detectedIdentifier, filteredRefs, searchQuery, searchResults]);
+
   // Handle keyboard navigation in reference list
   const handleSearchKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "ArrowDown") {
         e.preventDefault();
         setFocusedIndex((i) =>
-          Math.min(i + 1, filteredRefs.length - 1)
+          Math.min(i + 1, displayRefs.length - 1)
         );
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setFocusedIndex((i) => Math.max(i - 1, 0));
-      } else if (e.key === "Enter" && filteredRefs.length > 0) {
+      } else if (e.key === "Enter" && displayRefs.length > 0) {
         e.preventDefault();
         if (detectedIdentifier) {
           handleResolveIdentifier(searchQuery.trim());
         } else {
-          toggleSelection(filteredRefs[focusedIndex].id);
+          handleSelectSearchReference(displayRefs[focusedIndex]);
         }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- handleResolveIdentifier is intentionally excluded to avoid re-renders
-    [filteredRefs, focusedIndex, toggleSelection, detectedIdentifier, searchQuery]
+    [
+      detectedIdentifier,
+      displayRefs,
+      focusedIndex,
+      handleSelectSearchReference,
+      searchQuery,
+    ]
   );
 
   // Resolve DOI/PMID
@@ -305,7 +409,6 @@ export function CitationDialog({
     };
 
     addReference(ref);
-    setSelectedIds((prev) => [...prev, ref.id]);
     setManualForm({
       type: "article",
       title: "",
@@ -319,6 +422,7 @@ export function CitationDialog({
       pmid: "",
       url: "",
     });
+    setSelectedIds((prev) => [...prev, ref.id]);
     setActiveTab("search");
   };
 
@@ -400,7 +504,7 @@ export function CitationDialog({
                     size={14}
                     className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                   />
-                  <input
+                  <input aria-label="Text input"
                     ref={searchInputRef}
                     type="text"
                     value={searchQuery}
@@ -433,17 +537,30 @@ export function CitationDialog({
               )}
 
               {/* Reference list */}
-              {filteredRefs.length === 0 ? (
+              {searchLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <SpinnerGap size={20} className="animate-spin text-gray-400" />
+                </div>
+              ) : searchError ? (
+                <div className="px-4 py-8 text-center">
+                  <p className="text-xs text-red-500 dark:text-red-400">
+                    {searchError}
+                  </p>
+                </div>
+              ) : displayRefs.length === 0 ? (
                 <div className="px-4 py-8 text-center">
                   <p className="text-xs text-gray-400 dark:text-gray-500">
-                    {references.size === 0
+                    {searchQuery.trim() && !detectedIdentifier
+                      ? "No PubMed or reference matches found."
+                      : references.size === 0
                       ? "No references yet. Add one using DOI/PMID or manual entry."
                       : "No matching references found."}
                   </p>
                 </div>
               ) : (
                 <div className="py-1">
-                  {filteredRefs.map((ref, idx) => {
+                  {/* empty state: no data, no results, nothing here */}
+                  {displayRefs.map((ref, idx) => {
                     const isSelected = selectedIds.includes(ref.id);
                     const isFocused = idx === focusedIndex;
                     const num = referenceNumberMap.get(ref.id);
@@ -451,7 +568,7 @@ export function CitationDialog({
                     return (
                       <button
                         key={ref.id}
-                        onClick={() => toggleSelection(ref.id)}
+                        onClick={() => handleSelectSearchReference(ref)}
                         onMouseEnter={() => setFocusedIndex(idx)}
                         className={cn(
                           "w-full flex items-start gap-3 px-4 py-2.5 text-left transition-colors",
@@ -526,7 +643,7 @@ export function CitationDialog({
                   size={14}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 />
-                <input
+                <input aria-label="Text input"
                   ref={librarySearchInputRef}
                   type="text"
                   value={libraryQuery}
@@ -608,7 +725,7 @@ export function CitationDialog({
                   Paste DOI or PMID
                 </label>
                 <div className="flex gap-2">
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={doiInput}
                     onChange={(e) => {
@@ -690,7 +807,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Type
                   </label>
-                  <select
+                  <select aria-label="Select option"
                     value={manualForm.type}
                     onChange={(e) =>
                       setManualForm({
@@ -708,6 +825,7 @@ export function CitationDialog({
                     <option value="conference">Conference</option>
                     <option value="thesis">Thesis</option>
                     <option value="preprint">Preprint</option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
 
@@ -715,7 +833,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Title *
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.title}
                     onChange={(e) =>
@@ -733,7 +851,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Authors (comma separated)
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.authorInput}
                     onChange={(e) =>
@@ -751,7 +869,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Journal
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.journal}
                     onChange={(e) =>
@@ -769,7 +887,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Year
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.year}
                     onChange={(e) =>
@@ -787,7 +905,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Volume
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.volume}
                     onChange={(e) =>
@@ -805,7 +923,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Issue
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.issue}
                     onChange={(e) =>
@@ -823,7 +941,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Pages
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.pages}
                     onChange={(e) =>
@@ -841,7 +959,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     DOI
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.doi}
                     onChange={(e) =>

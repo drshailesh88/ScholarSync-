@@ -787,7 +787,7 @@ function NumberInput({
   disabled = false,
 }: NumberInputProps): JSX.Element {
   return (
-    <input
+    <input aria-label="Number input"
       type="number"
       value={value}
       min={min}
@@ -809,7 +809,7 @@ function SliderInput({
   disabled = false,
 }: SliderProps): JSX.Element {
   return (
-    <input
+    <input aria-label="Range slider"
       type="range"
       min={min}
       max={max}
@@ -828,7 +828,7 @@ function ColorInput({
   disabled = false,
 }: { value: string; onChange: (value: string) => void; disabled?: boolean }): JSX.Element {
   return (
-    <input
+    <input aria-label="Color picker"
       type="color"
       value={value}
       disabled={disabled}
@@ -845,7 +845,7 @@ function SelectInput({
   disabled = false,
 }: SelectProps): JSX.Element {
   return (
-    <select
+    <select aria-label="Select option"
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
@@ -878,11 +878,10 @@ function TransformInput({
   return (
     <label style={styles.transformField}>
       <span style={styles.transformLabel}>{label}</span>
-      <input
+      <input aria-label={label}
         type="text"
         value={value}
         inputMode="decimal"
-        aria-label={label}
         data-testid={`transform-${label.toLowerCase()}-input`}
         onFocus={onFocus}
         onBlur={onBlur}

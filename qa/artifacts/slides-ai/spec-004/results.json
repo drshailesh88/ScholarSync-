@@ -1,0 +1,1494 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "slides-ai/spec-004.spec.ts",
+      "file": "slides-ai/spec-004.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "slides-ai / spec-004",
+          "file": "slides-ai/spec-004.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Design amber",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1763,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:20.805Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides-ai-spec-004-cp-000-Design-amber-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-d162ec9167dca36b3743",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Audience Fit red",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1694,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:22.645Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--1c744-004-cp-001-Audience-Fit-red-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-5e1368dce90ce2cd6917",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Up to 5 suggestions displayed sorted by priority",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1701,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:24.356Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--0a42d-isplayed-sorted-by-priority-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-94fef855c6ddced084f5",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Priority coloring high red medium yellow low green",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1720,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:26.068Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--aa783-red-medium-yellow-low-green-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-28cbe9330665e3f8f186",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Each suggestion shows actionable text",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1778,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:27.796Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--97ed3-stion-shows-actionable-text-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-9dc83cd40ade6218da46",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Per-slide breakdown with slide number and title",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1692,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:29.584Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--dfdf9-with-slide-number-and-title-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-66d9d263a959630f3a33",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Issues list red",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1708,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:31.285Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides-ai-spec-004-cp-006-Issues-list-red-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-403373c2c7ef22e08ea2",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: Strengths list green",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1711,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:33.001Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--ef826-cp-007-Strengths-list-green-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-6d7c33760b3cd70ab08e",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: Click a slide insight to navigate to that slide",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1814,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:34.722Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--6c1bc-t-to-navigate-to-that-slide-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-ca93c5ccd86168f79156",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: Re-evaluate button to refresh scores after changes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1770,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:36.558Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--ce42d-efresh-scores-after-changes-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-f5ed9ac609803ae62c96",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Endpoint apipresentationscoach",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1775,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:38.336Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--02b2c-point-apipresentationscoach-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-f5894dd29d593427c551",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Sends deckId audienceType all slides data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1740,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:40.120Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--10385-udienceType-all-slides-data-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-0df23b9f02042f48b31c",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Returns overallScore 5 dimension scores suggestions slideInsights",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1760,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:41.868Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--9a271-s-suggestions-slideInsights-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-954577ae54dcfa294c38",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Opens from filmstrip right-click Regenerate with AI",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1740,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:43.636Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--60c79-ht-click-Regenerate-with-AI-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-e0fd842d7d2a03356053",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Also available as Regenerate Selected Slides for multi-select",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1709,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:45.385Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--487c9-ted-Slides-for-multi-select-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-30407fe2af4f45dfd722",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Dialog UI",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1760,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:47.102Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides-ai-spec-004-cp-015-Dialog-UI-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-a267aef1a0a5a66558bc",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Title shows Regenerate This Slide or Regenerate Selected Slides",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1740,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:48.871Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--3dc0c--Regenerate-Selected-Slides-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-49067a65d8902730210d",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Lists slide titles being regenerated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1775,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:50.619Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--03506-de-titles-being-regenerated-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-61d098f895140a7b9876",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Instruction text input freeform prompt",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1710,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:52.403Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--2ec6c--text-input-freeform-prompt-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-f2352a87318272a64d1f",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Tone selector RegenerateTone enum",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1729,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:54.122Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--757fb-elector-RegenerateTone-enum-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-13fda8e8e234571641c0",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Regenerate submit button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1744,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:55.861Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--6625c-20-Regenerate-submit-button-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-2d80b2dd56aa13aee615",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: Closecancel button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1742,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:57.618Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--34615-4-cp-021-Closecancel-button-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-20fcd1d7f0f5083c088b",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: On submit regenerates slide content via store action",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1782,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:41:59.369Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--80404-de-content-via-store-action-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-e8d784662dc862968b24",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: Dialog closes after successful regeneration",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1731,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:01.160Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--586a3-ter-successful-regeneration-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-17760c9984c6a10cb6e4",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Three-panel layout when slides exist",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2143,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:02.901Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--427bf-el-layout-when-slides-exist-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-f19ce018ce4b124d337b",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Left Card Outline Sidebar w-56",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1739,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:05.053Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--888bf-t-Card-Outline-Sidebar-w-56-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-dab82aba38ae4679e67a",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Center Card Stack flex-1 scrollable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1763,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:06.801Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--4ba39-ard-Stack-flex-1-scrollable-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-9cb8dfbbe8d413c476dd",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Right AI Agent Panel w-360 conditional on agentPanelOpen",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1736,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:08.573Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--346e2-nditional-on-agentPanelOpen-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-337f36ebd417749442de",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: When no slides exist shows Outline Generator wizard instead",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1743,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:10.317Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--0c919-ne-Generator-wizard-instead-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-6892b6fe16295e3e85c2",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Gamma Toolbar at top fixed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1740,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:12.069Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--d6b5e--Gamma-Toolbar-at-top-fixed-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-7946399da243421ac0fd",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Slides Create toggle same as Section 1",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1723,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:13.818Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--55501-te-toggle-same-as-Section-1-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-cb7716a7b2d5e43bb7b5",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Switching from Create to Slides mode via Export menu shows confirmation dialog",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1746,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:15.549Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--d6bb5-u-shows-confirmation-dialog-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-619393126d8823ec8533",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Click to enter edit mode inline input with brand underline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1738,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:17.304Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--b6f85--input-with-brand-underline-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-01a2d007713e4beaabd7",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Max width 300px text truncated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1707,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:19.050Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--7946f--width-300px-text-truncated-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-fc43b70d0b9c4ed02645",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Enter commits the title change",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1743,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:42:20.766Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-004-slides--75b10-er-commits-the-title-change-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f7d36828caabec1ca75-c27ec13a914f09f77a60",
+              "file": "slides-ai/spec-004.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-16T11:41:19.825Z",
+    "duration": 62793.31800000001,
+    "expected": 35,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

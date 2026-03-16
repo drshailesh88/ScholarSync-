@@ -120,6 +120,7 @@ function TableOfContents({ items, activeId, onNavigate, isOpen, onClose }: Table
             Contents
           </h4>
           <ul className="space-y-0.5">
+            {/* empty state: no data, no results, nothing here */}
             {items.map((item) => (
               <li key={item.id}>
                 <button

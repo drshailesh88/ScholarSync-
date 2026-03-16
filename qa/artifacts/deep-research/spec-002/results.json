@@ -1,0 +1,1494 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "deep-research/spec-002.spec.ts",
+      "file": "deep-research/spec-002.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "deep-research / spec-002",
+          "file": "deep-research/spec-002.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Editable perspective name fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1590,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:41:56.310Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-c9142-ble-perspective-name-fields-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-771307ba04ad70a16d17",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Chevron toggle to expandcollapse each perspective",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1547,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:41:57.978Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-0b77a-ndcollapse-each-perspective-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-86979b94858dfc8eac80",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Expanded perspectives show search queries section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1602,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:41:59.541Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-12752-show-search-queries-section-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-aafe662b626f14d363df",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Each perspective has 34 search queries by default",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1553,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:01.155Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-dc541-4-search-queries-by-default-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-da5fcc7dcde39589249b",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Query text displayed in editable input fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1574,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:02.723Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-fb248-ed-in-editable-input-fields-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-d54b8f5df4c02f93366c",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Add query link Plus icon lowercase appends new empty query",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1583,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:04.306Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-e249f-ase-appends-new-empty-query-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-6e96b3e0fc6922d87a9d",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Trash icon button icon-only no text label visible when 1 query exists",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1761,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:05.902Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-61440-visible-when-1-query-exists-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-7d5e8a6b802f43be799f",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: Clicking Trash icon deletes that query row",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1562,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:07.672Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-c108d-icon-deletes-that-query-row-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-1778d325fe33ad6c7b29",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: Regenerate button top right re-generates perspectives",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1573,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:09.242Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-b43f2-t-re-generates-perspectives-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-34545da434b51333db5b",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: The page re-fetches perspectives but it does not pass isRegenerating so the butt",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1645,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:10.823Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-3884a--isRegenerating-so-the-butt-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-6841ada7711a61cafa27",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Replaces perspectives with new set",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1618,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:12.477Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-20047-s-perspectives-with-new-set-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-e8520e9385404351c871",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Confirm Start Research button bottom right blue with Play icon",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1591,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:14.103Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-d1c5c-m-right-blue-with-Play-icon-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-e448c745963a8b55591c",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Sends confirmed perspectives to execute API",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1580,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:15.703Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-96999-perspectives-to-execute-API-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-82ed9ab5b87fa380c2a6",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Transitions to running state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1609,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:17.291Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-2dc76-ransitions-to-running-state-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-d52f53cee1b14782c79d",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Stop button red cancels and returns to idle",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1589,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:18.908Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-f35cc-cancels-and-returns-to-idle-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-c7b8d73299b8e014b375",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Progress-bar UI exists but the live execute route does not send numeric progress",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1577,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:20.506Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-3bb80-s-not-send-numeric-progress-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-6e4af5be2005b5eeadd1",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: 9 stages displayed in vertical timeline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1570,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:22.092Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-bf085-played-in-vertical-timeline-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-691955f8f70ea17330c1",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Connector lines between stages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1590,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:23.671Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-e8b87-nector-lines-between-stages-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-f451006dcced6927c720",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Current message text below active stage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1534,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:25.270Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-9a23b-age-text-below-active-stage-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-888863aa99babc9b555a",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Stages transition pending active completed sequentially",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1863,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:26.813Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-acbbb-tive-completed-sequentially-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-228afc4112ce6d66e7e1",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: The current live execute route does not emit section chunks so no progressive ma",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1575,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:28.689Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-c124a-chunks-so-no-progressive-ma-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-6ae20b9be065cb979b4e",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: A dead streamingSections preview path exists in the page but it is not exercised",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1593,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:30.273Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-b52d6-age-but-it-is-not-exercised-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-a82b54082b81bf84679d",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Running-state loading UI shows a pulsing Microscope icon animate-pulse",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1588,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:31.875Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-39bb6-croscope-icon-animate-pulse-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-7e60495340e5e71b0971",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: The right side stays on the loading placeholder until the final report event arr",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1575,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:33.471Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-45bab--the-final-report-event-arr-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-b4da13c8a6a1b3497dc3",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Stop button red visible during running",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1574,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:35.053Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-9ddf8--red-visible-during-running-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-fd8f2220158f0f5890d3",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Clicking Stop aborts fetch request",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1581,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:36.636Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-8f8de-g-Stop-aborts-fetch-request-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-8ad94498778f066e9374",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Returns to idle state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1638,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:38.227Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-4059d-p-026-Returns-to-idle-state-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-650f45559d3e0576da07",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Stop clears planPerspectives and returns to idle but it does not explicitly rese",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1581,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:39.889Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-1e2dc-it-does-not-explicitly-rese-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-81b65c79be3685a75bef",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Topic header shows the topic plus a metadata line with mode mode and totalSource",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1549,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:41.479Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-f764b-h-mode-mode-and-totalSource-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-466e3682eb493f8e861f",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Full report rendered markdown or legacy card format",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1613,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:43.036Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-ebe7c-kdown-or-legacy-card-format-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-a83af09395e0c5d41c9b",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Start New Research button center secondary style returns to idle",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1596,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:44.657Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-6dda1-ndary-style-returns-to-idle-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-ee17a83df0604872986b",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Export buttons visible in header",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1820,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:46.262Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-2c790-t-buttons-visible-in-header-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-236f558612a0713ffb0f",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Save to Library button visible in header",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1589,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:48.090Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-b7b64-ry-button-visible-in-header-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-2ae8a5d8cce8bdf0eaf9",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Headings h1h5 styled with correct sizes and scroll margins",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1593,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:49.687Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-b369d-ct-sizes-and-scroll-margins-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-dc01d6276b38f38148f3",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Paragraphs with proper spacing and line-height 16",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1589,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:51.290Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-002-dee-40994--spacing-and-line-height-16-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ca9e0cfcbfb53b0a66fe-34ad7239e164a59e553c",
+              "file": "deep-research/spec-002.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-16T13:41:55.127Z",
+    "duration": 57862.26,
+    "expected": 35,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { X, Spinner, Eye, ArrowCounterClockwise } from "@phosphor-icons/react";
-import { getDocumentVersions, getVersionContent, restoreDocumentVersion, saveNamedVersion } from "@/lib/actions/documents";
+import {
+  getDocumentVersions,
+  getVersionContent,
+  restoreDocumentVersion,
+  saveNamedVersion,
+} from "@/lib/actions/documents";
 import type { JSONContent } from "@tiptap/core";
 
 interface VersionRecord {
@@ -31,6 +36,7 @@ export function VersionHistory({
 }: VersionHistoryProps) {
   const [versions, setVersions] = useState<VersionRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [savingVersion, setSavingVersion] = useState(false);
   const [previewContent, setPreviewContent] = useState<JSONContent | null>(null);
   const [restoring, setRestoring] = useState<number | null>(null);
 
@@ -41,12 +47,20 @@ export function VersionHistory({
   }, [documentId]);
 
   async function handleSaveVersion() {
-    const name = prompt("Version name (e.g., 'Before methods rewrite'):");
-    if (!name) return;
+    if (!currentContent || loading || savingVersion) return;
 
-    await saveNamedVersion(documentId, sectionId, name, currentContent);
-    const updated = await getDocumentVersions(documentId);
-    setVersions(updated as unknown as VersionRecord[]);
+    const name = prompt("Version name (e.g., 'Before methods rewrite'):");
+    const trimmedName = name?.trim();
+    if (!trimmedName) return;
+
+    setSavingVersion(true);
+    try {
+      await saveNamedVersion(documentId, sectionId, trimmedName, currentContent);
+      const updated = await getDocumentVersions(documentId);
+      setVersions(updated as unknown as VersionRecord[]);
+    } finally {
+      setSavingVersion(false);
+    }
   }
 
   async function handleRestore(versionId: number) {
@@ -95,9 +109,10 @@ export function VersionHistory({
       <div className="p-4 border-b border-border">
         <button
           onClick={handleSaveVersion}
-          className="w-full px-3 py-2 text-sm font-medium text-white bg-brand rounded-lg hover:bg-brand/90"
+          disabled={loading || !currentContent || savingVersion}
+          className="w-full px-3 py-2 text-sm font-medium text-white bg-brand rounded-lg hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Save Current Version
+          {savingVersion ? "Saving..." : "Save Current Version"}
         </button>
       </div>
 

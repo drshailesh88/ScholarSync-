@@ -233,6 +233,10 @@ export function SocialExportModal({
                 shown for each tweet.
               </p>
               <div className="space-y-3">
+                {/* empty state: no data, no results, nothing here */}
+                {editedThread.length === 0 && (
+                  <p className="text-xs text-ink-muted text-center py-3">nothing here yet. get started by generating content.</p>
+                )}
                 {editedThread.map((tweet, i) => (
                   <div key={i} className="space-y-1">
                     <div className="flex items-center justify-between">
@@ -252,7 +256,7 @@ export function SocialExportModal({
                         {tweet.length}/280
                       </span>
                     </div>
-                    <textarea
+                    <textarea aria-label="Text area"
                       value={tweet}
                       onChange={(e) => {
                         const updated = [...editedThread];
@@ -272,7 +276,7 @@ export function SocialExportModal({
               {/* Options */}
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer">
-                  <input
+                  <input aria-label="Checkbox"
                     type="checkbox"
                     checked={showBranding}
                     onChange={(e) => setShowBranding(e.target.checked)}

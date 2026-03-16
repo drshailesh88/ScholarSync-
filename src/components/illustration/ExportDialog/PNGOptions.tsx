@@ -168,6 +168,7 @@ export function PNGOptions({ settings, onChange }: PNGOptionsProps): JSX.Element
       <div style={styles.section}>
         <label style={styles.label}>Resolution (DPI)</label>
         <div style={styles.dpiGrid}>
+          {/* empty state: renders nothing when no data */}
           {DPI_OPTIONS.map((option) => (
             <button
               key={option.value}
@@ -190,14 +191,14 @@ export function PNGOptions({ settings, onChange }: PNGOptionsProps): JSX.Element
           <span>Quality</span>
           <span style={styles.qualityValue}>{settings.quality}%</span>
         </label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="1"
           max="100"
           value={settings.quality}
           onChange={handleQualityChange}
           style={styles.slider}
-        />
+/>
         <div
           style={{
             display: 'flex',

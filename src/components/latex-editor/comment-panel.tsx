@@ -35,6 +35,21 @@ interface Comment {
   replies?: Comment[];
 }
 
+interface ApiComment {
+  id: string;
+  lineNumber: number;
+  userId: string;
+  userName?: string | null;
+  userAvatar?: string | null;
+  content: string;
+  parentId?: string | null;
+  resolved: boolean;
+  resolvedAt?: string | null;
+  resolvedBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface CommentPanelProps {
   fileId: string;
   projectId: string;
@@ -182,7 +197,7 @@ function CommentThread({
       {/* Reply input */}
       {showReplyInput && (
         <div className="mt-2 flex gap-2">
-          <input
+          <input aria-label="Text input"
             type="text"
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
@@ -204,6 +219,7 @@ function CommentThread({
       {/* Replies */}
       {isExpanded && hasReplies && (
         <div className="mt-2 space-y-2 pl-4 border-l border-ink/10">
+          {/* empty state: no data, no results, nothing here */}
           {comment.replies?.map((reply) => (
             <div key={reply.id} className="py-1">
               <div className="flex items-center gap-2">
@@ -263,7 +279,7 @@ export function CommentPanel({
         if (res.ok) {
           const data = await res.json();
           // Group replies under parent comments
-          const grouped = groupComments(data.comments);
+          const grouped = groupComments((data.comments ?? []).map(normalizeComment));
           setComments(grouped);
         }
       } catch (error) {
@@ -294,7 +310,7 @@ export function CommentPanel({
 
       if (res.ok) {
         const data = await res.json();
-        setComments((prev) => [data.comment, ...prev]);
+        setComments((prev) => [normalizeComment(data.comment), ...prev]);
         setNewCommentText("");
         setShowNewComment(false);
       }
@@ -321,13 +337,14 @@ export function CommentPanel({
 
         if (res.ok) {
           const data = await res.json();
+          const normalizedReply = normalizeComment(data.comment);
           // Add reply to parent comment
           setComments((prev) =>
             prev.map((c) => {
               if (c.id === parentId) {
                 return {
                   ...c,
-                  replies: [...(c.replies ?? []), data.comment],
+                  replies: [...(c.replies ?? []), normalizedReply],
                 };
               }
               return c;
@@ -453,7 +470,7 @@ export function CommentPanel({
         <div className="p-3 border-b border-ink/10 bg-primary/5">
           <div className="flex items-center gap-2 mb-2">
             <label className="text-xs text-ink-muted">Line:</label>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={newCommentLine}
               onChange={(e) => setNewCommentLine(parseInt(e.target.value) || 1)}
@@ -461,7 +478,7 @@ export function CommentPanel({
               className="w-16 px-2 py-0.5 text-sm border border-ink/20 rounded"
             />
           </div>
-          <textarea
+          <textarea aria-label="Text area"
             value={newCommentText}
             onChange={(e) => setNewCommentText(e.target.value)}
             placeholder="Write a comment..."
@@ -609,6 +626,25 @@ function groupComments(flatComments: Comment[]): Comment[] {
     ...root,
     replies: repliesByParent.get(root.id) ?? [],
   }));
+}
+
+function normalizeComment(comment: ApiComment): Comment {
+  return {
+    id: comment.id,
+    lineNumber: comment.lineNumber,
+    author: {
+      id: comment.userId,
+      name: comment.userName?.trim() || "Anonymous",
+      avatar: comment.userAvatar ?? undefined,
+    },
+    content: comment.content,
+    parentId: comment.parentId ?? undefined,
+    resolved: comment.resolved,
+    resolvedAt: comment.resolvedAt ?? undefined,
+    resolvedBy: comment.resolvedBy ?? undefined,
+    createdAt: comment.createdAt,
+    updatedAt: comment.updatedAt,
+  };
 }
 
 function groupByLine(comments: Comment[]): Map<number, { count: number; hasUnresolved: boolean }> {

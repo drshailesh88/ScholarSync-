@@ -272,6 +272,10 @@ export function AgentPanel({
           </div>
         )}
 
+        {/* empty state: no data, no results, nothing here */}
+        {messages.length === 0 && (
+          <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by sending a command.</p>
+        )}
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -356,7 +360,7 @@ export function AgentPanel({
       {/* Input */}
       <form onSubmit={handleSubmit} className="px-3 py-2 border-t border-border">
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Text input"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}

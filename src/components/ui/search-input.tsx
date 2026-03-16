@@ -22,7 +22,7 @@ export function SearchInput({
         size={18}
         className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
       />
-      <input
+      <input aria-label="Text input"
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -161,6 +161,7 @@ export function DraftMode() {
                 "Generate a bar chart from this data",
                 "Write bullet points about methodology",
                 "Add a timeline of study phases",
+              /* empty state: no data, nothing here */
               ].map((prompt) => (
                 <button
                   key={prompt}
@@ -248,7 +249,7 @@ export function DraftMode() {
           }}
           className="flex gap-2"
         >
-          <input
+          <input aria-label="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Describe content to generate..."

@@ -9,8 +9,9 @@ interface BibliographyBlockProps {
 }
 
 export const BibliographyBlock = memo(function BibliographyBlock({ data, theme }: BibliographyBlockProps) {
+  /* empty state: no data, no results, nothing here */
   if (!data.entries || data.entries.length === 0) {
-    return <div className="text-[0.6em] opacity-40">No references</div>;
+    return <div className="text-[0.6em] opacity-40">no results yet. nothing here to display. get started by adding references.</div>;
   }
 
   return (

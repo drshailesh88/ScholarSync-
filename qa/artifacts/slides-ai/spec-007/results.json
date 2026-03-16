@@ -1,0 +1,1494 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "slides-ai/spec-007.spec.ts",
+      "file": "slides-ai/spec-007.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "slides-ai / spec-007",
+          "file": "slides-ai/spec-007.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: background full card background",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1855,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:34.115Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--9fcdc-ground-full-card-background-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-57f4cc8c4eed7c200c7b",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Overlay types frosted backdrop blur faded gradient clear light tint",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1761,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:36.053Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--5afc6-d-gradient-clear-light-tint-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-2f4461932a0aba7b1e33",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Overlay intensity controls opacity",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1753,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:37.834Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--42376--intensity-controls-opacity-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-42c73d55f1ef32be2d41",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Click to activate a card",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1743,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:39.597Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--55fde-03-Click-to-activate-a-card-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-7b9bf2100a5300ea61d2",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Active card shows CardEditor inline editing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1802,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:41.350Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--233b5-s-CardEditor-inline-editing-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-25e74096d4b86658cb83",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Inactive cards show read-only content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2126,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:43.161Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--5d348-ards-show-read-only-content-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-d03fbfdfa25744e3b0a6",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Sparkle Menu CardSparkleMenu AI quick actions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1740,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:45.295Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--8e698-parkleMenu-AI-quick-actions-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-c1302e47e3013da20ba3",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: Background Picker CardBackgroundButton per-card styling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1741,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:47.044Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--65ab3-oundButton-per-card-styling-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-9a7aa1590471a14acecc",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: button appears between cards on hover",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1725,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:48.795Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--cc544-ears-between-cards-on-hover-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-d2a31fa1b2d79a5b6716",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: Click adds a new blank card at that position",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1693,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:50.530Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--90637-blank-card-at-that-position-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-887bdce0ab212dde23c3",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Add your first card button with PlusCircle icon",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1772,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:52.231Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--492f3-button-with-PlusCircle-icon-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-42666f0e1aff84a62759",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Dashed border hover transitions to brand colors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1759,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:54.012Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--f05b1-transitions-to-brand-colors-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-440a286720b3743b2e77",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Click title to enter edit mode Tiptap EditableTextBlock",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1792,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:55.780Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--9f7e8-de-Tiptap-EditableTextBlock-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-37295e2320581106197d",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: HTML stripped stored as plain text",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1805,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:57.582Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--4f957-ripped-stored-as-plain-text-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-1bcdf6dd7fc2bc83b612",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Placeholder Card title",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1757,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:44:59.396Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--26489--014-Placeholder-Card-title-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-b2fc102428c576c37b2e",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Styled with theme heading font and primary color",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1778,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:01.161Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--abd80-ding-font-and-primary-color-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-dc2f20c36bfffda388e9",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Existing subtitle becomes editable when card is active",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1704,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:02.947Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--a0234-ditable-when-card-is-active-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-d7da94fbef034529ddc5",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: EditableTextBlock with subtitle style",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1695,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:04.660Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--01ba2-xtBlock-with-subtitle-style-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-fb43b1d71ad214fe1329",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Placeholder Subtitle",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1709,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:06.363Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--fcab9-cp-018-Placeholder-Subtitle-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-9ef2c38bf1b6fc23198f",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Text blocks inline Tiptap rich text editing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1774,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:08.081Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--da7a3-ne-Tiptap-rich-text-editing-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-0e36e063aafd7a6fe898",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Supports style variants title subtitle body caption",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1980,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:09.870Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--e2924-title-subtitle-body-caption-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-a56d7b1bd997c0a29f3d",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: Custom font family font size and color",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2001,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:11.862Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--eacff--family-font-size-and-color-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-825fa60ea84d8064fec8",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Bullets blocks inline Tiptap bullets editing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1829,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:13.872Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--15773-line-Tiptap-bullets-editing-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-7a6629b7b4fc943a35bd",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: Toggle orderedunordered",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1731,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:15.709Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--09944-023-Toggle-orderedunordered-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-1e3e8358aac24a2120f4",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Addremove bullet points",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1806,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:17.449Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--d667d-024-Addremove-bullet-points-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-8cd592ea798647b4313f",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: All other blocks rendered read-only via BLOCK_REGISTRY",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1705,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:19.264Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--2104b-ead-only-via-BLOCK-REGISTRY-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-a824f859d9bae7b8d88f",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Click a block to select it ring-2 ring-brand40 brand5 background",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1692,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:20.977Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--65a6c-g-brand40-brand5-background-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-b7f058664ea056e6fa41",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Hover on unselected blocks shows ring-1 ring-border",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1743,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:22.678Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--a78bc-ks-shows-ring-1-ring-border-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-effff97431cd8dc9dc2c",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Click event stopped from propagating doesnt deselect card",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1772,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:24.429Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--d2498-gating-doesnt-deselect-card-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-6c58df80dffa07aeae6b",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Appears at bottom of active card",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1741,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:26.209Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--337b7-rs-at-bottom-of-active-card-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-299c1a6f7ae909308a06",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Opens Block Inserter Menu see Section 14",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1758,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:27.959Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--ed04c-nserter-Menu-see-Section-14-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-e3389ec562ce65190a69",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Click here to start typing or type for commands",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1734,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:29.725Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--372f4-typing-or-type-for-commands-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-dbc6a220568d8d7d8dc1",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Italic muted text",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1738,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:31.479Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--06805-07-cp-032-Italic-muted-text-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-fdb8769a1ff0ad56370e",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Sparkle icon button appears on hover of active card",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1697,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:33.225Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--6869a-ars-on-hover-of-active-card-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-b034099817954621c939",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Button 8x8 background rounded-lg surface-raised80",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1721,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T11:45:34.931Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/slides-ai-spec-007-slides--b7a51-rounded-lg-surface-raised80-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ceb47a85631849c2e2b9-8942e57ceb27a5aa23b7",
+              "file": "slides-ai/spec-007.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-16T11:44:33.096Z",
+    "duration": 63652.172000000006,
+    "expected": 35,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

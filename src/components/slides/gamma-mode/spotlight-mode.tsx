@@ -138,6 +138,7 @@ export function SpotlightOverlay({
 
           {/* Block progress dots */}
           <div className="absolute right-3 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-1.5">
+            {/* empty state: renders nothing when no data */}
             {contentBlocks.map((_, idx) => (
               <button
                 key={idx}

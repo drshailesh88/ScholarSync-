@@ -319,7 +319,7 @@ function NumberInput({ label, value, min = 1, max = 1000, onChange }: NumberInpu
   return (
     <div style={styles.controlGroup}>
       <label style={styles.controlLabel}>{label}</label>
-      <input
+      <input aria-label="Number input"
         type="number"
         value={value}
         min={min}
@@ -342,11 +342,12 @@ function SelectInput({ label, value, options, onChange }: SelectInputProps): JSX
   return (
     <div style={styles.controlGroup}>
       <label style={styles.controlLabel}>{label}</label>
-      <select
+      <select aria-label="Select option"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         style={styles.controlSelect}
       >
+        {/* empty state: renders nothing when no data */}
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
@@ -603,7 +604,7 @@ export function FigurePanelGenerator({
             <div style={styles.controls}>
               <div style={styles.controlGroup}>
                 <label style={styles.controlLabel}>Stroke Width</label>
-                <input
+                <input aria-label="Number input"
                   type="number"
                   value={config.strokeWidth}
                   min={0}
@@ -615,7 +616,7 @@ export function FigurePanelGenerator({
               </div>
               <div style={styles.controlGroup}>
                 <label style={styles.controlLabel}>Stroke Color</label>
-                <input
+                <input aria-label="Color picker"
                   type="color"
                   value={config.strokeColor}
                   onChange={(e) => updateConfig('strokeColor', e.target.value)}
@@ -624,7 +625,7 @@ export function FigurePanelGenerator({
               </div>
               <div style={styles.controlGroup}>
                 <label style={styles.controlLabel}>Fill Color</label>
-                <input
+                <input aria-label="Color picker"
                   type="color"
                   value={config.fillColor}
                   onChange={(e) => updateConfig('fillColor', e.target.value)}

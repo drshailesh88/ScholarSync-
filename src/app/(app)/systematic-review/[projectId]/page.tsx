@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useEffect, useState } from "react";

@@ -250,6 +250,7 @@ interface SymbolGridProps {
 function SymbolGrid({ symbols, onInsert }: SymbolGridProps): JSX.Element {
   return (
     <div style={styles.symbolsGrid}>
+      {/* empty state: renders nothing when no data */}
       {symbols.map((item, index) => (
         <button
           key={`${item.category}-${item.label}-${index}`}

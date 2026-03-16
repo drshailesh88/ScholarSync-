@@ -1,0 +1,1494 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "deep-research/spec-005.spec.ts",
+      "file": "deep-research/spec-005.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "deep-research / spec-005",
+          "file": "deep-research/spec-005.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Headings font-size 2414px font-weight margins",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1647,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:55.613Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-44bd7--2414px-font-weight-margins-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-14a3b6d0fc85ef2414e0",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Paragraphs line-height 16 color 333",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1563,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:57.343Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5a0c9-hs-line-height-16-color-333-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-cd6bd6e9f7b223264b24",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Tables border-collapse cell padding borders ccc",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1567,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:42:58.926Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5aa9d-se-cell-padding-borders-ccc-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-1fca4ce26ce9f8b9d0d1",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Blockquotes 3px left border ccc italic",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1537,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:00.505Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-0949b--3px-left-border-ccc-italic-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-4262c5e9b7fd9dd3e84d",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Superscript citations 10px color 2563eb",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1574,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:02.055Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-1955b-citations-10px-color-2563eb-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-0054941b612cc7a70086",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Shows Copied confirmation for 2 seconds",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1561,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:03.638Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-edb1f--confirmation-for-2-seconds-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-31ffb2ddc6b830f90700",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Fallback to plain text on older browsers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1566,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:05.210Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-27400-lain-text-on-older-browsers-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-0caf4e72d871c6f7bedc",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: Downloads as topic_referencesbib",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1542,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:06.787Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-e0d9b-oads-as-topic-referencesbib-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-3c6398420c0223d1caf4",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: Citation key format firstAuthorFirstSegmentyearfirstTitleWord lowercase with fal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1575,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:08.337Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-77065-itleWord-lowercase-with-fal-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-a8b40b94b733c983972d",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: Fields author title journal year doi pmid abstract",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1789,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:09.921Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-76c23-rnal-year-doi-pmid-abstract-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-c5f4fbc7750ab63dd714",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: All sources included",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1590,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:11.719Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-2dcbe-cp-010-All-sources-included-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-8f9fe26f274837d56f86",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Downloads as topic_referencesris",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1593,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:13.319Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-63361-oads-as-topic-referencesris-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-d2c8fa1a203a039941e0",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Fields TY TI AU per author JO PY DO AN AB UR ER",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1558,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:14.921Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-582d0-author-JO-PY-DO-AN-AB-UR-ER-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-ebd4320cecacceb173d4",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Compatible with Mendeley EndNote",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1583,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:16.488Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-12c96-tible-with-Mendeley-EndNote-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-f4229b54b85c09da09f9",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: All sources included",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1562,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:18.080Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-bd0c1-cp-014-All-sources-included-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-2b8ffe5848e7f1828823",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Button visible in done state header",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1575,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:19.651Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-005c1-isible-in-done-state-header-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-aabb9d6c176300e9d2e3",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: States",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1552,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:21.236Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-deep-research-spec-005-cp-016-States-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-c4559c4609288d034159",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Calls POST apideep-researchsave",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1538,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:22.803Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-cc1d1-s-POST-apideep-researchsave-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-472f962f437b94acc8d3",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Disabled if not logged in or research incomplete",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1833,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:24.349Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-ef29f-d-in-or-research-incomplete-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-8ede98ea156da1db23b5",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Error tooltip appears on failure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1726,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:26.191Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-60a39--tooltip-appears-on-failure-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-857fc792a22bd23a8566",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Auto-disables after successful save",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1573,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:27.929Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-8ef6b-ables-after-successful-save-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-26a4b8ed89155e29b0b4",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: Saved session appears in Past Research on next visit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1545,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:29.517Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-d5496-Past-Research-on-next-visit-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-5da21725c2dc75c64c90",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Export option Open in Studio",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1807,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:31.070Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-c39ff-xport-option-Open-in-Studio-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-40a3294618fe8bc57430",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: Calls POST apideep-researchopen-in-studio",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1557,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:32.885Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-116d1-deep-researchopen-in-studio-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-51a23757c1b5c999ad18",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Process",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1530,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:34.451Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-deep-research-spec-005-cp-024-Process-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-b9839ffe3394bebd896f",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Redirects to studioprojectIdprojectId",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1570,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:35.989Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5dec0-to-studioprojectIdprojectId-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-710b10f05aedeef8f829",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Loading spinner during creation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1591,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:37.568Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-3ddb0-ing-spinner-during-creation-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-7ee9bf9156280c809b4a",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Error state with retry capability",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1559,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:39.168Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-2e8ab-state-with-retry-capability-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-860e96518cb55070ceef",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Fallback for reports without markdown format",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1629,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:40.736Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-63dd4-rts-without-markdown-format-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-d8e081341e6c053fbd35",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Renders card-based display with sections",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1589,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:42.375Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-2ec5e-based-display-with-sections-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-33b4f28069df68212f99",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: PubMed search returns results",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1607,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:43.975Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-df305-bMed-search-returns-results-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-4d6795d5e07073f06cdc",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Semantic Scholar search returns results",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1549,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:45.593Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-a8533-olar-search-returns-results-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-84d9bed228b10b65263d",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: OpenAlex search returns results",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1548,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:47.151Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5aaaf-Alex-search-returns-results-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-c77175f72a144d76ba67",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Results deduplicated across sources",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1568,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:48.709Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-f016d-deduplicated-across-sources-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-ab2224653373d0c3d915",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Forward citations fetched via Semantic Scholar API",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1794,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T13:43:50.286Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-0c52b-ed-via-Semantic-Scholar-API-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9bfb3e06a9b019e38071-3f539d1838a42c11a736",
+              "file": "deep-research/spec-005.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-16T13:42:54.601Z",
+    "duration": 57601.886,
+    "expected": 35,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

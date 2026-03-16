@@ -113,6 +113,7 @@ export function PDFSelectionMenu({
       style={{ left: x, top: y }}
     >
       <div className="flex items-center gap-0.5 px-1.5 py-1.5 rounded-lg bg-surface border border-border shadow-lg backdrop-blur-sm">
+        {/* empty state: renders nothing when no data */}
         {actions.map((item) => {
           const Icon = item.icon;
           return (

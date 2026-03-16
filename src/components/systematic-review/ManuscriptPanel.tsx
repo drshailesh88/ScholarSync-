@@ -355,7 +355,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
         <label className="text-xs text-ink-muted font-medium block">
           Custom Instructions (optional)
         </label>
-        <textarea
+        <textarea aria-label="Text area"
           value={customInstructions}
           onChange={(e) => setCustomInstructions(e.target.value)}
           placeholder="e.g., Focus on clinical implications, use APA style, emphasize heterogeneity..."
@@ -582,7 +582,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
               </div>
             ) : isEditing && currentData ? (
               <div className="p-4 space-y-3">
-                <textarea
+                <textarea aria-label="Text area"
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   className="w-full h-80 px-3 py-2 bg-surface-alt border border-border rounded text-sm text-ink leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-brand/30 font-mono"

@@ -292,6 +292,7 @@ export function TemplateWizard({ template, onBack, onCreate }: TemplateWizardPro
             Fill in template fields ({filledCount}/{template.placeholders.length})
           </div>
 
+          {/* empty state: renders nothing when no data */}
           {template.placeholders.map((placeholder) => {
             const optional = isOptionalPlaceholder(template, placeholder);
             const useTextarea = shouldUseTextarea(placeholder);
@@ -303,7 +304,7 @@ export function TemplateWizard({ template, onBack, onCreate }: TemplateWizardPro
                   {optional && <span style={wizardStyles.optionalBadge}>(optional)</span>}
                 </label>
                 {useTextarea ? (
-                  <textarea
+                  <textarea aria-label="Text area"
                     style={wizardStyles.textarea}
                     value={values[placeholder]}
                     onChange={(e) => handleChange(placeholder, e.target.value)}
@@ -311,7 +312,7 @@ export function TemplateWizard({ template, onBack, onCreate }: TemplateWizardPro
                     rows={3}
                   />
                 ) : (
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     style={wizardStyles.input}
                     value={values[placeholder]}

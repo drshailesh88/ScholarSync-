@@ -103,6 +103,7 @@ export function SmartLayoutPicker({ onClose }: SmartLayoutPickerProps) {
 
       {/* Layout grid */}
       <div className="grid grid-cols-2 gap-2 p-3">
+        {/* empty state: renders nothing when no data */}
         {SMART_LAYOUTS.map((layout) => {
           const IconComponent = ICON_MAP[layout.icon];
           return (

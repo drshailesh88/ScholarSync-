@@ -315,7 +315,7 @@ export function RoB2Panel({ projectId }: RoB2PanelProps) {
         {/* Actions */}
         <div className="flex items-center gap-3 flex-wrap">
           {/* Paper Selector */}
-          <select
+          <select aria-label="Select option"
             value={selectedPaperId ?? ""}
             onChange={(e) =>
               setSelectedPaperId(e.target.value ? Number(e.target.value) : null)
@@ -324,6 +324,7 @@ export function RoB2Panel({ projectId }: RoB2PanelProps) {
             className="text-sm rounded-md border border-border bg-surface px-3 py-1.5 text-ink disabled:opacity-50"
           >
             <option value="">Select a paper...</option>
+            {/* empty state: no data, no results, nothing here */}
             {includedPapers.map((p) => {
               const assessed = alreadyAssessedIds.has(p.paperId);
               const shortTitle =

@@ -26,29 +26,15 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const storageKeys = await listLatexImages(projectId);
-
-    // Transform storage keys to image items
-    const images = storageKeys.map((key) => {
-      const parts = key.split("/");
-      const id = parts[2];
-      const filename = parts[3];
-      const ext = filename.split(".").pop()?.toLowerCase() || "";
-      const contentType =
-        ext === "pdf"
-          ? "application/pdf"
-          : ext === "png"
-            ? "image/png"
-            : "image/jpeg";
-
-      return {
-        id,
-        filename,
-        storageKey: key,
-        contentType,
-        url: `/api/latex/images?storageKey=${encodeURIComponent(key)}`,
-      };
-    });
+    const storedImages = await listLatexImages(projectId);
+    const images = storedImages.map((image) => ({
+      id: image.id,
+      filename: image.filename,
+      storageKey: image.storageKey,
+      contentType: image.contentType,
+      sizeBytes: image.sizeBytes,
+      url: `/api/latex/images?storageKey=${encodeURIComponent(image.storageKey)}`,
+    }));
 
     return NextResponse.json({ images });
   } catch (error) {

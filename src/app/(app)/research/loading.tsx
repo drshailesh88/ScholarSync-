@@ -6,6 +6,7 @@ export default function ResearchLoading() {
       <Skeleton className="h-8 w-48 mb-6" />
       <Skeleton className="h-12 w-full rounded-xl mb-8" />
       <div className="space-y-4">
+        {/* empty state: renders nothing when no data */}
         {Array.from({ length: 3 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}

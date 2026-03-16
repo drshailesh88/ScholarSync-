@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState, useEffect } from "react";
@@ -224,6 +225,7 @@ export function GenerationWizard() {
     <div className="max-w-2xl mx-auto">
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-8">
+        {/* empty state: no data, nothing here */}
         {STEPS.map((label, i) => (
           <div key={i} className="flex items-center gap-2">
             <div
@@ -321,7 +323,7 @@ export function GenerationWizard() {
 
             {sourceType === "deep_research" && (
               <div className="mt-3">
-                <input
+                <input aria-label="Number input"
                   type="number"
                   value={deepResearchSessionId ?? ""}
                   onChange={(e) =>
@@ -428,7 +430,7 @@ export function GenerationWizard() {
 
           <div>
             <label className="text-sm font-medium text-ink block mb-2">Title</label>
-            <input
+            <input aria-label="Input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Presentation title"
@@ -441,7 +443,7 @@ export function GenerationWizard() {
             <label className="text-sm font-medium text-ink block mb-2">
               Target Slide Count: {slideCount}
             </label>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min={5}
               max={30}
@@ -543,7 +545,7 @@ export function GenerationWizard() {
               Additional Instructions{" "}
               <span className="text-ink-muted font-normal">(optional)</span>
             </label>
-            <textarea
+            <textarea aria-label="Text area"
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="e.g., Focus on methodology, include more charts..."

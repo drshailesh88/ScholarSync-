@@ -143,7 +143,7 @@ export function InviteCollaboratorModal({
                   size={14}
                   className="shrink-0 text-ink-muted"
                 />
-                <input
+                <input aria-label="Email address"
                   ref={inputRef}
                   type="email"
                   value={email}

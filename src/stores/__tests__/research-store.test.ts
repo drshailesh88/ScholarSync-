@@ -307,6 +307,19 @@ describe("useResearchStore", () => {
       store.setResults([createPaper("1", "P1")], 1);
       store.setCurrentPage(2);
       store.setHasSearchedBefore(true);
+      store.setSearchPlan({
+        originalQuery: "test",
+        pubmedQuery: "test",
+        meshTerms: [],
+        synonyms: {},
+        suggestedFilters: {},
+        estimatedResults: "10",
+        rationale: "test",
+      });
+      store.setShowPlan(true);
+      store.setAiSummary("summary");
+      store.setSearchScrollPosition(120);
+      store.selectPaper("paper-123");
 
       store.clearSearch();
 
@@ -314,7 +327,13 @@ describe("useResearchStore", () => {
       expect(useResearchStore.getState().results).toEqual([]);
       expect(useResearchStore.getState().totalResults).toBe(0);
       expect(useResearchStore.getState().currentPage).toBe(0);
-      // Note: hasSearchedBefore is NOT reset by clearSearch
+      expect(useResearchStore.getState().searchPlan).toBeNull();
+      expect(useResearchStore.getState().showPlan).toBe(false);
+      expect(useResearchStore.getState().aiSummary).toBeNull();
+      expect(useResearchStore.getState().searchScrollPosition).toBe(0);
+      expect(useResearchStore.getState().selectedPaperId).toBeNull();
+      expect(useResearchStore.getState().selectedPaperDetail).toBeNull();
+      expect(useResearchStore.getState().hasSearchedBefore).toBe(true);
     });
   });
 

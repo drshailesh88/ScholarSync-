@@ -503,6 +503,7 @@ export const SkeletonText: React.FC<{
 }> = ({ lines = 3, lastLineWidth = '70%', spacing = 8 }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: spacing }}>
+      {/* empty state: renders nothing when no data */}
       {Array.from({ length: lines }).map((_, index) => (
         <Skeleton
           key={index}

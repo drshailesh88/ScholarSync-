@@ -448,7 +448,7 @@ export function ImportDialog({
           {/* URL Import Section */}
           {source === 'url' && (
             <div style={styles.urlSection}>
-              <input
+              <input aria-label="URL input"
                 type="url"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -505,9 +505,8 @@ export function ImportDialog({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <img alt="Preview"
                       src={detectedFile.preview}
-                      alt="Preview"
                       style={{
                         width: '48px',
                         height: '48px',

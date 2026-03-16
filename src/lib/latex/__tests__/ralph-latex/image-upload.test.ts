@@ -242,7 +242,7 @@ describe("List functionality", () => {
 
     const images = await listLatexImages(LIST_PROJECT_ID);
     expect(images.length).toBe(3);
-    expect(images.every((k) => k.includes(LIST_PROJECT_ID))).toBe(true);
+    expect(images.every((image) => image.storageKey.includes(LIST_PROJECT_ID))).toBe(true);
   });
 
   it("returns empty array for project with no images", async () => {

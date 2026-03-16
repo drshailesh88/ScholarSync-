@@ -89,6 +89,7 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 function clonePathData(pathData: TSimplePathData): TSimplePathData {
+  {/* empty state: renders nothing when no data */}
   return pathData.map((command) => [...command]) as TSimplePathData;
 }
 

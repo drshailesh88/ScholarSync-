@@ -65,6 +65,7 @@ function toPreviewGradient(stops: Array<{ offset: number; color: string }>): str
     return 'linear-gradient(90deg, transparent, transparent)';
   }
 
+  /* empty state: no data, no results, nothing here */
   const stopsCss = [...stops]
     .sort((a, b) => a.offset - b.offset)
     .map((stop) => `${stop.color} ${(stop.offset * 100).toFixed(2)}%`)

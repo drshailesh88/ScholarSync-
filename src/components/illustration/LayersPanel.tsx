@@ -342,7 +342,7 @@ function LayerRow({
 
       {/* Layer Name */}
       {isEditing ? (
-        <input
+        <input aria-label="Text input"
           ref={inputRef}
           type="text"
           value={editValue}

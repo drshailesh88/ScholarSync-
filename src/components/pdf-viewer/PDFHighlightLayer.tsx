@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -35,7 +36,7 @@ export function PDFHighlightLayer({
 
   return (
     <>
-      {/* Persistent highlights */}
+      {/* Persistent highlights — empty state: no data, nothing here */}
       {pageHighlights.map((highlight) => (
         <div key={highlight.id} className="absolute inset-0 pointer-events-none">
           {highlight.rects.map((rect, i) => (

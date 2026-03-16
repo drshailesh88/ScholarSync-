@@ -81,7 +81,7 @@ export function SlideCanvas({
         <div className="space-y-4 bg-surface rounded-xl border border-border p-4">
           <div>
             <label className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">Title</label>
-            <input
+            <input aria-label="Input"
               value={title ?? ""}
               onChange={(e) => onUpdateTitle(e.target.value)}
               className="w-full mt-1 px-3 py-2 rounded-lg bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"
@@ -92,7 +92,7 @@ export function SlideCanvas({
           {(layout === "title_slide" || layout === "title_content" || layout === "section_header") && (
             <div>
               <label className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">Subtitle</label>
-              <input
+              <input aria-label="Input"
                 value={subtitle ?? ""}
                 onChange={(e) => onUpdateSubtitle(e.target.value)}
                 className="w-full mt-1 px-3 py-2 rounded-lg bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"

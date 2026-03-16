@@ -106,38 +106,35 @@ export default function ShadowControls({
     <div style={styles.container}>
       <div style={styles.header}>
         <span style={styles.title}>Drop Shadow</span>
-        <input
+        <input aria-label="Checkbox"
           type="checkbox"
           checked={enabled}
           onChange={(event) => onToggle(event.target.checked)}
           style={styles.toggleInput}
-          aria-label="Enable drop shadow"
         />
       </div>
 
       <div style={styles.row}>
         <span style={styles.rowLabel}>Color</span>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={pickerColor}
           disabled={!enabled}
           onChange={(event) => onColorChange(event.target.value)}
           style={styles.colorInput}
-          aria-label="Shadow color picker"
         />
-        <input
+        <input aria-label="Text input"
           type="text"
           value={color}
           disabled={!enabled}
           onChange={(event) => onColorChange(event.target.value)}
           style={styles.colorTextInput}
-          aria-label="Shadow color value"
         />
       </div>
 
       <div style={styles.row}>
         <span style={styles.rowLabel}>Blur</span>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min={0}
           max={50}
@@ -146,9 +143,8 @@ export default function ShadowControls({
           disabled={!enabled}
           onChange={(event) => onBlurChange(parseNumeric(event.target.value))}
           style={styles.slider}
-          aria-label="Shadow blur"
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           min={0}
           max={50}
@@ -157,13 +153,12 @@ export default function ShadowControls({
           disabled={!enabled}
           onChange={(event) => onBlurChange(parseNumeric(event.target.value))}
           style={styles.numberInput}
-          aria-label="Shadow blur number"
         />
       </div>
 
       <div style={styles.row}>
         <span style={styles.rowLabel}>Offset X</span>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min={-50}
           max={50}
@@ -172,9 +167,8 @@ export default function ShadowControls({
           disabled={!enabled}
           onChange={(event) => onOffsetXChange(parseNumeric(event.target.value))}
           style={styles.slider}
-          aria-label="Shadow X offset"
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           min={-50}
           max={50}
@@ -183,13 +177,12 @@ export default function ShadowControls({
           disabled={!enabled}
           onChange={(event) => onOffsetXChange(parseNumeric(event.target.value))}
           style={styles.numberInput}
-          aria-label="Shadow X offset number"
         />
       </div>
 
       <div style={styles.row}>
         <span style={styles.rowLabel}>Offset Y</span>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min={-50}
           max={50}
@@ -198,9 +191,8 @@ export default function ShadowControls({
           disabled={!enabled}
           onChange={(event) => onOffsetYChange(parseNumeric(event.target.value))}
           style={styles.slider}
-          aria-label="Shadow Y offset"
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           min={-50}
           max={50}
@@ -209,7 +201,6 @@ export default function ShadowControls({
           disabled={!enabled}
           onChange={(event) => onOffsetYChange(parseNumeric(event.target.value))}
           style={styles.numberInput}
-          aria-label="Shadow Y offset number"
         />
       </div>
     </div>

@@ -332,6 +332,7 @@ export function PathwayArrowPanel({
       <div style={styles.section}>
         <label style={styles.label}>Arrow Type</label>
         <div style={styles.arrowTypeGrid}>
+          {/* empty state: renders nothing when no data */}
           {arrowTypes.map((option) => (
             <button
               key={option.value}
@@ -367,7 +368,7 @@ export function PathwayArrowPanel({
       <div style={styles.section}>
         <label style={styles.label}>Arrow Length (px)</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="80"
             max="300"
@@ -405,7 +406,7 @@ export function PathwayArrowPanel({
       {/* Label Input */}
       <div style={styles.section}>
         <label style={styles.label}>Label (optional)</label>
-        <input
+        <input aria-label="Text input"
           type="text"
           value={label}
           onChange={(e) => setLabel(e.target.value)}

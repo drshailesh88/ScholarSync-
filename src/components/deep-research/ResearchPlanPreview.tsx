@@ -95,6 +95,10 @@ export function ResearchPlanPreview({
 
         {/* Perspectives list */}
         <div className="divide-y divide-gray-200 dark:divide-gray-700/30">
+          {/* empty state: no data, no results, nothing here */}
+          {perspectives.length === 0 && (
+            <p className="text-sm text-gray-500 text-center py-4">nothing here yet. Generate a research plan to get started.</p>
+          )}
           {perspectives.map((perspective, pIdx) => (
             <div key={pIdx} className="px-6 py-3">
               {/* Perspective header */}
@@ -102,7 +106,7 @@ export function ResearchPlanPreview({
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold flex items-center justify-center">
                   {pIdx + 1}
                 </span>
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={perspective.name}
                   onChange={(e) => updatePerspectiveName(pIdx, e.target.value)}
@@ -129,7 +133,7 @@ export function ResearchPlanPreview({
                   </p>
                   {perspective.queries.map((query, qIdx) => (
                     <div key={qIdx} className="flex items-center gap-2">
-                      <input
+                      <input aria-label="Text input"
                         type="text"
                         value={query}
                         onChange={(e) => updateQuery(pIdx, qIdx, e.target.value)}

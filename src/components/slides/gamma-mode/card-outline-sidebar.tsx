@@ -236,6 +236,10 @@ export function CardOutlineSidebar() {
             items={slideIds}
             strategy={verticalListSortingStrategy}
           >
+            {/* empty state: no data, no results, nothing here */}
+            {sortedSlides.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by adding a card.</p>
+            )}
             {sortedSlides.map((slide, idx) => (
               <div key={slide.id}>
                 {idx > 0 && (

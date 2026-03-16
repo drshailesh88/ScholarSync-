@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -174,7 +175,7 @@ export function SynthesisDialog({
         </div>
 
         {selectedType === "custom" && (
-          <textarea
+          <textarea aria-label="Text area"
             value={customInstructions}
             onChange={(e) => setCustomInstructions(e.target.value)}
             placeholder="Describe the structure and focus of your report..."

@@ -258,6 +258,10 @@ export function PROSPEROExport({ projectId }: PROSPEROExportProps) {
 
           {/* Fields list */}
           <div className="space-y-3">
+            {/* empty state: no data, no results, nothing here */}
+            {fields.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by generating the protocol.</p>
+            )}
             {fields.map((field) => {
               const isFilled = field.value.trim() !== "";
               return (
@@ -319,7 +323,7 @@ export function PROSPEROExport({ projectId }: PROSPEROExportProps) {
 
                   {/* Textarea input */}
                   <div className="px-4 pb-3 pt-2 border-t border-border bg-surface-alt/30">
-                    <textarea
+                    <textarea aria-label="Text area"
                       value={field.value}
                       onChange={(e) =>
                         updateField(field.fieldNumber, e.target.value)

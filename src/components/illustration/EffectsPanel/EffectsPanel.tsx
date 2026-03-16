@@ -546,17 +546,16 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
       <div style={styles.controlGroup}>
         <div style={styles.groupHeader}>
           <span style={styles.toggleLabel}>Blur</span>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={blurEnabled}
             onChange={(event) => handleBlurToggle(event.target.checked)}
             style={styles.toggleInput}
-            aria-label="Enable blur"
           />
         </div>
         <div style={styles.row}>
           <span style={styles.rowLabel}>Amount</span>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min={0}
             max={20}
@@ -565,9 +564,8 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
             disabled={!blurEnabled}
             onChange={(event) => handleBlurAmountChange(parseRangeValue(event.target.value))}
             style={styles.slider}
-            aria-label="Blur amount"
           />
-          <input
+          <input aria-label="Number input"
             type="number"
             min={0}
             max={20}
@@ -576,7 +574,6 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
             disabled={!blurEnabled}
             onChange={(event) => handleBlurAmountChange(parseNumberInputValue(event.target.value))}
             style={styles.numberInput}
-            aria-label="Blur amount number"
           />
         </div>
         <div style={styles.helperText}>
@@ -591,7 +588,7 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
         </div>
         <div style={styles.row}>
           <span style={styles.rowLabel}>Value</span>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min={0}
             max={100}
@@ -599,9 +596,8 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
             value={opacityPercent}
             onChange={(event) => handleOpacityChange(parseRangeValue(event.target.value))}
             style={styles.slider}
-            aria-label="Opacity percentage"
           />
-          <input
+          <input aria-label="Number input"
             type="number"
             min={0}
             max={100}
@@ -609,7 +605,6 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
             value={opacityPercent}
             onChange={(event) => handleOpacityChange(parseNumberInputValue(event.target.value))}
             style={styles.numberInput}
-            aria-label="Opacity number"
           />
         </div>
       </div>

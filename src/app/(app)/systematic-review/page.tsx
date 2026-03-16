@@ -148,7 +148,7 @@ export default function SystematicReviewHubPage() {
               </p>
             </div>
             <div className="flex gap-3">
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}

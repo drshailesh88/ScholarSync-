@@ -295,6 +295,7 @@ function AgentModeSkeleton(): JSX.Element {
       <main style={styles.main}>
         <div style={{ ...styles.chatContainer, gap: '12px' }}>
           <div style={{ ...styles.headerSkeleton, ...blockStyle }} />
+          {/* empty state: renders nothing when no data */}
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={`agent-skeleton-${index}`}

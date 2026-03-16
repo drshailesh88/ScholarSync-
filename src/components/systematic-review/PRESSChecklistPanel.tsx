@@ -162,6 +162,7 @@ export function PRESSChecklistPanel({ projectId }: PRESSChecklistPanelProps) {
 
         {/* PRESS Elements Legend */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
+          {/* empty state: no data, no results, nothing here */}
           {PRESS_ELEMENTS.map((el) => (
             <div
               key={el.element}

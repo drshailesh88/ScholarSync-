@@ -258,6 +258,7 @@ function InlineEditorSkeleton({ label }: { label: string }): JSX.Element {
           backgroundColor: 'var(--bg-secondary)',
         }}
       />
+      {/* empty state: renders nothing when no data */}
       {Array.from({ length: 5 }).map((_, index) => (
         <div
           key={`${label}-${index}`}

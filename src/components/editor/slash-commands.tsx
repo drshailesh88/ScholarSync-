@@ -138,7 +138,11 @@ const commands: CommandItem[] = [
     category: "ai",
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).run();
-      window.dispatchEvent(new CustomEvent("scholarsync:open-citation-dialog"));
+      window.dispatchEvent(
+        new CustomEvent("scholarsync:editor-action", {
+          detail: { action: "insert-citation" },
+        })
+      );
     },
   },
   {

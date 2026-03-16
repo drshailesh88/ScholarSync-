@@ -12,6 +12,7 @@ import {
   SortAscending,
   SortDescending,
   MagnifyingGlass,
+  Rss,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useFeedStore } from "@/stores/feed-store";
@@ -19,7 +20,7 @@ import { FeedSidebar } from "@/components/feeds/feed-sidebar";
 import { ArticleList } from "@/components/feeds/article-list";
 import { ArticleReader } from "@/components/feeds/article-reader";
 import { CopilotPanel } from "@/components/feeds/copilot-panel";
-import { FeedEmptyState } from "@/components/feeds/feed-empty-state";
+import { EmptyState } from "@/components/ui/empty-state";
 import { AddFeedModal } from "@/components/feeds/add-feed-modal";
 import { CitationModal } from "@/components/feeds/citation-modal";
 import type { FeedArticleWithStatus } from "@/types/feed";
@@ -143,7 +144,7 @@ export default function FeedsPage() {
           <label className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer">
             <Upload size={16} />
             Import
-            <input
+            <input aria-label="File upload"
               type="file"
               accept=".opml,.xml"
               className="hidden"
@@ -237,7 +238,13 @@ export default function FeedsPage() {
 
       {/* Main content */}
       {!hasSubscriptions ? (
-        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />
+        <EmptyState
+          icon={Rss}
+          title="Your Journal Feed is empty"
+          description="Subscribe to medical journals, PubMed searches, or any RSS feed to stay current with the latest research."
+          actionLabel="Add Your First Feed"
+          onAction={() => setShowAddModal(true)}
+        />
       ) : (
         <div className="flex gap-4 flex-1 min-h-0">
           <div className="hidden lg:block w-56 shrink-0">

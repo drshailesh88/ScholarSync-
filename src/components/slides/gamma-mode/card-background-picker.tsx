@@ -99,6 +99,7 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-ink-muted">Color</label>
         <div className="flex flex-wrap gap-1.5">
+          {/* empty state: renders nothing when no data */}
           {allPresets.map((color) => (
             <button
               key={color}
@@ -135,7 +136,7 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
       {/* Image URL */}
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-ink-muted">Image URL</label>
-        <input
+        <input aria-label="https://example.com/image.jpg"
           type="text"
           placeholder="https://example.com/image.jpg"
           value={bg.imageUrl ?? ""}
@@ -217,7 +218,7 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
               {bg.overlayIntensity ?? 50}%
             </span>
           </div>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min={0}
             max={100}

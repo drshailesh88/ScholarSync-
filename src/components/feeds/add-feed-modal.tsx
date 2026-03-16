@@ -74,7 +74,7 @@ export function AddFeedModal({ open, onClose }: AddFeedModalProps) {
                   size={16}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
                 />
-                <input
+                <input aria-label="URL input"
                   type="url"
                   value={feedUrl}
                   onChange={(e) => setFeedUrl(e.target.value)}
@@ -111,7 +111,7 @@ export function AddFeedModal({ open, onClose }: AddFeedModalProps) {
                   size={16}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
                 />
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={pubmedQuery}
                   onChange={(e) => setPubmedQuery(e.target.value)}

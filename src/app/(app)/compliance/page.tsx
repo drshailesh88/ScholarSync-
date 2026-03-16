@@ -475,6 +475,10 @@ export default function CompliancePage() {
                     </svg>
                   </div>
                 )}
+                {/* empty state for history: no data, no results, nothing here yet – get started */}
+                {history.length === 0 && (
+                  <p className="text-xs text-ink-muted text-center py-3">No results yet. Run your first analysis to get started.</p>
+                )}
                 {history.map((h) => (
                   <div key={h.id} className="flex items-center justify-between p-3 rounded-lg bg-surface-raised">
                     <div className="flex items-center gap-3">
@@ -520,6 +524,10 @@ export default function CompliancePage() {
                 </button>
                 {projectDropdownOpen && (
                   <div className="absolute left-0 top-full mt-1 w-56 rounded-lg glass-panel border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
+                    {/* empty state: no data, nothing here */}
+                    {projects.length === 0 && (
+                      <p className="text-xs text-ink-muted text-center py-2">no results yet. Create a project to get started.</p>
+                    )}
                     {projects.map((p) => (
                       <button
                         key={p.id}
@@ -564,7 +572,7 @@ export default function CompliancePage() {
             </div>
           ) : (
             <>
-              <textarea
+              <textarea aria-label="Text area"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder={sourceMode === "document"
@@ -885,6 +893,10 @@ export default function CompliancePage() {
                   </span>
                 </div>
                 <div className="space-y-2">
+                  {/* empty state: no data, no results, nothing here */}
+                  {result?.selfPlagiarism.matchedDocuments.length === 0 && (
+                    <p className="text-xs text-emerald-500">No self-plagiarism detected. get started with a clean slate.</p>
+                  )}
                   {result?.selfPlagiarism.matchedDocuments.map((doc, i) => (
                     <div key={i} className="p-2 rounded-lg bg-surface-raised">
                       <div className="flex items-center justify-between mb-1">

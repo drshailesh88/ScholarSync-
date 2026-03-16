@@ -325,7 +325,7 @@ export function SlidesToolbar({
         </button>
         <div className="absolute left-0 top-full mt-1 hidden min-w-44 rounded-xl border border-border bg-surface p-1 shadow-lg z-50 group-hover/view:block">
           <label className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-ink hover:bg-surface-raised">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={showRulers}
               onChange={() => setShowRulers(!showRulers)}
@@ -333,7 +333,7 @@ export function SlidesToolbar({
             Rulers
           </label>
           <label className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-ink hover:bg-surface-raised">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={showGrid}
               onChange={() => setShowGrid(!showGrid)}
@@ -348,7 +348,7 @@ export function SlidesToolbar({
                 : "cursor-not-allowed text-ink-muted/70"
             )}
           >
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={snapToGrid}
               disabled={!showGrid}

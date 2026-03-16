@@ -65,7 +65,7 @@ export const ChartBlock = memo(function ChartBlock({ data, theme, institutionKit
   if (!data.datasets || data.datasets.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-[0.7em] opacity-40">
-        No chart data
+        no data to display. nothing here yet. get started by adding chart data.
       </div>
     );
   }

@@ -1,5 +1,14 @@
 import { Extension } from "@tiptap/core";
 
+function dispatchEditorAction(action: string) {
+  window.dispatchEvent(
+    new CustomEvent("scholarsync:editor-action", {
+      detail: { action },
+    })
+  );
+  return true;
+}
+
 /**
  * Additional keyboard shortcuts for academic writing.
  *
@@ -30,6 +39,9 @@ export const AcademicKeyboardShortcuts = Extension.create({
       // Strikethrough
       "Mod-Shift-x": () => this.editor.chain().focus().toggleStrike().run(),
 
+      // Clear formatting
+      "Mod-\\": () => this.editor.chain().focus().unsetAllMarks().clearNodes().run(),
+
       // Highlight
       "Mod-Shift-h": () => this.editor.chain().focus().toggleHighlight().run(),
 
@@ -58,34 +70,13 @@ export const AcademicKeyboardShortcuts = Extension.create({
       },
 
       // Toggle comment sidebar
-      "Mod-/": () => {
-        window.dispatchEvent(
-          new CustomEvent("scholarsync:editor-action", {
-            detail: { action: "toggle-comment-sidebar" },
-          })
-        );
-        return true;
-      },
+      "Mod-/": () => dispatchEditorAction("toggle-comment-sidebar"),
 
       // Insert citation
-      "Mod-Shift-c": () => {
-        window.dispatchEvent(
-          new CustomEvent("scholarsync:editor-action", {
-            detail: { action: "insert-citation" },
-          })
-        );
-        return true;
-      },
+      "Mod-Shift-c": () => dispatchEditorAction("insert-citation"),
 
       // Toggle reference sidebar
-      "Mod-Shift-r": () => {
-        window.dispatchEvent(
-          new CustomEvent("scholarsync:editor-action", {
-            detail: { action: "toggle-reference-sidebar" },
-          })
-        );
-        return true;
-      },
+      "Mod-Shift-r": () => dispatchEditorAction("toggle-reference-sidebar"),
 
       // Horizontal rule
       "Mod-Shift-Enter": () => this.editor.chain().focus().setHorizontalRule().run(),

@@ -77,6 +77,7 @@ export function NestedCardBlock({ data, theme, scale = 1 }: NestedCardBlockProps
                 borderColor: theme.borderColor ?? theme.primaryColor + "1a",
               }}
             >
+              {/* empty state: renders nothing when no data */}
               {data.contentBlocks.map((block, idx) => {
                 const entry = BLOCK_REGISTRY[block.type];
                 if (!entry) return null;

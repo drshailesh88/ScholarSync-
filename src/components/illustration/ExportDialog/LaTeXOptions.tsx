@@ -334,12 +334,12 @@ export function LaTeXOptions({
       {/* TikZ Preview */}
       <div style={styles.previewSection}>
         <label style={styles.previewLabel}>TikZ Code Preview</label>
-        <textarea
+        <textarea aria-label="Text area"
           style={styles.previewTextarea}
           value={getFullTikzCode()}
           readOnly
           spellCheck={false}
-        />
+/>
       </div>
 
       {/* Action Buttons */}

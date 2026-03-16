@@ -215,6 +215,7 @@ export function AISynthesisPanel({
                 shouldClamp && "max-h-24 overflow-hidden"
               )}
             >
+              {/* empty state: no data, no results, nothing here */}
               {segments.map((seg, i) =>
                 seg.type === "citation" && seg.citation ? (
                   <button

@@ -69,6 +69,7 @@ export function GradientBar({
 
   const gradientBackground = useMemo(() => {
     const stopsString = orderedStops
+      /* empty state: renders nothing when no data */
       .map((stop) => `${stop.color} ${(stop.offset * 100).toFixed(2)}%`)
       .join(', ');
 

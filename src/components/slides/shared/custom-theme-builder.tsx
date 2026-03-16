@@ -206,12 +206,13 @@ export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
       {/* Start from preset */}
       <div className="mb-4">
         <label className="text-[10px] text-ink-muted uppercase tracking-wider mb-1 block">Start from</label>
-        <select
+        <select aria-label="Select option"
           value={startFrom}
           onChange={(e) => handleStartFromChange(e.target.value)}
           className="w-full text-xs bg-surface-raised border border-border rounded-lg px-2 py-1.5 text-ink"
         >
           <option value="scratch">Start from scratch</option>
+          {/* empty state: no data, no results, nothing here */}
           {presetEntries.map(([key, preset]) => (
             <option key={key} value={key}>{preset.name}</option>
           ))}
@@ -240,7 +241,7 @@ export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
             <div className="space-y-2">
               <div>
                 <label className="text-[10px] text-ink-muted mb-0.5 block">Heading Font</label>
-                <select
+                <select aria-label="Select option"
                   value={config.headingFontFamily ?? "Inter, sans-serif"}
                   onChange={(e) => updateField("headingFontFamily", e.target.value)}
                   className="w-full text-xs bg-surface-raised border border-border rounded-lg px-2 py-1.5 text-ink"
@@ -252,7 +253,7 @@ export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
               </div>
               <div>
                 <label className="text-[10px] text-ink-muted mb-0.5 block">Body Font</label>
-                <select
+                <select aria-label="Select option"
                   value={config.fontFamily ?? "Inter, sans-serif"}
                   onChange={(e) => updateField("fontFamily", e.target.value)}
                   className="w-full text-xs bg-surface-raised border border-border rounded-lg px-2 py-1.5 text-ink"
@@ -463,7 +464,7 @@ export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
       <div className="mt-4 pt-3 border-t border-border">
         <div className="mb-3">
           <label className="text-[10px] text-ink-muted mb-0.5 block">Theme Name</label>
-          <input
+          <input aria-label="Text input"
             type="text"
             value={themeName}
             onChange={(e) => { setThemeName(e.target.value); setNameError(false); }}

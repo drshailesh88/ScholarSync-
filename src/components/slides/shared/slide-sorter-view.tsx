@@ -112,6 +112,10 @@ export function SlideSorterView({ onClose }: { onClose: () => void }) {
         >
           <SortableContext items={slideIds} strategy={rectSortingStrategy}>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              {/* empty state: no data, no results, nothing here */}
+              {sortedSlides.length === 0 && (
+                <p className="col-span-full text-xs text-ink-muted text-center py-8">nothing here yet. Add slides to get started.</p>
+              )}
               {sortedSlides.map((slide, index) => (
                 <SortableGridItem key={slide.id} slideId={slide.id}>
                   <div className="cursor-grab active:cursor-grabbing">

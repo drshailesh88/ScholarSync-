@@ -189,7 +189,7 @@ export function IllustrationMode() {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Describe the illustration
               </label>
-              <textarea
+              <textarea aria-label="Text area"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="e.g., A diagram showing the process of photosynthesis with labeled components"
@@ -208,6 +208,7 @@ export function IllustrationMode() {
                 Domain
               </label>
               <div className="flex flex-wrap gap-2">
+                {/* empty state: renders nothing when no data */}
                 {ILLUSTRATION_DOMAINS.map((domain) => (
                   <button
                     key={domain.value}
@@ -290,7 +291,7 @@ export function IllustrationMode() {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Search icons
               </label>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={iconSearch}
                 onChange={(e) => setIconSearch(e.target.value)}

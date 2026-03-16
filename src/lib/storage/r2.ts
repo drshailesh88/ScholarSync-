@@ -357,7 +357,7 @@ export interface LatexImage {
   id: string;
   projectId: string;
   filename: string;
-  contentType: LatexImageType;
+  contentType: LatexImageType | "application/octet-stream";
   sizeBytes: number;
   storageKey: string;
   createdAt: Date;
@@ -448,15 +448,14 @@ export async function deleteLatexImage(storageKey: string): Promise<void> {
 
 /**
  * List all images for a LaTeX project.
- * Returns array of storage keys.
  */
-export async function listLatexImages(projectId: string): Promise<string[]> {
+export async function listLatexImages(projectId: string): Promise<LatexImage[]> {
   if (!isWorkers()) {
     const projectDir = path.join(LOCAL_LATEX_IMAGE_DIR, projectId);
     if (!existsSync(projectDir)) return [];
 
     const { readdir, stat } = await import("node:fs/promises");
-    const images: string[] = [];
+    const images: LatexImage[] = [];
 
     try {
       const idDirs = await readdir(projectDir);
@@ -466,7 +465,27 @@ export async function listLatexImages(projectId: string): Promise<string[]> {
         if (idStat.isDirectory()) {
           const files = await readdir(idPath);
           for (const file of files) {
-            images.push(`latex-images/${projectId}/${idDir}/${file}`);
+            const filePath = path.join(idPath, file);
+            const fileStat = await stat(filePath);
+            const ext = path.extname(file).toLowerCase();
+            const contentType =
+              ext === ".pdf"
+                ? "application/pdf"
+                : ext === ".png"
+                  ? "image/png"
+                  : ext === ".jpg" || ext === ".jpeg"
+                    ? "image/jpeg"
+                    : "application/octet-stream";
+
+            images.push({
+              id: idDir,
+              projectId,
+              filename: file,
+              contentType,
+              sizeBytes: fileStat.size,
+              storageKey: `latex-images/${projectId}/${idDir}/${file}`,
+              createdAt: fileStat.birthtime,
+            });
           }
         }
       }

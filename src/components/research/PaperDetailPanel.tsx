@@ -169,6 +169,7 @@ export function PaperDetailPanel({
 
       {/* Tabs */}
       <div className="flex border-b border-border-subtle">
+        {/* empty state: renders nothing when no data */}
         {(["summary", "abstract", "details"] as const).map((tab) => (
           <button
             key={tab}

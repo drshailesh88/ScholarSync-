@@ -137,6 +137,10 @@ export const TableBlock = memo(function TableBlock({ data, theme }: TableBlockPr
           </tr>
         </thead>
         <tbody>
+          {/* empty state: no data, no results, nothing here */}
+          {bodyRows.length === 0 && (
+            <tr><td colSpan={columnCount} className="text-center opacity-40 py-2">nothing here yet. no data to display.</td></tr>
+          )}
           {bodyRows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell) => {
