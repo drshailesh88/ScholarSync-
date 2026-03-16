@@ -1,9 +1,9 @@
 # poster — Spec 006
 
-STATUS: PASS
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 32
+FAIL: 3
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -30,9 +30,9 @@ MODULE: poster
 - [x] PASS: All templates include Title, References, and Acknowledgments sections
 
 ### Icons & Visual Elements
-- [x] PASS: All listed icons render correctly without missing imports
-- [x] PASS: Icons are appropriately sized relative to their context
-- [x] PASS: Icons have correct color theming (inherit or explicit)
+- [ ] FAIL: All listed icons render correctly without missing imports
+- [ ] FAIL: Icons are appropriately sized relative to their context
+- [ ] FAIL: Icons have correct color theming (inherit or explicit)
 
 ### Error Handling & Edge Cases
 - [x] PASS: Wizard handles browser back/forward navigation gracefully

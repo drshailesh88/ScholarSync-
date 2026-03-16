@@ -1,9 +1,9 @@
 # poster — Spec 005
 
-STATUS: PASS
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 20
+FAIL: 15
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -31,23 +31,23 @@ MODULE: poster
 
 ### API — POST /api/posters/generate
 #### Error Codes
-- [x] PASS: API requires authentication (returns 401 without valid auth)
-- [x] PASS: API enforces rate limiting
-- [x] PASS: Title shorter than 1 character returns 400
-- [x] PASS: Title longer than 500 characters returns 400
-- [x] PASS: preprocessedData shorter than 1 character returns 400
-- [x] PASS: preprocessedData longer than 200,000 characters returns 400
-- [x] PASS: preprocessedData is sliced to 60,000 characters before AI processing
+- [ ] FAIL: API requires authentication (returns 401 without valid auth)
+- [ ] FAIL: API enforces rate limiting
+- [ ] FAIL: Title shorter than 1 character returns 400
+- [ ] FAIL: Title longer than 500 characters returns 400
+- [ ] FAIL: preprocessedData shorter than 1 character returns 400
+- [ ] FAIL: preprocessedData longer than 200,000 characters returns 400
+- [ ] FAIL: preprocessedData is sliced to 60,000 characters before AI processing
 - [x] PASS: Missing `posterSize` returns 400
-- [x] PASS: Missing `gridLayout` returns 400
-- [x] PASS: Default `themeKey` is "modern" when not provided
-- [x] PASS: Valid request creates a deck successfully
-- [x] PASS: Deck status transitions: created -> processing -> completed
-- [x] PASS: AI model used is `claude-sonnet-4-20250514`
+- [ ] FAIL: Missing `gridLayout` returns 400
+- [ ] FAIL: Default `themeKey` is "modern" when not provided
+- [ ] FAIL: Valid request creates a deck successfully
+- [ ] FAIL: Deck status transitions: created -> processing -> completed
+- [ ] FAIL: AI model used is `claude-sonnet-4-20250514`
 - [x] PASS: Response contains `deckId`, `sectionCount`, and `posterData`
-- [x] PASS: Metadata is stored in slide 0
-- [x] PASS: Section slides are created correctly
-- [x] PASS: Server errors return 500 with error details
+- [ ] FAIL: Metadata is stored in slide 0
+- [ ] FAIL: Section slides are created correctly
+- [ ] FAIL: Server errors return 500 with error details
 
 ### Types & Data Structures
 #### PosterGridLayout
