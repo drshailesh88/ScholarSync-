@@ -1,9 +1,9 @@
 # illustrate — Spec 004
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 33
+FAIL: 2
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -15,9 +15,9 @@ MODULE: illustrate
 - [x] PASS: MenuBar spans full width at top
 - [x] PASS: Status Bar spans full width at bottom
 - [x] PASS: Rulers display on top and left of canvas (toggleable)
-- [x] PASS: Layout is responsive and panels resize appropriately
+- [ ] FAIL: Layout is responsive and panels resize appropriately
 #### Loading Existing Diagrams (`/illustrate/editor/[id]`)
-- [x] PASS: Loading spinner shows while diagram data is retrieved
+- [ ] FAIL: Loading spinner shows while diagram data is retrieved
 - [x] PASS: Diagram loads from `localStorage['finnish-diagram-{id}']`
 - [x] PASS: Toast notification on successful load
 - [x] PASS: Error toast if diagram ID not found
