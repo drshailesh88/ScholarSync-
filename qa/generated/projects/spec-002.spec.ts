@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for projects/spec-002
  * Source: e2e/specs/projects/spec-002.md
- * Generated: 2026-03-14T15:19:24.583Z
+ * Generated: 2026-03-15T15:38:07.229Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-000 Clearing all filters shows every project');
+      throw new Error('Unhandled projects checkpoint: cp-000 ' + "Clearing all filters shows every project");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-001 Each row represents one project');
+      throw new Error('Unhandled projects checkpoint: cp-001 ' + "Each row represents one project");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-002 Rows render in order from API (updated_at DESC)');
+      throw new Error('Unhandled projects checkpoint: cp-002 ' + "Rows render in order from API (updated_at DESC)");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-003 Hovering the status button reveals the `CaretDown` icon on the badge control');
+      throw new Error('Unhandled projects checkpoint: cp-003 ' + "Hovering the status button reveals the `CaretDown` icon on the badge control");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-004 Clicking the status badge/caret opens the Status Update Modal');
+      throw new Error('Unhandled projects checkpoint: cp-004 ' + "Clicking the status badge/caret opens the Status Update Modal");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-005 Table is wrapped in a horizontal overflow container');
+      throw new Error('Unhandled projects checkpoint: cp-005 ' + "Table is wrapped in a horizontal overflow container");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-006 Edit navigates correctly to the studio page for that project');
+      throw new Error('Unhandled projects checkpoint: cp-006 ' + "Edit navigates correctly to the studio page for that project");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-007 Archive triggers `archiveProject(id)` server action');
+      throw new Error('Unhandled projects checkpoint: cp-007 ' + "Archive triggers `archiveProject(id)` server action");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-008 Delete triggers `deleteProject(id)` server action');
+      throw new Error('Unhandled projects checkpoint: cp-008 ' + "Delete triggers `deleteProject(id)` server action");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-009 All actions target the correct project ID');
+      throw new Error('Unhandled projects checkpoint: cp-009 ' + "All actions target the correct project ID");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-010 Projects displayed in a responsive grid of cards');
+      throw new Error('Unhandled projects checkpoint: cp-010 ' + "Projects displayed in a responsive grid of cards");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-011 Each card has a fixed brand-colored bar at the top');
+      throw new Error('Unhandled projects checkpoint: cp-011 ' + "Each card has a fixed brand-colored bar at the top");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-012 **Type icon** displayed on card');
+      throw new Error('Unhandled projects checkpoint: cp-012 ' + "**Type icon** displayed on card");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-013 **Status badge** displayed on card');
+      throw new Error('Unhandled projects checkpoint: cp-013 ' + "**Status badge** displayed on card");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-014 **Project title** prominent');
+      throw new Error('Unhandled projects checkpoint: cp-014 ' + "**Project title** prominent");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-015 Subtitle line: `"{type} · {lastEdited}"` format');
+      throw new Error('Unhandled projects checkpoint: cp-015 ' + "Subtitle line: `\"{type} · {lastEdited}\"` format");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-016 Footer line uses `Files` and `FileText` icons with singular/plural counts (`paper/papers`, `doc/docs`)');
+      throw new Error('Unhandled projects checkpoint: cp-016 ' + "Footer line uses `Files` and `FileText` icons with singular/plural counts (`paper/papers`, `doc/docs`)");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-017 Cards are clickable or have clear navigation affordance');
+      throw new Error('Unhandled projects checkpoint: cp-017 ' + "Cards are clickable or have clear navigation affordance");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-018 Grid adapts columns based on viewport width');
+      throw new Error('Unhandled projects checkpoint: cp-018 ' + "Grid adapts columns based on viewport width");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-019 Cards share a consistent structure, while final height remains content-driven');
+      throw new Error('Unhandled projects checkpoint: cp-019 ' + "Cards share a consistent structure, while final height remains content-driven");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-020 Filtering/search/tabs work identically in grid view as in list view');
+      throw new Error('Unhandled projects checkpoint: cp-020 ' + "Filtering/search/tabs work identically in grid view as in list view");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-021 All 13 project types map to exactly one of the 5 icon groups');
+      throw new Error('Unhandled projects checkpoint: cp-021 ' + "All 13 project types map to exactly one of the 5 icon groups");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-022 Icons render at appropriate size in both list and grid views');
+      throw new Error('Unhandled projects checkpoint: cp-022 ' + "Icons render at appropriate size in both list and grid views");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-023 Badges display the correct text label');
+      throw new Error('Unhandled projects checkpoint: cp-023 ' + "Badges display the correct text label");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-024 Badge color matches the status mapping');
+      throw new Error('Unhandled projects checkpoint: cp-024 ' + "Badge color matches the status mapping");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-025 Badges appear consistently in both list rows and grid cards');
+      throw new Error('Unhandled projects checkpoint: cp-025 ' + "Badges appear consistently in both list rows and grid cards");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-026 Clicking **"New Project"** button opens modal');
+      throw new Error('Unhandled projects checkpoint: cp-026 ' + "Clicking **\"New Project\"** button opens modal");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-027 Clicking **"Create Your First Project"** (empty state) opens modal');
+      throw new Error('Unhandled projects checkpoint: cp-027 ' + "Clicking **\"Create Your First Project\"** (empty state) opens modal");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-028 Modal has `X` close button');
+      throw new Error('Unhandled projects checkpoint: cp-028 ' + "Modal has `X` close button");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-029 Clicking outside modal or pressing Escape closes it');
+      throw new Error('Unhandled projects checkpoint: cp-029 ' + "Clicking outside modal or pressing Escape closes it");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-030 Title: **"New Project"**');
+      throw new Error('Unhandled projects checkpoint: cp-030 ' + "Title: **\"New Project\"**");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-031 Original Article');
+      throw new Error('Unhandled projects checkpoint: cp-031 ' + "Original Article");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-032 Review Article (default)');
+      throw new Error('Unhandled projects checkpoint: cp-032 ' + "Review Article (default)");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-033 Systematic Review');
+      throw new Error('Unhandled projects checkpoint: cp-033 ' + "Systematic Review");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('projects / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-034 Meta-Analysis');
+      throw new Error('Unhandled projects checkpoint: cp-034 ' + "Meta-Analysis");
     }
 
 

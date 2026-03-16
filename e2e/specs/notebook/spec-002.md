@@ -1,8 +1,8 @@
 # notebook — Spec 002
 
 STATUS: DONE
-TESTED: 0/35
-PASS: 0
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/notebook
@@ -10,51 +10,51 @@ MODULE: notebook
 
 ---
 ### URL Ingestion
-- [ ] **Original URL preserved** — stored in `originalUrl` field
-- [ ] **URL input cleared** — after submission
-- [ ] **URL input hidden** — after submission
+- [x] PASS: **Original URL preserved** — stored in `originalUrl` field
+- [x] PASS: **URL input cleared** — after submission
+- [x] PASS: **URL input hidden** — after submission
 
 ### Source File Status & States
 #### Retry Embed
-- [ ] **Retry button** — appears below "Embedding failed" label
-- [ ] Shows ArrowClockwise icon + "Click to retry" text
-- [ ] Sets status to "processing" during retry
-- [ ] On success: status → `ready`
-- [ ] On failure: status → `embed_failed` again
+- [x] PASS: **Retry button** — appears below "Embedding failed" label
+- [x] PASS: Shows ArrowClockwise icon + "Click to retry" text
+- [x] PASS: Sets status to "processing" during retry
+- [x] PASS: On success: status → `ready`
+- [x] PASS: On failure: status → `embed_failed` again
 
 ### Source Selection & Management
-- [ ] **Checkbox per file** — toggles `selected` state
-- [ ] **Selected papers** used for RAG retrieval in chat
-- [ ] **Unselected papers** excluded from AI queries
-- [ ] **Remove button** — X icon, visible on hover, removes file from list
-- [ ] **Selected count** — used in empty state text: "Ready to analyze N source(s)"
+- [x] PASS: **Checkbox per file** — toggles `selected` state
+- [x] PASS: **Selected papers** used for RAG retrieval in chat
+- [x] PASS: **Unselected papers** excluded from AI queries
+- [x] PASS: **Remove button** — X icon, visible on hover, removes file from list
+- [x] PASS: **Selected count** — used in empty state text: "Ready to analyze N source(s)"
 
 ### Notebook Modes
 #### Research Mode (default)
-- [ ] Chat header shows "Notebook Chat"
-- [ ] Input placeholder: "Ask about your sources..."
-- [ ] Empty state: "Ready to analyze N source(s)" + "Select sources on the left, then ask a question"
-- [ ] Starter suggestions: "Summarize Key Themes", "Find Contradictions", "Compare Methodologies"
-- [ ] AI provides direct, evidence-grounded responses
-- [ ] Follow-up chips styled with neutral surface colors
+- [x] PASS: Chat header shows "Notebook Chat"
+- [x] PASS: Input placeholder: "Ask about your sources..."
+- [x] PASS: Empty state: "Ready to analyze N source(s)" + "Select sources on the left, then ask a question"
+- [x] PASS: Starter suggestions: "Summarize Key Themes", "Find Contradictions", "Compare Methodologies"
+- [x] PASS: AI provides direct, evidence-grounded responses
+- [x] PASS: Follow-up chips styled with neutral surface colors
 #### Learn Mode
-- [ ] Chat header shows "Learn Mode"
-- [ ] **Socratic tutoring badge** — amber pill: "Socratic tutoring"
-- [ ] Input placeholder: "What do you want to explore?"
-- [ ] Empty state: "Learn mode: I'll ask you guiding questions instead of giving direct answers"
-- [ ] Starter suggestions: "Quiz me on these papers", "What assumptions should I question?", "Help me find gaps in this research"
-- [ ] AI uses Socratic method — asks guiding questions instead of direct answers
-- [ ] Follow-up chips styled with amber colors (amber-500/5 background, amber-500/20 border)
+- [x] PASS: Chat header shows "Learn Mode"
+- [x] PASS: **Socratic tutoring badge** — amber pill: "Socratic tutoring"
+- [x] PASS: Input placeholder: "What do you want to explore?"
+- [x] PASS: Empty state: "Learn mode: I'll ask you guiding questions instead of giving direct answers"
+- [x] PASS: Starter suggestions: "Quiz me on these papers", "What assumptions should I question?", "Help me find gaps in this research"
+- [x] PASS: AI uses Socratic method — asks guiding questions instead of direct answers
+- [x] PASS: Follow-up chips styled with amber colors (amber-500/5 background, amber-500/20 border)
 #### Mode Switching
-- [ ] Clicking mode button updates `notebookMode` state
-- [ ] Mode persisted in conversation record on creation
-- [ ] Mode sent as API parameter (`"notebook"` for research, `"learn"` for learn)
-- [ ] Switching modes updates starter suggestions immediately
-- [ ] Chat messages preserved when switching modes mid-conversation
+- [x] PASS: Clicking mode button updates `notebookMode` state
+- [x] PASS: Mode persisted in conversation record on creation
+- [x] PASS: Mode sent as API parameter (`"notebook"` for research, `"learn"` for learn)
+- [x] PASS: Switching modes updates starter suggestions immediately
+- [x] PASS: Chat messages preserved when switching modes mid-conversation
 
 ### Conversation History
 #### History Dropdown
-- [ ] **Toggle button** — ClockCounterClockwise icon + "Past conversations" + caret
-- [ ] **Caret direction** — CaretDown when closed, CaretUp when open
-- [ ] **Max height** — 32 lines, scrollable overflow
-- [ ] **"+ New conversation" button** — brand-colored, starts fresh conversation
+- [x] PASS: **Toggle button** — ClockCounterClockwise icon + "Past conversations" + caret
+- [x] PASS: **Caret direction** — CaretDown when closed, CaretUp when open
+- [x] PASS: **Max height** — 32 lines, scrollable overflow
+- [x] PASS: **"+ New conversation" button** — brand-colored, starts fresh conversation

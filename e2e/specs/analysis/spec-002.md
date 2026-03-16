@@ -1,8 +1,8 @@
 # analysis — Spec 002
 
-STATUS: PASS
-TESTED: 35/35
-PASS: 35
+STATUS: DONE
+TESTED: 33/35
+PASS: 33
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis

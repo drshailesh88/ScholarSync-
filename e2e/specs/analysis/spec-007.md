@@ -1,9 +1,9 @@
 # analysis — Spec 007
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 31
+FAIL: 4
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -13,7 +13,7 @@ MODULE: analysis
 #### Detailed QA Coverage
 - [x] PASS: Results write-good issue cards show uppercase type labels
 - [x] PASS: Results write-good issue cards display the issue reason text only
-- [x] PASS: Plagiarism Indicators section renders only when `result.plagiarismIndicators.length > 0`
+- [ ] FAIL: Plagiarism Indicators section renders only when `result.plagiarismIndicators.length > 0`
 - [x] PASS: High-severity plagiarism cards use red text/background styling
 - [x] PASS: Medium-severity plagiarism cards use yellow text/background styling
 - [x] PASS: Low-severity plagiarism cards use muted text on `bg-surface-raised`
@@ -25,9 +25,9 @@ MODULE: analysis
 - [x] PASS: Writing Quality `Passive Voice` falls back to `result.writingQuality.passiveVoiceCount` when `clientMetrics` is unavailable
 - [x] PASS: Writing Quality `Weasel Words`, `Adverbs`, and `Complex Sentences` rows render only when `clientMetrics` exists
 - [x] PASS: AI Detection section renders `Human Score`, `AI Score`, and `Overall Risk` as `ToneBadge` rows
-- [x] PASS: Human Score uses emerald for >= 70, yellow for 40-69, and red below 40
-- [x] PASS: AI Score uses emerald for <= 30, yellow for 31-60, and red above 60
-- [x] PASS: Overall Risk uses `low -> emerald`, `medium -> yellow`, and `high -> red`
+- [ ] FAIL: Human Score uses emerald for >= 70, yellow for 40-69, and red below 40
+- [ ] FAIL: AI Score uses emerald for <= 30, yellow for 31-60, and red above 60
+- [ ] FAIL: Overall Risk uses `low -> emerald`, `medium -> yellow`, and `high -> red`
 - [x] PASS: Paragraph Breakdown section renders only when `result.paragraphAnalysis.length > 0`
 - [x] PASS: Paragraph Breakdown rows display `Paragraph {n}` on the left and `{humanProbability}% human` on the right
 - [x] PASS: `MetricBar` caps bar fill width at 100% with `Math.min((value / max) * 100, 100)`

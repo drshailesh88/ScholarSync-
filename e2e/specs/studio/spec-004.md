@@ -1,8 +1,8 @@
 # studio — Spec 004
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/studio
@@ -11,46 +11,46 @@ MODULE: studio
 ---
 ### Research Tab
 #### Research Sidebar
-- [ ] Results can be saved to library
-- [ ] Papers can be cited directly
+- [x] PASS: Results can be saved to library
+- [x] PASS: Papers can be cited directly
 
 ### Integrity Panel (Checks Tab)
-- [ ] Tab labeled "Checks" in right panel
+- [x] PASS: Tab labeled "Checks" in right panel
 #### Idle State
-- [ ] Shield icon displayed
-- [ ] Title: "Integrity Check"
-- [ ] Description text explaining the feature
-- [ ] "Run Integrity Check" button (brand colored)
+- [x] PASS: Shield icon displayed
+- [x] PASS: Title: "Integrity Check"
+- [x] PASS: Description text explaining the feature
+- [x] PASS: "Run Integrity Check" button (brand colored)
 #### Running State
-- [ ] Spinning circle animation
-- [ ] Text: "Analyzing Document..."
-- [ ] Subtext: "Running AI detection, plagiarism scan, and citation verification."
+- [x] PASS: Spinning circle animation
+- [x] PASS: Text: "Analyzing Document..."
+- [x] PASS: Subtext: "Running AI detection, plagiarism scan, and citation verification."
 #### Error State
-- [ ] Warning icon
-- [ ] Error message displayed
-- [ ] "Retry" button with ArrowClockwise icon
+- [x] PASS: Warning icon
+- [x] PASS: Error message displayed
+- [x] PASS: "Retry" button with ArrowClockwise icon
 #### Results State
-- [ ] Header: "Integrity Report" with "Re-run" button
-- [ ] Circular gauge showing Human Score (0–100%)
+- [x] PASS: Header: "Integrity Report" with "Re-run" button
+- [x] PASS: Circular gauge showing Human Score (0–100%)
 #### Section 1: AI Detection
-- [ ] Robot icon (color by score: emerald ≥80%, amber ≥50%, red <50%)
-- [ ] Summary: `{humanScore}% human · {overallRisk} risk`
-- [ ] Expandable with chevron
-- [ ] Stats grid (2 columns):
-- [ ] Flagged Paragraphs (top 5):
-- [ ] Paragraph excerpt displayed
-- [ ] AI probability percentage shown
-- [ ] Flags listed as bullets
-- [ ] Suggestion shown if available
-- [ ] Available on free tier
+- [x] PASS: Robot icon (color by score: emerald ≥80%, amber ≥50%, red <50%)
+- [x] PASS: Summary: `{humanScore}% human · {overallRisk} risk`
+- [x] PASS: Expandable with chevron
+- [x] PASS: Stats grid (2 columns):
+- [x] PASS: Flagged Paragraphs (top 5):
+- [x] PASS: Paragraph excerpt displayed
+- [x] PASS: AI probability percentage shown
+- [x] PASS: Flags listed as bullets
+- [x] PASS: Suggestion shown if available
+- [x] PASS: Available on free tier
 #### Section 2: Plagiarism
-- [ ] MagnifyingGlass icon (emerald <15%, amber <30%, red ≥30%)
-- [ ] Summary: `X% similar · Y sources` or "Paid feature"
-- [ ] Expandable section
-- [ ] "Scanned Z scholarly sources" text
-- [ ] No matches: green success "No significant matches found"
-- [ ] Match cards (up to 5):
-- [ ] Similarity percentage (colored)
-- [ ] Severity badge: high / medium / low
-- [ ] Excerpt quote
-- [ ] Source title with year
+- [x] PASS: MagnifyingGlass icon (emerald <15%, amber <30%, red ≥30%)
+- [x] PASS: Summary: `X% similar · Y sources` or "Paid feature"
+- [x] PASS: Expandable section
+- [x] PASS: "Scanned Z scholarly sources" text
+- [x] PASS: No matches: green success "No significant matches found"
+- [x] PASS: Match cards (up to 5):
+- [x] PASS: Similarity percentage (colored)
+- [x] PASS: Severity badge: high / medium / low
+- [x] PASS: Excerpt quote
+- [x] PASS: Source title with year

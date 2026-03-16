@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-010
  * Source: e2e/specs/research/spec-010.md
- * Generated: 2026-03-14T08:47:14.001Z
+ * Generated: 2026-03-15T17:26:25.034Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 ClinicalTrials results always set `journal` to the sponsor organization name or `"ClinicalTrials.gov"` when no organization is present');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "ClinicalTrials results always set `journal` to the sponsor organization name or `\"ClinicalTrials.gov\"` when no organization is present");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 ClinicalTrials results always set `publicationTypes` to `["clinical_trial_registration"]`');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "ClinicalTrials results always set `publicationTypes` to `[\"clinical_trial_registration\"]`");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 ClinicalTrials results always set `isOpenAccess` to `true`');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "ClinicalTrials results always set `isOpenAccess` to `true`");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 ClinicalTrials result abstracts concatenate brief summary, `Phase: ...`, and `Status: ...` with ` | ` separators when those pieces exist');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "ClinicalTrials result abstracts concatenate brief summary, `Phase: ...`, and `Status: ...` with ` | ` separators when those pieces exist");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 Similar-paper recommendation fallback runs a Semantic Scholar title search only when the direct recommendation API returns zero papers and the caller provided `paperTitle`');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "Similar-paper recommendation fallback runs a Semantic Scholar title search only when the direct recommendation API returns zero papers and the caller provided `paperTitle`");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 Similar-paper title-search fallback excludes the original paper ID before slicing the result list back to the requested limit');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "Similar-paper title-search fallback excludes the original paper ID before slicing the result list back to the requested limit");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 Copilot submit uses a normal `<form>` submit path, so pressing `Enter` in the copilot text input triggers `handleChatSubmit(...)`');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "Copilot submit uses a normal `<form>` submit path, so pressing `Enter` in the copilot text input triggers `handleChatSubmit(...)`");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 Copilot submit does not support multi-line drafting because the input is a single-line `<input type="text">`');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "Copilot submit does not support multi-line drafting because the input is a single-line `<input type=\"text\">`");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 Copilot submit trims whitespace with `chatInput.trim()` before deciding whether the request is allowed');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "Copilot submit trims whitespace with `chatInput.trim()` before deciding whether the request is allowed");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 Copilot submit returns early without calling `sendMessage(...)` when `chatLoading` is already true');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "Copilot submit returns early without calling `sendMessage(...)` when `chatLoading` is already true");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 `chatLoading` is true for both `chatStatus === "submitted"` and `chatStatus === "streaming"`');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "`chatLoading` is true for both `chatStatus === \"submitted\"` and `chatStatus === \"streaming\"`");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 The `/research` page clears the copilot input immediately after calling `sendMessage({ text: chatInput })`');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "The `/research` page clears the copilot input immediately after calling `sendMessage({ text: chatInput })`");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 The `/research` page does not persist copilot messages in `sessionStorage`');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "The `/research` page does not persist copilot messages in `sessionStorage`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 The `/research` page does not persist `showCopilot` open/closed state across refresh');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "The `/research` page does not persist `showCopilot` open/closed state across refresh");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 The `/research` page does not pass the current search results, filters, or saved-paper IDs into `useChat(...)` as extra agent context');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "The `/research` page does not pass the current search results, filters, or saved-paper IDs into `useChat(...)` as extra agent context");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Copilot message rendering ignores any non-text `msg.parts` emitted by the AI SDK and drops messages whose concatenated text content is empty');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Copilot message rendering ignores any non-text `msg.parts` emitted by the AI SDK and drops messages whose concatenated text content is empty");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 The current copilot panel has no `useEffect` auto-scroll-to-bottom behavior for new messages');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "The current copilot panel has no `useEffect` auto-scroll-to-bottom behavior for new messages");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Research-agent requests are validated against a schema that allows between `1` and `50` messages');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Research-agent requests are validated against a schema that allows between `1` and `50` messages");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Research-agent request schema caps each message `content` string at `50000` characters');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Research-agent request schema caps each message `content` string at `50000` characters");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Research-agent schema optionally accepts `context.savedPaperIds`, but the current `/research` page never sends that context field');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Research-agent schema optionally accepts `context.savedPaperIds`, but the current `/research` page never sends that context field");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 When `context.savedPaperIds.length > 0`, the research-agent system prompt appends `The user has {N} papers saved in their library.`');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "When `context.savedPaperIds.length > 0`, the research-agent system prompt appends `The user has {N} papers saved in their library.`");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Research-agent streaming stops automatically when `stepCountIs(12)` is reached');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Research-agent streaming stops automatically when `stepCountIs(12)` is reached");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Invalid research-agent request bodies return HTTP 400 with `Invalid request. Messages are required.`');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Invalid research-agent request bodies return HTTP 400 with `Invalid request. Messages are required.`");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Unhandled research-agent failures return HTTP 500 with `Research agent failed`');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Unhandled research-agent failures return HTTP 500 with `Research agent failed`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 `searchPubMed` tool responses are truncated to the first `maxResults` items even if the underlying adapter returned more');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "`searchPubMed` tool responses are truncated to the first `maxResults` items even if the underlying adapter returned more");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 `searchPubMed` tool trims each returned author list to the first 3 authors');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "`searchPubMed` tool trims each returned author list to the first 3 authors");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 `searchPubMed` tool trims each returned abstract to the first 300 characters');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "`searchPubMed` tool trims each returned abstract to the first 300 characters");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 `searchSemanticScholar` tool includes `citationCount`, `tldr`, `studyType`, and `evidenceLevel` in each tool result');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "`searchSemanticScholar` tool includes `citationCount`, `tldr`, `studyType`, and `evidenceLevel` in each tool result");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 `searchOpenAlex` tool includes `isOpenAccess` and at most 5 concept strings in each tool result');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "`searchOpenAlex` tool includes `isOpenAccess` and at most 5 concept strings in each tool result");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 `getPaperDetails` checks Semantic Scholar by raw `s2Id` first, by `DOI:{doi}` second, and by `PMID:{pmid}` third');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "`getPaperDetails` checks Semantic Scholar by raw `s2Id` first, by `DOI:{doi}` second, and by `PMID:{pmid}` third");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 `getPaperDetails` falls back to `searchPubMed(pmid, { maxResults: 1 })` only when Semantic Scholar lookup by PMID returns no paper');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "`getPaperDetails` falls back to `searchPubMed(pmid, { maxResults: 1 })` only when Semantic Scholar lookup by PMID returns no paper");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 `getPaperDetails` returns `{ error: "Provide at least one identifier" }` when called with no DOI, PMID, or S2 ID');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "`getPaperDetails` returns `{ error: \"Provide at least one identifier\" }` when called with no DOI, PMID, or S2 ID");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 `findSimilarPapers` tool only returns title, first 3 authors, year, journal, doi, s2Id, citationCount, and tldr for each recommended paper');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "`findSimilarPapers` tool only returns title, first 3 authors, year, journal, doi, s2Id, citationCount, and tldr for each recommended paper");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 `savePaperToLibrary` tool requires a `source` string and returns only `{ success: true, paperId }` on success');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "`savePaperToLibrary` tool requires a `source` string and returns only `{ success: true, paperId }` on success");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 AI synthesis fingerprint uses the exact format `{query}::{top5 titles joined by |}`');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "AI synthesis fingerprint uses the exact format `{query}::{top5 titles joined by |}`");
     }
 
 

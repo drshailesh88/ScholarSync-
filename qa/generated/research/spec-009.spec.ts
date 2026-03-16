@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-009
  * Source: e2e/specs/research/spec-009.md
- * Generated: 2026-03-14T07:49:01.583Z
+ * Generated: 2026-03-15T17:25:02.282Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 Unhandled unified-search failures return HTTP 500 with `{ "error": "Search failed" }`');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "Unhandled unified-search failures return HTTP 500 with `{ \"error\": \"Search failed\" }`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 PubMed result parsing drops any `<PubmedArticle>` chunk whose `<ArticleTitle>` is missing or empty');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "PubMed result parsing drops any `<PubmedArticle>` chunk whose `<ArticleTitle>` is missing or empty");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 PubMed structured abstracts concatenate every `<AbstractText>` segment into one string separated by spaces');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "PubMed structured abstracts concatenate every `<AbstractText>` segment into one string separated by spaces");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 Labeled PubMed abstract segments are prefixed as `Label: text` during parsing');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "Labeled PubMed abstract segments are prefixed as `Label: text` during parsing");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 PubMed author names are normalized to `LastName ForeName`');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "PubMed author names are normalized to `LastName ForeName`");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 PubMed journal name prefers `<ISOAbbreviation>` and falls back to `<Title>`');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "PubMed journal name prefers `<ISOAbbreviation>` and falls back to `<Title>`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 PubMed year parsing prefers `<Year>` inside `<PubDate>` and falls back to `<MedlineDate>`');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "PubMed year parsing prefers `<Year>` inside `<PubDate>` and falls back to `<MedlineDate>`");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 PubMed year parsing falls back to numeric `0` when no four-digit year can be extracted');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "PubMed year parsing falls back to numeric `0` when no four-digit year can be extracted");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 PubMed DOI is read from `<ArticleId IdType="doi">`');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "PubMed DOI is read from `<ArticleId IdType=\"doi\">`");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 PubMed publication types are collected from every `<PublicationType>` tag into `publicationTypes[]`');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "PubMed publication types are collected from every `<PublicationType>` tag into `publicationTypes[]`");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 PubMed MeSH terms are collected from every `<DescriptorName>` tag into `meshTerms[]`');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "PubMed MeSH terms are collected from every `<DescriptorName>` tag into `meshTerms[]`");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 PubMed study type uses the first mapped publication type that is not `"other"`');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "PubMed study type uses the first mapped publication type that is not `\"other\"`");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 PubMed results always set `citationCount` to `0`');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "PubMed results always set `citationCount` to `0`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 PubMed results always set `isOpenAccess` to `false`');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "PubMed results always set `isOpenAccess` to `false`");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 PubMed source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "PubMed source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 PubMed resilient fetch calls use timeout `15000` and `baseDelay: 400`');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "PubMed resilient fetch calls use timeout `15000` and `baseDelay: 400`");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Semantic Scholar sanitization strips PubMed field tags such as `[MeSH]`, `[tiab]`, `[pt]`, `[au]`, `[ta]`, `[dp]`, and `[mesh]` before querying S2');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Semantic Scholar sanitization strips PubMed field tags such as `[MeSH]`, `[tiab]`, `[pt]`, `[au]`, `[ta]`, `[dp]`, and `[mesh]` before querying S2");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Semantic Scholar sanitization removes parentheses, double quotes, and boolean operators `AND`, `OR`, and `NOT`');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Semantic Scholar sanitization removes parentheses, double quotes, and boolean operators `AND`, `OR`, and `NOT`");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Semantic Scholar year filtering serializes as `YYYY-YYYY`, `YYYY-`, or `-YYYY` depending on which bounds are present');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Semantic Scholar year filtering serializes as `YYYY-YYYY`, `YYYY-`, or `-YYYY` depending on which bounds are present");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Semantic Scholar results expose `openAccessPdfUrl` separately from `isOpenAccess`');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Semantic Scholar results expose `openAccessPdfUrl` separately from `isOpenAccess`");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Semantic Scholar results default `fieldsOfStudy` to an empty array when the API omits them');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Semantic Scholar results default `fieldsOfStudy` to an empty array when the API omits them");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Semantic Scholar result mapping treats `JournalArticle` / `Journal Article` publication types as study type `"other"`');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Semantic Scholar result mapping treats `JournalArticle` / `Journal Article` publication types as study type `\"other\"`");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Semantic Scholar source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Semantic Scholar source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Semantic Scholar resilient fetch calls use timeout `15000` and `baseDelay: 1000`');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Semantic Scholar resilient fetch calls use timeout `15000` and `baseDelay: 1000`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 OpenAlex strips the `https://doi.org/` prefix before storing DOI values on unified results');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "OpenAlex strips the `https://doi.org/` prefix before storing DOI values on unified results");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 OpenAlex reconstructs abstract text from `abstract_inverted_index` by sorting word-position pairs numerically');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "OpenAlex reconstructs abstract text from `abstract_inverted_index` by sorting word-position pairs numerically");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 OpenAlex concept chips are limited to concepts whose score is greater than `0.3`');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "OpenAlex concept chips are limited to concepts whose score is greater than `0.3`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 OpenAlex year filtering serializes into the `filter=` query param as `publication_year:start-end`, `publication_year:start-`, or `publication_year:-end`');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "OpenAlex year filtering serializes into the `filter=` query param as `publication_year:start-end`, `publication_year:start-`, or `publication_year:-end`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 OpenAlex adds `is_oa:true` to its `filter=` query param only when `onlyOpenAccess` is true');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "OpenAlex adds `is_oa:true` to its `filter=` query param only when `onlyOpenAccess` is true");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 OpenAlex source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "OpenAlex source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 ClinicalTrials keyword extraction strips punctuation characters including `? . , ! ; : \' " ( ) [ ] { }`');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "ClinicalTrials keyword extraction strips punctuation characters including `? . , ! ; : ' \" ( ) [ ] { }`");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 ClinicalTrials keyword extraction drops single-character tokens and a built-in stop-word list before joining the remaining search terms');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "ClinicalTrials keyword extraction drops single-character tokens and a built-in stop-word list before joining the remaining search terms");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 ClinicalTrials falls back to the raw query string when keyword extraction produces an empty term string');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "ClinicalTrials falls back to the raw query string when keyword extraction produces an empty term string");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 ClinicalTrials requests always include `sort=@relevance`, `format=json`, and `countTotal=true`');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "ClinicalTrials requests always include `sort=@relevance`, `format=json`, and `countTotal=true`");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 ClinicalTrials status filtering only maps `recruiting` to `RECRUITING` and `completed` to `COMPLETED`');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "ClinicalTrials status filtering only maps `recruiting` to `RECRUITING` and `completed` to `COMPLETED`");
     }
 
 

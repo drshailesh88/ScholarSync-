@@ -1,9 +1,9 @@
 # analysis — Spec 006
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 33
+FAIL: 2
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -11,8 +11,8 @@ MODULE: analysis
 ---
 ### Quick Test Workflows
 #### Detailed QA Coverage
-- [x] PASS: Instant gauge size is `110`
-- [x] PASS: Instant gauge center displays the numeric `fleschReadingEase` score
+- [ ] FAIL: Instant gauge size is `110`
+- [ ] FAIL: Instant gauge center displays the numeric `fleschReadingEase` score
 - [x] PASS: Instant gauge label comes from `clientMetrics.readabilityLabel`
 - [x] PASS: Instant readability labels in the current implementation are `Easy`, `Standard`, `Difficult`, and `Very Difficult`
 - [x] PASS: Counts grid renders `Words`, `Sentences`, and `Paragraphs` summary cards

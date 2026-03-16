@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-012
  * Source: e2e/specs/research/spec-012.md
- * Generated: 2026-03-14T08:50:11.196Z
+ * Generated: 2026-03-15T17:29:10.991Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 `getRecentSearches()` serializes `searchedAt` as an ISO string and falls back to `""` when no timestamp is present');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "`getRecentSearches()` serializes `searchedAt` as an ISO string and falls back to `\"\"` when no timestamp is present");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 `getUserPapers(collection?)` returns paper metadata plus `refId`, `isFavorite`, `collection`, `notes`, `tags`, and `addedAt`');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "`getUserPapers(collection?)` returns paper metadata plus `refId`, `isFavorite`, `collection`, `notes`, `tags`, and `addedAt`");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 `savePaper()` de-duplicates in this order: DOI, PMID, Semantic Scholar ID, then normalized title+year');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "`savePaper()` de-duplicates in this order: DOI, PMID, Semantic Scholar ID, then normalized title+year");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 `savePaper()` only enriches an existing paper with missing metadata fields or higher citation-related counts; it does not blindly overwrite populated values');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "`savePaper()` only enriches an existing paper with missing metadata fields or higher citation-related counts; it does not blindly overwrite populated values");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 New-paper inserts default `authors` to `[]` when the caller omits them');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "New-paper inserts default `authors` to `[]` when the caller omits them");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 New-paper inserts copy `open_access_url` into `pdf_url`');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "New-paper inserts copy `open_access_url` into `pdf_url`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 `savePaper()` creates the user-reference row in collection `"All Papers"` with `isFavorite: false`');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "`savePaper()` creates the user-reference row in collection `\"All Papers\"` with `isFavorite: false`");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 User-reference creation uses `.onConflictDoNothing()`, so duplicate saves do not throw when the paper is already in the user library');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "User-reference creation uses `.onConflictDoNothing()`, so duplicate saves do not throw when the paper is already in the user library");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 `savePaper()` always calls `revalidatePath("/library")` after the user-reference insert path');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "`savePaper()` always calls `revalidatePath(\"/library\")` after the user-reference insert path");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 `savePaper()` only queues chunking/embedding work when the saved paper has an abstract or TL;DR');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "`savePaper()` only queues chunking/embedding work when the saved paper has an abstract or TL;DR");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 `savePaper()` only queues PDF processing when the saved paper has a DOI or `open_access_url`');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "`savePaper()` only queues PDF processing when the saved paper has a DOI or `open_access_url`");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 `handleSave(result)` chooses the outgoing `source` field as `"pubmed"` first, `"semantic_scholar"` second, and `"openalex"` otherwise based on `result.sources`');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "`handleSave(result)` chooses the outgoing `source` field as `\"pubmed\"` first, `\"semantic_scholar\"` second, and `\"openalex\"` otherwise based on `result.sources`");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 `handleSave(result)` forwards `open_access_url: result.openAccessPdfUrl || undefined` to the server action');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "`handleSave(result)` forwards `open_access_url: result.openAccessPdfUrl || undefined` to the server action");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 `Save & Cite` writes only citation metadata into `scholarsync_pending_citation`; it does not persist a saved library `paperId`');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "`Save & Cite` writes only citation metadata into `scholarsync_pending_citation`; it does not persist a saved library `paperId`");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 When `result.doi` or `result.pmid` is `undefined`, `JSON.stringify(...)` omits that key from the stored `scholarsync_pending_citation` payload');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "When `result.doi` or `result.pmid` is `undefined`, `JSON.stringify(...)` omits that key from the stored `scholarsync_pending_citation` payload");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Result author rows still render an empty `<p>` when `authors[]` is empty');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Result author rows still render an empty `<p>` when `authors[]` is empty");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Result metadata rows still render the separator format `{journal} · {year}` even when `journal` is blank or `year` is `0`');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Result metadata rows still render the separator format `{journal} · {year}` even when `journal` is blank or `year` is `0`");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Result citation text is omitted when `citationCount` is `0` because the render branch checks truthiness rather than nullability');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Result citation text is omitted when `citationCount` is `0` because the render branch checks truthiness rather than nullability");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Result cards omit the abstract block completely when `abstract` is falsy');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Result cards omit the abstract block completely when `abstract` is falsy");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Result cards omit the TL;DR block completely when `tldr` is falsy');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Result cards omit the TL;DR block completely when `tldr` is falsy");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Result cards omit the DOI metadata link completely when `doi` is falsy');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Result cards omit the DOI metadata link completely when `doi` is falsy");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Result cards omit the Similar button completely when `s2Id` is falsy');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Result cards omit the Similar button completely when `s2Id` is falsy");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Similar-result save buttons do not have a disabled visual state even when `handleSave(...)` will immediately no-op because the paper is already saved or currently saving');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Similar-result save buttons do not have a disabled visual state even when `handleSave(...)` will immediately no-op because the paper is already saved or currently saving");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Similar-result cards omit authors, DOI, abstract, TL;DR, evidence badges, open-access badges, and relevance text even when those fields exist on the recommended paper');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Similar-result cards omit authors, DOI, abstract, TL;DR, evidence badges, open-access badges, and relevance text even when those fields exist on the recommended paper");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 The live `/research` route does not render a before-search empty-state string like `Search for academic papers...`; it renders recent searches, recently saved papers, suggestion chips, and a `Loading your history...` helper');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "The live `/research` route does not render a before-search empty-state string like `Search for academic papers...`; it renders recent searches, recently saved papers, suggestion chips, and a `Loading your history...` helper");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 The live `/research` route does not disable the main `Search` button when the query input is empty; the button is disabled only while `loading` is true');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "The live `/research` route does not disable the main `Search` button when the query input is empty; the button is disabled only while `loading` is true");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 The live `/research` route does not support `Shift+Enter` multiline query entry because the primary search field is a single-line `<input>`');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "The live `/research` route does not support `Shift+Enter` multiline query entry because the primary search field is a single-line `<input>`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 The live `/research` route does not apply explicit `min` or `max` attributes to the `From` and `To` year inputs');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "The live `/research` route does not apply explicit `min` or `max` attributes to the `From` and `To` year inputs");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 The live copilot sidebar does not auto-scroll to the newest message in the current implementation');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "The live copilot sidebar does not auto-scroll to the newest message in the current implementation");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 The live copilot request path does not send current search results, filters, or saved-paper IDs into `/api/research-agent`; only the chat transcript is sent by the page');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "The live copilot request path does not send current search results, filters, or saved-paper IDs into `/api/research-agent`; only the chat transcript is sent by the page");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 The live AI synthesis panel does not show an inline failure banner or retry button; failed synthesis requests simply make the panel disappear');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "The live AI synthesis panel does not show an inline failure banner or retry button; failed synthesis requests simply make the panel disappear");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 The live augmented-query disclosure labels the Semantic Scholar variant as `S2:`, not `Semantic Scholar:`');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "The live augmented-query disclosure labels the Semantic Scholar variant as `S2:`, not `Semantic Scholar:`");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 `src/components/research/SearchInput.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "`src/components/research/SearchInput.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 `src/components/research/ResultsTable.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "`src/components/research/ResultsTable.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 `src/components/research/ResultRow.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "`src/components/research/ResultRow.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`");
     }
 
 

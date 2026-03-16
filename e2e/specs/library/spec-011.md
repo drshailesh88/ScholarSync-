@@ -1,9 +1,9 @@
 # library — Spec 011
 
-STATUS: PASS
+STATUS: PARTIAL
 TESTED: 30/30
-PASS: 30
-FAIL: 0
+PASS: 28
+FAIL: 2
 BLOCKED: 0
 PAGE: http://localhost:3001/library
 MODULE: library
@@ -28,8 +28,8 @@ MODULE: library
 - [x] PASS: Active citation tab styling is `bg-surface-raised text-ink border border-border-subtle`; inactive tabs use `text-ink-muted hover:text-ink hover:bg-surface-raised/50`
 - [x] PASS: The shared `Modal` component used for citations does not set `role="dialog"` or `aria-modal`
 - [x] PASS: The shared `Modal` close button has no `aria-label`
-- [x] PASS: Search input relies on placeholder text only; it has no associated `<label>` or `aria-label`
-- [x] PASS: Project, Study Type, and year filter controls have no explicit `<label>` or `aria-label`
+- [ ] FAIL: Search input relies on placeholder text only; it has no associated `<label>` or `aria-label`
+- [ ] FAIL: Project, Study Type, and year filter controls have no explicit `<label>` or `aria-label`
 - [x] PASS: Favorite and delete icon-only buttons have no `aria-label` or `title`
 #### Edge Cases & Cleanup
 - [x] PASS: Search debounce effect clears its pending timeout in cleanup via `return () => clearTimeout(timer)`

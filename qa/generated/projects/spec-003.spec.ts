@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for projects/spec-003
  * Source: e2e/specs/projects/spec-003.md
- * Generated: 2026-03-14T15:20:30.580Z
+ * Generated: 2026-03-15T15:39:04.490Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-000 Literature Review');
+      throw new Error('Unhandled projects checkpoint: cp-000 ' + "Literature Review");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-001 Case Report');
+      throw new Error('Unhandled projects checkpoint: cp-001 ' + "Case Report");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-002 Thesis');
+      throw new Error('Unhandled projects checkpoint: cp-002 ' + "Thesis");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-003 Dissertation');
+      throw new Error('Unhandled projects checkpoint: cp-003 ' + "Dissertation");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-004 Book Chapter');
+      throw new Error('Unhandled projects checkpoint: cp-004 ' + "Book Chapter");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-005 Vancouver (default)');
+      throw new Error('Unhandled projects checkpoint: cp-005 ' + "Vancouver (default)");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-006 APA 7th');
+      throw new Error('Unhandled projects checkpoint: cp-006 ' + "APA 7th");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-007 AMA');
+      throw new Error('Unhandled projects checkpoint: cp-007 ' + "AMA");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-008 Chicago');
+      throw new Error('Unhandled projects checkpoint: cp-008 ' + "Chicago");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-009 Harvard');
+      throw new Error('Unhandled projects checkpoint: cp-009 ' + "Harvard");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-010 IEEE');
+      throw new Error('Unhandled projects checkpoint: cp-010 ' + "IEEE");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-011 MLA');
+      throw new Error('Unhandled projects checkpoint: cp-011 ' + "MLA");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-012 **"Create Project"** button spans full width');
+      throw new Error('Unhandled projects checkpoint: cp-012 ' + "**\"Create Project\"** button spans full width");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-013 Button disabled when Project Name is empty');
+      throw new Error('Unhandled projects checkpoint: cp-013 ' + "Button disabled when Project Name is empty");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-014 Button disabled while `creating` state is true');
+      throw new Error('Unhandled projects checkpoint: cp-014 ' + "Button disabled while `creating` state is true");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-015 Button text changes to **"Creating..."** during submission');
+      throw new Error('Unhandled projects checkpoint: cp-015 ' + "Button text changes to **\"Creating...\"** during submission");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-016 Pressing **Enter** inside the Project Name input submits the create action');
+      throw new Error('Unhandled projects checkpoint: cp-016 ' + "Pressing **Enter** inside the Project Name input submits the create action");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-017 Successful creation navigates to `/editor/new?project={newProjectId}`');
+      throw new Error('Unhandled projects checkpoint: cp-017 ' + "Successful creation navigates to `/editor/new?project={newProjectId}`");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-018 Modal closes after successful creation');
+      throw new Error('Unhandled projects checkpoint: cp-018 ' + "Modal closes after successful creation");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-019 Failed creation logs an error and leaves the modal open');
+      throw new Error('Unhandled projects checkpoint: cp-019 ' + "Failed creation logs an error and leaves the modal open");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-020 Created project defaults to `status="planning"`');
+      throw new Error('Unhandled projects checkpoint: cp-020 ' + "Created project defaults to `status=\"planning\"`");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-021 Clicking the status badge or `CaretDown` icon on a project row opens the modal');
+      throw new Error('Unhandled projects checkpoint: cp-021 ' + "Clicking the status badge or `CaretDown` icon on a project row opens the modal");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-022 Modal displays for the correct project');
+      throw new Error('Unhandled projects checkpoint: cp-022 ' + "Modal displays for the correct project");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-023 Title: **"Update Status"**');
+      throw new Error('Unhandled projects checkpoint: cp-023 ' + "Title: **\"Update Status\"**");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-024 Subtitle: **"Change status for {project title}"**');
+      throw new Error('Unhandled projects checkpoint: cp-024 ' + "Subtitle: **\"Change status for {project title}\"**");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-025 Project title matches the selected project');
+      throw new Error('Unhandled projects checkpoint: cp-025 ' + "Project title matches the selected project");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-026 **Archived** displayed separately from the pipeline row');
+      throw new Error('Unhandled projects checkpoint: cp-026 ' + "**Archived** displayed separately from the pipeline row");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-027 Currently active status shows brand border + background with **"Selected"** label');
+      throw new Error('Unhandled projects checkpoint: cp-027 ' + "Currently active status shows brand border + background with **\"Selected\"** label");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-028 Clicking a different status changes the selection');
+      throw new Error('Unhandled projects checkpoint: cp-028 ' + "Clicking a different status changes the selection");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-029 Clicking the already-selected status keeps it selected');
+      throw new Error('Unhandled projects checkpoint: cp-029 ' + "Clicking the already-selected status keeps it selected");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-030 **"Update Status"** button displayed');
+      throw new Error('Unhandled projects checkpoint: cp-030 ' + "**\"Update Status\"** button displayed");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-031 Button disabled when selected status matches current status (no change)');
+      throw new Error('Unhandled projects checkpoint: cp-031 ' + "Button disabled when selected status matches current status (no change)");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-032 Clicking **"Update Status"** closes the modal before the `"Updating..."` label can render');
+      throw new Error('Unhandled projects checkpoint: cp-032 ' + "Clicking **\"Update Status\"** closes the modal before the `\"Updating...\"` label can render");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-033 Successful update reflects immediately in the project list');
+      throw new Error('Unhandled projects checkpoint: cp-033 ' + "Successful update reflects immediately in the project list");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('projects / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-034 Modal closes immediately on submit, before awaiting the server action');
+      throw new Error('Unhandled projects checkpoint: cp-034 ' + "Modal closes immediately on submit, before awaiting the server action");
     }
 
 

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for projects/spec-001
  * Source: e2e/specs/projects/spec-001.md
- * Generated: 2026-03-14T15:18:18.098Z
+ * Generated: 2026-03-15T15:37:10.203Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-000 Page renders as a client component (`"use client"`)');
+      throw new Error('Unhandled projects checkpoint: cp-000 ' + "Page renders as a client component (`\"use client\"`)");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-001 All sections visible after data loads');
+      throw new Error('Unhandled projects checkpoint: cp-001 ' + "All sections visible after data loads");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-002 Header, tabs, search/filter row, and project listing all render in order');
+      throw new Error('Unhandled projects checkpoint: cp-002 ' + "Header, tabs, search/filter row, and project listing all render in order");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-003 Responsive layout adapts to viewport size');
+      throw new Error('Unhandled projects checkpoint: cp-003 ' + "Responsive layout adapts to viewport size");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-004 Page title displays **"My Projects"**');
+      throw new Error('Unhandled projects checkpoint: cp-004 ' + "Page title displays **\"My Projects\"**");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-005 Badge next to title shows total project count');
+      throw new Error('Unhandled projects checkpoint: cp-005 ' + "Badge next to title shows total project count");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-006 Badge count updates when projects are added or removed');
+      throw new Error('Unhandled projects checkpoint: cp-006 ' + "Badge count updates when projects are added or removed");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-007 **List** button with `List` (Phosphor) icon');
+      throw new Error('Unhandled projects checkpoint: cp-007 ' + "**List** button with `List` (Phosphor) icon");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-008 **Grid** button with `SquaresFour` (Phosphor) icon');
+      throw new Error('Unhandled projects checkpoint: cp-008 ' + "**Grid** button with `SquaresFour` (Phosphor) icon");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-009 Active mode is visually highlighted');
+      throw new Error('Unhandled projects checkpoint: cp-009 ' + "Active mode is visually highlighted");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-010 Clicking toggles between `"list"` and `"grid"` view modes');
+      throw new Error('Unhandled projects checkpoint: cp-010 ' + "Clicking toggles between `\"list\"` and `\"grid\"` view modes");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-011 Selected mode persists during session (state-based)');
+      throw new Error('Unhandled projects checkpoint: cp-011 ' + "Selected mode persists during session (state-based)");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-012 Displays `Plus` icon with label **"New Project"**');
+      throw new Error('Unhandled projects checkpoint: cp-012 ' + "Displays `Plus` icon with label **\"New Project\"**");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-013 Clicking opens the New Project Modal');
+      throw new Error('Unhandled projects checkpoint: cp-013 ' + "Clicking opens the New Project Modal");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-014 Button visible at all times regardless of project count');
+      throw new Error('Unhandled projects checkpoint: cp-014 ' + "Button visible at all times regardless of project count");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-015 All four tabs render in a horizontal row');
+      throw new Error('Unhandled projects checkpoint: cp-015 ' + "All four tabs render in a horizontal row");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-016 Active tab is visually distinguished from inactive tabs');
+      throw new Error('Unhandled projects checkpoint: cp-016 ' + "Active tab is visually distinguished from inactive tabs");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-017 Clicking a tab filters the project list to matching types');
+      throw new Error('Unhandled projects checkpoint: cp-017 ' + "Clicking a tab filters the project list to matching types");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-018 "All Projects" tab shows every project regardless of type');
+      throw new Error('Unhandled projects checkpoint: cp-018 ' + "\"All Projects\" tab shows every project regardless of type");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-019 Tab switch is immediate (client-side filter, no refetch)');
+      throw new Error('Unhandled projects checkpoint: cp-019 ' + "Tab switch is immediate (client-side filter, no refetch)");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-020 Tab works in combination with search and status filter');
+      throw new Error('Unhandled projects checkpoint: cp-020 ' + "Tab works in combination with search and status filter");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-021 Switching tabs does not reset the search input or status filter');
+      throw new Error('Unhandled projects checkpoint: cp-021 ' + "Switching tabs does not reset the search input or status filter");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-022 Placeholder text: **"Search projects..."**');
+      throw new Error('Unhandled projects checkpoint: cp-022 ' + "Placeholder text: **\"Search projects...\"**");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-023 `MagnifyingGlass` icon present');
+      throw new Error('Unhandled projects checkpoint: cp-023 ' + "`MagnifyingGlass` icon present");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-024 Typing filters projects by title (client-side)');
+      throw new Error('Unhandled projects checkpoint: cp-024 ' + "Typing filters projects by title (client-side)");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-025 Clearing the input restores the full filtered list');
+      throw new Error('Unhandled projects checkpoint: cp-025 ' + "Clearing the input restores the full filtered list");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-026 Works in combination with active tab and status filter');
+      throw new Error('Unhandled projects checkpoint: cp-026 ' + "Works in combination with active tab and status filter");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-027 `FunnelSimple` icon displayed');
+      throw new Error('Unhandled projects checkpoint: cp-027 ' + "`FunnelSimple` icon displayed");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-028 Default option: **"All Statuses"**');
+      throw new Error('Unhandled projects checkpoint: cp-028 ' + "Default option: **\"All Statuses\"**");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-029 Dropdown lists all five statuses: Planning, Drafting, Reviewing, Completed, Archived');
+      throw new Error('Unhandled projects checkpoint: cp-029 ' + "Dropdown lists all five statuses: Planning, Drafting, Reviewing, Completed, Archived");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-030 Selecting a status filters projects to that status only');
+      throw new Error('Unhandled projects checkpoint: cp-030 ' + "Selecting a status filters projects to that status only");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-031 Selecting "All Statuses" removes the status filter');
+      throw new Error('Unhandled projects checkpoint: cp-031 ' + "Selecting \"All Statuses\" removes the status filter");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-032 Works in combination with active tab and search input');
+      throw new Error('Unhandled projects checkpoint: cp-032 ' + "Works in combination with active tab and search input");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-033 Tab + Search + Status all compound correctly');
+      throw new Error('Unhandled projects checkpoint: cp-033 ' + "Tab + Search + Status all compound correctly");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('projects / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-034 Example: "Articles" tab + search "crispr" + status "drafting" = only articles matching "crispr" with drafting status');
+      throw new Error('Unhandled projects checkpoint: cp-034 ' + "Example: \"Articles\" tab + search \"crispr\" + status \"drafting\" = only articles matching \"crispr\" with drafting status");
     }
 
 

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for projects/spec-006
  * Source: e2e/specs/projects/spec-006.md
- * Generated: 2026-03-14T15:23:50.184Z
+ * Generated: 2026-03-15T15:41:55.247Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-000 Tab switching is entirely client-side through the memoized `filtered` array');
+      throw new Error('Unhandled projects checkpoint: cp-000 ' + "Tab switching is entirely client-side through the memoized `filtered` array");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-001 Search filtering is case-insensitive through `p.title.toLowerCase().includes(search.toLowerCase())`');
+      throw new Error('Unhandled projects checkpoint: cp-001 ' + "Search filtering is case-insensitive through `p.title.toLowerCase().includes(search.toLowerCase())`");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-002 Status filter compares `p.status` directly to the selected filter value');
+      throw new Error('Unhandled projects checkpoint: cp-002 ' + "Status filter compares `p.status` directly to the selected filter value");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-003 Search input and status filter remain unchanged when view mode changes');
+      throw new Error('Unhandled projects checkpoint: cp-003 ' + "Search input and status filter remain unchanged when view mode changes");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-004 Search input and status filter remain unchanged when tabs change');
+      throw new Error('Unhandled projects checkpoint: cp-004 ' + "Search input and status filter remain unchanged when tabs change");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-005 Status filter select includes exactly six options: all, planning, drafting, reviewing, completed, archived');
+      throw new Error('Unhandled projects checkpoint: cp-005 ' + "Status filter select includes exactly six options: all, planning, drafting, reviewing, completed, archived");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-006 List view renders through the shared `DataTable` component');
+      throw new Error('Unhandled projects checkpoint: cp-006 ' + "List view renders through the shared `DataTable` component");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-007 Table rows become clickable because `onRowClick` is provided');
+      throw new Error('Unhandled projects checkpoint: cp-007 ' + "Table rows become clickable because `onRowClick` is provided");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-008 Clicking a list row navigates to `/studio/{item.id}`');
+      throw new Error('Unhandled projects checkpoint: cp-008 ' + "Clicking a list row navigates to `/studio/{item.id}`");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-009 Name column renders type icon plus truncated title text');
+      throw new Error('Unhandled projects checkpoint: cp-009 ' + "Name column renders type icon plus truncated title text");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-010 Type column falls back to `Project` when `project_type` is null or unmapped');
+      throw new Error('Unhandled projects checkpoint: cp-010 ' + "Type column falls back to `Project` when `project_type` is null or unmapped");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-011 Status cell is a button, not static text');
+      throw new Error('Unhandled projects checkpoint: cp-011 ' + "Status cell is a button, not static text");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-012 Status hover affordance uses a `CaretDown` icon with `opacity-0` until the group is hovered');
+      throw new Error('Unhandled projects checkpoint: cp-012 ' + "Status hover affordance uses a `CaretDown` icon with `opacity-0` until the group is hovered");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-013 Edit action button uses `title="Edit project"`');
+      throw new Error('Unhandled projects checkpoint: cp-013 ' + "Edit action button uses `title=\"Edit project\"`");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-014 Archive action button uses `title="Archive project"`');
+      throw new Error('Unhandled projects checkpoint: cp-014 ' + "Archive action button uses `title=\"Archive project\"`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-015 Delete action button uses `title="Delete project"`');
+      throw new Error('Unhandled projects checkpoint: cp-015 ' + "Delete action button uses `title=\"Delete project\"`");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-016 Archived list rows do not render the Archive action button');
+      throw new Error('Unhandled projects checkpoint: cp-016 ' + "Archived list rows do not render the Archive action button");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-017 Grid view renders one, two, or three columns through `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`');
+      throw new Error('Unhandled projects checkpoint: cp-017 ' + "Grid view renders one, two, or three columns through `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-018 Clicking a grid card navigates to `/studio/{project.id}`');
+      throw new Error('Unhandled projects checkpoint: cp-018 ' + "Clicking a grid card navigates to `/studio/{project.id}`");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-019 Grid card top bar is a fixed `bg-brand` strip in the current implementation');
+      throw new Error('Unhandled projects checkpoint: cp-019 ' + "Grid card top bar is a fixed `bg-brand` strip in the current implementation");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-020 Grid card title uses `truncate` to prevent wrapping');
+      throw new Error('Unhandled projects checkpoint: cp-020 ' + "Grid card title uses `truncate` to prevent wrapping");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-021 Grid card subtitle is `{getTypeLabel(project_type)} · {formatDate(updated_at)}`');
+      throw new Error('Unhandled projects checkpoint: cp-021 ' + "Grid card subtitle is `{getTypeLabel(project_type)} · {formatDate(updated_at)}`");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-022 Grid card paper count pluralizes `paper` vs `papers`');
+      throw new Error('Unhandled projects checkpoint: cp-022 ' + "Grid card paper count pluralizes `paper` vs `papers`");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-023 Grid card doc count pluralizes `doc` vs `docs`');
+      throw new Error('Unhandled projects checkpoint: cp-023 ' + "Grid card doc count pluralizes `doc` vs `docs`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-024 Archived grid cards do not render the Archive action button');
+      throw new Error('Unhandled projects checkpoint: cp-024 ' + "Archived grid cards do not render the Archive action button");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-025 Opening the modal shows the title `New Project`');
+      throw new Error('Unhandled projects checkpoint: cp-025 ' + "Opening the modal shows the title `New Project`");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-026 `Project Name` input defaults to an empty string and has `autoFocus`');
+      throw new Error('Unhandled projects checkpoint: cp-026 ' + "`Project Name` input defaults to an empty string and has `autoFocus`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-027 `Type` select defaults to `review_article`');
+      throw new Error('Unhandled projects checkpoint: cp-027 ' + "`Type` select defaults to `review_article`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-028 `Target Journal` input defaults to an empty string');
+      throw new Error('Unhandled projects checkpoint: cp-028 ' + "`Target Journal` input defaults to an empty string");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-029 `Deadline` input defaults to an empty string');
+      throw new Error('Unhandled projects checkpoint: cp-029 ' + "`Deadline` input defaults to an empty string");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-030 `Citation Style` select defaults to `vancouver`');
+      throw new Error('Unhandled projects checkpoint: cp-030 ' + "`Citation Style` select defaults to `vancouver`");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-031 Closing the modal through `onClose` resets every create-form field to its default value');
+      throw new Error('Unhandled projects checkpoint: cp-031 ' + "Closing the modal through `onClose` resets every create-form field to its default value");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-032 `Create Project` is disabled when `newName.trim()` is empty');
+      throw new Error('Unhandled projects checkpoint: cp-032 ' + "`Create Project` is disabled when `newName.trim()` is empty");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-033 `Create Project` is disabled while `creating` is true');
+      throw new Error('Unhandled projects checkpoint: cp-033 ' + "`Create Project` is disabled while `creating` is true");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('projects / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-034 Pressing Enter inside `Project Name` triggers `handleCreate()`');
+      throw new Error('Unhandled projects checkpoint: cp-034 ' + "Pressing Enter inside `Project Name` triggers `handleCreate()`");
     }
 
 

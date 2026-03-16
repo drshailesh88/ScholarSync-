@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for dashboard/spec-009
  * Source: e2e/specs/dashboard/spec-009.md
- * Generated: 2026-03-12T17:52:05.944Z
+ * Generated: 2026-03-15T15:23:19.171Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -13,6 +13,25 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { assertDashboardCheckpoint } from '../../module-assertions/dashboard';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 test.describe('dashboard / spec-009', () => {
   test.beforeEach(async ({ page }) => {
@@ -46,11 +65,25 @@ test.describe('dashboard / spec-009', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Badge component defines `issues` (red) and `popular` (sky) variants that are NOT used by the dashboard",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-000.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-000 ' + "Badge component defines `issues` (red) and `popular` (sky) variants that are NOT used by the dashboard");
+    }
+
 
     // This test validates: Badge component defines `issues` (red) and `popular` (sky) variants that are NOT used by the dashboard
     // The controller will parse results from Playwright JSON output.

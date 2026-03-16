@@ -1,9 +1,9 @@
 # dashboard — Spec 002
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/dashboard
 MODULE: dashboard
@@ -53,6 +53,6 @@ MODULE: dashboard
 - [x] PASS: Hover: background color changes
 
 ### Recent Activity
-- [x] PASS: Section title "Recent Activity" displayed
+- [ ] FAIL: Section title "Recent Activity" displayed
 - [x] PASS: Glass-panel container
 - [x] PASS: Bottom grid: side-by-side with Recent Searches on desktop, stacked on mobile

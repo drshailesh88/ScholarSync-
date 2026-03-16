@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-018
  * Source: e2e/specs/research/spec-018.md
- * Generated: 2026-03-14T08:13:32.073Z
+ * Generated: 2026-03-15T17:37:29.734Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 Copilot opening does not move focus into the chat input, and closing it does not restore focus to the floating toggle button');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "Copilot opening does not move focus into the chat input, and closing it does not restore focus to the floating toggle button");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 `AISynthesisPanel.triggerSynthesis()` has no stale-request guard, so an earlier request\'s `finally { setIsStreaming(false) }` can clear the streaming state of a newer synthesis run');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "`AISynthesisPanel.triggerSynthesis()` has no stale-request guard, so an earlier request's `finally { setIsStreaming(false) }` can clear the streaming state of a newer synthesis run");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Pagination UI is hidden entirely when `totalResults === 0`, even though the inner page-count text uses `Math.max(totalPages, 1)`');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Pagination UI is hidden entirely when `totalResults === 0`, even though the inner page-count text uses `Math.max(totalPages, 1)`");
     }
 
 

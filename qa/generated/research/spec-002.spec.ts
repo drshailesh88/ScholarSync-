@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-002
  * Source: e2e/specs/research/spec-002.md
- * Generated: 2026-03-14T08:42:49.106Z
+ * Generated: 2026-03-15T17:15:28.627Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 Toggle — "Show augmented queries" / hide toggle');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "Toggle — \"Show augmented queries\" / hide toggle");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 Displays AI-expanded query variations from search response');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "Displays AI-expanded query variations from search response");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Helps users understand how their query was interpreted');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Helps users understand how their query was interpreted");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 AISynthesisPanel component — displays AI-generated summary of search results');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "AISynthesisPanel component — displays AI-generated summary of search results");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 Loading state — shown during generation');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "Loading state — shown during generation");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 Generated after search — summarizes key findings across results');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "Generated after search — summarizes key findings across results");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 Persisted — saved in session storage');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "Persisted — saved in session storage");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 "SGLT2 inhibitors cardiovascular outcomes"');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "\"SGLT2 inhibitors cardiovascular outcomes\"");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 "CAR-T cell therapy solid tumors"');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "\"CAR-T cell therapy solid tumors\"");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 "GLP-1 agonists weight management"');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "\"GLP-1 agonists weight management\"");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 "mRNA vaccine technology advances"');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "\"mRNA vaccine technology advances\"");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 "AI-assisted diagnostic imaging accuracy"');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "\"AI-assisted diagnostic imaging accuracy\"");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 Clicking a suggestion populates query and triggers search');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "Clicking a suggestion populates query and triggers search");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 Loaded on mount — `getRecentSearches()` server action');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "Loaded on mount — `getRecentSearches()` server action");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 Saved on each search — `saveSearchQuery()` server action');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "Saved on each search — `saveSearchQuery()` server action");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 ClockCounterClockwise icon — history indicator');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "ClockCounterClockwise icon — history indicator");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Click to re-run — clicking a past search populates and executes it');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Click to re-run — clicking a past search populates and executes it");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Save button — FloppyDisk/BookmarkSimple icon on each result card');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Save button — FloppyDisk/BookmarkSimple icon on each result card");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Calls `savePaper()` — server action to persist to database');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Calls `savePaper()` — server action to persist to database");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Visual state — saved papers show filled/highlighted bookmark');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Visual state — saved papers show filled/highlighted bookmark");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Tracked in `saved` Set — prevents duplicate saves');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Tracked in `saved` Set — prevents duplicate saves");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Library loaded on mount — `getUserPapers()` fetches existing library');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Library loaded on mount — `getUserPapers()` fetches existing library");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Per-paper "Find Similar" action — triggers search for related papers');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Per-paper \"Find Similar\" action — triggers search for related papers");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Loading state — tracked per paper ID in `loadingSimilar` Set');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Loading state — tracked per paper ID in `loadingSimilar` Set");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Results — stored in `similarResults` record by paper ID');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Results — stored in `similarResults` record by paper ID");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Error handling — tracked in `similarErrors` Set');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Error handling — tracked in `similarErrors` Set");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Empty results — tracked in `similarEmpty` Set');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Empty results — tracked in `similarEmpty` Set");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Display — similar papers shown inline below the originating result');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Display — similar papers shown inline below the originating result");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Toggle button — shows/hides copilot panel');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Toggle button — shows/hides copilot panel");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 AISynthesisPanel component — renders synthesis interface');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "AISynthesisPanel component — renders synthesis interface");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 Uses `useChat` hook — from `@ai-sdk/react` with `TextStreamChatTransport`');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "Uses `useChat` hook — from `@ai-sdk/react` with `TextStreamChatTransport`");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 Streaming responses — token-by-token display');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "Streaming responses — token-by-token display");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 Streaming response — text streams progressively via TextDecoder');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "Streaming response — text streams progressively via TextDecoder");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 Markdown output — with `[N]` citation markers');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "Markdown output — with `[N]` citation markers");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 Temperature — generate mode uses `0.4`; plan mode uses `0.3`');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "Temperature — generate mode uses `0.4`; plan mode uses `0.3`");
     }
 
 

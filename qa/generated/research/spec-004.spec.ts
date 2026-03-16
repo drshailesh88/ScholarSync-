@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-004
  * Source: e2e/specs/research/spec-004.md
- * Generated: 2026-03-14T07:41:14.061Z
+ * Generated: 2026-03-15T17:18:12.463Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 Non-timeout failures surface either the API `error` string or `Search failed. Please try again.`');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "Non-timeout failures surface either the API `error` string or `Search failed. Please try again.`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 Starting a fresh search clears the current `error` state');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "Starting a fresh search clears the current `error` state");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Starting a fresh search clears the current `aiSummary` state before synthesis reruns');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Starting a fresh search clears the current `aiSummary` state before synthesis reruns");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 Search success replaces the current `results` array instead of appending to it');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "Search success replaces the current `results` array instead of appending to it");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 Successful searches persist a search-history row through `saveSearchQuery(...)` without blocking the UI on failure');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "Successful searches persist a search-history row through `saveSearchQuery(...)` without blocking the UI on failure");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 Search-history save payload includes `originalQuery`, `queryType: "user"`, `source: "all"`, `resultCount`, and `filtersApplied`');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "Search-history save payload includes `originalQuery`, `queryType: \"user\"`, `source: \"all\"`, `resultCount`, and `filtersApplied`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 Session persistence key is exactly `scholar-sync-research-page`');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "Session persistence key is exactly `scholar-sync-research-page`");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 Persisted session payload includes `query`, `results`, `filters`, `sort`, `hasSearched`, `page`, `totalResults`, `hasMore`, `sourceCounts`, `augmentedQueries`, and `aiSummary`');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "Persisted session payload includes `query`, `results`, `filters`, `sort`, `hasSearched`, `page`, `totalResults`, `hasMore`, `sourceCounts`, `augmentedQueries`, and `aiSummary`");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 Session restore repopulates the page from `sessionStorage` on mount when valid cached JSON exists');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "Session restore repopulates the page from `sessionStorage` on mount when valid cached JSON exists");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 Restoring a cached searched state sets the init-skip ref so filters/sort do not immediately rerun the search once on hydration');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "Restoring a cached searched state sets the init-skip ref so filters/sort do not immediately rerun the search once on hydration");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 Session write failures such as storage quota overflow are silently ignored');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "Session write failures such as storage quota overflow are silently ignored");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 User plan is loaded once on mount through `getUserUsageStats()`');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "User plan is loaded once on mount through `getUserUsageStats()`");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 If plan lookup fails, the page falls back to `free`');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "If plan lookup fails, the page falls back to `free`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 Empty-state history load requests `getRecentSearches()` and `getUserPapers()` in parallel');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "Empty-state history load requests `getRecentSearches()` and `getUserPapers()` in parallel");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 Empty-state history load is skipped when restored session state already contains searched results');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "Empty-state history load is skipped when restored session state already contains searched results");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Suggested-search chips are limited to the first 5 items from the 15-item suggestion list');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Suggested-search chips are limited to the first 5 items from the 15-item suggestion list");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Clicking a suggested search stores that query in state and triggers a follow-up search through `pendingSearchRef`');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Clicking a suggested search stores that query in state and triggers a follow-up search through `pendingSearchRef`");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Recent Searches section renders only when `recentSearches.length > 0`');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Recent Searches section renders only when `recentSearches.length > 0`");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Recent search rows show the result-count suffix only when `resultCount > 0`');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Recent search rows show the result-count suffix only when `resultCount > 0`");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Recent search rows rerun the saved query when clicked');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Recent search rows rerun the saved query when clicked");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Recently Saved section renders only when `recentPapers.length > 0`');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Recently Saved section renders only when `recentPapers.length > 0`");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Recently Saved cards are limited to the first 4 papers returned from `getUserPapers()`');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Recently Saved cards are limited to the first 4 papers returned from `getUserPapers()`");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Recently Saved author text shows at most two authors followed by ` et al.` when more than two authors exist');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Recently Saved author text shows at most two authors followed by ` et al.` when more than two authors exist");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Empty-state loading helper reads `Loading your history...`');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Empty-state loading helper reads `Loading your history...`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Empty-state loading helper appears only while history is loading and there are no recent searches yet');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Empty-state loading helper appears only while history is loading and there are no recent searches yet");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 `Last 5 Years` filter toggles a boolean chip state instead of opening a date picker');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "`Last 5 Years` filter toggles a boolean chip state instead of opening a date picker");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Turning `Last 5 Years` on clears both manual year inputs');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Turning `Last 5 Years` on clears both manual year inputs");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Typing either manual year input forces `last5Years` back to `false`');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Typing either manual year input forces `last5Years` back to `false`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Manual year inputs use placeholders `From` and `To`');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Manual year inputs use placeholders `From` and `To`");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 Manual year inputs do not set explicit `min` or `max` attributes in the current implementation');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "Manual year inputs do not set explicit `min` or `max` attributes in the current implementation");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 `PDF Available` filter translates to `openAccessOnly=true` in the search request');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "`PDF Available` filter translates to `openAccessOnly=true` in the search request");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 `High Impact` filter does not update visible sort state; it overrides the outgoing request sort to `citations`');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "`High Impact` filter does not update visible sort state; it overrides the outgoing request sort to `citations`");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 `RCTs Only` adds `rct` to the outgoing `studyTypes` query parameter');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "`RCTs Only` adds `rct` to the outgoing `studyTypes` query parameter");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 `Reviews` adds both `review` and `systematic_review` to the outgoing `studyTypes` query parameter');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "`Reviews` adds both `review` and `systematic_review` to the outgoing `studyTypes` query parameter");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 `Meta-Analyses` adds `meta_analysis` to the outgoing `studyTypes` query parameter');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "`Meta-Analyses` adds `meta_analysis` to the outgoing `studyTypes` query parameter");
     }
 
 

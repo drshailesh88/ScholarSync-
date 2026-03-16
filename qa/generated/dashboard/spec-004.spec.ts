@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for dashboard/spec-004
  * Source: e2e/specs/dashboard/spec-004.md
- * Generated: 2026-03-12T17:43:38.407Z
+ * Generated: 2026-03-15T15:19:24.632Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -13,6 +13,25 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { assertDashboardCheckpoint } from '../../module-assertions/dashboard';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 test.describe('dashboard / spec-004', () => {
   test.beforeEach(async ({ page }) => {
@@ -46,11 +65,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Pulse animation on all skeleton elements",
+      section: "Loading State",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-000.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-000 ' + "Pulse animation on all skeleton elements");
+    }
+
 
     // This test validates: Pulse animation on all skeleton elements
     // The controller will parse results from Playwright JSON output.
@@ -82,11 +115,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Stats overview, recent searches, and recent activity have no skeletons and will pop in after load",
+      section: "Loading State",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-001.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-001 ' + "Stats overview, recent searches, and recent activity have no skeletons and will pop in after load");
+    }
+
 
     // This test validates: Stats overview, recent searches, and recent activity have no skeletons and will pop in after load
     // The controller will parse results from Playwright JSON output.
@@ -118,11 +165,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Error boundary wraps dashboard page",
+      section: "Error Handling",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-002.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-002 ' + "Error boundary wraps dashboard page");
+    }
+
 
     // This test validates: Error boundary wraps dashboard page
     // The controller will parse results from Playwright JSON output.
@@ -154,11 +215,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "On error: `ErrorDisplay` component renders",
+      section: "Error Handling",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-003.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-003 ' + "On error: `ErrorDisplay` component renders");
+    }
+
 
     // This test validates: On error: `ErrorDisplay` component renders
     // The controller will parse results from Playwright JSON output.
@@ -190,11 +265,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Title: \"Dashboard unavailable\"",
+      section: "Error Handling",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-004.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-004 ' + "Title: \"Dashboard unavailable\"");
+    }
+
 
     // This test validates: Title: "Dashboard unavailable"
     // The controller will parse results from Playwright JSON output.
@@ -226,11 +315,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Message: \"We couldn't load your dashboard. This might be a temporary issue.\"",
+      section: "Error Handling",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-005.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-005 ' + "Message: \"We couldn't load your dashboard. This might be a temporary issue.\"");
+    }
+
 
     // This test validates: Message: "We couldn't load your dashboard. This might be a temporary issue."
     // The controller will parse results from Playwright JSON output.
@@ -262,11 +365,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Error object is passed into `ErrorDisplay` for logging/reporting, but raw error details are not rendered in the UI",
+      section: "Error Handling",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-006.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-006 ' + "Error object is passed into `ErrorDisplay` for logging/reporting, but raw error details are not rendered in the UI");
+    }
+
 
     // This test validates: Error object is passed into `ErrorDisplay` for logging/reporting, but raw error details are not rendered in the UI
     // The controller will parse results from Playwright JSON output.
@@ -298,11 +415,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "\"Try Again\" button calls `reset()` to retry page load",
+      section: "Error Handling",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-007.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-007 ' + "\"Try Again\" button calls `reset()` to retry page load");
+    }
+
 
     // This test validates: "Try Again" button calls `reset()` to retry page load
     // The controller will parse results from Playwright JSON output.
@@ -334,11 +465,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "After retry, page re-fetches data and renders normally",
+      section: "Error Handling",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-008.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-008 ' + "After retry, page re-fetches data and renders normally");
+    }
+
 
     // This test validates: After retry, page re-fetches data and renders normally
     // The controller will parse results from Playwright JSON output.
@@ -370,11 +515,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "`getDashboardData()` runs server-side on page load",
+      section: "Data Fetching & Server Actions",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-009.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-009 ' + "`getDashboardData()` runs server-side on page load");
+    }
+
 
     // This test validates: `getDashboardData()` runs server-side on page load
     // The controller will parse results from Playwright JSON output.
@@ -406,11 +565,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "8 parallel database queries via `Promise.all()`:",
+      section: "Data Fetching & Server Actions",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-010.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-010 ' + "8 parallel database queries via `Promise.all()`:");
+    }
+
 
     // This test validates: 8 parallel database queries via `Promise.all()`:
     // The controller will parse results from Playwright JSON output.
@@ -442,11 +615,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Dates serialize correctly from server to client component",
+      section: "Data Fetching & Server Actions",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-011.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-011 ' + "Dates serialize correctly from server to client component");
+    }
+
 
     // This test validates: Dates serialize correctly from server to client component
     // The controller will parse results from Playwright JSON output.
@@ -478,11 +665,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Data scoped to authenticated user only (no cross-user leaks)",
+      section: "Data Fetching & Server Actions",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-012.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-012 ' + "Data scoped to authenticated user only (no cross-user leaks)");
+    }
+
 
     // This test validates: Data scoped to authenticated user only (no cross-user leaks)
     // The controller will parse results from Playwright JSON output.
@@ -514,11 +715,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "`migrateLocalDocuments()` called on dashboard mount via `useEffect`",
+      section: "Document Migration",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-013.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-013 ' + "`migrateLocalDocuments()` called on dashboard mount via `useEffect`");
+    }
+
 
     // This test validates: `migrateLocalDocuments()` called on dashboard mount via `useEffect`
     // The controller will parse results from Playwright JSON output.
@@ -531,8 +746,8 @@ test.describe('dashboard / spec-004', () => {
     }
   });
 
-  test('cp-014: Dashboard mount currently calls migrateLocalDocuments with zero arguments', async ({ page }) => {
-    // Checkpoint 14: Dashboard mount currently calls `migrateLocalDocuments()` with zero arguments
+  test('cp-014: Dashboard mount collects local docs and calls migrateLocalDocumentslocalDocs', async ({ page }) => {
+    // Checkpoint 14: Dashboard mount collects local docs and calls `migrateLocalDocuments(localDocs)`
     // Section: Document Migration
 
     // Navigate to the page
@@ -550,13 +765,27 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Dashboard mount collects local docs and calls `migrateLocalDocuments(localDocs)`",
+      section: "Document Migration",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-014.png'),
       fullPage: false,
     });
 
-    // This test validates: Dashboard mount currently calls `migrateLocalDocuments()` with zero arguments
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-014 ' + "Dashboard mount collects local docs and calls `migrateLocalDocuments(localDocs)`");
+    }
+
+
+    // This test validates: Dashboard mount collects local docs and calls `migrateLocalDocuments(localDocs)`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -586,11 +815,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Creates default \"My Research\" project if user has no projects",
+      section: "Document Migration",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-015.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-015 ' + "Creates default \"My Research\" project if user has no projects");
+    }
+
 
     // This test validates: Creates default "My Research" project if user has no projects
     // The controller will parse results from Playwright JSON output.
@@ -622,11 +865,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Migrates each document to `synthesisDocuments` + `synthesisSections` tables",
+      section: "Document Migration",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-016.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-016 ' + "Migrates each document to `synthesisDocuments` + `synthesisSections` tables");
+    }
+
 
     // This test validates: Migrates each document to `synthesisDocuments` + `synthesisSections` tables
     // The controller will parse results from Playwright JSON output.
@@ -658,11 +915,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Skips \"new\" template documents",
+      section: "Document Migration",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-017.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-017 ' + "Skips \"new\" template documents");
+    }
+
 
     // This test validates: Skips "new" template documents
     // The controller will parse results from Playwright JSON output.
@@ -694,11 +965,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Runs silently (no UI feedback — errors caught and logged)",
+      section: "Document Migration",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-018.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-018 ' + "Runs silently (no UI feedback — errors caught and logged)");
+    }
+
 
     // This test validates: Runs silently (no UI feedback — errors caught and logged)
     // The controller will parse results from Playwright JSON output.
@@ -730,11 +1015,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Runs only once per page load",
+      section: "Document Migration",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-019.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-019 ' + "Runs only once per page load");
+    }
+
 
     // This test validates: Runs only once per page load
     // The controller will parse results from Playwright JSON output.
@@ -766,11 +1065,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "No deduplication guard exists; repeated migration calls would create duplicate rows",
+      section: "Document Migration",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-020.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-020 ' + "No deduplication guard exists; repeated migration calls would create duplicate rows");
+    }
+
 
     // This test validates: No deduplication guard exists; repeated migration calls would create duplicate rows
     // The controller will parse results from Playwright JSON output.
@@ -802,11 +1115,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Unauthenticated users redirected to `/sign-in`",
+      section: "Authentication & Access Control",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-021.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-021 ' + "Unauthenticated users redirected to `/sign-in`");
+    }
+
 
     // This test validates: Unauthenticated users redirected to `/sign-in`
     // The controller will parse results from Playwright JSON output.
@@ -838,11 +1165,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Authentication checked via `getCurrentUserId()` in layout",
+      section: "Authentication & Access Control",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-022.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-022 ' + "Authentication checked via `getCurrentUserId()` in layout");
+    }
+
 
     // This test validates: Authentication checked via `getCurrentUserId()` in layout
     // The controller will parse results from Playwright JSON output.
@@ -874,11 +1215,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Clerk session token verified from `__session` cookie",
+      section: "Authentication & Access Control",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-023.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-023 ' + "Clerk session token verified from `__session` cookie");
+    }
+
 
     // This test validates: Clerk session token verified from `__session` cookie
     // The controller will parse results from Playwright JSON output.
@@ -910,11 +1265,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "All database queries scoped to authenticated user's ID",
+      section: "Authentication & Access Control",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-024.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-024 ' + "All database queries scoped to authenticated user's ID");
+    }
+
 
     // This test validates: All database queries scoped to authenticated user's ID
     // The controller will parse results from Playwright JSON output.
@@ -946,11 +1315,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "No data from other users visible",
+      section: "Authentication & Access Control",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-025.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-025 ' + "No data from other users visible");
+    }
+
 
     // This test validates: No data from other users visible
     // The controller will parse results from Playwright JSON output.
@@ -982,11 +1365,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "`page.tsx` exports `dynamic = \"force-dynamic\"`",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-026.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-026 ' + "`page.tsx` exports `dynamic = \"force-dynamic\"`");
+    }
+
 
     // This test validates: `page.tsx` exports `dynamic = "force-dynamic"`
     // The controller will parse results from Playwright JSON output.
@@ -1018,11 +1415,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "`DashboardPage` awaits `getDashboardData()` on the server before rendering the client component",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-027.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-027 ' + "`DashboardPage` awaits `getDashboardData()` on the server before rendering the client component");
+    }
+
 
     // This test validates: `DashboardPage` awaits `getDashboardData()` on the server before rendering the client component
     // The controller will parse results from Playwright JSON output.
@@ -1054,11 +1465,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "`DashboardPage` passes `recentProjects`, `stats`, `recentSearches`, and `recentActivity` as separate props to `DashboardClient`",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-028.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-028 ' + "`DashboardPage` passes `recentProjects`, `stats`, `recentSearches`, and `recentActivity` as separate props to `DashboardClient`");
+    }
+
 
     // This test validates: `DashboardPage` passes `recentProjects`, `stats`, `recentSearches`, and `recentActivity` as separate props to `DashboardClient`
     // The controller will parse results from Playwright JSON output.
@@ -1090,11 +1515,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "`getDashboardData()` calls `ensureUser()` before assembling dashboard queries",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-029.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-029 ' + "`getDashboardData()` calls `ensureUser()` before assembling dashboard queries");
+    }
+
 
     // This test validates: `getDashboardData()` calls `ensureUser()` before assembling dashboard queries
     // The controller will parse results from Playwright JSON output.
@@ -1126,11 +1565,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "`getDashboardData()` runs recent-projects, counts, recent-searches, recent-activity, and user queries in parallel with `Promise.all`",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-030.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-030 ' + "`getDashboardData()` runs recent-projects, counts, recent-searches, recent-activity, and user queries in parallel with `Promise.all`");
+    }
+
 
     // This test validates: `getDashboardData()` runs recent-projects, counts, recent-searches, recent-activity, and user queries in parallel with `Promise.all`
     // The controller will parse results from Playwright JSON output.
@@ -1162,11 +1615,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Recent projects query is limited to 4 records",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-031.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-031 ' + "Recent projects query is limited to 4 records");
+    }
+
 
     // This test validates: Recent projects query is limited to 4 records
     // The controller will parse results from Playwright JSON output.
@@ -1198,11 +1665,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Recent searches query is limited to 5 records",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-032.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-032 ' + "Recent searches query is limited to 5 records");
+    }
+
 
     // This test validates: Recent searches query is limited to 5 records
     // The controller will parse results from Playwright JSON output.
@@ -1234,11 +1715,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Recent activity query is limited to 8 records",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-033.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-033 ' + "Recent activity query is limited to 8 records");
+    }
+
 
     // This test validates: Recent activity query is limited to 8 records
     // The controller will parse results from Playwright JSON output.
@@ -1270,11 +1765,25 @@ test.describe('dashboard / spec-004', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Dashboard stats include extra usage fields (`tokensUsed`, `tokensLimit`, `plagiarismChecksUsed`, `exportsUsed`, `plan`, `totalProjects`, `totalSearches`) even though this page does not render them yet",
+      section: "Quick Test Workflows",
+      subsection: "Detailed QA Coverage",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-034.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-034 ' + "Dashboard stats include extra usage fields (`tokensUsed`, `tokensLimit`, `plagiarismChecksUsed`, `exportsUsed`, `plan`, `totalProjects`, `totalSearches`) even though this page does not render them yet");
+    }
+
 
     // This test validates: Dashboard stats include extra usage fields (`tokensUsed`, `tokensLimit`, `plagiarismChecksUsed`, `exportsUsed`, `plan`, `totalProjects`, `totalSearches`) even though this page does not render them yet
     // The controller will parse results from Playwright JSON output.
