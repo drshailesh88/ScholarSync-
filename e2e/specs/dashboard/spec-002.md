@@ -2,8 +2,8 @@
 
 STATUS: PARTIAL
 TESTED: 35/35
-PASS: 29
-FAIL: 6
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/dashboard
 MODULE: dashboard
@@ -15,8 +15,8 @@ MODULE: dashboard
 - [x] PASS: Stats show `0` for new users (not blank or error)
 
 ### Active Manuscripts (Recent Projects)
-- [ ] FAIL: Section title "Active Manuscripts" displayed
-- [ ] FAIL: "View Archive →" link in header navigates to `/projects`
+- [x] PASS: Section title "Active Manuscripts" displayed
+- [x] PASS: "View Archive →" link in header navigates to `/projects`
 - [x] PASS: Glass-panel container wraps the project list
 #### Empty State
 - [x] PASS: When no projects exist: "No projects yet. Create your first manuscript to get started."
@@ -27,7 +27,7 @@ MODULE: dashboard
 - [x] PASS: Each row shows project type (converted from snake_case to Title Case)
 - [x] PASS: Each row shows status badge with correct variant:
 - [x] PASS: Each row shows right-arrow icon
-- [ ] FAIL: Clicking a row navigates to `/studio/{project.id}`
+- [x] PASS: Clicking a row navigates to `/studio/{project.id}`
 - [x] PASS: Hover: background color changes, text color changes
 - [x] PASS: Separator lines between rows (not after last row)
 #### Relative Time Formatting
@@ -38,8 +38,8 @@ MODULE: dashboard
 - [x] PASS: ≥ 7 days → Date string (e.g., "Jan 15")
 
 ### Recent Searches
-- [ ] FAIL: Section title "Recent Searches" displayed
-- [ ] FAIL: "Search →" link in header navigates to `/research`
+- [x] PASS: Section title "Recent Searches" displayed
+- [x] PASS: "Search →" link in header navigates to `/research`
 - [x] PASS: Glass-panel container
 #### Empty State
 - [x] PASS: When no searches: "No searches yet. Start exploring academic papers."
