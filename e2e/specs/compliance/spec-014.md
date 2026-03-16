@@ -2,8 +2,8 @@
 
 STATUS: PARTIAL
 TESTED: 35/35
-PASS: 33
-FAIL: 2
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/compliance
 MODULE: compliance
@@ -12,7 +12,7 @@ MODULE: compliance
 ### Quick Test Workflows
 #### API Route — `/api/copyleaks` (additional details)
 - [ ] FAIL: Copyleaks `results` action without `scanId` returns 400 with `"scanId is required for results action"`
-- [ ] FAIL: Copyleaks `text` field validated as `z.string().min(50).max(50000).optional()` — required only for `scan` action at the application level
+- [x] PASS: Copyleaks `text` field validated as `z.string().min(50).max(50000).optional()` — required only for `scan` action at the application level
 - [x] PASS: Copyleaks 500 error body: `{ error: "Copyleaks request failed" }`
 #### Orchestrator (`src/lib/integrity/index.ts`) — Writing Suggestion Exact Texts
 - [x] PASS: `PAID_PLANS` defined as `new Set(["basic", "pro", "institutional"])` — `"free"` plan is the only non-paid plan
