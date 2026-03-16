@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-007
  * Source: e2e/specs/slides/spec-007.md
- * Generated: 2026-03-14T10:17:46.863Z
+ * Generated: 2026-03-16T11:20:47.413Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
