@@ -3,7 +3,7 @@
     "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
     "rootDir": "/home/user/ScholarSync-/qa/generated",
     "forbidOnly": true,
-    "fullyParallel": false,
+    "fullyParallel": true,
     "globalSetup": null,
     "globalTeardown": null,
     "globalTimeout": 0,
@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 4
     },
     "preserveOutput": "always",
     "reporter": [
@@ -37,7 +37,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "qa-chromium",
         "name": "qa-chromium",
@@ -52,8 +52,8 @@
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.56.0",
-    "workers": 1,
+    "version": "1.56.1",
+    "workers": 4,
     "webServer": {
       "command": "PORT=3001 npm run dev",
       "port": 3001,
@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 7684,
+                      "duration": 2919,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:54:58.416Z",
+                      "startTime": "2026-03-16T17:12:35.048Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -130,15 +130,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1947,
+                      "duration": 3480,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:06.188Z",
+                      "startTime": "2026-03-16T17:12:35.133Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -170,15 +170,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1728,
+                      "duration": 3020,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:08.149Z",
+                      "startTime": "2026-03-16T17:12:35.033Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -210,15 +210,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1744,
+                      "duration": 3381,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:09.894Z",
+                      "startTime": "2026-03-16T17:12:35.105Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -253,12 +253,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1741,
+                      "duration": 3437,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:11.650Z",
+                      "startTime": "2026-03-16T17:12:38.162Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -290,15 +290,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1698,
+                      "duration": 3891,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:13.407Z",
+                      "startTime": "2026-03-16T17:12:38.217Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -330,15 +330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1696,
+                      "duration": 2796,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:15.115Z",
+                      "startTime": "2026-03-16T17:12:38.648Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -370,15 +370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1741,
+                      "duration": 2997,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:16.823Z",
+                      "startTime": "2026-03-16T17:12:38.789Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -410,15 +410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1767,
+                      "duration": 3380,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:18.576Z",
+                      "startTime": "2026-03-16T17:12:41.476Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -453,12 +453,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1773,
+                      "duration": 4376,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:20.354Z",
+                      "startTime": "2026-03-16T17:12:41.652Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -490,15 +490,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1730,
+                      "duration": 3965,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:22.138Z",
+                      "startTime": "2026-03-16T17:12:41.822Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -530,15 +530,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1691,
+                      "duration": 3909,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:23.879Z",
+                      "startTime": "2026-03-16T17:12:42.141Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -570,15 +570,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1744,
+                      "duration": 3146,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:25.583Z",
+                      "startTime": "2026-03-16T17:12:44.883Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -610,15 +610,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1729,
+                      "duration": 3089,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:27.342Z",
+                      "startTime": "2026-03-16T17:12:45.905Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -653,12 +653,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1701,
+                      "duration": 2882,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:29.086Z",
+                      "startTime": "2026-03-16T17:12:46.063Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -690,15 +690,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1757,
+                      "duration": 3223,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:30.798Z",
+                      "startTime": "2026-03-16T17:12:46.082Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -730,15 +730,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1709,
+                      "duration": 4076,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:32.565Z",
+                      "startTime": "2026-03-16T17:12:48.188Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -773,12 +773,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1731,
+                      "duration": 3368,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:34.285Z",
+                      "startTime": "2026-03-16T17:12:48.981Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -810,15 +810,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1767,
+                      "duration": 4410,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:36.032Z",
+                      "startTime": "2026-03-16T17:12:49.017Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -850,15 +850,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1734,
+                      "duration": 4180,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:37.811Z",
+                      "startTime": "2026-03-16T17:12:49.331Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -890,15 +890,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1750,
+                      "duration": 4348,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:39.557Z",
+                      "startTime": "2026-03-16T17:12:52.399Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -933,12 +933,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1738,
+                      "duration": 4394,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:41.320Z",
+                      "startTime": "2026-03-16T17:12:52.396Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -970,15 +970,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1737,
+                      "duration": 3975,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:43.068Z",
+                      "startTime": "2026-03-16T17:12:53.442Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1010,15 +1010,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1780,
+                      "duration": 3027,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:44.816Z",
+                      "startTime": "2026-03-16T17:12:53.525Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1050,15 +1050,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1778,
+                      "duration": 3906,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:46.608Z",
+                      "startTime": "2026-03-16T17:12:56.565Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1090,15 +1090,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1707,
+                      "duration": 3529,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:48.399Z",
+                      "startTime": "2026-03-16T17:12:56.780Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1133,12 +1133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1738,
+                      "duration": 3645,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:50.122Z",
+                      "startTime": "2026-03-16T17:12:56.809Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1170,15 +1170,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1723,
+                      "duration": 3728,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:51.870Z",
+                      "startTime": "2026-03-16T17:12:57.439Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1210,15 +1210,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1748,
+                      "duration": 3765,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:53.606Z",
+                      "startTime": "2026-03-16T17:13:00.335Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1253,12 +1253,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1793,
+                      "duration": 4435,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:55.368Z",
+                      "startTime": "2026-03-16T17:13:00.472Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1290,15 +1290,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1727,
+                      "duration": 4265,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:57.173Z",
+                      "startTime": "2026-03-16T17:13:00.497Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1330,15 +1330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1743,
+                      "duration": 2939,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:55:58.910Z",
+                      "startTime": "2026-03-16T17:13:01.181Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1370,15 +1370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1762,
+                      "duration": 2467,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:56:00.662Z",
+                      "startTime": "2026-03-16T17:13:04.174Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1410,15 +1410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1794,
+                      "duration": 2703,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:56:02.449Z",
+                      "startTime": "2026-03-16T17:13:04.172Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1450,15 +1450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1701,
+                      "duration": 2076,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T19:56:04.257Z",
+                      "startTime": "2026-03-16T17:13:04.813Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1484,8 +1484,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T19:54:56.276Z",
-    "duration": 70395.887,
+    "startTime": "2026-03-16T17:12:33.772Z",
+    "duration": 33296.9,
     "expected": 35,
     "skipped": 0,
     "unexpected": 0,

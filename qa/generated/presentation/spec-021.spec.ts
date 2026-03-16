@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-021
  * Source: e2e/specs/presentation/spec-021.md
- * Generated: 2026-03-14T20:06:56.478Z
+ * Generated: 2026-03-16T17:18:54.559Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -81,7 +81,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 Coach panel empty state includes descriptive helper copy and a `Run Coach` CTA');
+      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "Coach panel empty state includes descriptive helper copy and a `Run Coach` CTA");
     }
 
 
@@ -102,7 +102,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -131,7 +131,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 Successful coach response replaces the CTA state with score bars, suggestions, and per-slide insights');
+      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "Successful coach response replaces the CTA state with score bars, suggestions, and per-slide insights");
     }
 
 
@@ -152,7 +152,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -181,7 +181,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 Coach suggestions are sorted by priority and capped to the top five items');
+      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "Coach suggestions are sorted by priority and capped to the top five items");
     }
 
 
@@ -202,7 +202,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -231,7 +231,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 Slide insights navigate to the referenced slide by calling `onNavigateToSlide`');
+      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "Slide insights navigate to the referenced slide by calling `onNavigateToSlide`");
     }
 
 
@@ -252,7 +252,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -281,7 +281,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 `AgentPanel` starts with six quick-action buttons when no chat history exists');
+      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "`AgentPanel` starts with six quick-action buttons when no chat history exists");
     }
 
 
@@ -302,7 +302,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -331,7 +331,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 Agent quick actions disappear once there is at least one message in chat history');
+      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "Agent quick actions disappear once there is at least one message in chat history");
     }
 
 
@@ -352,7 +352,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -381,7 +381,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 Agent messages can include `modifiedSlideIds`, which are displayed back to the user in the agent response bubble');
+      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "Agent messages can include `modifiedSlideIds`, which are displayed back to the user in the agent response bubble");
     }
 
 
@@ -402,7 +402,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -431,7 +431,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 Agent undo only resets the panel-local `canUndo` state and triggers `onSlidesUpdated()`; it does not restore the prior slide snapshot client-side');
+      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "Agent undo only resets the panel-local `canUndo` state and triggers `onSlidesUpdated()`; it does not restore the prior slide snapshot client-side");
     }
 
 
@@ -452,7 +452,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -481,7 +481,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 Agent command input trims whitespace before submission');
+      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "Agent command input trims whitespace before submission");
     }
 
 
@@ -502,7 +502,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -531,7 +531,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 Agent errors are both shown inline and appended as agent chat messages prefixed with `Error:`');
+      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "Agent errors are both shown inline and appended as agent chat messages prefixed with `Error:`");
     }
 
 
@@ -552,7 +552,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -581,7 +581,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 Defense Prep configuration opens before any Q&A messages are shown');
+      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "Defense Prep configuration opens before any Q&A messages are shown");
     }
 
 
@@ -602,7 +602,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -631,7 +631,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 Defense Prep default difficulty is `moderate`');
+      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "Defense Prep default difficulty is `moderate`");
     }
 
 
@@ -652,7 +652,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -681,7 +681,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 Defense Prep starts with no focus areas selected');
+      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "Defense Prep starts with no focus areas selected");
     }
 
 
@@ -702,7 +702,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -731,7 +731,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 Starting a defense session clears prior messages, summary, revealed answers, and question count before fetching the first question');
+      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "Starting a defense session clears prior messages, summary, revealed answers, and question count before fetching the first question");
     }
 
 
@@ -752,7 +752,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -781,7 +781,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 Defense Prep API request omits `focusAreas` when none are selected');
+      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "Defense Prep API request omits `focusAreas` when none are selected");
     }
 
 
@@ -802,7 +802,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -831,7 +831,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 Reviewer messages can prepend `evaluation` text before the generated question');
+      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "Reviewer messages can prepend `evaluation` text before the generated question");
     }
 
 
@@ -852,7 +852,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -881,7 +881,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 Ending a defense session computes a local summary instead of requesting one from the server');
+      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "Ending a defense session computes a local summary instead of requesting one from the server");
     }
 
 
@@ -902,7 +902,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -931,7 +931,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 Resetting the defense session returns the panel to the configuration screen');
+      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "Resetting the defense session returns the panel to the configuration screen");
     }
 
 
@@ -952,7 +952,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -981,7 +981,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 `CommentsPanel` loads all comments on mount via `getComments(deckId)`');
+      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "`CommentsPanel` loads all comments on mount via `getComments(deckId)`");
     }
 
 
@@ -1002,7 +1002,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 Comments filter modes are exactly `all`, `unresolved`, and `resolved`');
+      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "Comments filter modes are exactly `all`, `unresolved`, and `resolved`");
     }
 
 
@@ -1052,7 +1052,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 Under the `all` filter, the active slide section is still shown even when it has zero comments');
+      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "Under the `all` filter, the active slide section is still shown even when it has zero comments");
     }
 
 
@@ -1102,7 +1102,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 Comments empty state shows `No comments yet` plus helper copy `Comments on slides will appear here`');
+      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "Comments empty state shows `No comments yet` plus helper copy `Comments on slides will appear here`");
     }
 
 
@@ -1152,7 +1152,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 `useCommentCounts()` silently ignores load errors and exposes `counts`, `totalUnresolved`, and `refresh`');
+      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "`useCommentCounts()` silently ignores load errors and exposes `counts`, `totalUnresolved`, and `refresh`");
     }
 
 
@@ -1202,7 +1202,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 `CommentsPanel` close button is local to the slide-over header and does not affect other editor state');
+      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "`CommentsPanel` close button is local to the slide-over header and does not affect other editor state");
     }
 
 
@@ -1252,7 +1252,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 `SharePanel` loads current settings on mount and shows `Loading share settings...` while waiting');
+      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "`SharePanel` loads current settings on mount and shows `Loading share settings...` while waiting");
     }
 
 
@@ -1302,7 +1302,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 Share toggle uses a custom pill switch rather than a checkbox');
+      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "Share toggle uses a custom pill switch rather than a checkbox");
     }
 
 
@@ -1352,7 +1352,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 Enabling sharing calls `enableDeckSharing(deckId)` and immediately stores the returned `shareUrl`');
+      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "Enabling sharing calls `enableDeckSharing(deckId)` and immediately stores the returned `shareUrl`");
     }
 
 
@@ -1402,7 +1402,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 Disabling sharing calls `disableDeckSharing(deckId)` and flips only `shareEnabled` locally');
+      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "Disabling sharing calls `disableDeckSharing(deckId)` and flips only `shareEnabled` locally");
     }
 
 
@@ -1452,7 +1452,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 Share link input is read-only and paired with a `Copy` button');
+      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "Share link input is read-only and paired with a `Copy` button");
     }
 
 
@@ -1502,7 +1502,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 Copy success swaps the button content to `Copied` for two seconds');
+      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "Copy success swaps the button content to `Copied` for two seconds");
     }
 
 
@@ -1552,7 +1552,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 Expiration date input sets `min` to today\'s date string in local ISO format');
+      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "Expiration date input sets `min` to today's date string in local ISO format");
     }
 
 
@@ -1602,7 +1602,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 Share settings save button remains visible only while sharing is enabled and a share URL exists');
+      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "Share settings save button remains visible only while sharing is enabled and a share URL exists");
     }
 
 
@@ -1652,7 +1652,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 Share-panel failures are logged to console only and do not surface an inline error message');
+      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "Share-panel failures are logged to console only and do not surface an inline error message");
     }
 
 
@@ -1702,7 +1702,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 `AnalyticsPanel` fetches `/api/analytics/deck-stats?deckId={id}` on mount');
+      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "`AnalyticsPanel` fetches `/api/analytics/deck-stats?deckId={id}` on mount");
     }
 
 
@@ -1752,7 +1752,7 @@ test.describe('presentation / spec-021', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-021');
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 Analytics loading state shows spinner plus text `Loading analytics...`');
+      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "Analytics loading state shows spinner plus text `Loading analytics...`");
     }
 
 

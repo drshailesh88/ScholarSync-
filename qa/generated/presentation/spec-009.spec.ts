@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-009
  * Source: e2e/specs/presentation/spec-009.md
- * Generated: 2026-03-14T19:51:58.294Z
+ * Generated: 2026-03-16T17:11:19.803Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -81,7 +81,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 **13.36** "New Session" button with ArrowRight icon resets to config (`defense-prep-panel.tsx:439`, `:442`, `:443`)');
+      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**13.36** \"New Session\" button with ArrowRight icon resets to config (`defense-prep-panel.tsx:439`, `:442`, `:443`)");
     }
 
 
@@ -102,7 +102,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -131,7 +131,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 **13.37** Q&A session header: "Q&A Session" with GraduationCap icon (`defense-prep-panel.tsx:456`, `:458`)');
+      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**13.37** Q&A session header: \"Q&A Session\" with GraduationCap icon (`defense-prep-panel.tsx:456`, `:458`)");
     }
 
 
@@ -152,7 +152,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -181,7 +181,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 **13.38** "End" button with Stop icon (`defense-prep-panel.tsx:465`, `:469`, `:470`)');
+      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**13.38** \"End\" button with Stop icon (`defense-prep-panel.tsx:465`, `:469`, `:470`)");
     }
 
 
@@ -202,7 +202,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -231,7 +231,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 **13.39** End button disabled while loading (`defense-prep-panel.tsx:466`)');
+      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**13.39** End button disabled while loading (`defense-prep-panel.tsx:466`)");
     }
 
 
@@ -252,7 +252,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -281,7 +281,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 **13.40** Presenter messages right-aligned with brand bg and white text (`defense-prep-panel.tsx:481`, `:492`)');
+      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**13.40** Presenter messages right-aligned with brand bg and white text (`defense-prep-panel.tsx:481`, `:492`)");
     }
 
 
@@ -302,7 +302,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -331,7 +331,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 **13.41** Reviewer messages left-aligned with surface bg and border (`defense-prep-panel.tsx:481`, `:484`, `:486`, `:492`)');
+      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**13.41** Reviewer messages left-aligned with surface bg and border (`defense-prep-panel.tsx:481`, `:484`, `:486`, `:492`)");
     }
 
 
@@ -352,7 +352,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -381,7 +381,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 **13.42** Reviewer messages show GraduationCap icon (`defense-prep-panel.tsx:486`)');
+      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**13.42** Reviewer messages show GraduationCap icon (`defense-prep-panel.tsx:486`)");
     }
 
 
@@ -402,7 +402,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -431,7 +431,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 **13.43** Category badge shown on reviewer messages when category exists (`defense-prep-panel.tsx:498`, `:500`)');
+      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**13.43** Category badge shown on reviewer messages when category exists (`defense-prep-panel.tsx:498`, `:500`)");
     }
 
 
@@ -452,7 +452,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -481,7 +481,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 **13.44** Slide reference badge "Slide N" shown when relatedSlideIndex exists (`defense-prep-panel.tsx:505`, `:507`)');
+      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**13.44** Slide reference badge \"Slide N\" shown when relatedSlideIndex exists (`defense-prep-panel.tsx:505`, `:507`)");
     }
 
 
@@ -502,7 +502,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -531,7 +531,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 **13.45** Suggested answer reveal uses "Show suggested answer" / "Hide suggested answer" toggle text with Eye/EyeSlash icons (`defense-prep-panel.tsx:525`, `:528`, `:531`, `:536`)');
+      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**13.45** Suggested answer reveal uses \"Show suggested answer\" / \"Hide suggested answer\" toggle text with Eye/EyeSlash icons (`defense-prep-panel.tsx:525`, `:528`, `:531`, `:536`)");
     }
 
 
@@ -552,7 +552,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -581,7 +581,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 **13.46** Revealed answer content shown when toggle active (`defense-prep-panel.tsx:538`)');
+      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**13.46** Revealed answer content shown when toggle active (`defense-prep-panel.tsx:538`)");
     }
 
 
@@ -602,7 +602,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -631,7 +631,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 **13.47** Loading state "Reviewing your response..." with CircleNotch spinner (`defense-prep-panel.tsx:550`, `:553`, `:557`)');
+      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**13.47** Loading state \"Reviewing your response...\" with CircleNotch spinner (`defense-prep-panel.tsx:550`, `:553`, `:557`)");
     }
 
 
@@ -652,7 +652,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -681,7 +681,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 **13.48** Error state shows Warning icon with error message (`defense-prep-panel.tsx:567`, `:570`)');
+      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**13.48** Error state shows Warning icon with error message (`defense-prep-panel.tsx:567`, `:570`)");
     }
 
 
@@ -702,7 +702,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -731,7 +731,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 **13.49** Answer input: placeholder "Type your answer...", disabled while loading (`defense-prep-panel.tsx:581-583`)');
+      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**13.49** Answer input: placeholder \"Type your answer...\", disabled while loading (`defense-prep-panel.tsx:581-583`)");
     }
 
 
@@ -752,7 +752,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -781,7 +781,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 **13.50** Send button: PaperPlaneRight when idle, CircleNotch when loading (`defense-prep-panel.tsx:592`, `:595`, `:600-603`)');
+      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**13.50** Send button: PaperPlaneRight when idle, CircleNotch when loading (`defense-prep-panel.tsx:592`, `:595`, `:600-603`)");
     }
 
 
@@ -802,7 +802,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -831,7 +831,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 **13.51** Send button disabled when loading or input empty (`defense-prep-panel.tsx:592`)');
+      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**13.51** Send button disabled when loading or input empty (`defense-prep-panel.tsx:592`)");
     }
 
 
@@ -852,7 +852,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -881,7 +881,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 **13.52** Footer shows "Question N · {difficulty} difficulty" (`defense-prep-panel.tsx:608`)');
+      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**13.52** Footer shows \"Question N · {difficulty} difficulty\" (`defense-prep-panel.tsx:608`)");
     }
 
 
@@ -902,7 +902,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -931,7 +931,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 **13.53** API calls to /api/presentations/defense-prep (`defense-prep-panel.tsx:139`)');
+      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**13.53** API calls to /api/presentations/defense-prep (`defense-prep-panel.tsx:139`)");
     }
 
 
@@ -952,7 +952,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -981,7 +981,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 **13.54** Focus areas omitted from request when none selected (`defense-prep-panel.tsx:152`)');
+      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**13.54** Focus areas omitted from request when none selected (`defense-prep-panel.tsx:152`)");
     }
 
 
@@ -1002,7 +1002,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 **14.1** CommentsPanel renders');
+      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**14.1** CommentsPanel renders");
     }
 
 
@@ -1052,7 +1052,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 **14.2** Filter: All comments');
+      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**14.2** Filter: All comments");
     }
 
 
@@ -1102,7 +1102,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 **14.3** Filter: Unresolved comments');
+      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**14.3** Filter: Unresolved comments");
     }
 
 
@@ -1152,7 +1152,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 **14.4** Filter: Resolved comments');
+      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**14.4** Filter: Resolved comments");
     }
 
 
@@ -1202,7 +1202,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 **14.5** Comments are grouped by slide');
+      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**14.5** Comments are grouped by slide");
     }
 
 
@@ -1252,7 +1252,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 **14.6** Adding a new comment on a slide');
+      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**14.6** Adding a new comment on a slide");
     }
 
 
@@ -1302,7 +1302,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 **14.7** Replying to an existing comment');
+      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**14.7** Replying to an existing comment");
     }
 
 
@@ -1352,7 +1352,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 **14.8** Resolving a comment marks it as resolved');
+      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**14.8** Resolving a comment marks it as resolved");
     }
 
 
@@ -1402,7 +1402,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 **14.9** Deleting a comment removes it');
+      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**14.9** Deleting a comment removes it");
     }
 
 
@@ -1452,7 +1452,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 **14.10** Comment count badge in toolbar updates accordingly');
+      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**14.10** Comment count badge in toolbar updates accordingly");
     }
 
 
@@ -1502,7 +1502,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 **15.1** AnalyticsPanel renders');
+      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "**15.1** AnalyticsPanel renders");
     }
 
 
@@ -1552,7 +1552,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 **15.2** Total Views metric displays');
+      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "**15.2** Total Views metric displays");
     }
 
 
@@ -1602,7 +1602,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 **15.3** Unique Viewers metric displays');
+      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "**15.3** Unique Viewers metric displays");
     }
 
 
@@ -1652,7 +1652,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 **15.4** Average Duration metric displays');
+      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "**15.4** Average Duration metric displays");
     }
 
 
@@ -1702,7 +1702,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 **15.5** Completion Rate metric displays');
+      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "**15.5** Completion Rate metric displays");
     }
 
 
@@ -1752,7 +1752,7 @@ test.describe('presentation / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/presentation', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/presentation/spec-009');
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 **15.6** Slide heatmap shows per-slide engagement');
+      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "**15.6** Slide heatmap shows per-slide engagement");
     }
 
 

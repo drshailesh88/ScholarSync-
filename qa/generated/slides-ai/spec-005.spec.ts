@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-005
  * Source: e2e/specs/slides-ai/spec-005.md
- * Generated: 2026-03-14T21:43:25.668Z
+ * Generated: 2026-03-16T17:49:32.057Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 Escape cancels and reverts');
+      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Escape cancels and reverts");
     }
 
 
@@ -102,7 +102,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 Blur commits the change');
+      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Blur commits the change");
     }
 
 
@@ -152,7 +152,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 Green dot = saved/idle');
+      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Green dot = saved/idle");
     }
 
 
@@ -202,7 +202,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 Yellow pulsing dot = saving');
+      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Yellow pulsing dot = saving");
     }
 
 
@@ -252,7 +252,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 Red dot = error');
+      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Red dot = error");
     }
 
 
@@ -302,7 +302,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 Tooltip shows status text');
+      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Tooltip shows status text");
     }
 
 
@@ -352,7 +352,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 Shows "X cards" (or "1 card" for singular)');
+      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Shows \"X cards\" (or \"1 card\" for singular)");
     }
 
 
@@ -402,7 +402,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 Updates dynamically as cards are added/removed');
+      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Updates dynamically as cards are added/removed");
     }
 
 
@@ -452,7 +452,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 Palette icon + theme name + caret');
+      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Palette icon + theme name + caret");
     }
 
 
@@ -502,7 +502,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 Click opens `ThemeCustomizer` dropdown (320px wide)');
+      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Click opens `ThemeCustomizer` dropdown (320px wide)");
     }
 
 
@@ -552,7 +552,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 Click outside closes dropdown');
+      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Click outside closes dropdown");
     }
 
 
@@ -602,7 +602,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 (See Section 13 for ThemeCustomizer details)');
+      throw new Error('Unhandled slides checkpoint: cp-011 ' + "(See Section 13 for ThemeCustomizer details)");
     }
 
 
@@ -652,7 +652,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 Export icon + "Export" label + caret');
+      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Export icon + \"Export\" label + caret");
     }
 
 
@@ -702,7 +702,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 **Export PPTX:**');
+      throw new Error('Unhandled slides checkpoint: cp-013 ' + "**Export PPTX:**");
     }
 
 
@@ -752,7 +752,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 PowerPoint logo icon');
+      throw new Error('Unhandled slides checkpoint: cp-014 ' + "PowerPoint logo icon");
     }
 
 
@@ -802,7 +802,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 Spinner during export');
+      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Spinner during export");
     }
 
 
@@ -852,7 +852,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 Downloads `.pptx` file with sanitized title');
+      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Downloads `.pptx` file with sanitized title");
     }
 
 
@@ -902,7 +902,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 **Export PDF:**');
+      throw new Error('Unhandled slides checkpoint: cp-017 ' + "**Export PDF:**");
     }
 
 
@@ -952,7 +952,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 PDF icon');
+      throw new Error('Unhandled slides checkpoint: cp-018 ' + "PDF icon");
     }
 
 
@@ -1002,7 +1002,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 Spinner during export');
+      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Spinner during export");
     }
 
 
@@ -1052,7 +1052,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 Downloads `.pdf` file');
+      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Downloads `.pdf` file");
     }
 
 
@@ -1102,7 +1102,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 **Continue in Slides Mode:**');
+      throw new Error('Unhandled slides checkpoint: cp-021 ' + "**Continue in Slides Mode:**");
     }
 
 
@@ -1152,7 +1152,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 MonitorPlay icon');
+      throw new Error('Unhandled slides checkpoint: cp-022 ' + "MonitorPlay icon");
     }
 
 
@@ -1202,7 +1202,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 Confirmation dialog: "Switch to Slides view? Your cards will be displayed as fixed-ratio slides."');
+      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Confirmation dialog: \"Switch to Slides view? Your cards will be displayed as fixed-ratio slides.\"");
     }
 
 
@@ -1252,7 +1252,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 Switches mode on confirm');
+      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Switches mode on confirm");
     }
 
 
@@ -1302,7 +1302,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 Export button disabled during export (shows spinner)');
+      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Export button disabled during export (shows spinner)");
     }
 
 
@@ -1352,7 +1352,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 Sparkle icon + "Agent" label');
+      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Sparkle icon + \"Agent\" label");
     }
 
 
@@ -1402,7 +1402,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 Active state: brand/10 background, brand text, filled sparkle icon');
+      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Active state: brand/10 background, brand text, filled sparkle icon");
     }
 
 
@@ -1452,7 +1452,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 Inactive state: default border, muted text, regular sparkle icon');
+      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Inactive state: default border, muted text, regular sparkle icon");
     }
 
 
@@ -1502,7 +1502,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 Click toggles the right-side Agent Panel');
+      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Click toggles the right-side Agent Panel");
     }
 
 
@@ -1552,7 +1552,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 Play icon + "Present" label');
+      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Play icon + \"Present\" label");
     }
 
 
@@ -1602,7 +1602,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 Brand-colored background (always visible)');
+      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Brand-colored background (always visible)");
     }
 
 
@@ -1652,7 +1652,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 Launches presentation mode');
+      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Launches presentation mode");
     }
 
 
@@ -1702,7 +1702,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 "Outline" label in uppercase, small font');
+      throw new Error('Unhandled slides checkpoint: cp-033 ' + "\"Outline\" label in uppercase, small font");
     }
 
 
@@ -1752,7 +1752,7 @@ test.describe('slides-ai / spec-005', () => {
 
     // Navigate to the page
     await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-005');
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 Each card shows:');
+      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Each card shows:");
     }
 
 

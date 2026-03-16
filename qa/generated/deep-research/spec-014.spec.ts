@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-014
  * Source: e2e/specs/deep-research/spec-014.md
- * Generated: 2026-03-14T18:46:28.334Z
+ * Generated: 2026-03-16T18:39:18.181Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 `page.tsx` defines `streamingSections`, renders streaming `ResearchDocument` previews, and animates them with an 800 ms timeout, but the execute API never emits `section` SSE events, so this path never runs.');
+      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "`page.tsx` defines `streamingSections`, renders streaming `ResearchDocument` previews, and animates them with an 800 ms timeout, but the execute API never emits `section` SSE events, so this path never runs.");
     }
 
 
@@ -102,7 +102,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 The `section` branch in the shared SSE parser exists, but no currently used deep-research server route sends `type: "section"`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "The `section` branch in the shared SSE parser exists, but no currently used deep-research server route sends `type: \"section\"`.");
     }
 
 
@@ -152,7 +152,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 The `_streamingMarkdown` variable in `page.tsx` is computed and never used.');
+      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "The `_streamingMarkdown` variable in `page.tsx` is computed and never used.");
     }
 
 
@@ -202,7 +202,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 The page passes `onError` into `readSSEStream()` during plan generation, but the reader never calls `handlers.onError`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "The page passes `onError` into `readSSEStream()` during plan generation, but the reader never calls `handlers.onError`.");
     }
 
 
@@ -252,7 +252,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 The preview component supports `isRegenerating`, but the page never passes that prop, so the spinner/disabled path is dead from the live route.');
+      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "The preview component supports `isRegenerating`, but the page never passes that prop, so the spinner/disabled path is dead from the live route.");
     }
 
 
@@ -302,7 +302,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 `SaveToLibraryButton` supports `isLoggedIn = false`, but the page never passes a false value, so the logged-out tooltip/disabled branch is dead from the live route.');
+      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "`SaveToLibraryButton` supports `isLoggedIn = false`, but the page never passes a false value, so the logged-out tooltip/disabled branch is dead from the live route.");
     }
 
 
@@ -352,7 +352,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 `ProgressStage.status = "error"` exists in the component contract, but the `/deep-research` page never constructs an error-status stage.');
+      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "`ProgressStage.status = \"error\"` exists in the component contract, but the `/deep-research` page never constructs an error-status stage.");
     }
 
 
@@ -402,7 +402,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 The legacy single-endpoint route `POST /api/deep-research` still exists, but the current `/deep-research` page never calls it.');
+      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "The legacy single-endpoint route `POST /api/deep-research` still exists, but the current `/deep-research` page never calls it.");
     }
 
 
@@ -452,7 +452,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 Even if `section` SSE events were added later, the current streaming-preview path would render them with `sources = []` because `report` is still `null` during the running state.');
+      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "Even if `section` SSE events were added later, the current streaming-preview path would render them with `sources = []` because `report` is still `null` during the running state.");
     }
 
 
@@ -502,7 +502,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 `STAGE_MAP` maps engine stages `validating`, `generating-perspectives`, `building-tree`, and `searching` to the single frontend stage `search-round-1`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "`STAGE_MAP` maps engine stages `validating`, `generating-perspectives`, `building-tree`, and `searching` to the single frontend stage `search-round-1`.");
     }
 
 
@@ -552,7 +552,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 Engine stage `search-round-3` maps to frontend `search-round-2` (no separate round-3 indicator on the frontend).');
+      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "Engine stage `search-round-3` maps to frontend `search-round-2` (no separate round-3 indicator on the frontend).");
     }
 
 
@@ -602,7 +602,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 Engine stages `deduplicating` and `unpaywall-lookup` both map to frontend `full-text-extraction`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "Engine stages `deduplicating` and `unpaywall-lookup` both map to frontend `full-text-extraction`.");
     }
 
 
@@ -652,7 +652,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 Engine stage `synthesizing` maps to `synthesis-perspectives`; engine stage `complete` maps to `synthesis-critique`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "Engine stage `synthesizing` maps to `synthesis-perspectives`; engine stage `complete` maps to `synthesis-critique`.");
     }
 
 
@@ -702,7 +702,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 Engine stages `citation-traversal`, `full-text-extraction`, and `data-extraction` are NOT in `STAGE_MAP` and pass through `mapStageId()` unchanged.');
+      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "Engine stages `citation-traversal`, `full-text-extraction`, and `data-extraction` are NOT in `STAGE_MAP` and pass through `mapStageId()` unchanged.");
     }
 
 
@@ -752,7 +752,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 Frontend stages `synthesis-summary` and `synthesis-tables` DO receive individual SSE progress events because synthesis progress is bridged through the execute route and unmapped stage IDs pass through unchanged.');
+      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "Frontend stages `synthesis-summary` and `synthesis-tables` DO receive individual SSE progress events because synthesis progress is bridged through the execute route and unmapped stage IDs pass through unchanged.");
     }
 
 
@@ -802,7 +802,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 During a live research execution, the progress stepper can activate `synthesis-perspectives` → `synthesis-summary` → `synthesis-tables` → `synthesis-critique` in sequence before the final `report` event completes all stages.');
+      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "During a live research execution, the progress stepper can activate `synthesis-perspectives` → `synthesis-summary` → `synthesis-tables` → `synthesis-critique` in sequence before the final `report` event completes all stages.");
     }
 
 
@@ -852,7 +852,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 The execute route does NOT call `validateTopic()` — it only checks `!topic || typeof topic !== "string"`. A topic of 2 characters would pass the execute route\'s validation (but the plan route would have already rejected it).');
+      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "The execute route does NOT call `validateTopic()` — it only checks `!topic || typeof topic !== \"string\"`. A topic of 2 characters would pass the execute route's validation (but the plan route would have already rejected it).");
     }
 
 
@@ -902,7 +902,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 The execute route accepts an optional `config` field in the request body (`config?: Partial<ResearchConfig>`), but the page client never sends it — this is dead code from the page\'s perspective.');
+      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "The execute route accepts an optional `config` field in the request body (`config?: Partial<ResearchConfig>`), but the page client never sends it — this is dead code from the page's perspective.");
     }
 
 
@@ -952,7 +952,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 `validateTopic()` runs inside the SSE stream (after the 200 response is already sent), so a 5–500 character violation is emitted as an SSE error event `{ type: "error", error: "Topic must be at least 5 characters long" }`, not as an HTTP 400 response.');
+      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "`validateTopic()` runs inside the SSE stream (after the 200 response is already sent), so a 5–500 character violation is emitted as an SSE error event `{ type: \"error\", error: \"Topic must be at least 5 characters long\" }`, not as an HTTP 400 response.");
     }
 
 
@@ -1002,7 +1002,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 The plan route emits the first progress message as `{ stage: "generating-perspectives", message: "Generating research perspectives..." }` before calling `generatePerspectives()`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "The plan route emits the first progress message as `{ stage: \"generating-perspectives\", message: \"Generating research perspectives...\" }` before calling `generatePerspectives()`.");
     }
 
 
@@ -1052,7 +1052,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 After perspective generation completes, the plan route emits `{ stage: "generating-perspectives", message: "Generated {N} perspectives" }` before the perspectives event.');
+      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "After perspective generation completes, the plan route emits `{ stage: \"generating-perspectives\", message: \"Generated {N} perspectives\" }` before the perspectives event.");
     }
 
 
@@ -1102,7 +1102,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 Missing or non-string `topic` returns `400 { "error": "Topic is required" }`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "Missing or non-string `topic` returns `400 { \"error\": \"Topic is required\" }`.");
     }
 
 
@@ -1152,7 +1152,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 Auth failure returns `401 { "error": "Not authenticated" }`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "Auth failure returns `401 { \"error\": \"Not authenticated\" }`.");
     }
 
 
@@ -1202,7 +1202,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 Unexpected errors return `500 { "error": "Failed to save research session" }`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "Unexpected errors return `500 { \"error\": \"Failed to save research session\" }`.");
     }
 
 
@@ -1252,7 +1252,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 Mode is extracted from `researchPlan` JSON via `(s.researchPlan as { mode?: string })?.mode` with fallback `"standard"`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "Mode is extracted from `researchPlan` JSON via `(s.researchPlan as { mode?: string })?.mode` with fallback `\"standard\"`.");
     }
 
 
@@ -1302,7 +1302,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 `completedAt` for each session falls back to `startedAt?.toISOString()` when `completedAt` is null.');
+      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "`completedAt` for each session falls back to `startedAt?.toISOString()` when `completedAt` is null.");
     }
 
 
@@ -1352,7 +1352,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 Unexpected errors return `500 { "error": "Failed to fetch sessions" }`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "Unexpected errors return `500 { \"error\": \"Failed to fetch sessions\" }`.");
     }
 
 
@@ -1402,7 +1402,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 Auth failure returns `401 { "error": "Not authenticated" }` (the client handles 401 silently by hiding the section).');
+      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "Auth failure returns `401 { \"error\": \"Not authenticated\" }` (the client handles 401 silently by hiding the section).");
     }
 
 
@@ -1452,7 +1452,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 Mode defaults to `"standard"` when `researchPlan.mode` is absent from the stored JSON.');
+      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "Mode defaults to `\"standard\"` when `researchPlan.mode` is absent from the stored JSON.");
     }
 
 
@@ -1502,7 +1502,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 `markdownReport` defaults to `session.finalReport || ""` — an empty string, not null/undefined.');
+      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "`markdownReport` defaults to `session.finalReport || \"\"` — an empty string, not null/undefined.");
     }
 
 
@@ -1552,7 +1552,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 Unexpected errors return `500 { "error": "Failed to fetch session" }`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "Unexpected errors return `500 { \"error\": \"Failed to fetch session\" }`.");
     }
 
 
@@ -1602,7 +1602,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 Auth failure returns `401 { "error": "Not authenticated" }`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "Auth failure returns `401 { \"error\": \"Not authenticated\" }`.");
     }
 
 
@@ -1652,7 +1652,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 Project title format: `Literature Review: {topic}`, with topic truncated to 77 chars + `"..."` when `topic.length > 80`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "Project title format: `Literature Review: {topic}`, with topic truncated to 77 chars + `\"...\"` when `topic.length > 80`.");
     }
 
 
@@ -1702,7 +1702,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 Project description: `Deep research report on: {topic}`.');
+      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "Project description: `Deep research report on: {topic}`.");
     }
 
 
@@ -1752,7 +1752,7 @@ test.describe('deep-research / spec-014', () => {
 
     // Navigate to the page
     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/deep-research/spec-014');
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 Document title is the same truncated string as the project title.');
+      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "Document title is the same truncated string as the project title.");
     }
 
 
