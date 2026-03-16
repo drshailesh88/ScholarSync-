@@ -174,11 +174,11 @@ test.describe('Deep Journey: Literature Search & Discovery', () => {
 
     // Before searching, verify initial/empty state
     const emptyStateTexts = ['search', 'papers', 'discover', 'find', 'literature', 'enter a query'];
-    let foundEmptyState = false;
+    let _foundEmptyState = false;
     for (const text of emptyStateTexts) {
       const el = page.getByText(new RegExp(text, 'i')).first();
       if (await el.isVisible().catch(() => false)) {
-        foundEmptyState = true;
+        _foundEmptyState = true;
         break;
       }
     }

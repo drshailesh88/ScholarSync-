@@ -103,7 +103,7 @@ test.describe('Deep Journey: LaTeX Paper Writing', () => {
 
     // Check for New Paper button
     const newBtn = page.locator('button, a').filter({ hasText: /new paper|new project|create/i }).first();
-    const newBtnVisible = await newBtn.isVisible().catch(() => false);
+    const _newBtnVisible = await newBtn.isVisible().catch(() => false);
 
     // Check for empty state or project grid
     const emptyState = page.getByText(/no project|get started|create your first/i).first();
@@ -247,7 +247,7 @@ test.describe('Deep Journey: LaTeX Paper Writing', () => {
 
     // Look for collaboration indicators
     const collabElements = page.locator('[class*="collab"], [class*="cursor"], [class*="presence"], [class*="avatar"]');
-    const count = await collabElements.count();
+    const _count = await collabElements.count();
 
     await page.screenshot({ path: 'e2e/artifacts/latex-collaboration.png' });
   });

@@ -43,7 +43,7 @@ async function openCommandPalette(page: Page) {
   });
 }
 
-function actionCard(page: Page, href: string, title: string) {
+function _actionCard(page: Page, href: string, title: string) {
   return page.locator(`main a[href="${href}"]`).filter({
     has: page.getByRole("heading", { name: title }),
   });

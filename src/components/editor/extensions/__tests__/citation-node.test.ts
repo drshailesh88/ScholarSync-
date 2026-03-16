@@ -5,6 +5,7 @@ import { CitationNode } from "../citation-node";
 
 describe("CitationNode keyboard shortcuts", () => {
   it("dispatches the shared insert-citation editor action on Mod-Shift-C", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = CitationNode.config as any;
     const dispatchSpy = vi.spyOn(window, "dispatchEvent");
     const shortcuts = config.addKeyboardShortcuts.call({});
@@ -22,6 +23,7 @@ describe("CitationNode keyboard shortcuts", () => {
 
 describe("CitationNode HTML serialization", () => {
   it("parses the citation span selector and JSON-backed attributes", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = CitationNode.config as any;
     const rules = config.parseHTML.call({});
     const attrs = config.addAttributes.call({});
@@ -36,6 +38,7 @@ describe("CitationNode HTML serialization", () => {
   });
 
   it("falls back safely on invalid JSON and omits null overrides on render", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = CitationNode.config as any;
     const attrs = config.addAttributes.call({});
     const element = document.createElement("span");

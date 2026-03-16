@@ -5,6 +5,7 @@ import { Footnote } from "../footnote-node";
 
 describe("Footnote node HTML serialization", () => {
   it("parses the expected span selector and data attributes", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = Footnote.config as any;
     const rules = config.parseHTML.call({});
     const attrs = config.addAttributes.call({});
@@ -21,6 +22,7 @@ describe("Footnote node HTML serialization", () => {
   });
 
   it("defaults missing footnote number to 1 and renders the non-editable marker span", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = Footnote.config as any;
     const attrs = config.addAttributes.call({});
     const render = config.renderHTML.call(

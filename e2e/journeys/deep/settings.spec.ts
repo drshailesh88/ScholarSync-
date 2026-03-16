@@ -144,7 +144,7 @@ test.describe('Deep Journey: Settings & User Configuration', () => {
 
     // Look for progress bars
     const progressBars = page.locator('[role="progressbar"], [class*="progress"], [class*="bar"]');
-    const barCount = await progressBars.count();
+    const _barCount = await progressBars.count();
 
     await page.screenshot({ path: 'e2e/artifacts/settings-usage.png' });
   });
@@ -224,7 +224,7 @@ test.describe('Deep Journey: Settings & User Configuration', () => {
 
     // Look for Log Out button but DO NOT click it
     const logOutBtn = page.locator('button').filter({ hasText: /log out|sign out|logout/i }).first();
-    const hasLogOut = await logOutBtn.isVisible().catch(() => false);
+    const _hasLogOut = await logOutBtn.isVisible().catch(() => false);
 
     await page.screenshot({ path: 'e2e/artifacts/settings-logout-exists.png' });
   });

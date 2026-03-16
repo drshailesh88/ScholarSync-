@@ -23,8 +23,8 @@ test.describe('Deep Journey: Slides Builder', () => {
     // Check for empty state or deck cards
     const emptyState = page.getByText(/no deck|no slide|get started|create/i).first();
     const deckCard = page.locator('[class*="card"]').first();
-    const hasEmpty = await emptyState.isVisible().catch(() => false);
-    const hasCards = await deckCard.isVisible().catch(() => false);
+    const _hasEmpty = await emptyState.isVisible().catch(() => false);
+    const _hasCards = await deckCard.isVisible().catch(() => false);
 
     await page.screenshot({ path: 'e2e/artifacts/slides-list.png' });
   });
@@ -38,11 +38,11 @@ test.describe('Deep Journey: Slides Builder', () => {
 
     // Look for Create New button
     const createBtn = page.locator('a, button').filter({ hasText: /create new|new deck|new slide/i }).first();
-    const createVisible = await createBtn.isVisible().catch(() => false);
+    const _createVisible = await createBtn.isVisible().catch(() => false);
 
     // Look for Import button
     const importBtn = page.locator('a, button').filter({ hasText: /import/i }).first();
-    const importVisible = await importBtn.isVisible().catch(() => false);
+    const _importVisible = await importBtn.isVisible().catch(() => false);
 
     await page.screenshot({ path: 'e2e/artifacts/slides-buttons.png' });
   });

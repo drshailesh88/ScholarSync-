@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const getMock = vi.fn();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CiteMock = function (this: any) {
   this.get = getMock;
 } as unknown as ReturnType<typeof vi.fn>;

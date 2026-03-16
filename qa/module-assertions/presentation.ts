@@ -40,10 +40,10 @@ const NEW_PAGE = "src/app/(app)/presentation/new/page.tsx";
 const EDITOR_PAGE = "src/app/(app)/presentation/[deckId]/page.tsx";
 const LOADING = "src/app/(app)/presentation/loading.tsx";
 const ERROR_PAGE = "src/app/(app)/presentation/error.tsx";
-const EDITOR_LOADING = "src/app/(app)/presentation/[deckId]/loading.tsx";
+const _EDITOR_LOADING = "src/app/(app)/presentation/[deckId]/loading.tsx";
 const EDITOR_ERROR = "src/app/(app)/presentation/[deckId]/error.tsx";
-const NEW_LOADING = "src/app/(app)/presentation/new/loading.tsx";
-const NEW_ERROR = "src/app/(app)/presentation/new/error.tsx";
+const _NEW_LOADING = "src/app/(app)/presentation/new/loading.tsx";
+const _NEW_ERROR = "src/app/(app)/presentation/new/error.tsx";
 const GEN_WIZARD = "src/components/presentation/generation-wizard.tsx";
 const SOURCE_SELECTOR = "src/components/presentation/source-selector.tsx";
 const TEMPLATE_SELECTOR = "src/components/presentation/template-selector.tsx";
@@ -70,7 +70,7 @@ const ANIMATION_PICKER = "src/components/presentation/animation-picker.tsx";
 const COLLAB_PROVIDER = "src/components/presentation/collaboration-provider.tsx";
 const COLLAB_AVATARS = "src/components/presentation/collaboration-avatars.tsx";
 const COLLAB_CURSORS = "src/components/presentation/collaboration-cursors.tsx";
-const COLLAB_TOOLBAR = "src/components/presentation/collaboration-toolbar-slot.tsx";
+const _COLLAB_TOOLBAR = "src/components/presentation/collaboration-toolbar-slot.tsx";
 const INVITE_MODAL = "src/components/presentation/invite-collaborator-modal.tsx";
 const COMMENT_THREAD = "src/components/presentation/comment-thread.tsx";
 const SOCIAL_EXPORT = "src/components/presentation/social-export-modal.tsx";
@@ -94,7 +94,7 @@ const RECORDER = "src/lib/recording/presentation-recorder.ts";
 export async function assertPresentationCheckpoint(
   input: PresentationCheckpointInput
 ): Promise<boolean> {
-  const { page, description, section, subsection, rootDir } = input;
+  const { page: _page, description, section, subsection, rootDir } = input;
   const d = description.toLowerCase();
 
   // ══════════════════════════════════════════════════════════════════════

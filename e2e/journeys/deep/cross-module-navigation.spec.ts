@@ -143,7 +143,7 @@ test.describe('Deep Journey: Cross-Module Navigation', () => {
     const dashboardLink = page.locator('nav a, aside a').filter({ hasText: /Dashboard/i }).first();
     if (await dashboardLink.isVisible().catch(() => false)) {
       // Active links have bg-surface-raised or similar
-      const classes = await dashboardLink.getAttribute('class');
+      const _classes = await dashboardLink.getAttribute('class');
       // Just verify the link is visible and clickable
     }
 
@@ -153,7 +153,7 @@ test.describe('Deep Journey: Cross-Module Navigation', () => {
       await researchLink.click();
       await page.waitForTimeout(1000);
 
-      const researchClasses = await researchLink.getAttribute('class');
+      const _researchClasses = await researchLink.getAttribute('class');
     }
 
     await page.screenshot({ path: 'e2e/artifacts/navigation-highlight.png' });

@@ -5,6 +5,7 @@ import { AcademicKeyboardShortcuts } from "../keyboard-shortcuts";
 
 describe("AcademicKeyboardShortcuts", () => {
   it("dispatches toggle-comment-sidebar for Mod-/", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = AcademicKeyboardShortcuts.config as any;
     const dispatchSpy = vi.spyOn(window, "dispatchEvent");
     const shortcuts = config.addKeyboardShortcuts.call({
@@ -22,6 +23,7 @@ describe("AcademicKeyboardShortcuts", () => {
   });
 
   it("wires Mod-\\\\ to clear marks and reset nodes", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = AcademicKeyboardShortcuts.config as any;
     const chain = {
       focus: vi.fn(),

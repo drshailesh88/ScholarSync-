@@ -32,7 +32,7 @@ test.describe('Deep Journey: Systematic Review', () => {
 
     // Check for New Review button
     const newBtn = page.locator('button, a').filter({ hasText: /new review|create|start/i }).first();
-    const hasNewBtn = await newBtn.isVisible().catch(() => false);
+    const _hasNewBtn = await newBtn.isVisible().catch(() => false);
 
     // Check empty state
     const emptyState = page.getByText(/no review|get started|create.*review/i).first();

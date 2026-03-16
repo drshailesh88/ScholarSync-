@@ -174,11 +174,11 @@ test.describe('Deep Journey: Studio Writing Experience', () => {
 
       // Look for save status indicators
       const saveIndicators = ['Saving', 'Saved', 'Unsaved', 'Save failed'];
-      let foundIndicator = false;
+      let _foundIndicator = false;
       for (const indicator of saveIndicators) {
         const el = page.getByText(indicator, { exact: false }).first();
         if (await el.isVisible().catch(() => false)) {
-          foundIndicator = true;
+          _foundIndicator = true;
           break;
         }
       }
@@ -296,7 +296,7 @@ test.describe('Deep Journey: Studio Writing Experience', () => {
 
     // Look for reference sidebar content
     const refSidebar = page.getByText(/reference|bibliography/i).first();
-    const sidebarVisible = await refSidebar.isVisible().catch(() => false);
+    const _sidebarVisible = await refSidebar.isVisible().catch(() => false);
 
     // Toggle back
     await page.keyboard.press('Meta+Shift+r');
@@ -322,8 +322,8 @@ test.describe('Deep Journey: Studio Writing Experience', () => {
       const pdfOption = page.getByText(/PDF/i).first();
       const wordOption = page.getByText(/Word|\.doc/i).first();
 
-      const hasPdf = await pdfOption.isVisible().catch(() => false);
-      const hasWord = await wordOption.isVisible().catch(() => false);
+      const _hasPdf = await pdfOption.isVisible().catch(() => false);
+      const _hasWord = await wordOption.isVisible().catch(() => false);
 
       // Close dropdown
       await page.keyboard.press('Escape');
@@ -350,7 +350,7 @@ test.describe('Deep Journey: Studio Writing Experience', () => {
 
       // Look for command palette/menu
       const commandMenu = page.locator('[class*="slash"], [class*="command"], [class*="menu"], [role="listbox"], [role="menu"]').first();
-      const menuVisible = await commandMenu.isVisible().catch(() => false);
+      const _menuVisible = await commandMenu.isVisible().catch(() => false);
 
       // Look for expected commands
       const commands = ['continue', 'summarize', 'cite', 'find-sources'];
@@ -378,8 +378,8 @@ test.describe('Deep Journey: Studio Writing Experience', () => {
     const litSearchLink = page.getByText('Literature Search', { exact: false }).first();
 
     // Check visibility
-    const hasLibrary = await libraryLink.isVisible().catch(() => false);
-    const hasLitSearch = await litSearchLink.isVisible().catch(() => false);
+    const _hasLibrary = await libraryLink.isVisible().catch(() => false);
+    const _hasLitSearch = await litSearchLink.isVisible().catch(() => false);
 
     // Check for project selector
     const projectSelector = page.locator('select, [class*="project"], [class*="selector"]').first();

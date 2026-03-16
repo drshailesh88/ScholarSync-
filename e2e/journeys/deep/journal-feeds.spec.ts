@@ -32,7 +32,7 @@ test.describe('Deep Journey: Journal Feed Reader', () => {
 
     // Look for Add Feed button
     const addFeedBtn = page.locator('button').filter({ hasText: /add feed|subscribe|new feed/i }).first();
-    const hasAddFeed = await addFeedBtn.isVisible().catch(() => false);
+    const _hasAddFeed = await addFeedBtn.isVisible().catch(() => false);
 
     // Check empty state
     const emptyState = page.getByText(/no feed|subscribe|add.*first/i).first();

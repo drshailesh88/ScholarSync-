@@ -54,11 +54,11 @@ test.describe('Deep Journey: Notebook / PDF Chat', () => {
     // Look for source attachment options — only in main content area, not sidebar
     const mainArea = page.locator('main, [role="main"]');
     const attachOptions = ['Upload PDF', 'Add from Library', 'Paste URL', 'Paste a URL', 'Upload'];
-    let foundCount = 0;
+    let _foundCount = 0;
     for (const opt of attachOptions) {
       const el = mainArea.getByText(opt, { exact: false }).first();
       if (await el.isVisible().catch(() => false)) {
-        foundCount++;
+        _foundCount++;
       }
     }
 
@@ -95,7 +95,7 @@ test.describe('Deep Journey: Notebook / PDF Chat', () => {
 
       // Verify message appears in chat area
       const messageArea = page.getByText('GLP-1 receptor agonists', { exact: false }).first();
-      const messageVisible = await messageArea.isVisible().catch(() => false);
+      const _messageVisible = await messageArea.isVisible().catch(() => false);
     }
 
     await page.screenshot({ path: 'e2e/artifacts/notebook-message-sent.png' });

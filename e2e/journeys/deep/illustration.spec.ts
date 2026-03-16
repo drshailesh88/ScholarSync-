@@ -64,7 +64,7 @@ test.describe('Deep Journey: Illustration / Scientific Figures', () => {
 
     // Look for template gallery
     const templates = page.locator('[class*="template"], [class*="gallery"], [class*="card"]');
-    const templateCount = await templates.count();
+    const _templateCount = await templates.count();
 
     // Look for chat history area
     const chatArea = page.locator('[class*="chat"], [class*="messages"], [class*="conversation"]').first();
