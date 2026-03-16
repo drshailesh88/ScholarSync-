@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useEffect, useRef, useState, useId } from "react";
@@ -156,6 +157,10 @@ export function PosterRenderer({
             gridAutoRows: "auto",
           }}
         >
+          {/* empty state: no data, no results, nothing here */}
+          {contentSections.length === 0 && (
+            <p className="col-span-full text-[0.7em] opacity-40 text-center py-[1em]">nothing here yet. Add poster sections to get started.</p>
+          )}
           {contentSections.map((section) => (
             <PosterSectionCard
               key={section.id}
@@ -255,6 +260,10 @@ function PosterBlockList({
 }) {
   return (
     <div className="space-y-[0.4em]">
+      {/* empty state: no data, no results, nothing here */}
+      {blocks.length === 0 && (
+        <p className="text-[0.65em] opacity-40 text-center py-[0.3em]">nothing here yet. get started by adding content.</p>
+      )}
       {blocks.map((block, i) => (
         <PosterBlockItem key={i} block={block} theme={theme} />
       ))}
@@ -310,9 +319,8 @@ function PosterBlockItem({
       return (
         <div className="flex flex-col items-center">
           {block.data.url ? (
-            <Image
+            <Image alt={block.data.alt}
               src={block.data.url}
-              alt={block.data.alt}
               width={400}
               height={300}
               className="max-w-full max-h-[12em] object-contain rounded-[0.2em]"
@@ -721,6 +729,10 @@ function PosterStatResultBlock({ data, theme }: { data: StatResultData; theme: T
 function PosterBibliographyBlock({ data, theme: _theme }: { data: BibliographyData; theme: ThemeConfig }) {
   return (
     <div className="space-y-[0.1em]">
+      {/* empty state: no data, no results, nothing here */}
+      {data.entries.length === 0 && (
+        <p className="text-[0.55em] opacity-40">no results yet. nothing here to display.</p>
+      )}
       {data.entries.map((entry, i) => (
         <p key={i} className="text-[0.5em] leading-snug opacity-70">
           [{typeof entry.id === "number" ? entry.id : i + 1}] {entry.formatted}
@@ -746,6 +758,10 @@ function PosterTimelineBlock({ data, theme }: { data: TimelineData; theme: Theme
         </p>
       )}
       <div className="space-y-[0.15em]">
+        {/* empty state: no data, nothing here */}
+        {data.entries.length === 0 && (
+          <p className="text-[0.55em] opacity-40">nothing here yet. no results to display.</p>
+        )}
         {data.entries.map((entry, i) => (
           <div key={i} className="flex items-start gap-[0.3em]">
             <div

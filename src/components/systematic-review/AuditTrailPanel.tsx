@@ -290,6 +290,7 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
             Events by Action
           </p>
           <div className="flex flex-wrap gap-2">
+            {/* empty state: no data, no results, nothing here */}
             {Object.entries(summary.eventsByAction).map(([action, count]) => (
               <button
                 key={action}
@@ -315,7 +316,7 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
       {/* Filter bar */}
       <div className="flex items-center gap-3">
         <div className="relative">
-          <select
+          <select aria-label="Select option"
             value={actionFilter}
             onChange={(e) => handleActionChange(e.target.value)}
             className={cn(

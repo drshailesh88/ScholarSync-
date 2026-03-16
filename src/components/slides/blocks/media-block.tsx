@@ -325,7 +325,7 @@ export const MediaBlock = memo(function MediaBlock({
         }}
         data-testid="media-placeholder"
       >
-        <input
+        <input aria-label="File upload"
           ref={inputRef}
           type="file"
           accept={MEDIA_ACCEPT}

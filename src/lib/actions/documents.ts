@@ -10,6 +10,17 @@ import {
 import { eq, and, desc, isNull } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 
+async function getNextVersionNumber(documentId: number): Promise<number> {
+  const [latestVersion] = await db
+    .select({ versionNumber: synthesisVersions.version_number })
+    .from(synthesisVersions)
+    .where(eq(synthesisVersions.document_id, documentId))
+    .orderBy(desc(synthesisVersions.version_number))
+    .limit(1);
+
+  return (latestVersion?.versionNumber ?? 0) + 1;
+}
+
 // ---------------------------------------------------------------------------
 // Load a single document with its sections (with user verification)
 // ---------------------------------------------------------------------------
@@ -285,10 +296,12 @@ export async function autoSaveVersion(
   sectionId: number,
   content: unknown
 ) {
+  const versionNumber = await getNextVersionNumber(documentId);
+
   await db.insert(synthesisVersions).values({
     document_id: documentId,
     section_id: sectionId,
-    version_number: Date.now(),
+    version_number: versionNumber,
     content_snapshot: content as Record<string, unknown>,
     auto_saved: true,
     saved_by: "auto",
@@ -419,10 +432,12 @@ export async function saveNamedVersion(
   name: string,
   content: unknown
 ) {
+  const versionNumber = await getNextVersionNumber(documentId);
+
   await db.insert(synthesisVersions).values({
     document_id: documentId,
     section_id: sectionId,
-    version_number: Date.now(),
+    version_number: versionNumber,
     version_name: name,
     content_snapshot: content as Record<string, unknown>,
     auto_saved: false,

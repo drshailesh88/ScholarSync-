@@ -26,8 +26,8 @@ export function ProgressBar({
         <span className="text-ink-muted">{label}</span>
         {showText && (
           <span className="text-ink font-medium">
-            {value.toLocaleString()}
-            {isUnlimited ? " (Unlimited)" : ` / ${max.toLocaleString()}`}
+            {value}
+            {isUnlimited ? " (Unlimited)" : ` / ${max}`}
           </span>
         )}
       </div>

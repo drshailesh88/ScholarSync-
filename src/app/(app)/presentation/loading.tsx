@@ -5,6 +5,7 @@ export default function PresentationLoading() {
     <div className="max-w-5xl mx-auto">
       <Skeleton className="h-8 w-56 mb-6" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* empty state: renders nothing when no data */}
         {Array.from({ length: 6 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}

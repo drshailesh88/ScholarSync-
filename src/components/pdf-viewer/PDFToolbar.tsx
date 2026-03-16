@@ -72,13 +72,12 @@ export function PDFToolbar({
           <CaretLeft size={16} />
         </button>
         <div className="flex items-center gap-1 text-sm">
-          <input
+          <input aria-label="Page number"
             type="text"
             defaultValue={currentPage}
             key={currentPage}
             onKeyDown={handlePageInput}
             className="w-10 text-center bg-surface-raised border border-border rounded px-1 py-0.5 text-sm text-ink tabular-nums focus:outline-none focus:ring-1 focus:ring-brand"
-            aria-label="Page number"
           />
           <span className="text-ink-muted">/ {totalPages || "..."}</span>
         </div>

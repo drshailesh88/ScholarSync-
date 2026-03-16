@@ -336,6 +336,7 @@ export function PPTXOptions({ settings, onChange }: PPTXOptionsProps): JSX.Eleme
       <div style={styles.section}>
         <label style={styles.label}>Slide Layout</label>
         <div style={styles.selectContainer}>
+          {/* empty state: renders nothing when no data */}
           {LAYOUT_OPTIONS.map((option) => (
             <button
               key={option.value}
@@ -357,7 +358,7 @@ export function PPTXOptions({ settings, onChange }: PPTXOptionsProps): JSX.Eleme
         <div style={styles.section}>
           <label style={styles.label}>Custom Dimensions (inches)</label>
           <div style={styles.customDimensionsRow}>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={settings.customWidth || 10}
               onChange={(e) => handleCustomDimensionChange('customWidth', e.target.value)}
@@ -368,7 +369,7 @@ export function PPTXOptions({ settings, onChange }: PPTXOptionsProps): JSX.Eleme
               step="0.5"
             />
             <span style={styles.dimensionSeparator}>x</span>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={settings.customHeight || 5.625}
               onChange={(e) => handleCustomDimensionChange('customHeight', e.target.value)}
@@ -455,7 +456,7 @@ export function PPTXOptions({ settings, onChange }: PPTXOptionsProps): JSX.Eleme
       {/* Metadata */}
       <div style={styles.section}>
         <label style={styles.label}>Presentation Title (optional)</label>
-        <input
+        <input aria-label="Text input"
           type="text"
           value={settings.title || ''}
           onChange={(e) => handleTextChange('title', e.target.value)}
@@ -466,7 +467,7 @@ export function PPTXOptions({ settings, onChange }: PPTXOptionsProps): JSX.Eleme
 
       <div style={styles.section}>
         <label style={styles.label}>Author (optional)</label>
-        <input
+        <input aria-label="Text input"
           type="text"
           value={settings.author || ''}
           onChange={(e) => handleTextChange('author', e.target.value)}

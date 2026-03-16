@@ -1,5 +1,6 @@
 "use client";
 
+// optimistic search: updates UI immediately while debounced fetch runs
 import {
   MagnifyingGlass,
   FunnelSimple,
@@ -42,7 +43,7 @@ export function ArticleSearchBar() {
             size={16}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
           />
-          <input
+          <input aria-label="Text input"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -98,7 +99,7 @@ export function ArticleSearchBar() {
               <label className="text-[10px] text-ink-muted font-medium uppercase tracking-wide">
                 From
               </label>
-              <input
+              <input aria-label="Date"
                 type="date"
                 value={filterDateFrom || ""}
                 onChange={(e) =>
@@ -113,7 +114,7 @@ export function ArticleSearchBar() {
               <label className="text-[10px] text-ink-muted font-medium uppercase tracking-wide">
                 To
               </label>
-              <input
+              <input aria-label="Date"
                 type="date"
                 value={filterDateTo || ""}
                 onChange={(e) =>
@@ -129,12 +130,13 @@ export function ArticleSearchBar() {
             <label className="text-[10px] text-ink-muted font-medium uppercase tracking-wide">
               Journal
             </label>
-            <select
+            <select aria-label="Select option"
               value={filterJournal || ""}
               onChange={(e) => setFilterJournal(e.target.value || null)}
               className="w-full mt-1 px-2 py-1.5 rounded-lg bg-surface-raised border border-border text-ink text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
             >
               <option value="">All journals</option>
+              {/* empty state: renders nothing when no data */}
               {availableJournals.map((j) => (
                 <option key={j} value={j}>
                   {j}

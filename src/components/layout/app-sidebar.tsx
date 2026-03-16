@@ -86,6 +86,7 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
       </div>
 
       <nav className="flex-1 px-3 py-6 space-y-4 overflow-y-auto">
+        {/* empty state: renders nothing when no data */}
         {navSections.map((section) => (
           <div key={section.label}>
             <div className="px-3 mb-1 text-[10px] font-semibold tracking-widest text-ink-muted/60">

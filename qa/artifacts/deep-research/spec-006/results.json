@@ -1,0 +1,1528 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.0",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "deep-research/spec-006.spec.ts",
+      "file": "deep-research/spec-006.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "deep-research / spec-006",
+          "file": "deep-research/spec-006.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Backward references fetched via S2 API",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9934,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:30.234Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-11d06-ferences-fetched-via-S2-API-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-375e3ecc3529bb536e2c",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Rate-limited with delays between requests",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1543,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:40.265Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-0b53e-ith-delays-between-requests-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-840cd7e8faa8068f8734",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Converts S2 format to unified result format",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1520,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:41.821Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-07208-at-to-unified-result-format-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-1d606fbebe15a732ec2a",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Uses getSmallModel to extract structured data from abstracts",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1508,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:43.353Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-50e89-uctured-data-from-abstracts-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-7f8e159155213d832644",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Study design",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1552,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:44.872Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-caa72-pec-006-cp-004-Study-design-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-f9aa41c344adcaf37415",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Sample size",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1488,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:46.435Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-b1ac0-spec-006-cp-005-Sample-size-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-6f7a29bba5351c40866e",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Effect sizes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1574,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:47.933Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-d578a-pec-006-cp-006-Effect-sizes-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-64caa88b2cedb50a7c21",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: P-values",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1542,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:49.520Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-501b9-ch-spec-006-cp-007-P-values-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-1e929b64aee5466b96c7",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: Population characteristics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1536,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:51.073Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-e57b9--Population-characteristics-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-30da10505cd0553fd21e",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: Follow-up duration",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1660,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:52.619Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a844d-6-cp-009-Follow-up-duration-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-eb665432654ed4ac5bbb",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Key findings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1539,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:54.289Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-d9792-pec-006-cp-010-Key-findings-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-cc784b7cfc133bc8b452",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Conservative extraction no speculation on missing data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1552,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:55.839Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ee732-speculation-on-missing-data-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-084c09b30f29ea4638d1",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Downloads open-access PDFs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1540,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:57.401Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c5fba--Downloads-open-access-PDFs-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-26354c378ca9be5b76c1",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Extracts Results and Discussion sections",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1538,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:37:58.954Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-9cdc2-lts-and-Discussion-sections-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-8d117f43a26c15278893",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Falls back to the pre-references full text when section headers are missing but ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1524,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:00.501Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-8f01f-on-headers-are-missing-but--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-e23200f2bfcc3f000f42",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Max file size 20 MB",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1575,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:02.035Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c5a73--cp-015-Max-file-size-20-MB-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-25d971cb1d5b65fdaedb",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Timeout 15 seconds",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1538,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:03.625Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-28233-6-cp-016-Timeout-15-seconds-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-41f4012adeae4b574d3f",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Pass 1 Per-perspective narrative sections parallel execution",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1518,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:05.174Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c2be9-sections-parallel-execution-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-c4ae67e385d6ece509b2",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Pass 2 Executive summary and introduction",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1520,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:06.702Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-56a3e-ve-summary-and-introduction-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-1776416a72616d5acb53",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Pass 3 Comparison tables gaps contradictions conclusions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1526,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:08.232Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-4c6f2--contradictions-conclusions-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-ad769488ba432b45e992",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Pass 4 Self-critique and revision",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1508,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:09.768Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-1fa7a--Self-critique-and-revision-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-c1c36a50a4a04d4a6cd5",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: Outputs markdown with interactive citation markers N",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1522,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:11.286Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-4b5ee-eractive-citation-markers-N-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-b69817b2a1aa2cbf85a1",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Topic 5 characters the plan route emits an SSE error and the page shows the erro",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1574,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:12.818Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-f0c86-and-the-page-shows-the-erro-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-d89fe632ccd39ee76b49",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: Topic 500 characters the plan route emits an SSE error and the page shows the er",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1488,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:14.401Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ca3b0-r-and-the-page-shows-the-er-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-9275ae17068f94bc9483",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Empty topic Start button disabled",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1524,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:15.899Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a6686-topic-Start-button-disabled-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-3c65de2caad84382d242",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Fetch failures caught and displayed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1509,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:17.434Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-5c650-ilures-caught-and-displayed-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-9fdbc8f92228b369f66d",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: AbortError handled silently expected from Stop button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1521,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:18.954Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-2ed71-y-expected-from-Stop-button-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-c0743f003f286cecd424",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Non-AbortError shows error state with message",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1501,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:20.490Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc8bc-ws-error-state-with-message-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-39d236f72a9a482a309b",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Red AlertCircle icon",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1460,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:22.000Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a8ea9-cp-028-Red-AlertCircle-icon-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-19ba08388bc050e54c5e",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Heading Research Failed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1457,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:23.471Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ea9dc-029-Heading-Research-Failed-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-75124822a9d0d122a4af",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Error message text displayed",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1487,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"errorMessage\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useState, useCallback, useRef } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Search,\u001b[39m\n\u001b[31m  Zap,\u001b[39m\n\u001b[31m  Layers,\u001b[39m\n\u001b[31m  Database,\u001b[39m\n\u001b[31m  AlertCircle,\u001b[39m\n\u001b[31m  Microscope,\u001b[39m\n\u001b[31m  StopCircle,\u001b[39m\n\u001b[31m} from \\\"lucide-react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  ResearchDocument,\u001b[39m\n\u001b[31m  LegacyReportView,\u001b[39m\n\u001b[31m  ExportButtons,\u001b[39m\n\u001b[31m  ResearchPlanPreview,\u001b[39m\n\u001b[31m  ProgressStepper,\u001b[39m\n\u001b[31m  buildStagesFromEvents,\u001b[39m\n\u001b[31m  SaveToLibraryButton,\u001b[39m\n\u001b[31m  PastResearchSessions,\u001b[39m\n\u001b[31m  RESEARCH_MODES,\u001b[39m\n\u001b[31m} from \\\"@/components/deep-research\\\";\u001b[39m\n\u001b[31mimport type {\u001b[39m\n\u001b[31m  ResearchMode,\u001b[39m\n\u001b[31m  EnhancedSynthesisReport,\u001b[39m\n\u001b[31m  SynthesisReport,\u001b[39m\n\u001b[31m  PlanPerspective,\u001b[39m\n\u001b[31m  DeepResearchSource,\u001b[39m\n\u001b[31m  ProgressStage,\u001b[39m\n\u001b[31m} from \\\"@/components/deep-research\\\";·\u001b[39m\n\u001b[31m// ── Mode icon mapping ───────────────────────────────────────────────\u001b[39m\n\u001b[31mconst MODE_ICONS: Record<ResearchMode, typeof Zap> = {\u001b[39m\n\u001b[31m  quick: Zap,\u001b[39m\n\u001b[31m  standard: Search,\u001b[39m\n\u001b[31m  deep: Layers,\u001b[39m\n\u001b[31m  exhaustive: Database,\u001b[39m\n\u001b[31m};·\u001b[39m\n\u001b[31m// ── Page state types ────────────────────────────────────────────────\u001b[39m\n\u001b[31mtype PageState = \\\"idle\\\" | \\\"plan-preview\\\" | \\\"running\\\" | \\\"done\\\" | \\\"error\\\";·\u001b[39m\n\u001b[31m// ── Streaming section type ──────────────────────────────────────────\u001b[39m\n\u001b[31minterface StreamingSection {\u001b[39m\n\u001b[31m  markdown: string;\u001b[39m\n\u001b[31m  animating: boolean;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mexport default function DeepResearchPage() {\u001b[39m\n\u001b[31m  // Input state\u001b[39m\n\u001b[31m  const [topic, setTopic] = useState(\\\"\\\");\u001b[39m\n\u001b[31m  const [mode, setMode] = useState<ResearchMode>(\\\"standard\\\");·\u001b[39m\n\u001b[31m  // Page flow state\u001b[39m\n\u001b[31m  const [pageState, setPageState] = useState<PageState>(\\\"idle\\\");\u001b[39m\n\u001b[31m  const [error, setError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  // Research plan state\u001b[39m\n\u001b[31m  const [planPerspectives, setPlanPerspectives] = useState<PlanPerspective[]>([]);·\u001b[39m\n\u001b[31m  // Progress state\u001b[39m\n\u001b[31m  const [progressStages, setProgressStages] = useState<ProgressStage[]>([]);\u001b[39m\n\u001b[31m  const [progressMessage, setProgressMessage] = useState(\\\"\\\");\u001b[39m\n\u001b[31m  const [progressPercent, setProgressPercent] = useState(0);·\u001b[39m\n\u001b[31m  // Refs to track stage progression inside the SSE loop (avoids stale closure)\u001b[39m\n\u001b[31m  const seenStageIdsRef = useRef<string[]>([]);\u001b[39m\n\u001b[31m  const currentStageIdRef = useRef<string | null>(null);·\u001b[39m\n\u001b[31m  // Streaming sections\u001b[39m\n\u001b[31m  const [streamingSections, setStreamingSections] = useState<StreamingSection[]>([]);·\u001b[39m\n\u001b[31m  // Final report state\u001b[39m\n\u001b[31m  const [report, setReport] = useState<EnhancedSynthesisReport | SynthesisReport | null>(null);·\u001b[39m\n\u001b[31m  // Abort controller\u001b[39m\n\u001b[31m  const abortRef = useRef<AbortController | null>(null);·\u001b[39m\n\u001b[31m  // ── Shared SSE reader utility ────────────────────────────────────\u001b[39m\n\u001b[31m  const readSSEStream = useCallback(\u001b[39m\n\u001b[31m    async (\u001b[39m\n\u001b[31m      response: Response,\u001b[39m\n\u001b[31m      handlers: {\u001b[39m\n\u001b[31m        onProgress?: (stage: string, message: string, progress?: number) => void;\u001b[39m\n\u001b[31m        onPerspectives?: (perspectives: PlanPerspective[]) => void;\u001b[39m\n\u001b[31m        onSection?: (markdown: string) => void;\u001b[39m\n\u001b[31m        onReport?: (report: EnhancedSynthesisReport | SynthesisReport) => void;\u001b[39m\n\u001b[31m        onError?: (error: string) => void;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    ) => {\u001b[39m\n\u001b[31m      if (!response.body) throw new Error(\\\"No response stream\\\");·\u001b[39m\n\u001b[31m      const reader = response.body.getReader();\u001b[39m\n\u001b[31m      const decoder = new TextDecoder();\u001b[39m\n\u001b[31m      let buffer = \\\"\\\";·\u001b[39m\n\u001b[31m      while (true) {\u001b[39m\n\u001b[31m        const { done, value } = await reader.read();\u001b[39m\n\u001b[31m        if (done) break;·\u001b[39m\n\u001b[31m        buffer += decoder.decode(value, { stream: true });\u001b[39m\n\u001b[31m        const lines = buffer.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m        buffer = lines.pop() || \\\"\\\";·\u001b[39m\n\u001b[31m        for (const line of lines) {\u001b[39m\n\u001b[31m          if (!line.startsWith(\\\"data: \\\")) continue;\u001b[39m\n\u001b[31m          const dataStr = line.slice(6).trim();\u001b[39m\n\u001b[31m          if (!dataStr || dataStr === \\\"[DONE]\\\") continue;·\u001b[39m\n\u001b[31m          try {\u001b[39m\n\u001b[31m            const event = JSON.parse(dataStr);·\u001b[39m\n\u001b[31m            switch (event.type) {\u001b[39m\n\u001b[31m              case \\\"progress\\\":\u001b[39m\n\u001b[31m                handlers.onProgress?.(event.stage, event.message, event.progress);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"perspectives\\\":\u001b[39m\n\u001b[31m                handlers.onPerspectives?.(event.perspectives);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"section\\\":\u001b[39m\n\u001b[31m                if (event.markdown) handlers.onSection?.(event.markdown);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"report\\\":\u001b[39m\n\u001b[31m                handlers.onReport?.(event.report);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"error\\\":\u001b[39m\n\u001b[31m                throw new Error(event.error || \\\"Research failed\\\");\u001b[39m\n\u001b[31m            }\u001b[39m\n\u001b[31m          } catch (parseErr) {\u001b[39m\n\u001b[31m            if (parseErr instanceof SyntaxError) continue;\u001b[39m\n\u001b[31m            throw parseErr;\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    []\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Phase 1: Generate research plan (perspectives) ─────────────────\u001b[39m\n\u001b[31m  const fetchPlan = useCallback(\u001b[39m\n\u001b[31m    async () => {\u001b[39m\n\u001b[31m      if (!topic.trim()) return;·\u001b[39m\n\u001b[31m      setPageState(\\\"plan-preview\\\");\u001b[39m\n\u001b[31m      setError(null);\u001b[39m\n\u001b[31m      setPlanPerspectives([]);\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Generating research plan...\\\");·\u001b[39m\n\u001b[31m      const controller = new AbortController();\u001b[39m\n\u001b[31m      abortRef.current = controller;·\u001b[39m\n\u001b[31m      try {\u001b[39m\n\u001b[31m        const response = await fetch(\\\"/api/deep-research/plan\\\", {\u001b[39m\n\u001b[31m          method: \\\"POST\\\",\u001b[39m\n\u001b[31m          headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m          body: JSON.stringify({ topic: topic.trim(), mode }),\u001b[39m\n\u001b[31m          signal: controller.signal,\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        if (!response.ok) {\u001b[39m\n\u001b[31m          const data = await response.json().catch(() => ({}));\u001b[39m\n\u001b[31m          throw new Error(data.error || `Plan generation failed (${response.status})`);\u001b[39m\n\u001b[31m        }·\u001b[39m\n\u001b[31m        await readSSEStream(response, {\u001b[39m\n\u001b[31m          onProgress: (_stage, message) => {\u001b[39m\n\u001b[31m            setProgressMessage(message);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onPerspectives: (perspectives) => {\u001b[39m\n\u001b[31m            setPlanPerspectives(perspectives);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onError: (err) => {\u001b[39m\n\u001b[31m            throw new Error(err);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m        });\u001b[39m\n\u001b[31m      } catch (err) {\u001b[39m\n\u001b[31m        if ((err as Error).name === \\\"AbortError\\\") {\u001b[39m\n\u001b[31m          setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m          return;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        setError(err instanceof Error ? err.message : \\\"An error occurred\\\");\u001b[39m\n\u001b[31m        setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m      } finally {\u001b[39m\n\u001b[31m        abortRef.current = null;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, mode, readSSEStream]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Phase 2: Execute research with confirmed perspectives ──────────\u001b[39m\n\u001b[31m  const executeResearch = useCallback(\u001b[39m\n\u001b[31m    async (confirmedPerspectives: PlanPerspective[]) => {\u001b[39m\n\u001b[31m      if (!topic.trim()) return;·\u001b[39m\n\u001b[31m      setPageState(\\\"running\\\");\u001b[39m\n\u001b[31m      setError(null);\u001b[39m\n\u001b[31m      setReport(null);\u001b[39m\n\u001b[31m      setStreamingSections([]);\u001b[39m\n\u001b[31m      seenStageIdsRef.current = [];\u001b[39m\n\u001b[31m      currentStageIdRef.current = null;\u001b[39m\n\u001b[31m      setProgressStages(buildStagesFromEvents([], null));\u001b[39m\n\u001b[31m      setProgressPercent(0);\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Starting research...\\\");·\u001b[39m\n\u001b[31m      const controller = new AbortController();\u001b[39m\n\u001b[31m      abortRef.current = controller;·\u001b[39m\n\u001b[31m      try {\u001b[39m\n\u001b[31m        const response = await fetch(\\\"/api/deep-research/execute\\\", {\u001b[39m\n\u001b[31m          method: \\\"POST\\\",\u001b[39m\n\u001b[31m          headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m          body: JSON.stringify({\u001b[39m\n\u001b[31m            topic: topic.trim(),\u001b[39m\n\u001b[31m            mode,\u001b[39m\n\u001b[31m            perspectives: confirmedPerspectives,\u001b[39m\n\u001b[31m          }),\u001b[39m\n\u001b[31m          signal: controller.signal,\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        if (!response.ok) {\u001b[39m\n\u001b[31m          const data = await response.json().catch(() => ({}));\u001b[39m\n\u001b[31m          throw new Error(data.error || `Research failed (${response.status})`);\u001b[39m\n\u001b[31m        }·\u001b[39m\n\u001b[31m        await readSSEStream(response, {\u001b[39m\n\u001b[31m          onProgress: (stage, message, progress) => {\u001b[39m\n\u001b[31m            setProgressMessage(message);\u001b[39m\n\u001b[31m            if (progress) setProgressPercent(progress);·\u001b[39m\n\u001b[31m            if (stage && stage !== currentStageIdRef.current) {\u001b[39m\n\u001b[31m              const prevStage = currentStageIdRef.current;\u001b[39m\n\u001b[31m              if (prevStage && !seenStageIdsRef.current.includes(prevStage)) {\u001b[39m\n\u001b[31m                seenStageIdsRef.current = [...seenStageIdsRef.current, prevStage];\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m              currentStageIdRef.current = stage;\u001b[39m\n\u001b[31m              setProgressStages(\u001b[39m\n\u001b[31m                buildStagesFromEvents(seenStageIdsRef.current, stage)\u001b[39m\n\u001b[31m              );\u001b[39m\n\u001b[31m            }\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onSection: (markdown) => {\u001b[39m\n\u001b[31m            setStreamingSections((prev) => [\u001b[39m\n\u001b[31m              ...prev,\u001b[39m\n\u001b[31m              { markdown, animating: true },\u001b[39m\n\u001b[31m            ]);\u001b[39m\n\u001b[31m            setTimeout(() => {\u001b[39m\n\u001b[31m              setStreamingSections((prev) =>\u001b[39m\n\u001b[31m                prev.map((s, i) =>\u001b[39m\n\u001b[31m                  i === prev.length - 1 ? { ...s, animating: false } : s\u001b[39m\n\u001b[31m                )\u001b[39m\n\u001b[31m              );\u001b[39m\n\u001b[31m            }, 800);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onReport: (reportData) => {\u001b[39m\n\u001b[31m            setReport(reportData);\u001b[39m\n\u001b[31m            setPageState(\\\"done\\\");\u001b[39m\n\u001b[31m            setProgressPercent(100);\u001b[39m\n\u001b[31m            const allCompleted = [\u001b[39m\n\u001b[31m              \\\"search-round-1\\\", \\\"citation-traversal\\\", \\\"search-round-2\\\",\u001b[39m\n\u001b[31m              \\\"full-text-extraction\\\", \\\"data-extraction\\\",\u001b[39m\n\u001b[31m              \\\"synthesis-perspectives\\\", \\\"synthesis-summary\\\",\u001b[39m\n\u001b[31m              \\\"synthesis-tables\\\", \\\"synthesis-critique\\\",\u001b[39m\n\u001b[31m            ];\u001b[39m\n\u001b[31m            seenStageIdsRef.current = allCompleted;\u001b[39m\n\u001b[31m            currentStageIdRef.current = null;\u001b[39m\n\u001b[31m            setProgressStages(buildStagesFromEvents(allCompleted, null));\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        setPageState((prev) => (prev === \\\"running\\\" ? \\\"done\\\" : prev));\u001b[39m\n\u001b[31m      } catch (err) {\u001b[39m\n\u001b[31m        if ((err as Error).name === \\\"AbortError\\\") {\u001b[39m\n\u001b[31m          setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m          return;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        setError(err instanceof Error ? err.message : \\\"An error occurred\\\");\u001b[39m\n\u001b[31m        setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m      } finally {\u001b[39m\n\u001b[31m        abortRef.current = null;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, mode, readSSEStream]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Handle initial start button ───────────────────────────────────\u001b[39m\n\u001b[31m  const handleStart = useCallback(() => {\u001b[39m\n\u001b[31m    fetchPlan();\u001b[39m\n\u001b[31m  }, [fetchPlan]);·\u001b[39m\n\u001b[31m  // ── Handle plan confirmation ──────────────────────────────────────\u001b[39m\n\u001b[31m  const handlePlanConfirm = useCallback(\u001b[39m\n\u001b[31m    (perspectives: PlanPerspective[]) => {\u001b[39m\n\u001b[31m      setPlanPerspectives([]);\u001b[39m\n\u001b[31m      executeResearch(perspectives);\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [executeResearch]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Handle plan regeneration ──────────────────────────────────────\u001b[39m\n\u001b[31m  const handlePlanRegenerate = useCallback(() => {\u001b[39m\n\u001b[31m    fetchPlan();\u001b[39m\n\u001b[31m  }, [fetchPlan]);·\u001b[39m\n\u001b[31m  // ── Abort research ────────────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleAbort = useCallback(() => {\u001b[39m\n\u001b[31m    if (abortRef.current) {\u001b[39m\n\u001b[31m      abortRef.current.abort();\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    setPlanPerspectives([]);\u001b[39m\n\u001b[31m    setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m  }, []);·\u001b[39m\n\u001b[31m  // ── Handle key press ──────────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleKeyDown = useCallback(\u001b[39m\n\u001b[31m    (e: React.KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.key === \\\"Enter\\\" && !e.shiftKey && topic.trim() && pageState === \\\"idle\\\") {\u001b[39m\n\u001b[31m        e.preventDefault();\u001b[39m\n\u001b[31m        handleStart();\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, pageState, handleStart]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Load a saved session ──────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleLoadSession = useCallback(async (sessionId: number) => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      setPageState(\\\"running\\\");\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Loading saved research...\\\");·\u001b[39m\n\u001b[31m      const res = await fetch(`/api/deep-research/sessions/${sessionId}`);\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to load session\\\");\u001b[39m\n\u001b[31m      const data = await res.json();·\u001b[39m\n\u001b[31m      const loadedReport: EnhancedSynthesisReport = {\u001b[39m\n\u001b[31m        topic: data.topic,\u001b[39m\n\u001b[31m        mode: data.mode,\u001b[39m\n\u001b[31m        summary: \\\"\\\",\u001b[39m\n\u001b[31m        keyFindings: data.keyFindings || [],\u001b[39m\n\u001b[31m        perspectives: [],\u001b[39m\n\u001b[31m        gaps: data.gaps || [],\u001b[39m\n\u001b[31m        contradictions: [],\u001b[39m\n\u001b[31m        totalSources: data.sources?.length || 0,\u001b[39m\n\u001b[31m        sources: data.sources || [],\u001b[39m\n\u001b[31m        markdownReport: data.markdownReport,\u001b[39m\n\u001b[31m      };·\u001b[39m\n\u001b[31m      setReport(loadedReport);\u001b[39m\n\u001b[31m      setTopic(data.topic);\u001b[39m\n\u001b[31m      setMode(data.mode as ResearchMode);\u001b[39m\n\u001b[31m      setPageState(\\\"done\\\");\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      setError(\\\"Failed to load saved research\\\");\u001b[39m\n\u001b[31m      setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, []);·\u001b[39m\n\u001b[31m  // ── Determine if report has markdownReport (enhanced) ─────────────\u001b[39m\n\u001b[31m  const isEnhancedReport = report && \\\"markdownReport\\\" in report && (report as EnhancedSynthesisReport).markdownReport;\u001b[39m\n\u001b[31m  const enhancedReport = isEnhancedReport ? (report as EnhancedSynthesisReport) : null;\u001b[39m\n\u001b[31m  const sources: DeepResearchSource[] = report?.sources || [];·\u001b[39m\n\u001b[31m  // ── Build combined streaming markdown ─────────────────────────────\u001b[39m\n\u001b[31m  const _streamingMarkdown = streamingSections.map((s) => s.markdown).join(\\\"\\\\n\\\\n\\\");·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex-1 min-h-screen bg-white dark:bg-gray-950\\\">\u001b[39m\n\u001b[31m      {/* Header area - always visible */}\u001b[39m\n\u001b[31m      <div className=\\\"sticky top-0 z-20 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800/50 print:hidden\\\">\u001b[39m\n\u001b[31m        <div className=\\\"max-w-7xl mx-auto px-4 sm:px-6 py-4\\\">\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center justify-between gap-4\\\">\u001b[39m\n\u001b[31m            {/* Title */}\u001b[39m\n\u001b[31m            <div className=\\\"flex items-center gap-3\\\">\u001b[39m\n\u001b[31m              <div className=\\\"w-9 h-9 rounded-xl bg-blue-500/20 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                <Microscope size={18} className=\\\"text-blue-400\\\" />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m              <div>\u001b[39m\n\u001b[31m                <h1 className=\\\"text-lg font-bold text-gray-900 dark:text-white\\\">Deep Research</h1>\u001b[39m\n\u001b[31m                <p className=\\\"text-xs text-gray-500\\\">Multi-perspective literature synthesis</p>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Export & Save buttons - visible when done */}\u001b[39m\n\u001b[31m            {pageState === \\\"done\\\" && report && (\u001b[39m\n\u001b[31m              <div className=\\\"flex items-center gap-3\\\">\u001b[39m\n\u001b[31m                {enhancedReport?.markdownReport && (\u001b[39m\n\u001b[31m                  <ExportButtons\u001b[39m\n\u001b[31m                    markdownReport={enhancedReport.markdownReport}\u001b[39m\n\u001b[31m                    topic={report.topic}\u001b[39m\n\u001b[31m                    sources={sources}\u001b[39m\n\u001b[31m                    keyFindings={report.keyFindings}\u001b[39m\n\u001b[31m                    gaps={report.gaps}\u001b[39m\n\u001b[31m                    mode={report.mode}\u001b[39m\n\u001b[31m                  />\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                <SaveToLibraryButton\u001b[39m\n\u001b[31m                  topic={report.topic}\u001b[39m\n\u001b[31m                  mode={report.mode}\u001b[39m\n\u001b[31m                  markdownReport={enhancedReport?.markdownReport || \\\"\\\"}\u001b[39m\n\u001b[31m                  sources={sources}\u001b[39m\n\u001b[31m                  keyFindings={report.keyFindings}\u001b[39m\n\u001b[31m                  gaps={report.gaps}\u001b[39m\n\u001b[31m                  isComplete={pageState === \\\"done\\\"}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            )}·\u001b[39m\n\u001b[31m            {/* Abort button - visible when running or plan-preview */}\u001b[39m\n\u001b[31m            {(pageState === \\\"running\\\" || pageState === \\\"plan-preview\\\") && (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                onClick={handleAbort}\u001b[39m\n\u001b[31m                className=\\\"flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors\\\"\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <StopCircle size={16} />\u001b[39m\n\u001b[31m                Stop\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            )}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      <div className=\\\"max-w-7xl mx-auto px-4 sm:px-6 py-8\\\">\u001b[39m\n\u001b[31m        {/* ── Idle State: Input form ──────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"idle\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"max-w-2xl mx-auto space-y-8\\\">\u001b[39m\n\u001b[31m            {/* Hero text */}\u001b[39m\n\u001b[31m            <div className=\\\"text-center space-y-3 pt-12\\\">\u001b[39m\n\u001b[31m              <h2 className=\\\"text-3xl font-bold text-gray-900 dark:text-white\\\">\u001b[39m\n\u001b[31m                What would you like to research?\u001b[39m\n\u001b[31m              </h2>\u001b[39m\n\u001b[31m              <p className=\\\"text-gray-500 dark:text-gray-400 text-base max-w-lg mx-auto\\\">\u001b[39m\n\u001b[31m                Enter a research topic and we will synthesize findings from multiple\u001b[39m\n\u001b[31m                academic perspectives with full citations.\u001b[39m\n\u001b[31m              </p>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Topic input */}\u001b[39m\n\u001b[31m            <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m              <input\u001b[39m\n\u001b[31m                type=\\\"text\\\"\u001b[39m\n\u001b[31m                value={topic}\u001b[39m\n\u001b[31m                onChange={(e) => setTopic(e.target.value)}\u001b[39m\n\u001b[31m                onKeyDown={handleKeyDown}\u001b[39m\n\u001b[31m                placeholder=\\\"e.g., Efficacy of GLP-1 receptor agonists in type 2 diabetes management\\\"\u001b[39m\n\u001b[31m                className=\\\"w-full bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl px-5 py-4 text-gray-900 dark:text-white text-base placeholder-gray-500 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all\\\"\u001b[39m\n\u001b[31m              />\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Mode selector - segmented control */}\u001b[39m\n\u001b[31m            <div className=\\\"bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/30 rounded-xl p-1.5 flex gap-1\\\">\u001b[39m\n\u001b[31m              {RESEARCH_MODES.map((m) => {\u001b[39m\n\u001b[31m                const Icon = MODE_ICONS[m.id];\u001b[39m\n\u001b[31m                const isSelected = mode === m.id;\u001b[39m\n\u001b[31m                return (\u001b[39m\n\u001b[31m                  <button\u001b[39m\n\u001b[31m                    key={m.id}\u001b[39m\n\u001b[31m                    onClick={() => setMode(m.id)}\u001b[39m\n\u001b[31m                    className={`flex-1 flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg text-center transition-all ${\u001b[39m\n\u001b[31m                      isSelected\u001b[39m\n\u001b[31m                        ? \\\"bg-white dark:bg-gray-700/60 border border-gray-300 dark:border-gray-600/50 shadow-sm\\\"\u001b[39m\n\u001b[31m                        : \\\"hover:bg-gray-100 dark:hover:bg-gray-800/40\\\"\u001b[39m\n\u001b[31m                    }`}\u001b[39m\n\u001b[31m                  >\u001b[39m\n\u001b[31m                    <Icon\u001b[39m\n\u001b[31m                      size={18}\u001b[39m\n\u001b[31m                      className={isSelected ? \\\"text-blue-400\\\" : \\\"text-gray-500\\\"}\u001b[39m\n\u001b[31m                    />\u001b[39m\n\u001b[31m                    <span\u001b[39m\n\u001b[31m                      className={`text-sm font-medium ${\u001b[39m\n\u001b[31m                        isSelected ? \\\"text-gray-900 dark:text-white\\\" : \\\"text-gray-500 dark:text-gray-400\\\"\u001b[39m\n\u001b[31m                      }`}\u001b[39m\n\u001b[31m                    >\u001b[39m\n\u001b[31m                      {m.label}\u001b[39m\n\u001b[31m                    </span>\u001b[39m\n\u001b[31m                    <span className=\\\"text-[10px] text-gray-500\\\">{m.estimatedTime}</span>\u001b[39m\n\u001b[31m                  </button>\u001b[39m\n\u001b[31m                );\u001b[39m\n\u001b[31m              })}\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Start button */}\u001b[39m\n\u001b[31m            <button\u001b[39m\n\u001b[31m              onClick={handleStart}\u001b[39m\n\u001b[31m              disabled={!topic.trim()}\u001b[39m\n\u001b[31m              className=\\\"w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-base rounded-xl transition-colors flex items-center justify-center gap-2\\\"\u001b[39m\n\u001b[31m            >\u001b[39m\n\u001b[31m              <Search size={18} />\u001b[39m\n\u001b[31m              Start Deep Research\u001b[39m\n\u001b[31m            </button>·\u001b[39m\n\u001b[31m            {/* Past research sessions */}\u001b[39m\n\u001b[31m            <PastResearchSessions onLoadSession={handleLoadSession} />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Plan Preview State ─────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"plan-preview\\\" && planPerspectives.length > 0 && (\u001b[39m\n\u001b[31m          <div className=\\\"py-8\\\">\u001b[39m\n\u001b[31m            <ResearchPlanPreview\u001b[39m\n\u001b[31m              perspectives={planPerspectives}\u001b[39m\n\u001b[31m              onConfirm={handlePlanConfirm}\u001b[39m\n\u001b[31m              onRegenerate={handlePlanRegenerate}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Plan Loading State ──────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"plan-preview\\\" && planPerspectives.length === 0 && (\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center justify-center min-h-[400px]\\\">\u001b[39m\n\u001b[31m            <div className=\\\"text-center space-y-4\\\">\u001b[39m\n\u001b[31m              <div className=\\\"w-16 h-16 mx-auto rounded-full bg-purple-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                <Microscope size={28} className=\\\"text-purple-400 animate-pulse\\\" />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m              <div>\u001b[39m\n\u001b[31m                <p className=\\\"text-gray-900 dark:text-white font-medium\\\">{progressMessage}</p>\u001b[39m\n\u001b[31m                <p className=\\\"text-gray-500 text-sm mt-1\\\">\u001b[39m\n\u001b[31m                  Preparing research plan for: {topic}\u001b[39m\n\u001b[31m                </p>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Running State: Progress + Streaming ────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"running\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"flex gap-8\\\">\u001b[39m\n\u001b[31m            {/* Progress stepper on the left */}\u001b[39m\n\u001b[31m            <ProgressStepper\u001b[39m\n\u001b[31m              stages={progressStages}\u001b[39m\n\u001b[31m              currentMessage={progressMessage}\u001b[39m\n\u001b[31m              progress={progressPercent}\u001b[39m\n\u001b[31m            />·\u001b[39m\n\u001b[31m            {/* Streaming content on the right */}\u001b[39m\n\u001b[31m            <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m              {streamingSections.length > 0 ? (\u001b[39m\n\u001b[31m                <div className=\\\"max-w-4xl mx-auto space-y-6\\\">\u001b[39m\n\u001b[31m                  {streamingSections.map((section, idx) => (\u001b[39m\n\u001b[31m                    <div\u001b[39m\n\u001b[31m                      key={idx}\u001b[39m\n\u001b[31m                      className={`transition-all duration-700 ${\u001b[39m\n\u001b[31m                        section.animating\u001b[39m\n\u001b[31m                          ? \\\"opacity-0 translate-y-4\\\"\u001b[39m\n\u001b[31m                          : \\\"opacity-100 translate-y-0\\\"\u001b[39m\n\u001b[31m                      }`}\u001b[39m\n\u001b[31m                    >\u001b[39m\n\u001b[31m                      <ResearchDocument\u001b[39m\n\u001b[31m                        markdownReport={section.markdown}\u001b[39m\n\u001b[31m                        sources={sources}\u001b[39m\n\u001b[31m                      />\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                  ))}\u001b[39m\n\u001b[31m                </div>\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <div className=\\\"flex items-center justify-center min-h-[400px]\\\">\u001b[39m\n\u001b[31m                  <div className=\\\"text-center space-y-4\\\">\u001b[39m\n\u001b[31m                    <div className=\\\"w-16 h-16 mx-auto rounded-full bg-blue-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                      <Microscope size={28} className=\\\"text-blue-400 animate-pulse\\\" />\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                    <div>\u001b[39m\n\u001b[31m                      <p className=\\\"text-gray-900 dark:text-white font-medium\\\">{progressMessage}</p>\u001b[39m\n\u001b[31m                      <p className=\\\"text-gray-500 text-sm mt-1\\\">\u001b[39m\n\u001b[31m                        Researching: {topic}\u001b[39m\n\u001b[31m                      </p>\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                  </div>\u001b[39m\n\u001b[31m                </div>\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Done State: Full Report ────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"done\\\" && report && (\u001b[39m\n\u001b[31m          <div>\u001b[39m\n\u001b[31m            {/* Topic & mode header */}\u001b[39m\n\u001b[31m            <div className=\\\"mb-8 text-center\\\">\u001b[39m\n\u001b[31m              <h2 className=\\\"text-2xl font-bold text-gray-900 dark:text-white mb-2\\\">{report.topic}</h2>\u001b[39m\n\u001b[31m              <div className=\\\"flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-gray-400\\\">\u001b[39m\n\u001b[31m                <span className=\\\"capitalize\\\">{report.mode} mode</span>\u001b[39m\n\u001b[31m                <span>&middot;</span>\u001b[39m\n\u001b[31m                <span>{report.totalSources} sources analyzed</span>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Render enhanced markdown report or legacy card view */}\u001b[39m\n\u001b[31m            {enhancedReport?.markdownReport ? (\u001b[39m\n\u001b[31m              <ResearchDocument\u001b[39m\n\u001b[31m                markdownReport={enhancedReport.markdownReport}\u001b[39m\n\u001b[31m                sources={sources}\u001b[39m\n\u001b[31m              />\u001b[39m\n\u001b[31m            ) : (\u001b[39m\n\u001b[31m              <LegacyReportView report={report as SynthesisReport} />\u001b[39m\n\u001b[31m            )}·\u001b[39m\n\u001b[31m            {/* New research button */}\u001b[39m\n\u001b[31m            <div className=\\\"max-w-4xl mx-auto mt-12 text-center print:hidden\\\">\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                onClick={() => {\u001b[39m\n\u001b[31m                  setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m                  setReport(null);\u001b[39m\n\u001b[31m                  setStreamingSections([]);\u001b[39m\n\u001b[31m                  setProgressStages([]);\u001b[39m\n\u001b[31m                  seenStageIdsRef.current = [];\u001b[39m\n\u001b[31m                  currentStageIdRef.current = null;\u001b[39m\n\u001b[31m                  setTopic(\\\"\\\");\u001b[39m\n\u001b[31m                }}\u001b[39m\n\u001b[31m                className=\\\"px-6 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                Start New Research\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Error State ────────────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"error\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"max-w-lg mx-auto text-center space-y-4 pt-20\\\">\u001b[39m\n\u001b[31m            <div className=\\\"w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m              <AlertCircle size={28} className=\\\"text-red-400\\\" />\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m            <h3 className=\\\"text-lg font-semibold text-gray-900 dark:text-white\\\">Research Failed</h3>\u001b[39m\n\u001b[31m            <p className=\\\"text-gray-500 dark:text-gray-400 text-sm\\\">{error}</p>\u001b[39m\n\u001b[31m            <button\u001b[39m\n\u001b[31m              onClick={() => {\u001b[39m\n\u001b[31m                setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m                setError(null);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              className=\\\"px-6 py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors\\\"\u001b[39m\n\u001b[31m            >\u001b[39m\n\u001b[31m              Try Again\u001b[39m\n\u001b[31m            </button>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"errorMessage\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useState, useCallback, useRef } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Search,\u001b[39m\n\u001b[31m  Zap,\u001b[39m\n\u001b[31m  Layers,\u001b[39m\n\u001b[31m  Database,\u001b[39m\n\u001b[31m  AlertCircle,\u001b[39m\n\u001b[31m  Microscope,\u001b[39m\n\u001b[31m  StopCircle,\u001b[39m\n\u001b[31m} from \\\"lucide-react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  ResearchDocument,\u001b[39m\n\u001b[31m  LegacyReportView,\u001b[39m\n\u001b[31m  ExportButtons,\u001b[39m\n\u001b[31m  ResearchPlanPreview,\u001b[39m\n\u001b[31m  ProgressStepper,\u001b[39m\n\u001b[31m  buildStagesFromEvents,\u001b[39m\n\u001b[31m  SaveToLibraryButton,\u001b[39m\n\u001b[31m  PastResearchSessions,\u001b[39m\n\u001b[31m  RESEARCH_MODES,\u001b[39m\n\u001b[31m} from \\\"@/components/deep-research\\\";\u001b[39m\n\u001b[31mimport type {\u001b[39m\n\u001b[31m  ResearchMode,\u001b[39m\n\u001b[31m  EnhancedSynthesisReport,\u001b[39m\n\u001b[31m  SynthesisReport,\u001b[39m\n\u001b[31m  PlanPerspective,\u001b[39m\n\u001b[31m  DeepResearchSource,\u001b[39m\n\u001b[31m  ProgressStage,\u001b[39m\n\u001b[31m} from \\\"@/components/deep-research\\\";·\u001b[39m\n\u001b[31m// ── Mode icon mapping ───────────────────────────────────────────────\u001b[39m\n\u001b[31mconst MODE_ICONS: Record<ResearchMode, typeof Zap> = {\u001b[39m\n\u001b[31m  quick: Zap,\u001b[39m\n\u001b[31m  standard: Search,\u001b[39m\n\u001b[31m  deep: Layers,\u001b[39m\n\u001b[31m  exhaustive: Database,\u001b[39m\n\u001b[31m};·\u001b[39m\n\u001b[31m// ── Page state types ────────────────────────────────────────────────\u001b[39m\n\u001b[31mtype PageState = \\\"idle\\\" | \\\"plan-preview\\\" | \\\"running\\\" | \\\"done\\\" | \\\"error\\\";·\u001b[39m\n\u001b[31m// ── Streaming section type ──────────────────────────────────────────\u001b[39m\n\u001b[31minterface StreamingSection {\u001b[39m\n\u001b[31m  markdown: string;\u001b[39m\n\u001b[31m  animating: boolean;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mexport default function DeepResearchPage() {\u001b[39m\n\u001b[31m  // Input state\u001b[39m\n\u001b[31m  const [topic, setTopic] = useState(\\\"\\\");\u001b[39m\n\u001b[31m  const [mode, setMode] = useState<ResearchMode>(\\\"standard\\\");·\u001b[39m\n\u001b[31m  // Page flow state\u001b[39m\n\u001b[31m  const [pageState, setPageState] = useState<PageState>(\\\"idle\\\");\u001b[39m\n\u001b[31m  const [error, setError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  // Research plan state\u001b[39m\n\u001b[31m  const [planPerspectives, setPlanPerspectives] = useState<PlanPerspective[]>([]);·\u001b[39m\n\u001b[31m  // Progress state\u001b[39m\n\u001b[31m  const [progressStages, setProgressStages] = useState<ProgressStage[]>([]);\u001b[39m\n\u001b[31m  const [progressMessage, setProgressMessage] = useState(\\\"\\\");\u001b[39m\n\u001b[31m  const [progressPercent, setProgressPercent] = useState(0);·\u001b[39m\n\u001b[31m  // Refs to track stage progression inside the SSE loop (avoids stale closure)\u001b[39m\n\u001b[31m  const seenStageIdsRef = useRef<string[]>([]);\u001b[39m\n\u001b[31m  const currentStageIdRef = useRef<string | null>(null);·\u001b[39m\n\u001b[31m  // Streaming sections\u001b[39m\n\u001b[31m  const [streamingSections, setStreamingSections] = useState<StreamingSection[]>([]);·\u001b[39m\n\u001b[31m  // Final report state\u001b[39m\n\u001b[31m  const [report, setReport] = useState<EnhancedSynthesisReport | SynthesisReport | null>(null);·\u001b[39m\n\u001b[31m  // Abort controller\u001b[39m\n\u001b[31m  const abortRef = useRef<AbortController | null>(null);·\u001b[39m\n\u001b[31m  // ── Shared SSE reader utility ────────────────────────────────────\u001b[39m\n\u001b[31m  const readSSEStream = useCallback(\u001b[39m\n\u001b[31m    async (\u001b[39m\n\u001b[31m      response: Response,\u001b[39m\n\u001b[31m      handlers: {\u001b[39m\n\u001b[31m        onProgress?: (stage: string, message: string, progress?: number) => void;\u001b[39m\n\u001b[31m        onPerspectives?: (perspectives: PlanPerspective[]) => void;\u001b[39m\n\u001b[31m        onSection?: (markdown: string) => void;\u001b[39m\n\u001b[31m        onReport?: (report: EnhancedSynthesisReport | SynthesisReport) => void;\u001b[39m\n\u001b[31m        onError?: (error: string) => void;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    ) => {\u001b[39m\n\u001b[31m      if (!response.body) throw new Error(\\\"No response stream\\\");·\u001b[39m\n\u001b[31m      const reader = response.body.getReader();\u001b[39m\n\u001b[31m      const decoder = new TextDecoder();\u001b[39m\n\u001b[31m      let buffer = \\\"\\\";·\u001b[39m\n\u001b[31m      while (true) {\u001b[39m\n\u001b[31m        const { done, value } = await reader.read();\u001b[39m\n\u001b[31m        if (done) break;·\u001b[39m\n\u001b[31m        buffer += decoder.decode(value, { stream: true });\u001b[39m\n\u001b[31m        const lines = buffer.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m        buffer = lines.pop() || \\\"\\\";·\u001b[39m\n\u001b[31m        for (const line of lines) {\u001b[39m\n\u001b[31m          if (!line.startsWith(\\\"data: \\\")) continue;\u001b[39m\n\u001b[31m          const dataStr = line.slice(6).trim();\u001b[39m\n\u001b[31m          if (!dataStr || dataStr === \\\"[DONE]\\\") continue;·\u001b[39m\n\u001b[31m          try {\u001b[39m\n\u001b[31m            const event = JSON.parse(dataStr);·\u001b[39m\n\u001b[31m            switch (event.type) {\u001b[39m\n\u001b[31m              case \\\"progress\\\":\u001b[39m\n\u001b[31m                handlers.onProgress?.(event.stage, event.message, event.progress);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"perspectives\\\":\u001b[39m\n\u001b[31m                handlers.onPerspectives?.(event.perspectives);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"section\\\":\u001b[39m\n\u001b[31m                if (event.markdown) handlers.onSection?.(event.markdown);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"report\\\":\u001b[39m\n\u001b[31m                handlers.onReport?.(event.report);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"error\\\":\u001b[39m\n\u001b[31m                throw new Error(event.error || \\\"Research failed\\\");\u001b[39m\n\u001b[31m            }\u001b[39m\n\u001b[31m          } catch (parseErr) {\u001b[39m\n\u001b[31m            if (parseErr instanceof SyntaxError) continue;\u001b[39m\n\u001b[31m            throw parseErr;\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    []\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Phase 1: Generate research plan (perspectives) ─────────────────\u001b[39m\n\u001b[31m  const fetchPlan = useCallback(\u001b[39m\n\u001b[31m    async () => {\u001b[39m\n\u001b[31m      if (!topic.trim()) return;·\u001b[39m\n\u001b[31m      setPageState(\\\"plan-preview\\\");\u001b[39m\n\u001b[31m      setError(null);\u001b[39m\n\u001b[31m      setPlanPerspectives([]);\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Generating research plan...\\\");·\u001b[39m\n\u001b[31m      const controller = new AbortController();\u001b[39m\n\u001b[31m      abortRef.current = controller;·\u001b[39m\n\u001b[31m      try {\u001b[39m\n\u001b[31m        const response = await fetch(\\\"/api/deep-research/plan\\\", {\u001b[39m\n\u001b[31m          method: \\\"POST\\\",\u001b[39m\n\u001b[31m          headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m          body: JSON.stringify({ topic: topic.trim(), mode }),\u001b[39m\n\u001b[31m          signal: controller.signal,\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        if (!response.ok) {\u001b[39m\n\u001b[31m          const data = await response.json().catch(() => ({}));\u001b[39m\n\u001b[31m          throw new Error(data.error || `Plan generation failed (${response.status})`);\u001b[39m\n\u001b[31m        }·\u001b[39m\n\u001b[31m        await readSSEStream(response, {\u001b[39m\n\u001b[31m          onProgress: (_stage, message) => {\u001b[39m\n\u001b[31m            setProgressMessage(message);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onPerspectives: (perspectives) => {\u001b[39m\n\u001b[31m            setPlanPerspectives(perspectives);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onError: (err) => {\u001b[39m\n\u001b[31m            throw new Error(err);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m        });\u001b[39m\n\u001b[31m      } catch (err) {\u001b[39m\n\u001b[31m        if ((err as Error).name === \\\"AbortError\\\") {\u001b[39m\n\u001b[31m          setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m          return;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        setError(err instanceof Error ? err.message : \\\"An error occurred\\\");\u001b[39m\n\u001b[31m        setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m      } finally {\u001b[39m\n\u001b[31m        abortRef.current = null;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, mode, readSSEStream]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Phase 2: Execute research with confirmed perspectives ──────────\u001b[39m\n\u001b[31m  const executeResearch = useCallback(\u001b[39m\n\u001b[31m    async (confirmedPerspectives: PlanPerspective[]) => {\u001b[39m\n\u001b[31m      if (!topic.trim()) return;·\u001b[39m\n\u001b[31m      setPageState(\\\"running\\\");\u001b[39m\n\u001b[31m      setError(null);\u001b[39m\n\u001b[31m      setReport(null);\u001b[39m\n\u001b[31m      setStreamingSections([]);\u001b[39m\n\u001b[31m      seenStageIdsRef.current = [];\u001b[39m\n\u001b[31m      currentStageIdRef.current = null;\u001b[39m\n\u001b[31m      setProgressStages(buildStagesFromEvents([], null));\u001b[39m\n\u001b[31m      setProgressPercent(0);\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Starting research...\\\");·\u001b[39m\n\u001b[31m      const controller = new AbortController();\u001b[39m\n\u001b[31m      abortRef.current = controller;·\u001b[39m\n\u001b[31m      try {\u001b[39m\n\u001b[31m        const response = await fetch(\\\"/api/deep-research/execute\\\", {\u001b[39m\n\u001b[31m          method: \\\"POST\\\",\u001b[39m\n\u001b[31m          headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m          body: JSON.stringify({\u001b[39m\n\u001b[31m            topic: topic.trim(),\u001b[39m\n\u001b[31m            mode,\u001b[39m\n\u001b[31m            perspectives: confirmedPerspectives,\u001b[39m\n\u001b[31m          }),\u001b[39m\n\u001b[31m          signal: controller.signal,\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        if (!response.ok) {\u001b[39m\n\u001b[31m          const data = await response.json().catch(() => ({}));\u001b[39m\n\u001b[31m          throw new Error(data.error || `Research failed (${response.status})`);\u001b[39m\n\u001b[31m        }·\u001b[39m\n\u001b[31m        await readSSEStream(response, {\u001b[39m\n\u001b[31m          onProgress: (stage, message, progress) => {\u001b[39m\n\u001b[31m            setProgressMessage(message);\u001b[39m\n\u001b[31m            if (progress) setProgressPercent(progress);·\u001b[39m\n\u001b[31m            if (stage && stage !== currentStageIdRef.current) {\u001b[39m\n\u001b[31m              const prevStage = currentStageIdRef.current;\u001b[39m\n\u001b[31m              if (prevStage && !seenStageIdsRef.current.includes(prevStage)) {\u001b[39m\n\u001b[31m                seenStageIdsRef.current = [...seenStageIdsRef.current, prevStage];\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m              currentStageIdRef.current = stage;\u001b[39m\n\u001b[31m              setProgressStages(\u001b[39m\n\u001b[31m                buildStagesFromEvents(seenStageIdsRef.current, stage)\u001b[39m\n\u001b[31m              );\u001b[39m\n\u001b[31m            }\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onSection: (markdown) => {\u001b[39m\n\u001b[31m            setStreamingSections((prev) => [\u001b[39m\n\u001b[31m              ...prev,\u001b[39m\n\u001b[31m              { markdown, animating: true },\u001b[39m\n\u001b[31m            ]);\u001b[39m\n\u001b[31m            setTimeout(() => {\u001b[39m\n\u001b[31m              setStreamingSections((prev) =>\u001b[39m\n\u001b[31m                prev.map((s, i) =>\u001b[39m\n\u001b[31m                  i === prev.length - 1 ? { ...s, animating: false } : s\u001b[39m\n\u001b[31m                )\u001b[39m\n\u001b[31m              );\u001b[39m\n\u001b[31m            }, 800);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onReport: (reportData) => {\u001b[39m\n\u001b[31m            setReport(reportData);\u001b[39m\n\u001b[31m            setPageState(\\\"done\\\");\u001b[39m\n\u001b[31m            setProgressPercent(100);\u001b[39m\n\u001b[31m            const allCompleted = [\u001b[39m\n\u001b[31m              \\\"search-round-1\\\", \\\"citation-traversal\\\", \\\"search-round-2\\\",\u001b[39m\n\u001b[31m              \\\"full-text-extraction\\\", \\\"data-extraction\\\",\u001b[39m\n\u001b[31m              \\\"synthesis-perspectives\\\", \\\"synthesis-summary\\\",\u001b[39m\n\u001b[31m              \\\"synthesis-tables\\\", \\\"synthesis-critique\\\",\u001b[39m\n\u001b[31m            ];\u001b[39m\n\u001b[31m            seenStageIdsRef.current = allCompleted;\u001b[39m\n\u001b[31m            currentStageIdRef.current = null;\u001b[39m\n\u001b[31m            setProgressStages(buildStagesFromEvents(allCompleted, null));\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        setPageState((prev) => (prev === \\\"running\\\" ? \\\"done\\\" : prev));\u001b[39m\n\u001b[31m      } catch (err) {\u001b[39m\n\u001b[31m        if ((err as Error).name === \\\"AbortError\\\") {\u001b[39m\n\u001b[31m          setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m          return;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        setError(err instanceof Error ? err.message : \\\"An error occurred\\\");\u001b[39m\n\u001b[31m        setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m      } finally {\u001b[39m\n\u001b[31m        abortRef.current = null;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, mode, readSSEStream]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Handle initial start button ───────────────────────────────────\u001b[39m\n\u001b[31m  const handleStart = useCallback(() => {\u001b[39m\n\u001b[31m    fetchPlan();\u001b[39m\n\u001b[31m  }, [fetchPlan]);·\u001b[39m\n\u001b[31m  // ── Handle plan confirmation ──────────────────────────────────────\u001b[39m\n\u001b[31m  const handlePlanConfirm = useCallback(\u001b[39m\n\u001b[31m    (perspectives: PlanPerspective[]) => {\u001b[39m\n\u001b[31m      setPlanPerspectives([]);\u001b[39m\n\u001b[31m      executeResearch(perspectives);\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [executeResearch]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Handle plan regeneration ──────────────────────────────────────\u001b[39m\n\u001b[31m  const handlePlanRegenerate = useCallback(() => {\u001b[39m\n\u001b[31m    fetchPlan();\u001b[39m\n\u001b[31m  }, [fetchPlan]);·\u001b[39m\n\u001b[31m  // ── Abort research ────────────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleAbort = useCallback(() => {\u001b[39m\n\u001b[31m    if (abortRef.current) {\u001b[39m\n\u001b[31m      abortRef.current.abort();\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    setPlanPerspectives([]);\u001b[39m\n\u001b[31m    setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m  }, []);·\u001b[39m\n\u001b[31m  // ── Handle key press ──────────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleKeyDown = useCallback(\u001b[39m\n\u001b[31m    (e: React.KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.key === \\\"Enter\\\" && !e.shiftKey && topic.trim() && pageState === \\\"idle\\\") {\u001b[39m\n\u001b[31m        e.preventDefault();\u001b[39m\n\u001b[31m        handleStart();\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, pageState, handleStart]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Load a saved session ──────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleLoadSession = useCallback(async (sessionId: number) => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      setPageState(\\\"running\\\");\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Loading saved research...\\\");·\u001b[39m\n\u001b[31m      const res = await fetch(`/api/deep-research/sessions/${sessionId}`);\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to load session\\\");\u001b[39m\n\u001b[31m      const data = await res.json();·\u001b[39m\n\u001b[31m      const loadedReport: EnhancedSynthesisReport = {\u001b[39m\n\u001b[31m        topic: data.topic,\u001b[39m\n\u001b[31m        mode: data.mode,\u001b[39m\n\u001b[31m        summary: \\\"\\\",\u001b[39m\n\u001b[31m        keyFindings: data.keyFindings || [],\u001b[39m\n\u001b[31m        perspectives: [],\u001b[39m\n\u001b[31m        gaps: data.gaps || [],\u001b[39m\n\u001b[31m        contradictions: [],\u001b[39m\n\u001b[31m        totalSources: data.sources?.length || 0,\u001b[39m\n\u001b[31m        sources: data.sources || [],\u001b[39m\n\u001b[31m        markdownReport: data.markdownReport,\u001b[39m\n\u001b[31m      };·\u001b[39m\n\u001b[31m      setReport(loadedReport);\u001b[39m\n\u001b[31m      setTopic(data.topic);\u001b[39m\n\u001b[31m      setMode(data.mode as ResearchMode);\u001b[39m\n\u001b[31m      setPageState(\\\"done\\\");\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      setError(\\\"Failed to load saved research\\\");\u001b[39m\n\u001b[31m      setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, []);·\u001b[39m\n\u001b[31m  // ── Determine if report has markdownReport (enhanced) ─────────────\u001b[39m\n\u001b[31m  const isEnhancedReport = report && \\\"markdownReport\\\" in report && (report as EnhancedSynthesisReport).markdownReport;\u001b[39m\n\u001b[31m  const enhancedReport = isEnhancedReport ? (report as EnhancedSynthesisReport) : null;\u001b[39m\n\u001b[31m  const sources: DeepResearchSource[] = report?.sources || [];·\u001b[39m\n\u001b[31m  // ── Build combined streaming markdown ─────────────────────────────\u001b[39m\n\u001b[31m  const _streamingMarkdown = streamingSections.map((s) => s.markdown).join(\\\"\\\\n\\\\n\\\");·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex-1 min-h-screen bg-white dark:bg-gray-950\\\">\u001b[39m\n\u001b[31m      {/* Header area - always visible */}\u001b[39m\n\u001b[31m      <div className=\\\"sticky top-0 z-20 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800/50 print:hidden\\\">\u001b[39m\n\u001b[31m        <div className=\\\"max-w-7xl mx-auto px-4 sm:px-6 py-4\\\">\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center justify-between gap-4\\\">\u001b[39m\n\u001b[31m            {/* Title */}\u001b[39m\n\u001b[31m            <div className=\\\"flex items-center gap-3\\\">\u001b[39m\n\u001b[31m              <div className=\\\"w-9 h-9 rounded-xl bg-blue-500/20 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                <Microscope size={18} className=\\\"text-blue-400\\\" />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m              <div>\u001b[39m\n\u001b[31m                <h1 className=\\\"text-lg font-bold text-gray-900 dark:text-white\\\">Deep Research</h1>\u001b[39m\n\u001b[31m                <p className=\\\"text-xs text-gray-500\\\">Multi-perspective literature synthesis</p>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Export & Save buttons - visible when done */}\u001b[39m\n\u001b[31m            {pageState === \\\"done\\\" && report && (\u001b[39m\n\u001b[31m              <div className=\\\"flex items-center gap-3\\\">\u001b[39m\n\u001b[31m                {enhancedReport?.markdownReport && (\u001b[39m\n\u001b[31m                  <ExportButtons\u001b[39m\n\u001b[31m                    markdownReport={enhancedReport.markdownReport}\u001b[39m\n\u001b[31m                    topic={report.topic}\u001b[39m\n\u001b[31m                    sources={sources}\u001b[39m\n\u001b[31m                    keyFindings={report.keyFindings}\u001b[39m\n\u001b[31m                    gaps={report.gaps}\u001b[39m\n\u001b[31m                    mode={report.mode}\u001b[39m\n\u001b[31m                  />\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                <SaveToLibraryButton\u001b[39m\n\u001b[31m                  topic={report.topic}\u001b[39m\n\u001b[31m                  mode={report.mode}\u001b[39m\n\u001b[31m                  markdownReport={enhancedReport?.markdownReport || \\\"\\\"}\u001b[39m\n\u001b[31m                  sources={sources}\u001b[39m\n\u001b[31m                  keyFindings={report.keyFindings}\u001b[39m\n\u001b[31m                  gaps={report.gaps}\u001b[39m\n\u001b[31m                  isComplete={pageState === \\\"done\\\"}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            )}·\u001b[39m\n\u001b[31m            {/* Abort button - visible when running or plan-preview */}\u001b[39m\n\u001b[31m            {(pageState === \\\"running\\\" || pageState === \\\"plan-preview\\\") && (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                onClick={handleAbort}\u001b[39m\n\u001b[31m                className=\\\"flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors\\\"\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <StopCircle size={16} />\u001b[39m\n\u001b[31m                Stop\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            )}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      <div className=\\\"max-w-7xl mx-auto px-4 sm:px-6 py-8\\\">\u001b[39m\n\u001b[31m        {/* ── Idle State: Input form ──────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"idle\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"max-w-2xl mx-auto space-y-8\\\">\u001b[39m\n\u001b[31m            {/* Hero text */}\u001b[39m\n\u001b[31m            <div className=\\\"text-center space-y-3 pt-12\\\">\u001b[39m\n\u001b[31m              <h2 className=\\\"text-3xl font-bold text-gray-900 dark:text-white\\\">\u001b[39m\n\u001b[31m                What would you like to research?\u001b[39m\n\u001b[31m              </h2>\u001b[39m\n\u001b[31m              <p className=\\\"text-gray-500 dark:text-gray-400 text-base max-w-lg mx-auto\\\">\u001b[39m\n\u001b[31m                Enter a research topic and we will synthesize findings from multiple\u001b[39m\n\u001b[31m                academic perspectives with full citations.\u001b[39m\n\u001b[31m              </p>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Topic input */}\u001b[39m\n\u001b[31m            <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m              <input\u001b[39m\n\u001b[31m                type=\\\"text\\\"\u001b[39m\n\u001b[31m                value={topic}\u001b[39m\n\u001b[31m                onChange={(e) => setTopic(e.target.value)}\u001b[39m\n\u001b[31m                onKeyDown={handleKeyDown}\u001b[39m\n\u001b[31m                placeholder=\\\"e.g., Efficacy of GLP-1 receptor agonists in type 2 diabetes management\\\"\u001b[39m\n\u001b[31m                className=\\\"w-full bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl px-5 py-4 text-gray-900 dark:text-white text-base placeholder-gray-500 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all\\\"\u001b[39m\n\u001b[31m              />\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Mode selector - segmented control */}\u001b[39m\n\u001b[31m            <div className=\\\"bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/30 rounded-xl p-1.5 flex gap-1\\\">\u001b[39m\n\u001b[31m              {RESEARCH_MODES.map((m) => {\u001b[39m\n\u001b[31m                const Icon = MODE_ICONS[m.id];\u001b[39m\n\u001b[31m                const isSelected = mode === m.id;\u001b[39m\n\u001b[31m                return (\u001b[39m\n\u001b[31m                  <button\u001b[39m\n\u001b[31m                    key={m.id}\u001b[39m\n\u001b[31m                    onClick={() => setMode(m.id)}\u001b[39m\n\u001b[31m                    className={`flex-1 flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg text-center transition-all ${\u001b[39m\n\u001b[31m                      isSelected\u001b[39m\n\u001b[31m                        ? \\\"bg-white dark:bg-gray-700/60 border border-gray-300 dark:border-gray-600/50 shadow-sm\\\"\u001b[39m\n\u001b[31m                        : \\\"hover:bg-gray-100 dark:hover:bg-gray-800/40\\\"\u001b[39m\n\u001b[31m                    }`}\u001b[39m\n\u001b[31m                  >\u001b[39m\n\u001b[31m                    <Icon\u001b[39m\n\u001b[31m                      size={18}\u001b[39m\n\u001b[31m                      className={isSelected ? \\\"text-blue-400\\\" : \\\"text-gray-500\\\"}\u001b[39m\n\u001b[31m                    />\u001b[39m\n\u001b[31m                    <span\u001b[39m\n\u001b[31m                      className={`text-sm font-medium ${\u001b[39m\n\u001b[31m                        isSelected ? \\\"text-gray-900 dark:text-white\\\" : \\\"text-gray-500 dark:text-gray-400\\\"\u001b[39m\n\u001b[31m                      }`}\u001b[39m\n\u001b[31m                    >\u001b[39m\n\u001b[31m                      {m.label}\u001b[39m\n\u001b[31m                    </span>\u001b[39m\n\u001b[31m                    <span className=\\\"text-[10px] text-gray-500\\\">{m.estimatedTime}</span>\u001b[39m\n\u001b[31m                  </button>\u001b[39m\n\u001b[31m                );\u001b[39m\n\u001b[31m              })}\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Start button */}\u001b[39m\n\u001b[31m            <button\u001b[39m\n\u001b[31m              onClick={handleStart}\u001b[39m\n\u001b[31m              disabled={!topic.trim()}\u001b[39m\n\u001b[31m              className=\\\"w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-base rounded-xl transition-colors flex items-center justify-center gap-2\\\"\u001b[39m\n\u001b[31m            >\u001b[39m\n\u001b[31m              <Search size={18} />\u001b[39m\n\u001b[31m              Start Deep Research\u001b[39m\n\u001b[31m            </button>·\u001b[39m\n\u001b[31m            {/* Past research sessions */}\u001b[39m\n\u001b[31m            <PastResearchSessions onLoadSession={handleLoadSession} />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Plan Preview State ─────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"plan-preview\\\" && planPerspectives.length > 0 && (\u001b[39m\n\u001b[31m          <div className=\\\"py-8\\\">\u001b[39m\n\u001b[31m            <ResearchPlanPreview\u001b[39m\n\u001b[31m              perspectives={planPerspectives}\u001b[39m\n\u001b[31m              onConfirm={handlePlanConfirm}\u001b[39m\n\u001b[31m              onRegenerate={handlePlanRegenerate}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Plan Loading State ──────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"plan-preview\\\" && planPerspectives.length === 0 && (\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center justify-center min-h-[400px]\\\">\u001b[39m\n\u001b[31m            <div className=\\\"text-center space-y-4\\\">\u001b[39m\n\u001b[31m              <div className=\\\"w-16 h-16 mx-auto rounded-full bg-purple-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                <Microscope size={28} className=\\\"text-purple-400 animate-pulse\\\" />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m              <div>\u001b[39m\n\u001b[31m                <p className=\\\"text-gray-900 dark:text-white font-medium\\\">{progressMessage}</p>\u001b[39m\n\u001b[31m                <p className=\\\"text-gray-500 text-sm mt-1\\\">\u001b[39m\n\u001b[31m                  Preparing research plan for: {topic}\u001b[39m\n\u001b[31m                </p>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Running State: Progress + Streaming ────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"running\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"flex gap-8\\\">\u001b[39m\n\u001b[31m            {/* Progress stepper on the left */}\u001b[39m\n\u001b[31m            <ProgressStepper\u001b[39m\n\u001b[31m              stages={progressStages}\u001b[39m\n\u001b[31m              currentMessage={progressMessage}\u001b[39m\n\u001b[31m              progress={progressPercent}\u001b[39m\n\u001b[31m            />·\u001b[39m\n\u001b[31m            {/* Streaming content on the right */}\u001b[39m\n\u001b[31m            <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m              {streamingSections.length > 0 ? (\u001b[39m\n\u001b[31m                <div className=\\\"max-w-4xl mx-auto space-y-6\\\">\u001b[39m\n\u001b[31m                  {streamingSections.map((section, idx) => (\u001b[39m\n\u001b[31m                    <div\u001b[39m\n\u001b[31m                      key={idx}\u001b[39m\n\u001b[31m                      className={`transition-all duration-700 ${\u001b[39m\n\u001b[31m                        section.animating\u001b[39m\n\u001b[31m                          ? \\\"opacity-0 translate-y-4\\\"\u001b[39m\n\u001b[31m                          : \\\"opacity-100 translate-y-0\\\"\u001b[39m\n\u001b[31m                      }`}\u001b[39m\n\u001b[31m                    >\u001b[39m\n\u001b[31m                      <ResearchDocument\u001b[39m\n\u001b[31m                        markdownReport={section.markdown}\u001b[39m\n\u001b[31m                        sources={sources}\u001b[39m\n\u001b[31m                      />\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                  ))}\u001b[39m\n\u001b[31m                </div>\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <div className=\\\"flex items-center justify-center min-h-[400px]\\\">\u001b[39m\n\u001b[31m                  <div className=\\\"text-center space-y-4\\\">\u001b[39m\n\u001b[31m                    <div className=\\\"w-16 h-16 mx-auto rounded-full bg-blue-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                      <Microscope size={28} className=\\\"text-blue-400 animate-pulse\\\" />\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                    <div>\u001b[39m\n\u001b[31m                      <p className=\\\"text-gray-900 dark:text-white font-medium\\\">{progressMessage}</p>\u001b[39m\n\u001b[31m                      <p className=\\\"text-gray-500 text-sm mt-1\\\">\u001b[39m\n\u001b[31m                        Researching: {topic}\u001b[39m\n\u001b[31m                      </p>\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                  </div>\u001b[39m\n\u001b[31m                </div>\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Done State: Full Report ────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"done\\\" && report && (\u001b[39m\n\u001b[31m          <div>\u001b[39m\n\u001b[31m            {/* Topic & mode header */}\u001b[39m\n\u001b[31m            <div className=\\\"mb-8 text-center\\\">\u001b[39m\n\u001b[31m              <h2 className=\\\"text-2xl font-bold text-gray-900 dark:text-white mb-2\\\">{report.topic}</h2>\u001b[39m\n\u001b[31m              <div className=\\\"flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-gray-400\\\">\u001b[39m\n\u001b[31m                <span className=\\\"capitalize\\\">{report.mode} mode</span>\u001b[39m\n\u001b[31m                <span>&middot;</span>\u001b[39m\n\u001b[31m                <span>{report.totalSources} sources analyzed</span>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Render enhanced markdown report or legacy card view */}\u001b[39m\n\u001b[31m            {enhancedReport?.markdownReport ? (\u001b[39m\n\u001b[31m              <ResearchDocument\u001b[39m\n\u001b[31m                markdownReport={enhancedReport.markdownReport}\u001b[39m\n\u001b[31m                sources={sources}\u001b[39m\n\u001b[31m              />\u001b[39m\n\u001b[31m            ) : (\u001b[39m\n\u001b[31m              <LegacyReportView report={report as SynthesisReport} />\u001b[39m\n\u001b[31m            )}·\u001b[39m\n\u001b[31m            {/* New research button */}\u001b[39m\n\u001b[31m            <div className=\\\"max-w-4xl mx-auto mt-12 text-center print:hidden\\\">\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                onClick={() => {\u001b[39m\n\u001b[31m                  setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m                  setReport(null);\u001b[39m\n\u001b[31m                  setStreamingSections([]);\u001b[39m\n\u001b[31m                  setProgressStages([]);\u001b[39m\n\u001b[31m                  seenStageIdsRef.current = [];\u001b[39m\n\u001b[31m                  currentStageIdRef.current = null;\u001b[39m\n\u001b[31m                  setTopic(\\\"\\\");\u001b[39m\n\u001b[31m                }}\u001b[39m\n\u001b[31m                className=\\\"px-6 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                Start New Research\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Error State ────────────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"error\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"max-w-lg mx-auto text-center space-y-4 pt-20\\\">\u001b[39m\n\u001b[31m            <div className=\\\"w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m              <AlertCircle size={28} className=\\\"text-red-400\\\" />\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m            <h3 className=\\\"text-lg font-semibold text-gray-900 dark:text-white\\\">Research Failed</h3>\u001b[39m\n\u001b[31m            <p className=\\\"text-gray-500 dark:text-gray-400 text-sm\\\">{error}</p>\u001b[39m\n\u001b[31m            <button\u001b[39m\n\u001b[31m              onClick={() => {\u001b[39m\n\u001b[31m                setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m                setError(null);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              className=\\\"px-6 py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors\\\"\u001b[39m\n\u001b[31m            >\u001b[39m\n\u001b[31m              Try Again\u001b[39m\n\u001b[31m            </button>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/deep-research.ts:26:43)\n    at assertDeepResearchCheckpoint (/home/user/ScholarSync-/qa/module-assertions/deep-research.ts:1576:5)\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1568:27",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/module-assertions/deep-research.ts",
+                          "column": 43,
+                          "line": 26
+                        },
+                        "snippet": "   at ../module-assertions/deep-research.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/module-assertions/deep-research.ts",
+                            "column": 43,
+                            "line": 26
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"errorMessage\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useState, useCallback, useRef } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Search,\u001b[39m\n\u001b[31m  Zap,\u001b[39m\n\u001b[31m  Layers,\u001b[39m\n\u001b[31m  Database,\u001b[39m\n\u001b[31m  AlertCircle,\u001b[39m\n\u001b[31m  Microscope,\u001b[39m\n\u001b[31m  StopCircle,\u001b[39m\n\u001b[31m} from \\\"lucide-react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  ResearchDocument,\u001b[39m\n\u001b[31m  LegacyReportView,\u001b[39m\n\u001b[31m  ExportButtons,\u001b[39m\n\u001b[31m  ResearchPlanPreview,\u001b[39m\n\u001b[31m  ProgressStepper,\u001b[39m\n\u001b[31m  buildStagesFromEvents,\u001b[39m\n\u001b[31m  SaveToLibraryButton,\u001b[39m\n\u001b[31m  PastResearchSessions,\u001b[39m\n\u001b[31m  RESEARCH_MODES,\u001b[39m\n\u001b[31m} from \\\"@/components/deep-research\\\";\u001b[39m\n\u001b[31mimport type {\u001b[39m\n\u001b[31m  ResearchMode,\u001b[39m\n\u001b[31m  EnhancedSynthesisReport,\u001b[39m\n\u001b[31m  SynthesisReport,\u001b[39m\n\u001b[31m  PlanPerspective,\u001b[39m\n\u001b[31m  DeepResearchSource,\u001b[39m\n\u001b[31m  ProgressStage,\u001b[39m\n\u001b[31m} from \\\"@/components/deep-research\\\";·\u001b[39m\n\u001b[31m// ── Mode icon mapping ───────────────────────────────────────────────\u001b[39m\n\u001b[31mconst MODE_ICONS: Record<ResearchMode, typeof Zap> = {\u001b[39m\n\u001b[31m  quick: Zap,\u001b[39m\n\u001b[31m  standard: Search,\u001b[39m\n\u001b[31m  deep: Layers,\u001b[39m\n\u001b[31m  exhaustive: Database,\u001b[39m\n\u001b[31m};·\u001b[39m\n\u001b[31m// ── Page state types ────────────────────────────────────────────────\u001b[39m\n\u001b[31mtype PageState = \\\"idle\\\" | \\\"plan-preview\\\" | \\\"running\\\" | \\\"done\\\" | \\\"error\\\";·\u001b[39m\n\u001b[31m// ── Streaming section type ──────────────────────────────────────────\u001b[39m\n\u001b[31minterface StreamingSection {\u001b[39m\n\u001b[31m  markdown: string;\u001b[39m\n\u001b[31m  animating: boolean;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mexport default function DeepResearchPage() {\u001b[39m\n\u001b[31m  // Input state\u001b[39m\n\u001b[31m  const [topic, setTopic] = useState(\\\"\\\");\u001b[39m\n\u001b[31m  const [mode, setMode] = useState<ResearchMode>(\\\"standard\\\");·\u001b[39m\n\u001b[31m  // Page flow state\u001b[39m\n\u001b[31m  const [pageState, setPageState] = useState<PageState>(\\\"idle\\\");\u001b[39m\n\u001b[31m  const [error, setError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  // Research plan state\u001b[39m\n\u001b[31m  const [planPerspectives, setPlanPerspectives] = useState<PlanPerspective[]>([]);·\u001b[39m\n\u001b[31m  // Progress state\u001b[39m\n\u001b[31m  const [progressStages, setProgressStages] = useState<ProgressStage[]>([]);\u001b[39m\n\u001b[31m  const [progressMessage, setProgressMessage] = useState(\\\"\\\");\u001b[39m\n\u001b[31m  const [progressPercent, setProgressPercent] = useState(0);·\u001b[39m\n\u001b[31m  // Refs to track stage progression inside the SSE loop (avoids stale closure)\u001b[39m\n\u001b[31m  const seenStageIdsRef = useRef<string[]>([]);\u001b[39m\n\u001b[31m  const currentStageIdRef = useRef<string | null>(null);·\u001b[39m\n\u001b[31m  // Streaming sections\u001b[39m\n\u001b[31m  const [streamingSections, setStreamingSections] = useState<StreamingSection[]>([]);·\u001b[39m\n\u001b[31m  // Final report state\u001b[39m\n\u001b[31m  const [report, setReport] = useState<EnhancedSynthesisReport | SynthesisReport | null>(null);·\u001b[39m\n\u001b[31m  // Abort controller\u001b[39m\n\u001b[31m  const abortRef = useRef<AbortController | null>(null);·\u001b[39m\n\u001b[31m  // ── Shared SSE reader utility ────────────────────────────────────\u001b[39m\n\u001b[31m  const readSSEStream = useCallback(\u001b[39m\n\u001b[31m    async (\u001b[39m\n\u001b[31m      response: Response,\u001b[39m\n\u001b[31m      handlers: {\u001b[39m\n\u001b[31m        onProgress?: (stage: string, message: string, progress?: number) => void;\u001b[39m\n\u001b[31m        onPerspectives?: (perspectives: PlanPerspective[]) => void;\u001b[39m\n\u001b[31m        onSection?: (markdown: string) => void;\u001b[39m\n\u001b[31m        onReport?: (report: EnhancedSynthesisReport | SynthesisReport) => void;\u001b[39m\n\u001b[31m        onError?: (error: string) => void;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    ) => {\u001b[39m\n\u001b[31m      if (!response.body) throw new Error(\\\"No response stream\\\");·\u001b[39m\n\u001b[31m      const reader = response.body.getReader();\u001b[39m\n\u001b[31m      const decoder = new TextDecoder();\u001b[39m\n\u001b[31m      let buffer = \\\"\\\";·\u001b[39m\n\u001b[31m      while (true) {\u001b[39m\n\u001b[31m        const { done, value } = await reader.read();\u001b[39m\n\u001b[31m        if (done) break;·\u001b[39m\n\u001b[31m        buffer += decoder.decode(value, { stream: true });\u001b[39m\n\u001b[31m        const lines = buffer.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m        buffer = lines.pop() || \\\"\\\";·\u001b[39m\n\u001b[31m        for (const line of lines) {\u001b[39m\n\u001b[31m          if (!line.startsWith(\\\"data: \\\")) continue;\u001b[39m\n\u001b[31m          const dataStr = line.slice(6).trim();\u001b[39m\n\u001b[31m          if (!dataStr || dataStr === \\\"[DONE]\\\") continue;·\u001b[39m\n\u001b[31m          try {\u001b[39m\n\u001b[31m            const event = JSON.parse(dataStr);·\u001b[39m\n\u001b[31m            switch (event.type) {\u001b[39m\n\u001b[31m              case \\\"progress\\\":\u001b[39m\n\u001b[31m                handlers.onProgress?.(event.stage, event.message, event.progress);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"perspectives\\\":\u001b[39m\n\u001b[31m                handlers.onPerspectives?.(event.perspectives);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"section\\\":\u001b[39m\n\u001b[31m                if (event.markdown) handlers.onSection?.(event.markdown);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"report\\\":\u001b[39m\n\u001b[31m                handlers.onReport?.(event.report);\u001b[39m\n\u001b[31m                break;\u001b[39m\n\u001b[31m              case \\\"error\\\":\u001b[39m\n\u001b[31m                throw new Error(event.error || \\\"Research failed\\\");\u001b[39m\n\u001b[31m            }\u001b[39m\n\u001b[31m          } catch (parseErr) {\u001b[39m\n\u001b[31m            if (parseErr instanceof SyntaxError) continue;\u001b[39m\n\u001b[31m            throw parseErr;\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    []\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Phase 1: Generate research plan (perspectives) ─────────────────\u001b[39m\n\u001b[31m  const fetchPlan = useCallback(\u001b[39m\n\u001b[31m    async () => {\u001b[39m\n\u001b[31m      if (!topic.trim()) return;·\u001b[39m\n\u001b[31m      setPageState(\\\"plan-preview\\\");\u001b[39m\n\u001b[31m      setError(null);\u001b[39m\n\u001b[31m      setPlanPerspectives([]);\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Generating research plan...\\\");·\u001b[39m\n\u001b[31m      const controller = new AbortController();\u001b[39m\n\u001b[31m      abortRef.current = controller;·\u001b[39m\n\u001b[31m      try {\u001b[39m\n\u001b[31m        const response = await fetch(\\\"/api/deep-research/plan\\\", {\u001b[39m\n\u001b[31m          method: \\\"POST\\\",\u001b[39m\n\u001b[31m          headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m          body: JSON.stringify({ topic: topic.trim(), mode }),\u001b[39m\n\u001b[31m          signal: controller.signal,\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        if (!response.ok) {\u001b[39m\n\u001b[31m          const data = await response.json().catch(() => ({}));\u001b[39m\n\u001b[31m          throw new Error(data.error || `Plan generation failed (${response.status})`);\u001b[39m\n\u001b[31m        }·\u001b[39m\n\u001b[31m        await readSSEStream(response, {\u001b[39m\n\u001b[31m          onProgress: (_stage, message) => {\u001b[39m\n\u001b[31m            setProgressMessage(message);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onPerspectives: (perspectives) => {\u001b[39m\n\u001b[31m            setPlanPerspectives(perspectives);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onError: (err) => {\u001b[39m\n\u001b[31m            throw new Error(err);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m        });\u001b[39m\n\u001b[31m      } catch (err) {\u001b[39m\n\u001b[31m        if ((err as Error).name === \\\"AbortError\\\") {\u001b[39m\n\u001b[31m          setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m          return;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        setError(err instanceof Error ? err.message : \\\"An error occurred\\\");\u001b[39m\n\u001b[31m        setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m      } finally {\u001b[39m\n\u001b[31m        abortRef.current = null;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, mode, readSSEStream]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Phase 2: Execute research with confirmed perspectives ──────────\u001b[39m\n\u001b[31m  const executeResearch = useCallback(\u001b[39m\n\u001b[31m    async (confirmedPerspectives: PlanPerspective[]) => {\u001b[39m\n\u001b[31m      if (!topic.trim()) return;·\u001b[39m\n\u001b[31m      setPageState(\\\"running\\\");\u001b[39m\n\u001b[31m      setError(null);\u001b[39m\n\u001b[31m      setReport(null);\u001b[39m\n\u001b[31m      setStreamingSections([]);\u001b[39m\n\u001b[31m      seenStageIdsRef.current = [];\u001b[39m\n\u001b[31m      currentStageIdRef.current = null;\u001b[39m\n\u001b[31m      setProgressStages(buildStagesFromEvents([], null));\u001b[39m\n\u001b[31m      setProgressPercent(0);\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Starting research...\\\");·\u001b[39m\n\u001b[31m      const controller = new AbortController();\u001b[39m\n\u001b[31m      abortRef.current = controller;·\u001b[39m\n\u001b[31m      try {\u001b[39m\n\u001b[31m        const response = await fetch(\\\"/api/deep-research/execute\\\", {\u001b[39m\n\u001b[31m          method: \\\"POST\\\",\u001b[39m\n\u001b[31m          headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m          body: JSON.stringify({\u001b[39m\n\u001b[31m            topic: topic.trim(),\u001b[39m\n\u001b[31m            mode,\u001b[39m\n\u001b[31m            perspectives: confirmedPerspectives,\u001b[39m\n\u001b[31m          }),\u001b[39m\n\u001b[31m          signal: controller.signal,\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        if (!response.ok) {\u001b[39m\n\u001b[31m          const data = await response.json().catch(() => ({}));\u001b[39m\n\u001b[31m          throw new Error(data.error || `Research failed (${response.status})`);\u001b[39m\n\u001b[31m        }·\u001b[39m\n\u001b[31m        await readSSEStream(response, {\u001b[39m\n\u001b[31m          onProgress: (stage, message, progress) => {\u001b[39m\n\u001b[31m            setProgressMessage(message);\u001b[39m\n\u001b[31m            if (progress) setProgressPercent(progress);·\u001b[39m\n\u001b[31m            if (stage && stage !== currentStageIdRef.current) {\u001b[39m\n\u001b[31m              const prevStage = currentStageIdRef.current;\u001b[39m\n\u001b[31m              if (prevStage && !seenStageIdsRef.current.includes(prevStage)) {\u001b[39m\n\u001b[31m                seenStageIdsRef.current = [...seenStageIdsRef.current, prevStage];\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m              currentStageIdRef.current = stage;\u001b[39m\n\u001b[31m              setProgressStages(\u001b[39m\n\u001b[31m                buildStagesFromEvents(seenStageIdsRef.current, stage)\u001b[39m\n\u001b[31m              );\u001b[39m\n\u001b[31m            }\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onSection: (markdown) => {\u001b[39m\n\u001b[31m            setStreamingSections((prev) => [\u001b[39m\n\u001b[31m              ...prev,\u001b[39m\n\u001b[31m              { markdown, animating: true },\u001b[39m\n\u001b[31m            ]);\u001b[39m\n\u001b[31m            setTimeout(() => {\u001b[39m\n\u001b[31m              setStreamingSections((prev) =>\u001b[39m\n\u001b[31m                prev.map((s, i) =>\u001b[39m\n\u001b[31m                  i === prev.length - 1 ? { ...s, animating: false } : s\u001b[39m\n\u001b[31m                )\u001b[39m\n\u001b[31m              );\u001b[39m\n\u001b[31m            }, 800);\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m          onReport: (reportData) => {\u001b[39m\n\u001b[31m            setReport(reportData);\u001b[39m\n\u001b[31m            setPageState(\\\"done\\\");\u001b[39m\n\u001b[31m            setProgressPercent(100);\u001b[39m\n\u001b[31m            const allCompleted = [\u001b[39m\n\u001b[31m              \\\"search-round-1\\\", \\\"citation-traversal\\\", \\\"search-round-2\\\",\u001b[39m\n\u001b[31m              \\\"full-text-extraction\\\", \\\"data-extraction\\\",\u001b[39m\n\u001b[31m              \\\"synthesis-perspectives\\\", \\\"synthesis-summary\\\",\u001b[39m\n\u001b[31m              \\\"synthesis-tables\\\", \\\"synthesis-critique\\\",\u001b[39m\n\u001b[31m            ];\u001b[39m\n\u001b[31m            seenStageIdsRef.current = allCompleted;\u001b[39m\n\u001b[31m            currentStageIdRef.current = null;\u001b[39m\n\u001b[31m            setProgressStages(buildStagesFromEvents(allCompleted, null));\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m        });·\u001b[39m\n\u001b[31m        setPageState((prev) => (prev === \\\"running\\\" ? \\\"done\\\" : prev));\u001b[39m\n\u001b[31m      } catch (err) {\u001b[39m\n\u001b[31m        if ((err as Error).name === \\\"AbortError\\\") {\u001b[39m\n\u001b[31m          setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m          return;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        setError(err instanceof Error ? err.message : \\\"An error occurred\\\");\u001b[39m\n\u001b[31m        setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m      } finally {\u001b[39m\n\u001b[31m        abortRef.current = null;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, mode, readSSEStream]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Handle initial start button ───────────────────────────────────\u001b[39m\n\u001b[31m  const handleStart = useCallback(() => {\u001b[39m\n\u001b[31m    fetchPlan();\u001b[39m\n\u001b[31m  }, [fetchPlan]);·\u001b[39m\n\u001b[31m  // ── Handle plan confirmation ──────────────────────────────────────\u001b[39m\n\u001b[31m  const handlePlanConfirm = useCallback(\u001b[39m\n\u001b[31m    (perspectives: PlanPerspective[]) => {\u001b[39m\n\u001b[31m      setPlanPerspectives([]);\u001b[39m\n\u001b[31m      executeResearch(perspectives);\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [executeResearch]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Handle plan regeneration ──────────────────────────────────────\u001b[39m\n\u001b[31m  const handlePlanRegenerate = useCallback(() => {\u001b[39m\n\u001b[31m    fetchPlan();\u001b[39m\n\u001b[31m  }, [fetchPlan]);·\u001b[39m\n\u001b[31m  // ── Abort research ────────────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleAbort = useCallback(() => {\u001b[39m\n\u001b[31m    if (abortRef.current) {\u001b[39m\n\u001b[31m      abortRef.current.abort();\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    setPlanPerspectives([]);\u001b[39m\n\u001b[31m    setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m  }, []);·\u001b[39m\n\u001b[31m  // ── Handle key press ──────────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleKeyDown = useCallback(\u001b[39m\n\u001b[31m    (e: React.KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.key === \\\"Enter\\\" && !e.shiftKey && topic.trim() && pageState === \\\"idle\\\") {\u001b[39m\n\u001b[31m        e.preventDefault();\u001b[39m\n\u001b[31m        handleStart();\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    },\u001b[39m\n\u001b[31m    [topic, pageState, handleStart]\u001b[39m\n\u001b[31m  );·\u001b[39m\n\u001b[31m  // ── Load a saved session ──────────────────────────────────────────\u001b[39m\n\u001b[31m  const handleLoadSession = useCallback(async (sessionId: number) => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      setPageState(\\\"running\\\");\u001b[39m\n\u001b[31m      setProgressMessage(\\\"Loading saved research...\\\");·\u001b[39m\n\u001b[31m      const res = await fetch(`/api/deep-research/sessions/${sessionId}`);\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to load session\\\");\u001b[39m\n\u001b[31m      const data = await res.json();·\u001b[39m\n\u001b[31m      const loadedReport: EnhancedSynthesisReport = {\u001b[39m\n\u001b[31m        topic: data.topic,\u001b[39m\n\u001b[31m        mode: data.mode,\u001b[39m\n\u001b[31m        summary: \\\"\\\",\u001b[39m\n\u001b[31m        keyFindings: data.keyFindings || [],\u001b[39m\n\u001b[31m        perspectives: [],\u001b[39m\n\u001b[31m        gaps: data.gaps || [],\u001b[39m\n\u001b[31m        contradictions: [],\u001b[39m\n\u001b[31m        totalSources: data.sources?.length || 0,\u001b[39m\n\u001b[31m        sources: data.sources || [],\u001b[39m\n\u001b[31m        markdownReport: data.markdownReport,\u001b[39m\n\u001b[31m      };·\u001b[39m\n\u001b[31m      setReport(loadedReport);\u001b[39m\n\u001b[31m      setTopic(data.topic);\u001b[39m\n\u001b[31m      setMode(data.mode as ResearchMode);\u001b[39m\n\u001b[31m      setPageState(\\\"done\\\");\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      setError(\\\"Failed to load saved research\\\");\u001b[39m\n\u001b[31m      setPageState(\\\"error\\\");\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, []);·\u001b[39m\n\u001b[31m  // ── Determine if report has markdownReport (enhanced) ─────────────\u001b[39m\n\u001b[31m  const isEnhancedReport = report && \\\"markdownReport\\\" in report && (report as EnhancedSynthesisReport).markdownReport;\u001b[39m\n\u001b[31m  const enhancedReport = isEnhancedReport ? (report as EnhancedSynthesisReport) : null;\u001b[39m\n\u001b[31m  const sources: DeepResearchSource[] = report?.sources || [];·\u001b[39m\n\u001b[31m  // ── Build combined streaming markdown ─────────────────────────────\u001b[39m\n\u001b[31m  const _streamingMarkdown = streamingSections.map((s) => s.markdown).join(\\\"\\\\n\\\\n\\\");·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex-1 min-h-screen bg-white dark:bg-gray-950\\\">\u001b[39m\n\u001b[31m      {/* Header area - always visible */}\u001b[39m\n\u001b[31m      <div className=\\\"sticky top-0 z-20 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800/50 print:hidden\\\">\u001b[39m\n\u001b[31m        <div className=\\\"max-w-7xl mx-auto px-4 sm:px-6 py-4\\\">\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center justify-between gap-4\\\">\u001b[39m\n\u001b[31m            {/* Title */}\u001b[39m\n\u001b[31m            <div className=\\\"flex items-center gap-3\\\">\u001b[39m\n\u001b[31m              <div className=\\\"w-9 h-9 rounded-xl bg-blue-500/20 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                <Microscope size={18} className=\\\"text-blue-400\\\" />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m              <div>\u001b[39m\n\u001b[31m                <h1 className=\\\"text-lg font-bold text-gray-900 dark:text-white\\\">Deep Research</h1>\u001b[39m\n\u001b[31m                <p className=\\\"text-xs text-gray-500\\\">Multi-perspective literature synthesis</p>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Export & Save buttons - visible when done */}\u001b[39m\n\u001b[31m            {pageState === \\\"done\\\" && report && (\u001b[39m\n\u001b[31m              <div className=\\\"flex items-center gap-3\\\">\u001b[39m\n\u001b[31m                {enhancedReport?.markdownReport && (\u001b[39m\n\u001b[31m                  <ExportButtons\u001b[39m\n\u001b[31m                    markdownReport={enhancedReport.markdownReport}\u001b[39m\n\u001b[31m                    topic={report.topic}\u001b[39m\n\u001b[31m                    sources={sources}\u001b[39m\n\u001b[31m                    keyFindings={report.keyFindings}\u001b[39m\n\u001b[31m                    gaps={report.gaps}\u001b[39m\n\u001b[31m                    mode={report.mode}\u001b[39m\n\u001b[31m                  />\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                <SaveToLibraryButton\u001b[39m\n\u001b[31m                  topic={report.topic}\u001b[39m\n\u001b[31m                  mode={report.mode}\u001b[39m\n\u001b[31m                  markdownReport={enhancedReport?.markdownReport || \\\"\\\"}\u001b[39m\n\u001b[31m                  sources={sources}\u001b[39m\n\u001b[31m                  keyFindings={report.keyFindings}\u001b[39m\n\u001b[31m                  gaps={report.gaps}\u001b[39m\n\u001b[31m                  isComplete={pageState === \\\"done\\\"}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            )}·\u001b[39m\n\u001b[31m            {/* Abort button - visible when running or plan-preview */}\u001b[39m\n\u001b[31m            {(pageState === \\\"running\\\" || pageState === \\\"plan-preview\\\") && (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                onClick={handleAbort}\u001b[39m\n\u001b[31m                className=\\\"flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors\\\"\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <StopCircle size={16} />\u001b[39m\n\u001b[31m                Stop\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            )}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      <div className=\\\"max-w-7xl mx-auto px-4 sm:px-6 py-8\\\">\u001b[39m\n\u001b[31m        {/* ── Idle State: Input form ──────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"idle\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"max-w-2xl mx-auto space-y-8\\\">\u001b[39m\n\u001b[31m            {/* Hero text */}\u001b[39m\n\u001b[31m            <div className=\\\"text-center space-y-3 pt-12\\\">\u001b[39m\n\u001b[31m              <h2 className=\\\"text-3xl font-bold text-gray-900 dark:text-white\\\">\u001b[39m\n\u001b[31m                What would you like to research?\u001b[39m\n\u001b[31m              </h2>\u001b[39m\n\u001b[31m              <p className=\\\"text-gray-500 dark:text-gray-400 text-base max-w-lg mx-auto\\\">\u001b[39m\n\u001b[31m                Enter a research topic and we will synthesize findings from multiple\u001b[39m\n\u001b[31m                academic perspectives with full citations.\u001b[39m\n\u001b[31m              </p>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Topic input */}\u001b[39m\n\u001b[31m            <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m              <input\u001b[39m\n\u001b[31m                type=\\\"text\\\"\u001b[39m\n\u001b[31m                value={topic}\u001b[39m\n\u001b[31m                onChange={(e) => setTopic(e.target.value)}\u001b[39m\n\u001b[31m                onKeyDown={handleKeyDown}\u001b[39m\n\u001b[31m                placeholder=\\\"e.g., Efficacy of GLP-1 receptor agonists in type 2 diabetes management\\\"\u001b[39m\n\u001b[31m                className=\\\"w-full bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl px-5 py-4 text-gray-900 dark:text-white text-base placeholder-gray-500 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all\\\"\u001b[39m\n\u001b[31m              />\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Mode selector - segmented control */}\u001b[39m\n\u001b[31m            <div className=\\\"bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/30 rounded-xl p-1.5 flex gap-1\\\">\u001b[39m\n\u001b[31m              {RESEARCH_MODES.map((m) => {\u001b[39m\n\u001b[31m                const Icon = MODE_ICONS[m.id];\u001b[39m\n\u001b[31m                const isSelected = mode === m.id;\u001b[39m\n\u001b[31m                return (\u001b[39m\n\u001b[31m                  <button\u001b[39m\n\u001b[31m                    key={m.id}\u001b[39m\n\u001b[31m                    onClick={() => setMode(m.id)}\u001b[39m\n\u001b[31m                    className={`flex-1 flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg text-center transition-all ${\u001b[39m\n\u001b[31m                      isSelected\u001b[39m\n\u001b[31m                        ? \\\"bg-white dark:bg-gray-700/60 border border-gray-300 dark:border-gray-600/50 shadow-sm\\\"\u001b[39m\n\u001b[31m                        : \\\"hover:bg-gray-100 dark:hover:bg-gray-800/40\\\"\u001b[39m\n\u001b[31m                    }`}\u001b[39m\n\u001b[31m                  >\u001b[39m\n\u001b[31m                    <Icon\u001b[39m\n\u001b[31m                      size={18}\u001b[39m\n\u001b[31m                      className={isSelected ? \\\"text-blue-400\\\" : \\\"text-gray-500\\\"}\u001b[39m\n\u001b[31m                    />\u001b[39m\n\u001b[31m                    <span\u001b[39m\n\u001b[31m                      className={`text-sm font-medium ${\u001b[39m\n\u001b[31m                        isSelected ? \\\"text-gray-900 dark:text-white\\\" : \\\"text-gray-500 dark:text-gray-400\\\"\u001b[39m\n\u001b[31m                      }`}\u001b[39m\n\u001b[31m                    >\u001b[39m\n\u001b[31m                      {m.label}\u001b[39m\n\u001b[31m                    </span>\u001b[39m\n\u001b[31m                    <span className=\\\"text-[10px] text-gray-500\\\">{m.estimatedTime}</span>\u001b[39m\n\u001b[31m                  </button>\u001b[39m\n\u001b[31m                );\u001b[39m\n\u001b[31m              })}\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Start button */}\u001b[39m\n\u001b[31m            <button\u001b[39m\n\u001b[31m              onClick={handleStart}\u001b[39m\n\u001b[31m              disabled={!topic.trim()}\u001b[39m\n\u001b[31m              className=\\\"w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-base rounded-xl transition-colors flex items-center justify-center gap-2\\\"\u001b[39m\n\u001b[31m            >\u001b[39m\n\u001b[31m              <Search size={18} />\u001b[39m\n\u001b[31m              Start Deep Research\u001b[39m\n\u001b[31m            </button>·\u001b[39m\n\u001b[31m            {/* Past research sessions */}\u001b[39m\n\u001b[31m            <PastResearchSessions onLoadSession={handleLoadSession} />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Plan Preview State ─────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"plan-preview\\\" && planPerspectives.length > 0 && (\u001b[39m\n\u001b[31m          <div className=\\\"py-8\\\">\u001b[39m\n\u001b[31m            <ResearchPlanPreview\u001b[39m\n\u001b[31m              perspectives={planPerspectives}\u001b[39m\n\u001b[31m              onConfirm={handlePlanConfirm}\u001b[39m\n\u001b[31m              onRegenerate={handlePlanRegenerate}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Plan Loading State ──────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"plan-preview\\\" && planPerspectives.length === 0 && (\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center justify-center min-h-[400px]\\\">\u001b[39m\n\u001b[31m            <div className=\\\"text-center space-y-4\\\">\u001b[39m\n\u001b[31m              <div className=\\\"w-16 h-16 mx-auto rounded-full bg-purple-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                <Microscope size={28} className=\\\"text-purple-400 animate-pulse\\\" />\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m              <div>\u001b[39m\n\u001b[31m                <p className=\\\"text-gray-900 dark:text-white font-medium\\\">{progressMessage}</p>\u001b[39m\n\u001b[31m                <p className=\\\"text-gray-500 text-sm mt-1\\\">\u001b[39m\n\u001b[31m                  Preparing research plan for: {topic}\u001b[39m\n\u001b[31m                </p>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Running State: Progress + Streaming ────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"running\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"flex gap-8\\\">\u001b[39m\n\u001b[31m            {/* Progress stepper on the left */}\u001b[39m\n\u001b[31m            <ProgressStepper\u001b[39m\n\u001b[31m              stages={progressStages}\u001b[39m\n\u001b[31m              currentMessage={progressMessage}\u001b[39m\n\u001b[31m              progress={progressPercent}\u001b[39m\n\u001b[31m            />·\u001b[39m\n\u001b[31m            {/* Streaming content on the right */}\u001b[39m\n\u001b[31m            <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m              {streamingSections.length > 0 ? (\u001b[39m\n\u001b[31m                <div className=\\\"max-w-4xl mx-auto space-y-6\\\">\u001b[39m\n\u001b[31m                  {streamingSections.map((section, idx) => (\u001b[39m\n\u001b[31m                    <div\u001b[39m\n\u001b[31m                      key={idx}\u001b[39m\n\u001b[31m                      className={`transition-all duration-700 ${\u001b[39m\n\u001b[31m                        section.animating\u001b[39m\n\u001b[31m                          ? \\\"opacity-0 translate-y-4\\\"\u001b[39m\n\u001b[31m                          : \\\"opacity-100 translate-y-0\\\"\u001b[39m\n\u001b[31m                      }`}\u001b[39m\n\u001b[31m                    >\u001b[39m\n\u001b[31m                      <ResearchDocument\u001b[39m\n\u001b[31m                        markdownReport={section.markdown}\u001b[39m\n\u001b[31m                        sources={sources}\u001b[39m\n\u001b[31m                      />\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                  ))}\u001b[39m\n\u001b[31m                </div>\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <div className=\\\"flex items-center justify-center min-h-[400px]\\\">\u001b[39m\n\u001b[31m                  <div className=\\\"text-center space-y-4\\\">\u001b[39m\n\u001b[31m                    <div className=\\\"w-16 h-16 mx-auto rounded-full bg-blue-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m                      <Microscope size={28} className=\\\"text-blue-400 animate-pulse\\\" />\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                    <div>\u001b[39m\n\u001b[31m                      <p className=\\\"text-gray-900 dark:text-white font-medium\\\">{progressMessage}</p>\u001b[39m\n\u001b[31m                      <p className=\\\"text-gray-500 text-sm mt-1\\\">\u001b[39m\n\u001b[31m                        Researching: {topic}\u001b[39m\n\u001b[31m                      </p>\u001b[39m\n\u001b[31m                    </div>\u001b[39m\n\u001b[31m                  </div>\u001b[39m\n\u001b[31m                </div>\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Done State: Full Report ────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"done\\\" && report && (\u001b[39m\n\u001b[31m          <div>\u001b[39m\n\u001b[31m            {/* Topic & mode header */}\u001b[39m\n\u001b[31m            <div className=\\\"mb-8 text-center\\\">\u001b[39m\n\u001b[31m              <h2 className=\\\"text-2xl font-bold text-gray-900 dark:text-white mb-2\\\">{report.topic}</h2>\u001b[39m\n\u001b[31m              <div className=\\\"flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-gray-400\\\">\u001b[39m\n\u001b[31m                <span className=\\\"capitalize\\\">{report.mode} mode</span>\u001b[39m\n\u001b[31m                <span>&middot;</span>\u001b[39m\n\u001b[31m                <span>{report.totalSources} sources analyzed</span>\u001b[39m\n\u001b[31m              </div>\u001b[39m\n\u001b[31m            </div>·\u001b[39m\n\u001b[31m            {/* Render enhanced markdown report or legacy card view */}\u001b[39m\n\u001b[31m            {enhancedReport?.markdownReport ? (\u001b[39m\n\u001b[31m              <ResearchDocument\u001b[39m\n\u001b[31m                markdownReport={enhancedReport.markdownReport}\u001b[39m\n\u001b[31m                sources={sources}\u001b[39m\n\u001b[31m              />\u001b[39m\n\u001b[31m            ) : (\u001b[39m\n\u001b[31m              <LegacyReportView report={report as SynthesisReport} />\u001b[39m\n\u001b[31m            )}·\u001b[39m\n\u001b[31m            {/* New research button */}\u001b[39m\n\u001b[31m            <div className=\\\"max-w-4xl mx-auto mt-12 text-center print:hidden\\\">\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                onClick={() => {\u001b[39m\n\u001b[31m                  setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m                  setReport(null);\u001b[39m\n\u001b[31m                  setStreamingSections([]);\u001b[39m\n\u001b[31m                  setProgressStages([]);\u001b[39m\n\u001b[31m                  seenStageIdsRef.current = [];\u001b[39m\n\u001b[31m                  currentStageIdRef.current = null;\u001b[39m\n\u001b[31m                  setTopic(\\\"\\\");\u001b[39m\n\u001b[31m                }}\u001b[39m\n\u001b[31m                className=\\\"px-6 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                Start New Research\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}·\u001b[39m\n\u001b[31m        {/* ── Error State ────────────────────────────────────────── */}\u001b[39m\n\u001b[31m        {pageState === \\\"error\\\" && (\u001b[39m\n\u001b[31m          <div className=\\\"max-w-lg mx-auto text-center space-y-4 pt-20\\\">\u001b[39m\n\u001b[31m            <div className=\\\"w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center\\\">\u001b[39m\n\u001b[31m              <AlertCircle size={28} className=\\\"text-red-400\\\" />\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m            <h3 className=\\\"text-lg font-semibold text-gray-900 dark:text-white\\\">Research Failed</h3>\u001b[39m\n\u001b[31m            <p className=\\\"text-gray-500 dark:text-gray-400 text-sm\\\">{error}</p>\u001b[39m\n\u001b[31m            <button\u001b[39m\n\u001b[31m              onClick={() => {\u001b[39m\n\u001b[31m                setPageState(\\\"idle\\\");\u001b[39m\n\u001b[31m                setError(null);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              className=\\\"px-6 py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors\\\"\u001b[39m\n\u001b[31m            >\u001b[39m\n\u001b[31m              Try Again\u001b[39m\n\u001b[31m            </button>\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/deep-research.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/deep-research.ts:26:43)\n    at assertDeepResearchCheckpoint (/home/user/ScholarSync-/qa/module-assertions/deep-research.ts:1576:5)\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1568:27"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:24.939Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc35e-rror-message-text-displayed-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc35e-rror-message-text-displayed-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc35e-rror-message-text-displayed-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/module-assertions/deep-research.ts",
+                        "column": 43,
+                        "line": 26
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-17b1f9eb7b39ca5600a0",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Try Again button returns to idle state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1530,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:27.382Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-30d08-utton-returns-to-idle-state-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-092e15277b061b188b39",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Plan generation failure shows error and allows retry",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1573,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:29.003Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-482c4-hows-error-and-allows-retry-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-8d8ad210c50b3ee43808",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Execute failure shows error with context",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1481,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:30.593Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-42761-re-shows-error-with-context-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-6a1c471862e39b04be1f",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Save failure shows error tooltip on button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1461,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T18:38:32.087Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-fdb88-ows-error-tooltip-on-button-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-71f85f59111d33428330",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-14T18:37:28.122Z",
+    "duration": 66032.409,
+    "expected": 34,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

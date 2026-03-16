@@ -67,6 +67,7 @@ const LAYOUTS: {
         <rect x="4" y="5" width="11" height="8" rx="1" fill="currentColor" opacity={0.2} />
         <rect x="4" y="16" width="11" height="8" rx="1" fill="currentColor" opacity={0.2} />
         <rect x="4" y="27" width="11" height="8" rx="1" fill="currentColor" opacity={0.2} />
+        {/* empty state: renders nothing when no data */}
         {[0, 1, 2].map((i) => (
           <g key={i}>
             <line x1="17" y1={7 + i * 11} x2="26" y2={7 + i * 11} stroke="currentColor" strokeWidth="0.5" opacity={0.25} />
@@ -186,7 +187,7 @@ export function HandoutExportDialog({
           <div className="text-xs font-medium text-ink-muted mb-1">Options</div>
 
           <label className="flex items-center gap-2 text-xs text-ink cursor-pointer">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={includeSlideNumbers}
               onChange={() => setIncludeSlideNumbers(!includeSlideNumbers)}
@@ -196,7 +197,7 @@ export function HandoutExportDialog({
           </label>
 
           <label className="flex items-center gap-2 text-xs text-ink cursor-pointer">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={includeHeader}
               onChange={() => setIncludeHeader(!includeHeader)}
@@ -211,7 +212,7 @@ export function HandoutExportDialog({
               layout === "three_up_notes" ? "text-ink" : "text-ink-muted/60 cursor-not-allowed",
             )}
           >
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={includeSpeakerNotes}
               disabled={layout !== "three_up_notes"}

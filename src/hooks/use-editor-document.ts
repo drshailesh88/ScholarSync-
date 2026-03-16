@@ -22,7 +22,7 @@ export interface UseEditorDocumentReturn {
   projectId: number | null;
 
   // Save state
-  saveStatus: "saved" | "saving" | "unsaved" | "error" | "offline";
+  saveStatus: "saved" | "saving" | "unsaved" | "error" | "offline" | "local";
   lastSavedAt: Date | null;
 
   // Actions
@@ -56,7 +56,7 @@ export function useEditorDocument(
   const [sectionId, setSectionId] = useState<number | null>(null);
   const [resolvedProjectId, setResolvedProjectId] = useState<number | null>(null);
   const [saveStatus, setSaveStatus] = useState<
-    "saved" | "saving" | "unsaved" | "error" | "offline"
+    "saved" | "saving" | "unsaved" | "error" | "offline" | "local"
   >("saved");
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [loadedFromLocalStorage, setLoadedFromLocalStorage] = useState(false);
@@ -65,7 +65,6 @@ export function useEditorDocument(
 
   // Refs for tracking
   const pendingSaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const saveRetryCountRef = useRef(0);
   const lastVersionSaveRef = useRef<Date>(new Date());
   const currentSectionIdRef = useRef<number | null>(null);
 
@@ -221,7 +220,7 @@ export function useEditorDocument(
     return () => clearInterval(interval);
   }, [dbDocumentId, content]);
 
-  // Process offline queue when connection is restored
+  // Process queued saves when connection is restored and reflect browser offline status.
   useEffect(() => {
     function handleOnline() {
       processQueue(async (data) => {
@@ -237,13 +236,29 @@ export function useEditorDocument(
         if (processed > 0) {
           setSaveStatus("saved");
           setLastSavedAt(new Date());
+          setError(null);
+        } else if (lastSavedAt) {
+          setSaveStatus("saved");
         }
       });
     }
 
+    function handleOffline() {
+      setSaveStatus((current) => {
+        if (current === "saving" || current === "unsaved" || current === "local") {
+          return current;
+        }
+        return "offline";
+      });
+    }
+
     window.addEventListener("online", handleOnline);
-    return () => window.removeEventListener("online", handleOnline);
-  }, []);
+    window.addEventListener("offline", handleOffline);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [lastSavedAt]);
 
   // Debounced save function
   const handleEditorUpdate = useCallback(
@@ -333,7 +348,7 @@ export function useEditorDocument(
 
           setSaveStatus("saved");
           setLastSavedAt(new Date());
-          saveRetryCountRef.current = 0;
+          setError(null);
 
           // Clear error if we were in offline mode
           if (loadedFromLocalStorage && error) {
@@ -353,20 +368,6 @@ export function useEditorDocument(
               word_count: data.word_count,
               sectionId: currentSectionIdRef.current!,
             });
-            setSaveStatus("unsaved");
-            return;
-          }
-
-          // Retry logic with exponential backoff
-          if (saveRetryCountRef.current < 3) {
-            saveRetryCountRef.current++;
-            const backoffMs = Math.pow(2, saveRetryCountRef.current) * 1000; // 2s, 4s, 8s
-
-            setTimeout(() => {
-              handleEditorUpdate(data);
-            }, backoffMs);
-          } else {
-            // Max retries reached - fallback to localStorage
             try {
               const localKey = `scholarsync_doc_${urlDocumentId}`;
               localStorage.setItem(
@@ -380,14 +381,18 @@ export function useEditorDocument(
                   timestamp: Date.now(),
                 })
               );
-              setSaveStatus("offline");
-              setError("Database unavailable. Changes saved locally.");
+              setSaveStatus("local");
+              setError("Saved locally. Changes will sync when you're back online.");
             } catch (localError) {
               console.error("Failed to save to localStorage:", localError);
               setSaveStatus("error");
               setError("Failed to save. Please check your connection.");
             }
+            return;
           }
+
+          setSaveStatus("error");
+          setError("Failed to save. Please check your connection.");
         }
       }, 2000);
     },

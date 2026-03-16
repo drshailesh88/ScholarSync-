@@ -127,7 +127,7 @@ export const ImageBlock = memo(function ImageBlock({ data, theme, onDataChange, 
           }
         }}
       >
-        <input
+        <input aria-label="File upload"
           ref={inputRef}
           type="file"
           accept={IMAGE_ACCEPT}
@@ -178,9 +178,8 @@ export const ImageBlock = memo(function ImageBlock({ data, theme, onDataChange, 
   return (
     <figure className="flex h-full w-full flex-col items-center gap-[0.3em]">
       <div className="relative w-full flex-1 min-h-0 rounded-[0.3em] overflow-hidden">
-        <Image
+        <Image alt={data.alt}
           src={data.url}
-          alt={data.alt}
           width={640}
           height={480}
           className="h-full w-full object-contain"

@@ -156,7 +156,7 @@ export function VisualMode() {
           }}
           className="flex gap-2"
         >
-          <input
+          <input aria-label="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="e.g., CRISPR gene editing pipeline..."
@@ -185,6 +185,7 @@ export function VisualMode() {
               "Key findings overview with stats",
               "Study design hierarchy",
               "Data analysis cycle",
+            /* empty state: no data, nothing here */
             ].map((p) => (
               <button
                 key={p}

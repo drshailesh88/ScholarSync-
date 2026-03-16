@@ -22,7 +22,7 @@ export function SpeakerNotesBar() {
       </button>
       {expanded && (
         <div className="px-4 pb-3">
-          <textarea
+          <textarea aria-label="Text area"
             value={activeSlide.speakerNotes}
             onChange={(e) =>
               updateSlide(activeSlide.id, { speakerNotes: e.target.value })

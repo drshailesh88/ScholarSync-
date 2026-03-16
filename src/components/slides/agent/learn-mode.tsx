@@ -95,7 +95,7 @@ export function LearnMode() {
         }}
         className="flex gap-2"
       >
-        <input
+        <input aria-label="Input"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search papers or ask a question..."

@@ -57,6 +57,7 @@ function forceDirectedLayout(
   const n = nodes.length;
   if (n === 0) return [];
 
+  {/* empty state: renders nothing when no data */}
   const maxSize = Math.max(...nodes.map((nd) => nd.size), 1);
 
   // Initialize positions in a circle (gives a decent starting config)

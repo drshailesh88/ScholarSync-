@@ -6,6 +6,7 @@ export default function LibraryLoading() {
       <aside className="w-64 shrink-0 glass-panel rounded-2xl p-4">
         <Skeleton className="h-4 w-20 mb-4 mx-2" />
         <div className="space-y-1">
+          {/* empty state: renders nothing when no data */}
           {Array.from({ length: 5 }).map((_, i) => (
             <Skeleton key={i} className="h-9 w-full rounded-lg" />
           ))}

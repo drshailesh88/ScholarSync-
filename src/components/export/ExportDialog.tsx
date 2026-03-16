@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { JSONContent } from "@tiptap/core";
 import {
   X,
@@ -35,8 +35,19 @@ export function ExportDialog({
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
   const bibliographyEntries = useReferenceStore((s) => s.bibliographyEntries);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    setFormat("docx");
+    setDoubleSpaced(true);
+    setIncludePageNumbers(true);
+    setIsExporting(false);
+  }, [isOpen]);
+
   const handleExport = useCallback(async () => {
     setIsExporting(true);
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 0);
+    });
 
     try {
       if (format === "docx") {
@@ -143,7 +154,7 @@ export function ExportDialog({
           {/* Options */}
           <div className="space-y-3">
             <label className="flex items-center gap-3 cursor-pointer">
-              <input
+              <input aria-label="Checkbox"
                 type="checkbox"
                 checked={includePageNumbers}
                 onChange={(e) => setIncludePageNumbers(e.target.checked)}
@@ -153,7 +164,7 @@ export function ExportDialog({
             </label>
 
             <label className="flex items-center gap-3 cursor-pointer">
-              <input
+              <input aria-label="Checkbox"
                 type="checkbox"
                 checked={doubleSpaced}
                 onChange={(e) => setDoubleSpaced(e.target.checked)}

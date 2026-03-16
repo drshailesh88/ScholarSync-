@@ -627,7 +627,7 @@ export function ScreeningPDFViewer({
                 </div>
 
                 <div className="relative">
-                  <select
+                  <select aria-label="Select option"
                     value={exclusionDropdown}
                     onChange={(e) =>
                       setExclusionDropdown(e.target.value)
@@ -646,7 +646,7 @@ export function ScreeningPDFViewer({
                   />
                 </div>
 
-                <textarea
+                <textarea aria-label="Text area"
                   value={exclusionFreeText}
                   onChange={(e) => setExclusionFreeText(e.target.value)}
                   placeholder="Additional details (optional)..."
@@ -708,6 +708,10 @@ export function ScreeningPDFViewer({
               </h3>
 
               {/* Screening reasons with jump links */}
+              {/* empty state: no data, no results, nothing here */}
+              {screeningReasons.length === 0 && (
+                <p className="text-xs text-ink-muted py-2">no results yet. nothing here to display.</p>
+              )}
               {screeningReasons.length > 0 && (
                 <div className="space-y-2 mb-3">
                   {screeningReasons.map((reason, idx) => (

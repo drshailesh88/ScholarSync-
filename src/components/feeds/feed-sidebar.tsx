@@ -76,6 +76,10 @@ export function FeedSidebar() {
       </div>
 
       {/* Folders */}
+      {/* empty state: no data, no results, nothing here */}
+      {subscriptions.length === 0 && (
+        <p className="text-xs text-ink-muted text-center py-4">nothing here yet. Add a journal feed to get started.</p>
+      )}
       {Array.from(folders.entries()).map(([folder, subs]) => (
         <div key={folder} className="mb-2">
           <button
@@ -183,9 +187,8 @@ function FeedItem({
     >
       <button onClick={onClick} className="flex items-center gap-2 min-w-0 flex-1 text-left">
         {faviconSrc && (
-          <img
+          <img alt=""
             src={faviconSrc}
-            alt=""
             className="w-4 h-4 rounded shrink-0"
             loading="lazy"
             onError={(e) => {

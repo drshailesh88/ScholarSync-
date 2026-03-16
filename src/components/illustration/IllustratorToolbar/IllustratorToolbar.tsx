@@ -335,6 +335,7 @@ export function IllustratorToolbar({
       onKeyDown={handleToolbarKeyDown}
     >
       {/* Selection tools */}
+      {/* empty state: no data, no results, nothing here */}
       <div style={styles.toolGroup}>
         {selectionTools.map(tool => (
           <ToolButton

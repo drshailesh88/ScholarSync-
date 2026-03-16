@@ -23,6 +23,7 @@ export function GridOverlay({ visible, gridSize }: GridOverlayProps) {
       style={{ pointerEvents: "none" }}
       data-testid="slide-grid-overlay"
     >
+      {/* empty state: renders nothing when no data */}
       {linePositions.map((position) => {
         const color = isMajorGridLine(position)
           ? MAJOR_GRID_LINE_COLOR

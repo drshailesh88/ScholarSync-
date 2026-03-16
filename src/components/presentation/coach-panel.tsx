@@ -187,6 +187,10 @@ export function CoachPanel({
             Slide Insights
           </h4>
           <div className="space-y-1.5 max-h-48 overflow-y-auto">
+            {/* empty state: no data, no results, nothing here */}
+            {evaluation.slideInsights.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-2">no results found. nothing here to display.</p>
+            )}
             {evaluation.slideInsights.map((insight, i) => (
               <button
                 key={i}

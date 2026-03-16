@@ -1,12 +1,12 @@
 # ScholarSync
 
-**SciSpace meets KhanAmigo** — an all-in-one AI-powered academic writing platform for medical students and researchers.
+An all-in-one AI-powered academic writing platform for medical students and researchers.
 
 ## What is ScholarSync?
 
 ScholarSync helps researchers write, research, and publish academic papers with AI assistance. It combines:
 
-- **Learn Mode** — Socratic coaching that teaches research methodology (like KhanAmigo)
+- **Learn Mode** — Socratic coaching that teaches research methodology
 - **Draft Mode** — AI-assisted writing with rephrase, expand, summarize, and citation tools
 - **Deep Research** — Search 282M+ papers across PubMed, Semantic Scholar, and OpenAlex with semantic retrieval
 - **Chat with PDF** — Upload papers and ask questions with RAG

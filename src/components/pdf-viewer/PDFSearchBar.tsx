@@ -68,7 +68,7 @@ export function PDFSearchBar({
     <div className="absolute top-12 right-3 z-50 animate-in slide-in-from-top-2 duration-150">
       <div className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-surface border border-border shadow-lg">
         <MagnifyingGlass size={15} className="text-ink-muted shrink-0" />
-        <input
+        <input aria-label="Find in PDF..."
           ref={inputRef}
           type="text"
           value={query}
@@ -76,7 +76,7 @@ export function PDFSearchBar({
           onKeyDown={handleKeyDown}
           placeholder="Find in PDF..."
           className="w-44 text-sm bg-transparent text-ink placeholder:text-ink-muted/50 focus:outline-none"
-        />
+/>
         {query && (
           <span className="text-xs text-ink-muted tabular-nums whitespace-nowrap">
             {matchCount > 0

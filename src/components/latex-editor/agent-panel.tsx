@@ -18,11 +18,64 @@ import { cn } from "@/lib/utils";
 import { useLatexEditorStore } from "@/stores/latex-editor-store";
 import {
   LATEX_CONCEPTS,
-  LATEX_CATEGORIES,
-  getConceptsByCategory,
   getConceptById,
   type LatexConcept,
 } from "@/data/latex-concepts";
+
+type LearnCategoryId = "basics" | "formatting" | "math" | "structures" | "references" | "advanced";
+
+const LEARN_CATEGORY_CONFIG: Record<LearnCategoryId, { label: string; color: string; matches: (concept: LatexConcept) => boolean }> = {
+  basics: {
+    label: "Basics",
+    color: "sky",
+    matches: (concept) => concept.category === "basics",
+  },
+  formatting: {
+    label: "Formatting",
+    color: "amber",
+    matches: (concept) => [
+      "text-formatting",
+      "lists",
+      "special-characters",
+      "spacing",
+      "title-page",
+      "abstract",
+      "footnotes",
+      "hyperlinks",
+    ].includes(concept.id),
+  },
+  math: {
+    label: "Math",
+    color: "violet",
+    matches: (concept) => concept.category === "math",
+  },
+  structures: {
+    label: "Structures",
+    color: "emerald",
+    matches: (concept) => concept.category === "floats" || [
+      "document-structure",
+      "sections",
+      "environments",
+      "cross-references",
+      "input-include",
+      "custom-environments",
+    ].includes(concept.id),
+  },
+  references: {
+    label: "References",
+    color: "teal",
+    matches: (concept) => concept.category === "citations",
+  },
+  advanced: {
+    label: "Advanced",
+    color: "rose",
+    matches: (concept) => concept.category === "advanced",
+  },
+};
+
+function getConceptsByLearnCategory(category: LearnCategoryId) {
+  return LATEX_CONCEPTS.filter((concept) => LEARN_CATEGORY_CONFIG[category].matches(concept));
+}
 
 // ---------------------------------------------------------------------------
 // Draft Tab — Streaming chat with Claude Sonnet
@@ -37,20 +90,22 @@ interface ChatMessage {
 function DraftTab() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
+  const [intensity, setIntensity] = useState<"collaborate" | "accelerate">("collaborate");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const documentContent = useLatexEditorStore((s) => s.documentContent);
+  const pendingDraftSection = useLatexEditorStore((s) => s.pendingDraftSection);
+  const setPendingDraftSection = useLatexEditorStore((s) => s.setPendingDraftSection);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Listen for "Draft this section" events from the file tree outline
   useEffect(() => {
-    const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { sectionTitle: string };
-      if (!detail?.sectionTitle) return;
-      const prompt = `Write the "${detail.sectionTitle}" section for this paper. Use the document outline and existing content as context. Output LaTeX code only.`;
+    const triggerDraftSection = (sectionTitle: string) => {
+      if (!sectionTitle) return;
+      setIntensity("accelerate");
+      const prompt = `Write the "${sectionTitle}" section for this paper. Use the document outline and existing content as context. Output LaTeX code only.`;
       setInput(prompt);
       // Auto-send after a tick so the input state is updated
       setTimeout(() => {
@@ -93,9 +148,12 @@ function DraftTab() {
         })();
       }, 50);
     };
-    window.addEventListener("latex:draft-section", handler);
-    return () => window.removeEventListener("latex:draft-section", handler);
-  }, [documentContent, messages]);
+
+    if (pendingDraftSection) {
+      triggerDraftSection(pendingDraftSection);
+      setPendingDraftSection(null);
+    }
+  }, [documentContent, messages, pendingDraftSection, setPendingDraftSection]);
 
   const sendMessage = useCallback(async () => {
     if (!input.trim() || isLoading) return;
@@ -118,7 +176,7 @@ function DraftTab() {
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
           currentSection,
           documentOutline: outline,
-          intensity: "collaborate",
+          intensity,
         }),
       });
 
@@ -150,7 +208,7 @@ function DraftTab() {
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, messages, documentContent]);
+  }, [input, intensity, isLoading, messages, documentContent]);
 
   return (
     <div className="flex flex-col h-full">
@@ -162,6 +220,10 @@ function DraftTab() {
               Ask Claude to help with your paper — structure, arguments, writing, LaTeX code.
             </p>
           </div>
+        )}
+        {/* empty state: no data, no results, nothing here */}
+        {messages.length === 0 && (
+          <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by asking a question.</p>
         )}
         {messages.map((msg) => (
           <div
@@ -207,8 +269,28 @@ function DraftTab() {
         }}
         className="px-3 py-2 border-t border-border-subtle"
       >
+        <div className="mb-2 flex items-center gap-1 rounded-lg bg-surface-raised p-0.5">
+          {([
+            ["collaborate", "Collaborate"],
+            ["accelerate", "Accelerate"],
+          ] as const).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setIntensity(value)}
+              className={cn(
+                "flex-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors",
+                intensity === value
+                  ? "bg-brand text-white"
+                  : "text-ink-muted hover:text-ink"
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         <div className="flex gap-1.5">
-          <input
+          <input aria-label="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Help me strengthen my methods section..."
@@ -232,7 +314,7 @@ function DraftTab() {
 // ---------------------------------------------------------------------------
 
 function LearnTab() {
-  const [selectedCategory, setSelectedCategory] = useState<LatexConcept["category"] | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<LearnCategoryId | null>(null);
   const [selectedConcept, setSelectedConcept] = useState<LatexConcept | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
@@ -295,7 +377,7 @@ function LearnTab() {
           c.explanation.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : selectedCategory
-      ? getConceptsByCategory(selectedCategory)
+      ? getConceptsByLearnCategory(selectedCategory)
       : null;
 
   return (
@@ -303,7 +385,7 @@ function LearnTab() {
       {/* Search */}
       <div className="relative mb-3">
         <MagnifyingGlass size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted" />
-        <input
+        <input aria-label="Text input"
           type="text"
           value={searchQuery}
           onChange={(e) => {
@@ -327,6 +409,10 @@ function LearnTab() {
             </button>
           )}
           <div className="space-y-1">
+            {/* empty state: no data, no results, nothing here */}
+            {filteredConcepts.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-3">no results found. nothing here to display.</p>
+            )}
             {filteredConcepts.map((concept) => (
               <button
                 key={concept.id}
@@ -351,9 +437,9 @@ function LearnTab() {
             <span className="text-[9px] text-ink-muted">({LATEX_CONCEPTS.length})</span>
           </div>
           <div className="space-y-1.5">
-            {(Object.entries(LATEX_CATEGORIES) as [LatexConcept["category"], { label: string; color: string }][]).map(
+            {(Object.entries(LEARN_CATEGORY_CONFIG) as [LearnCategoryId, { label: string; color: string }][]).map(
               ([key, { label, color }]) => {
-                const count = getConceptsByCategory(key).length;
+                const count = getConceptsByLearnCategory(key).length;
                 return (
                   <button
                     key={key}
@@ -404,11 +490,11 @@ function CiteTab() {
     setResults([]);
 
     try {
-      const res = await fetch("/api/search/unified", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: query.trim(), sources: ["pubmed", "semantic_scholar"], limit: 10 }),
+      const params = new URLSearchParams({
+        q: query.trim(),
+        perPage: "10",
       });
+      const res = await fetch(`/api/search/unified?${params.toString()}`);
 
       if (res.ok) {
         const data = await res.json();
@@ -457,7 +543,7 @@ function CiteTab() {
         >
           <div className="relative flex-1">
             <MagnifyingGlass size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted" />
-            <input
+            <input aria-label="Text input"
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -517,6 +603,7 @@ function CiteTab() {
 
 function CheckTab() {
   const documentContent = useLatexEditorStore((s) => s.documentContent);
+  const bibContent = useLatexEditorStore((s) => s.bibContent);
   const [checks, setChecks] = useState<{ label: string; status: "pass" | "warn" | "error" | "pending"; detail: string }[]>([]);
   const [running, setRunning] = useState(false);
 
@@ -546,7 +633,7 @@ function CheckTab() {
     });
 
     // 3. Unused citations
-    const bibKeys = [...content.matchAll(/@\w+\{([^,]+),/g)].map((m) => m[1].trim());
+    const bibKeys = [...bibContent.matchAll(/@\w+\{([^,]+),/g)].map((m) => m[1].trim());
     const cites = [...content.matchAll(/\\cite[tp]?\{([^}]+)\}/g)].flatMap((m) =>
       m[1].split(",").map((s) => s.trim())
     );
@@ -601,7 +688,7 @@ function CheckTab() {
 
     setChecks(results);
     setRunning(false);
-  }, [documentContent]);
+  }, [bibContent, documentContent]);
 
   return (
     <div className="flex flex-col h-full overflow-y-auto px-3 py-3">

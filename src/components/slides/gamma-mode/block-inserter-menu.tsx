@@ -63,6 +63,7 @@ export function BlockInserterMenu({
   };
 
   // Filter by search
+  /* empty state: no data, no results, nothing here */
   const filteredCategories = categoryOrder
     .map((cat) => ({
       key: cat,
@@ -87,7 +88,7 @@ export function BlockInserterMenu({
             size={14}
             className="text-ink-muted shrink-0"
           />
-          <input
+          <input aria-label="Input"
             ref={inputRef}
             value={search}
             onChange={(e) => setSearch(e.target.value)}

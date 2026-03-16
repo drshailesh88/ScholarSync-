@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import type { Editor } from "@tiptap/react";
 
 interface FootnoteSectionProps {
@@ -13,20 +13,31 @@ interface FootnoteData {
 }
 
 export function FootnoteSection({ editor }: FootnoteSectionProps) {
-  const footnotes = useMemo(() => {
-    const fns: FootnoteData[] = [];
-    editor.state.doc.descendants((node, pos) => {
-      if (node.type.name === "footnote") {
-        fns.push({
-          id: node.attrs.id as string,
-          number: node.attrs.number as number,
-          text: node.attrs.text as string,
-          pos,
-        });
-      }
-    });
-    return fns.sort((a, b) => a.number - b.number);
-  }, [editor.state.doc]);
+  const [footnotes, setFootnotes] = useState<FootnoteData[]>([]);
+
+  useEffect(() => {
+    const updateFootnotes = () => {
+      const nextFootnotes: FootnoteData[] = [];
+      editor.state.doc.descendants((node, pos) => {
+        if (node.type.name === "footnote") {
+          nextFootnotes.push({
+            id: node.attrs.id as string,
+            number: node.attrs.number as number,
+            text: node.attrs.text as string,
+            pos,
+          });
+        }
+      });
+
+      setFootnotes(nextFootnotes.sort((a, b) => a.number - b.number));
+    };
+
+    updateFootnotes();
+    editor.on("transaction", updateFootnotes);
+    return () => {
+      editor.off("transaction", updateFootnotes);
+    };
+  }, [editor]);
 
   if (footnotes.length === 0) return null;
 

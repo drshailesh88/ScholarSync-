@@ -309,6 +309,10 @@ export function AnalyticsPanel({ deckId, onClose }: AnalyticsPanelProps) {
                       </tr>
                     </thead>
                     <tbody>
+                      {/* empty state: no data, no results, nothing here – get started */}
+                      {stats.recentViews.length === 0 && (
+                        <tr><td colSpan={4} className="p-4 text-center text-ink-muted text-xs">No data available. Share your presentation to see viewer analytics.</td></tr>
+                      )}
                       {stats.recentViews.slice(0, 10).map((v, i) => (
                         <tr
                           key={i}

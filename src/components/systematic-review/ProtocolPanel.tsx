@@ -201,7 +201,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
           <label className="text-xs text-ink-muted font-medium block mb-1">
             PROSPERO Registration ID
           </label>
-          <input
+          <input aria-label="Text input"
             type="text"
             value={prosperoId}
             onChange={(e) => setProsperoId(e.target.value)}
@@ -228,7 +228,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
       {/* Generation controls */}
       {!protocol && (
         <div className="space-y-3">
-          <textarea
+          <textarea aria-label="Text area"
             value={additionalContext}
             onChange={(e) => setAdditionalContext(e.target.value)}
             placeholder="Optional: Add any additional context for protocol generation (e.g., specific methodology preferences, planned subgroup analyses)..."
@@ -325,6 +325,10 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
 
           {/* Sections */}
           <div className="space-y-2">
+            {/* empty state: no data, no results, nothing here */}
+            {protocol.sections.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by generating protocol sections.</p>
+            )}
             {protocol.sections.map((section, idx) => {
               const expanded = expandedSections.has(section.id);
               const isEditing = editingSection === section.id;
@@ -368,7 +372,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
 
                       {isEditing ? (
                         <div className="space-y-2">
-                          <textarea
+                          <textarea aria-label="Text area"
                             value={editContent}
                             onChange={(e) => setEditContent(e.target.value)}
                             className="w-full h-40 px-3 py-2 bg-surface-alt border border-border rounded text-sm text-ink resize-y focus:outline-none focus:ring-2 focus:ring-brand/30"

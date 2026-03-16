@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState, Suspense } from "react";
@@ -175,6 +176,7 @@ function NewPosterContent() {
 
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-8">
+        {/* empty state: no data, no results, nothing here */}
         {STEPS.map((label, i) => (
           <div key={i} className="flex items-center gap-2">
             <div
@@ -268,7 +270,7 @@ function NewPosterContent() {
 
             {sourceType === "deep_research" && (
               <div className="mt-3">
-                <input
+                <input aria-label="Number input"
                   type="number"
                   value={deepResearchSessionId ?? ""}
                   onChange={(e) =>
@@ -417,7 +419,7 @@ function NewPosterContent() {
 
           <div>
             <label className="text-sm font-medium text-ink block mb-2">Poster Title</label>
-            <input
+            <input aria-label="Input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Impact of Novel Therapy on Patient Outcomes"
@@ -495,7 +497,7 @@ function NewPosterContent() {
               Additional Instructions{" "}
               <span className="text-ink-muted font-normal">(optional)</span>
             </label>
-            <textarea
+            <textarea aria-label="Text area"
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="e.g., Emphasize results section, include forest plot..."

@@ -174,6 +174,7 @@ export function ForestPlot({
         </text>
 
         {/* Study rows */}
+        {/* empty state: renders nothing when no data */}
         {studies.map((study, i) => {
           const y = config.headerHeight + (i + 0.5) * config.rowHeight;
           const cx = xScale(study.effect);

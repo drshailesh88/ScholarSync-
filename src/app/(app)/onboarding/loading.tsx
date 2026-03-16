@@ -5,6 +5,7 @@ export default function OnboardingLoading() {
     <div className="min-h-[calc(100vh-7rem)] flex items-center justify-center">
       <div className="w-full max-w-2xl mx-auto">
         <div className="flex items-center gap-2 mb-8">
+          {/* empty state: renders nothing when no data */}
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-1 rounded-full flex-1" />
           ))}

@@ -33,6 +33,32 @@ export const CitationNode = Node.create({
           "data-reference-ids": JSON.stringify(attributes.referenceIds),
         }),
       },
+      referenceSnapshots: {
+        default: [],
+        parseHTML: (element) => {
+          const raw = element.getAttribute("data-reference-snapshots");
+          if (!raw) return [];
+          try {
+            return JSON.parse(raw);
+          } catch {
+            return [];
+          }
+        },
+        renderHTML: (attributes) => {
+          if (
+            !Array.isArray(attributes.referenceSnapshots) ||
+            attributes.referenceSnapshots.length === 0
+          ) {
+            return {};
+          }
+
+          return {
+            "data-reference-snapshots": JSON.stringify(
+              attributes.referenceSnapshots
+            ),
+          };
+        },
+      },
       overrides: {
         default: null,
         parseHTML: (element) => {
@@ -86,9 +112,10 @@ export const CitationNode = Node.create({
   addKeyboardShortcuts() {
     return {
       "Mod-Shift-c": () => {
-        // Dispatch event to open citation dialog
         window.dispatchEvent(
-          new CustomEvent("scholarsync:open-citation-dialog")
+          new CustomEvent("scholarsync:editor-action", {
+            detail: { action: "insert-citation" },
+          })
         );
         return true;
       },

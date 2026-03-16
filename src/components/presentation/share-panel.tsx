@@ -152,11 +152,11 @@ export function SharePanel({ deckId, onClose }: SharePanelProps) {
                       Share link
                     </label>
                     <div className="flex gap-2">
-                      <input
+                      <input aria-label="Input"
                         readOnly
                         value={shareUrl}
                         className="flex-1 px-3 py-2 bg-surface-raised border border-border-subtle rounded-lg text-xs text-ink truncate focus:outline-none"
-                      />
+/>
                       <button
                         onClick={handleCopy}
                         className="px-3 py-2 bg-brand hover:bg-brand-hover text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 shrink-0"
@@ -182,7 +182,7 @@ export function SharePanel({ deckId, onClose }: SharePanelProps) {
                       <Lock size={12} />
                       Password protection (optional)
                     </label>
-                    <input
+                    <input aria-label="Text input"
                       type="text"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -197,7 +197,7 @@ export function SharePanel({ deckId, onClose }: SharePanelProps) {
                       <CalendarBlank size={12} />
                       Expiration date (optional)
                     </label>
-                    <input
+                    <input aria-label="Date"
                       type="date"
                       value={expiresAt}
                       onChange={(e) => setExpiresAt(e.target.value)}

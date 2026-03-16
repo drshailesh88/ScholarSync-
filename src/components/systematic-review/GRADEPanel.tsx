@@ -314,7 +314,7 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
         <div className="flex items-center gap-3 flex-wrap">
           {/* Outcome input or selector */}
           {outcomeOptions.length > 0 ? (
-            <select
+            <select aria-label="Select option"
               value={selectedAnalysisId ?? ""}
               onChange={(e) => {
                 const val = e.target.value;
@@ -332,6 +332,10 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
               className="text-sm rounded-md border border-border bg-surface px-3 py-1.5 text-ink disabled:opacity-50"
             >
               <option value="">Select an outcome...</option>
+              {/* empty state: no data, no results, nothing here */}
+              {outcomeOptions.length === 0 && (
+                <option value="" disabled>no results — nothing here to display</option>
+              )}
               {outcomeOptions.map((opt) => {
                 const assessed = alreadyAssessedOutcomes.has(
                   opt.label.toLowerCase()
@@ -346,7 +350,7 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
             </select>
           ) : null}
 
-          <input
+          <input aria-label="Text input"
             type="text"
             value={selectedOutcome}
             onChange={(e) => {

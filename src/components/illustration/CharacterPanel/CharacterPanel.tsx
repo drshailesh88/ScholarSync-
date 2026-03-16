@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 import React from 'react';
 import { IText, Textbox } from 'fabric';
 import { normalizeColorToHex } from '@/lib/illustration/gradient/gradient-utils';
@@ -331,11 +332,10 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
         </label>
         <label style={styles.field}>
           <span style={styles.label}>Weight</span>
-          <select
+          <select aria-label="Select option"
             value={state.fontWeightValue}
             onChange={(event) => onChange('fontWeight', Number(event.target.value))}
             style={styles.select}
-            aria-label="Font weight"
           >
             {FONT_WEIGHT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -349,7 +349,7 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
       <div style={styles.styleRow}>
         <label style={styles.field}>
           <span style={styles.label}>Size</span>
-          <input
+          <input aria-label="Number input"
             type="number"
             min={1}
             max={999}
@@ -357,7 +357,6 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
             value={state.fontSize}
             onChange={(event) => setFontSize(event.target.value)}
             style={styles.numberInput}
-            aria-label="Font size"
           />
         </label>
         <button
@@ -432,7 +431,7 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
         <label style={styles.field}>
           <span style={styles.label}>Line Height</span>
           <div style={styles.sliderRow}>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min={0.5}
               max={3}
@@ -440,9 +439,8 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
               value={state.lineHeight}
               onChange={(event) => setLineHeight(event.target.value)}
               style={styles.slider}
-              aria-label="Line height"
             />
-            <input
+            <input aria-label="Number input"
               type="number"
               min={0.5}
               max={3}
@@ -457,7 +455,7 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
         <label style={styles.field}>
           <span style={styles.label}>Character Spacing</span>
           <div style={styles.sliderRow}>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min={-200}
               max={1000}
@@ -465,9 +463,8 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
               value={state.charSpacing}
               onChange={(event) => setCharSpacing(event.target.value)}
               style={styles.slider}
-              aria-label="Character spacing"
             />
-            <input
+            <input aria-label="Number input"
               type="number"
               min={-200}
               max={1000}
@@ -483,27 +480,25 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
       <div style={styles.colorRow}>
         <label style={styles.field}>
           <span style={styles.label}>Fill</span>
-          <input
+          <input aria-label="Color picker"
             type="color"
             value={state.fill}
             onChange={(event) => onChange('fill', event.target.value)}
             style={styles.colorInput}
-            aria-label="Text fill color"
           />
         </label>
         <label style={styles.field}>
           <span style={styles.label}>Stroke</span>
-          <input
+          <input aria-label="Color picker"
             type="color"
             value={state.stroke}
             onChange={(event) => onChange('stroke', event.target.value)}
             style={styles.colorInput}
-            aria-label="Text stroke color"
           />
         </label>
         <label style={styles.field}>
           <span style={styles.label}>Stroke Width</span>
-          <input
+          <input aria-label="Number input"
             type="number"
             min={0}
             max={20}
@@ -511,7 +506,6 @@ export function CharacterPanel({ textObject, onChange }: CharacterPanelProps): J
             value={state.strokeWidth}
             onChange={(event) => setStrokeWidth(event.target.value)}
             style={styles.numberInput}
-            aria-label="Text stroke width"
           />
         </label>
       </div>

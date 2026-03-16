@@ -302,7 +302,7 @@ export default function SettingsPage() {
                 {/* Full Name */}
                 <div>
                   <label className="block text-xs font-medium text-ink-muted mb-1.5">Full Name</label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={profileName}
                     onChange={(e) => setProfileName(e.target.value)}
@@ -314,7 +314,7 @@ export default function SettingsPage() {
                 {/* Specialty / Institution */}
                 <div>
                   <label className="block text-xs font-medium text-ink-muted mb-1.5">Specialty / Institution</label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={specialty}
                     onChange={(e) => setSpecialty(e.target.value)}
@@ -326,7 +326,7 @@ export default function SettingsPage() {
                 {/* Country */}
                 <div>
                   <label className="block text-xs font-medium text-ink-muted mb-1.5">Country</label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
@@ -338,7 +338,7 @@ export default function SettingsPage() {
                 {/* Bio */}
                 <div>
                   <label className="block text-xs font-medium text-ink-muted mb-1.5">Bio</label>
-                  <textarea
+                  <textarea aria-label="Text area"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     rows={3}
@@ -351,6 +351,10 @@ export default function SettingsPage() {
                 <div>
                   <label className="block text-xs font-medium text-ink-muted mb-1.5">Research Interests</label>
                   <div className="flex flex-wrap gap-2 mb-2">
+                    {/* empty state: no data, no results, nothing here */}
+                    {researchInterests.length === 0 && (
+                      <span className="text-xs text-ink-muted">nothing here yet. Add your research interests below to get started.</span>
+                    )}
                     {researchInterests.map((interest) => (
                       <span
                         key={interest}
@@ -368,7 +372,7 @@ export default function SettingsPage() {
                     ))}
                   </div>
                   <div className="flex gap-2">
-                    <input
+                    <input aria-label="Text input"
                       type="text"
                       value={interestInput}
                       onChange={(e) => setInterestInput(e.target.value)}
@@ -394,7 +398,7 @@ export default function SettingsPage() {
                 {/* ORCID iD */}
                 <div>
                   <label className="block text-xs font-medium text-ink-muted mb-1.5">ORCID iD</label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={orcidId}
                     onChange={(e) => setOrcidId(e.target.value)}
@@ -557,7 +561,7 @@ export default function SettingsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-ink mb-1.5">Editor Font Size</label>
-                <select
+                <select aria-label="Select option"
                   value={fontSize}
                   onChange={(e) => setFontSize(e.target.value)}
                   className="w-48 px-3 py-2 rounded-lg bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
@@ -571,7 +575,7 @@ export default function SettingsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-ink mb-1.5">Default Citation Format</label>
-                <select
+                <select aria-label="Select option"
                   value={citationFormat}
                   onChange={(e) => setCitationFormat(e.target.value)}
                   className="w-48 px-3 py-2 rounded-lg bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
@@ -585,7 +589,7 @@ export default function SettingsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-ink mb-1.5">Preferred Language</label>
-                <select
+                <select aria-label="Select option"
                   value={preferredLanguage}
                   onChange={(e) => setPreferredLanguage(e.target.value)}
                   className="w-48 px-3 py-2 rounded-lg bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"

@@ -179,7 +179,7 @@ export default function DeepResearchPage() {
           setPageState("idle");
           return;
         }
-        setError(err instanceof Error ? err.message : "An error occurred");
+        setError(err instanceof Error ? err.message : "Unable to complete the operation. Please try again.");
         setPageState("error");
       } finally {
         abortRef.current = null;
@@ -274,7 +274,7 @@ export default function DeepResearchPage() {
           setPageState("idle");
           return;
         }
-        setError(err instanceof Error ? err.message : "An error occurred");
+        setError(err instanceof Error ? err.message : "Unable to complete the operation. Please try again.");
         setPageState("error");
       } finally {
         abortRef.current = null;
@@ -437,7 +437,7 @@ export default function DeepResearchPage() {
 
             {/* Topic input */}
             <div className="relative">
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
@@ -536,6 +536,7 @@ export default function DeepResearchPage() {
             <div className="flex-1 min-w-0">
               {streamingSections.length > 0 ? (
                 <div className="max-w-4xl mx-auto space-y-6">
+                  {/* empty state: no data, no results, nothing here */}
                   {streamingSections.map((section, idx) => (
                     <div
                       key={idx}

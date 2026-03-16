@@ -82,6 +82,13 @@ export interface CitationNodeAttrs {
   /** Reference IDs cited at this point (supports multi-citations) */
   referenceIds: string[];
 
+  /**
+   * Persisted snapshots of the cited references.
+   * Used to rehydrate the reference store after reloads so manual citations,
+   * bibliography rendering, and the reference sidebar survive page refreshes.
+   */
+  referenceSnapshots?: Reference[];
+
   /** Per-reference overrides (v2 — prefix, suffix, suppress author, etc.) */
   overrides?: {
     [referenceId: string]: {

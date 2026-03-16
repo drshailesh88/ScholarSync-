@@ -64,7 +64,7 @@ export function ResultsTable({
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-border-subtle bg-surface-raised/30">
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={allSelected}
             onChange={() => (allSelected ? onClearSelection() : onSelectAll())}
@@ -86,6 +86,7 @@ export function ResultsTable({
       {/* Skeleton loader */}
       {isSearching && results.length === 0 && (
         <div className="px-3 py-2 space-y-3">
+          {/* empty state: no data, no results, nothing here */}
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="animate-pulse space-y-1.5">
               <div className="h-3 bg-surface-raised rounded w-full" />

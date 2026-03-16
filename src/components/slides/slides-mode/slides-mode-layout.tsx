@@ -212,6 +212,7 @@ export function SlidesModeLayout() {
     try {
       root.render(
         <div>
+          {/* empty state: no data, no results, nothing here */}
           {sortedSlides.map((slide, index) => (
             <div
               key={slide.id}

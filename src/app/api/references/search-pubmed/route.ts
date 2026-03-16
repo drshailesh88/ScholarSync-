@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(fullQuery)}&retmax=${clampedPageSize}&retstart=${retStart}&retmode=json${baseParams}`;
 
     const searchRes = await fetch(searchUrl, {
-      signal: AbortSignal.timeout(10000),
+      signal: AbortSignal.timeout(20000),
     });
 
     if (!searchRes.ok) {
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
     const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmids.join(",")}&rettype=xml&retmode=xml${baseParams}`;
 
     const fetchRes = await fetch(fetchUrl, {
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(25000),
     });
 
     if (!fetchRes.ok) {

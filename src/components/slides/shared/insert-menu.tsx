@@ -259,7 +259,7 @@ export function InsertMenu({
       <div className="border-b border-border px-3 py-2">
         <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-raised px-2 py-1.5">
           <MagnifyingGlass size={14} className="shrink-0 text-ink-muted" />
-          <input
+          <input aria-label="Search blocks"
             ref={inputRef}
             data-testid="insert-menu-search"
             value={search}
@@ -271,6 +271,10 @@ export function InsertMenu({
       </div>
 
       <div className="max-h-[344px] overflow-y-auto p-1.5">
+        {/* empty state: no data, nothing here */}
+        {itemsByCategory.length === 0 && (
+          <p className="text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</p>
+        )}
         {itemsByCategory.map(({ category, label, items }) => (
           <section key={category} data-testid={`insert-menu-section-${category}`}>
             <h4 className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-ink-muted">

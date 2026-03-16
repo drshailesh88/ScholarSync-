@@ -6,6 +6,7 @@ export default function SettingsLoading() {
       <aside className="w-64 shrink-0 glass-panel rounded-2xl p-4">
         <Skeleton className="h-5 w-16 mb-4 mx-3" />
         <div className="space-y-1">
+          {/* empty state: renders nothing when no data */}
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-10 w-full rounded-lg" />
           ))}

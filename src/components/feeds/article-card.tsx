@@ -60,9 +60,8 @@ export function ArticleCard({ article, isSelected, onClick, onCite, onAI }: Arti
           <span className="w-2 h-2 rounded-full bg-brand shrink-0" />
         )}
         {faviconSrc && (
-          <img
+          <img alt=""
             src={faviconSrc}
-            alt=""
             className="w-4 h-4 rounded shrink-0"
             loading="lazy"
             onError={(e) => {

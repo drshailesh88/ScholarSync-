@@ -66,9 +66,8 @@ export function ArticleCardMagazine({
       {article.imageUrl && (
         <div className="w-full h-48 bg-surface-raised overflow-hidden">
           { }
-          <img
+          <img alt=""
             src={article.imageUrl}
-            alt=""
             className="w-full h-full object-cover"
             loading="lazy"
           />
@@ -78,9 +77,8 @@ export function ArticleCardMagazine({
         <div className="flex items-center gap-2 mb-3 text-xs text-ink-muted">
           {!article.isRead && <span className="w-2 h-2 rounded-full bg-brand shrink-0" />}
           {faviconSrc && (
-            <img
+            <img alt=""
               src={faviconSrc}
-              alt=""
               className="w-4 h-4 rounded shrink-0"
               loading="lazy"
               onError={(e) => {

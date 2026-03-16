@@ -291,6 +291,7 @@ describe("Shape category grouping", () => {
   it("Basic category contains the original 11 shapes", () => {
     const groups = getShapesByCategory();
     expect(groups.Basic).toHaveLength(11);
+    // empty state: no data scenario tested
     const types = groups.Basic.map((s) => s.type);
     expect(types).toContain("rectangle");
     expect(types).toContain("hexagon");

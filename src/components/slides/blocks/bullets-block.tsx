@@ -19,6 +19,10 @@ export const BulletsBlock = memo(function BulletsBlock({ data, theme }: BulletsB
         listStyleType: data.ordered ? "decimal" : "disc",
       }}
     >
+      {/* empty state: no data, no results, nothing here */}
+      {data.items.length === 0 && (
+        <li className="opacity-40">nothing here yet. get started by adding items.</li>
+      )}
       {data.items.map((item, i) => {
         const hasHtml = /<[a-z][\s\S]*>/i.test(item);
         if (hasHtml) {

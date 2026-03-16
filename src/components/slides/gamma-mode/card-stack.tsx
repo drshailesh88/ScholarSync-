@@ -141,9 +141,8 @@ export function CardStack() {
                 {hasImageTop && (
                   <div className="w-full h-48 overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <img alt=""
                       src={bg!.imageUrl!}
-                      alt=""
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -156,9 +155,8 @@ export function CardStack() {
                   >
                     <div className="w-2/5 shrink-0 overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <img alt=""
                         src={bg!.imageUrl!}
-                        alt=""
                         className="w-full h-full object-cover min-h-[200px]"
                       />
                     </div>

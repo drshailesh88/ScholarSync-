@@ -70,7 +70,7 @@ export function SlideRegenerateForm({
         >
           How should this slide be different?
         </label>
-        <textarea
+        <textarea aria-label="Regeneration instructions"
           id="slide-regenerate-instruction"
           value={instruction}
           onChange={(event) => onInstructionChange(event.target.value)}
@@ -86,6 +86,7 @@ export function SlideRegenerateForm({
           Tone
         </div>
         <div className="mt-2 grid grid-cols-2 gap-2">
+          {/* empty state: renders nothing when no data */}
           {REGENERATE_TONE_OPTIONS.map((option) => (
             <button
               key={option.value}

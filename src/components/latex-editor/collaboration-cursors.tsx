@@ -25,6 +25,7 @@ export function CollaboratorAvatars() {
 
   return (
     <div className="flex items-center -space-x-2">
+      {/* empty state: no data, no results, nothing here */}
       {displayUsers.map((user, index) => {
         if (!user) return null;
 
@@ -40,9 +41,8 @@ export function CollaboratorAvatars() {
               title={user.name}
             >
               {user.avatar ? (
-                <Image
+                <Image alt={user.name}
                   src={user.avatar}
-                  alt={user.name}
                   width={32}
                   height={32}
                   className="w-full h-full object-cover"
@@ -104,6 +104,23 @@ export function TypingIndicator() {
         <span className="w-1 h-1 rounded-full bg-current animate-bounce" style={{ animationDelay: "300ms" }} />
       </span>
       {text}
+    </div>
+  );
+}
+
+export function CollaborationStatus() {
+  const { isConnected } = useCollaboration();
+
+  return (
+    <div
+      className="hidden sm:flex items-center gap-1.5 text-[11px] text-ink-muted"
+      title={isConnected ? "Collaboration connected" : "Collaboration disconnected"}
+    >
+      <span
+        className="h-2 w-2 rounded-full"
+        style={{ backgroundColor: isConnected ? "#10b981" : "#94a3b8" }}
+      />
+      {isConnected ? "Connected" : "Offline"}
     </div>
   );
 }

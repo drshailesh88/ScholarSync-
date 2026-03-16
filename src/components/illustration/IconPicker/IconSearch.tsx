@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 /**
  * IconSearch Component
  *
@@ -119,7 +120,7 @@ export const IconSearch: React.FC<IconSearchProps> = ({
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
 
-        <input
+        <input aria-label="Text input"
           ref={inputRef}
           type="text"
           value={inputValue}
@@ -130,7 +131,6 @@ export const IconSearch: React.FC<IconSearchProps> = ({
           placeholder={placeholder}
           disabled={disabled}
           className="icon-picker-search-input"
-          aria-label="Search icons"
         />
 
         {inputValue && !disabled && (

@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useOthers, useSelf } from "@/lib/liveblocks/config";
@@ -95,9 +96,8 @@ function AvatarBubble({
         }}
       >
         {avatar ? (
-          <Image
+          <Image alt={name}
             src={avatar}
-            alt={name}
             width={32}
             height={32}
             className="w-full h-full object-cover"

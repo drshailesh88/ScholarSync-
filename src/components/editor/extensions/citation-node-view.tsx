@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { NodeViewWrapper } from "@tiptap/react";
 import type { NodeViewProps } from "@tiptap/react";
 import { useReferenceStore } from "@/stores/reference-store";
 import { Trash, ArrowSquareOut } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import type { Reference } from "@/types/citation";
+import { cloneReference } from "@/lib/citations/document-reference-hydration";
 
 /**
  * React NodeView for inline citation rendering.
@@ -17,6 +19,15 @@ import { cn } from "@/lib/utils";
 export function CitationNodeView(props: NodeViewProps) {
   const { node, deleteNode, selected, getPos, editor } = props;
   const referenceIds: string[] = node.attrs.referenceIds || [];
+  const referenceSnapshots = useMemo(
+    () =>
+      Array.isArray(node.attrs.referenceSnapshots)
+        ? (node.attrs.referenceSnapshots as Reference[]).map((reference) =>
+            cloneReference(reference)
+          )
+        : [],
+    [node.attrs.referenceSnapshots]
+  );
 
   const references = useReferenceStore((s) => s.references);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
@@ -27,6 +38,20 @@ export function CitationNodeView(props: NodeViewProps) {
   const chipRef = useRef<HTMLSpanElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const tooltipTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const mergedReferences = useMemo(() => {
+    const merged = new Map<string, Reference>();
+
+    for (const snapshot of referenceSnapshots) {
+      merged.set(snapshot.id, snapshot);
+    }
+
+    for (const [id, reference] of references.entries()) {
+      merged.set(id, reference);
+    }
+
+    return merged;
+  }, [referenceSnapshots, references]);
 
   // Close popover on click outside
   useEffect(() => {
@@ -45,17 +70,21 @@ export function CitationNodeView(props: NodeViewProps) {
     return () => document.removeEventListener("mousedown", handler);
   }, [showPopover]);
 
+  if (referenceIds.length === 0) {
+    return <NodeViewWrapper as="span" className="hidden" />;
+  }
+
   // Compute display text based on style
   const displayText = computeDisplayText(
     referenceIds,
     referenceNumberMap,
-    references,
+    mergedReferences,
     citationStyle
   );
 
   // Get reference details for tooltip/popover
   const refDetails = referenceIds
-    .map((id) => references.get(id))
+    .map((id) => mergedReferences.get(id))
     .filter(Boolean);
 
   const handleMouseEnter = () => {
@@ -76,6 +105,9 @@ export function CitationNodeView(props: NodeViewProps) {
 
   const handleRemoveRef = (refId: string) => {
     const newIds = referenceIds.filter((id) => id !== refId);
+    const newSnapshots = referenceSnapshots.filter(
+      (reference) => reference.id !== refId
+    );
     if (newIds.length === 0) {
       deleteNode();
     } else {
@@ -88,6 +120,7 @@ export function CitationNodeView(props: NodeViewProps) {
             tr.setNodeMarkup(pos, undefined, {
               ...node.attrs,
               referenceIds: newIds,
+              referenceSnapshots: newSnapshots,
             });
             return true;
           })
@@ -138,6 +171,7 @@ export function CitationNodeView(props: NodeViewProps) {
       {/* Tooltip on hover */}
       {showTooltip && !showPopover && refDetails.length > 0 && (
         <span className="absolute z-50 bottom-full left-0 mb-1 px-2.5 py-1.5 rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-[11px] leading-snug shadow-lg max-w-xs pointer-events-none">
+          {/* empty state: no data, no results, nothing here */}
           {refDetails.map((ref, i) => (
             <span key={ref!.id} className="block">
               {ref!.authors.length > 0 && (
@@ -245,7 +279,7 @@ function formatAuthorsShort(
 function computeDisplayText(
   referenceIds: string[],
   numberMap: Map<string, number>,
-  references: Map<string, unknown>,
+  references: Map<string, Reference>,
   style: string
 ): string {
   if (referenceIds.length === 0) return "[?]";
@@ -265,7 +299,7 @@ function computeDisplayText(
 
   // Author-year style
   const refs = referenceIds
-    .map((id) => references.get(id) as { authors: { family: string }[]; year: number } | undefined)
+    .map((id) => references.get(id))
     .filter(Boolean);
 
   if (refs.length === 0) return "(?)";

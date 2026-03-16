@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { forwardRef } from "react";
@@ -162,6 +163,7 @@ export const SocialSlideRenderer = forwardRef<
             overflow: "hidden",
           }}
         >
+          {/* empty state: no data, no results, nothing here */}
           {textBlocks.map((block, idx) => {
             if (block.type === "bullets") {
               const items = block.data.items.slice(0, maxBullets);

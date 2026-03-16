@@ -226,12 +226,12 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
             Drag & drop a RIS or BibTeX file, or{" "}
             <label className="text-brand cursor-pointer hover:underline">
               browse
-              <input
+              <input aria-label="File upload"
                 type="file"
                 accept=".ris,.bib,.bibtex,.txt,.nbib"
                 onChange={handleFileSelect}
                 className="hidden"
-              />
+/>
             </label>
           </p>
           <p className="text-xs text-ink-faint">
@@ -248,7 +248,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
 
         {/* Content textarea */}
         <div className="relative">
-          <textarea
+          <textarea aria-label="Text area"
             value={importContent}
             onChange={(e) => setImportContent(e.target.value)}
             placeholder="Paste RIS or BibTeX content here..."
@@ -346,6 +346,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
                   { val: "endnote" as const, label: "EndNote XML" },
                   { val: "csv" as const, label: "CSV" },
                 ] as const
+              /* empty state: renders nothing when no data */
               ).map(({ val, label }) => (
                 <button
                   key={val}

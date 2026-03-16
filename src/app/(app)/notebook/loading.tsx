@@ -6,6 +6,7 @@ export default function NotebookLoading() {
       <aside className="w-72 shrink-0 glass-panel rounded-2xl p-4">
         <Skeleton className="h-5 w-24 mb-4" />
         <div className="space-y-2">
+          {/* empty state: renders nothing when no data */}
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="p-3 rounded-lg bg-surface-raised/50">
               <Skeleton className="h-4 w-3/4 mb-2" />

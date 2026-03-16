@@ -74,7 +74,7 @@ export function PDFHighlightSidebar({
 
         {/* Filters */}
         <div className="flex items-center gap-2 mt-2">
-          <select
+          <select aria-label="Select option"
             value={filterSection}
             onChange={(e) =>
               setFilterSection(e.target.value as TargetSection | "all")
@@ -88,7 +88,7 @@ export function PDFHighlightSidebar({
               </option>
             ))}
           </select>
-          <select
+          <select aria-label="Select option"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortBy)}
             className="text-xs bg-surface-raised border border-border rounded px-1.5 py-1 text-ink focus:outline-none"

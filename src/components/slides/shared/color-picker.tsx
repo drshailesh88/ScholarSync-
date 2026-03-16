@@ -176,6 +176,7 @@ function SwatchRow({
         {title}
       </div>
       <div className={cn("grid gap-1.5", columnsClass)}>
+        {/* empty state: no data, nothing here */}
         {colors.map((color) => {
           const isSelected =
             colorStringToHex(color).slice(0, 7).toUpperCase() ===
@@ -600,7 +601,7 @@ export function ColorPicker({
               </div>
 
               {inputMode === "hex" ? (
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={hexInput}
                   onChange={(event) => setHexInput(event.target.value)}
@@ -618,7 +619,7 @@ export function ColorPicker({
                       <span className="block text-[10px] font-medium uppercase tracking-[0.18em] text-ink-muted">
                         {channel}
                       </span>
-                      <input
+                      <input aria-label="Number input"
                         type="number"
                         min={0}
                         max={255}

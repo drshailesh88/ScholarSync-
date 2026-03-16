@@ -954,6 +954,7 @@ export function MenuBar({
             </svg>
           </span>
           <div className="submenu">
+            {/* empty state: no data, no results, nothing here */}
             {item.submenu.map((subItem) => renderMenuItem(subItem))}
           </div>
         </div>

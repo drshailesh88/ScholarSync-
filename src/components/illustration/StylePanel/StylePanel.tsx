@@ -374,6 +374,7 @@ export function StylePanel({
       <div style={styles.section}>
         <label style={styles.sectionLabel}>Presets</label>
         <div style={styles.presetButtons}>
+          {/* empty state: renders nothing when no data */}
           {Object.keys(presets).map(presetName => (
             <button
               key={presetName}
@@ -390,7 +391,7 @@ export function StylePanel({
       <div style={styles.section}>
         <label style={styles.sectionLabel}>Roughness</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="0"
             max="3"
@@ -399,7 +400,7 @@ export function StylePanel({
             onChange={handleRoughnessChange}
             style={styles.slider}
             disabled={!settings.enabled}
-          />
+/>
           <span style={styles.sliderValue}>{settings.roughness.toFixed(1)}</span>
         </div>
       </div>
@@ -408,7 +409,7 @@ export function StylePanel({
       <div style={styles.section}>
         <label style={styles.sectionLabel}>Bowing (Line Curvature)</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="0"
             max="3"
@@ -417,7 +418,7 @@ export function StylePanel({
             onChange={handleBowingChange}
             style={styles.slider}
             disabled={!settings.enabled}
-          />
+/>
           <span style={styles.sliderValue}>{settings.bowing.toFixed(1)}</span>
         </div>
       </div>
@@ -426,7 +427,7 @@ export function StylePanel({
       <div style={styles.section}>
         <label style={styles.sectionLabel}>Stroke Width</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="0.5"
             max="8"
@@ -435,7 +436,7 @@ export function StylePanel({
             onChange={handleStrokeWidthChange}
             style={styles.slider}
             disabled={!settings.enabled}
-          />
+/>
           <span style={styles.sliderValue}>{settings.strokeWidth.toFixed(1)}</span>
         </div>
       </div>

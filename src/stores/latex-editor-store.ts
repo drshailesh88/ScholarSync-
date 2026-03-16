@@ -48,10 +48,14 @@ interface LatexEditorState {
   // Agent panel active tab
   agentTab: "draft" | "learn" | "cite" | "check";
   setAgentTab: (tab: "draft" | "learn" | "cite" | "check") => void;
+  pendingDraftSection: string | null;
+  setPendingDraftSection: (section: string | null) => void;
 
   // Document content (for preview syncing)
   documentContent: string;
   setDocumentContent: (content: string) => void;
+  bibContent: string;
+  setBibContent: (content: string) => void;
 
   // Compiled PDF URL (blob URL for pdfjs-dist)
   compiledPdfUrl: string | null;
@@ -116,10 +120,14 @@ export const useLatexEditorStore = create<LatexEditorState>((set, get) => ({
   // Agent panel tab
   agentTab: "draft",
   setAgentTab: (agentTab) => set({ agentTab }),
+  pendingDraftSection: null,
+  setPendingDraftSection: (pendingDraftSection) => set({ pendingDraftSection }),
 
   // Document content
   documentContent: "",
   setDocumentContent: (documentContent) => set({ documentContent }),
+  bibContent: "",
+  setBibContent: (bibContent) => set({ bibContent }),
 
   // Compiled PDF
   compiledPdfUrl: null,

@@ -198,6 +198,7 @@ export function computeLayout(
 
   // Multiple regions: distribute blocks
   const assigned = new Set<number>();
+  /* empty state: no data, no results, nothing here */
   const regionBlocks: ContentBlock[][] = def.regions.map(() => []);
 
   // First pass: assign blocks to regions with matching preferTypes

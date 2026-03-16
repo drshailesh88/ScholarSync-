@@ -265,6 +265,7 @@ export function SlideRendererV2({
         {/* Content regions from layout engine */}
         {layoutResult.regions.length > 0 && (
           <div className="flex-1 relative min-h-0">
+            {/* empty state: renders nothing when no data */}
             {layoutResult.regions.map((region) => (
               <div key={region.id} style={regionToCSS(region)}>
                 <AutoFitRegion>

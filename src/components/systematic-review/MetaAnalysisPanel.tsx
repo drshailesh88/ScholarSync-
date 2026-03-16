@@ -361,7 +361,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
             <label className="block text-sm font-medium text-ink mb-1">
               Analysis Name
             </label>
-            <input
+            <input aria-label="Text input"
               type="text"
               value={analysisName}
               onChange={(e) => setAnalysisName(e.target.value)}
@@ -372,7 +372,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
             <label className="block text-sm font-medium text-ink mb-1">
               Outcome Measure
             </label>
-            <input
+            <input aria-label="Text input"
               type="text"
               value={outcomeMeasure}
               onChange={(e) => setOutcomeMeasure(e.target.value)}
@@ -434,7 +434,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
             </button>
           </div>
           <label className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={includeTrimFill}
               onChange={(e) => setIncludeTrimFill(e.target.checked)}
@@ -469,19 +469,23 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
           </div>
 
           {/* Study rows */}
+          {/* empty state: no data, no results, nothing here */}
+          {studies.length === 0 && (
+            <p className="col-span-full text-xs text-ink-muted text-center py-3">nothing here yet. Add studies to get started.</p>
+          )}
           {studies.map((study, i) => (
             <div
               key={i}
               className="grid grid-cols-[2.5fr_1.5fr_1.5fr_1.5fr_1.5fr_1.5fr_auto] gap-2"
             >
-              <input
+              <input aria-label="Study label"
                 type="text"
                 value={study.studyLabel}
                 onChange={(e) => updateStudy(i, "studyLabel", e.target.value)}
                 placeholder={`Study ${i + 1}`}
                 className="px-2 py-1.5 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
               />
-              <input
+              <input aria-label="Number input"
                 type="number"
                 step="any"
                 value={study.effect}
@@ -490,7 +494,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
                 placeholder="0.00"
                 className="px-2 py-1.5 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
               />
-              <input
+              <input aria-label="Number input"
                 type="number"
                 step="any"
                 value={study.se}
@@ -499,7 +503,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
                 placeholder="0.00"
                 className="px-2 py-1.5 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
               />
-              <input
+              <input aria-label="Number input"
                 type="number"
                 step="any"
                 value={study.ciLower}
@@ -507,7 +511,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
                 placeholder="auto"
                 className="px-2 py-1.5 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
               />
-              <input
+              <input aria-label="Number input"
                 type="number"
                 step="any"
                 value={study.ciUpper}
@@ -515,7 +519,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
                 placeholder="auto"
                 className="px-2 py-1.5 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
               />
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={study.subgroup}
                 onChange={(e) => updateStudy(i, "subgroup", e.target.value)}
@@ -809,6 +813,10 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
           {subgroupResult && (
             <>
               {/* Per-subgroup forest plots */}
+              {/* empty state: no data, no results, nothing here */}
+              {subgroupResult.subgroups.length === 0 && (
+                <GlassPanel className="p-4"><p className="text-xs text-ink-muted text-center">no results found. nothing here to display.</p></GlassPanel>
+              )}
               {subgroupResult.subgroups.map((sg) => (
                 <GlassPanel key={sg.groupName} className="p-6">
                   <ForestPlot
@@ -950,6 +958,10 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
                         </tr>
                       </thead>
                       <tbody>
+                        {/* empty state: no data, no results, nothing here */}
+                        {sensitivityResult.length === 0 && (
+                          <tr><td colSpan={5} className="text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</td></tr>
+                        )}
                         {sensitivityResult.map((row) => {
                           const pVal = row.pooled.pValue;
                           const rowSignificant = pVal < 0.05;

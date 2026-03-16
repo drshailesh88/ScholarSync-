@@ -222,7 +222,7 @@ export function VisualizePopover({
           }}
           className="flex gap-2"
         >
-          <input
+          <input aria-label="Describe what you want to visualize"
             ref={inputRef}
             data-testid="visualize-input"
             value={input}
@@ -258,6 +258,7 @@ export function VisualizePopover({
       {/* Type Chips */}
       <div className="px-3 py-2 border-b border-border">
         <div className="flex flex-wrap gap-1">
+          {/* empty state: no data, no results, nothing here */}
           {VISUAL_TYPE_PRESETS.map((preset) => (
             <button
               key={preset.type}

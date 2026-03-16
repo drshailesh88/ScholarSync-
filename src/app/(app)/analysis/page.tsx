@@ -6,14 +6,55 @@ import { ArrowLeft, Sparkle, CircleNotch, CaretDown, FileText } from "@phosphor-
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
 import { CircularGauge } from "@/components/ui/circular-gauge";
-import type { IntegrityCheckResult } from "@/lib/integrity/types";
 import { analyzeWriting, type WritingIssue, type WritingMetrics } from "@/lib/writing-analysis";
 import {
   getActiveDocumentForAnalysis,
   listProjectsForAnalysis,
   type DocumentForAnalysis,
 } from "@/lib/actions/analysis";
-type AnalysisResult = IntegrityCheckResult;
+
+/** Local UI shape for analysis results */
+interface AnalysisResult {
+  humanScore: number;
+  aiScore: number;
+  overallRisk: "low" | "medium" | "high";
+  paragraphAnalysis: Array<{
+    paragraphIndex: number;
+    humanProbability: number;
+    flags: string[];
+    suggestion?: string;
+  }>;
+  plagiarismIndicators: Array<{
+    excerpt: string;
+    concern: string;
+    severity: "low" | "medium" | "high";
+  }>;
+  aiDetection: {
+    humanScore: number;
+    aiScore: number;
+    overallRisk: "low" | "medium" | "high";
+    paragraphs: Array<{
+      paragraphIndex: number;
+      humanProbability: number;
+      flags: string[];
+      suggestion?: string;
+    }>;
+  };
+  plagiarism: {
+    matches: Array<{
+      excerpt: string;
+      source: { title?: string; authors?: string[]; doi?: string; year?: number };
+      similarity: number;
+      severity: "low" | "medium" | "high";
+    }>;
+  } | null;
+  writingQuality: {
+    passiveVoiceCount: number;
+    averageSentenceLength: number;
+    readabilityGrade: number;
+    suggestions: string[];
+  };
+}
 
 type SourceMode = "document" | "paste";
 
@@ -64,7 +105,11 @@ export default function AnalysisPage() {
           setSelectedProjectId(p[0].id);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        setError("Could not load projects. Switching to paste mode.");
+        setSourceMode("paste");
+        setDocLoading(false);
+      });
   }, [selectedProjectId]);
 
   // Load active document when project changes
@@ -150,7 +195,44 @@ export default function AnalysisPage() {
       }
 
       const data = await res.json();
-      setResult(data);
+      // Map API response shape to component's AnalysisResult shape
+      const mapped: AnalysisResult = {
+        humanScore: data.aiDetection?.humanScore ?? 0,
+        aiScore: data.aiDetection?.aiScore ?? 0,
+        overallRisk: data.aiDetection?.overallRisk ?? "low",
+        paragraphAnalysis: (data.aiDetection?.paragraphs ?? []).map((p: { paragraphIndex: number; humanProbability: number; flags: string[]; suggestion?: string }) => ({
+          paragraphIndex: p.paragraphIndex,
+          humanProbability: p.humanProbability,
+          flags: p.flags ?? [],
+          suggestion: p.suggestion,
+        })),
+        plagiarismIndicators: (data.plagiarism?.matches ?? []).map((m: { excerpt?: string; source?: { title?: string; authors?: string[]; doi?: string; year?: number }; severity?: string }) => ({
+          excerpt: m.excerpt ?? "",
+          concern: m.source
+            ? `${m.source.title ?? "Unknown source"}${m.source.authors?.length ? " — " + m.source.authors.join(", ") : ""}${m.source.year ? " (" + m.source.year + ")" : ""}`
+            : "",
+          severity: (m.severity as "low" | "medium" | "high") ?? "low",
+        })),
+        aiDetection: {
+          humanScore: data.aiDetection?.humanScore ?? 0,
+          aiScore: data.aiDetection?.aiScore ?? 0,
+          overallRisk: data.aiDetection?.overallRisk ?? "low",
+          paragraphs: (data.aiDetection?.paragraphs ?? []).map((p: { paragraphIndex: number; humanProbability: number; flags: string[]; suggestion?: string }) => ({
+            paragraphIndex: p.paragraphIndex,
+            humanProbability: p.humanProbability,
+            flags: p.flags ?? [],
+            suggestion: p.suggestion,
+          })),
+        },
+        plagiarism: data.plagiarism ?? null,
+        writingQuality: {
+          passiveVoiceCount: data.writingQuality?.passiveVoiceCount ?? 0,
+          averageSentenceLength: data.writingQuality?.averageSentenceLength ?? 0,
+          readabilityGrade: data.writingQuality?.readabilityGrade ?? 0,
+          suggestions: data.writingQuality?.suggestions ?? [],
+        },
+      };
+      setResult(mapped);
     } catch {
       setError("Failed to connect. Check your API key.");
     } finally {
@@ -252,6 +334,10 @@ export default function AnalysisPage() {
                   </button>
                   {projectDropdownOpen && (
                     <div className="absolute left-0 top-full mt-1 w-56 rounded-lg glass-panel border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
+                      {/* empty state: no data, nothing here */}
+                      {projects.length === 0 && (
+                        <p className="text-xs text-ink-muted text-center py-2">no results yet. Create a project to get started.</p>
+                      )}
                       {projects.map((p) => (
                         <button
                           key={p.id}
@@ -296,7 +382,7 @@ export default function AnalysisPage() {
               </div>
             ) : (
               <>
-                <textarea
+                <textarea aria-label="Text area"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder={sourceMode === "document"
@@ -552,6 +638,9 @@ export default function AnalysisPage() {
                               </span>
                             </div>
                             <p className="text-xs text-ink-muted">{issue.reason}</p>
+                            {issue.suggestion && (
+                              <p className="text-xs text-ink-muted/70 mt-1 italic">{issue.suggestion}</p>
+                            )}
                           </div>
                         );
                       })}

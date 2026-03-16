@@ -396,6 +396,7 @@ export function applyTableDataOperation(
     return {
       ...normalized,
       headers: [...normalized.headers, `Column ${normalized.headers.length + 1}`],
+      /* empty state: renders nothing when no data */
       rows: normalized.rows.map((row) => [...row, ""]),
     };
   }

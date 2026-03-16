@@ -486,14 +486,13 @@ export const ShortcutsHelp: React.FC<ShortcutsHelpProps> = ({
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <input
+            <input aria-label="Search shortcuts..."
               ref={searchInputRef}
               type="text"
               placeholder="Search shortcuts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={styles.searchInput}
-              aria-label="Search shortcuts"
             />
           </div>
         </div>
@@ -501,6 +500,7 @@ export const ShortcutsHelp: React.FC<ShortcutsHelpProps> = ({
         {/* Content */}
         <div style={styles.content}>
           {hasResults ? (
+            /* empty state: no data, no results, nothing here */
             CATEGORY_ORDER.map((category) => {
               const categoryShortcuts = groupedShortcuts[category];
               if (categoryShortcuts.length === 0) return null;

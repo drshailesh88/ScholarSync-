@@ -474,6 +474,10 @@ export function AMSTAR2Panel({ projectId }: AMSTAR2PanelProps) {
                     Critical Weaknesses
                   </span>
                   <div className="mt-1 flex flex-wrap gap-1">
+                    {/* empty state: no data, no results, nothing here */}
+                    {assessment.criticalWeaknesses.length === 0 && (
+                      <span className="text-xs text-emerald-400">no results — nothing here to flag.</span>
+                    )}
                     {assessment.criticalWeaknesses.map((n) => (
                       <span
                         key={n}

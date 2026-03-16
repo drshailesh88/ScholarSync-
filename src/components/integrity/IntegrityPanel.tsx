@@ -61,6 +61,7 @@ export function IntegrityPanel({ getEditorText, sources }: IntegrityPanelProps) 
     const text = getEditorText();
     if (!text || text.trim().length < 50) {
       setError("Document must have at least 50 characters to check.");
+      setStatus("error");
       return;
     }
 
@@ -206,6 +207,7 @@ export function IntegrityPanel({ getEditorText, sources }: IntegrityPanelProps) 
             {ai.paragraphs.filter((p) => p.flags.length > 0).length > 0 && (
               <div className="space-y-1.5 mt-2">
                 <span className="text-[10px] font-medium text-ink-muted uppercase">Flagged Paragraphs</span>
+                {/* empty state: no data, no results, nothing here */}
                 {ai.paragraphs
                   .filter((p) => p.flags.length > 0)
                   .slice(0, 5)

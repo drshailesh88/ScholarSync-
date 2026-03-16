@@ -57,12 +57,12 @@ export default function BlendModeSelect({
   return (
     <div style={styles.container}>
       <span style={styles.header}>Blend Mode</span>
-      <select
+      <select aria-label="Select option"
         value={value}
         onChange={(event) => onChange(event.target.value as BlendModeValue)}
         style={styles.select}
-        aria-label="Blend mode"
       >
+        {/* empty state: renders nothing when no data */}
         {BLEND_MODES.map((mode) => (
           <option key={mode.value} value={mode.value}>
             {mode.label}

@@ -12,7 +12,7 @@ const exportPdfSchema = z.object({
   title: z.string().max(500).optional(),
   content: z.string().max(500000),
   citations: z.array(z.string()).max(1000).optional(),
-});
+}).strict();
 
 // Layout constants (in points; 72pt = 1 inch)
 const MARGIN = 72; // 1-inch margins

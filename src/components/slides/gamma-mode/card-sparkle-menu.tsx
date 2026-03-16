@@ -155,6 +155,7 @@ export function CardSparkleMenu({ slideId }: CardSparkleMenuProps) {
           body: JSON.stringify({
             deckId,
             message: action.buildMessage(slideId),
+            /* empty state: renders nothing when no data */
             slides: slides.map((s) => ({
               id: s.id,
               title: s.title,

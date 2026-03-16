@@ -45,6 +45,7 @@ export function ProjectHeader({
 
       {/* Progress stepper */}
       <div className="flex items-center gap-1">
+        {/* empty state: renders nothing when no data */}
         {STAGES.map((stage, i) => {
           const isCompleted = i < currentIndex;
           const isCurrent = i === currentIndex;

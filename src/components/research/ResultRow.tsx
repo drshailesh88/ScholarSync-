@@ -42,7 +42,7 @@ export function ResultRow({
     >
       <div className="flex items-start gap-2">
         {/* Checkbox */}
-        <input
+        <input aria-label="Checkbox"
           type="checkbox"
           checked={isSelected}
           onChange={onToggleSelect}

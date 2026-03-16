@@ -237,12 +237,13 @@ export function DocumentSettings({
         <div style={styles.body}>
           <div style={styles.field}>
             <label style={styles.label} htmlFor="canvas-preset-select">Preset</label>
-            <select
+            <select aria-label="Preset"
               id="canvas-preset-select"
               style={styles.select}
               value={presetId}
               onChange={(event) => handlePresetChange(event.target.value as CanvasPreset['id'])}
             >
+              {/* empty state: renders nothing when no data */}
               {CANVAS_PRESETS.map((preset) => (
                 <option key={preset.id} value={preset.id}>
                   {preset.label}
@@ -280,7 +281,7 @@ export function DocumentSettings({
           <div style={styles.row}>
             <div style={styles.field}>
               <label style={styles.label} htmlFor="canvas-width-input">Width (px)</label>
-              <input
+              <input aria-label="Width"
                 id="canvas-width-input"
                 type="number"
                 min={1}
@@ -295,7 +296,7 @@ export function DocumentSettings({
 
             <div style={styles.field}>
               <label style={styles.label} htmlFor="canvas-height-input">Height (px)</label>
-              <input
+              <input aria-label="Height"
                 id="canvas-height-input"
                 type="number"
                 min={1}
@@ -311,7 +312,7 @@ export function DocumentSettings({
 
           <div style={styles.field}>
             <label style={styles.label} htmlFor="canvas-background-input">Background Color</label>
-            <input
+            <input aria-label="Background color"
               id="canvas-background-input"
               type="color"
               value={backgroundColor}
