@@ -65,21 +65,21 @@
   },
   "suites": [
     {
-      "title": "analysis/spec-005.spec.ts",
-      "file": "analysis/spec-005.spec.ts",
+      "title": "compliance/spec-014.spec.ts",
+      "file": "compliance/spec-014.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "analysis / spec-005",
-          "file": "analysis/spec-005.spec.ts",
+          "title": "compliance / spec-014",
+          "file": "compliance/spec-014.spec.ts",
           "line": 36,
           "column": 6,
           "specs": [
             {
-              "title": "cp-000: When document mode has no activeDoc the textarea is replaced by the empty-docume",
-              "ok": true,
+              "title": "cp-000: Copyleaks results action without scanId returns 400 with scanId is required for ",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -92,34 +92,58 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 7463,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 55330,
+                      "error": {
+                        "message": "TimeoutError: page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/compliance\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "TimeoutError: page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/compliance\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts:54:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts",
+                          "column": 16,
+                          "line": 54
+                        },
+                        "snippet": "  52 |\n  53 |     // Navigate to the page\n> 54 |     await page.goto('/compliance', { waitUntil: 'domcontentloaded' });\n     |                ^\n  55 |     await page.waitForLoadState('networkidle').catch(() => {});\n  56 |\n  57 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts",
+                            "column": 16,
+                            "line": 54
+                          },
+                          "message": "TimeoutError: page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/compliance\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  52 |\n  53 |     // Navigate to the page\n> 54 |     await page.goto('/compliance', { waitUntil: 'domcontentloaded' });\n     |                ^\n  55 |     await page.waitForLoadState('networkidle').catch(() => {});\n  56 |\n  57 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts:54:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:30:52.831Z",
+                      "startTime": "2026-03-16T05:13:19.166Z",
                       "annotations": [],
                       "attachments": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-49f2d-eplaced-by-the-empty-docume-qa-chromium/test-finished-1.png"
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-9f053-ith-scanId-is-required-for--qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts",
+                        "column": 16,
+                        "line": 54
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-a2dc70f60d5eca7a8aaf",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-2257620d63d00a48dd5f",
+              "file": "compliance/spec-014.spec.ts",
               "line": 49,
               "column": 3
             },
             {
-              "title": "cp-001: Empty-document state uses a FileText icon above the message",
-              "ok": true,
+              "title": "cp-001: Copyleaks text field validated as zstringmin50max50000optional required only for",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -130,35 +154,69 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2179,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 50036,
+                      "error": {
+                        "message": "TimeoutError: page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/compliance\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "TimeoutError: page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/compliance\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts:104:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts",
+                          "column": 16,
+                          "line": 104
+                        },
+                        "snippet": "  102 |\n  103 |     // Navigate to the page\n> 104 |     await page.goto('/compliance', { waitUntil: 'domcontentloaded' });\n      |                ^\n  105 |     await page.waitForLoadState('networkidle').catch(() => {});\n  106 |\n  107 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts",
+                            "column": 16,
+                            "line": 104
+                          },
+                          "message": "TimeoutError: page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/compliance\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  102 |\n  103 |     // Navigate to the page\n> 104 |     await page.goto('/compliance', { waitUntil: 'domcontentloaded' });\n      |                ^\n  105 |     await page.waitForLoadState('networkidle').catch(() => {});\n  106 |\n  107 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts:104:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:00.386Z",
+                      "startTime": "2026-03-16T05:14:21.541Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-8a112-Text-icon-above-the-message-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-f4582-0optional-required-only-for-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-f4582-0optional-required-only-for-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-f4582-0optional-required-only-for-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/compliance/spec-014.spec.ts",
+                        "column": 16,
+                        "line": 104
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-a6cc292cf46c4bc2c7b1",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-15881173ebb4e1654c5e",
+              "file": "compliance/spec-014.spec.ts",
               "line": 99,
               "column": 3
             },
             {
-              "title": "cp-002: Empty-document state message reads No document found Write something in the Stud",
+              "title": "cp-002: Copyleaks 500 error body error Copyleaks request failed",
               "ok": true,
               "tags": [],
               "tests": [
@@ -170,21 +228,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1952,
+                      "duration": 3014,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:02.580Z",
+                      "startTime": "2026-03-16T05:15:12.542Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-31045-Write-something-in-the-Stud-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-595b8-or-Copyleaks-request-failed-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -192,13 +250,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-0cb72ff7f36bba2e58c5",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-cac47a7cd4becdc12fd3",
+              "file": "compliance/spec-014.spec.ts",
               "line": 149,
               "column": 3
             },
             {
-              "title": "cp-003: Empty-document state hides the textarea and analyze button entirely",
+              "title": "cp-003: PAID_PLANS defined as new Setbasic pro institutional free plan is the only non-p",
               "ok": true,
               "tags": [],
               "tests": [
@@ -210,21 +268,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1970,
+                      "duration": 1808,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:04.546Z",
+                      "startTime": "2026-03-16T05:15:15.652Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-d6153-and-analyze-button-entirely-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-30dcb-free-plan-is-the-only-non-p-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -232,13 +290,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-d2577e4f180e3b1fefc0",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-90ddfbe168b7d96a77ef",
+              "file": "compliance/spec-014.spec.ts",
               "line": 199,
               "column": 3
             },
             {
-              "title": "cp-004: Document-mode textarea placeholder is Document content loaded from your project",
+              "title": "cp-004: Self-plagiarism runs for any authenticated user regardless of plan gated only by",
               "ok": true,
               "tags": [],
               "tests": [
@@ -250,21 +308,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1803,
+                      "duration": 1944,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:06.529Z",
+                      "startTime": "2026-03-16T05:15:17.475Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-b3cd0-nt-loaded-from-your-project-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-e20e2-dless-of-plan-gated-only-by-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -272,13 +330,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-139ef586a0a9a3e535ba",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-9a0acad75e980904a9e7",
+              "file": "compliance/spec-014.spec.ts",
               "line": 249,
               "column": 3
             },
             {
-              "title": "cp-005: Paste-mode textarea placeholder is Paste your text here to analyze writing quali",
+              "title": "cp-005: Mode routing ai_detection AI detection only plagiarism plagiarism paid self-plag",
               "ok": true,
               "tags": [],
               "tests": [
@@ -290,687 +348,7 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1826,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:08.344Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-61e7f-re-to-analyze-writing-quali-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-4d8c1406947356fa5796",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 299,
-              "column": 3
-            },
-            {
-              "title": "cp-006: Document-mode textarea is readOnly",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1970,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:10.181Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-bf5ab-t-mode-textarea-is-readOnly-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-e75e10bfeb1e81cea9eb",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 349,
-              "column": 3
-            },
-            {
-              "title": "cp-007: Paste-mode textarea is editable",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1924,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:12.162Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-7ebb4-e-mode-textarea-is-editable-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-a94f0845e4367b6f6042",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 399,
-              "column": 3
-            },
-            {
-              "title": "cp-008: Textarea uses font-serif",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2092,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:14.099Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-9c0d4-08-Textarea-uses-font-serif-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-d60a86a64e1a9386063b",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 449,
-              "column": 3
-            },
-            {
-              "title": "cp-009: Textarea uses resize-none",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2181,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:16.202Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-df271-9-Textarea-uses-resize-none-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-5c414972a28e97ed0ee0",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 499,
-              "column": 3
-            },
-            {
-              "title": "cp-010: Textarea uses focusring-2 focusring-brand40 when focused",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1909,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:18.396Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-422ef-usring-brand40-when-focused-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-373de5915e2ddb1afa06",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 549,
-              "column": 3
-            },
-            {
-              "title": "cp-011: Word count text is always computed from effectiveTextsplitsfilterBooleanlength",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1840,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:20.316Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-65526-xtsplitsfilterBooleanlength-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-2c113b3787249d4b7735",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 599,
-              "column": 3
-            },
-            {
-              "title": "cp-012: Word count reads 0 words when the textarea is empty or whitespace-only",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1890,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:22.167Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-24825-is-empty-or-whitespace-only-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-44107a49200ce4ce6c39",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 649,
-              "column": 3
-            },
-            {
-              "title": "cp-013: Paste-mode typing updates inputText on every onChange",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1942,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:24.067Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-56a96-inputText-on-every-onChange-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-8fe32280027951f7ad7f",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 699,
-              "column": 3
-            },
-            {
-              "title": "cp-014: Inline error text is rendered directly under the textarea in red when error is n",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1918,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:26.020Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-446c5-area-in-red-when-error-is-n-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-c3226e908107809806d9",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 749,
-              "column": 3
-            },
-            {
-              "title": "cp-015: Forced submission with fewer than 50 characters sets Please enter at least 50 ch",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1802,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:27.948Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-5ab87-Please-enter-at-least-50-ch-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-d269543fc8a98e5aa740",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 799,
-              "column": 3
-            },
-            {
-              "title": "cp-016: New document loads clear prior errors by setting error back to null",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1888,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:29.761Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-62346--setting-error-back-to-null-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-2d1525e76f602d0cd002",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 849,
-              "column": 3
-            },
-            {
-              "title": "cp-017: Starting a new analysis clears prior errors before the fetch begins",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1859,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:31.661Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-c227c-ors-before-the-fetch-begins-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-9cb0035e16d210c5706f",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 899,
-              "column": 3
-            },
-            {
-              "title": "cp-018: Non-OK API responses use dataerror Writing analysis failed for the inline error",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1822,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:33.529Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-e293d-failed-for-the-inline-error-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-fc700fa1c0e95b319b1c",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 949,
-              "column": 3
-            },
-            {
-              "title": "cp-019: Network exceptions set the inline error to Failed to connect Check your API key",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1793,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:35.361Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-34894--connect-Check-your-API-key-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-1da57f90f0d197a603a2",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 999,
-              "column": 3
-            },
-            {
-              "title": "cp-020: Error feedback is inline text only there is no toast alert banner or modal",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1853,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:37.164Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-fc5f1-toast-alert-banner-or-modal-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-bcea92fcad154c3610e0",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 1049,
-              "column": 3
-            },
-            {
-              "title": "cp-021: Analyze button label is Analyze Writing while idle",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1876,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T04:31:39.031Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-c595e--Analyze-Writing-while-idle-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c52c74e82de806d23e77-239b3e2b6a6dbd2e4036",
-              "file": "analysis/spec-005.spec.ts",
-              "line": 1099,
-              "column": 3
-            },
-            {
-              "title": "cp-022: Analyze button includes a leading Sparkle icon while idle",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
                       "duration": 1799,
@@ -978,13 +356,13 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:40.918Z",
+                      "startTime": "2026-03-16T05:15:19.438Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-8b3a8-ing-Sparkle-icon-while-idle-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-954ca-m-plagiarism-paid-self-plag-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -992,13 +370,693 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-032b97dbab2bff36c876",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-e95074c57fe778d30751",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: writingQualitypassiveVoiceCount is computed from stats as MathroundpassiveVoiceP",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1914,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:21.247Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-4e63f-s-as-MathroundpassiveVoiceP-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-3faba441628d92e89355",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: writingQualityaverageSentenceLength is directly aistatsavgSentenceLength not rec",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1707,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:23.172Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-1e5b1-tsavgSentenceLength-not-rec-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-e3536ea527097b6f6906",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: writingQualityreadabilityGrade is directly aistatsreadabilityGrade not recompute",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1657,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:24.888Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-32a29-dabilityGrade-not-recompute-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-4cc9b069d7b7c479ad65",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: checkedAt is generated server-side as new DatetoISOString not passed from the cl",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1736,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:26.555Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-f6cc4-ring-not-passed-from-the-cl-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-5f1a840ba8cb45e2c147",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Default AI result when AI detection is skipped has all 10 stats fields zeroed an",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1694,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:28.300Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-e3195-l-10-stats-fields-zeroed-an-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-7d4e3014037cd1ae94b7",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Exact writing suggestion for avgSentenceLength 28 Your average sentence length i",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1765,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:30.004Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-77ff6-r-average-sentence-length-i-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-42e95c56e1228fdbda48",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Exact suggestion for sentenceLengthStdDev 3 Your sentence lengths are very unifo",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1835,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:31.779Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-ebf86-ence-lengths-are-very-unifo-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-6a54fb6d29f0d3f47d68",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Exact suggestion for passiveVoicePercent 30 N of sentences use passive voice Con",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1843,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:33.622Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-71913-ences-use-passive-voice-Con-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-a7aa0eeb13c4bc085254",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Exact suggestion for typeTokenRatio 035 typeTokenRatio 0 Vocabulary diversity is",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1803,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:35.473Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-46564-o-0-Vocabulary-diversity-is-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-4720c9b06f8cf48d2159",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Exact suggestion for hedgingPhraseCount 5 Found N hedging phrases eg It is impor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1696,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:37.284Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-31fed-ging-phrases-eg-It-is-impor-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-2fd374bc99d41ae37d85",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Exact suggestion for readabilityGrade 16 Readability grade is above 16 postgradu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1726,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:38.988Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-b152d-grade-is-above-16-postgradu-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-a881761b6ca627a32f2e",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: renderSentenceLevel sorts sentences by startOffset ascending before iterating",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1774,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:40.722Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-aec06--ascending-before-iterating-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-d3fd373896b7c4e0c51d",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Gaps before the first sentence are rendered as plain span keygap-cursor elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1642,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:42.507Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-3b8b5-span-keygap-cursor-elements-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-21e85c7be8627bb68be6",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Trailing text after the last sentence is rendered as span keytail-cursor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1689,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:44.158Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-282a1-ered-as-span-keytail-cursor-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-89866d4cc83007293993",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Citation issue Warning icons have titleissuemessage attribute as tooltip text",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1674,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:45.856Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-c062e-e-attribute-as-tooltip-text-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-8ee7e5a48eb2e52a0bab",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: applyPlagiarismHighlights sorts ranges by start ascending before rendering overl",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1741,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:47.538Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-494a8-ding-before-rendering-overl-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-39c61f04777bb317af8f",
+              "file": "compliance/spec-014.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: IntegrityPanel truncates editor text to 50000 chars before sending textslice0 50",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1641,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T05:15:49.287Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-e2641-efore-sending-textslice0-50-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73f35d223276ee8fbff6-2b46100af8edebae969b",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1149,
               "column": 3
             },
             {
-              "title": "cp-023: Analyze button is disabled when effectiveTexttrimlength 50",
+              "title": "cp-023: IntegrityPanel error for short text exact message Document must have at least 50",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1010,21 +1068,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1876,
+                      "duration": 1624,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:42.729Z",
+                      "startTime": "2026-03-16T05:15:50.937Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-f3baf--effectiveTexttrimlength-50-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-0e538-ument-must-have-at-least-50-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1032,13 +1090,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-d940a853be18084b87a8",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-b812512b7ca75aa6b9c4",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1199,
               "column": 3
             },
             {
-              "title": "cp-024: Analyze button is disabled when loading is true",
+              "title": "cp-024: IntegrityPanel idle description exact text Detect AI content check plagiarism ag",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1050,21 +1108,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1870,
+                      "duration": 1643,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:44.615Z",
+                      "startTime": "2026-03-16T05:15:52.570Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-394d4-sabled-when-loading-is-true-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-86ab7-content-check-plagiarism-ag-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1072,13 +1130,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-6e6eef682a498ab2e75d",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-71f53ff22aae90182fa1",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1249,
               "column": 3
             },
             {
-              "title": "cp-025: Disabled button uses the disabledopacity-50 style",
+              "title": "cp-025: IntegrityPanel does NOT pass mode field in its API request body server defaults ",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1090,21 +1148,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1891,
+                      "duration": 1658,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:46.496Z",
+                      "startTime": "2026-03-16T05:15:54.222Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-e82de-he-disabledopacity-50-style-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-0c15c-quest-body-server-defaults--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1112,13 +1170,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-3361ef1f8d7af9cc4efb",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-b8ec1d76ace273928215",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1299,
               "column": 3
             },
             {
-              "title": "cp-026: Clicking Analyze serializes the request body as text inputText mode full",
+              "title": "cp-026: IntegrityPanel AI Detection section shows 4 StatCard components Avg Sentence avg",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1130,21 +1188,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1860,
+                      "duration": 1644,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:48.397Z",
+                      "startTime": "2026-03-16T05:15:55.889Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-e5c37-as-text-inputText-mode-full-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-440e8-components-Avg-Sentence-avg-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1152,13 +1210,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-367cfed47d9b72b18db4",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-fedcdfad1f1c167a5208",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1349,
               "column": 3
             },
             {
-              "title": "cp-027: Clicking Analyze splits the current text into paragraphs using nn before the net",
+              "title": "cp-027: IntegrityPanel Flagged Paragraphs section header is uppercase shows only paragra",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1170,21 +1228,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1869,
+                      "duration": 1771,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:50.267Z",
+                      "startTime": "2026-03-16T05:15:57.542Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-438b9-phs-using-nn-before-the-net-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-9545e-ppercase-shows-only-paragra-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1192,13 +1250,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-ec10878414d2abdcc526",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-e2bd38c0ddb1172af851",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1399,
               "column": 3
             },
             {
-              "title": "cp-028: While loading the button label changes to Analyzing",
+              "title": "cp-028: IntegrityPanel flagged paragraph format paragraphIndex1 excerpt with humanProbab",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1210,21 +1268,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1916,
+                      "duration": 1788,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:52.147Z",
+                      "startTime": "2026-03-16T05:15:59.322Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-fc56a--label-changes-to-Analyzing-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-137d2-x1-excerpt-with-humanProbab-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1232,13 +1290,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-76e238683efb6e4ab952",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-95674a6a2b9a861cc51a",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1449,
               "column": 3
             },
             {
-              "title": "cp-029: While loading the button still renders the Sparkle icon it does not swap to a sp",
+              "title": "cp-029: IntegrityPanel plagiarism no-match message CheckCircle icon No significant match",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1250,21 +1308,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1945,
+                      "duration": 1674,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:54.074Z",
+                      "startTime": "2026-03-16T05:16:01.123Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-f6420-on-it-does-not-swap-to-a-sp-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-cb7ed-e-icon-No-significant-match-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1272,13 +1330,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-eab02e0b1db025d4589d",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-9fd1dc817052eca8a5fb",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1499,
               "column": 3
             },
             {
-              "title": "cp-030: Successful responses store the parsed JSON in result",
+              "title": "cp-030: IntegrityPanel plagiarism matches truncated to first 5 via slice0 5 main page sh",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1290,21 +1348,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1975,
+                      "duration": 1674,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:56.030Z",
+                      "startTime": "2026-03-16T05:16:02.805Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-405d9-e-the-parsed-JSON-in-result-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-beddf-5-via-slice0-5-main-page-sh-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1312,13 +1370,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-fef03117b7e8158b0d92",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-0552aef9ea0c55d68e3b",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1549,
               "column": 3
             },
             {
-              "title": "cp-031: Successful responses keep the previously computed clientMetrics visible for the ",
+              "title": "cp-031: IntegrityPanel plagiarism match shows LinkSimple icon 10px inline before source ",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1330,21 +1388,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1936,
+                      "duration": 1600,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:58.015Z",
+                      "startTime": "2026-03-16T05:16:04.488Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-6a10d-entMetrics-visible-for-the--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-d7620--10px-inline-before-source--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1352,13 +1410,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-f425898e95d0083e31f6",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-5e6b29c8d1df0d46c203",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1599,
               "column": 3
             },
             {
-              "title": "cp-032: Instant metrics panel is hidden until clientMetrics exists and trimmed text leng",
+              "title": "cp-032: IntegrityPanel Citation section uses severity-specific icons XCircle 12px red-40",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1370,21 +1428,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1906,
+                      "duration": 1666,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:31:59.962Z",
+                      "startTime": "2026-03-16T05:16:06.100Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-1d81d-xists-and-trimmed-text-leng-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-467ce-c-icons-XCircle-12px-red-40-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1392,13 +1450,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-b64c6ee77af2e5477d7c",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-adf60153619ffbe37bbe",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1649,
               "column": 3
             },
             {
-              "title": "cp-033: Instant metrics panel appears for loaded document text as well as pasted text",
+              "title": "cp-033: IntegrityPanel shows Verified References subsection when verifiedReferenceslengt",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1410,21 +1468,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1908,
+                      "duration": 1677,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:32:01.879Z",
+                      "startTime": "2026-03-16T05:16:07.774Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-86584-text-as-well-as-pasted-text-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-4c020-hen-verifiedReferenceslengt-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1432,13 +1490,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-e3e42a82fb836fe68c86",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-67c2ce1f15099632d093",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1699,
               "column": 3
             },
             {
-              "title": "cp-034: Instant metrics analysis is debounced by 500ms after the last text change",
+              "title": "cp-034: IntegrityPanel Writing Quality labels differ from main page Readability not Read",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1450,21 +1508,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1912,
+                      "duration": 1678,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T04:32:03.798Z",
+                      "startTime": "2026-03-16T05:16:09.462Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-005-analysis-caf47--after-the-last-text-change-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/compliance-spec-014-compli-3fb7b-n-page-Readability-not-Read-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1472,8 +1530,8 @@
                   "status": "expected"
                 }
               ],
-              "id": "c52c74e82de806d23e77-0f3a1395ca31c1d51330",
-              "file": "analysis/spec-005.spec.ts",
+              "id": "73f35d223276ee8fbff6-79e1eb267331964a1a5d",
+              "file": "compliance/spec-014.spec.ts",
               "line": 1749,
               "column": 3
             }
@@ -1484,11 +1542,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-16T04:30:50.752Z",
-    "duration": 75713.735,
-    "expected": 35,
+    "startTime": "2026-03-16T05:13:10.295Z",
+    "duration": 181596.827,
+    "expected": 33,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 2,
     "flaky": 0
   }
 }
