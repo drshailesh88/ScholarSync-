@@ -322,7 +322,7 @@ function scoreStateConsistency() {
 function scoreAuthSecurity() {
   const d = { protectedRoutes: 0, withMiddleware: false, withCsrf: false, properCookies: false };
 
-  d.withMiddleware = existsSync(`${SRC}/middleware.ts`) || existsSync('middleware.ts');
+  d.withMiddleware = existsSync(`${SRC}/middleware.ts`) || existsSync('middleware.ts') || existsSync(`${SRC}/proxy.ts`);
   d.withCsrf = countMatches('csrf\\|CSRF', '*.ts') > 0;
 
   const routes = run(`find ${SRC}/app/api -name "route.ts" 2>/dev/null || true`);
