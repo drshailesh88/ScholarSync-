@@ -25,10 +25,16 @@ import {
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { useSystematicReviewStore } from "@/stores/systematic-review-store";
-import {
-  ScreeningPDFViewer,
-  type ScreeningPaper,
-} from "@/components/systematic-review/ScreeningPDFViewer";
+import dynamic from "next/dynamic";
+import { type ScreeningPaper } from "@/components/systematic-review/ScreeningPDFViewer";
+
+const ScreeningPDFViewer = dynamic(
+  () =>
+    import("@/components/systematic-review/ScreeningPDFViewer").then(
+      (mod) => mod.ScreeningPDFViewer
+    ),
+  { ssr: false }
+);
 
 interface ScreeningPanelProps {
   projectId: number;
