@@ -15,6 +15,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { runDeepResearch } from "@/lib/deep-research/engine";
 import type {
@@ -44,20 +45,22 @@ function mapStageId(stage: ResearchStage): string {
   return STAGE_MAP[stage] || stage;
 }
 
-interface PlanPerspective {
-  id?: string;
-  name: string;
-  description?: string;
-  queries: string[];
-  expectedPaperTypes?: string[];
-}
+const planPerspectiveSchema = z.object({
+  id: z.string().trim().min(1).optional(),
+  name: z.string().trim().min(1, "Perspective name is required"),
+  description: z.string().trim().min(1).optional(),
+  queries: z.array(z.string().trim().min(1)).min(1, "At least one query is required"),
+  expectedPaperTypes: z.array(z.string().trim().min(1)).optional(),
+});
 
-interface ExecuteRequest {
-  topic: string;
-  mode?: "quick" | "standard" | "deep" | "exhaustive";
-  perspectives: PlanPerspective[];
-  config?: Partial<ResearchConfig>;
-}
+const executeRequestSchema = z.object({
+  topic: z.string().trim().min(1, "topic is required"),
+  mode: z.enum(["quick", "standard", "deep", "exhaustive"]).optional(),
+  perspectives: z.array(planPerspectiveSchema).min(1, "perspectives array is required"),
+  config: z.record(z.string(), z.unknown()).optional(),
+});
+
+type ExecuteRequest = z.infer<typeof executeRequestSchema>;
 
 export async function POST(req: NextRequest) {
   // ── Auth ────────────────────────────────────────────────────────────
@@ -73,7 +76,21 @@ export async function POST(req: NextRequest) {
   // ── parse and validate request ──────────────────────────────────────
   let body: ExecuteRequest;
   try {
-    body = await req.json();
+    const parseResult = executeRequestSchema.safeParse(await req.json());
+    if (!parseResult.success) {
+      return new Response(
+        JSON.stringify({
+          error: "Invalid request body",
+          issues: parseResult.error.flatten(),
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    body = parseResult.data;
   } catch {
     return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
       status: 400,
@@ -82,20 +99,6 @@ export async function POST(req: NextRequest) {
   }
 
   const { topic, mode, perspectives: planPerspectives, config } = body;
-
-  if (!topic || typeof topic !== "string") {
-    return new Response(JSON.stringify({ error: "topic is required" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  if (!Array.isArray(planPerspectives) || planPerspectives.length === 0) {
-    return new Response(
-      JSON.stringify({ error: "perspectives array is required" }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
-    );
-  }
 
   // Convert PlanPerspective[] to engine Perspective[] format
   const enginePerspectives: Perspective[] = planPerspectives.map((p, idx) => ({
@@ -126,7 +129,7 @@ export async function POST(req: NextRequest) {
 
       try {
         const resolvedConfig: Partial<ResearchConfig> = {
-          ...config,
+          ...(config as Partial<ResearchConfig> | undefined),
           ...(mode ? { mode } : {}),
         };
 

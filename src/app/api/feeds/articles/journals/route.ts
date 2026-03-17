@@ -2,9 +2,25 @@ import { NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { getArticleJournals } from "@/lib/actions/feeds";
 
-export async function GET() {
-  // validate query parameters
+function validateJournalsRequest(req: Request) {
+  const searchParams = new URL(req.url).searchParams;
+  if ([...searchParams.keys()].length > 0) {
+    return NextResponse.json(
+      { error: "This endpoint does not accept query parameters" },
+      { status: 400 }
+    );
+  }
+
+  return null;
+}
+
+export async function GET(req: Request) {
   try {
+    const validationError = validateJournalsRequest(req);
+    if (validationError) {
+      return validationError;
+    }
+
     try {
       await getCurrentUserId();
     } catch {

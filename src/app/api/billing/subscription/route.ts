@@ -3,13 +3,30 @@ import { getSubscription } from "@/lib/actions/billing";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { getCurrentUserId } from "@/lib/auth";
 
+function validateSubscriptionRequest(req: Request) {
+  const searchParams = new URL(req.url).searchParams;
+  if ([...searchParams.keys()].length > 0) {
+    return NextResponse.json(
+      { error: "This endpoint does not accept query parameters" },
+      { status: 400 }
+    );
+  }
+
+  if (req.headers.get("x-invalid-request") === "true") {
+    return NextResponse.json({ error: "Bad request" }, { status: 400 });
+  }
+
+  return null;
+}
+
 export async function GET(req: Request) {
-  // validate and parse subscription request
   try {
-    await getCurrentUserId();
-    if (req.headers.get("x-invalid-request") === "true") {
-      return NextResponse.json({ error: "Bad request" }, { status: 400 });
+    const validationError = validateSubscriptionRequest(req);
+    if (validationError) {
+      return validationError;
     }
+
+    await getCurrentUserId();
 
     const [subscription, usage] = await Promise.all([
       getSubscription(),

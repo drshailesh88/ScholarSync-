@@ -2,9 +2,59 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { getCuratedFeeds } from "@/lib/actions/feeds";
 
-// GET — Browse curated journals
-// validate query parameters
-export async function GET(req: NextRequest) {
+type DiscoverFilters = {
+  category?: string;
+  specialty?: string;
+  search?: string;
+};
+
+type DiscoverValidationResult =
+  | { error: NextResponse }
+  | { filters: DiscoverFilters };
+
+function validateDiscoverFilters(req: NextRequest): DiscoverValidationResult {
+  const { searchParams } = new URL(req.url);
+  const category = searchParams.get("category")?.trim();
+  const specialty = searchParams.get("specialty")?.trim();
+  const search = searchParams.get("search")?.trim();
+
+  if (category && category.length > 100) {
+    return {
+      error: NextResponse.json(
+        { error: "Query parameter 'category' is too long" },
+        { status: 400 }
+      ),
+    };
+  }
+
+  if (specialty && specialty.length > 100) {
+    return {
+      error: NextResponse.json(
+        { error: "Query parameter 'specialty' is too long" },
+        { status: 400 }
+      ),
+    };
+  }
+
+  if (search && search.length > 200) {
+    return {
+      error: NextResponse.json(
+        { error: "Query parameter 'search' is too long" },
+        { status: 400 }
+      ),
+    };
+  }
+
+  return {
+    filters: {
+      ...(category ? { category } : {}),
+      ...(specialty ? { specialty } : {}),
+      ...(search ? { search } : {}),
+    },
+  };
+}
+
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     let userId: string;
     try {
@@ -14,24 +64,12 @@ export async function GET(req: NextRequest) {
     }
     void userId;
 
-    const { searchParams } = new URL(req.url);
+    const parsed = validateDiscoverFilters(req);
+    if ("error" in parsed) {
+      return parsed.error;
+    }
 
-    const filters: {
-      category?: string;
-      specialty?: string;
-      search?: string;
-    } = {};
-
-    const category = searchParams.get("category");
-    if (category) filters.category = category;
-
-    const specialty = searchParams.get("specialty");
-    if (specialty) filters.specialty = specialty;
-
-    const search = searchParams.get("search");
-    if (search) filters.search = search;
-
-    const result = await getCuratedFeeds(filters);
+    const result = await getCuratedFeeds(parsed.filters);
     return NextResponse.json({
       feeds: result.feeds,
       categories: result.categories,

@@ -9,6 +9,7 @@ import path from "node:path";
 // ---------------------------------------------------------------------------
 
 const LOCAL_ICONS_DIR = path.join(process.cwd(), ".data", "icons", "bioicons");
+const SAFE_ICON_NAME = /^[A-Za-z0-9._-]+\.svg$/;
 
 /**
  * Check if running in Cloudflare Workers
@@ -32,27 +33,35 @@ function getBucket() {
   return env.STORAGE;
 }
 
-// auth: public endpoint (static icon assets)
-export async function GET(req: Request) {
-  // validate query parameters
-  const { searchParams } = new URL(req.url);
-  const name = searchParams.get("name");
-
+function validateIconName(name: string | null) {
   if (!name) {
-    return NextResponse.json(
-      { error: "Missing 'name' parameter" },
-      { status: 400 }
-    );
+    return {
+      error: NextResponse.json(
+        { error: "Missing 'name' parameter" },
+        { status: 400 }
+      ),
+    };
   }
 
-  // Security: Only allow .svg files with safe names
-  if (!name.endsWith(".svg") || name.includes("..") || name.includes("/")) {
-    return NextResponse.json(
-      { error: "Invalid icon name" },
-      { status: 400 }
-    );
+  if (!SAFE_ICON_NAME.test(name)) {
+    return {
+      error: NextResponse.json(
+        { error: "Invalid icon name" },
+        { status: 400 }
+      ),
+    };
   }
 
+  return { name };
+}
+
+export async function GET(req: Request) {
+  const parsed = validateIconName(new URL(req.url).searchParams.get("name"));
+  if ("error" in parsed) {
+    return parsed.error;
+  }
+
+  const { name } = parsed;
   const key = `icons/bioicons/${name}`;
 
   try {

@@ -3,10 +3,21 @@ import { seedDevData } from "@/lib/actions/seed";
 import { logger } from "@/lib/logger";
 import { getCurrentUserId } from "@/lib/auth";
 
-// Dev-only endpoint to seed the database — validate environment before execution
-export async function POST() {
+function validateSeedAccess() {
   if (process.env.NODE_ENV === "production") {
-    return NextResponse.json({ error: "Not available in production" }, { status: 403 });
+    return NextResponse.json(
+      { error: "Not available in production" },
+      { status: 403 }
+    );
+  }
+
+  return null;
+}
+
+export async function POST() {
+  const accessError = validateSeedAccess();
+  if (accessError) {
+    return accessError;
   }
 
   try {

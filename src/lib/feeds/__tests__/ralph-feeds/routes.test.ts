@@ -144,7 +144,8 @@ describe("JF-171: Authentication enforcement", () => {
 
   it("GET /api/feeds/discover returns 401", async () => {
     const mod = await import("@/app/api/feeds/discover/route");
-    const res = await mod.GET(makeRequest("/api/feeds/discover") as unknown as import("next/server").NextRequest);
+    expect(typeof mod.GET).toBe("function");
+    const res = await mod.GET!(makeRequest("/api/feeds/discover") as unknown as import("next/server").NextRequest);
     expect(res.status).toBe(401);
   });
 

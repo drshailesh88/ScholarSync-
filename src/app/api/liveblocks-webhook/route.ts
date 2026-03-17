@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Liveblocks } from "@liveblocks/node";
+import { z } from "zod";
 import type { SlideLayout, ContentBlock } from "@/types/presentation";
 
 // ---------------------------------------------------------------------------
@@ -14,7 +15,16 @@ import type { SlideLayout, ContentBlock } from "@/types/presentation";
 //   Events: storageUpdated
 // ---------------------------------------------------------------------------
 
-// auth: webhook signature verification (Liveblocks)
+const liveblocksWebhookSchema = z.object({
+  type: z.string().trim().min(1),
+  data: z
+    .object({
+      roomId: z.string().trim().min(1).optional(),
+    })
+    .passthrough()
+    .optional(),
+});
+
 export async function POST(req: Request) {
   if (!process.env.LIVEBLOCKS_SECRET_KEY) {
     return NextResponse.json(
@@ -24,15 +34,22 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = await req.json();
-    const { type, data } = body;
+    const parseResult = liveblocksWebhookSchema.safeParse(await req.json());
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid webhook payload", issues: parseResult.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const { type, data } = parseResult.data;
 
     // We only care about storage update events
     if (type !== "storageUpdated") {
       return NextResponse.json({ ok: true });
     }
 
-    const roomId = data?.roomId as string | undefined;
+    const roomId = data?.roomId;
     if (!roomId || !roomId.startsWith("presentation:")) {
       return NextResponse.json({ ok: true });
     }

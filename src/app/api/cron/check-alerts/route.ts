@@ -14,9 +14,24 @@
 import { NextResponse } from "next/server";
 import { checkDueAlerts } from "@/lib/systematic-review/living-review";
 
+function validateCronRequest(req: Request) {
+  const searchParams = new URL(req.url).searchParams;
+  if ([...searchParams.keys()].length > 0) {
+    return NextResponse.json(
+      { error: "This endpoint does not accept query parameters" },
+      { status: 400 }
+    );
+  }
+
+  return null;
+}
+
 export async function GET(req: Request) {
-  // validate query parameters
-  // Verify cron secret (Vercel sets this header)
+  const validationError = validateCronRequest(req);
+  if (validationError) {
+    return validationError;
+  }
+
   const authHeader = req.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
 
