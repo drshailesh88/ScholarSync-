@@ -61,7 +61,11 @@ describe("POST /api/embed", () => {
     const res = await POST(makeRequest({ paperId: 42 }));
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.chunksCreated).toBe(5);
+    expect(body).toEqual({ chunksCreated: 5 });
+    expect(mockCheckRateLimit).toHaveBeenCalledWith("dev_user_001", "embed", {
+      limit: 60,
+      windowSeconds: 3600,
+    });
     expect(mockEmbedPaperChunks).toHaveBeenCalledWith(42);
   });
 
@@ -75,6 +79,23 @@ describe("POST /api/embed", () => {
   it("returns 400 for invalid paperId type", async () => {
     const res = await POST(makeRequest({ paperId: "not-a-number" }));
     expect(res.status).toBe(400);
+    await expect(res.json()).resolves.toMatchObject({ error: "Invalid input" });
+    expect(mockEmbedPaperChunks).not.toHaveBeenCalled();
+  });
+
+  it("returns the rate-limit response without attempting embeddings", async () => {
+    mockCheckRateLimit.mockResolvedValue(
+      new Response(JSON.stringify({ error: "Too many requests" }), {
+        status: 429,
+        headers: { "Content-Type": "application/json" },
+      })
+    );
+
+    const res = await POST(makeRequest({ paperId: 42 }));
+
+    expect(res.status).toBe(429);
+    await expect(res.json()).resolves.toEqual({ error: "Too many requests" });
+    expect(mockEmbedPaperChunks).not.toHaveBeenCalled();
   });
 
   it("returns 500 when auth throws (unauthenticated)", async () => {
@@ -83,5 +104,6 @@ describe("POST /api/embed", () => {
     // The embed route doesn't have a dedicated auth catch block,
     // so the error falls through to the generic catch => 500
     expect(res.status).toBe(500);
+    await expect(res.json()).resolves.toEqual({ error: "Failed to embed paper" });
   });
 });

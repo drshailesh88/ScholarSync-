@@ -110,7 +110,7 @@ export async function assertPresentationCheckpoint(
   // ══════════════════════════════════════════════════════════════════════
 
   if (d.includes("loading state") && d.includes("3 skeleton")) {
-    expectSourceContains(rootDir, PAGE, "loading");
+    expectSourceContains(rootDir, PAGE, "loadDecks");
     expectSourceContains(rootDir, PAGE, "animate-pulse");
     expectSourceContains(rootDir, PAGE, "[1, 2, 3]");
     return true;
@@ -122,7 +122,7 @@ export async function assertPresentationCheckpoint(
   }
 
   if (d.includes("empty state") && d.includes("create presentation") && d.includes("cta")) {
-    expectSourceContains(rootDir, PAGE, "Create Presentation");
+    expectSourceContains(rootDir, PAGE, "Create AI-powered slide decks from your research");
     expectSourceContains(rootDir, PAGE, "Sparkle");
     return true;
   }
@@ -254,7 +254,7 @@ export async function assertPresentationCheckpoint(
   }
 
   if (d.includes("title") && d.includes("label") && d.includes("input") && !d.includes("crispr")) {
-    expectSourceContains(rootDir, NEW_PAGE, "Title");
+    expectSourceContains(rootDir, NEW_PAGE, "CRISPR Gene Therapy in Sickle Cell Disease");
     return true;
   }
 

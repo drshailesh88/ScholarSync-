@@ -61,11 +61,31 @@ describe("GET /api/search/pubmed", () => {
   });
 
   it("returns results for a valid query", async () => {
-    const res = await GET(makeRequest({ q: "aspirin cardiology" }));
+    const res = await GET(
+      makeRequest({
+        q: "aspirin cardiology",
+        maxResults: "150",
+        page: "2",
+        yearStart: "2018",
+        yearEnd: "2024",
+      })
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.results).toBeDefined();
-    expect(mockSearchPubMed).toHaveBeenCalledOnce();
+    expect(body).toEqual({
+      results: [{ id: "pmid:456", title: "PubMed Result" }],
+      total: 1,
+    });
+    expect(mockCheckRateLimit).toHaveBeenCalledWith("dev_user_001", "search", {
+      limit: 120,
+      windowSeconds: 3600,
+    });
+    expect(mockSearchPubMed).toHaveBeenCalledWith("aspirin cardiology", {
+      maxResults: 100,
+      page: 2,
+      yearStart: 2018,
+      yearEnd: 2024,
+    });
   });
 
   it("returns 400 when query is missing", async () => {
@@ -78,6 +98,25 @@ describe("GET /api/search/pubmed", () => {
   it("returns 400 when query exceeds 500 characters", async () => {
     const res = await GET(makeRequest({ q: "x".repeat(501) }));
     expect(res.status).toBe(400);
+    await expect(res.json()).resolves.toEqual({
+      error: "Query parameter 'q' must not exceed 500 characters",
+    });
+    expect(mockSearchPubMed).not.toHaveBeenCalled();
+  });
+
+  it("returns the rate-limit response before calling PubMed", async () => {
+    mockCheckRateLimit.mockResolvedValue(
+      new Response(JSON.stringify({ error: "rate limited" }), {
+        status: 429,
+        headers: { "Content-Type": "application/json" },
+      })
+    );
+
+    const res = await GET(makeRequest({ q: "test" }));
+
+    expect(res.status).toBe(429);
+    await expect(res.json()).resolves.toEqual({ error: "rate limited" });
+    expect(mockSearchPubMed).not.toHaveBeenCalled();
   });
 
   it("returns 401 when auth fails", async () => {

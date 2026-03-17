@@ -65,10 +65,24 @@ describe("PDFChatPanel", () => {
   });
 
   it("sends message and appends assistant response", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue({ ok: true, json: async () => ({ content: "assistant answer", sourceQuotes: [] }) } as Response);
+    storeState.highlights = [
+      { paperId: "p1", pageNumber: 4, selectedText: "primary outcome", note: "important", color: "yellow" },
+      { paperId: "other-paper", pageNumber: 1, selectedText: "ignore me" },
+    ];
+    const fetchMock = vi.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      json: async () => ({ content: "assistant answer", sourceQuotes: [] }),
+    } as Response);
 
     act(() => {
-      root.render(<PDFChatPanel paperId="p1" paperMetadata={{ title: "Trial paper" } as never} onNavigateToPage={vi.fn()} />);
+      root.render(
+        <PDFChatPanel
+          paperId="p1"
+          paperMetadata={{ title: "Trial paper" } as never}
+          currentSelection={{ pageNumber: 3, text: "selected text" } as never}
+          onNavigateToPage={vi.fn()}
+        />
+      );
     });
 
     const textarea = container.querySelector("textarea") as HTMLTextAreaElement;
@@ -83,7 +97,32 @@ describe("PDFChatPanel", () => {
       container.querySelector('button[aria-label="Send message"]')?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    expect(addChatMessageMock).toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledWith("/api/research/pdf-chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paperId: "p1",
+        message: '[Selection from page 3: "selected text"]\n\nWhat is outcome?',
+        highlights: [
+          {
+            pageNumber: 4,
+            text: "primary outcome",
+            note: "important",
+            color: "yellow",
+            targetSection: undefined,
+          },
+        ],
+        paperMetadata: { title: "Trial paper" },
+      }),
+    });
+    expect(addChatMessageMock).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ role: "user", content: "What is outcome?" })
+    );
+    expect(addChatMessageMock).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ role: "assistant", content: "assistant answer" })
+    );
     expect(setChatLoadingMock).toHaveBeenCalledWith(true);
     expect(setChatLoadingMock).toHaveBeenLastCalledWith(false);
   });

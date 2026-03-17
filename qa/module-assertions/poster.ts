@@ -85,12 +85,12 @@ export async function assertPosterCheckpoint(
   // ══════════════════════════════════════════════════════════════════════
 
   if (d.includes("source selection") || (d.includes("step 0") && d.includes("source"))) {
-    expectSourceMatches(rootDir, NEW_PAGE, /source|Source/);
+    expectSourceMatches(rootDir, NEW_PAGE, /Choose where to generate your poster from|sourceType=\{sourceType\}/);
     return true;
   }
 
   if (d.includes("7 source types") || (d.includes("source") && d.includes("types") && d.includes("cards"))) {
-    expectSourceMatches(rootDir, NEW_PAGE, /source|papers|document|text/i);
+    expectSourceMatches(rootDir, NEW_PAGE, /sourceType === "deep_research"|<SourceSelector/);
     return true;
   }
 
@@ -145,7 +145,7 @@ export async function assertPosterCheckpoint(
   }
 
   if (d.includes("validation") && d.includes("source") && (d.includes("error") || d.includes("required"))) {
-    expectSourceMatches(rootDir, NEW_PAGE, /valid|error|required/i);
+    expectSourceMatches(rootDir, NEW_PAGE, /const canProceedStep0 =|rawText\.trim\(\)\.length > 50/);
     return true;
   }
 
@@ -193,7 +193,7 @@ export async function assertPosterCheckpoint(
   // ══════════════════════════════════════════════════════════════════════
 
   if (d.includes("step 2") && (d.includes("theme") || d.includes("options"))) {
-    expectSourceMatches(rootDir, NEW_PAGE, /theme|Theme/);
+    expectSourceMatches(rootDir, NEW_PAGE, /Object\.entries\(PRESET_THEMES\)|Choose dimensions and a poster template/);
     return true;
   }
 
@@ -222,7 +222,7 @@ export async function assertPosterCheckpoint(
   // ══════════════════════════════════════════════════════════════════════
 
   if (d.includes("step 3") && (d.includes("progress") || d.includes("generation"))) {
-    expectSourceMatches(rootDir, NEW_PAGE, /progress|Progress|generating/i);
+    expectSourceMatches(rootDir, NEW_PAGE, /AI is creating your conference poster|label="Generating poster sections"/);
     return true;
   }
 
