@@ -80,22 +80,22 @@ export async function assertFeedsCheckpoint(
   }
 
   if (d.includes("unread") && d.includes("badge") && d.includes("article")) {
-    expectSourceContains(rootDir, PAGE, "unread");
+    expectSourceContains(rootDir, PAGE, 'unread article{totalUnread !== 1 ? "s" : ""}');
     return true;
   }
 
   if (d.includes("export") && d.includes("button") && d.includes("header")) {
-    expectSourceContains(rootDir, PAGE, "Export");
+    expectSourceContains(rootDir, PAGE, "/api/feeds/opml/export");
     return true;
   }
 
   if (d.includes("import") && d.includes("button") && d.includes("header")) {
-    expectSourceContains(rootDir, PAGE, "Import");
+    expectSourceContains(rootDir, PAGE, "/api/feeds/opml/import");
     return true;
   }
 
   if (d.includes("mark all read") && d.includes("button")) {
-    expectSourceContains(rootDir, PAGE, "Mark all read");
+    expectSourceContains(rootDir, PAGE, "markAllRead(selectedFeedId ?? undefined)");
     return true;
   }
 

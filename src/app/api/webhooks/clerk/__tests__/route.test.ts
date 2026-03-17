@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { NextRequest } from "next/server";
+import { users } from "@/lib/db/schema";
 
 const mockDb = vi.hoisted(() => ({
   insert: vi.fn(),
@@ -7,6 +8,11 @@ const mockDb = vi.hoisted(() => ({
 }));
 const mockLoggerWithRequestId = vi.hoisted(() => vi.fn());
 const mockLogError = vi.hoisted(() => vi.fn());
+
+let insertValuesMock: ReturnType<typeof vi.fn>;
+let onConflictDoUpdateMock: ReturnType<typeof vi.fn>;
+let updateSetMock: ReturnType<typeof vi.fn>;
+let updateWhereMock: ReturnType<typeof vi.fn>;
 
 vi.mock("@/lib/db", () => ({ db: mockDb }));
 
@@ -41,13 +47,13 @@ describe("POST /api/webhooks/clerk", () => {
     vi.clearAllMocks();
     mockLoggerWithRequestId.mockReturnValue({ error: mockLogError });
 
-    const onConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
-    const values = vi.fn().mockReturnValue({ onConflictDoUpdate });
-    mockDb.insert.mockReturnValue({ values });
+    onConflictDoUpdateMock = vi.fn().mockResolvedValue(undefined);
+    insertValuesMock = vi.fn().mockReturnValue({ onConflictDoUpdate: onConflictDoUpdateMock });
+    mockDb.insert.mockReturnValue({ values: insertValuesMock });
 
-    const where = vi.fn().mockResolvedValue(undefined);
-    const set = vi.fn().mockReturnValue({ where });
-    mockDb.update.mockReturnValue({ set });
+    updateWhereMock = vi.fn().mockResolvedValue(undefined);
+    updateSetMock = vi.fn().mockReturnValue({ where: updateWhereMock });
+    mockDb.update.mockReturnValue({ set: updateSetMock });
   });
 
   it("upserts user data for user.created event", async () => {
@@ -67,6 +73,22 @@ describe("POST /api/webhooks/clerk", () => {
     expect(res.status).toBe(200);
     await expect(res.json()).resolves.toEqual({ success: true });
     expect(mockDb.insert).toHaveBeenCalledOnce();
+    expect(mockDb.insert).toHaveBeenCalledWith(users);
+    expect(insertValuesMock).toHaveBeenCalledWith({
+      id: "user_1",
+      email: "ada@example.com",
+      full_name: "Ada Lovelace",
+      avatar_url: "https://avatar",
+    });
+    expect(onConflictDoUpdateMock).toHaveBeenCalledWith({
+      target: users.id,
+      set: expect.objectContaining({
+        email: "ada@example.com",
+        full_name: "Ada Lovelace",
+        avatar_url: "https://avatar",
+        updated_at: expect.any(Date),
+      }),
+    });
   });
 
   it("returns 400 when required payload shape is missing", async () => {

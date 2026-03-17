@@ -97,7 +97,7 @@ export async function assertSlidesAiCheckpoint(
   // ── Background Picker ──
   if (d.includes("background") && (d.includes("picker") || d.includes("select"))) {
     expect(fileExists(rootDir, CARD_BG_PICKER)).toBe(true);
-    expectSourceContains(rootDir, CARD_BG_PICKER, "background");
+    expectSourceContains(rootDir, CARD_BG_PICKER, "Set background color");
     return true;
   }
 
@@ -118,14 +118,14 @@ export async function assertSlidesAiCheckpoint(
   // ── Smart Layout Templates ──
   if (d.includes("smart layout") || d.includes("template")) {
     expect(fileExists(rootDir, SMART_TEMPLATES)).toBe(true);
-    expectSourceContains(rootDir, SMART_TEMPLATES, "template");
+    expectSourceContains(rootDir, SMART_TEMPLATES, "SMART_LAYOUTS");
     return true;
   }
 
   // ── Export Deck ──
   if (d.includes("export") && (d.includes("deck") || d.includes("presentation") || d.includes("pdf") || d.includes("pptx"))) {
     expect(fileExists(rootDir, EXPORT_DECK)).toBe(true);
-    expectSourceContains(rootDir, EXPORT_DECK, "export");
+    expectSourceContains(rootDir, EXPORT_DECK, 'format === "pptx" ? "/api/export/pptx" : "/api/export/presentation-pdf"');
     return true;
   }
 
@@ -188,49 +188,49 @@ export async function assertSlidesAiCheckpoint(
   // ── AI Outline Generation API ──
   if (d.includes("outline") && (d.includes("generat") || d.includes("api"))) {
     expect(fileExists(rootDir, OUTLINE_ROUTE)).toBe(true);
-    expectSourceContains(rootDir, OUTLINE_ROUTE, "POST");
+    expectSourceContains(rootDir, OUTLINE_ROUTE, 'feature: "slides-outline"');
     return true;
   }
 
   // ── AI Streaming Generation ──
   if (d.includes("stream") && d.includes("generat")) {
     expect(fileExists(rootDir, GENERATE_STREAM)).toBe(true);
-    expectSourceContains(rootDir, GENERATE_STREAM, "POST");
+    expectSourceContains(rootDir, GENERATE_STREAM, "collectMissingImageBlocks");
     return true;
   }
 
   // ── AI Image Generation ──
   if (d.includes("image") && d.includes("generat")) {
     expect(fileExists(rootDir, GENERATE_IMAGE)).toBe(true);
-    expectSourceContains(rootDir, GENERATE_IMAGE, "POST");
+    expectSourceContains(rootDir, GENERATE_IMAGE, "generateSlideImage");
     return true;
   }
 
   // ── AI Visual Generation ──
   if (d.includes("visual") && d.includes("generat")) {
     expect(fileExists(rootDir, GENERATE_VISUAL)).toBe(true);
-    expectSourceContains(rootDir, GENERATE_VISUAL, "POST");
+    expectSourceContains(rootDir, GENERATE_VISUAL, "validateVisualResponse");
     return true;
   }
 
   // ── Chat Route ──
   if (d.includes("chat") && (d.includes("slide") || d.includes("ai"))) {
     expect(fileExists(rootDir, CHAT_ROUTE)).toBe(true);
-    expectSourceContains(rootDir, CHAT_ROUTE, "POST");
+    expectSourceContains(rootDir, CHAT_ROUTE, 'feature: "slides-chat"');
     return true;
   }
 
   // ── Regenerate Route ──
   if (d.includes("regenerat")) {
     expect(fileExists(rootDir, REGENERATE_ROUTE)).toBe(true);
-    expectSourceContains(rootDir, REGENERATE_ROUTE, "POST");
+    expectSourceContains(rootDir, REGENERATE_ROUTE, "getRegenerateSlideSystemPrompt");
     return true;
   }
 
   // ── Mode Selector (switching between slides/gamma mode) ──
   if (d.includes("mode") && (d.includes("switch") || d.includes("selector") || d.includes("toggle"))) {
     expect(fileExists(rootDir, MODE_SELECTOR)).toBe(true);
-    expectSourceContains(rootDir, MODE_SELECTOR, "mode");
+    expectSourceContains(rootDir, MODE_SELECTOR, 'onClick={() => onModeChange("slides")}');
     return true;
   }
 

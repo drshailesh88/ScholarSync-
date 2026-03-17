@@ -169,7 +169,7 @@ export async function assertIllustrateCheckpoint(
   }
 
   if (d.includes("action cards") && d.includes("link") && d.includes("not custom button")) {
-    expectSourceContains(rootDir, WELCOME, "Link");
+    expectSourceContains(rootDir, WELCOME, "import Link from 'next/link'");
     return true;
   }
 

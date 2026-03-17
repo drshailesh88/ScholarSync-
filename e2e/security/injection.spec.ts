@@ -85,6 +85,16 @@ test.describe("API injection resistance", () => {
               `${method} ${route.endpoint} (${attackCase.name}) -> ${response.status()}`
             );
           }
+
+          if (attackCase.name === "xss") {
+            const contentType = response.headers()["content-type"] ?? "";
+            if (contentType.includes("text/html")) {
+              const body = await response.text();
+              if (body.includes(attackCase.value) || body.includes("onerror=alert(1)")) {
+                offenders.push(`${method} ${route.endpoint} reflected raw XSS payload in HTML`);
+              }
+            }
+          }
         }
       }
 

@@ -6,20 +6,29 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ImageBrowser } from "../image-browser";
 
 vi.mock("next/image", () => ({
-  // eslint-disable-next-line @next/next/no-img-element
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img {...props} alt={props.alt || "image"} />,
+  default: ({
+    alt,
+    fill: _fill,
+    unoptimized: _unoptimized,
+    ...props
+  }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean; unoptimized?: boolean }) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img {...props} alt={alt || "image"} />
+  ),
 }));
 
 describe("ImageBrowser", () => {
   let container: HTMLDivElement;
   let root: Root;
   const onInsertImage = vi.fn();
+  const writeTextMock = vi.fn();
 
   beforeEach(() => {
     vi.restoreAllMocks();
     onInsertImage.mockReset();
+    writeTextMock.mockReset();
     Object.defineProperty(globalThis, "navigator", {
-      value: { clipboard: { writeText: vi.fn() } },
+      value: { clipboard: { writeText: writeTextMock } },
       configurable: true,
     });
     container = document.createElement("div");
@@ -74,6 +83,20 @@ describe("ImageBrowser", () => {
 
     expect(container.textContent).toContain("figure-one.png");
     expect(container.textContent).toContain("Click to insert");
+
+    const buttons = Array.from(container.querySelectorAll("button"));
+    const insertButton = buttons.find((button) => button.getAttribute("title")?.includes("includegraphics"));
+    const copyPathButton = buttons.find((button) => button.getAttribute("title") === "Copy path");
+
+    await act(async () => {
+      insertButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      copyPathButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    expect(onInsertImage).toHaveBeenCalledWith(
+      "\\includegraphics[width=\\linewidth]{figures/figure-one.png}"
+    );
+    expect(writeTextMock).toHaveBeenCalledWith("figures/figure-one.png");
   });
 
   it("shows validation error for invalid file type", async () => {
