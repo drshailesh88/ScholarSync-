@@ -9,6 +9,7 @@ const hasClerkKeys =
 
 const DEV_USER_ID = "dev_user_001";
 const isDev = process.env.NODE_ENV === "development";
+const isStrictPlaywrightAuth = process.env.PLAYWRIGHT_AUTH_STRICT === "1";
 
 // Singleton Clerk client for server-side usage
 let _clerkClient: ReturnType<typeof createClerkClient> | null = null;
@@ -34,7 +35,24 @@ async function getSessionToken(): Promise<string | null> {
   }
 }
 
+async function getPlaywrightBypassUserId(): Promise<string | null> {
+  if (!isDev) return null;
+
+  try {
+    const cookieStore = await cookies();
+    if (cookieStore.get("__playwright")?.value !== "true") {
+      return null;
+    }
+
+    return cookieStore.get("__playwright_user")?.value ?? DEV_USER_ID;
+  } catch {
+    return null;
+  }
+}
+
 export async function getCurrentUserId(): Promise<string> {
+  const playwrightBypassUserId = await getPlaywrightBypassUserId();
+
   if (hasClerkKeys) {
     const token = await getSessionToken();
     if (token) {
@@ -48,16 +66,20 @@ export async function getCurrentUserId(): Promise<string> {
       }
     }
 
+    if (playwrightBypassUserId) return playwrightBypassUserId;
+
     // In dev, fall back to a synthetic user when no session cookie is present
     // (e.g. curl, server-side calls, preview environments)
-    if (isDev) return DEV_USER_ID;
+    if (isDev && !isStrictPlaywrightAuth) return DEV_USER_ID;
 
     throw new Error("Not authenticated");
   }
 
   // Dev fallback ONLY works in development. In production, missing Clerk keys is a fatal error.
   if (isDev) {
-    return DEV_USER_ID;
+    if (playwrightBypassUserId) return playwrightBypassUserId;
+    if (!isStrictPlaywrightAuth) return DEV_USER_ID;
+    throw new Error("Not authenticated");
   }
 
   throw new Error(
