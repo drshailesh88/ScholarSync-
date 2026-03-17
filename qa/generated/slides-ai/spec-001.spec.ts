@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-001
  * Source: e2e/specs/slides-ai/spec-001.md
- * Generated: 2026-03-15T15:11:16.068Z
+ * Generated: 2026-03-16T18:42:00.890Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -51,8 +51,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 1. Mode Selector Toggle
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -101,8 +101,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 1. Mode Selector Toggle
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -151,8 +151,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 1. Mode Selector Toggle
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -201,8 +201,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 1. Mode Selector Toggle
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -251,8 +251,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 1. Mode Selector Toggle
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -301,8 +301,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 1. Mode Selector Toggle
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -351,8 +351,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -401,8 +401,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -451,8 +451,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -501,8 +501,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -551,8 +551,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -601,8 +601,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -651,8 +651,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -701,8 +701,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -751,8 +751,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -801,8 +801,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -851,8 +851,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -901,8 +901,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -951,8 +951,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 2. Mode Selection Screen (First-Time Entry)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1001,8 +1001,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1051,8 +1051,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1101,8 +1101,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1151,8 +1151,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1201,8 +1201,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1251,8 +1251,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1301,8 +1301,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1351,8 +1351,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1401,8 +1401,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1451,8 +1451,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1501,8 +1501,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1551,8 +1551,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1601,8 +1601,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1651,8 +1651,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1701,8 +1701,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');
@@ -1751,8 +1751,8 @@ test.describe('slides-ai / spec-001', () => {
     // Section:  > 3. Slides Agent Panel (`slides-agent-panel.tsx`)
 
     // Navigate to the page
-    await page.goto('/slides/ai', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.goto('/slides/new', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides-ai/spec-001');

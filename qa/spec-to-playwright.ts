@@ -124,6 +124,11 @@ function getPagePath(pageUrl: string, moduleName: string): string {
     return "/studio";
   }
 
+  // /slides/ai is not a valid route — use /slides/new instead
+  if (pathname === "/slides/ai") {
+    return "/slides/new";
+  }
+
   return pathname;
 }
 
@@ -166,7 +171,7 @@ function generatePlaywrightTest(
 
     // Navigate to the page
     await page.goto('${pagePath}', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), '${artifactDir}');

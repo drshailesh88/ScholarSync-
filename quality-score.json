@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-03-16T15:48:00.028Z",
-  "composite": 85.7,
-  "temperature": "COLD",
+  "timestamp": "2026-03-16T19:22:01.421Z",
+  "composite": 96.16,
+  "temperature": "FROZEN",
   "currentPhase": 5,
   "phaseAverages": {
-    "1": 99,
-    "2": 73,
+    "1": 97,
+    "2": 99,
     "3": 100,
-    "4": 100,
-    "5": 100
+    "4": 87,
+    "5": 95
   },
   "weakest": {
-    "dimension": "specPassRate",
-    "label": "Spec Pass Rate",
-    "score": 49.47
+    "dimension": "authSecurity",
+    "label": "Auth Security",
+    "score": 60
   },
   "dimensions": {
     "typescriptStrict": {
@@ -22,7 +22,7 @@
         "errors": 0,
         "anyCount": 173,
         "strictEnabled": true,
-        "totalLines": 502789
+        "totalLines": 502486
       },
       "weight": 0.08,
       "phase": 1,
@@ -50,43 +50,43 @@
       "label": "Error Boundaries"
     },
     "apiHardening": {
-      "score": 99.11,
+      "score": 92.14,
       "details": {
         "total": 168,
-        "withTryCatch": 167,
-        "withValidation": 168,
-        "withAuth": 162,
-        "withProperStatus": 168
+        "withTryCatch": 165,
+        "withValidation": 141,
+        "withAuth": 154,
+        "withProperStatus": 161
       },
       "weight": 0.07,
       "phase": 1,
       "label": "API Route Hardening"
     },
     "specPassRate": {
-      "score": 49.47,
+      "score": 100,
       "details": {
         "totalSpecs": 376,
-        "passingSpecs": 186
+        "passingSpecs": 376
       },
       "weight": 0.12,
       "phase": 2,
       "label": "Spec Pass Rate"
     },
     "checkpointPassRate": {
-      "score": 49.74,
+      "score": 99.59,
       "details": {
         "totalCheckpoints": 12804,
-        "passingCheckpoints": 6369
+        "passingCheckpoints": 12752
       },
       "weight": 0.1,
       "phase": 2,
       "label": "Checkpoint Pass Rate"
     },
     "moduleCoverage": {
-      "score": 65,
+      "score": 100,
       "details": {
         "totalModules": 20,
-        "coveredModules": 13,
+        "coveredModules": 20,
         "modules": [
           "dashboard",
           "onboarding",
@@ -115,11 +115,11 @@
       "label": "Module Coverage"
     },
     "assertionModuleCoverage": {
-      "score": 100,
+      "score": 95,
       "details": {
         "totalModules": 20,
-        "assertionFiles": 20,
-        "coveredAssertionFiles": 20
+        "assertionFiles": 19,
+        "coveredAssertionFiles": 19
       },
       "weight": 0.05,
       "phase": 2,
@@ -183,10 +183,10 @@
       "label": "State Consistency"
     },
     "authSecurity": {
-      "score": 100,
+      "score": 60,
       "details": {
-        "protectedRoutes": 12,
-        "withMiddleware": true,
+        "protectedRoutes": 14,
+        "withMiddleware": false,
         "withCsrf": true,
         "properCookies": false
       },
@@ -195,10 +195,10 @@
       "label": "Auth Security"
     },
     "inputValidation": {
-      "score": 99.54,
+      "score": 99.53,
       "details": {
-        "zodUsage": 1666,
-        "manualValidation": 297,
+        "zodUsage": 1637,
+        "manualValidation": 260,
         "rawBodyUsage": 9
       },
       "weight": 0.05,
@@ -218,9 +218,9 @@
       "label": "Dependency Security"
     },
     "accessibility": {
-      "score": 100,
+      "score": 95,
       "details": {
-        "missingAlt": 0,
+        "missingAlt": 1,
         "missingLabels": 0,
         "ariaUsage": 825,
         "jsxA11yPlugin": true,

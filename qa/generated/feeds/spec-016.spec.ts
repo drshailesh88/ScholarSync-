@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-016
  * Source: e2e/specs/feeds/spec-016.md
- * Generated: 2026-03-14T19:02:54.849Z
+ * Generated: 2026-03-16T16:43:09.486Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -81,7 +81,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 Messages area: `overflow-y-auto px-4 py-3 space-y-3 min-h-0`');
+      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "Messages area: `overflow-y-auto px-4 py-3 space-y-3 min-h-0`");
     }
 
 
@@ -102,7 +102,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -131,7 +131,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 Empty state icon container: `w-12 h-12 rounded-2xl bg-brand/10` with Sparkle (24px)');
+      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "Empty state icon container: `w-12 h-12 rounded-2xl bg-brand/10` with Sparkle (24px)");
     }
 
 
@@ -152,7 +152,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -181,7 +181,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 Empty state text: "Ask me about this paper" (`text-sm font-medium text-ink mb-1`)');
+      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "Empty state text: \"Ask me about this paper\" (`text-sm font-medium text-ink mb-1`)");
     }
 
 
@@ -202,7 +202,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -231,7 +231,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 Empty state helper: "Click Summarize for a quick overview, or ask any question about the study." (`text-xs text-ink-muted max-w-[250px]`)');
+      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Empty state helper: \"Click Summarize for a quick overview, or ask any question about the study.\" (`text-xs text-ink-muted max-w-[250px]`)");
     }
 
 
@@ -252,7 +252,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -281,7 +281,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 User messages: `bg-surface-raised text-ink` aligned right (`justify-end`)');
+      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "User messages: `bg-surface-raised text-ink` aligned right (`justify-end`)");
     }
 
 
@@ -302,7 +302,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -331,7 +331,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 Assistant messages: `bg-brand/5 text-ink` aligned left (`justify-start`) with Sparkle avatar');
+      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "Assistant messages: `bg-brand/5 text-ink` aligned left (`justify-start`) with Sparkle avatar");
     }
 
 
@@ -352,7 +352,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -381,7 +381,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 Assistant avatar: `w-6 h-6 rounded-full bg-brand/20` with `Sparkle` (12px)');
+      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "Assistant avatar: `w-6 h-6 rounded-full bg-brand/20` with `Sparkle` (12px)");
     }
 
 
@@ -402,7 +402,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -431,7 +431,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 Message text: `whitespace-pre-wrap text-xs leading-relaxed`');
+      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "Message text: `whitespace-pre-wrap text-xs leading-relaxed`");
     }
 
 
@@ -452,7 +452,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -481,7 +481,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 Related papers in messages use `RelatedPaperCards` with `dense` prop');
+      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "Related papers in messages use `RelatedPaperCards` with `dense` prop");
     }
 
 
@@ -502,7 +502,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -531,7 +531,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 Related-papers message width: `max-w-[95%]` (vs normal `max-w-[85%]`)');
+      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Related-papers message width: `max-w-[95%]` (vs normal `max-w-[85%]`)");
     }
 
 
@@ -552,7 +552,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -581,7 +581,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 Loading Sparkle icon uses `animate-spin` class (separate from bouncing dots)');
+      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "Loading Sparkle icon uses `animate-spin` class (separate from bouncing dots)");
     }
 
 
@@ -602,7 +602,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -631,7 +631,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 Bouncing dot delays: 0ms, `[animation-delay:150ms]`, `[animation-delay:300ms]`');
+      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "Bouncing dot delays: 0ms, `[animation-delay:150ms]`, `[animation-delay:300ms]`");
     }
 
 
@@ -652,7 +652,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -681,7 +681,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 Bouncing dot styling: `w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce`');
+      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "Bouncing dot styling: `w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce`");
     }
 
 
@@ -702,7 +702,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -731,7 +731,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 Suggestion chips header text: "Try asking:" (`text-xs text-ink-muted font-medium`)');
+      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "Suggestion chips header text: \"Try asking:\" (`text-xs text-ink-muted font-medium`)");
     }
 
 
@@ -752,7 +752,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -781,7 +781,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 Suggestion chip: `w-full text-left px-3 py-2 rounded-lg text-xs` with `line-clamp-2`');
+      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "Suggestion chip: `w-full text-left px-3 py-2 rounded-lg text-xs` with `line-clamp-2`");
     }
 
 
@@ -802,7 +802,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -831,7 +831,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 Suggestion chip hover: `hover:border-brand/30`');
+      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "Suggestion chip hover: `hover:border-brand/30`");
     }
 
 
@@ -852,7 +852,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -881,7 +881,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 Suggestion chips disabled when `copilotLoading` is true');
+      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Suggestion chips disabled when `copilotLoading` is true");
     }
 
 
@@ -902,7 +902,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -931,7 +931,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 Chat input form border: `border-t border-border-subtle`');
+      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "Chat input form border: `border-t border-border-subtle`");
     }
 
 
@@ -952,7 +952,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -981,7 +981,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 Chat input styling: `rounded-xl bg-surface-raised border border-border text-ink text-xs`');
+      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "Chat input styling: `rounded-xl bg-surface-raised border border-border text-ink text-xs`");
     }
 
 
@@ -1002,7 +1002,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 Send button: `p-2 rounded-xl bg-brand text-white` with `PaperPlaneRight` icon (16px)');
+      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "Send button: `p-2 rounded-xl bg-brand text-white` with `PaperPlaneRight` icon (16px)");
     }
 
 
@@ -1052,7 +1052,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 Send button disabled: `copilotLoading || !input.trim()` (both conditions)');
+      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "Send button disabled: `copilotLoading || !input.trim()` (both conditions)");
     }
 
 
@@ -1102,7 +1102,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 Form submit: prevents default, trims input, clears local input state, then calls `sendCopilotMessage`');
+      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "Form submit: prevents default, trims input, clears local input state, then calls `sendCopilotMessage`");
     }
 
 
@@ -1152,7 +1152,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 Auto-scroll: `messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })` triggered on `copilotMessages` change');
+      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "Auto-scroll: `messagesEndRef.current?.scrollIntoView({ behavior: \"smooth\" })` triggered on `copilotMessages` change");
     }
 
 
@@ -1202,7 +1202,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 Modal title: "Add Feed" (not "Add a Feed" or "New Feed")');
+      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "Modal title: \"Add Feed\" (not \"Add a Feed\" or \"New Feed\")");
     }
 
 
@@ -1252,7 +1252,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 Modal max-width: `max-w-xl`');
+      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Modal max-width: `max-w-xl`");
     }
 
 
@@ -1302,7 +1302,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 Tab keys: `"url"` and `"browse"` (not `"Add URL"` / `"Browse Journals"`)');
+      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Tab keys: `\"url\"` and `\"browse\"` (not `\"Add URL\"` / `\"Browse Journals\"`)");
     }
 
 
@@ -1352,7 +1352,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 RSS input icon: `Rss` (16px) positioned `left-3 top-1/2 -translate-y-1/2`');
+      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "RSS input icon: `Rss` (16px) positioned `left-3 top-1/2 -translate-y-1/2`");
     }
 
 
@@ -1402,7 +1402,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 RSS input type: `url` (enables browser URL validation)');
+      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "RSS input type: `url` (enables browser URL validation)");
     }
 
 
@@ -1452,7 +1452,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 PubMed input icon: `MagnifyingGlass` (16px) positioned same as RSS');
+      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "PubMed input icon: `MagnifyingGlass` (16px) positioned same as RSS");
     }
 
 
@@ -1502,7 +1502,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 PubMed input type: `text`');
+      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "PubMed input type: `text`");
     }
 
 
@@ -1552,7 +1552,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 RSS Add button text: "Adding..." during subscribe, "Add" normally');
+      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "RSS Add button text: \"Adding...\" during subscribe, \"Add\" normally");
     }
 
 
@@ -1602,7 +1602,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 PubMed Create Feed button text: "Creating..." during subscribe, "Create Feed" normally');
+      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "PubMed Create Feed button text: \"Creating...\" during subscribe, \"Create Feed\" normally");
     }
 
 
@@ -1652,7 +1652,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 Divider: "or" text centered between `border-t border-border-subtle` lines');
+      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Divider: \"or\" text centered between `border-t border-border-subtle` lines");
     }
 
 
@@ -1702,7 +1702,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 Error styling: `text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-xl`');
+      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Error styling: `text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-xl`");
     }
 
 
@@ -1752,7 +1752,7 @@ test.describe('feeds / spec-016', () => {
 
     // Navigate to the page
     await page.goto('/feeds', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/feeds/spec-016');
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 Successful URL add: clears `feedUrl` then calls `onClose()`');
+      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "Successful URL add: clears `feedUrl` then calls `onClose()`");
     }
 
 

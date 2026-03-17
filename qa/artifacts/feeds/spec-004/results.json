@@ -3,7 +3,7 @@
     "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
     "rootDir": "/home/user/ScholarSync-/qa/generated",
     "forbidOnly": true,
-    "fullyParallel": false,
+    "fullyParallel": true,
     "globalSetup": null,
     "globalTeardown": null,
     "globalTimeout": 0,
@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 4
     },
     "preserveOutput": "always",
     "reporter": [
@@ -37,7 +37,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "qa-chromium",
         "name": "qa-chromium",
@@ -52,8 +52,8 @@
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.56.0",
-    "workers": 1,
+    "version": "1.56.1",
+    "workers": 4,
     "webServer": {
       "command": "PORT=3001 npm run dev",
       "port": 3001,
@@ -65,20 +65,20 @@
   },
   "suites": [
     {
-      "title": "deep-research/spec-010.spec.ts",
-      "file": "deep-research/spec-010.spec.ts",
+      "title": "feeds/spec-004.spec.ts",
+      "file": "feeds/spec-004.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "deep-research / spec-010",
-          "file": "deep-research/spec-010.spec.ts",
+          "title": "feeds / spec-004",
+          "file": "feeds/spec-004.spec.ts",
           "line": 36,
           "column": 6,
           "specs": [
             {
-              "title": "cp-000: The error-state retry button label is exactly Try Again",
+              "title": "cp-000: GET apifeedsarticlesidrelated limit 5",
               "ok": true,
               "tags": [],
               "tests": [
@@ -93,18 +93,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 20596,
+                      "duration": 3256,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:32:23.675Z",
+                      "startTime": "2026-03-16T16:37:23.411Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-8df3a--label-is-exactly-Try-Again-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--48545-dsarticlesidrelated-limit-5-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -112,13 +112,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-d66920f016cd15776f83",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-2d2389587446622e15dd",
+              "file": "feeds/spec-004.spec.ts",
               "line": 49,
               "column": 3
             },
             {
-              "title": "cp-001: Try Again resets only pageState idle and error null",
+              "title": "cp-001: POST apipaperssave for saving related papers",
               "ok": true,
               "tags": [],
               "tests": [
@@ -130,21 +130,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3000,
+                      "duration": 3046,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:32:44.451Z",
+                      "startTime": "2026-03-16T16:37:23.470Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-c15ae-geState-idle-and-error-null-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--90cba-e-for-saving-related-papers-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -152,13 +152,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-4576b6f073c85815da71",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-d8e0b6827bb7a0e0ffd8",
+              "file": "feeds/spec-004.spec.ts",
               "line": 99,
               "column": 3
             },
             {
-              "title": "cp-002: Loading a saved session sets pageState running and progressMessage Loading saved",
+              "title": "cp-002: Sparkle icon in brand20 background",
               "ok": true,
               "tags": [],
               "tests": [
@@ -170,21 +170,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 2669,
+                      "duration": 3059,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:32:47.477Z",
+                      "startTime": "2026-03-16T16:37:23.427Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-1b603-ogressMessage-Loading-saved-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--85def--icon-in-brand20-background-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -192,13 +192,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-eeb693b12f6fb90211df",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-c39a2b02fbf3efb1fb94",
+              "file": "feeds/spec-004.spec.ts",
               "line": 149,
               "column": 3
             },
             {
-              "title": "cp-003: handleLoadSession fetches GET apideep-researchsessionsid",
+              "title": "cp-003: Title AI Copilot",
               "ok": true,
               "tags": [],
               "tests": [
@@ -210,21 +210,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2236,
+                      "duration": 3095,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:32:50.171Z",
+                      "startTime": "2026-03-16T16:37:23.426Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-41475--apideep-researchsessionsid-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-003-Title-AI-Copilot-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -232,13 +232,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-965223416c8802f0a00a",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-3c6e74fba106d2d45e0a",
+              "file": "feeds/spec-004.spec.ts",
               "line": 199,
               "column": 3
             },
             {
-              "title": "cp-004: The synthetic loaded report always sets summary perspectives contradictions keyF",
+              "title": "cp-004: Close button X icon",
               "ok": true,
               "tags": [],
               "tests": [
@@ -250,21 +250,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2870,
+                      "duration": 2614,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:32:52.431Z",
+                      "startTime": "2026-03-16T16:37:26.721Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-3fd11-ectives-contradictions-keyF-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-004-Close-button-X-icon-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -272,13 +272,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-3b67ab0518e960692b71",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-32442b5a92cac4d9ea43",
+              "file": "feeds/spec-004.spec.ts",
               "line": 249,
               "column": 3
             },
             {
-              "title": "cp-005: Loading a saved session also sets topic datatopic mode datamode as ResearchMode ",
+              "title": "cp-005: Article title line-clamp-2",
               "ok": true,
               "tags": [],
               "tests": [
@@ -290,21 +290,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3943,
+                      "duration": 2537,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:32:55.314Z",
+                      "startTime": "2026-03-16T16:37:26.710Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-e58b5-e-datamode-as-ResearchMode--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--f3c2e--Article-title-line-clamp-2-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -312,13 +312,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-19b28357ddf09f2f06dc",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-70b9dd8a6520c7d8497c",
+              "file": "feeds/spec-004.spec.ts",
               "line": 299,
               "column": 3
             },
             {
-              "title": "cp-006: A saved-session load failure always sets the exact error string Failed to load s",
+              "title": "cp-006: Authors journal year",
               "ok": true,
               "tags": [],
               "tests": [
@@ -330,21 +330,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 6884,
+                      "duration": 2568,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:32:59.273Z",
+                      "startTime": "2026-03-16T16:37:26.797Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-0bf16-ror-string-Failed-to-load-s-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-006-Authors-journal-year-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -352,13 +352,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-164c19c832fbab5da43b",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-4a0e2735f452ac3747b8",
+              "file": "feeds/spec-004.spec.ts",
               "line": 349,
               "column": 3
             },
             {
-              "title": "cp-007: ResearchDocument uses react-markdown with remarkGfm",
+              "title": "cp-007: User messages surface-raised background right-aligned",
               "ok": true,
               "tags": [],
               "tests": [
@@ -373,18 +373,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 19731,
+                      "duration": 2916,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:33:06.175Z",
+                      "startTime": "2026-03-16T16:37:26.850Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-56d9e-act-markdown-with-remarkGfm-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--72ab9-ed-background-right-aligned-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -392,13 +392,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-fb4b16b816358faa6278",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-e321f490448ae06d2b61",
+              "file": "feeds/spec-004.spec.ts",
               "line": 399,
               "column": 3
             },
             {
-              "title": "cp-008: extractTOC creates TOC items only from lines starting with or",
+              "title": "cp-008: Assistant messages brand5 background left-aligned with Sparkle icon",
               "ok": true,
               "tags": [],
               "tests": [
@@ -410,21 +410,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 19704,
+                      "duration": 3152,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:33:25.927Z",
+                      "startTime": "2026-03-16T16:37:29.301Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-1d1ed-from-lines-starting-with-or-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--9b46d-t-aligned-with-Sparkle-icon-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -432,13 +432,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-d34f8422eb64368eefa9",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-80d3dc3094d11717bafc",
+              "file": "feeds/spec-004.spec.ts",
               "line": 449,
               "column": 3
             },
             {
-              "title": "cp-009: Desktop TOC heading text is exactly Contents",
+              "title": "cp-009: Loading indicator 3 animated dots",
               "ok": true,
               "tags": [],
               "tests": [
@@ -450,21 +450,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 9502,
+                      "duration": 3047,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:33:45.656Z",
+                      "startTime": "2026-03-16T16:37:29.415Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-eb1e8-ng-text-is-exactly-Contents-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--64909-g-indicator-3-animated-dots-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -472,13 +472,53 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-8d66e9c18c51e75b8153",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-76bf8339958836e15d90",
+              "file": "feeds/spec-004.spec.ts",
               "line": 499,
               "column": 3
             },
             {
-              "title": "cp-010: Desktop TOC is hidden below the lg breakpoint",
+              "title": "cp-010: Streaming text appears incrementally",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2960,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:29.423Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--f5968--text-appears-incrementally-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-4c49b38f53f9e326e5f2",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Auto-scroll to latest message",
               "ok": true,
               "tags": [],
               "tests": [
@@ -493,18 +533,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3836,
+                      "duration": 2487,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:33:55.208Z",
+                      "startTime": "2026-03-16T16:37:29.795Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f1388-den-below-the-lg-breakpoint-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--6017c-to-scroll-to-latest-message-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -512,13 +552,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-c84764463a1fe9fbe72b",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 549,
+              "id": "803d560c444d45fe2be6-2c90a5dc2b04a2884e92",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 599,
               "column": 3
             },
             {
-              "title": "cp-011: Mobile TOC is a left-side drawer with width w-72 not a bottom sheet",
+              "title": "cp-012: Clickable chips with follow-up question text",
               "ok": true,
               "tags": [],
               "tests": [
@@ -532,19 +572,699 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2632,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:32.350Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--d9979-ith-follow-up-question-text-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-50f851ce4d2ea7b4ddef",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Clicking sends the suggestion as a message",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2860,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:32.409Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--89445-the-suggestion-as-a-message-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-52ce0d4975db68a78200",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Placeholder Ask about this paper",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2594,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:32.479Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--1d9ed-holder-Ask-about-this-paper-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-b495529e341edf78ae50",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: PaperPlaneRight send button brand background",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2757,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:32.483Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--374f5-end-button-brand-background-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-9f90404e4f6d9d337e46",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Disabled when loading or input empty",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2946,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:35.044Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--87062-when-loading-or-input-empty-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-f99226383e6229245037",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Centered Sparkle icon large brand10 bg",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2787,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:35.145Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--619fa-arkle-icon-large-brand10-bg-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-a4b6d1f78fc067c7130b",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Ask me about this paper",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 3077,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:35.280Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-018-Ask-me-about-this-paper-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-71e0d08d30a36eea4442",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Click Summarize for a quick overview or ask any question about the study",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2728,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:35.314Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--7ea0b-ny-question-about-the-study-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-f2c654f6066cf523fe05",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: POST apifeedscopilotsummarize returns summary suggestions source tier",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2853,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:37.960Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--55b35-ary-suggestions-source-tier-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-0fcfb8ad350d13dea7f4",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: POST apifeedscopilotchat SSE streaming chat response",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2626,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:38.015Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--afc89-SSE-streaming-chat-response-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-700ceedcb0855a331718",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Add URL tab",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 3037,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:38.074Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-022-Add-URL-tab-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-22ec50adfbb1becbc735",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: Browse Journals tab",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2397,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:38.393Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-023-Browse-Journals-tab-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-32a4c0989d4355b8010f",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Label RSS Atom Feed URL",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3073,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:40.685Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-024-Label-RSS-Atom-Feed-URL-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-ae3c265fcd7ba96c3a22",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Input placeholder httpsexamplecomfeedxml",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2927,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:40.809Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--cedb4-lder-httpsexamplecomfeedxml-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-744337eaf8a01861dc08",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Add button loading Adding",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2667,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:40.841Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--06df6-6-Add-button-loading-Adding-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-b37628ece9ef654f8642",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Enter key submits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2516,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:41.126Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-027-Enter-key-submits-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-26193b168902b4d092d4",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Validates URL and subscribes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2705,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T16:37:43.541Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--beb13-alidates-URL-and-subscribes-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "803d560c444d45fe2be6-370fdd8c678875399129",
+              "file": "feeds/spec-004.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Label PubMed Search Query",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
                       "duration": 2602,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:33:59.092Z",
+                      "startTime": "2026-03-16T16:37:43.668Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-da2b5-dth-w-72-not-a-bottom-sheet-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--db706-9-Label-PubMed-Search-Query-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -552,733 +1272,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-9df665e2abfa9e1272bc",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 599,
-              "column": 3
-            },
-            {
-              "title": "cp-012: Mobile TOC closes on backdrop click or the X button",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2709,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:01.712Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-27645-kdrop-click-or-the-X-button-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-78d0d1fb967b5878008c",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 649,
-              "column": 3
-            },
-            {
-              "title": "cp-013: There is no Escape key handler for the TOC or citations overlays",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2828,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:04.462Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-a5a39-e-TOC-or-citations-overlays-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-a4337288bf915d91da5d",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 699,
-              "column": 3
-            },
-            {
-              "title": "cp-014: The floating mobile TOC button always renders even when the markdown has no or h",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3351,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:07.327Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-30fea-en-the-markdown-has-no-or-h-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-51cfa3a1dae45d9a521f",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 749,
-              "column": 3
-            },
-            {
-              "title": "cp-015: The floating mobile citations button renders only when sourceslength 0",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2471,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:10.701Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-bf54b-s-only-when-sourceslength-0-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-de734821609c232b3ab4",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 799,
-              "column": 3
-            },
-            {
-              "title": "cp-016: The floating citations button title is exactly Citations",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 4072,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:13.183Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-62820--title-is-exactly-Citations-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-b9909991286cf0de62aa",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 849,
-              "column": 3
-            },
-            {
-              "title": "cp-017: The floating TOC button title is exactly Table of Contents",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3609,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:17.265Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-6bc08-s-exactly-Table-of-Contents-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-a7c5f5d8da33afd860b5",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 899,
-              "column": 3
-            },
-            {
-              "title": "cp-018: scrollToReference sets highlightedCitation opens the citations panel if it was c",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2965,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:20.891Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-1b1a4-citations-panel-if-it-was-c-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-71bd059d1f333c79328a",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 949,
-              "column": 3
-            },
-            {
-              "title": "cp-019: handlePanelCitationClick sets highlightedCitation and scrolls the matching Refer",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2929,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:23.880Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-56f30--scrolls-the-matching-Refer-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-29a482d840ea9c69fc8c",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 999,
-              "column": 3
-            },
-            {
-              "title": "cp-020: Highlighted references keep their blue-tinted background until another citation ",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 5474,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:26.822Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-777b2-und-until-another-citation--qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-0eb9d47714b4af372703",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1049,
-              "column": 3
-            },
-            {
-              "title": "cp-021: Markdown links always render target_blank with relnoopener noreferrer",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 7185,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:32.315Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-e33e2-with-relnoopener-noreferrer-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-fa6a1bfc10494e68f89d",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1099,
-              "column": 3
-            },
-            {
-              "title": "cp-022: Inline code renders only when the markdown code node has no className",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6729,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:39.526Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f0753--code-node-has-no-className-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-1a63cad890278d637b3d",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1149,
-              "column": 3
-            },
-            {
-              "title": "cp-023: Code blocks render as bordered code blocks inside pre without syntax highlightin",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6370,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:46.269Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-6f0cb--without-syntax-highlightin-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-01d928d9bd1f062b6112",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1199,
-              "column": 3
-            },
-            {
-              "title": "cp-024: The appended references section title is exactly References",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 4743,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:52.715Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-b9aee-title-is-exactly-References-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-d238bd1e343c7f901c92",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1249,
-              "column": 3
-            },
-            {
-              "title": "cp-025: Both the references list and citations panel cap rendering at the first 50 sourc",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3961,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:34:57.498Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-234b4-ering-at-the-first-50-sourc-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-c754cdc4c627d99ddbee",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1299,
-              "column": 3
-            },
-            {
-              "title": "cp-026: Reference author text uses the first 3 authors plus et al when there are more th",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 5815,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:35:01.495Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-5dc53-t-al-when-there-are-more-th-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-9c7913599c8633a39d96",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1349,
-              "column": 3
-            },
-            {
-              "title": "cp-027: Reference metadata shows citation counts only when sourcecitationCount 0",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6203,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:35:07.322Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-2469e--when-sourcecitationCount-0-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-1b02fa9a1f9d3d82001b",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1399,
-              "column": 3
-            },
-            {
-              "title": "cp-028: Reference metadata shows OA only when sourceisOpenAccess is truthy",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6998,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:35:13.536Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-ff661-ourceisOpenAccess-is-truthy-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-c1eb663be27bd920a39c",
-              "file": "deep-research/spec-010.spec.ts",
-              "line": 1449,
-              "column": 3
-            },
-            {
-              "title": "cp-029: Reference links render individual DOI PubMed and PDF anchors when those fields e",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 9528,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T17:35:20.560Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-fd360-anchors-when-those-fields-e-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1612db4ea92c19056ecf-acbe0c139b91cef6d265",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-2d4213c1515ab20b3f96",
+              "file": "feeds/spec-004.spec.ts",
               "line": 1499,
               "column": 3
             },
             {
-              "title": "cp-030: When the desktop citations panel is closed the reopen icon button title is exact",
+              "title": "cp-030: Input placeholder eg machine learning AND radiology",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1290,21 +1290,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 4735,
+                      "duration": 2718,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:35:30.116Z",
+                      "startTime": "2026-03-16T16:37:43.757Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-6032a--icon-button-title-is-exact-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--e2b0f-hine-learning-AND-radiology-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1312,13 +1312,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-985ccfe407d2c7a8c6e3",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-dc585eea591d068eea7c",
+              "file": "feeds/spec-004.spec.ts",
               "line": 1549,
               "column": 3
             },
             {
-              "title": "cp-031: Inline citation markers render as superscript N text with hover and click behavi",
+              "title": "cp-031: Create Feed button loading Creating",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1333,18 +1333,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4969,
+                      "duration": 2659,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:35:34.875Z",
+                      "startTime": "2026-03-16T16:37:43.780Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-66acd-with-hover-and-click-behavi-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--8c821-eed-button-loading-Creating-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1352,13 +1352,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-c5476ea0a209ed864b7d",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-817bb88a14d20ebecacd",
+              "file": "feeds/spec-004.spec.ts",
               "line": 1599,
               "column": 3
             },
             {
-              "title": "cp-032: expandCitationNumbers supports single numbers comma-separated numbers semicolon-",
+              "title": "cp-032: Enter key submits",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1370,21 +1370,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 5828,
+                      "duration": 2144,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:35:39.866Z",
+                      "startTime": "2026-03-16T16:37:46.303Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f43f4-eparated-numbers-semicolon--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec-004-cp-032-Enter-key-submits-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1392,13 +1392,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-e730531a7dc10e8ba0d5",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-1dc25ee6cd6a1ffdd1ee",
+              "file": "feeds/spec-004.spec.ts",
               "line": 1649,
               "column": 3
             },
             {
-              "title": "cp-033: Tooltip position is clamped with Mathminpositiontop windowinnerHeight - 240 and ",
+              "title": "cp-033: Creates live PubMed search feed",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1410,21 +1410,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 4596,
+                      "duration": 2076,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:35:45.715Z",
+                      "startTime": "2026-03-16T16:37:46.339Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-2802b-indowinnerHeight---240-and--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--5643b-tes-live-PubMed-search-feed-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1432,13 +1432,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-3c517b38c0eb5b979c9b",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-f9a5ab47692a4da33337",
+              "file": "feeds/spec-004.spec.ts",
               "line": 1699,
               "column": 3
             },
             {
-              "title": "cp-034: Tooltip link labels are exactly DOI PubMed and PDF",
+              "title": "cp-034: Red background red-50010 with error text",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1453,18 +1453,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5517,
+                      "duration": 2081,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T17:35:50.349Z",
+                      "startTime": "2026-03-16T16:37:46.456Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-abb59--exactly-DOI-PubMed-and-PDF-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-004-feeds-spec--bb317-d-red-50010-with-error-text-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1472,8 +1472,8 @@
                   "status": "expected"
                 }
               ],
-              "id": "1612db4ea92c19056ecf-3e0597b935a27d500ebc",
-              "file": "deep-research/spec-010.spec.ts",
+              "id": "803d560c444d45fe2be6-eea3619c3aca1faa1e69",
+              "file": "feeds/spec-004.spec.ts",
               "line": 1749,
               "column": 3
             }
@@ -1484,8 +1484,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T17:32:20.992Z",
-    "duration": 217165.94499999998,
+    "startTime": "2026-03-16T16:37:22.223Z",
+    "duration": 26462.648,
     "expected": 35,
     "skipped": 0,
     "unexpected": 0,

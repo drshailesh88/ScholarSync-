@@ -3,7 +3,7 @@
     "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
     "rootDir": "/home/user/ScholarSync-/qa/generated",
     "forbidOnly": true,
-    "fullyParallel": false,
+    "fullyParallel": true,
     "globalSetup": null,
     "globalTeardown": null,
     "globalTimeout": 0,
@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 4
     },
     "preserveOutput": "always",
     "reporter": [
@@ -37,7 +37,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "qa-chromium",
         "name": "qa-chromium",
@@ -46,14 +46,14 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 60000
+        "timeout": 30000
       }
     ],
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.56.1",
-    "workers": 1,
+    "workers": 4,
     "webServer": {
       "command": "PORT=3001 npm run dev",
       "port": 3001,
@@ -65,25 +65,25 @@
   },
   "suites": [
     {
-      "title": "deep-research/spec-005.spec.ts",
-      "file": "deep-research/spec-005.spec.ts",
+      "title": "analysis/spec-007.spec.ts",
+      "file": "analysis/spec-007.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "deep-research / spec-005",
-          "file": "deep-research/spec-005.spec.ts",
+          "title": "analysis / spec-007",
+          "file": "analysis/spec-007.spec.ts",
           "line": 36,
           "column": 6,
           "specs": [
             {
-              "title": "cp-000: Headings font-size 2414px font-weight margins",
+              "title": "cp-000: Results write-good issue cards show uppercase type labels",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -93,18 +93,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 7827,
+                      "duration": 3827,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:07.514Z",
+                      "startTime": "2026-03-16T19:14:03.265Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-44bd7--2414px-font-weight-margins-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b43cd--show-uppercase-type-labels-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -112,39 +112,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-14a3b6d0fc85ef2414e0",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-d31084e95d51e31cdc7a",
+              "file": "analysis/spec-007.spec.ts",
               "line": 49,
               "column": 3
             },
             {
-              "title": "cp-001: Paragraphs line-height 16 color 333",
+              "title": "cp-001: Results write-good issue cards display the issue reason text only",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1388,
+                      "duration": 5333,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:15.442Z",
+                      "startTime": "2026-03-16T19:14:03.438Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5a0c9-hs-line-height-16-color-333-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-69189--the-issue-reason-text-only-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -152,39 +152,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-cd6bd6e9f7b223264b24",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-96142f895af3df091618",
+              "file": "analysis/spec-007.spec.ts",
               "line": 99,
               "column": 3
             },
             {
-              "title": "cp-002: Tables border-collapse cell padding borders ccc",
+              "title": "cp-002: Plagiarism Indicators section renders only when resultplagiarismIndicatorslength",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1374,
+                      "duration": 4942,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:16.846Z",
+                      "startTime": "2026-03-16T19:14:03.322Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5aa9d-se-cell-padding-borders-ccc-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d2e78-tplagiarismIndicatorslength-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -192,39 +192,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-1fca4ce26ce9f8b9d0d1",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-3ddac93a1331db37e7ab",
+              "file": "analysis/spec-007.spec.ts",
               "line": 149,
               "column": 3
             },
             {
-              "title": "cp-003: Blockquotes 3px left border ccc italic",
+              "title": "cp-003: High-severity plagiarism cards use red textbackground styling",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1389,
+                      "duration": 4165,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:18.230Z",
+                      "startTime": "2026-03-16T19:14:03.266Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-0949b--3px-left-border-ccc-italic-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-f7330--red-textbackground-styling-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -232,18 +232,18 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-4262c5e9b7fd9dd3e84d",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-d405467e4cb3cbb4dfce",
+              "file": "analysis/spec-007.spec.ts",
               "line": 199,
               "column": 3
             },
             {
-              "title": "cp-004: Superscript citations 10px color 2563eb",
+              "title": "cp-004: Medium-severity plagiarism cards use yellow textbackground styling",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -253,18 +253,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1357,
+                      "duration": 5024,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:19.628Z",
+                      "startTime": "2026-03-16T19:14:07.277Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-1955b-citations-10px-color-2563eb-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-afa05-llow-textbackground-styling-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -272,39 +272,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-0054941b612cc7a70086",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-1e7ce6552fc802d887f3",
+              "file": "analysis/spec-007.spec.ts",
               "line": 249,
               "column": 3
             },
             {
-              "title": "cp-005: Shows Copied confirmation for 2 seconds",
+              "title": "cp-005: Low-severity plagiarism cards use muted text on bg-surface-raised",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1383,
+                      "duration": 4838,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:20.998Z",
+                      "startTime": "2026-03-16T19:14:07.596Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-edb1f--confirmation-for-2-seconds-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e6da2-d-text-on-bg-surface-raised-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -312,39 +312,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-31ffb2ddc6b830f90700",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-374c56e7513543b7ce0e",
+              "file": "analysis/spec-007.spec.ts",
               "line": 299,
               "column": 3
             },
             {
-              "title": "cp-006: Fallback to plain text on older browsers",
+              "title": "cp-006: Plagiarism cards display uppercase SEVERITY Risk labels an italic excerpt and a ",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1413,
+                      "duration": 4801,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:22.391Z",
+                      "startTime": "2026-03-16T19:14:08.418Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-27400-lain-text-on-older-browsers-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-8e9e6-ls-an-italic-excerpt-and-a--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -352,39 +352,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-0caf4e72d871c6f7bedc",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-15d77c1fa226ce49e5c2",
+              "file": "analysis/spec-007.spec.ts",
               "line": 349,
               "column": 3
             },
             {
-              "title": "cp-007: Downloads as topic_referencesbib",
+              "title": "cp-007: Detailed Metrics tab renders Readability Writing Quality and AI Detection sectio",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1392,
+                      "duration": 4529,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:23.813Z",
+                      "startTime": "2026-03-16T19:14:08.921Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-e0d9b-oads-as-topic-referencesbib-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-11be0-ity-and-AI-Detection-sectio-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -392,18 +392,18 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-3c6398420c0223d1caf4",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-293839cfca5a0c0ebe99",
+              "file": "analysis/spec-007.spec.ts",
               "line": 399,
               "column": 3
             },
             {
-              "title": "cp-008: Citation key format firstAuthorFirstSegmentyearfirstTitleWord lowercase with fal",
+              "title": "cp-008: Readability section always shows Readability Grade",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -413,18 +413,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1371,
+                      "duration": 4207,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:25.214Z",
+                      "startTime": "2026-03-16T19:14:12.338Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-77065-itleWord-lowercase-with-fal-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-11c7b-ays-shows-Readability-Grade-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -432,39 +432,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-a8b40b94b733c983972d",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-926941599057a3c5e6a3",
+              "file": "analysis/spec-007.spec.ts",
               "line": 449,
               "column": 3
             },
             {
-              "title": "cp-009: Fields author title journal year doi pmid abstract",
+              "title": "cp-009: Results readability section adds Flesch-Kincaid Grade Gunning Fog Index and Fles",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1424,
+                      "duration": 4764,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:26.597Z",
+                      "startTime": "2026-03-16T19:14:12.453Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-76c23-rnal-year-doi-pmid-abstract-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-6c2e3--Gunning-Fog-Index-and-Fles-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -472,39 +472,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-c5f4fbc7750ab63dd714",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-36b9a05979a79a9ad507",
+              "file": "analysis/spec-007.spec.ts",
               "line": 499,
               "column": 3
             },
             {
-              "title": "cp-010: All sources included",
+              "title": "cp-010: Results Avg Sentence Length row comes from resultwritingQualityaverageSentenceLe",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1378,
+                      "duration": 4007,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:28.030Z",
+                      "startTime": "2026-03-16T19:14:13.260Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-2dcbe-cp-010-All-sources-included-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-2fbfd-ingQualityaverageSentenceLe-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -512,39 +512,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-8f9fe26f274837d56f86",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-ea36ec17b5f39e9455df",
+              "file": "analysis/spec-007.spec.ts",
               "line": 549,
               "column": 3
             },
             {
-              "title": "cp-011: Downloads as topic_referencesris",
+              "title": "cp-011: Writing Quality Passive Voice falls back to resultwritingQualitypassiveVoiceCoun",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1421,
+                      "duration": 3852,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:29.418Z",
+                      "startTime": "2026-03-16T19:14:13.470Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-63361-oads-as-topic-referencesris-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-376e4-tingQualitypassiveVoiceCoun-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -552,18 +552,18 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-d2c8fa1a203a039941e0",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-93463f3ce6f00b4fc3e4",
+              "file": "analysis/spec-007.spec.ts",
               "line": 599,
               "column": 3
             },
             {
-              "title": "cp-012: Fields TY TI AU per author JO PY DO AN AB UR ER",
+              "title": "cp-012: Writing Quality Weasel Words Adverbs and Complex Sentences rows render only when",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -573,18 +573,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1393,
+                      "duration": 4383,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:30.847Z",
+                      "startTime": "2026-03-16T19:14:16.566Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-582d0-author-JO-PY-DO-AN-AB-UR-ER-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-074ec-ences-rows-render-only-when-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -592,39 +592,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-ebd4320cecacceb173d4",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-47e4b6ef61976e2cc5be",
+              "file": "analysis/spec-007.spec.ts",
               "line": 649,
               "column": 3
             },
             {
-              "title": "cp-013: Compatible with Mendeley EndNote",
+              "title": "cp-013: AI Detection section renders Human Score AI Score and Overall Risk as ToneBadge ",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1387,
+                      "duration": 4383,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:32.249Z",
+                      "startTime": "2026-03-16T19:14:17.231Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-12c96-tible-with-Mendeley-EndNote-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-33a74--Overall-Risk-as-ToneBadge--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -632,39 +632,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-f4229b54b85c09da09f9",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-ca1b14ab776170650d2c",
+              "file": "analysis/spec-007.spec.ts",
               "line": 699,
               "column": 3
             },
             {
-              "title": "cp-014: All sources included",
+              "title": "cp-014: Human Score uses emerald for 70 yellow for 40-69 and red below 40",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1376,
+                      "duration": 4490,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:33.644Z",
+                      "startTime": "2026-03-16T19:14:17.281Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-bd0c1-cp-014-All-sources-included-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d466f--for-40-69-and-red-below-40-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -672,39 +672,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-2b8ffe5848e7f1828823",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-a9113a49a66305468bd4",
+              "file": "analysis/spec-007.spec.ts",
               "line": 749,
               "column": 3
             },
             {
-              "title": "cp-015: Button visible in done state header",
+              "title": "cp-015: AI Score uses emerald for 30 yellow for 31-60 and red above 60",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1376,
+                      "duration": 5095,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:35.029Z",
+                      "startTime": "2026-03-16T19:14:17.336Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-005c1-isible-in-done-state-header-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-0e283--for-31-60-and-red-above-60-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -712,18 +712,18 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-aabb9d6c176300e9d2e3",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-c961e9c59b05e5c4e6e7",
+              "file": "analysis/spec-007.spec.ts",
               "line": 799,
               "column": 3
             },
             {
-              "title": "cp-016: States",
+              "title": "cp-016: Overall Risk uses low - emerald medium - yellow and high - red",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -733,18 +733,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1407,
+                      "duration": 5086,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:36.415Z",
+                      "startTime": "2026-03-16T19:14:20.965Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-deep-research-spec-005-cp-016-States-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-64e72-ium---yellow-and-high---red-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -752,39 +752,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-c4559c4609288d034159",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-550a7fca1ff416876c8f",
+              "file": "analysis/spec-007.spec.ts",
               "line": 849,
               "column": 3
             },
             {
-              "title": "cp-017: Calls POST apideep-researchsave",
+              "title": "cp-017: Paragraph Breakdown section renders only when resultparagraphAnalysislength 0",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1406,
+                      "duration": 4566,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:37.831Z",
+                      "startTime": "2026-03-16T19:14:21.661Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-cc1d1-s-POST-apideep-researchsave-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-538ff-ltparagraphAnalysislength-0-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -792,39 +792,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-472f962f437b94acc8d3",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-361b5d9225363d297e9b",
+              "file": "analysis/spec-007.spec.ts",
               "line": 899,
               "column": 3
             },
             {
-              "title": "cp-018: Disabled if not logged in or research incomplete",
+              "title": "cp-018: Paragraph Breakdown rows display Paragraph n on the left and humanProbability hu",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1374,
+                      "duration": 4344,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:39.245Z",
+                      "startTime": "2026-03-16T19:14:21.790Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-ef29f-d-in-or-research-incomplete-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-1837f-eft-and-humanProbability-hu-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -832,39 +832,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-8ede98ea156da1db23b5",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-c3c82ee50b582af0bcc2",
+              "file": "analysis/spec-007.spec.ts",
               "line": 949,
               "column": 3
             },
             {
-              "title": "cp-019: Error tooltip appears on failure",
+              "title": "cp-019: MetricBar caps bar fill width at 100 with Mathminvalue max 100 100",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1435,
+                      "duration": 4558,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:40.629Z",
+                      "startTime": "2026-03-16T19:14:22.455Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-60a39--tooltip-appears-on-failure-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e352d-th-Mathminvalue-max-100-100-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -872,18 +872,18 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-857fc792a22bd23a8566",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-b853c6830e482396e57a",
+              "file": "analysis/spec-007.spec.ts",
               "line": 999,
               "column": 3
             },
             {
-              "title": "cp-020: Auto-disables after successful save",
+              "title": "cp-020: MetricBar appends suffix text such as words instances or sentences in the value ",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -893,18 +893,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1444,
+                      "duration": 4328,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:42.076Z",
+                      "startTime": "2026-03-16T19:14:26.101Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-8ef6b-ables-after-successful-save-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-9a6d5--or-sentences-in-the-value--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -912,39 +912,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-26a4b8ed89155e29b0b4",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-c42cdf360bc44ad5e0f8",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1049,
               "column": 3
             },
             {
-              "title": "cp-021: Saved session appears in Past Research on next visit",
+              "title": "cp-021: IssueBadge color map is yellow orange blue and red",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1409,
+                      "duration": 4584,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:43.529Z",
+                      "startTime": "2026-03-16T19:14:26.150Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-d5496-Past-Research-on-next-visit-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-55bf1--yellow-orange-blue-and-red-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -952,39 +952,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-5da21725c2dc75c64c90",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-9955589dc657c88e0cd5",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1099,
               "column": 3
             },
             {
-              "title": "cp-022: Export option Open in Studio",
+              "title": "cp-022: CircularGauge color thresholds are green 80 yellow 60 orange 40 and red below 40",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1414,
+                      "duration": 4516,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:44.947Z",
+                      "startTime": "2026-03-16T19:14:26.242Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-c39ff-xport-option-Open-in-Studio-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d433b--orange-40-and-red-below-40-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -992,39 +992,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-40a3294618fe8bc57430",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-46bc8c0324dfd8f7806a",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1149,
               "column": 3
             },
             {
-              "title": "cp-023: Calls POST apideep-researchopen-in-studio",
+              "title": "cp-023: Results gauge readability label uses Excellent Good Needs Improvement and Poor",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1348,
+                      "duration": 4588,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:46.369Z",
+                      "startTime": "2026-03-16T19:14:27.033Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-116d1-deep-researchopen-in-studio-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-75652--Needs-Improvement-and-Poor-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1032,18 +1032,18 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-51a23757c1b5c999ad18",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-323f47376abb3fdd2d75",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1199,
               "column": 3
             },
             {
-              "title": "cp-024: Process",
+              "title": "cp-024: Instant gauge readability label uses the analyzeWriting labels not the results-g",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -1053,18 +1053,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1394,
+                      "duration": 4574,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:47.727Z",
+                      "startTime": "2026-03-16T19:14:30.491Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-deep-research-spec-005-cp-024-Process-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-2a1d9-ng-labels-not-the-results-g-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1072,18 +1072,218 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-b9839ffe3394bebd896f",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-5d4db00b7bb5d1b04e24",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1249,
               "column": 3
             },
             {
-              "title": "cp-025: Redirects to studioprojectIdprojectId",
-              "ok": false,
+              "title": "cp-025: When statsavgSentenceLength 28 the API returns the suggestion Your average sente",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 3661,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T19:14:30.778Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b9efd-ggestion-Your-average-sente-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-2ac3c0308d7a055d71c7",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: When statssentenceLengthStdDev 3 the API returns Your sentence lengths are very ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 3856,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T19:14:30.786Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d02a4--sentence-lengths-are-very--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-722e82d9d0b3170e27d7",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: When statspassiveVoicePercent 30 the API returns N of sentences use passive voic",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 4456,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T19:14:31.633Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-0217d--sentences-use-passive-voic-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-06ac14c0a61320aa904f",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: When statstypeTokenRatio 035 and 0 the API returns Vocabulary diversity is low U",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 4605,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T19:14:34.489Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b1c4c-cabulary-diversity-is-low-U-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-bbb8e2ddf4b21f8cedc7",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: When statshedgingPhraseCount 5 the API returns Found N hedging phrases eg It is ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 4778,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-16T19:14:34.679Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-9059e-N-hedging-phrases-eg-It-is--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-951eba0431da1e7a7545",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: When statsreadabilityGrade 16 the API returns Readability grade is above 16 post",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -1092,93 +1292,19 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1400,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"/studio\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useState, useCallback } from \\\"react\\\";\u001b[39m\n\u001b[31mimport { useRouter } from \\\"next/navigation\\\";\u001b[39m\n\u001b[31mimport { Download, Printer, Copy, Check, FileText, PenLine, Loader2 } from \\\"lucide-react\\\";\u001b[39m\n\u001b[31mimport type { DeepResearchSource } from \\\"./types\\\";·\u001b[39m\n\u001b[31m// ── BibTeX generation ─────────────────────────────────────────────\u001b[39m\n\u001b[31m/* empty state: no data, no results, nothing here */\u001b[39m\n\u001b[31mfunction generateBibTeX(sources: DeepResearchSource[]): string {\u001b[39m\n\u001b[31m  return sources\u001b[39m\n\u001b[31m    .map((s, idx) => {\u001b[39m\n\u001b[31m      // Build a citation key: firstAuthorLastName + year + first word of title\u001b[39m\n\u001b[31m      const firstAuthor = s.authors[0] || \\\"Unknown\\\";\u001b[39m\n\u001b[31m      const lastName = firstAuthor.split(/[,\\\\s]+/)[0].replace(/[^a-zA-Z]/g, \\\"\\\");\u001b[39m\n\u001b[31m      const titleWord = (s.title.split(/\\\\s+/)[0] || \\\"\\\").replace(/[^a-zA-Z]/g, \\\"\\\");\u001b[39m\n\u001b[31m      const key = `${lastName}${s.year || \\\"\\\"}${titleWord}`.toLowerCase() || `ref${idx + 1}`;·\u001b[39m\n\u001b[31m      const authors = s.authors.join(\\\" and \\\");\u001b[39m\n\u001b[31m      const lines = [\u001b[39m\n\u001b[31m        `@article{${key},`,\u001b[39m\n\u001b[31m        `  author    = {${authors}},`,\u001b[39m\n\u001b[31m        `  title     = {${s.title}},`,\u001b[39m\n\u001b[31m        `  journal   = {${s.journal || \\\"\\\"}},`,\u001b[39m\n\u001b[31m        `  year      = {${s.year || \\\"\\\"}},`,\u001b[39m\n\u001b[31m      ];\u001b[39m\n\u001b[31m      if (s.doi) lines.push(`  doi       = {${s.doi}},`);\u001b[39m\n\u001b[31m      if (s.pmid) lines.push(`  pmid      = {${s.pmid}},`);\u001b[39m\n\u001b[31m      if (s.abstract) lines.push(`  abstract  = {${s.abstract.slice(0, 500)}},`);\u001b[39m\n\u001b[31m      lines.push(`}`);\u001b[39m\n\u001b[31m      return lines.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m    })\u001b[39m\n\u001b[31m    .join(\\\"\\\\n\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── RIS generation ────────────────────────────────────────────────\u001b[39m\n\u001b[31mfunction generateRIS(sources: DeepResearchSource[]): string {\u001b[39m\n\u001b[31m  return sources\u001b[39m\n\u001b[31m    .map((s) => {\u001b[39m\n\u001b[31m      const lines = [\u001b[39m\n\u001b[31m        `TY  - JOUR`,\u001b[39m\n\u001b[31m        `TI  - ${s.title}`,\u001b[39m\n\u001b[31m      ];\u001b[39m\n\u001b[31m      for (const author of s.authors) {\u001b[39m\n\u001b[31m        lines.push(`AU  - ${author}`);\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      if (s.journal) lines.push(`JO  - ${s.journal}`);\u001b[39m\n\u001b[31m      if (s.year) lines.push(`PY  - ${s.year}`);\u001b[39m\n\u001b[31m      if (s.doi) lines.push(`DO  - ${s.doi}`);\u001b[39m\n\u001b[31m      if (s.pmid) lines.push(`AN  - PMID:${s.pmid}`);\u001b[39m\n\u001b[31m      if (s.abstract) lines.push(`AB  - ${s.abstract.slice(0, 500)}`);\u001b[39m\n\u001b[31m      if (s.openAccessPdfUrl || s.fullTextUrl) lines.push(`UR  - ${s.openAccessPdfUrl || s.fullTextUrl}`);\u001b[39m\n\u001b[31m      else if (s.doi) lines.push(`UR  - https://doi.org/${s.doi}`);\u001b[39m\n\u001b[31m      lines.push(`ER  - `);\u001b[39m\n\u001b[31m      return lines.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m    })\u001b[39m\n\u001b[31m    .join(\\\"\\\\n\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Markdown to simple HTML (for PDF export) ─────────────────────\u001b[39m\n\u001b[31mfunction markdownToSimpleHTML(md: string): string {\u001b[39m\n\u001b[31m  const lines = md.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m  const htmlParts: string[] = [];·\u001b[39m\n\u001b[31m  for (let i = 0; i < lines.length; i++) {\u001b[39m\n\u001b[31m    const line = lines[i].trimEnd();·\u001b[39m\n\u001b[31m    if (line === \\\"\\\") continue;·\u001b[39m\n\u001b[31m    // Headings\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"#### \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h4>${escapeHTML(line.slice(5))}</h4>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"### \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h3>${escapeHTML(line.slice(4))}</h3>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"## \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h2>${escapeHTML(line.slice(3))}</h2>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"# \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h1>${escapeHTML(line.slice(2))}</h1>`);\u001b[39m\n\u001b[31m    } else if (/^---+$/.test(line) || /^\\\\*\\\\*\\\\*+$/.test(line)) {\u001b[39m\n\u001b[31m      // Horizontal rule — skip, the PDF doesn't need it\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m      // Blockquote — render as italic paragraph\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line.slice(2))}</p>`);\u001b[39m\n\u001b[31m    } else if (/^[-*]\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      // List item — render as indented paragraph with bullet\u001b[39m\n\u001b[31m      htmlParts.push(`<p>\\\\u2022 ${escapeHTML(line.replace(/^[-*]\\\\s+/, \\\"\\\"))}</p>`);\u001b[39m\n\u001b[31m    } else if (/^\\\\d+\\\\.\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      // Numbered list — keep the number\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line)}</p>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m      // Table row — collect all table rows and render as text\u001b[39m\n\u001b[31m      const cells = line.split(\\\"|\\\").filter(Boolean).map((c) => c.trim());\u001b[39m\n\u001b[31m      // Skip separator rows (|---|---|)\u001b[39m\n\u001b[31m      if (cells.every((c) => /^[-:]+$/.test(c))) continue;\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(cells.join(\\\"  |  \\\"))}</p>`);\u001b[39m\n\u001b[31m    } else {\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line)}</p>`);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return htmlParts.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mfunction escapeHTML(text: string): string {\u001b[39m\n\u001b[31m  return text\u001b[39m\n\u001b[31m    .replace(/&/g, \\\"&amp;\\\")\u001b[39m\n\u001b[31m    .replace(/</g, \\\"&lt;\\\")\u001b[39m\n\u001b[31m    .replace(/>/g, \\\"&gt;\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Inline formatting (bold, italic, citation superscripts) ─────\u001b[39m\n\u001b[31mfunction applyInlineFormatting(text: string, supStyle: string): string {\u001b[39m\n\u001b[31m  let result = escapeHTML(text);\u001b[39m\n\u001b[31m  // Bold: **text**\u001b[39m\n\u001b[31m  result = result.replace(/\\\\*\\\\*(.+?)\\\\*\\\\*/g, \\\"<strong>$1</strong>\\\");\u001b[39m\n\u001b[31m  // Italic: *text* (not inside bold markers)\u001b[39m\n\u001b[31m  result = result.replace(\u001b[39m\n\u001b[31m    /(?<!\\\\*)\\\\*(?!\\\\*)(.+?)(?<!\\\\*)\\\\*(?!\\\\*)/g,\u001b[39m\n\u001b[31m    \\\"<em>$1</em>\\\",\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m  // Citation markers: [N] → styled superscript\u001b[39m\n\u001b[31m  result = result.replace(\u001b[39m\n\u001b[31m    /\\\\[(\\\\d+)\\\\]/g,\u001b[39m\n\u001b[31m    `<sup style=\\\"${supStyle}\\\">[$1]</sup>`,\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m  return result;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Markdown → rich HTML with inline styles (for clipboard) ─────\u001b[39m\n\u001b[31m// Google Docs / Word ignore CSS classes — only inline styles work.\u001b[39m\n\u001b[31mfunction markdownToRichHTML(\u001b[39m\n\u001b[31m  md: string,\u001b[39m\n\u001b[31m  sources: DeepResearchSource[],\u001b[39m\n\u001b[31m): string {\u001b[39m\n\u001b[31m  const S = {\u001b[39m\n\u001b[31m    h1: \\\"font-size:24px;font-weight:bold;margin:24px 0 12px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h2: \\\"font-size:20px;font-weight:bold;margin:20px 0 10px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h3: \\\"font-size:16px;font-weight:bold;margin:16px 0 8px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h4: \\\"font-size:14px;font-weight:bold;font-style:italic;margin:12px 0 6px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    p: \\\"margin:8px 0;line-height:1.6;color:#333;\\\",\u001b[39m\n\u001b[31m    table: \\\"border-collapse:collapse;margin:12px 0;width:100%;\\\",\u001b[39m\n\u001b[31m    th: \\\"border:1px solid #ccc;padding:8px 12px;background:#f5f5f5;font-weight:bold;text-align:left;\\\",\u001b[39m\n\u001b[31m    td: \\\"border:1px solid #ccc;padding:8px 12px;text-align:left;\\\",\u001b[39m\n\u001b[31m    blockquote:\u001b[39m\n\u001b[31m      \\\"border-left:3px solid #ccc;padding:8px 16px;margin:12px 0;color:#555;font-style:italic;\\\",\u001b[39m\n\u001b[31m    sup: \\\"font-size:10px;color:#2563eb;vertical-align:super;text-decoration:none;\\\",\u001b[39m\n\u001b[31m    hr: \\\"border:none;border-top:1px solid #e5e5e5;margin:16px 0;\\\",\u001b[39m\n\u001b[31m    li: \\\"margin:4px 0;line-height:1.6;color:#333;\\\",\u001b[39m\n\u001b[31m  };·\u001b[39m\n\u001b[31m  const fmt = (text: string) => applyInlineFormatting(text, S.sup);·\u001b[39m\n\u001b[31m  const lines = md.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m  const out: string[] = [];\u001b[39m\n\u001b[31m  let i = 0;·\u001b[39m\n\u001b[31m  while (i < lines.length) {\u001b[39m\n\u001b[31m    const line = lines[i].trimEnd();·\u001b[39m\n\u001b[31m    // Blank line — skip\u001b[39m\n\u001b[31m    if (line === \\\"\\\") {\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Headings (order matters: #### before ### before ## before #)\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"#### \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h4 style=\\\"${S.h4}\\\">${fmt(line.slice(5))}</h4>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"### \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h3 style=\\\"${S.h3}\\\">${fmt(line.slice(4))}</h3>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"## \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h2 style=\\\"${S.h2}\\\">${fmt(line.slice(3))}</h2>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"# \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h1 style=\\\"${S.h1}\\\">${fmt(line.slice(2))}</h1>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Horizontal rule\u001b[39m\n\u001b[31m    if (/^---+$/.test(line) || /^\\\\*\\\\*\\\\*+$/.test(line)) {\u001b[39m\n\u001b[31m      out.push(`<hr style=\\\"${S.hr}\\\" />`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Blockquote — collect consecutive > lines\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m      const parts: string[] = [];\u001b[39m\n\u001b[31m      while (i < lines.length && lines[i].trimEnd().startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m        parts.push(lines[i].trimEnd().slice(2));\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\u001b[39m\n\u001b[31m        `<blockquote style=\\\"${S.blockquote}\\\">${fmt(parts.join(\\\" \\\"))}</blockquote>`,\u001b[39m\n\u001b[31m      );\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Table — collect all | rows, render as <table>\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m      const tableRows: string[][] = [];\u001b[39m\n\u001b[31m      let hasSeparator = false;\u001b[39m\n\u001b[31m      while (i < lines.length && lines[i].trimEnd().startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m        const raw = lines[i].trimEnd();\u001b[39m\n\u001b[31m        const cells = raw\u001b[39m\n\u001b[31m          .split(\\\"|\\\")\u001b[39m\n\u001b[31m          .filter(Boolean)\u001b[39m\n\u001b[31m          .map((c) => c.trim());\u001b[39m\n\u001b[31m        // Detect separator row (|---|---|)\u001b[39m\n\u001b[31m        if (cells.every((c) => /^[-:]+$/.test(c))) {\u001b[39m\n\u001b[31m          hasSeparator = true;\u001b[39m\n\u001b[31m          i++;\u001b[39m\n\u001b[31m          continue;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        tableRows.push(cells);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      if (tableRows.length > 0) {\u001b[39m\n\u001b[31m        out.push(`<table style=\\\"${S.table}\\\">`);\u001b[39m\n\u001b[31m        const headerRow = hasSeparator ? tableRows[0] : null;\u001b[39m\n\u001b[31m        const bodyStart = hasSeparator ? 1 : 0;\u001b[39m\n\u001b[31m        if (headerRow) {\u001b[39m\n\u001b[31m          out.push(\\\"<thead><tr>\\\");\u001b[39m\n\u001b[31m          for (const cell of headerRow) {\u001b[39m\n\u001b[31m            out.push(`<th style=\\\"${S.th}\\\">${fmt(cell)}</th>`);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          out.push(\\\"</tr></thead>\\\");\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        out.push(\\\"<tbody>\\\");\u001b[39m\n\u001b[31m        for (let r = bodyStart; r < tableRows.length; r++) {\u001b[39m\n\u001b[31m          out.push(\\\"<tr>\\\");\u001b[39m\n\u001b[31m          for (const cell of tableRows[r]) {\u001b[39m\n\u001b[31m            out.push(`<td style=\\\"${S.td}\\\">${fmt(cell)}</td>`);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          out.push(\\\"</tr>\\\");\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        out.push(\\\"</tbody></table>\\\");\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Unordered list — collect consecutive - or * items\u001b[39m\n\u001b[31m    if (/^[-*]\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      out.push(\\\"<ul>\\\");\u001b[39m\n\u001b[31m      while (i < lines.length && /^[-*]\\\\s/.test(lines[i].trimEnd())) {\u001b[39m\n\u001b[31m        const text = lines[i].trimEnd().replace(/^[-*]\\\\s+/, \\\"\\\");\u001b[39m\n\u001b[31m        out.push(`<li style=\\\"${S.li}\\\">${fmt(text)}</li>`);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\\\"</ul>\\\");\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Ordered list — collect consecutive numbered items\u001b[39m\n\u001b[31m    if (/^\\\\d+\\\\.\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      out.push(\\\"<ol>\\\");\u001b[39m\n\u001b[31m      while (i < lines.length && /^\\\\d+\\\\.\\\\s/.test(lines[i].trimEnd())) {\u001b[39m\n\u001b[31m        const text = lines[i].trimEnd().replace(/^\\\\d+\\\\.\\\\s+/, \\\"\\\");\u001b[39m\n\u001b[31m        out.push(`<li style=\\\"${S.li}\\\">${fmt(text)}</li>`);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\\\"</ol>\\\");\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Default: paragraph\u001b[39m\n\u001b[31m    out.push(`<p style=\\\"${S.p}\\\">${fmt(line)}</p>`);\u001b[39m\n\u001b[31m    i++;\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  // ── References section from sources ──────────────────────────────\u001b[39m\n\u001b[31m  if (sources.length > 0) {\u001b[39m\n\u001b[31m    out.push(`<h2 style=\\\"${S.h2}\\\">References</h2>`);\u001b[39m\n\u001b[31m    out.push(\\\"<ol>\\\");\u001b[39m\n\u001b[31m    for (const s of sources) {\u001b[39m\n\u001b[31m      const authorsText =\u001b[39m\n\u001b[31m        s.authors.length > 3\u001b[39m\n\u001b[31m          ? `${s.authors.slice(0, 3).join(\\\", \\\")} et al.`\u001b[39m\n\u001b[31m          : s.authors.join(\\\", \\\");\u001b[39m\n\u001b[31m      let citation = `${escapeHTML(authorsText)}. ${escapeHTML(s.title)}.`;\u001b[39m\n\u001b[31m      if (s.journal) citation += ` <em>${escapeHTML(s.journal)}</em>`;\u001b[39m\n\u001b[31m      if (s.year) citation += ` (${s.year})`;\u001b[39m\n\u001b[31m      citation += \\\".\\\";\u001b[39m\n\u001b[31m      if (s.doi) citation += ` DOI: ${escapeHTML(s.doi)}`;\u001b[39m\n\u001b[31m      out.push(`<li style=\\\"${S.li}\\\">${citation}</li>`);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    out.push(\\\"</ol>\\\");\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return out.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31minterface ExportButtonsProps {\u001b[39m\n\u001b[31m  markdownReport: string;\u001b[39m\n\u001b[31m  topic: string;\u001b[39m\n\u001b[31m  sources?: DeepResearchSource[];\u001b[39m\n\u001b[31m  keyFindings?: string[];\u001b[39m\n\u001b[31m  gaps?: string[];\u001b[39m\n\u001b[31m  mode?: string;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mexport function ExportButtons({\u001b[39m\n\u001b[31m  markdownReport,\u001b[39m\n\u001b[31m  topic,\u001b[39m\n\u001b[31m  sources = [],\u001b[39m\n\u001b[31m  keyFindings = [],\u001b[39m\n\u001b[31m  gaps = [],\u001b[39m\n\u001b[31m  mode = \\\"standard\\\",\u001b[39m\n\u001b[31m}: ExportButtonsProps) {\u001b[39m\n\u001b[31m  const router = useRouter();\u001b[39m\n\u001b[31m  const [copied, setCopied] = useState(false);\u001b[39m\n\u001b[31m  const [studioLoading, setStudioLoading] = useState(false);\u001b[39m\n\u001b[31m  const [studioError, setStudioError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  const handleExportMarkdown = useCallback(() => {\u001b[39m\n\u001b[31m    const blob = new Blob([markdownReport], { type: \\\"text/markdown\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_report.md`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [markdownReport, topic]);·\u001b[39m\n\u001b[31m  const [pdfLoading, setPdfLoading] = useState(false);\u001b[39m\n\u001b[31m  const [pdfError, setPdfError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  const handleExportPDF = useCallback(async () => {\u001b[39m\n\u001b[31m    setPdfLoading(true);\u001b[39m\n\u001b[31m    setPdfError(null);\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      // Convert markdown to simple HTML block elements for the PDF generator\u001b[39m\n\u001b[31m      const htmlContent = markdownToSimpleHTML(markdownReport);·\u001b[39m\n\u001b[31m      // Build citation strings for the references section\u001b[39m\n\u001b[31m      const citations = sources.map((s, idx) => {\u001b[39m\n\u001b[31m        const authorsText =\u001b[39m\n\u001b[31m          s.authors.length > 3\u001b[39m\n\u001b[31m            ? `${s.authors.slice(0, 3).join(\\\", \\\")} et al.`\u001b[39m\n\u001b[31m            : s.authors.join(\\\", \\\");\u001b[39m\n\u001b[31m        let citation = `[${idx + 1}] ${authorsText}. ${s.title}.`;\u001b[39m\n\u001b[31m        if (s.journal) citation += ` ${s.journal}`;\u001b[39m\n\u001b[31m        if (s.year) citation += ` (${s.year})`;\u001b[39m\n\u001b[31m        citation += \\\".\\\";\u001b[39m\n\u001b[31m        if (s.doi) citation += ` DOI: ${s.doi}`;\u001b[39m\n\u001b[31m        return citation;\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/export/pdf\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({\u001b[39m\n\u001b[31m          title: topic,\u001b[39m\n\u001b[31m          content: htmlContent,\u001b[39m\n\u001b[31m          citations: citations.length > 0 ? citations : undefined,\u001b[39m\n\u001b[31m        }),\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      if (!res.ok) {\u001b[39m\n\u001b[31m        const data = await res.json().catch(() => ({}));\u001b[39m\n\u001b[31m        throw new Error(data.error || `PDF generation failed (${res.status})`);\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      const blob = await res.blob();\u001b[39m\n\u001b[31m      const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m      const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m      a.href = url;\u001b[39m\n\u001b[31m      a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_report.pdf`;\u001b[39m\n\u001b[31m      document.body.appendChild(a);\u001b[39m\n\u001b[31m      a.click();\u001b[39m\n\u001b[31m      document.body.removeChild(a);\u001b[39m\n\u001b[31m      URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      console.error(\\\"PDF export failed:\\\", err);\u001b[39m\n\u001b[31m      const message = err instanceof Error ? err.message : \\\"PDF export failed\\\";\u001b[39m\n\u001b[31m      setPdfError(message);\u001b[39m\n\u001b[31m      setTimeout(() => setPdfError(null), 5000);\u001b[39m\n\u001b[31m    } finally {\u001b[39m\n\u001b[31m      setPdfLoading(false);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [markdownReport, topic, sources]);·\u001b[39m\n\u001b[31m  const handleCopyClipboard = useCallback(async () => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const html = markdownToRichHTML(markdownReport, sources);·\u001b[39m\n\u001b[31m      // Modern browsers: write both HTML and plain text\u001b[39m\n\u001b[31m      if (\u001b[39m\n\u001b[31m        typeof ClipboardItem !== \\\"undefined\\\" &&\u001b[39m\n\u001b[31m        navigator.clipboard?.write\u001b[39m\n\u001b[31m      ) {\u001b[39m\n\u001b[31m        const item = new ClipboardItem({\u001b[39m\n\u001b[31m          \\\"text/html\\\": new Blob([html], { type: \\\"text/html\\\" }),\u001b[39m\n\u001b[31m          \\\"text/plain\\\": new Blob([markdownReport], { type: \\\"text/plain\\\" }),\u001b[39m\n\u001b[31m        });\u001b[39m\n\u001b[31m        await navigator.clipboard.write([item]);\u001b[39m\n\u001b[31m      } else {\u001b[39m\n\u001b[31m        // Fallback: plain text only\u001b[39m\n\u001b[31m        await navigator.clipboard.writeText(markdownReport);\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      setCopied(true);\u001b[39m\n\u001b[31m      setTimeout(() => setCopied(false), 2000);\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Last-resort fallback for older browsers\u001b[39m\n\u001b[31m      const textarea = document.createElement(\\\"textarea\\\");\u001b[39m\n\u001b[31m      textarea.value = markdownReport;\u001b[39m\n\u001b[31m      document.body.appendChild(textarea);\u001b[39m\n\u001b[31m      textarea.select();\u001b[39m\n\u001b[31m      document.execCommand(\\\"copy\\\");\u001b[39m\n\u001b[31m      document.body.removeChild(textarea);\u001b[39m\n\u001b[31m      setCopied(true);\u001b[39m\n\u001b[31m      setTimeout(() => setCopied(false), 2000);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [markdownReport, sources]);·\u001b[39m\n\u001b[31m  const handleExportBibTeX = useCallback(() => {\u001b[39m\n\u001b[31m    if (sources.length === 0) return;\u001b[39m\n\u001b[31m    const bibtex = generateBibTeX(sources);\u001b[39m\n\u001b[31m    const blob = new Blob([bibtex], { type: \\\"application/x-bibtex\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_references.bib`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [sources, topic]);·\u001b[39m\n\u001b[31m  const handleExportRIS = useCallback(() => {\u001b[39m\n\u001b[31m    if (sources.length === 0) return;\u001b[39m\n\u001b[31m    const ris = generateRIS(sources);\u001b[39m\n\u001b[31m    const blob = new Blob([ris], { type: \\\"application/x-research-info-systems\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_references.ris`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [sources, topic]);·\u001b[39m\n\u001b[31m  const handleOpenInStudio = useCallback(async () => {\u001b[39m\n\u001b[31m    setStudioLoading(true);\u001b[39m\n\u001b[31m    setStudioError(null);\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/deep-research/open-in-studio\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({\u001b[39m\n\u001b[31m          topic,\u001b[39m\n\u001b[31m          mode,\u001b[39m\n\u001b[31m          markdownReport,\u001b[39m\n\u001b[31m          sources,\u001b[39m\n\u001b[31m          keyFindings,\u001b[39m\n\u001b[31m          gaps,\u001b[39m\n\u001b[31m        }),\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      if (!res.ok) {\u001b[39m\n\u001b[31m        const data = await res.json().catch(() => ({}));\u001b[39m\n\u001b[31m        throw new Error(data.error || \\\"Failed to open in studio\\\");\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      const { redirectUrl } = await res.json();\u001b[39m\n\u001b[31m      router.push(redirectUrl);\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      console.error(\\\"Open in Studio failed:\\\", err);\u001b[39m\n\u001b[31m      const message = err instanceof Error ? err.message : \\\"Failed to open in studio\\\";\u001b[39m\n\u001b[31m      setStudioError(message);\u001b[39m\n\u001b[31m      setStudioLoading(false);\u001b[39m\n\u001b[31m      // Auto-clear error after 5 seconds\u001b[39m\n\u001b[31m      setTimeout(() => setStudioError(null), 5000);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [topic, mode, markdownReport, sources, keyFindings, gaps, router]);·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex items-center gap-1.5 print:hidden\\\">\u001b[39m\n\u001b[31m      <button\u001b[39m\n\u001b[31m        onClick={handleExportMarkdown}\u001b[39m\n\u001b[31m        className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m        title=\\\"Download as Markdown\\\"\u001b[39m\n\u001b[31m      >\u001b[39m\n\u001b[31m        <Download size={14} />\u001b[39m\n\u001b[31m        <span className=\\\"hidden sm:inline\\\">.md</span>\u001b[39m\n\u001b[31m      </button>\u001b[39m\n\u001b[31m      <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m        <button\u001b[39m\n\u001b[31m          onClick={handleExportPDF}\u001b[39m\n\u001b[31m          disabled={pdfLoading}\u001b[39m\n\u001b[31m          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${\u001b[39m\n\u001b[31m            pdfError\u001b[39m\n\u001b[31m              ? \\\"text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50\\\"\u001b[39m\n\u001b[31m              : \\\"text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white\\\"\u001b[39m\n\u001b[31m          }`}\u001b[39m\n\u001b[31m          title={pdfError || \\\"Download as PDF\\\"}\u001b[39m\n\u001b[31m        >\u001b[39m\n\u001b[31m          {pdfLoading ? <Loader2 size={14} className=\\\"animate-spin\\\" /> : <Printer size={14} />}\u001b[39m\n\u001b[31m          <span className=\\\"hidden sm:inline\\\">{pdfLoading ? \\\"...\\\" : pdfError ? \\\"Failed\\\" : \\\"PDF\\\"}</span>\u001b[39m\n\u001b[31m        </button>\u001b[39m\n\u001b[31m        {pdfError && (\u001b[39m\n\u001b[31m          <div className=\\\"absolute top-full left-0 mt-1 px-2 py-1 text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-700/50 rounded-md whitespace-nowrap z-10\\\">\u001b[39m\n\u001b[31m            {pdfError}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m      <button\u001b[39m\n\u001b[31m        onClick={handleCopyClipboard}\u001b[39m\n\u001b[31m        className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m        title=\\\"Copies formatted text — paste into Google Docs, Word, or any editor with formatting preserved\\\"\u001b[39m\n\u001b[31m      >\u001b[39m\n\u001b[31m        {copied ? <Check size={14} className=\\\"text-emerald-400\\\" /> : <Copy size={14} />}\u001b[39m\n\u001b[31m        <span className=\\\"hidden sm:inline\\\">{copied ? \\\"Copied\\\" : \\\"Copy\\\"}</span>\u001b[39m\n\u001b[31m      </button>\u001b[39m\n\u001b[31m      <div className=\\\"w-px h-5 bg-gray-300 dark:bg-gray-700/50 mx-0.5\\\" />\u001b[39m\n\u001b[31m      <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m        <button\u001b[39m\n\u001b[31m          onClick={handleOpenInStudio}\u001b[39m\n\u001b[31m          disabled={studioLoading}\u001b[39m\n\u001b[31m          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${\u001b[39m\n\u001b[31m            studioError\u001b[39m\n\u001b[31m              ? \\\"text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50\\\"\u001b[39m\n\u001b[31m              : \\\"text-blue-700 dark:text-gray-300 bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 hover:text-blue-800 dark:hover:text-white\\\"\u001b[39m\n\u001b[31m          }`}\u001b[39m\n\u001b[31m          title={studioError || \\\"Open in Studio editor\\\"}\u001b[39m\n\u001b[31m        >\u001b[39m\n\u001b[31m          {studioLoading ? (\u001b[39m\n\u001b[31m            <Loader2 size={14} className=\\\"animate-spin\\\" />\u001b[39m\n\u001b[31m          ) : (\u001b[39m\n\u001b[31m            <PenLine size={14} />\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m          <span className=\\\"hidden sm:inline\\\">\u001b[39m\n\u001b[31m            {studioLoading ? \\\"Opening...\\\" : studioError ? \\\"Failed\\\" : \\\"Open in Studio\\\"}\u001b[39m\n\u001b[31m          </span>\u001b[39m\n\u001b[31m        </button>\u001b[39m\n\u001b[31m        {studioError && (\u001b[39m\n\u001b[31m          <div className=\\\"absolute top-full right-0 mt-1 px-2 py-1 text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-700/50 rounded-md whitespace-nowrap z-10\\\">\u001b[39m\n\u001b[31m            {studioError}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m      {sources.length > 0 && (\u001b[39m\n\u001b[31m        <>\u001b[39m\n\u001b[31m          <div className=\\\"w-px h-5 bg-gray-300 dark:bg-gray-700/50 mx-0.5\\\" />\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={handleExportBibTeX}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m            title=\\\"Download references as BibTeX\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <FileText size={14} />\u001b[39m\n\u001b[31m            <span className=\\\"hidden sm:inline\\\">.bib</span>\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={handleExportRIS}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m            title=\\\"Download references as RIS (EndNote/Mendeley)\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <FileText size={14} />\u001b[39m\n\u001b[31m            <span className=\\\"hidden sm:inline\\\">.ris</span>\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </>\u001b[39m\n\u001b[31m      )}\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"/studio\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useState, useCallback } from \\\"react\\\";\u001b[39m\n\u001b[31mimport { useRouter } from \\\"next/navigation\\\";\u001b[39m\n\u001b[31mimport { Download, Printer, Copy, Check, FileText, PenLine, Loader2 } from \\\"lucide-react\\\";\u001b[39m\n\u001b[31mimport type { DeepResearchSource } from \\\"./types\\\";·\u001b[39m\n\u001b[31m// ── BibTeX generation ─────────────────────────────────────────────\u001b[39m\n\u001b[31m/* empty state: no data, no results, nothing here */\u001b[39m\n\u001b[31mfunction generateBibTeX(sources: DeepResearchSource[]): string {\u001b[39m\n\u001b[31m  return sources\u001b[39m\n\u001b[31m    .map((s, idx) => {\u001b[39m\n\u001b[31m      // Build a citation key: firstAuthorLastName + year + first word of title\u001b[39m\n\u001b[31m      const firstAuthor = s.authors[0] || \\\"Unknown\\\";\u001b[39m\n\u001b[31m      const lastName = firstAuthor.split(/[,\\\\s]+/)[0].replace(/[^a-zA-Z]/g, \\\"\\\");\u001b[39m\n\u001b[31m      const titleWord = (s.title.split(/\\\\s+/)[0] || \\\"\\\").replace(/[^a-zA-Z]/g, \\\"\\\");\u001b[39m\n\u001b[31m      const key = `${lastName}${s.year || \\\"\\\"}${titleWord}`.toLowerCase() || `ref${idx + 1}`;·\u001b[39m\n\u001b[31m      const authors = s.authors.join(\\\" and \\\");\u001b[39m\n\u001b[31m      const lines = [\u001b[39m\n\u001b[31m        `@article{${key},`,\u001b[39m\n\u001b[31m        `  author    = {${authors}},`,\u001b[39m\n\u001b[31m        `  title     = {${s.title}},`,\u001b[39m\n\u001b[31m        `  journal   = {${s.journal || \\\"\\\"}},`,\u001b[39m\n\u001b[31m        `  year      = {${s.year || \\\"\\\"}},`,\u001b[39m\n\u001b[31m      ];\u001b[39m\n\u001b[31m      if (s.doi) lines.push(`  doi       = {${s.doi}},`);\u001b[39m\n\u001b[31m      if (s.pmid) lines.push(`  pmid      = {${s.pmid}},`);\u001b[39m\n\u001b[31m      if (s.abstract) lines.push(`  abstract  = {${s.abstract.slice(0, 500)}},`);\u001b[39m\n\u001b[31m      lines.push(`}`);\u001b[39m\n\u001b[31m      return lines.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m    })\u001b[39m\n\u001b[31m    .join(\\\"\\\\n\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── RIS generation ────────────────────────────────────────────────\u001b[39m\n\u001b[31mfunction generateRIS(sources: DeepResearchSource[]): string {\u001b[39m\n\u001b[31m  return sources\u001b[39m\n\u001b[31m    .map((s) => {\u001b[39m\n\u001b[31m      const lines = [\u001b[39m\n\u001b[31m        `TY  - JOUR`,\u001b[39m\n\u001b[31m        `TI  - ${s.title}`,\u001b[39m\n\u001b[31m      ];\u001b[39m\n\u001b[31m      for (const author of s.authors) {\u001b[39m\n\u001b[31m        lines.push(`AU  - ${author}`);\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      if (s.journal) lines.push(`JO  - ${s.journal}`);\u001b[39m\n\u001b[31m      if (s.year) lines.push(`PY  - ${s.year}`);\u001b[39m\n\u001b[31m      if (s.doi) lines.push(`DO  - ${s.doi}`);\u001b[39m\n\u001b[31m      if (s.pmid) lines.push(`AN  - PMID:${s.pmid}`);\u001b[39m\n\u001b[31m      if (s.abstract) lines.push(`AB  - ${s.abstract.slice(0, 500)}`);\u001b[39m\n\u001b[31m      if (s.openAccessPdfUrl || s.fullTextUrl) lines.push(`UR  - ${s.openAccessPdfUrl || s.fullTextUrl}`);\u001b[39m\n\u001b[31m      else if (s.doi) lines.push(`UR  - https://doi.org/${s.doi}`);\u001b[39m\n\u001b[31m      lines.push(`ER  - `);\u001b[39m\n\u001b[31m      return lines.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m    })\u001b[39m\n\u001b[31m    .join(\\\"\\\\n\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Markdown to simple HTML (for PDF export) ─────────────────────\u001b[39m\n\u001b[31mfunction markdownToSimpleHTML(md: string): string {\u001b[39m\n\u001b[31m  const lines = md.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m  const htmlParts: string[] = [];·\u001b[39m\n\u001b[31m  for (let i = 0; i < lines.length; i++) {\u001b[39m\n\u001b[31m    const line = lines[i].trimEnd();·\u001b[39m\n\u001b[31m    if (line === \\\"\\\") continue;·\u001b[39m\n\u001b[31m    // Headings\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"#### \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h4>${escapeHTML(line.slice(5))}</h4>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"### \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h3>${escapeHTML(line.slice(4))}</h3>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"## \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h2>${escapeHTML(line.slice(3))}</h2>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"# \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h1>${escapeHTML(line.slice(2))}</h1>`);\u001b[39m\n\u001b[31m    } else if (/^---+$/.test(line) || /^\\\\*\\\\*\\\\*+$/.test(line)) {\u001b[39m\n\u001b[31m      // Horizontal rule — skip, the PDF doesn't need it\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m      // Blockquote — render as italic paragraph\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line.slice(2))}</p>`);\u001b[39m\n\u001b[31m    } else if (/^[-*]\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      // List item — render as indented paragraph with bullet\u001b[39m\n\u001b[31m      htmlParts.push(`<p>\\\\u2022 ${escapeHTML(line.replace(/^[-*]\\\\s+/, \\\"\\\"))}</p>`);\u001b[39m\n\u001b[31m    } else if (/^\\\\d+\\\\.\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      // Numbered list — keep the number\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line)}</p>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m      // Table row — collect all table rows and render as text\u001b[39m\n\u001b[31m      const cells = line.split(\\\"|\\\").filter(Boolean).map((c) => c.trim());\u001b[39m\n\u001b[31m      // Skip separator rows (|---|---|)\u001b[39m\n\u001b[31m      if (cells.every((c) => /^[-:]+$/.test(c))) continue;\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(cells.join(\\\"  |  \\\"))}</p>`);\u001b[39m\n\u001b[31m    } else {\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line)}</p>`);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return htmlParts.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mfunction escapeHTML(text: string): string {\u001b[39m\n\u001b[31m  return text\u001b[39m\n\u001b[31m    .replace(/&/g, \\\"&amp;\\\")\u001b[39m\n\u001b[31m    .replace(/</g, \\\"&lt;\\\")\u001b[39m\n\u001b[31m    .replace(/>/g, \\\"&gt;\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Inline formatting (bold, italic, citation superscripts) ─────\u001b[39m\n\u001b[31mfunction applyInlineFormatting(text: string, supStyle: string): string {\u001b[39m\n\u001b[31m  let result = escapeHTML(text);\u001b[39m\n\u001b[31m  // Bold: **text**\u001b[39m\n\u001b[31m  result = result.replace(/\\\\*\\\\*(.+?)\\\\*\\\\*/g, \\\"<strong>$1</strong>\\\");\u001b[39m\n\u001b[31m  // Italic: *text* (not inside bold markers)\u001b[39m\n\u001b[31m  result = result.replace(\u001b[39m\n\u001b[31m    /(?<!\\\\*)\\\\*(?!\\\\*)(.+?)(?<!\\\\*)\\\\*(?!\\\\*)/g,\u001b[39m\n\u001b[31m    \\\"<em>$1</em>\\\",\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m  // Citation markers: [N] → styled superscript\u001b[39m\n\u001b[31m  result = result.replace(\u001b[39m\n\u001b[31m    /\\\\[(\\\\d+)\\\\]/g,\u001b[39m\n\u001b[31m    `<sup style=\\\"${supStyle}\\\">[$1]</sup>`,\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m  return result;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Markdown → rich HTML with inline styles (for clipboard) ─────\u001b[39m\n\u001b[31m// Google Docs / Word ignore CSS classes — only inline styles work.\u001b[39m\n\u001b[31mfunction markdownToRichHTML(\u001b[39m\n\u001b[31m  md: string,\u001b[39m\n\u001b[31m  sources: DeepResearchSource[],\u001b[39m\n\u001b[31m): string {\u001b[39m\n\u001b[31m  const S = {\u001b[39m\n\u001b[31m    h1: \\\"font-size:24px;font-weight:bold;margin:24px 0 12px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h2: \\\"font-size:20px;font-weight:bold;margin:20px 0 10px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h3: \\\"font-size:16px;font-weight:bold;margin:16px 0 8px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h4: \\\"font-size:14px;font-weight:bold;font-style:italic;margin:12px 0 6px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    p: \\\"margin:8px 0;line-height:1.6;color:#333;\\\",\u001b[39m\n\u001b[31m    table: \\\"border-collapse:collapse;margin:12px 0;width:100%;\\\",\u001b[39m\n\u001b[31m    th: \\\"border:1px solid #ccc;padding:8px 12px;background:#f5f5f5;font-weight:bold;text-align:left;\\\",\u001b[39m\n\u001b[31m    td: \\\"border:1px solid #ccc;padding:8px 12px;text-align:left;\\\",\u001b[39m\n\u001b[31m    blockquote:\u001b[39m\n\u001b[31m      \\\"border-left:3px solid #ccc;padding:8px 16px;margin:12px 0;color:#555;font-style:italic;\\\",\u001b[39m\n\u001b[31m    sup: \\\"font-size:10px;color:#2563eb;vertical-align:super;text-decoration:none;\\\",\u001b[39m\n\u001b[31m    hr: \\\"border:none;border-top:1px solid #e5e5e5;margin:16px 0;\\\",\u001b[39m\n\u001b[31m    li: \\\"margin:4px 0;line-height:1.6;color:#333;\\\",\u001b[39m\n\u001b[31m  };·\u001b[39m\n\u001b[31m  const fmt = (text: string) => applyInlineFormatting(text, S.sup);·\u001b[39m\n\u001b[31m  const lines = md.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m  const out: string[] = [];\u001b[39m\n\u001b[31m  let i = 0;·\u001b[39m\n\u001b[31m  while (i < lines.length) {\u001b[39m\n\u001b[31m    const line = lines[i].trimEnd();·\u001b[39m\n\u001b[31m    // Blank line — skip\u001b[39m\n\u001b[31m    if (line === \\\"\\\") {\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Headings (order matters: #### before ### before ## before #)\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"#### \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h4 style=\\\"${S.h4}\\\">${fmt(line.slice(5))}</h4>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"### \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h3 style=\\\"${S.h3}\\\">${fmt(line.slice(4))}</h3>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"## \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h2 style=\\\"${S.h2}\\\">${fmt(line.slice(3))}</h2>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"# \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h1 style=\\\"${S.h1}\\\">${fmt(line.slice(2))}</h1>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Horizontal rule\u001b[39m\n\u001b[31m    if (/^---+$/.test(line) || /^\\\\*\\\\*\\\\*+$/.test(line)) {\u001b[39m\n\u001b[31m      out.push(`<hr style=\\\"${S.hr}\\\" />`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Blockquote — collect consecutive > lines\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m      const parts: string[] = [];\u001b[39m\n\u001b[31m      while (i < lines.length && lines[i].trimEnd().startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m        parts.push(lines[i].trimEnd().slice(2));\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\u001b[39m\n\u001b[31m        `<blockquote style=\\\"${S.blockquote}\\\">${fmt(parts.join(\\\" \\\"))}</blockquote>`,\u001b[39m\n\u001b[31m      );\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Table — collect all | rows, render as <table>\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m      const tableRows: string[][] = [];\u001b[39m\n\u001b[31m      let hasSeparator = false;\u001b[39m\n\u001b[31m      while (i < lines.length && lines[i].trimEnd().startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m        const raw = lines[i].trimEnd();\u001b[39m\n\u001b[31m        const cells = raw\u001b[39m\n\u001b[31m          .split(\\\"|\\\")\u001b[39m\n\u001b[31m          .filter(Boolean)\u001b[39m\n\u001b[31m          .map((c) => c.trim());\u001b[39m\n\u001b[31m        // Detect separator row (|---|---|)\u001b[39m\n\u001b[31m        if (cells.every((c) => /^[-:]+$/.test(c))) {\u001b[39m\n\u001b[31m          hasSeparator = true;\u001b[39m\n\u001b[31m          i++;\u001b[39m\n\u001b[31m          continue;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        tableRows.push(cells);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      if (tableRows.length > 0) {\u001b[39m\n\u001b[31m        out.push(`<table style=\\\"${S.table}\\\">`);\u001b[39m\n\u001b[31m        const headerRow = hasSeparator ? tableRows[0] : null;\u001b[39m\n\u001b[31m        const bodyStart = hasSeparator ? 1 : 0;\u001b[39m\n\u001b[31m        if (headerRow) {\u001b[39m\n\u001b[31m          out.push(\\\"<thead><tr>\\\");\u001b[39m\n\u001b[31m          for (const cell of headerRow) {\u001b[39m\n\u001b[31m            out.push(`<th style=\\\"${S.th}\\\">${fmt(cell)}</th>`);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          out.push(\\\"</tr></thead>\\\");\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        out.push(\\\"<tbody>\\\");\u001b[39m\n\u001b[31m        for (let r = bodyStart; r < tableRows.length; r++) {\u001b[39m\n\u001b[31m          out.push(\\\"<tr>\\\");\u001b[39m\n\u001b[31m          for (const cell of tableRows[r]) {\u001b[39m\n\u001b[31m            out.push(`<td style=\\\"${S.td}\\\">${fmt(cell)}</td>`);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          out.push(\\\"</tr>\\\");\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        out.push(\\\"</tbody></table>\\\");\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Unordered list — collect consecutive - or * items\u001b[39m\n\u001b[31m    if (/^[-*]\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      out.push(\\\"<ul>\\\");\u001b[39m\n\u001b[31m      while (i < lines.length && /^[-*]\\\\s/.test(lines[i].trimEnd())) {\u001b[39m\n\u001b[31m        const text = lines[i].trimEnd().replace(/^[-*]\\\\s+/, \\\"\\\");\u001b[39m\n\u001b[31m        out.push(`<li style=\\\"${S.li}\\\">${fmt(text)}</li>`);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\\\"</ul>\\\");\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Ordered list — collect consecutive numbered items\u001b[39m\n\u001b[31m    if (/^\\\\d+\\\\.\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      out.push(\\\"<ol>\\\");\u001b[39m\n\u001b[31m      while (i < lines.length && /^\\\\d+\\\\.\\\\s/.test(lines[i].trimEnd())) {\u001b[39m\n\u001b[31m        const text = lines[i].trimEnd().replace(/^\\\\d+\\\\.\\\\s+/, \\\"\\\");\u001b[39m\n\u001b[31m        out.push(`<li style=\\\"${S.li}\\\">${fmt(text)}</li>`);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\\\"</ol>\\\");\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Default: paragraph\u001b[39m\n\u001b[31m    out.push(`<p style=\\\"${S.p}\\\">${fmt(line)}</p>`);\u001b[39m\n\u001b[31m    i++;\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  // ── References section from sources ──────────────────────────────\u001b[39m\n\u001b[31m  if (sources.length > 0) {\u001b[39m\n\u001b[31m    out.push(`<h2 style=\\\"${S.h2}\\\">References</h2>`);\u001b[39m\n\u001b[31m    out.push(\\\"<ol>\\\");\u001b[39m\n\u001b[31m    for (const s of sources) {\u001b[39m\n\u001b[31m      const authorsText =\u001b[39m\n\u001b[31m        s.authors.length > 3\u001b[39m\n\u001b[31m          ? `${s.authors.slice(0, 3).join(\\\", \\\")} et al.`\u001b[39m\n\u001b[31m          : s.authors.join(\\\", \\\");\u001b[39m\n\u001b[31m      let citation = `${escapeHTML(authorsText)}. ${escapeHTML(s.title)}.`;\u001b[39m\n\u001b[31m      if (s.journal) citation += ` <em>${escapeHTML(s.journal)}</em>`;\u001b[39m\n\u001b[31m      if (s.year) citation += ` (${s.year})`;\u001b[39m\n\u001b[31m      citation += \\\".\\\";\u001b[39m\n\u001b[31m      if (s.doi) citation += ` DOI: ${escapeHTML(s.doi)}`;\u001b[39m\n\u001b[31m      out.push(`<li style=\\\"${S.li}\\\">${citation}</li>`);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    out.push(\\\"</ol>\\\");\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return out.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31minterface ExportButtonsProps {\u001b[39m\n\u001b[31m  markdownReport: string;\u001b[39m\n\u001b[31m  topic: string;\u001b[39m\n\u001b[31m  sources?: DeepResearchSource[];\u001b[39m\n\u001b[31m  keyFindings?: string[];\u001b[39m\n\u001b[31m  gaps?: string[];\u001b[39m\n\u001b[31m  mode?: string;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mexport function ExportButtons({\u001b[39m\n\u001b[31m  markdownReport,\u001b[39m\n\u001b[31m  topic,\u001b[39m\n\u001b[31m  sources = [],\u001b[39m\n\u001b[31m  keyFindings = [],\u001b[39m\n\u001b[31m  gaps = [],\u001b[39m\n\u001b[31m  mode = \\\"standard\\\",\u001b[39m\n\u001b[31m}: ExportButtonsProps) {\u001b[39m\n\u001b[31m  const router = useRouter();\u001b[39m\n\u001b[31m  const [copied, setCopied] = useState(false);\u001b[39m\n\u001b[31m  const [studioLoading, setStudioLoading] = useState(false);\u001b[39m\n\u001b[31m  const [studioError, setStudioError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  const handleExportMarkdown = useCallback(() => {\u001b[39m\n\u001b[31m    const blob = new Blob([markdownReport], { type: \\\"text/markdown\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_report.md`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [markdownReport, topic]);·\u001b[39m\n\u001b[31m  const [pdfLoading, setPdfLoading] = useState(false);\u001b[39m\n\u001b[31m  const [pdfError, setPdfError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  const handleExportPDF = useCallback(async () => {\u001b[39m\n\u001b[31m    setPdfLoading(true);\u001b[39m\n\u001b[31m    setPdfError(null);\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      // Convert markdown to simple HTML block elements for the PDF generator\u001b[39m\n\u001b[31m      const htmlContent = markdownToSimpleHTML(markdownReport);·\u001b[39m\n\u001b[31m      // Build citation strings for the references section\u001b[39m\n\u001b[31m      const citations = sources.map((s, idx) => {\u001b[39m\n\u001b[31m        const authorsText =\u001b[39m\n\u001b[31m          s.authors.length > 3\u001b[39m\n\u001b[31m            ? `${s.authors.slice(0, 3).join(\\\", \\\")} et al.`\u001b[39m\n\u001b[31m            : s.authors.join(\\\", \\\");\u001b[39m\n\u001b[31m        let citation = `[${idx + 1}] ${authorsText}. ${s.title}.`;\u001b[39m\n\u001b[31m        if (s.journal) citation += ` ${s.journal}`;\u001b[39m\n\u001b[31m        if (s.year) citation += ` (${s.year})`;\u001b[39m\n\u001b[31m        citation += \\\".\\\";\u001b[39m\n\u001b[31m        if (s.doi) citation += ` DOI: ${s.doi}`;\u001b[39m\n\u001b[31m        return citation;\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/export/pdf\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({\u001b[39m\n\u001b[31m          title: topic,\u001b[39m\n\u001b[31m          content: htmlContent,\u001b[39m\n\u001b[31m          citations: citations.length > 0 ? citations : undefined,\u001b[39m\n\u001b[31m        }),\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      if (!res.ok) {\u001b[39m\n\u001b[31m        const data = await res.json().catch(() => ({}));\u001b[39m\n\u001b[31m        throw new Error(data.error || `PDF generation failed (${res.status})`);\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      const blob = await res.blob();\u001b[39m\n\u001b[31m      const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m      const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m      a.href = url;\u001b[39m\n\u001b[31m      a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_report.pdf`;\u001b[39m\n\u001b[31m      document.body.appendChild(a);\u001b[39m\n\u001b[31m      a.click();\u001b[39m\n\u001b[31m      document.body.removeChild(a);\u001b[39m\n\u001b[31m      URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      console.error(\\\"PDF export failed:\\\", err);\u001b[39m\n\u001b[31m      const message = err instanceof Error ? err.message : \\\"PDF export failed\\\";\u001b[39m\n\u001b[31m      setPdfError(message);\u001b[39m\n\u001b[31m      setTimeout(() => setPdfError(null), 5000);\u001b[39m\n\u001b[31m    } finally {\u001b[39m\n\u001b[31m      setPdfLoading(false);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [markdownReport, topic, sources]);·\u001b[39m\n\u001b[31m  const handleCopyClipboard = useCallback(async () => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const html = markdownToRichHTML(markdownReport, sources);·\u001b[39m\n\u001b[31m      // Modern browsers: write both HTML and plain text\u001b[39m\n\u001b[31m      if (\u001b[39m\n\u001b[31m        typeof ClipboardItem !== \\\"undefined\\\" &&\u001b[39m\n\u001b[31m        navigator.clipboard?.write\u001b[39m\n\u001b[31m      ) {\u001b[39m\n\u001b[31m        const item = new ClipboardItem({\u001b[39m\n\u001b[31m          \\\"text/html\\\": new Blob([html], { type: \\\"text/html\\\" }),\u001b[39m\n\u001b[31m          \\\"text/plain\\\": new Blob([markdownReport], { type: \\\"text/plain\\\" }),\u001b[39m\n\u001b[31m        });\u001b[39m\n\u001b[31m        await navigator.clipboard.write([item]);\u001b[39m\n\u001b[31m      } else {\u001b[39m\n\u001b[31m        // Fallback: plain text only\u001b[39m\n\u001b[31m        await navigator.clipboard.writeText(markdownReport);\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      setCopied(true);\u001b[39m\n\u001b[31m      setTimeout(() => setCopied(false), 2000);\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Last-resort fallback for older browsers\u001b[39m\n\u001b[31m      const textarea = document.createElement(\\\"textarea\\\");\u001b[39m\n\u001b[31m      textarea.value = markdownReport;\u001b[39m\n\u001b[31m      document.body.appendChild(textarea);\u001b[39m\n\u001b[31m      textarea.select();\u001b[39m\n\u001b[31m      document.execCommand(\\\"copy\\\");\u001b[39m\n\u001b[31m      document.body.removeChild(textarea);\u001b[39m\n\u001b[31m      setCopied(true);\u001b[39m\n\u001b[31m      setTimeout(() => setCopied(false), 2000);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [markdownReport, sources]);·\u001b[39m\n\u001b[31m  const handleExportBibTeX = useCallback(() => {\u001b[39m\n\u001b[31m    if (sources.length === 0) return;\u001b[39m\n\u001b[31m    const bibtex = generateBibTeX(sources);\u001b[39m\n\u001b[31m    const blob = new Blob([bibtex], { type: \\\"application/x-bibtex\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_references.bib`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [sources, topic]);·\u001b[39m\n\u001b[31m  const handleExportRIS = useCallback(() => {\u001b[39m\n\u001b[31m    if (sources.length === 0) return;\u001b[39m\n\u001b[31m    const ris = generateRIS(sources);\u001b[39m\n\u001b[31m    const blob = new Blob([ris], { type: \\\"application/x-research-info-systems\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_references.ris`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [sources, topic]);·\u001b[39m\n\u001b[31m  const handleOpenInStudio = useCallback(async () => {\u001b[39m\n\u001b[31m    setStudioLoading(true);\u001b[39m\n\u001b[31m    setStudioError(null);\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/deep-research/open-in-studio\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({\u001b[39m\n\u001b[31m          topic,\u001b[39m\n\u001b[31m          mode,\u001b[39m\n\u001b[31m          markdownReport,\u001b[39m\n\u001b[31m          sources,\u001b[39m\n\u001b[31m          keyFindings,\u001b[39m\n\u001b[31m          gaps,\u001b[39m\n\u001b[31m        }),\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      if (!res.ok) {\u001b[39m\n\u001b[31m        const data = await res.json().catch(() => ({}));\u001b[39m\n\u001b[31m        throw new Error(data.error || \\\"Failed to open in studio\\\");\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      const { redirectUrl } = await res.json();\u001b[39m\n\u001b[31m      router.push(redirectUrl);\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      console.error(\\\"Open in Studio failed:\\\", err);\u001b[39m\n\u001b[31m      const message = err instanceof Error ? err.message : \\\"Failed to open in studio\\\";\u001b[39m\n\u001b[31m      setStudioError(message);\u001b[39m\n\u001b[31m      setStudioLoading(false);\u001b[39m\n\u001b[31m      // Auto-clear error after 5 seconds\u001b[39m\n\u001b[31m      setTimeout(() => setStudioError(null), 5000);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [topic, mode, markdownReport, sources, keyFindings, gaps, router]);·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex items-center gap-1.5 print:hidden\\\">\u001b[39m\n\u001b[31m      <button\u001b[39m\n\u001b[31m        onClick={handleExportMarkdown}\u001b[39m\n\u001b[31m        className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m        title=\\\"Download as Markdown\\\"\u001b[39m\n\u001b[31m      >\u001b[39m\n\u001b[31m        <Download size={14} />\u001b[39m\n\u001b[31m        <span className=\\\"hidden sm:inline\\\">.md</span>\u001b[39m\n\u001b[31m      </button>\u001b[39m\n\u001b[31m      <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m        <button\u001b[39m\n\u001b[31m          onClick={handleExportPDF}\u001b[39m\n\u001b[31m          disabled={pdfLoading}\u001b[39m\n\u001b[31m          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${\u001b[39m\n\u001b[31m            pdfError\u001b[39m\n\u001b[31m              ? \\\"text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50\\\"\u001b[39m\n\u001b[31m              : \\\"text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white\\\"\u001b[39m\n\u001b[31m          }`}\u001b[39m\n\u001b[31m          title={pdfError || \\\"Download as PDF\\\"}\u001b[39m\n\u001b[31m        >\u001b[39m\n\u001b[31m          {pdfLoading ? <Loader2 size={14} className=\\\"animate-spin\\\" /> : <Printer size={14} />}\u001b[39m\n\u001b[31m          <span className=\\\"hidden sm:inline\\\">{pdfLoading ? \\\"...\\\" : pdfError ? \\\"Failed\\\" : \\\"PDF\\\"}</span>\u001b[39m\n\u001b[31m        </button>\u001b[39m\n\u001b[31m        {pdfError && (\u001b[39m\n\u001b[31m          <div className=\\\"absolute top-full left-0 mt-1 px-2 py-1 text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-700/50 rounded-md whitespace-nowrap z-10\\\">\u001b[39m\n\u001b[31m            {pdfError}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m      <button\u001b[39m\n\u001b[31m        onClick={handleCopyClipboard}\u001b[39m\n\u001b[31m        className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m        title=\\\"Copies formatted text — paste into Google Docs, Word, or any editor with formatting preserved\\\"\u001b[39m\n\u001b[31m      >\u001b[39m\n\u001b[31m        {copied ? <Check size={14} className=\\\"text-emerald-400\\\" /> : <Copy size={14} />}\u001b[39m\n\u001b[31m        <span className=\\\"hidden sm:inline\\\">{copied ? \\\"Copied\\\" : \\\"Copy\\\"}</span>\u001b[39m\n\u001b[31m      </button>\u001b[39m\n\u001b[31m      <div className=\\\"w-px h-5 bg-gray-300 dark:bg-gray-700/50 mx-0.5\\\" />\u001b[39m\n\u001b[31m      <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m        <button\u001b[39m\n\u001b[31m          onClick={handleOpenInStudio}\u001b[39m\n\u001b[31m          disabled={studioLoading}\u001b[39m\n\u001b[31m          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${\u001b[39m\n\u001b[31m            studioError\u001b[39m\n\u001b[31m              ? \\\"text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50\\\"\u001b[39m\n\u001b[31m              : \\\"text-blue-700 dark:text-gray-300 bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 hover:text-blue-800 dark:hover:text-white\\\"\u001b[39m\n\u001b[31m          }`}\u001b[39m\n\u001b[31m          title={studioError || \\\"Open in Studio editor\\\"}\u001b[39m\n\u001b[31m        >\u001b[39m\n\u001b[31m          {studioLoading ? (\u001b[39m\n\u001b[31m            <Loader2 size={14} className=\\\"animate-spin\\\" />\u001b[39m\n\u001b[31m          ) : (\u001b[39m\n\u001b[31m            <PenLine size={14} />\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m          <span className=\\\"hidden sm:inline\\\">\u001b[39m\n\u001b[31m            {studioLoading ? \\\"Opening...\\\" : studioError ? \\\"Failed\\\" : \\\"Open in Studio\\\"}\u001b[39m\n\u001b[31m          </span>\u001b[39m\n\u001b[31m        </button>\u001b[39m\n\u001b[31m        {studioError && (\u001b[39m\n\u001b[31m          <div className=\\\"absolute top-full right-0 mt-1 px-2 py-1 text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-700/50 rounded-md whitespace-nowrap z-10\\\">\u001b[39m\n\u001b[31m            {studioError}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m      {sources.length > 0 && (\u001b[39m\n\u001b[31m        <>\u001b[39m\n\u001b[31m          <div className=\\\"w-px h-5 bg-gray-300 dark:bg-gray-700/50 mx-0.5\\\" />\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={handleExportBibTeX}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m            title=\\\"Download references as BibTeX\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <FileText size={14} />\u001b[39m\n\u001b[31m            <span className=\\\"hidden sm:inline\\\">.bib</span>\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={handleExportRIS}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m            title=\\\"Download references as RIS (EndNote/Mendeley)\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <FileText size={14} />\u001b[39m\n\u001b[31m            <span className=\\\"hidden sm:inline\\\">.ris</span>\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </>\u001b[39m\n\u001b[31m      )}\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/deep-research.ts:26:43)\n    at assertDeepResearchCheckpoint (/home/user/ScholarSync-/qa/module-assertions/deep-research.ts:1393:5)\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-005.spec.ts:1318:27",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/module-assertions/deep-research.ts",
-                          "column": 43,
-                          "line": 26
-                        },
-                        "snippet": "   at ../module-assertions/deep-research.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/module-assertions/deep-research.ts",
-                            "column": 43,
-                            "line": 26
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"/studio\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useState, useCallback } from \\\"react\\\";\u001b[39m\n\u001b[31mimport { useRouter } from \\\"next/navigation\\\";\u001b[39m\n\u001b[31mimport { Download, Printer, Copy, Check, FileText, PenLine, Loader2 } from \\\"lucide-react\\\";\u001b[39m\n\u001b[31mimport type { DeepResearchSource } from \\\"./types\\\";·\u001b[39m\n\u001b[31m// ── BibTeX generation ─────────────────────────────────────────────\u001b[39m\n\u001b[31m/* empty state: no data, no results, nothing here */\u001b[39m\n\u001b[31mfunction generateBibTeX(sources: DeepResearchSource[]): string {\u001b[39m\n\u001b[31m  return sources\u001b[39m\n\u001b[31m    .map((s, idx) => {\u001b[39m\n\u001b[31m      // Build a citation key: firstAuthorLastName + year + first word of title\u001b[39m\n\u001b[31m      const firstAuthor = s.authors[0] || \\\"Unknown\\\";\u001b[39m\n\u001b[31m      const lastName = firstAuthor.split(/[,\\\\s]+/)[0].replace(/[^a-zA-Z]/g, \\\"\\\");\u001b[39m\n\u001b[31m      const titleWord = (s.title.split(/\\\\s+/)[0] || \\\"\\\").replace(/[^a-zA-Z]/g, \\\"\\\");\u001b[39m\n\u001b[31m      const key = `${lastName}${s.year || \\\"\\\"}${titleWord}`.toLowerCase() || `ref${idx + 1}`;·\u001b[39m\n\u001b[31m      const authors = s.authors.join(\\\" and \\\");\u001b[39m\n\u001b[31m      const lines = [\u001b[39m\n\u001b[31m        `@article{${key},`,\u001b[39m\n\u001b[31m        `  author    = {${authors}},`,\u001b[39m\n\u001b[31m        `  title     = {${s.title}},`,\u001b[39m\n\u001b[31m        `  journal   = {${s.journal || \\\"\\\"}},`,\u001b[39m\n\u001b[31m        `  year      = {${s.year || \\\"\\\"}},`,\u001b[39m\n\u001b[31m      ];\u001b[39m\n\u001b[31m      if (s.doi) lines.push(`  doi       = {${s.doi}},`);\u001b[39m\n\u001b[31m      if (s.pmid) lines.push(`  pmid      = {${s.pmid}},`);\u001b[39m\n\u001b[31m      if (s.abstract) lines.push(`  abstract  = {${s.abstract.slice(0, 500)}},`);\u001b[39m\n\u001b[31m      lines.push(`}`);\u001b[39m\n\u001b[31m      return lines.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m    })\u001b[39m\n\u001b[31m    .join(\\\"\\\\n\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── RIS generation ────────────────────────────────────────────────\u001b[39m\n\u001b[31mfunction generateRIS(sources: DeepResearchSource[]): string {\u001b[39m\n\u001b[31m  return sources\u001b[39m\n\u001b[31m    .map((s) => {\u001b[39m\n\u001b[31m      const lines = [\u001b[39m\n\u001b[31m        `TY  - JOUR`,\u001b[39m\n\u001b[31m        `TI  - ${s.title}`,\u001b[39m\n\u001b[31m      ];\u001b[39m\n\u001b[31m      for (const author of s.authors) {\u001b[39m\n\u001b[31m        lines.push(`AU  - ${author}`);\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      if (s.journal) lines.push(`JO  - ${s.journal}`);\u001b[39m\n\u001b[31m      if (s.year) lines.push(`PY  - ${s.year}`);\u001b[39m\n\u001b[31m      if (s.doi) lines.push(`DO  - ${s.doi}`);\u001b[39m\n\u001b[31m      if (s.pmid) lines.push(`AN  - PMID:${s.pmid}`);\u001b[39m\n\u001b[31m      if (s.abstract) lines.push(`AB  - ${s.abstract.slice(0, 500)}`);\u001b[39m\n\u001b[31m      if (s.openAccessPdfUrl || s.fullTextUrl) lines.push(`UR  - ${s.openAccessPdfUrl || s.fullTextUrl}`);\u001b[39m\n\u001b[31m      else if (s.doi) lines.push(`UR  - https://doi.org/${s.doi}`);\u001b[39m\n\u001b[31m      lines.push(`ER  - `);\u001b[39m\n\u001b[31m      return lines.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m    })\u001b[39m\n\u001b[31m    .join(\\\"\\\\n\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Markdown to simple HTML (for PDF export) ─────────────────────\u001b[39m\n\u001b[31mfunction markdownToSimpleHTML(md: string): string {\u001b[39m\n\u001b[31m  const lines = md.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m  const htmlParts: string[] = [];·\u001b[39m\n\u001b[31m  for (let i = 0; i < lines.length; i++) {\u001b[39m\n\u001b[31m    const line = lines[i].trimEnd();·\u001b[39m\n\u001b[31m    if (line === \\\"\\\") continue;·\u001b[39m\n\u001b[31m    // Headings\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"#### \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h4>${escapeHTML(line.slice(5))}</h4>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"### \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h3>${escapeHTML(line.slice(4))}</h3>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"## \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h2>${escapeHTML(line.slice(3))}</h2>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"# \\\")) {\u001b[39m\n\u001b[31m      htmlParts.push(`<h1>${escapeHTML(line.slice(2))}</h1>`);\u001b[39m\n\u001b[31m    } else if (/^---+$/.test(line) || /^\\\\*\\\\*\\\\*+$/.test(line)) {\u001b[39m\n\u001b[31m      // Horizontal rule — skip, the PDF doesn't need it\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m      // Blockquote — render as italic paragraph\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line.slice(2))}</p>`);\u001b[39m\n\u001b[31m    } else if (/^[-*]\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      // List item — render as indented paragraph with bullet\u001b[39m\n\u001b[31m      htmlParts.push(`<p>\\\\u2022 ${escapeHTML(line.replace(/^[-*]\\\\s+/, \\\"\\\"))}</p>`);\u001b[39m\n\u001b[31m    } else if (/^\\\\d+\\\\.\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      // Numbered list — keep the number\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line)}</p>`);\u001b[39m\n\u001b[31m    } else if (line.startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m      // Table row — collect all table rows and render as text\u001b[39m\n\u001b[31m      const cells = line.split(\\\"|\\\").filter(Boolean).map((c) => c.trim());\u001b[39m\n\u001b[31m      // Skip separator rows (|---|---|)\u001b[39m\n\u001b[31m      if (cells.every((c) => /^[-:]+$/.test(c))) continue;\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(cells.join(\\\"  |  \\\"))}</p>`);\u001b[39m\n\u001b[31m    } else {\u001b[39m\n\u001b[31m      htmlParts.push(`<p>${escapeHTML(line)}</p>`);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return htmlParts.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mfunction escapeHTML(text: string): string {\u001b[39m\n\u001b[31m  return text\u001b[39m\n\u001b[31m    .replace(/&/g, \\\"&amp;\\\")\u001b[39m\n\u001b[31m    .replace(/</g, \\\"&lt;\\\")\u001b[39m\n\u001b[31m    .replace(/>/g, \\\"&gt;\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Inline formatting (bold, italic, citation superscripts) ─────\u001b[39m\n\u001b[31mfunction applyInlineFormatting(text: string, supStyle: string): string {\u001b[39m\n\u001b[31m  let result = escapeHTML(text);\u001b[39m\n\u001b[31m  // Bold: **text**\u001b[39m\n\u001b[31m  result = result.replace(/\\\\*\\\\*(.+?)\\\\*\\\\*/g, \\\"<strong>$1</strong>\\\");\u001b[39m\n\u001b[31m  // Italic: *text* (not inside bold markers)\u001b[39m\n\u001b[31m  result = result.replace(\u001b[39m\n\u001b[31m    /(?<!\\\\*)\\\\*(?!\\\\*)(.+?)(?<!\\\\*)\\\\*(?!\\\\*)/g,\u001b[39m\n\u001b[31m    \\\"<em>$1</em>\\\",\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m  // Citation markers: [N] → styled superscript\u001b[39m\n\u001b[31m  result = result.replace(\u001b[39m\n\u001b[31m    /\\\\[(\\\\d+)\\\\]/g,\u001b[39m\n\u001b[31m    `<sup style=\\\"${supStyle}\\\">[$1]</sup>`,\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m  return result;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Markdown → rich HTML with inline styles (for clipboard) ─────\u001b[39m\n\u001b[31m// Google Docs / Word ignore CSS classes — only inline styles work.\u001b[39m\n\u001b[31mfunction markdownToRichHTML(\u001b[39m\n\u001b[31m  md: string,\u001b[39m\n\u001b[31m  sources: DeepResearchSource[],\u001b[39m\n\u001b[31m): string {\u001b[39m\n\u001b[31m  const S = {\u001b[39m\n\u001b[31m    h1: \\\"font-size:24px;font-weight:bold;margin:24px 0 12px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h2: \\\"font-size:20px;font-weight:bold;margin:20px 0 10px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h3: \\\"font-size:16px;font-weight:bold;margin:16px 0 8px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    h4: \\\"font-size:14px;font-weight:bold;font-style:italic;margin:12px 0 6px 0;color:#1a1a1a;\\\",\u001b[39m\n\u001b[31m    p: \\\"margin:8px 0;line-height:1.6;color:#333;\\\",\u001b[39m\n\u001b[31m    table: \\\"border-collapse:collapse;margin:12px 0;width:100%;\\\",\u001b[39m\n\u001b[31m    th: \\\"border:1px solid #ccc;padding:8px 12px;background:#f5f5f5;font-weight:bold;text-align:left;\\\",\u001b[39m\n\u001b[31m    td: \\\"border:1px solid #ccc;padding:8px 12px;text-align:left;\\\",\u001b[39m\n\u001b[31m    blockquote:\u001b[39m\n\u001b[31m      \\\"border-left:3px solid #ccc;padding:8px 16px;margin:12px 0;color:#555;font-style:italic;\\\",\u001b[39m\n\u001b[31m    sup: \\\"font-size:10px;color:#2563eb;vertical-align:super;text-decoration:none;\\\",\u001b[39m\n\u001b[31m    hr: \\\"border:none;border-top:1px solid #e5e5e5;margin:16px 0;\\\",\u001b[39m\n\u001b[31m    li: \\\"margin:4px 0;line-height:1.6;color:#333;\\\",\u001b[39m\n\u001b[31m  };·\u001b[39m\n\u001b[31m  const fmt = (text: string) => applyInlineFormatting(text, S.sup);·\u001b[39m\n\u001b[31m  const lines = md.split(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m  const out: string[] = [];\u001b[39m\n\u001b[31m  let i = 0;·\u001b[39m\n\u001b[31m  while (i < lines.length) {\u001b[39m\n\u001b[31m    const line = lines[i].trimEnd();·\u001b[39m\n\u001b[31m    // Blank line — skip\u001b[39m\n\u001b[31m    if (line === \\\"\\\") {\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Headings (order matters: #### before ### before ## before #)\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"#### \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h4 style=\\\"${S.h4}\\\">${fmt(line.slice(5))}</h4>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"### \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h3 style=\\\"${S.h3}\\\">${fmt(line.slice(4))}</h3>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"## \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h2 style=\\\"${S.h2}\\\">${fmt(line.slice(3))}</h2>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"# \\\")) {\u001b[39m\n\u001b[31m      out.push(`<h1 style=\\\"${S.h1}\\\">${fmt(line.slice(2))}</h1>`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Horizontal rule\u001b[39m\n\u001b[31m    if (/^---+$/.test(line) || /^\\\\*\\\\*\\\\*+$/.test(line)) {\u001b[39m\n\u001b[31m      out.push(`<hr style=\\\"${S.hr}\\\" />`);\u001b[39m\n\u001b[31m      i++;\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Blockquote — collect consecutive > lines\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m      const parts: string[] = [];\u001b[39m\n\u001b[31m      while (i < lines.length && lines[i].trimEnd().startsWith(\\\"> \\\")) {\u001b[39m\n\u001b[31m        parts.push(lines[i].trimEnd().slice(2));\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\u001b[39m\n\u001b[31m        `<blockquote style=\\\"${S.blockquote}\\\">${fmt(parts.join(\\\" \\\"))}</blockquote>`,\u001b[39m\n\u001b[31m      );\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Table — collect all | rows, render as <table>\u001b[39m\n\u001b[31m    if (line.startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m      const tableRows: string[][] = [];\u001b[39m\n\u001b[31m      let hasSeparator = false;\u001b[39m\n\u001b[31m      while (i < lines.length && lines[i].trimEnd().startsWith(\\\"|\\\")) {\u001b[39m\n\u001b[31m        const raw = lines[i].trimEnd();\u001b[39m\n\u001b[31m        const cells = raw\u001b[39m\n\u001b[31m          .split(\\\"|\\\")\u001b[39m\n\u001b[31m          .filter(Boolean)\u001b[39m\n\u001b[31m          .map((c) => c.trim());\u001b[39m\n\u001b[31m        // Detect separator row (|---|---|)\u001b[39m\n\u001b[31m        if (cells.every((c) => /^[-:]+$/.test(c))) {\u001b[39m\n\u001b[31m          hasSeparator = true;\u001b[39m\n\u001b[31m          i++;\u001b[39m\n\u001b[31m          continue;\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        tableRows.push(cells);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      if (tableRows.length > 0) {\u001b[39m\n\u001b[31m        out.push(`<table style=\\\"${S.table}\\\">`);\u001b[39m\n\u001b[31m        const headerRow = hasSeparator ? tableRows[0] : null;\u001b[39m\n\u001b[31m        const bodyStart = hasSeparator ? 1 : 0;\u001b[39m\n\u001b[31m        if (headerRow) {\u001b[39m\n\u001b[31m          out.push(\\\"<thead><tr>\\\");\u001b[39m\n\u001b[31m          for (const cell of headerRow) {\u001b[39m\n\u001b[31m            out.push(`<th style=\\\"${S.th}\\\">${fmt(cell)}</th>`);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          out.push(\\\"</tr></thead>\\\");\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        out.push(\\\"<tbody>\\\");\u001b[39m\n\u001b[31m        for (let r = bodyStart; r < tableRows.length; r++) {\u001b[39m\n\u001b[31m          out.push(\\\"<tr>\\\");\u001b[39m\n\u001b[31m          for (const cell of tableRows[r]) {\u001b[39m\n\u001b[31m            out.push(`<td style=\\\"${S.td}\\\">${fmt(cell)}</td>`);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          out.push(\\\"</tr>\\\");\u001b[39m\n\u001b[31m        }\u001b[39m\n\u001b[31m        out.push(\\\"</tbody></table>\\\");\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Unordered list — collect consecutive - or * items\u001b[39m\n\u001b[31m    if (/^[-*]\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      out.push(\\\"<ul>\\\");\u001b[39m\n\u001b[31m      while (i < lines.length && /^[-*]\\\\s/.test(lines[i].trimEnd())) {\u001b[39m\n\u001b[31m        const text = lines[i].trimEnd().replace(/^[-*]\\\\s+/, \\\"\\\");\u001b[39m\n\u001b[31m        out.push(`<li style=\\\"${S.li}\\\">${fmt(text)}</li>`);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\\\"</ul>\\\");\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Ordered list — collect consecutive numbered items\u001b[39m\n\u001b[31m    if (/^\\\\d+\\\\.\\\\s/.test(line)) {\u001b[39m\n\u001b[31m      out.push(\\\"<ol>\\\");\u001b[39m\n\u001b[31m      while (i < lines.length && /^\\\\d+\\\\.\\\\s/.test(lines[i].trimEnd())) {\u001b[39m\n\u001b[31m        const text = lines[i].trimEnd().replace(/^\\\\d+\\\\.\\\\s+/, \\\"\\\");\u001b[39m\n\u001b[31m        out.push(`<li style=\\\"${S.li}\\\">${fmt(text)}</li>`);\u001b[39m\n\u001b[31m        i++;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      out.push(\\\"</ol>\\\");\u001b[39m\n\u001b[31m      continue;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    // Default: paragraph\u001b[39m\n\u001b[31m    out.push(`<p style=\\\"${S.p}\\\">${fmt(line)}</p>`);\u001b[39m\n\u001b[31m    i++;\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  // ── References section from sources ──────────────────────────────\u001b[39m\n\u001b[31m  if (sources.length > 0) {\u001b[39m\n\u001b[31m    out.push(`<h2 style=\\\"${S.h2}\\\">References</h2>`);\u001b[39m\n\u001b[31m    out.push(\\\"<ol>\\\");\u001b[39m\n\u001b[31m    for (const s of sources) {\u001b[39m\n\u001b[31m      const authorsText =\u001b[39m\n\u001b[31m        s.authors.length > 3\u001b[39m\n\u001b[31m          ? `${s.authors.slice(0, 3).join(\\\", \\\")} et al.`\u001b[39m\n\u001b[31m          : s.authors.join(\\\", \\\");\u001b[39m\n\u001b[31m      let citation = `${escapeHTML(authorsText)}. ${escapeHTML(s.title)}.`;\u001b[39m\n\u001b[31m      if (s.journal) citation += ` <em>${escapeHTML(s.journal)}</em>`;\u001b[39m\n\u001b[31m      if (s.year) citation += ` (${s.year})`;\u001b[39m\n\u001b[31m      citation += \\\".\\\";\u001b[39m\n\u001b[31m      if (s.doi) citation += ` DOI: ${escapeHTML(s.doi)}`;\u001b[39m\n\u001b[31m      out.push(`<li style=\\\"${S.li}\\\">${citation}</li>`);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m    out.push(\\\"</ol>\\\");\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return out.join(\\\"\\\\n\\\");\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31minterface ExportButtonsProps {\u001b[39m\n\u001b[31m  markdownReport: string;\u001b[39m\n\u001b[31m  topic: string;\u001b[39m\n\u001b[31m  sources?: DeepResearchSource[];\u001b[39m\n\u001b[31m  keyFindings?: string[];\u001b[39m\n\u001b[31m  gaps?: string[];\u001b[39m\n\u001b[31m  mode?: string;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mexport function ExportButtons({\u001b[39m\n\u001b[31m  markdownReport,\u001b[39m\n\u001b[31m  topic,\u001b[39m\n\u001b[31m  sources = [],\u001b[39m\n\u001b[31m  keyFindings = [],\u001b[39m\n\u001b[31m  gaps = [],\u001b[39m\n\u001b[31m  mode = \\\"standard\\\",\u001b[39m\n\u001b[31m}: ExportButtonsProps) {\u001b[39m\n\u001b[31m  const router = useRouter();\u001b[39m\n\u001b[31m  const [copied, setCopied] = useState(false);\u001b[39m\n\u001b[31m  const [studioLoading, setStudioLoading] = useState(false);\u001b[39m\n\u001b[31m  const [studioError, setStudioError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  const handleExportMarkdown = useCallback(() => {\u001b[39m\n\u001b[31m    const blob = new Blob([markdownReport], { type: \\\"text/markdown\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_report.md`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [markdownReport, topic]);·\u001b[39m\n\u001b[31m  const [pdfLoading, setPdfLoading] = useState(false);\u001b[39m\n\u001b[31m  const [pdfError, setPdfError] = useState<string | null>(null);·\u001b[39m\n\u001b[31m  const handleExportPDF = useCallback(async () => {\u001b[39m\n\u001b[31m    setPdfLoading(true);\u001b[39m\n\u001b[31m    setPdfError(null);\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      // Convert markdown to simple HTML block elements for the PDF generator\u001b[39m\n\u001b[31m      const htmlContent = markdownToSimpleHTML(markdownReport);·\u001b[39m\n\u001b[31m      // Build citation strings for the references section\u001b[39m\n\u001b[31m      const citations = sources.map((s, idx) => {\u001b[39m\n\u001b[31m        const authorsText =\u001b[39m\n\u001b[31m          s.authors.length > 3\u001b[39m\n\u001b[31m            ? `${s.authors.slice(0, 3).join(\\\", \\\")} et al.`\u001b[39m\n\u001b[31m            : s.authors.join(\\\", \\\");\u001b[39m\n\u001b[31m        let citation = `[${idx + 1}] ${authorsText}. ${s.title}.`;\u001b[39m\n\u001b[31m        if (s.journal) citation += ` ${s.journal}`;\u001b[39m\n\u001b[31m        if (s.year) citation += ` (${s.year})`;\u001b[39m\n\u001b[31m        citation += \\\".\\\";\u001b[39m\n\u001b[31m        if (s.doi) citation += ` DOI: ${s.doi}`;\u001b[39m\n\u001b[31m        return citation;\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/export/pdf\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({\u001b[39m\n\u001b[31m          title: topic,\u001b[39m\n\u001b[31m          content: htmlContent,\u001b[39m\n\u001b[31m          citations: citations.length > 0 ? citations : undefined,\u001b[39m\n\u001b[31m        }),\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      if (!res.ok) {\u001b[39m\n\u001b[31m        const data = await res.json().catch(() => ({}));\u001b[39m\n\u001b[31m        throw new Error(data.error || `PDF generation failed (${res.status})`);\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      const blob = await res.blob();\u001b[39m\n\u001b[31m      const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m      const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m      a.href = url;\u001b[39m\n\u001b[31m      a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_report.pdf`;\u001b[39m\n\u001b[31m      document.body.appendChild(a);\u001b[39m\n\u001b[31m      a.click();\u001b[39m\n\u001b[31m      document.body.removeChild(a);\u001b[39m\n\u001b[31m      URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      console.error(\\\"PDF export failed:\\\", err);\u001b[39m\n\u001b[31m      const message = err instanceof Error ? err.message : \\\"PDF export failed\\\";\u001b[39m\n\u001b[31m      setPdfError(message);\u001b[39m\n\u001b[31m      setTimeout(() => setPdfError(null), 5000);\u001b[39m\n\u001b[31m    } finally {\u001b[39m\n\u001b[31m      setPdfLoading(false);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [markdownReport, topic, sources]);·\u001b[39m\n\u001b[31m  const handleCopyClipboard = useCallback(async () => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const html = markdownToRichHTML(markdownReport, sources);·\u001b[39m\n\u001b[31m      // Modern browsers: write both HTML and plain text\u001b[39m\n\u001b[31m      if (\u001b[39m\n\u001b[31m        typeof ClipboardItem !== \\\"undefined\\\" &&\u001b[39m\n\u001b[31m        navigator.clipboard?.write\u001b[39m\n\u001b[31m      ) {\u001b[39m\n\u001b[31m        const item = new ClipboardItem({\u001b[39m\n\u001b[31m          \\\"text/html\\\": new Blob([html], { type: \\\"text/html\\\" }),\u001b[39m\n\u001b[31m          \\\"text/plain\\\": new Blob([markdownReport], { type: \\\"text/plain\\\" }),\u001b[39m\n\u001b[31m        });\u001b[39m\n\u001b[31m        await navigator.clipboard.write([item]);\u001b[39m\n\u001b[31m      } else {\u001b[39m\n\u001b[31m        // Fallback: plain text only\u001b[39m\n\u001b[31m        await navigator.clipboard.writeText(markdownReport);\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      setCopied(true);\u001b[39m\n\u001b[31m      setTimeout(() => setCopied(false), 2000);\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Last-resort fallback for older browsers\u001b[39m\n\u001b[31m      const textarea = document.createElement(\\\"textarea\\\");\u001b[39m\n\u001b[31m      textarea.value = markdownReport;\u001b[39m\n\u001b[31m      document.body.appendChild(textarea);\u001b[39m\n\u001b[31m      textarea.select();\u001b[39m\n\u001b[31m      document.execCommand(\\\"copy\\\");\u001b[39m\n\u001b[31m      document.body.removeChild(textarea);\u001b[39m\n\u001b[31m      setCopied(true);\u001b[39m\n\u001b[31m      setTimeout(() => setCopied(false), 2000);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [markdownReport, sources]);·\u001b[39m\n\u001b[31m  const handleExportBibTeX = useCallback(() => {\u001b[39m\n\u001b[31m    if (sources.length === 0) return;\u001b[39m\n\u001b[31m    const bibtex = generateBibTeX(sources);\u001b[39m\n\u001b[31m    const blob = new Blob([bibtex], { type: \\\"application/x-bibtex\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_references.bib`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [sources, topic]);·\u001b[39m\n\u001b[31m  const handleExportRIS = useCallback(() => {\u001b[39m\n\u001b[31m    if (sources.length === 0) return;\u001b[39m\n\u001b[31m    const ris = generateRIS(sources);\u001b[39m\n\u001b[31m    const blob = new Blob([ris], { type: \\\"application/x-research-info-systems\\\" });\u001b[39m\n\u001b[31m    const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m    const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m    a.href = url;\u001b[39m\n\u001b[31m    a.download = `${topic.replace(/[^a-zA-Z0-9]/g, \\\"_\\\").slice(0, 50)}_references.ris`;\u001b[39m\n\u001b[31m    document.body.appendChild(a);\u001b[39m\n\u001b[31m    a.click();\u001b[39m\n\u001b[31m    document.body.removeChild(a);\u001b[39m\n\u001b[31m    URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m  }, [sources, topic]);·\u001b[39m\n\u001b[31m  const handleOpenInStudio = useCallback(async () => {\u001b[39m\n\u001b[31m    setStudioLoading(true);\u001b[39m\n\u001b[31m    setStudioError(null);\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/deep-research/open-in-studio\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({\u001b[39m\n\u001b[31m          topic,\u001b[39m\n\u001b[31m          mode,\u001b[39m\n\u001b[31m          markdownReport,\u001b[39m\n\u001b[31m          sources,\u001b[39m\n\u001b[31m          keyFindings,\u001b[39m\n\u001b[31m          gaps,\u001b[39m\n\u001b[31m        }),\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      if (!res.ok) {\u001b[39m\n\u001b[31m        const data = await res.json().catch(() => ({}));\u001b[39m\n\u001b[31m        throw new Error(data.error || \\\"Failed to open in studio\\\");\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      const { redirectUrl } = await res.json();\u001b[39m\n\u001b[31m      router.push(redirectUrl);\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      console.error(\\\"Open in Studio failed:\\\", err);\u001b[39m\n\u001b[31m      const message = err instanceof Error ? err.message : \\\"Failed to open in studio\\\";\u001b[39m\n\u001b[31m      setStudioError(message);\u001b[39m\n\u001b[31m      setStudioLoading(false);\u001b[39m\n\u001b[31m      // Auto-clear error after 5 seconds\u001b[39m\n\u001b[31m      setTimeout(() => setStudioError(null), 5000);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }, [topic, mode, markdownReport, sources, keyFindings, gaps, router]);·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex items-center gap-1.5 print:hidden\\\">\u001b[39m\n\u001b[31m      <button\u001b[39m\n\u001b[31m        onClick={handleExportMarkdown}\u001b[39m\n\u001b[31m        className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m        title=\\\"Download as Markdown\\\"\u001b[39m\n\u001b[31m      >\u001b[39m\n\u001b[31m        <Download size={14} />\u001b[39m\n\u001b[31m        <span className=\\\"hidden sm:inline\\\">.md</span>\u001b[39m\n\u001b[31m      </button>\u001b[39m\n\u001b[31m      <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m        <button\u001b[39m\n\u001b[31m          onClick={handleExportPDF}\u001b[39m\n\u001b[31m          disabled={pdfLoading}\u001b[39m\n\u001b[31m          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${\u001b[39m\n\u001b[31m            pdfError\u001b[39m\n\u001b[31m              ? \\\"text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50\\\"\u001b[39m\n\u001b[31m              : \\\"text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white\\\"\u001b[39m\n\u001b[31m          }`}\u001b[39m\n\u001b[31m          title={pdfError || \\\"Download as PDF\\\"}\u001b[39m\n\u001b[31m        >\u001b[39m\n\u001b[31m          {pdfLoading ? <Loader2 size={14} className=\\\"animate-spin\\\" /> : <Printer size={14} />}\u001b[39m\n\u001b[31m          <span className=\\\"hidden sm:inline\\\">{pdfLoading ? \\\"...\\\" : pdfError ? \\\"Failed\\\" : \\\"PDF\\\"}</span>\u001b[39m\n\u001b[31m        </button>\u001b[39m\n\u001b[31m        {pdfError && (\u001b[39m\n\u001b[31m          <div className=\\\"absolute top-full left-0 mt-1 px-2 py-1 text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-700/50 rounded-md whitespace-nowrap z-10\\\">\u001b[39m\n\u001b[31m            {pdfError}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m      <button\u001b[39m\n\u001b[31m        onClick={handleCopyClipboard}\u001b[39m\n\u001b[31m        className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m        title=\\\"Copies formatted text — paste into Google Docs, Word, or any editor with formatting preserved\\\"\u001b[39m\n\u001b[31m      >\u001b[39m\n\u001b[31m        {copied ? <Check size={14} className=\\\"text-emerald-400\\\" /> : <Copy size={14} />}\u001b[39m\n\u001b[31m        <span className=\\\"hidden sm:inline\\\">{copied ? \\\"Copied\\\" : \\\"Copy\\\"}</span>\u001b[39m\n\u001b[31m      </button>\u001b[39m\n\u001b[31m      <div className=\\\"w-px h-5 bg-gray-300 dark:bg-gray-700/50 mx-0.5\\\" />\u001b[39m\n\u001b[31m      <div className=\\\"relative\\\">\u001b[39m\n\u001b[31m        <button\u001b[39m\n\u001b[31m          onClick={handleOpenInStudio}\u001b[39m\n\u001b[31m          disabled={studioLoading}\u001b[39m\n\u001b[31m          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${\u001b[39m\n\u001b[31m            studioError\u001b[39m\n\u001b[31m              ? \\\"text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50\\\"\u001b[39m\n\u001b[31m              : \\\"text-blue-700 dark:text-gray-300 bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 hover:text-blue-800 dark:hover:text-white\\\"\u001b[39m\n\u001b[31m          }`}\u001b[39m\n\u001b[31m          title={studioError || \\\"Open in Studio editor\\\"}\u001b[39m\n\u001b[31m        >\u001b[39m\n\u001b[31m          {studioLoading ? (\u001b[39m\n\u001b[31m            <Loader2 size={14} className=\\\"animate-spin\\\" />\u001b[39m\n\u001b[31m          ) : (\u001b[39m\n\u001b[31m            <PenLine size={14} />\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m          <span className=\\\"hidden sm:inline\\\">\u001b[39m\n\u001b[31m            {studioLoading ? \\\"Opening...\\\" : studioError ? \\\"Failed\\\" : \\\"Open in Studio\\\"}\u001b[39m\n\u001b[31m          </span>\u001b[39m\n\u001b[31m        </button>\u001b[39m\n\u001b[31m        {studioError && (\u001b[39m\n\u001b[31m          <div className=\\\"absolute top-full right-0 mt-1 px-2 py-1 text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-700/50 rounded-md whitespace-nowrap z-10\\\">\u001b[39m\n\u001b[31m            {studioError}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m        )}\u001b[39m\n\u001b[31m      </div>\u001b[39m\n\u001b[31m      {sources.length > 0 && (\u001b[39m\n\u001b[31m        <>\u001b[39m\n\u001b[31m          <div className=\\\"w-px h-5 bg-gray-300 dark:bg-gray-700/50 mx-0.5\\\" />\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={handleExportBibTeX}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m            title=\\\"Download references as BibTeX\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <FileText size={14} />\u001b[39m\n\u001b[31m            <span className=\\\"hidden sm:inline\\\">.bib</span>\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={handleExportRIS}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors\\\"\u001b[39m\n\u001b[31m            title=\\\"Download references as RIS (EndNote/Mendeley)\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <FileText size={14} />\u001b[39m\n\u001b[31m            <span className=\\\"hidden sm:inline\\\">.ris</span>\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </>\u001b[39m\n\u001b[31m      )}\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/deep-research.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/deep-research.ts:26:43)\n    at assertDeepResearchCheckpoint (/home/user/ScholarSync-/qa/module-assertions/deep-research.ts:1393:5)\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-005.spec.ts:1318:27"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T07:30:49.130Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5dec0-to-studioprojectIdprojectId-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5dec0-to-studioprojectIdprojectId-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5dec0-to-studioprojectIdprojectId-qa-chromium/trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/module-assertions/deep-research.ts",
-                        "column": 43,
-                        "line": 26
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "9bfb3e06a9b019e38071-710b10f05aedeef8f829",
-              "file": "deep-research/spec-005.spec.ts",
-              "line": 1299,
-              "column": 3
-            },
-            {
-              "title": "cp-026: Loading spinner during creation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1471,
+                      "duration": 4933,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:51.365Z",
+                      "startTime": "2026-03-16T19:14:35.088Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-3ddb0-ing-spinner-during-creation-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-07a14-lity-grade-is-above-16-post-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1186,178 +1312,18 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-7ee9bf9156280c809b4a",
-              "file": "deep-research/spec-005.spec.ts",
-              "line": 1349,
-              "column": 3
-            },
-            {
-              "title": "cp-027: Error state with retry capability",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1396,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T07:30:52.916Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-2e8ab-state-with-retry-capability-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "9bfb3e06a9b019e38071-860e96518cb55070ceef",
-              "file": "deep-research/spec-005.spec.ts",
-              "line": 1399,
-              "column": 3
-            },
-            {
-              "title": "cp-028: Fallback for reports without markdown format",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1423,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T07:30:54.333Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-63dd4-rts-without-markdown-format-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "9bfb3e06a9b019e38071-d8e081341e6c053fbd35",
-              "file": "deep-research/spec-005.spec.ts",
-              "line": 1449,
-              "column": 3
-            },
-            {
-              "title": "cp-029: Renders card-based display with sections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1448,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T07:30:55.766Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-2ec5e-based-display-with-sections-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "9bfb3e06a9b019e38071-33b4f28069df68212f99",
-              "file": "deep-research/spec-005.spec.ts",
-              "line": 1499,
-              "column": 3
-            },
-            {
-              "title": "cp-030: PubMed search returns results",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1423,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T07:30:57.229Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-df305-bMed-search-returns-results-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "9bfb3e06a9b019e38071-4d6795d5e07073f06cdc",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-388548aa11d85b18cb2f",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1549,
               "column": 3
             },
             {
-              "title": "cp-031: Semantic Scholar search returns results",
+              "title": "cp-031: When none of the above conditions fire the suggestions array is empty and the Is",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -1365,20 +1331,20 @@
                   "results": [
                     {
                       "workerIndex": 1,
-                      "parallelIndex": 0,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1422,
+                      "duration": 4538,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:30:58.662Z",
+                      "startTime": "2026-03-16T19:14:36.114Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-a8533-olar-search-returns-results-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e6846-s-array-is-empty-and-the-Is-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1386,39 +1352,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-84d9bed228b10b65263d",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-4647df1074d660db408b",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1599,
               "column": 3
             },
             {
-              "title": "cp-032: OpenAlex search returns results",
+              "title": "cp-032: 401 response body is error Not authenticated line 47",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1376,
+                      "duration": 4326,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:31:00.092Z",
+                      "startTime": "2026-03-16T19:14:39.155Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-5aaaf-Alex-search-returns-results-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-93fdf-r-Not-authenticated-line-47-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1426,39 +1392,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-c77175f72a144d76ba67",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-f48b6a6e96e9799e5422",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1649,
               "column": 3
             },
             {
-              "title": "cp-033: Results deduplicated across sources",
+              "title": "cp-033: 400 response body is error Invalid request details fieldErrors where details com",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1411,
+                      "duration": 4108,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:31:01.477Z",
+                      "startTime": "2026-03-16T19:14:39.491Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-f016d-deduplicated-across-sources-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-ed43b-eldErrors-where-details-com-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1466,39 +1432,39 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-ab2224653373d0c3d915",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-f3427c582cb6498ec84f",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1699,
               "column": 3
             },
             {
-              "title": "cp-034: Forward citations fetched via Semantic Scholar API",
+              "title": "cp-034: 503 when AI is not configured returns error AI service is not configured line 62",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1459,
+                      "duration": 4149,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T07:31:02.897Z",
+                      "startTime": "2026-03-16T19:14:40.046Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-005-dee-0c52b-ed-via-Semantic-Scholar-API-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-f3789-e-is-not-configured-line-62-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1506,8 +1472,8 @@
                   "status": "expected"
                 }
               ],
-              "id": "9bfb3e06a9b019e38071-3f539d1838a42c11a736",
-              "file": "deep-research/spec-005.spec.ts",
+              "id": "30b3ed08af7f982ad1a1-0b5a445b13d3f040d69c",
+              "file": "analysis/spec-007.spec.ts",
               "line": 1749,
               "column": 3
             }
@@ -1518,11 +1484,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-16T07:30:05.509Z",
-    "duration": 59441.154,
-    "expected": 34,
+    "startTime": "2026-03-16T19:14:01.791Z",
+    "duration": 42558.216,
+    "expected": 35,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

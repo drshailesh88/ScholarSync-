@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-003
  * Source: e2e/specs/slides/spec-003.md
- * Generated: 2026-03-14T20:49:29.043Z
+ * Generated: 2026-03-16T17:31:19.290Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -81,7 +81,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 Marquee/rubber-band selection by dragging on empty canvas area');
+      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Marquee/rubber-band selection by dragging on empty canvas area");
     }
 
 
@@ -102,7 +102,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -131,7 +131,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 Tab cycles to next block; Shift+Tab cycles to previous');
+      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Tab cycles to next block; Shift+Tab cycles to previous");
     }
 
 
@@ -152,7 +152,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -181,7 +181,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 Cmd+A selects all blocks on the active slide');
+      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Cmd+A selects all blocks on the active slide");
     }
 
 
@@ -202,7 +202,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -231,7 +231,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 Escape deselects all (or exits editing mode first)');
+      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Escape deselects all (or exits editing mode first)");
     }
 
 
@@ -252,7 +252,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -281,7 +281,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 Double-click a text/bullets/quote block to enter inline edit mode');
+      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Double-click a text/bullets/quote block to enter inline edit mode");
     }
 
 
@@ -302,7 +302,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -331,7 +331,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 Editing state tracked globally (for keyboard shortcuts awareness)');
+      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Editing state tracked globally (for keyboard shortcuts awareness)");
     }
 
 
@@ -352,7 +352,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -381,7 +381,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 Click outside the editing block to exit edit mode');
+      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Click outside the editing block to exit edit mode");
     }
 
 
@@ -402,7 +402,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -431,7 +431,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 Escape exits edit mode');
+      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Escape exits edit mode");
     }
 
 
@@ -452,7 +452,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -481,7 +481,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 Drag blocks to reposition them on the canvas');
+      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Drag blocks to reposition them on the canvas");
     }
 
 
@@ -502,7 +502,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -531,7 +531,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 Resize handles on selected blocks');
+      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Resize handles on selected blocks");
     }
 
 
@@ -552,7 +552,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -581,7 +581,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 Multi-block group move (drag one selected block, all move together)');
+      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Multi-block group move (drag one selected block, all move together)");
     }
 
 
@@ -602,7 +602,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -631,7 +631,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 Grid snap when `snapToGrid` is enabled');
+      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Grid snap when `snapToGrid` is enabled");
     }
 
 
@@ -652,7 +652,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -681,7 +681,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 Position values in percentage-based coordinates (0–100)');
+      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Position values in percentage-based coordinates (0–100)");
     }
 
 
@@ -702,7 +702,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -731,7 +731,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 Cmd+] — Bring Forward');
+      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Cmd+] — Bring Forward");
     }
 
 
@@ -752,7 +752,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -781,7 +781,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 Cmd+Shift+] — Bring to Front');
+      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Cmd+Shift+] — Bring to Front");
     }
 
 
@@ -802,7 +802,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -831,7 +831,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 Cmd+[ — Send Backward');
+      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Cmd+[ — Send Backward");
     }
 
 
@@ -852,7 +852,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -881,7 +881,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 Cmd+Shift+[ — Send to Back');
+      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Cmd+Shift+[ — Send to Back");
     }
 
 
@@ -902,7 +902,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -931,7 +931,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 Cmd+L — Toggle lock on selected block');
+      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Cmd+L — Toggle lock on selected block");
     }
 
 
@@ -952,7 +952,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -981,7 +981,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 Locked blocks cannot be moved, resized, or deleted');
+      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Locked blocks cannot be moved, resized, or deleted");
     }
 
 
@@ -1002,7 +1002,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 Lock/unlock icons displayed on locked blocks');
+      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Lock/unlock icons displayed on locked blocks");
     }
 
 
@@ -1052,7 +1052,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 Cmd+C — Copy selected block(s)');
+      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Cmd+C — Copy selected block(s)");
     }
 
 
@@ -1102,7 +1102,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 Cmd+X — Cut selected block(s)');
+      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Cmd+X — Cut selected block(s)");
     }
 
 
@@ -1152,7 +1152,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 Cmd+V — Paste block(s) from clipboard');
+      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Cmd+V — Paste block(s) from clipboard");
     }
 
 
@@ -1202,7 +1202,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 Delete/Backspace — Delete selected block(s) (respects lock)');
+      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Delete/Backspace — Delete selected block(s) (respects lock)");
     }
 
 
@@ -1252,7 +1252,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 Context menu appears at cursor position');
+      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Context menu appears at cursor position");
     }
 
 
@@ -1302,7 +1302,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 Contains block-specific actions (copy, cut, delete, z-order, lock)');
+      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Contains block-specific actions (copy, cut, delete, z-order, lock)");
     }
 
 
@@ -1352,7 +1352,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 Submenu support with hover-reveal');
+      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Submenu support with hover-reveal");
     }
 
 
@@ -1402,7 +1402,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 Escape or click outside closes the menu');
+      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Escape or click outside closes the menu");
     }
 
 
@@ -1452,7 +1452,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 Scroll closes the menu');
+      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Scroll closes the menu");
     }
 
 
@@ -1502,7 +1502,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 Opened from context menu "Regenerate with AI..."');
+      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Opened from context menu \"Regenerate with AI...\"");
     }
 
 
@@ -1552,7 +1552,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 Instruction text input');
+      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Instruction text input");
     }
 
 
@@ -1602,7 +1602,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 Tone selector (RegenerateTone)');
+      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Tone selector (RegenerateTone)");
     }
 
 
@@ -1652,7 +1652,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 Submit regenerates the slide content');
+      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Submit regenerates the slide content");
     }
 
 
@@ -1702,7 +1702,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 Dialog closes on cancel or after successful regeneration');
+      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Dialog closes on cancel or after successful regeneration");
     }
 
 
@@ -1752,7 +1752,7 @@ test.describe('slides / spec-003', () => {
 
     // Navigate to the page
     await page.goto('/slides', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/slides/spec-003');
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 Toggle rulers on/off from canvas controls');
+      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Toggle rulers on/off from canvas controls");
     }
 
 

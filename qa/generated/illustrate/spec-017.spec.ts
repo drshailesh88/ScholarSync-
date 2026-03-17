@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for illustrate/spec-017
  * Source: e2e/specs/illustrate/spec-017.md
- * Generated: 2026-03-15T05:18:07.731Z
+ * Generated: 2026-03-16T18:50:10.580Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -102,7 +102,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -152,7 +152,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -202,7 +202,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -252,7 +252,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -302,7 +302,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -352,7 +352,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -402,7 +402,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -452,7 +452,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -502,7 +502,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -552,7 +552,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -602,7 +602,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -652,7 +652,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -702,7 +702,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -752,7 +752,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -802,7 +802,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -852,7 +852,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -902,7 +902,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -952,7 +952,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1002,7 +1002,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1052,7 +1052,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1102,7 +1102,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1152,7 +1152,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1202,7 +1202,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1252,7 +1252,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1302,7 +1302,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1352,7 +1352,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1402,7 +1402,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1452,7 +1452,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1502,7 +1502,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1552,7 +1552,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1602,7 +1602,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1652,7 +1652,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1702,7 +1702,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');
@@ -1752,7 +1752,7 @@ test.describe('illustrate / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/illustrate', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/illustrate/spec-017');

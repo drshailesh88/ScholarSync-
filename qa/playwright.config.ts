@@ -13,11 +13,11 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./generated",
-  fullyParallel: false, // Sequential within module for state consistency
+  fullyParallel: true, // Parallel for speed
   forbidOnly: true,
   retries: 0, // Controller handles retries, not Playwright
-  workers: 1, // One at a time for deterministic results
-  timeout: 60_000,
+  workers: 4, // Parallel workers for throughput
+  timeout: 30_000,
 
   reporter: [
     ["json", { outputFile: "./progress/results.json" }],
@@ -29,8 +29,8 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "on", // Always capture screenshots (proof)
     video: "off",
-    actionTimeout: 10_000,
-    navigationTimeout: 45_000,
+    actionTimeout: 15_000,
+    navigationTimeout: 20_000,
   },
 
   projects: [

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for systematic-review/spec-006
  * Source: e2e/specs/systematic-review/spec-006.md
- * Generated: 2026-03-15T10:10:50.424Z
+ * Generated: 2026-03-16T18:05:32.431Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -102,7 +102,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -152,7 +152,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -202,7 +202,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -252,7 +252,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -302,7 +302,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -352,7 +352,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -402,7 +402,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -452,7 +452,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -502,7 +502,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -552,7 +552,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -602,7 +602,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -652,7 +652,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -702,7 +702,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -752,7 +752,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -802,7 +802,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -852,7 +852,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -902,7 +902,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -952,7 +952,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1002,7 +1002,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1052,7 +1052,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1102,7 +1102,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1152,7 +1152,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1202,7 +1202,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1252,7 +1252,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1302,7 +1302,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1352,7 +1352,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1402,7 +1402,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1452,7 +1452,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1502,7 +1502,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1552,7 +1552,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1602,7 +1602,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1652,7 +1652,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1702,7 +1702,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
@@ -1752,7 +1752,7 @@ test.describe('systematic-review / spec-006', () => {
 
     // Navigate to the page
     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/systematic-review/spec-006');
