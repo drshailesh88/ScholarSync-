@@ -6,8 +6,15 @@
  * - Majority vote decides include/exclude
  * - Disagreements flagged for human review
  * - Full audit trail for PRISMA compliance
+ *
+ * Deterministic hardening:
+ * - temperature: 0 for reproducible outputs
+ * - SHA-256 content hashing for per-agent cache keys
+ * - Per-agent decision persistence in screening_agent_decisions
+ * - Cache-aware batch screening (skips rate-limit delay on cache hits)
  */
 
+import crypto from "crypto";
 import { generateObject } from "ai";
 import { getSmallModel } from "@/lib/ai/models";
 import { getScreeningAgentPrompt } from "@/lib/ai/prompts/systematic-review";
@@ -34,6 +41,8 @@ export interface AgentDecision {
   reasoning: string;
   matchedInclusion: number[];
   matchedExclusion: number[];
+  contentHash?: string;
+  fromCache?: boolean;
 }
 
 export interface ConsensusResult {
@@ -42,6 +51,7 @@ export interface ConsensusResult {
   consensusConfidence: number;
   requiresHumanReview: boolean;
   reason: string;
+  deterministic: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -81,6 +91,113 @@ function formatCriteria(criteria: ScreeningCriterion[]): string {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // ---------------------------------------------------------------------------
+// Content hashing for deterministic cache keys
+// ---------------------------------------------------------------------------
+
+function computeContentHash(
+  criteria: ScreeningCriterion[],
+  title: string,
+  abstract: string,
+  agentIndex: number
+): string {
+  const sortedCriteria = [...criteria].sort((a, b) => a.id - b.id);
+  const normalizedTitle = title.trim().toLowerCase();
+  const normalizedAbstract = abstract.trim().toLowerCase();
+
+  const payload = JSON.stringify({
+    criteria: sortedCriteria,
+    title: normalizedTitle,
+    abstract: normalizedAbstract,
+    agentIndex,
+  });
+
+  return crypto.createHash("sha256").update(payload).digest("hex");
+}
+
+// ---------------------------------------------------------------------------
+// Per-agent decision cache (screening_agent_decisions table)
+// ---------------------------------------------------------------------------
+
+async function getCachedAgentDecision(
+  projectId: number,
+  paperId: number,
+  agentIndex: number,
+  contentHash: string
+): Promise<AgentDecision | null> {
+  try {
+    const rows = await db.execute(sql`
+      SELECT
+        agent_index,
+        decision,
+        confidence,
+        reasoning,
+        matched_inclusion,
+        matched_exclusion,
+        content_hash
+      FROM screening_agent_decisions
+      WHERE project_id = ${projectId}
+        AND paper_id = ${paperId}
+        AND agent_index = ${agentIndex}
+        AND content_hash = ${contentHash}
+      LIMIT 1
+    `);
+
+    const row = (rows as unknown as { rows?: Record<string, unknown>[] }).rows?.[0] ?? (rows as unknown as Record<string, unknown>[])[0];
+    if (!row) return null;
+
+    return {
+      agentIndex: row.agent_index as number,
+      decision: row.decision as "include" | "exclude" | "uncertain",
+      confidence: Number(row.confidence),
+      reasoning: row.reasoning as string,
+      matchedInclusion: (row.matched_inclusion ?? []) as number[],
+      matchedExclusion: (row.matched_exclusion ?? []) as number[],
+      contentHash: row.content_hash as string,
+      fromCache: true,
+    };
+  } catch {
+    // Table may not exist yet (pre-migration) — fall through to AI call
+    return null;
+  }
+}
+
+async function persistAgentDecision(
+  projectId: number,
+  paperId: number,
+  decision: AgentDecision,
+  contentHash: string
+): Promise<void> {
+  try {
+    await db.execute(sql`
+      INSERT INTO screening_agent_decisions (
+        project_id,
+        paper_id,
+        agent_index,
+        content_hash,
+        decision,
+        confidence,
+        reasoning,
+        matched_inclusion,
+        matched_exclusion
+      ) VALUES (
+        ${projectId},
+        ${paperId},
+        ${decision.agentIndex},
+        ${contentHash},
+        ${decision.decision},
+        ${decision.confidence},
+        ${decision.reasoning},
+        ${JSON.stringify(decision.matchedInclusion)}::jsonb,
+        ${JSON.stringify(decision.matchedExclusion)}::jsonb
+      )
+      ON CONFLICT DO NOTHING
+    `);
+  } catch {
+    // Table may not exist yet (pre-migration) — silently skip persistence
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Run a single screening agent (with retry + exponential backoff)
 // ---------------------------------------------------------------------------
 
@@ -88,8 +205,23 @@ async function runScreeningAgent(
   agentIndex: 0 | 1 | 2,
   criteria: ScreeningCriterion[],
   title: string,
-  abstract: string
+  abstract: string,
+  projectId?: number,
+  paperId?: number
 ): Promise<AgentDecision> {
+  const contentHash = computeContentHash(criteria, title, abstract, agentIndex);
+
+  // Check cache first if we have project/paper context
+  if (projectId != null && paperId != null) {
+    const cached = await getCachedAgentDecision(
+      projectId,
+      paperId,
+      agentIndex,
+      contentHash
+    );
+    if (cached) return cached;
+  }
+
   const formattedCriteria = formatCriteria(criteria);
 
   const prompt = getScreeningAgentPrompt(
@@ -108,16 +240,26 @@ async function runScreeningAgent(
         model: getSmallModel(),
         schema: agentDecisionSchema,
         prompt,
+        temperature: 0,
       });
 
-      return {
+      const decision: AgentDecision = {
         agentIndex,
         decision: object.decision,
         confidence: Math.max(0, Math.min(1, object.confidence)),
         reasoning: object.reasoning,
         matchedInclusion: object.matched_inclusion,
         matchedExclusion: object.matched_exclusion,
+        contentHash,
+        fromCache: false,
       };
+
+      // Persist the decision for future cache hits
+      if (projectId != null && paperId != null) {
+        await persistAgentDecision(projectId, paperId, decision, contentHash);
+      }
+
+      return decision;
     } catch (err) {
       lastError = err;
       if (attempt < maxRetries) {
@@ -151,6 +293,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
       consensusConfidence: avgConfidence,
       requiresHumanReview: false,
       reason: "All 3 agents voted to include",
+      deterministic: true,
     };
   }
 
@@ -162,6 +305,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
       consensusConfidence: avgConfidence,
       requiresHumanReview: false,
       reason: "All 3 agents voted to exclude",
+      deterministic: true,
     };
   }
 
@@ -173,6 +317,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
       consensusConfidence: avgConfidence * 0.85, // slightly lower for non-unanimous
       requiresHumanReview: false,
       reason: `${includeCount}/3 agents voted to include (majority consensus)`,
+      deterministic: true,
     };
   }
 
@@ -184,6 +329,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
       consensusConfidence: avgConfidence * 0.85,
       requiresHumanReview: false,
       reason: `${excludeCount}/3 agents voted to exclude (majority consensus)`,
+      deterministic: true,
     };
   }
 
@@ -194,6 +340,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
     consensusConfidence: avgConfidence * 0.5,
     requiresHumanReview: true,
     reason: `No consensus: ${includeCount} include, ${excludeCount} exclude, ${uncertainCount} uncertain — requires human review`,
+    deterministic: true,
   };
 }
 
@@ -210,9 +357,9 @@ export async function screenPaper(
 ): Promise<ConsensusResult> {
   // Run all 3 agents in parallel
   const [agent0, agent1, agent2] = await Promise.all([
-    runScreeningAgent(0, criteria, title, abstract),
-    runScreeningAgent(1, criteria, title, abstract),
-    runScreeningAgent(2, criteria, title, abstract),
+    runScreeningAgent(0, criteria, title, abstract, projectId, paperId),
+    runScreeningAgent(1, criteria, title, abstract, projectId, paperId),
+    runScreeningAgent(2, criteria, title, abstract, projectId, paperId),
   ]);
 
   const consensus = resolveConsensus([agent0, agent1, agent2]);
@@ -299,8 +446,10 @@ export async function batchScreenPapers(
       )
     );
 
+    const batchResults: ConsensusResult[] = [];
     for (const result of settled) {
       if (result.status === "fulfilled") {
+        batchResults.push(result.value);
         results.push(result.value);
       }
       // Failed papers are silently skipped — they remain unscreened
@@ -309,8 +458,14 @@ export async function batchScreenPapers(
 
     onProgress?.(Math.min(i + batchSize, papers.length), papers.length);
 
-    // Pause between batches to respect rate limits
-    if (i + batchSize < papers.length) {
+    // Skip rate-limit delay when all results in this batch came from cache
+    const allFromCache =
+      batchResults.length > 0 &&
+      batchResults.every((r) =>
+        r.agentDecisions.every((d) => d.fromCache === true)
+      );
+
+    if (i + batchSize < papers.length && !allFromCache) {
       await sleep(delayBetweenBatchesMs);
     }
   }
@@ -346,4 +501,62 @@ export async function getScreeningSummary(projectId: number) {
   }
 
   return summary;
+}
+
+// ---------------------------------------------------------------------------
+// Audit trail: retrieve per-agent decisions for a paper
+// ---------------------------------------------------------------------------
+
+export async function getAgentDecisions(
+  projectId: number,
+  paperId: number
+): Promise<AgentDecision[]> {
+  try {
+    const rows = await db.execute(sql`
+      SELECT
+        agent_index,
+        decision,
+        confidence,
+        reasoning,
+        matched_inclusion,
+        matched_exclusion,
+        content_hash
+      FROM screening_agent_decisions
+      WHERE project_id = ${projectId}
+        AND paper_id = ${paperId}
+      ORDER BY agent_index ASC
+    `);
+
+    const resultRows = (rows as unknown as { rows?: Record<string, unknown>[] }).rows ?? (rows as unknown as Record<string, unknown>[]);
+    return (resultRows as Record<string, unknown>[]).map((row) => ({
+      agentIndex: row.agent_index as number,
+      decision: row.decision as "include" | "exclude" | "uncertain",
+      confidence: Number(row.confidence),
+      reasoning: row.reasoning as string,
+      matchedInclusion: (row.matched_inclusion ?? []) as number[],
+      matchedExclusion: (row.matched_exclusion ?? []) as number[],
+      contentHash: row.content_hash as string,
+      fromCache: true,
+    }));
+  } catch {
+    // Table may not exist yet (pre-migration)
+    return [];
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Cache invalidation: remove all cached agent decisions for a project
+// ---------------------------------------------------------------------------
+
+export async function invalidateScreeningCache(
+  projectId: number
+): Promise<void> {
+  try {
+    await db.execute(sql`
+      DELETE FROM screening_agent_decisions
+      WHERE project_id = ${projectId}
+    `);
+  } catch {
+    // Table may not exist yet (pre-migration)
+  }
 }

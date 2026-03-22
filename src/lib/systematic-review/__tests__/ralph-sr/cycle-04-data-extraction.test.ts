@@ -540,11 +540,11 @@ describe("RALPH SR Cycle 4 — Stage 7: Screening & Search Prompts", () => {
     const p2 = getScreeningAgentPrompt(2, "criteria", "title", "abstract");
 
     expect(p0).toContain("Agent A");
-    expect(p0).toContain("MINIMIZE FALSE EXCLUSIONS");
+    expect(p0).toContain("POPULATION MATCH");
     expect(p1).toContain("Agent B");
-    expect(p1).toContain("PRECISION");
+    expect(p1).toContain("STUDY DESIGN");
     expect(p2).toContain("Agent C");
-    expect(p2).toContain("balanced");
+    expect(p2).toContain("PRIMARY OUTCOME");
   });
 
   it("getScreeningAgentPrompt substitutes criteria, title, abstract", () => {

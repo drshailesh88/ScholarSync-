@@ -67,6 +67,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
       consensusConfidence: avgConfidence,
       requiresHumanReview: false,
       reason: "All 3 agents voted to include",
+      deterministic: true,
     };
   }
 
@@ -77,6 +78,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
       consensusConfidence: avgConfidence,
       requiresHumanReview: false,
       reason: "All 3 agents voted to exclude",
+      deterministic: true,
     };
   }
 
@@ -87,6 +89,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
       consensusConfidence: avgConfidence * 0.85,
       requiresHumanReview: false,
       reason: `${includeCount}/3 agents voted to include (majority consensus)`,
+      deterministic: true,
     };
   }
 
@@ -97,6 +100,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
       consensusConfidence: avgConfidence * 0.85,
       requiresHumanReview: false,
       reason: `${excludeCount}/3 agents voted to exclude (majority consensus)`,
+      deterministic: true,
     };
   }
 
@@ -106,6 +110,7 @@ function resolveConsensus(decisions: AgentDecision[]): ConsensusResult {
     consensusConfidence: avgConfidence * 0.5,
     requiresHumanReview: true,
     reason: `No consensus: ${includeCount} include, ${excludeCount} exclude, ${uncertainCount} uncertain — requires human review`,
+    deterministic: true,
   };
 }
 

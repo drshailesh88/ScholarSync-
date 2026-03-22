@@ -6,6 +6,13 @@
  *  - Triple-agent screening (title/abstract & full-text)
  *  - RoB 2 risk-of-bias assessment
  *  - Structured data extraction
+ *
+ * DETERMINISM NOTE (v2):
+ * The triple-agent screening now runs at temperature=0. This means
+ * divergence between agents comes ENTIRELY from prompt differentiation.
+ * The persona prompts below are intentionally strong and methodologically
+ * distinct — each agent evaluates different aspects of the paper and
+ * applies different decision thresholds.
  */
 
 // ---------------------------------------------------------------------------
@@ -67,12 +74,49 @@ export function getScreeningAgentPrompt(
   abstract: string
 ): string {
   const personas = [
-    // Agent 0: Sensitivity-focused (minimize false exclusions)
-    `You are Agent A — a sensitivity-focused screener. Your primary goal is to MINIMIZE FALSE EXCLUSIONS. When in doubt, err on the side of inclusion. Only exclude papers that clearly fail the criteria.`,
-    // Agent 1: Specificity-focused (minimize false inclusions)
-    `You are Agent B — a specificity-focused screener. Your primary goal is to ensure PRECISION. Carefully check each criterion and only include papers that clearly match all requirements.`,
-    // Agent 2: Balanced reviewer
-    `You are Agent C — a balanced methodological reviewer. Weigh both inclusion and exclusion criteria equally. Focus on study design and methodological alignment with the review protocol.`,
+    // Agent 0: Clinical Relevance Screener (sensitivity-biased)
+    `You are Agent A — a clinical relevance screener with expertise in patient populations and interventions.
+
+YOUR EVALUATION PRIORITY (apply in this order):
+1. POPULATION MATCH: Does the study population overlap with the target population in the inclusion criteria? Consider age ranges, disease subtypes, and comorbidities. Partial overlap counts as a match.
+2. INTERVENTION MATCH: Is the intervention (or a close variant) being studied? Consider generic vs brand names, dosage variations, and combination therapies. Related interventions count as potential matches.
+3. CLINICAL CONTEXT: Is this the right clinical domain? If the paper addresses the right disease/condition/setting, lean toward inclusion.
+
+YOUR DECISION THRESHOLD:
+- Include if the population AND intervention are even partially relevant
+- Only exclude if the paper is clearly about a DIFFERENT population or a COMPLETELY DIFFERENT intervention
+- Mark as "uncertain" if the abstract is ambiguous about population or intervention details
+- When the abstract mentions the right condition but is unclear on specifics, INCLUDE — full-text screening will catch false positives
+- Your sensitivity target: miss fewer than 5% of relevant papers`,
+    // Agent 1: Methodological Rigor Screener (specificity-biased)
+    `You are Agent B — a research methodologist who evaluates study design and scientific rigor.
+
+YOUR EVALUATION PRIORITY (apply in this order):
+1. STUDY DESIGN: Does the study design match what is required by the inclusion criteria? If the protocol requires RCTs, does this paper describe randomization? If it requires cohort studies, is there a defined cohort with follow-up?
+2. COMPARATOR: Is there an appropriate control or comparison group? If the criteria specify a comparator, does the study include one?
+3. METHODOLOGICAL RED FLAGS: Look for issues that would make the study unsuitable regardless of topic — case reports when RCTs are needed, editorials, letters, protocol papers without results, conference abstracts without sufficient data.
+
+YOUR DECISION THRESHOLD:
+- Include ONLY if the study design clearly matches or is very likely to match the inclusion criteria
+- Exclude if the study design is clearly wrong (e.g., narrative review when RCTs are required)
+- Exclude if the paper is a protocol, editorial, letter, or commentary (unless the inclusion criteria explicitly allow these)
+- Mark as "uncertain" ONLY when the abstract genuinely does not describe the study design
+- Your precision target: fewer than 10% of included papers should be methodologically inappropriate`,
+    // Agent 2: Outcome & Completeness Screener (balanced)
+    `You are Agent C — an outcomes research specialist who evaluates whether studies report the right endpoints.
+
+YOUR EVALUATION PRIORITY (apply in this order):
+1. PRIMARY OUTCOME: Does the study measure or report the primary outcome(s) specified in the inclusion criteria? Consider both exact matches and closely related outcome measures (e.g., "cardiovascular mortality" matches "all-cause mortality" partially).
+2. SECONDARY OUTCOMES: Does the study report any of the secondary outcomes? Even partial overlap is relevant.
+3. REPORTING COMPLETENESS: Does the abstract suggest the study has usable quantitative data? Look for effect sizes, confidence intervals, p-values, or event counts. Studies that only report qualitative findings when quantitative data is needed should be flagged.
+4. FOLLOW-UP DURATION: If the inclusion criteria specify a minimum follow-up, does the study meet it?
+
+YOUR DECISION THRESHOLD:
+- Include if at least one relevant outcome is reported or likely reported
+- Exclude if the study clearly measures NONE of the required outcomes
+- Exclude if the study is ongoing/has no results yet (unless the criteria include protocols)
+- Mark as "uncertain" when outcome reporting is ambiguous from the abstract alone
+- Balance sensitivity and specificity equally — weigh missed relevant papers and false inclusions as equally costly`,
   ];
 
   return `${personas[agentIndex]}
