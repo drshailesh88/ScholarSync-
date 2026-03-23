@@ -1,0 +1,132 @@
+/**
+ * ScholarSync Design System — Design Tokens
+ * ==========================================
+ * Extracted from: github.com/drshailesh88/Ui-for-scholarsync
+ * Source of truth: decisions.md
+ * 
+ * CRITICAL: This file defines the exact visual language.
+ * Do NOT modify these values unless updating the design system.
+ */
+
+:root {
+  /* ═══ CORE COLORS ═══ */
+  --bg-app: #FFFFFF;                    /* Clean white main background */
+  --bg-sidebar: #1E1145;                /* Deep warm purple — Superhuman hero palette */
+  --bg-surface: #F7F5F3;                /* Light warm gray for inputs/cards */
+  --bg-hover: rgba(0,0,0,0.03);         /* Subtle hover state */
+  --bg-active: rgba(0,0,0,0.05);        /* Subtle active/pressed state */
+  
+  /* Text hierarchy */
+  --text-primary: #1C1917;              /* Warm near-black */
+  --text-secondary: #78716C;            /* Warm gray */
+  --text-tertiary: #A8A29E;             /* Muted warm gray */
+  --text-inverse: #FFFFFF;              /* White text on dark backgrounds */
+  --text-inverse-secondary: rgba(255,255,255,0.55);  /* Sidebar nav labels */
+  
+  /* Accent / Brand */
+  --accent: #6D28D9;                    /* Violet/purple — Superhuman signature */
+  --accent-hover: #5B21B6;              /* Darker accent for hover states */
+  --accent-light: rgba(109,40,217,0.08); /* Tinted background for active filters */
+  --accent-border: rgba(109,40,217,0.2); /* Accent-tinted borders */
+  
+  /* Borders */
+  --border: rgba(0,0,0,0.06);           /* Default subtle border */
+  --border-strong: rgba(0,0,0,0.1);     /* Stronger border for emphasis */
+  
+  /* ═══ TOOL ACCENT COLORS ═══ */
+  /* Each tool has a signature color for identification */
+  --editor-accent: #2C3E6B;             /* Draft/Editor — deep blue */
+  --research-accent: #6D28D9;           /* Discover — purple */
+  --library-accent: #047857;            /* Library — emerald green */
+  --discover-accent: #B45309;           /* Discover alternate */
+  --review-accent: #4D7C0F;             /* Systematic Review — lime */
+  --stage-accent: #0E7490;              /* Stage/Presentation — cyan */
+  --learn-accent: #15803D;              /* Learn mode — green */
+  --latex-accent: #475569;              /* LaTeX — slate */
+  --canvas-accent: #7E22CE;             /* Canvas/Illustrate — purple */
+  --audit-accent: #92400E;              /* Audit/Integrity — amber */
+  --pulse-accent: #854D0E;              /* Pulse/Feeds — yellow-brown */
+  --reading-accent: #1D4ED8;            /* Reading Room — blue */
+  --poster-accent: #9333EA;             /* Poster — violet */
+  
+  /* ═══ TYPOGRAPHY ═══ */
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", monospace;
+  
+  /* ═══ SPACING & RADIUS ═══ */
+  --radius: 6px;                        /* Subtle rounding — not 0, not large */
+  --radius-lg: 10px;                    /* Larger elements like cards, panels */
+  
+  /* ═══ TRANSITIONS ═══ */
+  --transition: 0.15s ease;             /* Quick UI feedback */
+  --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);  /* Material standard easing */
+  
+  /* ═══ SHADOWS ═══ */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.15);
+  
+  /* ═══ SIDEBAR SPECIFIC ═══ */
+  --sidebar-width: 224px;
+  --sidebar-section-label: rgba(255,255,255,0.3);
+  --sidebar-nav-label: rgba(255,255,255,0.55);
+  --sidebar-nav-active: #FFFFFF;
+  --sidebar-glass-bg: rgba(255,255,255,0.08);
+  --sidebar-glass-active: rgba(255,255,255,0.1);
+  --sidebar-indicator-gradient: linear-gradient(180deg, rgba(196,181,253,0.9), rgba(168,85,247,0.6));
+  --sidebar-border: rgba(255,255,255,0.06);
+  
+  /* ═══ BUDDY PANEL ═══ */
+  --buddy-panel-width: 360px;
+  --buddy-mode-draft-bg: #F8FAFF;
+  --buddy-mode-learn-bg: #F5FBF8;
+  --buddy-draft-accent: #0891B2;        /* Cyan for Draft mode */
+  
+  /* ═══ Z-INDEX SCALE ═══ */
+  --z-sidebar: 100;
+  --z-dropdown: 60;
+  --z-modal: 500;
+  --z-command-palette: 1000;
+  --z-buddy-fab: 200;
+}
+
+/* ═══ SIDEBAR GRADIENT ORB ANIMATIONS ═══ */
+/* Two soft radial gradients that slowly drift and breathe */
+@keyframes sidebarGlow {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  50% { transform: translate(5%, 8%) scale(1.05); opacity: 1; }
+  100% { transform: translate(-3%, -5%) scale(0.98); opacity: 0.8; }
+}
+
+/* ═══ ACTIVE INDICATOR ANIMATION ═══ */
+@keyframes indicatorIn {
+  from { height: 0; opacity: 0; }
+  to { height: 16px; opacity: 1; }
+}
+
+/* ═══ BUDDY SEND BUTTON ANIMATION ═══ */
+@keyframes send-fly {
+  from { transform: translateY(0.1em); }
+  to { transform: translateY(-0.1em); }
+}
+
+/* ═══ BUDDY GEAR SPIN ═══ */
+@keyframes buddySpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ═══ SLIDE REMOVE ANIMATION ═══ */
+@keyframes slideRemove {
+  0% { max-height: 40px; opacity: 1; transform: translateX(0); padding-top: 7px; padding-bottom: 7px; }
+  50% { opacity: 0; transform: translateX(20px); }
+  100% { max-height: 0; opacity: 0; transform: translateX(20px); padding-top: 0; padding-bottom: 0; margin: 0; }
+}
+
+/* ═══ PANEL SLIDE UP ═══ */
+@keyframes panelSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

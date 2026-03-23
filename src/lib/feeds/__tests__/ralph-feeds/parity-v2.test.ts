@@ -564,11 +564,10 @@ describe("P32: OPML import (Sprint 16)", () => {
 
 // ── P33: Navigation entry ────────────────────────────────────────────
 describe("P33: Sidebar navigation", () => {
-  it("sidebar has /feeds with Rss icon", () => {
+  it("sidebar has /feeds with Pulse label", () => {
     const c = readFileSync("src/components/layout/app-sidebar.tsx", "utf-8");
     expect(c).toContain('"/feeds"');
-    expect(c).toContain("Journal Feed");
-    expect(c).toContain("Rss");
+    expect(c).toContain("Pulse");
   });
 });
 
