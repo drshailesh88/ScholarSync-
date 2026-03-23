@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import {
   SquaresFour,
   PenNib,
@@ -79,7 +80,8 @@ export function AppSidebar({ open, onClose, width = 224 }: AppSidebarProps) {
   const pathname = usePathname();
   const [userPanelOpen, setUserPanelOpen] = useState(false);
   const [addToolOpen, setAddToolOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const isDarkMode = theme === "dark";
 
   const sidebarContent = (
     <div className="relative flex flex-col h-full overflow-hidden">
@@ -257,7 +259,7 @@ export function AppSidebar({ open, onClose, width = 224 }: AppSidebarProps) {
             <div className="mt-1 space-y-0.5 animate-in slide-in-from-bottom-2 duration-200">
               {/* Dark mode toggle */}
               <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
+                onClick={() => setTheme(isDarkMode ? "light" : "dark")}
                 className="flex items-center justify-between w-full px-3 py-[7px] rounded-md
                            text-xs text-white/45 hover:text-white/80 hover:bg-white/[0.06]
                            transition-all"
