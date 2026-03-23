@@ -1,28 +1,16 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useMemo, Suspense } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { Editor } from "@tiptap/react";
 import {
   FilePdf,
-  Plus,
-  PaperPlaneRight,
-  GlobeHemisphereWest,
   Books,
-  Sparkle,
   DownloadSimple,
   FileDoc,
   CircleNotch,
   Warning,
-  Question,
-  CaretDown,
-  MagnifyingGlass,
 } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
-import { Tabs } from "@/components/ui/tabs";
-import { ProgressBar } from "@/components/ui/progress-bar";
-import { ProjectSelector } from "@/components/studio/ProjectSelector";
 import { SaveIndicator } from "@/components/studio/SaveIndicator";
 import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
@@ -46,15 +34,10 @@ import {
 import { countSectionWords, getDocumentWordCount } from "@/lib/editor/word-counter";
 import type { Reference } from "@/types/citation";
 import {
-  GUIDE_STAGES,
-  GUIDE_STAGE_LABELS,
-  GUIDE_DOC_TYPE_LABELS,
   type GuideDocumentType,
   type GuideStage,
 } from "@/types/guide";
 import {
-  DRAFT_MODE_LABELS,
-  DRAFT_MODE_DESCRIPTIONS,
   type DraftModeIntensity,
 } from "@/types/draft";
 
@@ -72,12 +55,6 @@ interface ResearchCitationDetail {
   doi?: string;
   pmid?: string;
 }
-
-const aiPanelTabs = [
-  { key: "chat", label: "Chat & Learn" },
-  { key: "research", label: "Research" },
-  { key: "checks", label: "Checks" },
-];
 
 function toCitationAuthors(authors?: string[]) {
   if (!authors?.length) return [];
@@ -159,15 +136,15 @@ function StudioContent() {
   const projectParam = searchParams.get("projectId");
   const initialProjectId = projectParam ? Number(projectParam) : null;
 
-  const [isLearnMode, setIsLearnMode] = useState(searchParams.get("mode") === "learn");
+  const [isLearnMode, _setIsLearnMode] = useState(searchParams.get("mode") === "learn");
   const [aiTab, setAiTab] = useState("chat");
-  const [researchQuery, setResearchQuery] = useState("");
+  const [_researchQuery, _setResearchQuery] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [chatError, setChatError] = useState<string | null>(null);
+  const [_chatError, setChatError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [usageStats, setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
+  const [_usageStats, _setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
@@ -244,22 +221,22 @@ function StudioContent() {
     isLoading: docLoading,
     error: docError,
     handleEditorUpdate,
-    projects: userProjects,
-    selectedProjectId,
-    selectProject,
+    projects: _userProjects,
+    selectedProjectId: _selectedProjectId,
+    selectProject: _selectProject,
   } = useStudioDocument(initialProjectId);
 
   // Guide mode context
-  const [guideDocType, setGuideDocType] = useState<GuideDocumentType | null>(null);
-  const [guideStage, setGuideStage] = useState<GuideStage>("understand");
-  const [showDocTypePicker, setShowDocTypePicker] = useState(false);
+  const [guideDocType, _setGuideDocType] = useState<GuideDocumentType | null>(null);
+  const [guideStage, _setGuideStage] = useState<GuideStage>("understand");
+  const [_showDocTypePicker, _setShowDocTypePicker] = useState(false);
 
   // Draft mode context
-  const [draftIntensity, setDraftIntensity] = useState<DraftModeIntensity>("collaborate");
+  const [draftIntensity, _setDraftIntensity] = useState<DraftModeIntensity>("collaborate");
 
   useEffect(() => {
     getUserUsageStats().then((stats) => {
-      if (stats) setUsageStats({ tokens_used: stats.tokens_used ?? 0, tokens_limit: stats.tokens_limit ?? 50000 });
+      if (stats) _setUsageStats({ tokens_used: stats.tokens_used ?? 0, tokens_limit: stats.tokens_limit ?? 50000 });
     }).catch(() => {});
   }, []);
 
@@ -636,7 +613,7 @@ function StudioContent() {
     }
   }, [input, isLoading, messages, isLearnMode, guideDocType, guideStage, docTitle, draftIntensity]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const _handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     sendMessage();
   };
@@ -732,7 +709,7 @@ function StudioContent() {
   };
 
   // Cited sources from reference store (replaces hardcoded list)
-  const citedSourcesList = useMemo(() => {
+  const _citedSourcesList = useMemo(() => {
     return Array.from(referenceNumberMap.entries())
       .sort(([, a], [, b]) => a - b)
       .slice(0, 5)
@@ -761,262 +738,79 @@ function StudioContent() {
   }, [referenceNumberMap, references]);
 
   return (
-    <div className="flex h-[calc(100vh-7rem)] -m-6 -mt-0">
-      {/* Left Sidebar */}
-      <aside className="w-64 shrink-0 glass-panel border-r border-border flex flex-col">
-        <div className="px-4 py-4 border-b border-border-subtle">
+    <div className="flex flex-col h-[calc(100vh-5.5rem)] -m-6">
+      {/* Clean toolbar — Title, Save, Cite, Audit, Export */}
+      <div className="flex items-center justify-between px-5 h-11 border-b border-border-subtle shrink-0 bg-surface">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
           <input aria-label="Text input"
             type="text"
             value={docTitle}
             onChange={(e) => setDocTitle(e.target.value)}
-            className="w-full text-sm font-semibold text-ink bg-transparent focus:outline-none"
+            className="text-sm font-medium text-ink bg-transparent focus:outline-none flex-1 min-w-0"
           />
-          <div className="flex mt-3 p-0.5 bg-surface-raised rounded-lg">
-            <button
-              onClick={() => setIsLearnMode(false)}
-              className={cn(
-                "flex-1 py-1.5 rounded-md text-xs font-medium transition-all",
-                !isLearnMode ? "bg-brand text-white" : "text-ink-muted hover:text-ink"
-              )}
-            >
-              Write
-            </button>
-            <button
-              onClick={() => setIsLearnMode(true)}
-              className={cn(
-                "flex-1 py-1.5 rounded-md text-xs font-medium transition-all",
-                isLearnMode ? "bg-emerald-500 text-white" : "text-ink-muted hover:text-ink"
-              )}
-            >
-              Learn
-            </button>
-          </div>
-
-          {/* Project selector */}
-          {userProjects.length > 1 && (
-            <div className="mt-3">
-              <ProjectSelector
-                projects={userProjects}
-                selectedId={selectedProjectId}
-                onSelect={selectProject}
-              />
-            </div>
+          <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
+          {citationNotice && (
+            <span className="text-[11px] font-medium text-emerald-500 shrink-0">{citationNotice}</span>
           )}
         </div>
-
-        <nav className="px-3 py-3 space-y-0.5">
-          <div className="px-3 py-2 rounded-lg bg-surface-raised text-ink text-sm font-medium">
-            Current Draft
-          </div>
-          <Link href="/library" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-muted hover:text-ink hover:bg-surface-raised/50 transition-colors">
-            <Books size={16} />
-            My Library
-          </Link>
-          <Link href="/research" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-muted hover:text-ink hover:bg-surface-raised/50 transition-colors">
-            <GlobeHemisphereWest size={16} />
-            Literature Search
-          </Link>
-        </nav>
-
-        <div className="px-4 py-3 border-t border-border-subtle flex-1 overflow-y-auto">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-ink-muted uppercase tracking-wider">
-              References ({references.size})
-            </span>
-            <button
-              onClick={openCitationDialogWithSelection}
-              className="text-brand hover:text-brand-hover"
-            >
-              <Plus size={14} />
-            </button>
-          </div>
-          <div className="space-y-2">
-            {citedSourcesList.length > 0 ? (
-              citedSourcesList.map((src) => (
-                <div key={src.num} className="flex items-start gap-2 p-2 rounded-lg bg-surface-raised/50">
-                  <span className="text-[10px] font-mono font-bold text-blue-500 shrink-0 mt-0.5">
-                    [{src.num}]
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-xs text-ink truncate">{src.title}</p>
-                    <p className="text-[10px] text-ink-muted">{src.author}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-[10px] text-ink-muted text-center py-2">
-                Use Cmd+Shift+C to add citations
-              </p>
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={openCitationDialogWithSelection}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          >
+            <Books size={14} />
+            Cite
+            {references.size > 0 && (
+              <span className="text-[10px] bg-brand/10 text-brand px-1.5 py-0.5 rounded-full font-semibold">{references.size}</span>
             )}
-            {references.size > 5 && (
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="w-full text-[10px] text-brand hover:text-brand-hover py-1"
-              >
-                View all {references.size} references
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-auto px-4 py-4 border-t border-border-subtle">
-          <ProgressBar
-            value={usageStats?.tokens_used ?? 0}
-            max={usageStats?.tokens_limit ?? 50000}
-            label="AI Credits"
-            color="var(--brand)"
-          />
-        </div>
-      </aside>
-
-      {/* Center Editor */}
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {pendingCitationNotice && (
-          <div className="px-4 py-2 bg-blue-500/10 border-b border-blue-500/20 shrink-0">
-            <span className="text-sm text-blue-700 dark:text-blue-300">
-              {pendingCitationNotice}
-            </span>
-          </div>
-        )}
-        {!isLearnMode && (
-          <div className="px-4 py-2 bg-brand/5 border-b border-brand/10">
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-medium text-ink-muted">AI Intensity</p>
-              <div className="flex p-0.5 bg-surface-raised rounded-lg">
-                {(["focus", "collaborate", "accelerate"] as DraftModeIntensity[]).map((mode) => (
-                  <button
-                    key={mode}
-                    onClick={() => setDraftIntensity(mode)}
-                    title={DRAFT_MODE_DESCRIPTIONS[mode]}
-                    className={cn(
-                      "px-3 py-1 rounded-md text-[10px] font-medium transition-all",
-                      draftIntensity === mode
-                        ? mode === "focus"
-                          ? "bg-sky-500 text-white"
-                          : mode === "collaborate"
-                            ? "bg-brand text-white"
-                            : "bg-violet-500 text-white"
-                        : "text-ink-muted hover:text-ink"
-                    )}
-                  >
-                    {DRAFT_MODE_LABELS[mode]}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <p className="text-[10px] text-ink-muted mt-1">{DRAFT_MODE_DESCRIPTIONS[draftIntensity]}</p>
-          </div>
-        )}
-        {isLearnMode && (
-          <div className="px-4 py-2 bg-emerald-500/10 border-b border-emerald-500/20">
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-medium text-emerald-500">
-                Guide Mode — I won&apos;t write for you — I&apos;ll teach you how
-              </p>
-              {/* Document type selector */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowDocTypePicker((v) => !v)}
-                  className="flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium bg-emerald-500/20 text-emerald-600 hover:bg-emerald-500/30 transition-colors"
-                >
-                  {guideDocType ? GUIDE_DOC_TYPE_LABELS[guideDocType] : "Select document type"}
-                  <CaretDown size={10} />
-                </button>
-                {showDocTypePicker && (
-                  <div className="absolute right-0 top-full mt-1 w-48 rounded-lg glass-panel border border-border shadow-lg z-50 py-1">
-                    {(Object.entries(GUIDE_DOC_TYPE_LABELS) as [GuideDocumentType, string][]).map(([key, label]) => (
-                      <button
-                        key={key}
-                        onClick={() => { setGuideDocType(key); setShowDocTypePicker(false); }}
-                        className={cn(
-                          "w-full text-left px-3 py-1.5 text-xs transition-colors",
-                          guideDocType === key
-                            ? "bg-emerald-500/10 text-emerald-600 font-medium"
-                            : "text-ink hover:bg-surface-raised"
-                        )}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* Stage progression tracker */}
-            {guideDocType && (
-              <div className="flex items-center gap-1 mt-2">
-                {GUIDE_STAGES.map((stage, i) => {
-                  const isActive = stage === guideStage;
-                  const stageIdx = GUIDE_STAGES.indexOf(guideStage);
-                  const isCompleted = i < stageIdx;
-                  return (
-                    <button
-                      key={stage}
-                      onClick={() => setGuideStage(stage)}
-                      className={cn(
-                        "flex-1 py-1 rounded text-[10px] font-medium transition-all",
-                        isActive
-                          ? "bg-emerald-500 text-white"
-                          : isCompleted
-                            ? "bg-emerald-500/30 text-emerald-600"
-                            : "bg-surface-raised/50 text-ink-muted hover:text-ink"
-                      )}
-                    >
-                      {GUIDE_STAGE_LABELS[stage]}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-        <div className="flex items-center justify-between px-4 py-2 border-b border-border-subtle bg-surface">
-          <div className="flex items-center gap-3">
-            <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
-            {citationNotice && (
-              <span className="text-[10px] font-medium text-emerald-500">
-                {citationNotice}
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowKeyboardShortcuts(true)}
-              title="Keyboard shortcuts"
-              className="flex items-center justify-center w-8 h-8 rounded-lg text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border transition-colors"
-            >
-              <Question size={14} />
-            </button>
-            <div className="relative">
+          </button>
+          <button
+            onClick={() => setAiTab("checks")}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          >
+            Audit
+          </button>
+          <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border transition-colors"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
             >
               <DownloadSimple size={14} />
               Export
             </button>
             {showExport && (
-              <div className="absolute right-0 top-full mt-1 w-48 rounded-lg glass-panel border border-border shadow-lg z-50">
+              <div className="absolute right-0 top-full mt-1 w-44 rounded-lg bg-surface border border-border shadow-lg z-50 py-1">
                 <button
                   onClick={handleExportPDF}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised rounded-t-lg transition-colors"
+                  className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
                 >
                   <FilePdf size={14} className="text-red-400" />
                   Export as PDF
                 </button>
                 <button
                   onClick={handleExportDocx}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised rounded-b-lg transition-colors"
+                  className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
                 >
                   <FileDoc size={14} className="text-blue-400" />
                   Export as Word
                 </button>
               </div>
             )}
-            </div>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto bg-surface">
+      </div>
+
+      {/* Pending citation notice */}
+      {pendingCitationNotice && (
+        <div className="px-5 py-2 bg-blue-500/10 border-b border-blue-500/20 shrink-0">
+          <span className="text-xs text-blue-700 dark:text-blue-300">{pendingCitationNotice}</span>
+        </div>
+      )}
+
+      {/* Main content area */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Editor — distraction-free writing surface */}
+        <main className="flex-1 overflow-y-auto bg-surface">
           {docLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="flex flex-col items-center gap-3">
@@ -1045,144 +839,32 @@ function StudioContent() {
               referenceCount={references.size}
             />
           )}
-        </div>
-      </main>
+        </main>
 
-      {/* Research Sidebar */}
-      <ResearchSidebar />
+        {/* Research Sidebar (toggleable) */}
+        <ResearchSidebar />
 
-      {/* Right: Reference Sidebar, Comment Sidebar, or AI Panel */}
-      {sidebarOpen ? (
-        <ReferenceSidebar
-          open={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          onOpenCitationDialog={openCitationDialogWithSelection}
-        />
-      ) : commentSidebarOpen && studioDoc?.id && editorRef.current ? (
-        <CommentSidebar
-          documentId={String(studioDoc.id)}
-          editor={editorRef.current}
-          onClose={toggleCommentSidebar}
-        />
-      ) : (
-        <aside className="w-80 shrink-0 glass-panel border-l border-border flex flex-col">
-          <div className="px-4 py-3 border-b border-border-subtle">
-            <Tabs tabs={aiPanelTabs} activeTab={aiTab} onChange={setAiTab} />
-          </div>
-
-          {aiTab === "chat" && (
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
-                {chatError && (
-                  <div className="p-3 rounded-lg bg-amber-500/10 text-amber-500 text-xs">
-                    {chatError}
-                  </div>
-                )}
-                {/* empty state: no data, no results, nothing here */}
-                {messages.length === 0 && (
-                  <p className="text-xs text-ink-muted text-center py-4">Ask the AI assistant a question to get started.</p>
-                )}
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={cn(
-                      "flex gap-2",
-                      msg.role === "user" ? "justify-end" : "justify-start"
-                    )}
-                  >
-                    {msg.role === "assistant" && (
-                      <div className="w-6 h-6 rounded-full bg-brand/20 flex items-center justify-center shrink-0 mt-0.5">
-                        <Sparkle size={12} className="text-brand" />
-                      </div>
-                    )}
-                    <div
-                      className={cn(
-                        "max-w-[85%] px-3 py-2 rounded-xl text-sm",
-                        msg.role === "user"
-                          ? "bg-surface-raised text-ink"
-                          : "bg-brand/5 text-ink"
-                      )}
-                    >
-                      <p className="whitespace-pre-wrap text-xs leading-relaxed">{msg.content}</p>
-                    </div>
-                  </div>
-                ))}
-                {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-                  <div className="flex gap-2">
-                    <div className="w-6 h-6 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
-                      <Sparkle size={12} className="text-brand animate-spin" />
-                    </div>
-                    <div className="px-3 py-2 rounded-xl bg-brand/5">
-                      <div className="flex gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce" />
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce [animation-delay:150ms]" />
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce [animation-delay:300ms]" />
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
-              <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-border-subtle">
-                <div className="flex gap-2">
-                  <input aria-label="Input"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder={isLearnMode ? "Ask me to challenge your thinking..." : "Ask your AI research assistant..."}
-                    className="flex-1 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isLoading || !input.trim()}
-                    className="p-2 rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50"
-                  >
-                    <PaperPlaneRight size={16} />
-                  </button>
-                </div>
-              </form>
+        {/* Reference Sidebar OR Comment Sidebar OR Integrity Panel (toggleable, right side) */}
+        {sidebarOpen && (
+          <ReferenceSidebar
+            open={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+            onOpenCitationDialog={openCitationDialogWithSelection}
+          />
+        )}
+        {!sidebarOpen && commentSidebarOpen && studioDoc?.id && editorRef.current && (
+          <CommentSidebar
+            documentId={String(studioDoc.id)}
+            editor={editorRef.current}
+            onClose={toggleCommentSidebar}
+          />
+        )}
+        {!sidebarOpen && !commentSidebarOpen && aiTab === "checks" && (
+          <aside className="w-80 shrink-0 border-l border-border flex flex-col bg-surface">
+            <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
+              <span className="text-xs font-semibold text-ink">Integrity Check</span>
+              <button onClick={() => setAiTab("chat")} className="text-xs text-ink-muted hover:text-ink">Close</button>
             </div>
-          )}
-
-          {aiTab === "research" && (
-            <div className="flex-1 px-4 py-3 space-y-3 overflow-y-auto">
-              <button
-                onClick={() => useResearchStore.getState().openSidebar()}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-brand/10 border border-brand/20 text-brand text-xs font-medium hover:bg-brand/15 transition-colors"
-              >
-                <Books size={16} />
-                Open Literature Research Panel
-              </button>
-              <p className="text-center text-[10px] text-ink-muted">
-                Or press <kbd className="px-1 py-0.5 rounded bg-surface-raised border border-border text-[9px]">Cmd+Shift+L</kbd> to toggle
-              </p>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-                  <input aria-label="Input"
-                    value={researchQuery}
-                    onChange={(e) => setResearchQuery(e.target.value)}
-                    placeholder="Quick search PubMed..."
-                    className="w-full pl-8 pr-3 py-2 rounded-lg bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none"
-                  />
-                </div>
-                <button
-                  onClick={() => {
-                    if (researchQuery.trim()) {
-                      const store = useResearchStore.getState();
-                      store.setQuery(researchQuery);
-                      store.openSidebar();
-                      store.setActiveTab("search");
-                    }
-                  }}
-                  className="px-3 py-2 rounded-lg bg-brand text-white text-xs font-medium hover:bg-brand-hover transition-colors"
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-          )}
-
-          {aiTab === "checks" && (
             <IntegrityPanel
               getEditorText={() =>
                 editorRef.current?.view.dom.innerText?.trim() ||
@@ -1191,11 +873,11 @@ function StudioContent() {
               }
               sources={integritySources}
             />
-          )}
-        </aside>
-      )}
+          </aside>
+        )}
+      </div>
 
-      {/* Citation Dialog (modal overlay) */}
+      {/* Citation Dialog (modal overlay) — unchanged */}
       <CitationDialog
         open={citationDialogOpen}
         onClose={closeCitationDialog}

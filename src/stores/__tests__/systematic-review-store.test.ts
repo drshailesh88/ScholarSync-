@@ -80,6 +80,7 @@ describe("useSystematicReviewStore", () => {
         searchStrategy: null,
         searchDatabases: [],
         protocolRegistration: null,
+        reviewType: "intervention_rct" as const,
         reviewStage: "screening" as const,
         settings: {},
       };
@@ -102,6 +103,7 @@ describe("useSystematicReviewStore", () => {
         searchStrategy: null,
         searchDatabases: [],
         protocolRegistration: null,
+        reviewType: "intervention_rct" as const,
         reviewStage: "search_strategy" as const,
         settings: {},
       };
@@ -125,6 +127,7 @@ describe("useSystematicReviewStore", () => {
         searchStrategy: strategy,
         searchDatabases: [],
         protocolRegistration: null,
+        reviewType: "intervention_rct" as const,
         reviewStage: "search_strategy" as const,
         settings: {},
       };
@@ -143,6 +146,7 @@ describe("useSystematicReviewStore", () => {
         searchStrategy: null,
         searchDatabases: [],
         protocolRegistration: null,
+        reviewType: "intervention_rct" as const,
         reviewStage: "data_extraction" as const,
         settings: {},
       };
@@ -163,6 +167,7 @@ describe("useSystematicReviewStore", () => {
         searchStrategy: null,
         searchDatabases: [],
         protocolRegistration: null,
+        reviewType: "intervention_rct" as const,
         reviewStage: "search_strategy" as const,
         settings: {},
       });
@@ -351,7 +356,8 @@ describe("useSystematicReviewStore", () => {
           description: "Test review",
           researchQuestion: "Question?",
           status: "active",
-          reviewStage: "search_strategy" as const,
+          reviewType: "intervention_rct" as const,
+        reviewStage: "search_strategy" as const,
           paperCount: 100,
           screeningProgress: 25,
           createdAt: "2023-01-01",
