@@ -72,9 +72,10 @@ const navSections = [
 interface AppSidebarProps {
   open?: boolean;
   onClose?: () => void;
+  width?: number;
 }
 
-export function AppSidebar({ open, onClose }: AppSidebarProps) {
+export function AppSidebar({ open, onClose, width = 224 }: AppSidebarProps) {
   const pathname = usePathname();
   const [userPanelOpen, setUserPanelOpen] = useState(false);
   const [addToolOpen, setAddToolOpen] = useState(false);
@@ -296,8 +297,9 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
     <>
       {/* Desktop sidebar */}
       <aside 
-        className="hidden md:flex w-56 flex-col shrink-0 h-screen relative overflow-hidden"
-        style={{ 
+        className="hidden md:flex flex-col shrink-0 h-screen relative overflow-hidden"
+        style={{
+          width: `${width}px`,
           backgroundColor: '#1E1145',
           borderRight: '1px solid rgba(255,255,255,0.06)'
         }}

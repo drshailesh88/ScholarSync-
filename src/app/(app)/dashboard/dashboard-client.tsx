@@ -342,7 +342,7 @@ export default function DashboardClient({
 
         {/* ═══ PROJECT LIST ═══ */}
         {viewMode === "list" ? (
-          <div className="flex flex-direction-column">
+          <div className="flex flex-col">
             {filteredProjects.length === 0 ? (
               <div className="py-12 text-center text-[#A8A29E] text-sm">
                 No projects found. Create your first project to get started.
