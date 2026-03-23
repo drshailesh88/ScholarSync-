@@ -114,7 +114,7 @@ describe("JF-232: Sidebar modification", () => {
     const fs = await import("fs");
     const content = fs.readFileSync("src/components/layout/app-sidebar.tsx", "utf-8");
     expect(content).toContain('"/feeds"');
-    expect(content).toContain("Journal Feed");
+    expect(content).toContain("Pulse");
     expect(content).toContain("Rss");
   });
 });

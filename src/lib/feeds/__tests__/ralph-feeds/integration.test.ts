@@ -237,7 +237,7 @@ describe("JF-308: Navigation entry exists", () => {
     const content = fs.readFileSync(sidebarPath, "utf-8");
 
     expect(content).toContain('"/feeds"');
-    expect(content).toContain("Journal Feed");
+    expect(content).toContain("Pulse");
   });
 });
 

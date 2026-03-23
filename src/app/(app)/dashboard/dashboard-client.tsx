@@ -1,27 +1,28 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  GlobeHemisphereWest,
-  PenNib,
-  GraduationCap,
-  ShieldCheck,
-  FileText,
-  ArrowRight,
-  MagnifyingGlass,
-  Books,
-  ChatCircleDots,
-  ClockCounterClockwise,
-} from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { migrateLocalDocuments } from "@/lib/editor/migrate-local-documents";
 import {
   collectLocalDocuments,
   hasCompletedLocalDocumentMigration,
   markLocalDocumentMigrationComplete,
 } from "./dashboard-client-helpers";
+import {
+  Plus,
+  MagnifyingGlass,
+  List,
+  SquaresFour,
+  Tag,
+  CaretDown,
+  PenNib,
+  Code,
+  FlowArrow,
+  Presentation,
+  PaintBrush,
+  Brain,
+} from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 import type {
   DashboardProject,
   DashboardStats,
@@ -29,113 +30,72 @@ import type {
   RecentActivity,
 } from "@/lib/actions/dashboard";
 
-// ── Action Cards (static config) ────────────────────────────────
-
-const actionCards = [
-  {
-    title: "Literature Search",
-    description: "Query 200M+ academic papers. Extract consensus.",
-    icon: GlobeHemisphereWest,
-    href: "/research",
-    accent: "sky",
-  },
-  {
-    title: "Write & Draft",
-    description: "Open the luminous studio. Start writing with focus.",
-    icon: PenNib,
-    href: "/studio",
-    accent: "indigo",
-  },
-  {
-    title: "Learn Mode",
-    description: "Socratic AI tutor. Think critically, learn deeply.",
-    icon: GraduationCap,
-    href: "/studio?mode=learn",
-    accent: "emerald",
-  },
-  {
-    title: "Final Checks",
-    description: "Run plagiarism and AI-detection compliance audits.",
-    icon: ShieldCheck,
-    href: "/compliance",
-    accent: "amber",
-  },
-];
-
-const accentColors: Record<
-  string,
-  { bg: string; text: string; glow: string }
-> = {
-  sky: {
-    bg: "bg-sky-500/10",
-    text: "text-sky-400",
-    glow: "hover:shadow-[0_0_40px_rgba(56,189,248,0.15)] hover:border-sky-500/30",
-  },
-  indigo: {
-    bg: "bg-indigo-500/10",
-    text: "text-indigo-400",
-    glow: "hover:shadow-[0_0_40px_rgba(99,102,241,0.15)] hover:border-indigo-500/30",
-  },
-  emerald: {
-    bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-    glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/30",
-  },
-  amber: {
-    bg: "bg-amber-500/10",
-    text: "text-amber-400",
-    glow: "hover:shadow-[0_0_40px_rgba(245,158,11,0.15)] hover:border-amber-500/30",
-  },
+// ═══ TYPE COLORS ═══
+const typeColors: Record<string, string> = {
+  draft: "#6D28D9",        // Purple - Draft
+  research: "#0891B2",     // Cyan - Research
+  review: "#4D7C0F",       // Green - Systematic Review
+  presentation: "#0E7490", // Teal - Presentation
+  latex: "#475569",        // Slate - LaTeX
+  canvas: "#7E22CE",       // Violet - Canvas
+  deep_research: "#6D28D9", // Purple - Deep Research
+  systematic_review: "#4D7C0F",
+  default: "#78716C",      // Gray - Default
 };
 
-// ── Helpers ──────────────────────────────────────────────────────
+// ═══ STATUS FILTERS ═══
+const statusFilters = ["All", "Active", "Completed"];
 
-type DbStatus = "planning" | "drafting" | "reviewing" | "completed" | "archived";
+// ═══ TYPE FILTERS ═══
+const typeFilters = ["Draft", "Research", "Review", "Presentation"];
 
-const statusMap: Record<
-  DbStatus,
-  { variant: "drafting" | "completed" | "issues" | "active" | "popular"; label: string }
-> = {
-  planning: { variant: "active", label: "Planning" },
-  drafting: { variant: "drafting", label: "Drafting" },
-  reviewing: { variant: "active", label: "Reviewing" },
-  completed: { variant: "completed", label: "Completed" },
-  archived: { variant: "completed", label: "Archived" },
-};
-
+// ═══ HELPERS ═══
 function formatRelativeTime(date: Date | string | null): string {
-  if (!date) return "Never";
+  if (!date) return "";
   const now = new Date();
   const d = typeof date === "string" ? new Date(date) : date;
   const diffMs = now.getTime() - d.getTime();
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
+  const diffWeeks = Math.floor(diffDays / 7);
 
   if (diffMins < 1) return "Just now";
   if (diffMins < 60) return `${diffMins}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;
   if (diffDays < 7) return `${diffDays}d ago`;
-  return d.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+  if (diffWeeks < 4) return `${diffWeeks}w ago`;
+  return d.toLocaleDateString("en-US", { day: "numeric", month: "short" });
 }
 
-function formatProjectType(projectType: string | null): string {
-  if (!projectType) return "Project";
-  return projectType
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+function getTypeColor(projectType: string | null): string {
+  if (!projectType) return typeColors.default;
+  const normalized = projectType.toLowerCase().replace(/\s+/g, "_");
+  return typeColors[normalized] || typeColors.default;
 }
 
-function formatActivityAction(action: string): string {
-  return action
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+function formatMeta(project: DashboardProject): string {
+  const parts: string[] = [];
+  
+  // Add project type if available
+  if (project.project_type) {
+    const typeLabel = project.project_type
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+    parts.push(typeLabel);
+  }
+  
+  // Add status
+  if (project.status) {
+    const statusLabel = project.status.charAt(0).toUpperCase() + project.status.slice(1);
+    parts.push(statusLabel);
+  }
+  
+  return parts.join(" · ") || "Project";
 }
 
-// ── Component Props ─────────────────────────────────────────────
-
+// ═══ COMPONENT PROPS ═══
 interface DashboardClientProps {
   recentProjects: DashboardProject[];
   stats: DashboardStats;
@@ -143,287 +103,337 @@ interface DashboardClientProps {
   recentActivity: RecentActivity[];
 }
 
-// ── Main Client Component ───────────────────────────────────────
+// ═══ NEW DROPDOWN ITEMS ═══
+const newDropdownItems = [
+  { label: "Draft", href: "/studio", icon: PenNib, color: "#6D28D9" },
+  { label: "LaTeX Document", href: "/latex", icon: Code, color: "#475569" },
+  { label: "Systematic Review", href: "/systematic-review", icon: FlowArrow, color: "#4D7C0F" },
+  { label: "Presentation", href: "/presentation", icon: Presentation, color: "#0E7490" },
+  { label: "Canvas", href: "/illustrate", icon: PaintBrush, color: "#7E22CE" },
+  { label: "Deep Research", href: "/deep-research", icon: Brain, color: "#6D28D9" },
+];
 
+// ═══ MAIN COMPONENT ═══
 export default function DashboardClient({
   recentProjects,
-  stats,
-  recentSearches,
-  recentActivity,
+  stats: _stats,
+  recentSearches: _recentSearches,
+  recentActivity: _recentActivity,
 }: DashboardClientProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeStatusFilter, setActiveStatusFilter] = useState("All");
+  const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [newDropdownOpen, setNewDropdownOpen] = useState(false);
+  const [importantFilter, setImportantFilter] = useState(false);
+  const [notesFilter, setNotesFilter] = useState(false);
+
+  // Local document migration (preserves existing wiring)
   useEffect(() => {
     const storage = window.localStorage;
-    if (hasCompletedLocalDocumentMigration(storage)) {
-      return;
-    }
-
+    if (hasCompletedLocalDocumentMigration(storage)) return;
     const localDocs = collectLocalDocuments(storage);
-    if (localDocs.length === 0) {
-      return;
-    }
-
+    if (localDocs.length === 0) return;
     const migratableDocs = localDocs.filter((doc) => doc.documentId !== "new");
     let cancelled = false;
-
     migrateLocalDocuments(localDocs)
       .then((migratedCount) => {
-        if (cancelled) {
-          return;
-        }
-
-        if (
-          migratableDocs.length === 0 ||
-          migratedCount >= migratableDocs.length
-        ) {
+        if (cancelled) return;
+        if (migratableDocs.length === 0 || migratedCount >= migratableDocs.length) {
           markLocalDocumentMigrationComplete(storage);
         }
       })
       .catch(console.error);
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
+  // Filter projects
+  const filteredProjects = recentProjects.filter((project) => {
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      if (!project.title.toLowerCase().includes(query)) return false;
+    }
+    
+    // Status filter
+    if (activeStatusFilter !== "All") {
+      const status = project.status?.toLowerCase();
+      if (activeStatusFilter === "Active" && status === "completed") return false;
+      if (activeStatusFilter === "Completed" && status !== "completed") return false;
+    }
+    
+    // Type filter
+    if (activeTypeFilter) {
+      const type = project.project_type?.toLowerCase();
+      if (!type?.includes(activeTypeFilter.toLowerCase())) return false;
+    }
+    
+    return true;
+  });
+
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* Action Cards */}
-      <section className="mb-12">
-        <h2 className="text-sm font-medium text-ink-muted uppercase tracking-widest mb-6">
-          What do you want to do today?
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {actionCards.map((card) => {
-            const colors = accentColors[card.accent];
-            const Icon = card.icon;
-            return (
-                <Link
-                  key={card.title}
-                  href={card.href}
-                  className={cn(
-                    "group flex h-full flex-col glass-panel rounded-2xl p-6 transition-all duration-200 hover:-translate-y-1 border border-border",
-                    colors.glow
-                  )}
-                >
-                <div
-                  className={cn(
-                    "w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
-                    colors.bg,
-                    colors.text
-                  )}
-                >
-                  <Icon size={24} />
+    <div className="h-full overflow-y-auto bg-white">
+      <div className="max-w-6xl mx-auto px-8 py-8 lg:px-12">
+        
+        {/* ═══ TOP BAR ═══ */}
+        <div className="flex items-center gap-4 mb-8 flex-wrap">
+          
+          {/* New Button */}
+          <div className="relative">
+            <button
+              onClick={() => setNewDropdownOpen(!newDropdownOpen)}
+              className="flex items-center gap-1.5 px-5 py-2 bg-white text-[#1C1917]
+                         text-[13px] font-medium border border-black/10 rounded-md
+                         hover:border-[#78716C] transition-colors"
+            >
+              <Plus size={16} weight="bold" />
+              New
+              <CaretDown size={12} className="ml-1 text-[#A8A29E]" />
+            </button>
+            
+            {/* Dropdown */}
+            {newDropdownOpen && (
+              <>
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setNewDropdownOpen(false)} 
+                />
+                <div className="absolute left-0 top-full mt-1 w-[220px] bg-white border border-black/10 
+                                rounded-md shadow-[0_8px_24px_rgba(0,0,0,0.08)] p-1 z-50">
+                  {newDropdownItems.map((item) => {
+                    const _Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setNewDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 rounded text-[13px] font-medium
+                                   text-[#1C1917] hover:bg-[#F7F5F3] transition-colors"
+                      >
+                        <div 
+                          className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
                 </div>
-                <h3 className="font-semibold text-ink mb-1">{card.title}</h3>
-                <p className="text-sm text-ink-muted leading-relaxed">
-                  {card.description}
-                </p>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
+              </>
+            )}
+          </div>
 
-      {/* Stats Overview */}
-      <section className="mb-12">
-        <h2 className="text-sm font-medium text-ink-muted uppercase tracking-widest mb-6">
-          Your Research at a Glance
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="glass-panel rounded-2xl p-5 border border-border">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400">
-                <FileText size={18} />
-              </div>
-              <span className="text-2xl font-bold text-ink">{stats.projectCount}</span>
-            </div>
-            <p className="text-xs text-ink-muted">Projects</p>
+          {/* Search */}
+          <div className="flex items-center gap-2 px-3.5 py-[7px] bg-[#F7F5F3] 
+                          border border-black/[0.06] rounded-md flex-1 max-w-[360px]
+                          focus-within:border-[#6D28D9] transition-colors">
+            <MagnifyingGlass size={16} className="text-[#A8A29E] flex-shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search all projects..."
+              className="flex-1 bg-transparent text-[13px] text-[#1C1917] outline-none
+                         placeholder:text-[#A8A29E]"
+            />
           </div>
-          <div className="glass-panel rounded-2xl p-5 border border-border">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400">
-                <Books size={18} />
-              </div>
-              <span className="text-2xl font-bold text-ink">{stats.paperCount}</span>
+
+          {/* Filters */}
+          <div className="flex items-center gap-0.5 ml-auto">
+            {/* Status Filters */}
+            {statusFilters.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setActiveStatusFilter(filter)}
+                className={cn(
+                  "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
+                  activeStatusFilter === filter
+                    ? "bg-[#F7F5F3] text-[#1C1917] border border-black/[0.06]"
+                    : "text-[#A8A29E] hover:text-[#78716C]"
+                )}
+              >
+                {filter}
+              </button>
+            ))}
+            
+            {/* Divider */}
+            <div className="w-px h-[18px] bg-black/[0.06] mx-2.5" />
+            
+            {/* Type Filters */}
+            {typeFilters.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setActiveTypeFilter(activeTypeFilter === filter ? null : filter)}
+                className={cn(
+                  "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
+                  activeTypeFilter === filter
+                    ? "bg-purple-50 text-[#6D28D9] border border-purple-200"
+                    : "text-[#A8A29E] hover:text-[#78716C]"
+                )}
+              >
+                {filter}
+              </button>
+            ))}
+            
+            {/* Divider */}
+            <div className="w-px h-[18px] bg-black/[0.06] mx-2.5" />
+            
+            {/* Mark Filters */}
+            <button
+              onClick={() => setImportantFilter(!importantFilter)}
+              className={cn(
+                "flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md transition-all",
+                importantFilter
+                  ? "bg-[#F7F5F3] border border-black/[0.06]"
+                  : "text-[#A8A29E] hover:text-[#78716C]"
+              )}
+            >
+              <Tag size={12} weight="fill" className="text-amber-500" />
+              Important
+            </button>
+            <button
+              onClick={() => setNotesFilter(!notesFilter)}
+              className={cn(
+                "flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md transition-all",
+                notesFilter
+                  ? "bg-[#F7F5F3] border border-black/[0.06]"
+                  : "text-[#A8A29E] hover:text-[#78716C]"
+              )}
+            >
+              <Tag size={12} weight="fill" className="text-blue-500" />
+              Notes
+            </button>
+            
+            {/* Divider */}
+            <div className="w-px h-[18px] bg-black/[0.06] mx-2.5" />
+            
+            {/* View Toggle */}
+            <div className="flex items-center gap-px bg-[#F7F5F3] rounded-md p-0.5 border border-black/[0.06]">
+              <button
+                onClick={() => setViewMode("list")}
+                className={cn(
+                  "w-7 h-[26px] flex items-center justify-center rounded",
+                  viewMode === "list" 
+                    ? "bg-white text-[#1C1917] shadow-[0_1px_3px_rgba(0,0,0,0.08)]" 
+                    : "text-[#A8A29E] hover:text-[#78716C]"
+                )}
+              >
+                <List size={14} />
+              </button>
+              <button
+                onClick={() => setViewMode("grid")}
+                className={cn(
+                  "w-7 h-[26px] flex items-center justify-center rounded",
+                  viewMode === "grid" 
+                    ? "bg-white text-[#1C1917] shadow-[0_1px_3px_rgba(0,0,0,0.08)]" 
+                    : "text-[#A8A29E] hover:text-[#78716C]"
+                )}
+              >
+                <SquaresFour size={14} />
+              </button>
             </div>
-            <p className="text-xs text-ink-muted">Papers Saved</p>
-          </div>
-          <div className="glass-panel rounded-2xl p-5 border border-border">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                <MagnifyingGlass size={18} />
-              </div>
-              <span className="text-2xl font-bold text-ink">{stats.searchCount}</span>
-            </div>
-            <p className="text-xs text-ink-muted">Searches</p>
-          </div>
-          <div className="glass-panel rounded-2xl p-5 border border-border">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
-                <ChatCircleDots size={18} />
-              </div>
-              <span className="text-2xl font-bold text-ink">{stats.conversationCount}</span>
-            </div>
-            <p className="text-xs text-ink-muted">Conversations</p>
           </div>
         </div>
-      </section>
 
-      {/* Recent Projects */}
-      <section className="mb-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-medium text-ink-muted uppercase tracking-widest">
-            Active Manuscripts
-          </h2>
-          <Link
-            href="/projects"
-            className="text-sm text-brand hover:text-brand-hover transition-colors"
-          >
-            View Archive →
-          </Link>
+        {/* ═══ SECTION LABEL ═══ */}
+        <div className="text-[11px] font-semibold text-[#A8A29E] uppercase tracking-wider mb-2">
+          Recent
         </div>
 
-        <div className="glass-panel rounded-2xl overflow-hidden border border-border">
-          {recentProjects.length === 0 ? (
-            <div className="p-8 text-center text-ink-muted text-sm">
-              No projects yet. Create your first manuscript to get started.
-            </div>
-          ) : (
-            recentProjects.map((project, idx) => {
-              const status =
-                statusMap[(project.status as DbStatus) || "drafting"];
-              return (
+        {/* ═══ PROJECT LIST ═══ */}
+        {viewMode === "list" ? (
+          <div className="flex flex-direction-column">
+            {filteredProjects.length === 0 ? (
+              <div className="py-12 text-center text-[#A8A29E] text-sm">
+                No projects found. Create your first project to get started.
+              </div>
+            ) : (
+              filteredProjects.map((project, idx) => (
                 <Link
                   key={project.id}
                   href={`/studio?projectId=${project.id}`}
                   className={cn(
-                    "group flex items-center justify-between p-5 hover:bg-surface-raised/50 transition-colors cursor-pointer",
-                    idx < recentProjects.length - 1 &&
-                      "border-b border-border-subtle"
+                    "flex items-center gap-3.5 px-4 py-3 cursor-pointer",
+                    "border-b border-black/[0.06]",
+                    idx === 0 && "border-t",
+                    "hover:bg-black/[0.02] transition-colors duration-75"
                   )}
                 >
-                  <div className="flex items-center gap-5 min-w-0">
-                    <div className="w-10 h-10 rounded-lg bg-surface-raised flex items-center justify-center text-ink-muted group-hover:text-ink transition-colors shrink-0">
-                      <FileText size={20} />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="font-serif text-ink group-hover:text-brand transition-colors truncate">
-                        {project.title}
-                      </h4>
-                      <p className="text-xs text-ink-muted mt-0.5">
-                        {formatRelativeTime(project.updated_at)} ·{" "}
-                        {formatProjectType(project.project_type)}
-                      </p>
-                    </div>
+                  {/* Type dot */}
+                  <div 
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: getTypeColor(project.project_type) }}
+                  />
+                  
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-[14px] font-medium text-[#1C1917] truncate">
+                      {project.title}
+                    </h3>
+                    <p className="text-xs text-[#A8A29E] mt-0.5 truncate">
+                      {formatMeta(project)}
+                    </p>
                   </div>
-                  <div className="flex items-center gap-4 shrink-0 ml-4">
-                    <Badge variant={status.variant}>{status.label}</Badge>
-                    <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-ink-muted group-hover:text-ink group-hover:border-border transition-all">
-                      <ArrowRight size={14} />
-                    </div>
-                  </div>
+                  
+                  {/* Mark indicators (if any) */}
+                  {/* These would be populated from project data */}
+                  
+                  {/* Timestamp */}
+                  <span className="font-mono text-[11px] text-[#A8A29E] flex-shrink-0">
+                    {formatRelativeTime(project.updated_at)}
+                  </span>
                 </Link>
-              );
-            })
-          )}
-        </div>
-      </section>
-
-      {/* Bottom Grid: Recent Searches + Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Searches */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-medium text-ink-muted uppercase tracking-widest">
-              Recent Searches
-            </h2>
-            <Link
-              href="/research"
-              className="text-sm text-brand hover:text-brand-hover transition-colors"
-            >
-              Search →
-            </Link>
-          </div>
-          <div className="glass-panel rounded-2xl overflow-hidden border border-border">
-            {recentSearches.length === 0 ? (
-              <div className="p-6 text-center text-ink-muted text-sm">
-                No searches yet. Start exploring academic papers.
-              </div>
-            ) : (
-              recentSearches.map((search, idx) => (
-                <div
-                  key={search.id}
-                  className={cn(
-                    "flex items-center gap-3 p-4",
-                    idx < recentSearches.length - 1 &&
-                      "border-b border-border-subtle"
-                  )}
-                >
-                  <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center text-ink-muted shrink-0">
-                    <MagnifyingGlass size={16} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-ink truncate">
-                      {search.original_query}
-                    </p>
-                    <p className="text-xs text-ink-muted mt-0.5">
-                      {search.result_count != null
-                        ? `${search.result_count} results`
-                        : "No results"}{" "}
-                      · {formatRelativeTime(search.created_at)}
-                      {search.source && search.source !== "all"
-                        ? ` · ${search.source}`
-                        : ""}
-                    </p>
-                  </div>
-                </div>
               ))
             )}
           </div>
-        </section>
-
-        {/* Recent Activity */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-medium text-ink-muted uppercase tracking-widest">
-              Recent Activity
-            </h2>
-          </div>
-          <div className="glass-panel rounded-2xl overflow-hidden border border-border">
-            {recentActivity.length === 0 ? (
-              <div className="p-6 text-center text-ink-muted text-sm">
-                No activity yet. Your research actions will appear here.
-              </div>
-            ) : (
-              recentActivity.map((activity, idx) => (
-                <div
-                  key={activity.id}
-                  className={cn(
-                    "flex items-center gap-3 p-4",
-                    idx < recentActivity.length - 1 &&
-                      "border-b border-border-subtle"
-                  )}
-                >
-                  <div className="w-8 h-8 rounded-lg bg-surface-raised flex items-center justify-center text-ink-muted shrink-0">
-                    <ClockCounterClockwise size={16} />
+        ) : (
+          /* ═══ GRID VIEW ═══ */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {filteredProjects.map((project) => (
+              <Link
+                key={project.id}
+                href={`/studio?projectId=${project.id}`}
+                className="bg-white border border-black/[0.06] rounded-md overflow-hidden
+                           hover:border-black/10 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]
+                           hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+              >
+                {/* Preview area */}
+                <div className="h-[140px] p-4 bg-[#F7F5F3] border-b border-black/[0.06] relative">
+                  <div className="font-serif text-[10px] font-semibold text-[#1C1917] leading-tight mb-1.5 line-clamp-2">
+                    {project.title}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-ink truncate">
-                      {formatActivityAction(activity.action)}
-                    </p>
-                    <p className="text-xs text-ink-muted mt-0.5">
-                      {activity.entity_type
-                        ? `${formatActivityAction(activity.entity_type)}`
-                        : ""}
-                      {activity.entity_type ? " · " : ""}
-                      {formatRelativeTime(activity.created_at)}
-                    </p>
+                  <div className="space-y-1">
+                    {[...Array(4)].map((_, i) => (
+                      <div 
+                        key={i} 
+                        className="h-[3px] rounded-full bg-[#A8A29E]/25"
+                        style={{ width: `${80 - i * 15}%` }}
+                      />
+                    ))}
                   </div>
+                  {/* Fade overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#F7F5F3] to-transparent" />
                 </div>
-              ))
-            )}
+                
+                {/* Info */}
+                <div className="p-3">
+                  <div className="flex items-center gap-2">
+                    <div 
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: getTypeColor(project.project_type) }}
+                    />
+                    <span className="text-[13px] font-medium text-[#1C1917] truncate flex-1">
+                      {project.title}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#A8A29E] mt-1 truncate">
+                    {formatRelativeTime(project.updated_at)}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
-        </section>
+        )}
       </div>
     </div>
   );

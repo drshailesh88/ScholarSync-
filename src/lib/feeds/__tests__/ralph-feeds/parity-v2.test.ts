@@ -567,7 +567,7 @@ describe("P33: Sidebar navigation", () => {
   it("sidebar has /feeds with Rss icon", () => {
     const c = readFileSync("src/components/layout/app-sidebar.tsx", "utf-8");
     expect(c).toContain('"/feeds"');
-    expect(c).toContain("Journal Feed");
+    expect(c).toContain("Pulse");
     expect(c).toContain("Rss");
   });
 });
