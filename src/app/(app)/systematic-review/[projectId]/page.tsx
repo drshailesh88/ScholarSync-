@@ -1,7 +1,7 @@
 // Empty state: renders nothing when data.length === 0
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   MagnifyingGlass,
@@ -21,12 +21,15 @@ import {
   Article,
   ArrowSquareOut,
   ShareNetwork,
+  ChartScatter,
+  ClockCounterClockwise,
 } from "@phosphor-icons/react";
 import { Tabs } from "@/components/ui/tabs";
 import {
   useSystematicReviewStore,
   type WorkflowTab,
   type ReviewConfig,
+  type ReviewType,
 } from "@/stores/systematic-review-store";
 import { ProjectHeader } from "@/components/systematic-review/ProjectHeader";
 import { SearchStrategyPanel } from "@/components/systematic-review/SearchStrategyPanel";
@@ -45,6 +48,9 @@ import { PROSPEROExport } from "@/components/systematic-review/PROSPEROExport";
 import { GRADEPanel } from "@/components/systematic-review/GRADEPanel";
 import { ManuscriptPanel } from "@/components/systematic-review/ManuscriptPanel";
 import { NMAPanel } from "@/components/systematic-review/NMAPanel";
+import { EvidenceGapMap } from "@/components/systematic-review/EvidenceGapMap";
+import { AuditTrailPanel } from "@/components/systematic-review/AuditTrailPanel";
+import { MOOSEChecklistPanel } from "@/components/systematic-review/MOOSEChecklistPanel";
 import { SRRoomProvider } from "@/lib/liveblocks/sr-config";
 import { CollaboratorPresence } from "@/components/systematic-review/CollaboratorPresence";
 import { ActivityFeed } from "@/components/systematic-review/ActivityFeed";
@@ -55,7 +61,7 @@ import Link from "next/link";
 // Workflow tab definitions
 // ---------------------------------------------------------------------------
 
-const WORKFLOW_TABS = [
+const ALL_WORKFLOW_TABS = [
   { key: "strategy", label: "Search Strategy", icon: MagnifyingGlass },
   { key: "import", label: "Import Papers", icon: DownloadSimple },
   { key: "screening", label: "AI Screening", icon: Funnel },
@@ -66,12 +72,37 @@ const WORKFLOW_TABS = [
   { key: "nma", label: "Network MA", icon: ShareNetwork },
   { key: "grade", label: "GRADE", icon: Certificate },
   { key: "manuscript", label: "Manuscript", icon: Article },
+  { key: "gap_map", label: "Evidence Gap Map", icon: ChartScatter },
+  { key: "audit", label: "Audit Trail", icon: ClockCounterClockwise },
   { key: "snowball", label: "Snowballing", icon: Graph },
   { key: "export", label: "Export", icon: Export },
   { key: "living", label: "Living Review", icon: Bell },
   { key: "protocol", label: "Protocol", icon: Scroll },
   { key: "prospero", label: "PROSPERO", icon: ArrowSquareOut },
 ];
+
+const UNIVERSAL_TABS = new Set([
+  "strategy", "import", "screening", "prisma", "extraction",
+  "manuscript", "export", "protocol", "prospero", "audit",
+]);
+
+const TAB_VISIBILITY: Record<ReviewType, Set<string>> = {
+  intervention_rct: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "living", "nma", "gap_map"]),
+  intervention_non_rct: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "living", "nma", "gap_map"]),
+  observational_cohort: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "living", "gap_map"]),
+  observational_case_control: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "living", "gap_map"]),
+  diagnostic_accuracy: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "gap_map"]),
+  prognostic: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "gap_map"]),
+  qualitative: new Set([...UNIVERSAL_TABS, "snowball", "gap_map"]),
+  mixed_methods: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "gap_map"]),
+  scoping: new Set([...UNIVERSAL_TABS, "snowball"]),
+  umbrella: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "gap_map"]),
+};
+
+function getVisibleTabs(reviewType: ReviewType) {
+  const allowed = TAB_VISIBILITY[reviewType];
+  return ALL_WORKFLOW_TABS.filter((t) => allowed.has(t.key));
+}
 
 // ---------------------------------------------------------------------------
 // Main Workflow Page — wraps content in Liveblocks SRRoomProvider
@@ -118,6 +149,7 @@ function SystematicReviewWorkflowContent({
   const {
     projectTitle,
     reviewStage,
+    reviewType,
     activeTab,
     setProject,
     setActiveTab,
@@ -128,6 +160,16 @@ function SystematicReviewWorkflowContent({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [paperCount, setPaperCount] = useState(0);
+
+  const visibleTabs = useMemo(() => getVisibleTabs(reviewType), [reviewType]);
+
+  // Reset activeTab to 'strategy' if it's no longer visible for this review type
+  useEffect(() => {
+    const visibleKeys = new Set(visibleTabs.map((t) => t.key));
+    if (!visibleKeys.has(activeTab)) {
+      setActiveTab("strategy");
+    }
+  }, [visibleTabs, activeTab, setActiveTab]);
 
   // Load project config on mount or when projectId changes
   useEffect(() => {
@@ -164,6 +206,7 @@ function SystematicReviewWorkflowContent({
         ? {
             id: data.config.id,
             projectId: data.config.projectId,
+            reviewType: data.config.reviewType ?? "intervention_rct",
             pico: data.config.pico,
             searchStrategy: data.config.searchStrategy,
             searchDatabases: data.config.searchDatabases ?? ["pubmed"],
@@ -174,6 +217,7 @@ function SystematicReviewWorkflowContent({
         : {
             id: 0,
             projectId,
+            reviewType: "intervention_rct",
             pico: null,
             searchStrategy: null,
             searchDatabases: ["pubmed"],
@@ -257,7 +301,7 @@ function SystematicReviewWorkflowContent({
       {/* Workflow Tabs */}
       <div className="px-6 pt-4 border-b border-border">
         <Tabs
-          tabs={WORKFLOW_TABS.map((t) => ({
+          tabs={visibleTabs.map((t) => ({
             key: t.key,
             label: t.label,
           }))}
@@ -281,6 +325,10 @@ function SystematicReviewWorkflowContent({
           <div className="space-y-8">
             <PRISMAFlowPanel projectId={projectId} />
             <PRISMAChecklistPanel projectId={projectId} />
+            {(reviewType === "observational_cohort" ||
+              reviewType === "observational_case_control") && (
+              <MOOSEChecklistPanel projectId={projectId} />
+            )}
           </div>
         )}
         {activeTab === "rob" && <UnifiedRoBPanel projectId={projectId} />}
@@ -309,6 +357,12 @@ function SystematicReviewWorkflowContent({
         )}
         {activeTab === "prospero" && (
           <PROSPEROExport projectId={projectId} />
+        )}
+        {activeTab === "gap_map" && (
+          <EvidenceGapMap projectId={projectId} />
+        )}
+        {activeTab === "audit" && (
+          <AuditTrailPanel projectId={projectId} />
         )}
       </div>
 

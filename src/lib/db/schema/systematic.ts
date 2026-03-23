@@ -25,6 +25,7 @@ import {
   matrixSourceEnum,
   milestoneStatusEnum,
   reviewStageEnum,
+  reviewTypeEnum,
   alertFrequencyEnum,
   alertStatusEnum,
 } from "./enums";
@@ -292,6 +293,7 @@ export const systematicReviewConfig = pgTable(
     protocolDoi: text("protocol_doi"),
     searchDate: timestamp("search_date"),
     lastSearchDate: timestamp("last_search_date"),
+    reviewType: reviewTypeEnum("review_type").default("intervention_rct"),
     reviewStage: reviewStageEnum("review_stage").default("search_strategy"),
     settings: jsonb("settings").default({}),
     createdAt: timestamp("created_at").defaultNow(),

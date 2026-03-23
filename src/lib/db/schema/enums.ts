@@ -201,6 +201,19 @@ export const reviewStageEnum = pgEnum("review_stage", [
   "data_extraction", "risk_of_bias", "meta_analysis", "reporting",
 ]);
 
+export const reviewTypeEnum = pgEnum("review_type", [
+  "intervention_rct",
+  "intervention_non_rct",
+  "observational_cohort",
+  "observational_case_control",
+  "diagnostic_accuracy",
+  "prognostic",
+  "qualitative",
+  "mixed_methods",
+  "scoping",
+  "umbrella",
+]);
+
 // ---------------------------------------------------------------------------
 // Search Alerts (Living Reviews)
 // ---------------------------------------------------------------------------

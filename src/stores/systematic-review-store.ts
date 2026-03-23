@@ -28,7 +28,21 @@ export type WorkflowTab =
   | "protocol"
   | "prospero"
   | "grade"
-  | "manuscript";
+  | "manuscript"
+  | "gap_map"
+  | "audit";
+
+export type ReviewType =
+  | "intervention_rct"
+  | "intervention_non_rct"
+  | "observational_cohort"
+  | "observational_case_control"
+  | "diagnostic_accuracy"
+  | "prognostic"
+  | "qualitative"
+  | "mixed_methods"
+  | "scoping"
+  | "umbrella";
 
 export type ReviewStage =
   | "search_strategy"
@@ -83,6 +97,7 @@ export interface ScreeningSummary {
 export interface ReviewConfig {
   id: number;
   projectId: number;
+  reviewType: ReviewType;
   pico: PICOInput | null;
   searchStrategy: SearchStrategy | null;
   searchDatabases: string[];
@@ -116,6 +131,7 @@ interface SystematicReviewStore {
 
   // Workflow progress
   reviewStage: ReviewStage;
+  reviewType: ReviewType;
 
   // Search strategy state
   pico: PICOInput;
@@ -135,6 +151,7 @@ interface SystematicReviewStore {
   clearProject: () => void;
   setActiveTab: (tab: WorkflowTab) => void;
   setReviewStage: (stage: ReviewStage) => void;
+  setReviewType: (type: ReviewType) => void;
 
   // Actions — search strategy
   setPICO: (pico: PICOInput) => void;
@@ -176,6 +193,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
 
       // Workflow
       reviewStage: "search_strategy",
+      reviewType: "intervention_rct",
 
       // Search strategy
       pico: { ...DEFAULT_PICO },
@@ -197,6 +215,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
           projectTitle: title,
           reviewConfig: config,
           reviewStage: config.reviewStage,
+          reviewType: config.reviewType ?? "intervention_rct",
           pico: config.pico ?? { ...DEFAULT_PICO },
           generatedStrategy: config.searchStrategy ?? null,
         }),
@@ -208,6 +227,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
           reviewConfig: null,
           activeTab: "strategy",
           reviewStage: "search_strategy",
+          reviewType: "intervention_rct",
           pico: { ...DEFAULT_PICO },
           generatedStrategy: null,
           criteria: [{ type: "inclusion", description: "" }],
@@ -217,6 +237,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
 
       setActiveTab: (tab) => set({ activeTab: tab }),
       setReviewStage: (stage) => set({ reviewStage: stage }),
+      setReviewType: (type) => set({ reviewType: type }),
 
       // Actions — search strategy
       setPICO: (pico) => set({ pico }),
@@ -240,6 +261,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
         projectTitle: state.projectTitle,
         activeTab: state.activeTab,
         reviewStage: state.reviewStage,
+        reviewType: state.reviewType,
         pico: state.pico,
         // NOTE: criteria intentionally NOT persisted — always loaded from API
         // to prevent stale criteria from leaking across projects.
