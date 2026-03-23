@@ -1,45 +1,79 @@
 import Link from "next/link";
-import { SquaresFour } from "@phosphor-icons/react/dist/ssr";
 
 export function MarketingNav() {
   return (
-    <nav className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-      <div className="glass-panel rounded-full px-6 py-3 flex items-center gap-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center text-white text-xs">
-            <SquaresFour size={14} weight="fill" />
-          </div>
-          <span className="font-semibold tracking-tight text-sm text-white">
-            ScholarSync
-          </span>
+    <header className="sticky top-0 z-[201] w-full border-b border-black/[0.06] backdrop-blur-[12px] bg-white/90">
+      <nav className="mx-auto flex max-w-[1400px] items-center justify-between h-14 px-6 md:px-9">
+        <Link
+          href="/"
+          className="flex items-center gap-2"
+          style={{ color: "#1E1145" }}
+        >
+          <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="10" fill="#6D28D9" />
+            <text
+              x="50%"
+              y="54%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill="white"
+              fontFamily="Source Serif 4,serif"
+              fontSize="20"
+              fontWeight="700"
+            >
+              S
+            </text>
+          </svg>
+          <span className="text-xl font-bold tracking-tight">ScholarSync</span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6 text-xs font-medium text-[#94a3b8]">
-          <a href="#features" className="hover:text-white transition-colors">
-            Features
-          </a>
-          <a href="#pricing" className="hover:text-white transition-colors">
+        <div className="hidden md:flex items-center gap-8">
+          <a
+            href="#"
+            className="text-sm font-medium transition-colors hover:text-[#241013]"
+            style={{ color: "rgba(36,16,19,0.65)" }}
+          >
             Pricing
+          </a>
+          <a
+            href="#"
+            className="text-sm font-medium transition-colors hover:text-[#241013]"
+            style={{ color: "rgba(36,16,19,0.65)" }}
+          >
+            Blog
           </a>
         </div>
 
-        <div className="w-px h-4 bg-white/10 hidden md:block" />
-
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link
             href="/sign-in"
-            className="text-xs font-medium text-[#94a3b8] hover:text-white transition-colors"
+            className="text-sm font-medium transition-colors hover:text-[#241013]"
+            style={{ color: "rgba(36,16,19,0.65)" }}
           >
-            Sign In
+            Log in
           </Link>
           <Link
             href="/sign-up"
-            className="bg-gradient-to-r from-indigo-500 to-sky-500 text-white px-4 py-1.5 rounded-full text-xs font-bold hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+            className="inline-flex items-center gap-1.5 bg-[#6D28D9] text-white text-sm font-medium px-5 py-2 rounded-md transition-colors hover:bg-[#5B21B6]"
           >
-            Get Started
+            Get started
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M3 8h10M9 4l4 4-4 4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </Link>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }
