@@ -146,6 +146,9 @@ function StudioContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [_usageStats, _setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
+  const [showMark, setShowMark] = useState(false);
+  const [markImportant, setMarkImportant] = useState(false);
+  const [markNotes, setMarkNotes] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
   const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
@@ -752,6 +755,15 @@ function StudioContent() {
           {citationNotice && (
             <span className="text-[11px] font-medium text-emerald-500 shrink-0">{citationNotice}</span>
           )}
+          <button
+            onClick={showWordCountBreakdown}
+            className="text-[11px] text-ink-muted hover:text-ink transition-colors cursor-pointer"
+            title="Click for section breakdown"
+          >
+            {editorRef.current && !editorRef.current.isDestroyed
+              ? `${getDocumentWordCount(editorRef.current.state.doc)} words`
+              : ""}
+          </button>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           <button
@@ -770,6 +782,38 @@ function StudioContent() {
           >
             Audit
           </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowMark((v) => !v)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+            >
+              Mark
+              {(markImportant || markNotes) && (
+                <span className="flex gap-0.5">
+                  {markImportant && <span className="w-2 h-2 rounded-full bg-amber-500" />}
+                  {markNotes && <span className="w-2 h-2 rounded-full bg-blue-500" />}
+                </span>
+              )}
+            </button>
+            {showMark && (
+              <div className="absolute right-0 top-full mt-1 w-40 rounded-lg bg-surface border border-border shadow-lg z-50 py-1">
+                <button
+                  onClick={() => setMarkImportant((v) => !v)}
+                  className="flex items-center justify-between w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+                >
+                  <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> Important</span>
+                  {markImportant && <span className="text-brand font-bold">✓</span>}
+                </button>
+                <button
+                  onClick={() => setMarkNotes((v) => !v)}
+                  className="flex items-center justify-between w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+                >
+                  <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> Notes</span>
+                  {markNotes && <span className="text-brand font-bold">✓</span>}
+                </button>
+              </div>
+            )}
+          </div>
           <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}

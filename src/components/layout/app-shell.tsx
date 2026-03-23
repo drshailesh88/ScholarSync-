@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { AppSidebar } from "./app-sidebar";
 import { AppHeader } from "./app-header";
 import { CommandPalette } from "@/components/ui/command-palette";
@@ -12,14 +13,23 @@ const SIDEBAR_MIN = 180;
 const SIDEBAR_MAX = 320;
 const SIDEBAR_DEFAULT = 224;
 const BUDDY_MIN = 280;
-const BUDDY_MAX_RATIO = 0.5; // 50% of viewport
+const BUDDY_MAX_RATIO = 0.5;
+
+// Routes where the sidebar auto-collapses for distraction-free writing
+const DISTRACTION_FREE_ROUTES = ["/studio", "/latex"];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [buddyOpen, setBuddyOpen] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_DEFAULT);
   const [buddyWidth, setBuddyWidth] = useState(360);
+
+  // Auto-collapse sidebar on distraction-free routes
+  const isDistractionFree = DISTRACTION_FREE_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
+  );
 
   const handleSidebarResize = useCallback((delta: number) => {
     setSidebarWidth((w) => Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, w + delta)));
@@ -32,22 +42,35 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen">
-      {/* Desktop sidebar — resizable */}
-      <AppSidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        onShortcutsOpen={() => setShortcutsOpen(true)}
-        width={sidebarWidth}
-      />
+      {/* Desktop sidebar — hidden on distraction-free routes */}
+      {!isDistractionFree && (
+        <>
+          <AppSidebar
+            open={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+            onShortcutsOpen={() => setShortcutsOpen(true)}
+            width={sidebarWidth}
+          />
+          <div className="hidden md:flex h-screen">
+            <ResizeHandle side="right" onResize={handleSidebarResize} />
+          </div>
+        </>
+      )}
 
-      {/* Sidebar resize handle (desktop only) */}
-      <div className="hidden md:flex h-screen">
-        <ResizeHandle side="right" onResize={handleSidebarResize} />
-      </div>
+      {/* Mobile sidebar — available even on distraction-free routes via hamburger */}
+      {isDistractionFree && (
+        <AppSidebar
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          onShortcutsOpen={() => setShortcutsOpen(true)}
+          width={sidebarWidth}
+          mobileOnly
+        />
+      )}
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <AppHeader onMenuClick={() => setSidebarOpen(true)} />
+        <AppHeader onMenuClick={() => setSidebarOpen(true)} showMenuButton={isDistractionFree} />
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
 
@@ -59,7 +82,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </>
       )}
 
-      {/* Buddy FAB — shown when panel is closed */}
+      {/* Buddy FAB */}
       {!buddyOpen && <BuddyFab onClick={() => setBuddyOpen(true)} />}
 
       {/* Overlays */}

@@ -125,6 +125,7 @@ interface AppSidebarProps {
   onClose?: () => void;
   onShortcutsOpen?: () => void;
   width?: number;
+  mobileOnly?: boolean;
 }
 
 function NavIcon({ icon }: { icon: NavIcon }) {
@@ -149,7 +150,7 @@ function NavIcon({ icon }: { icon: NavIcon }) {
   );
 }
 
-export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224 }: AppSidebarProps) {
+export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobileOnly = false }: AppSidebarProps) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [userPanelOpen, setUserPanelOpen] = useState(false);
@@ -296,10 +297,10 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224 }: AppS
 
   return (
     <>
-      {/* Desktop sidebar */}
-      <aside className={cn("hidden md:flex flex-col shrink-0 ss-sidebar h-screen", textSize === "large" && "text-large")} style={{ width }}>
+      {/* Desktop sidebar — hidden when mobileOnly */}
+      {!mobileOnly && <aside className={cn("hidden md:flex flex-col shrink-0 ss-sidebar h-screen", textSize === "large" && "text-large")} style={{ width }}>
         {sidebarContent}
-      </aside>
+      </aside>}
 
       {/* Mobile overlay sidebar */}
       {open && (
