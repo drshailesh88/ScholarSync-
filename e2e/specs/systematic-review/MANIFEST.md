@@ -1,6 +1,6 @@
 # systematic-review — Spec Manifest
 
-Generated: 2026-03-11
+Generated: 2026-03-24
 Source: SYSTEMATIC_REVIEW_FEATURES_TESTING.md
 Total items: 1100
 Spec files: 32
