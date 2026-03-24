@@ -159,8 +159,13 @@ export async function POST(req: Request) {
         parsed.data.reason
       );
 
+      // Fire-and-forget: recompute priorities in the background after each decision
+      updateScreeningPriorities(parsed.data.projectId).catch(() => {
+        // Silent failure — priorities will be recomputed on next manual trigger
+      });
+
       const progress = await getScreeningProgress(parsed.data.projectId);
-      return NextResponse.json({ success: true, progress });
+      return NextResponse.json({ success: true, progress, prioritiesUpdating: true });
     }
 
     // Handle regular screening decision — pass userId as the reviewerId
@@ -170,13 +175,18 @@ export async function POST(req: Request) {
       reviewerId: userId,
     });
 
+    // Fire-and-forget: recompute priorities in the background after each decision
+    updateScreeningPriorities(parsed.data.projectId).catch(() => {
+      // Silent failure — priorities will be recomputed on next manual trigger
+    });
+
     // Get updated progress (overall + per-reviewer)
     const [progress, reviewerProgress] = await Promise.all([
       getScreeningProgress(parsed.data.projectId),
       getReviewerProgress(parsed.data.projectId, userId),
     ]);
 
-    return NextResponse.json({ success: true, progress, reviewerProgress });
+    return NextResponse.json({ success: true, progress, reviewerProgress, prioritiesUpdating: true });
   } catch (error) {
     console.error("Screening decision error", error);
     return NextResponse.json(
