@@ -76,16 +76,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className={`flex-1 overflow-y-auto ${isDistractionFree ? "p-0" : "p-6"}`}>{children}</main>
       </div>
 
-      {/* Buddy resize handle + panel */}
-      {buddyOpen && (
+      {/* Buddy — hidden on editor routes where Workbench replaces it */}
+      {!isDistractionFree && buddyOpen && (
         <>
           <ResizeHandle side="left" onResize={handleBuddyResize} />
           <BuddyPanel isOpen={buddyOpen} onClose={() => setBuddyOpen(false)} width={buddyWidth} />
         </>
       )}
 
-      {/* Buddy FAB */}
-      {!buddyOpen && <BuddyFab onClick={() => setBuddyOpen(true)} />}
+      {/* Buddy FAB — hidden on distraction-free routes */}
+      {!isDistractionFree && !buddyOpen && <BuddyFab onClick={() => setBuddyOpen(true)} />}
 
       {/* Overlays */}
       <CommandPalette />

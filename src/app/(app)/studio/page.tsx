@@ -11,20 +11,14 @@ import {
   CircleNotch,
   Warning,
   CaretDown,
+  Sparkle,
+  ShieldCheck,
 } from "@phosphor-icons/react";
 import { SaveIndicator } from "@/components/studio/SaveIndicator";
-import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
-import { CommentSidebar } from "@/components/editor/CommentSidebar";
 import { KeyboardShortcutsDialog } from "@/components/editor/KeyboardShortcutsDialog";
 import { CitationDialog } from "@/components/citations/citation-dialog";
-import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
 import { useReferenceStore } from "@/stores/reference-store";
-import { useEditorStore } from "@/stores/editor-store";
-import { ResearchSidebar } from "@/components/research/ResearchSidebar";
-import { useResearchStore } from "@/stores/research-store";
-import { getUserUsageStats } from "@/lib/actions/user";
-import { createConversation, addMessage } from "@/lib/actions/conversations";
 import { getProjectPapersForCitation } from "@/lib/actions/papers";
 import { useStudioDocument } from "@/hooks/use-studio-document";
 import { paperToReference } from "@/lib/citations/paper-to-reference";
@@ -38,9 +32,12 @@ import {
   type GuideDocumentType,
   type GuideStage,
 } from "@/types/guide";
-import {
-  type DraftModeIntensity,
-} from "@/types/draft";
+import { type DraftModeIntensity } from "@/types/draft";
+import { getUserUsageStats } from "@/lib/actions/user";
+import { createConversation, addMessage } from "@/lib/actions/conversations";
+import { useResearchStore } from "@/stores/research-store";
+import { Workbench } from "@/components/studio/Workbench";
+import { useWorkbenchStore } from "@/stores/workbench-store";
 
 interface ChatMessage {
   id: string;
@@ -136,9 +133,10 @@ function StudioContent() {
   const searchParams = useSearchParams();
   const projectParam = searchParams.get("projectId");
   const initialProjectId = projectParam ? Number(projectParam) : null;
+  const workbench = useWorkbenchStore();
 
   const [isLearnMode, _setIsLearnMode] = useState(searchParams.get("mode") === "learn");
-  const [aiTab, setAiTab] = useState("chat");
+  const [_aiTab, _setAiTab] = useState("chat");
   const [_researchQuery, _setResearchQuery] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -147,9 +145,9 @@ function StudioContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [_usageStats, _setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
-  const [showMark, setShowMark] = useState(false);
-  const [markImportant, setMarkImportant] = useState(false);
-  const [markNotes, setMarkNotes] = useState(false);
+  const [_showMark, _setShowMark] = useState(false);
+  const [_markImportant, _setMarkImportant] = useState(false);
+  const [_markNotes, _setMarkNotes] = useState(false);
   const [showFormattingToolbar, setShowFormattingToolbar] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
@@ -165,25 +163,22 @@ function StudioContent() {
   const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
   const openCitationDialog = useReferenceStore((s) => s.openCitationDialog);
   const closeCitationDialog = useReferenceStore((s) => s.closeCitationDialog);
-  const sidebarOpen = useReferenceStore((s) => s.sidebarOpen);
-  const toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
-  const setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
+  const _sidebarOpen = useReferenceStore((s) => s.sidebarOpen);
+  const _toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
+  const _setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
   const addReferences = useReferenceStore((s) => s.addReferences);
   const clearReferences = useReferenceStore((s) => s.clearReferences);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
-  const commentSidebarOpen = useEditorStore((s) => s.commentSidebarOpen);
-  const toggleCommentSidebar = useEditorStore((s) => s.toggleCommentSidebar);
-
   const submitAiPrompt = useCallback((prompt: string) => {
     setInput(prompt);
-    setAiTab("chat");
+    workbench.open("assistant");
     setTimeout(() => {
       setInput(prompt);
       const form = document.querySelector<HTMLFormElement>("form");
       form?.requestSubmit();
     }, 100);
-  }, []);
+  }, [workbench]);
 
   const showWordCountBreakdown = useCallback(() => {
     const editor = editorRef.current;
@@ -201,7 +196,7 @@ function StudioContent() {
       ? `Section word counts:\n${sectionLines.join("\n")}\n\nTotal: ${totalWords} words`
       : `Document word count: ${totalWords} words`;
 
-    setAiTab("chat");
+    workbench.open("assistant");
     setMessages((prev) => [
       ...prev,
       {
@@ -210,7 +205,7 @@ function StudioContent() {
         content,
       },
     ]);
-  }, []);
+  }, [workbench]);
 
   // -----------------------------------------------------------------------
   // Real DB persistence via hook
@@ -318,17 +313,17 @@ function StudioContent() {
     return () => window.removeEventListener("scholarsync:open-citation-dialog", handler);
   }, [openCitationDialogWithSelection]);
 
-  // Listen for Cmd+Shift+R to toggle reference sidebar
+  // Listen for Cmd+Shift+R to toggle sources in workbench
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "R") {
         e.preventDefault();
-        toggleSidebar();
+        workbench.toggle("sources");
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [toggleSidebar]);
+  }, [workbench]);
 
   // Handle slash command AI events from the editor
   useEffect(() => {
@@ -351,7 +346,7 @@ function StudioContent() {
           prompt = `Improve the clarity, precision, and academic tone of this selected text while preserving meaning:\n\n${detail.context || ""}`;
           break;
         case "ask":
-          setAiTab("chat");
+          workbench.open("assistant");
           setTimeout(() => {
             document
               .querySelector<HTMLInputElement>('input[placeholder*="AI research assistant"], input[placeholder*="challenge your thinking"]')
@@ -377,7 +372,7 @@ function StudioContent() {
           break;
         case "integrity-check":
           // Switch to the Checks tab — the IntegrityPanel handles the API call
-          setAiTab("checks");
+          workbench.open("review");
           return;
         default:
           return;
@@ -388,7 +383,7 @@ function StudioContent() {
 
     window.addEventListener("scholarsync:ai-action", handler);
     return () => window.removeEventListener("scholarsync:ai-action", handler);
-  }, [submitAiPrompt, toggleSidebar]);
+  }, [submitAiPrompt, workbench]);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -405,9 +400,7 @@ function StudioContent() {
         const { from, to } = editor.state.selection;
         const selectedText = editor.state.doc.textBetween(from, to, " ");
 
-        if (!commentSidebarOpen) {
-          toggleCommentSidebar();
-        }
+        workbench.open("review");
 
         window.dispatchEvent(
           new CustomEvent("scholarsync:new-inline-comment", {
@@ -422,7 +415,7 @@ function StudioContent() {
       }
 
       if (detail.action === "toggle-comment-sidebar") {
-        toggleCommentSidebar();
+        workbench.toggle("review");
         return;
       }
 
@@ -434,9 +427,8 @@ function StudioContent() {
     window.addEventListener("scholarsync:editor-action", handler);
     return () => window.removeEventListener("scholarsync:editor-action", handler);
   }, [
-    commentSidebarOpen,
     showWordCountBreakdown,
-    toggleCommentSidebar,
+    workbench,
     openCitationDialogWithSelection,
   ]);
 
@@ -768,54 +760,40 @@ function StudioContent() {
           </button>
         </div>
         <div className="flex items-center gap-1 shrink-0">
+          {/* Sources */}
           <button
-            onClick={openCitationDialogWithSelection}
+            onClick={() => workbench.toggle("sources")}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           >
             <Books size={14} />
-            Cite
+            Sources
             {references.size > 0 && (
               <span className="text-[10px] bg-brand/10 text-brand px-1.5 py-0.5 rounded-full font-semibold">{references.size}</span>
             )}
           </button>
+          {/* Assistant */}
           <button
-            onClick={() => setAiTab("checks")}
+            onClick={() => workbench.toggle("assistant")}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           >
-            Audit
+            <Sparkle size={14} />
+            Assistant
           </button>
-          <div className="relative">
-            <button
-              onClick={() => setShowMark((v) => !v)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
-            >
-              Mark
-              {(markImportant || markNotes) && (
-                <span className="flex gap-0.5">
-                  {markImportant && <span className="w-2 h-2 rounded-full bg-amber-500" />}
-                  {markNotes && <span className="w-2 h-2 rounded-full bg-blue-500" />}
-                </span>
-              )}
-            </button>
-            {showMark && (
-              <div className="absolute right-0 top-full mt-1 w-40 rounded-lg bg-surface border border-border shadow-lg z-50 py-1">
-                <button
-                  onClick={() => setMarkImportant((v) => !v)}
-                  className="flex items-center justify-between w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
-                >
-                  <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> Important</span>
-                  {markImportant && <span className="text-brand font-bold">✓</span>}
-                </button>
-                <button
-                  onClick={() => setMarkNotes((v) => !v)}
-                  className="flex items-center justify-between w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
-                >
-                  <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> Notes</span>
-                  {markNotes && <span className="text-brand font-bold">✓</span>}
-                </button>
-              </div>
-            )}
-          </div>
+          {/* Review */}
+          <button
+            onClick={() => workbench.toggle("review")}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          >
+            <ShieldCheck size={14} />
+            Review
+          </button>
+          {/* Cite (quick cite — opens modal) */}
+          <button
+            onClick={openCitationDialogWithSelection}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          >
+            Cite
+          </button>
           <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
@@ -865,10 +843,10 @@ function StudioContent() {
         </div>
       )}
 
-      {/* Main content area */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Editor — distraction-free writing surface */}
-        <main className="flex-1 overflow-y-auto bg-surface">
+      {/* Main content area — editor + Workbench overlay */}
+      <div className="flex-1 overflow-hidden relative">
+        {/* Editor — always full width, never pushed */}
+        <main className="h-full overflow-y-auto bg-surface">
           {docLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="flex flex-col items-center gap-3">
@@ -893,7 +871,7 @@ function StudioContent() {
               debounceMs={2000}
               onEditorReady={handleEditorReady}
               onOpenCitationDialog={openCitationDialogWithSelection}
-              onToggleReferenceSidebar={toggleSidebar}
+              onToggleReferenceSidebar={() => workbench.toggle("sources")}
               referenceCount={references.size}
               showToolbar={showFormattingToolbar}
               onToggleToolbar={() => setShowFormattingToolbar(false)}
@@ -901,40 +879,14 @@ function StudioContent() {
           )}
         </main>
 
-        {/* Research Sidebar (toggleable) */}
-        <ResearchSidebar />
-
-        {/* Reference Sidebar OR Comment Sidebar OR Integrity Panel (toggleable, right side) */}
-        {sidebarOpen && (
-          <ReferenceSidebar
-            open={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-            onOpenCitationDialog={openCitationDialogWithSelection}
-          />
-        )}
-        {!sidebarOpen && commentSidebarOpen && studioDoc?.id && editorRef.current && (
-          <CommentSidebar
-            documentId={String(studioDoc.id)}
-            editor={editorRef.current}
-            onClose={toggleCommentSidebar}
-          />
-        )}
-        {!sidebarOpen && !commentSidebarOpen && aiTab === "checks" && (
-          <aside className="w-80 shrink-0 border-l border-border flex flex-col bg-surface">
-            <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
-              <span className="text-xs font-semibold text-ink">Integrity Check</span>
-              <button onClick={() => setAiTab("chat")} className="text-xs text-ink-muted hover:text-ink">Close</button>
-            </div>
-            <IntegrityPanel
-              getEditorText={() =>
-                editorRef.current?.view.dom.innerText?.trim() ||
-                editorRef.current?.getText({ blockSeparator: "\n\n" }) ||
-                ""
-              }
-              sources={integritySources}
-            />
-          </aside>
-        )}
+        {/* Workbench — overlays the right side */}
+        <Workbench
+          editorRef={editorRef}
+          documentId={studioDoc?.id ? String(studioDoc.id) : undefined}
+          integritySources={integritySources}
+          onOpenCitationDialog={openCitationDialogWithSelection}
+          onInsertCitation={handleInsertCitation}
+        />
       </div>
 
       {/* Citation Dialog (modal overlay) — unchanged */}
