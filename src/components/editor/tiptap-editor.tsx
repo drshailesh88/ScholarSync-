@@ -75,6 +75,11 @@ interface TiptapEditorProps {
   onOpenCitationDialog?: () => void;
   onToggleReferenceSidebar?: () => void;
   referenceCount?: number;
+  /** Hide the built-in formatting toolbar (for distraction-free mode) */
+  hideToolbar?: boolean;
+  /** Show toolbar state and toggle callback (controlled from parent) */
+  showToolbar?: boolean;
+  onToggleToolbar?: () => void;
 }
 
 export function TiptapEditor({
@@ -85,9 +90,12 @@ export function TiptapEditor({
   contentKey,
   onDirty,
   onEditorReady,
-  onOpenCitationDialog,
-  onToggleReferenceSidebar,
-  referenceCount,
+  onOpenCitationDialog: _onOpenCitationDialog,
+  onToggleReferenceSidebar: _onToggleReferenceSidebar,
+  referenceCount: _referenceCount,
+  hideToolbar = false,
+  showToolbar = false,
+  onToggleToolbar,
 }: TiptapEditorProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onUpdateRef = useRef(onUpdate);
@@ -329,12 +337,12 @@ export function TiptapEditor({
 
   return (
     <div className={className}>
-      <Toolbar
-        editor={editor}
-        onOpenCitationDialog={onOpenCitationDialog}
-        onToggleReferenceSidebar={onToggleReferenceSidebar}
-        referenceCount={referenceCount}
-      />
+      {!hideToolbar && showToolbar && (
+        <Toolbar
+          editor={editor}
+          onCollapse={onToggleToolbar}
+        />
+      )}
       <div className="relative">
         {editor && (
           <>

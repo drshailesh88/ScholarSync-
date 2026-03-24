@@ -10,6 +10,7 @@ import {
   FileDoc,
   CircleNotch,
   Warning,
+  CaretDown,
 } from "@phosphor-icons/react";
 import { SaveIndicator } from "@/components/studio/SaveIndicator";
 import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
@@ -149,6 +150,7 @@ function StudioContent() {
   const [showMark, setShowMark] = useState(false);
   const [markImportant, setMarkImportant] = useState(false);
   const [markNotes, setMarkNotes] = useState(false);
+  const [showFormattingToolbar, setShowFormattingToolbar] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
   const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
@@ -741,7 +743,7 @@ function StudioContent() {
   }, [referenceNumberMap, references]);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5.5rem)] -m-6">
+    <div className="flex flex-col h-screen">
       {/* Clean toolbar — Title, Save, Cite, Audit, Export */}
       <div className="flex items-center justify-between px-5 h-11 border-b border-border-subtle shrink-0 bg-surface">
         <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -841,6 +843,18 @@ function StudioContent() {
               </div>
             )}
           </div>
+          {/* Toolbar expand/collapse chevron */}
+          <button
+            onClick={() => setShowFormattingToolbar((v) => !v)}
+            className="flex items-center justify-center w-7 h-7 rounded-md text-ink-muted hover:text-ink hover:bg-surface-raised transition-all"
+            title={showFormattingToolbar ? "Hide formatting toolbar" : "Show formatting toolbar"}
+          >
+            <CaretDown
+              size={12}
+              className="transition-transform"
+              style={{ transform: showFormattingToolbar ? "rotate(180deg)" : "" }}
+            />
+          </button>
         </div>
       </div>
 
@@ -881,6 +895,8 @@ function StudioContent() {
               onOpenCitationDialog={openCitationDialogWithSelection}
               onToggleReferenceSidebar={toggleSidebar}
               referenceCount={references.size}
+              showToolbar={showFormattingToolbar}
+              onToggleToolbar={() => setShowFormattingToolbar(false)}
             />
           )}
         </main>

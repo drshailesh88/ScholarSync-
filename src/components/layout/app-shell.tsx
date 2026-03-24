@@ -70,8 +70,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <AppHeader onMenuClick={() => setSidebarOpen(true)} showMenuButton={isDistractionFree} />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        {!isDistractionFree && (
+          <AppHeader onMenuClick={() => setSidebarOpen(true)} />
+        )}
+        <main className={`flex-1 overflow-y-auto ${isDistractionFree ? "p-0" : "p-6"}`}>{children}</main>
       </div>
 
       {/* Buddy resize handle + panel */}

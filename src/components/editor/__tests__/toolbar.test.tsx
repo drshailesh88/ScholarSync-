@@ -70,9 +70,7 @@ describe("Toolbar", () => {
       root?.render(
         <Toolbar
           editor={editor as never}
-          onOpenCitationDialog={vi.fn()}
-          onToggleReferenceSidebar={vi.fn()}
-          referenceCount={3}
+          onCollapse={vi.fn()}
         />
       );
     });
@@ -123,9 +121,7 @@ describe("Toolbar", () => {
       root?.render(
         <Toolbar
           editor={editor as never}
-          onOpenCitationDialog={onOpenCitationDialog}
-          onToggleReferenceSidebar={onToggleReferenceSidebar}
-          referenceCount={1}
+          onCollapse={vi.fn()}
         />
       );
     });
