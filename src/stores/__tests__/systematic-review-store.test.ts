@@ -83,6 +83,7 @@ describe("useSystematicReviewStore", () => {
         reviewType: "intervention_rct" as const,
         reviewStage: "screening" as const,
         settings: {},
+        isRapid: false,
       };
 
       store.setProject(1, "Test Review", config);
@@ -106,6 +107,7 @@ describe("useSystematicReviewStore", () => {
         reviewType: "intervention_rct" as const,
         reviewStage: "search_strategy" as const,
         settings: {},
+        isRapid: false,
       };
 
       store.setProject(1, "Test", config);
@@ -130,6 +132,7 @@ describe("useSystematicReviewStore", () => {
         reviewType: "intervention_rct" as const,
         reviewStage: "search_strategy" as const,
         settings: {},
+        isRapid: false,
       };
 
       store.setProject(1, "Test", config);
@@ -149,6 +152,7 @@ describe("useSystematicReviewStore", () => {
         reviewType: "intervention_rct" as const,
         reviewStage: "data_extraction" as const,
         settings: {},
+        isRapid: false,
       };
 
       store.setProject(1, "Test", config);
@@ -170,6 +174,7 @@ describe("useSystematicReviewStore", () => {
         reviewType: "intervention_rct" as const,
         reviewStage: "search_strategy" as const,
         settings: {},
+        isRapid: false,
       });
       store.setPICO({ population: "Modified", intervention: "I", comparison: "C", outcome: "O" });
 

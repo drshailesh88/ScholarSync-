@@ -54,7 +54,7 @@ interface PRISMAChecklistPanelProps {
 // Checklist variants
 // ---------------------------------------------------------------------------
 
-type ChecklistVariant = "prisma2020" | "prismaS" | "prismaNMA";
+type ChecklistVariant = "prisma2020" | "prismaS" | "prismaNMA" | "prismaScR";
 
 interface VariantConfig {
   label: string;
@@ -100,6 +100,17 @@ const VARIANT_CONFIG: Record<ChecklistVariant, VariantConfig> = {
     apiVariant: "prismaNMA",
     csvFilename: "prisma-nma-checklist.csv",
     verifyingText: "Verifying 5 items...",
+  },
+  prismaScR: {
+    label: "PRISMA-ScR (Scoping)",
+    shortLabel: "PRISMA-ScR",
+    description:
+      "Verify your scoping review against all 22 PRISMA-ScR checklist items (Tricco et al., 2018).",
+    itemCount: 22,
+    apiEndpoint: "/api/systematic-review/prisma-checklist",
+    apiVariant: "prismaScR",
+    csvFilename: "prisma-scr-checklist.csv",
+    verifyingText: "Verifying 22 items...",
   },
 };
 

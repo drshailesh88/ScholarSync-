@@ -410,3 +410,13 @@ export {
   type MOOSEItemResult,
   type MOOSEAssessment,
 } from "./moose-checklist";
+
+// ---------------------------------------------------------------------------
+// PRISMA-ScR — Scoping Review checklist
+// ---------------------------------------------------------------------------
+
+export {
+  PRISMA_SCR_ITEMS,
+  verifyPRISMASCRCompliance,
+  exportPRISMASCRChecklistCSV,
+} from "./prisma-scr-checklist";

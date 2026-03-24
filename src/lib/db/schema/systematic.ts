@@ -296,6 +296,7 @@ export const systematicReviewConfig = pgTable(
     reviewType: reviewTypeEnum("review_type").default("intervention_rct"),
     reviewStage: reviewStageEnum("review_stage").default("search_strategy"),
     settings: jsonb("settings").default({}),
+    isRapid: boolean("is_rapid").default(false),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },

@@ -22,6 +22,11 @@ import {
   exportPRISMASChecklistCSV,
   exportPRISMANMAChecklistCSV,
 } from "@/lib/systematic-review/prisma-checklist";
+import {
+  PRISMA_SCR_ITEMS,
+  verifyPRISMASCRCompliance,
+  exportPRISMASCRChecklistCSV,
+} from "@/lib/systematic-review/prisma-scr-checklist";
 
 // ---------------------------------------------------------------------------
 // POST — Verify manuscript against checklist
@@ -31,7 +36,7 @@ const verifySchema = z.object({
   projectId: z.number().int().positive(),
   manuscriptText: z.string().min(100).max(200000),
   exportFormat: z.enum(["json", "csv"]).default("json"),
-  variant: z.enum(["prisma2020", "prismaS", "prismaNMA"]).default("prisma2020"),
+  variant: z.enum(["prisma2020", "prismaS", "prismaNMA", "prismaScR"]).default("prisma2020"),
 });
 
 export async function POST(req: Request) {
@@ -71,6 +76,9 @@ export async function POST(req: Request) {
       case "prismaNMA":
         result = await verifyPRISMANMACompliance(manuscriptText);
         break;
+      case "prismaScR":
+        result = await verifyPRISMASCRCompliance(manuscriptText);
+        break;
       default:
         result = await verifyPRISMACompliance(manuscriptText);
     }
@@ -86,6 +94,10 @@ export async function POST(req: Request) {
         case "prismaNMA":
           csv = exportPRISMANMAChecklistCSV(result);
           filename = "prisma-nma-checklist.csv";
+          break;
+        case "prismaScR":
+          csv = exportPRISMASCRChecklistCSV(result);
+          filename = "prisma-scr-checklist.csv";
           break;
         default:
           csv = exportChecklistCSV(result);
@@ -122,6 +134,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ items: PRISMA_S_ITEMS, totalItems: PRISMA_S_ITEMS.length });
     case "prismaNMA":
       return NextResponse.json({ items: PRISMA_NMA_ITEMS, totalItems: PRISMA_NMA_ITEMS.length });
+    case "prismaScR":
+      return NextResponse.json({ items: PRISMA_SCR_ITEMS, totalItems: PRISMA_SCR_ITEMS.length });
     default:
       return NextResponse.json({ items: PRISMA_2020_ITEMS, totalItems: 27 });
   }

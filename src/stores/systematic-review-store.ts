@@ -105,6 +105,7 @@ export interface ReviewConfig {
   protocolRegistration: string | null;
   reviewStage: ReviewStage;
   settings: Record<string, unknown>;
+  isRapid: boolean;
 }
 
 export interface SRProject {
@@ -133,6 +134,7 @@ interface SystematicReviewStore {
   // Workflow progress
   reviewStage: ReviewStage;
   reviewType: ReviewType;
+  isRapid: boolean;
 
   // Search strategy state
   pico: PICOInput;
@@ -195,6 +197,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
       // Workflow
       reviewStage: "search_strategy",
       reviewType: "intervention_rct",
+      isRapid: false,
 
       // Search strategy
       pico: { ...DEFAULT_PICO },
@@ -217,6 +220,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
           reviewConfig: config,
           reviewStage: config.reviewStage,
           reviewType: config.reviewType ?? "intervention_rct",
+          isRapid: config.isRapid ?? false,
           pico: config.pico ?? { ...DEFAULT_PICO },
           generatedStrategy: config.searchStrategy ?? null,
         }),
@@ -229,6 +233,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
           activeTab: "strategy",
           reviewStage: "search_strategy",
           reviewType: "intervention_rct",
+          isRapid: false,
           pico: { ...DEFAULT_PICO },
           generatedStrategy: null,
           criteria: [{ type: "inclusion", description: "" }],

@@ -52,6 +52,8 @@ import { NMAPanel } from "@/components/systematic-review/NMAPanel";
 import { EvidenceGapMap } from "@/components/systematic-review/EvidenceGapMap";
 import { AuditTrailPanel } from "@/components/systematic-review/AuditTrailPanel";
 import { CERQualPanel } from "@/components/systematic-review/CERQualPanel";
+import { DeviationTracker } from "@/components/systematic-review/DeviationTracker";
+import { ScopingChartingPanel } from "@/components/systematic-review/ScopingChartingPanel";
 import { MOOSEChecklistPanel } from "@/components/systematic-review/MOOSEChecklistPanel";
 import { SRRoomProvider } from "@/lib/liveblocks/sr-config";
 import { CollaboratorPresence } from "@/components/systematic-review/CollaboratorPresence";
@@ -153,6 +155,7 @@ function SystematicReviewWorkflowContent({
     projectTitle,
     reviewStage,
     reviewType,
+    isRapid,
     activeTab,
     setProject,
     setActiveTab,
@@ -216,6 +219,7 @@ function SystematicReviewWorkflowContent({
             protocolRegistration: data.config.protocolRegistration,
             reviewStage: data.config.reviewStage ?? "search_strategy",
             settings: data.config.settings ?? {},
+            isRapid: data.config.isRapid ?? false,
           }
         : {
             id: 0,
@@ -227,6 +231,7 @@ function SystematicReviewWorkflowContent({
             protocolRegistration: null,
             reviewStage: "search_strategy",
             settings: {},
+            isRapid: false,
           };
 
       setProject(projectId, data.project.title, config);
@@ -336,7 +341,9 @@ function SystematicReviewWorkflowContent({
         )}
         {activeTab === "rob" && <UnifiedRoBPanel projectId={projectId} />}
         {activeTab === "extraction" && (
-          <DataExtractionPanel projectId={projectId} />
+          reviewType === "scoping"
+            ? <ScopingChartingPanel projectId={projectId} />
+            : <DataExtractionPanel projectId={projectId} />
         )}
         {activeTab === "meta_analysis" && (
           <MetaAnalysisPanel projectId={projectId} />
@@ -357,7 +364,10 @@ function SystematicReviewWorkflowContent({
           <LivingReviewPanel projectId={projectId} />
         )}
         {activeTab === "protocol" && (
-          <ProtocolPanel projectId={projectId} />
+          <div className="space-y-8">
+            <ProtocolPanel projectId={projectId} />
+            <DeviationTracker projectId={projectId} isRapid={isRapid} />
+          </div>
         )}
         {activeTab === "prospero" && (
           <PROSPEROExport projectId={projectId} />

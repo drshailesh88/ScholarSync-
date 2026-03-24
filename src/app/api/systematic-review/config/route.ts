@@ -56,6 +56,7 @@ const updateSchema = z.object({
     ])
     .optional(),
   settings: z.record(z.string(), z.unknown()).optional(),
+  isRapid: z.boolean().optional(),
 });
 
 // ---------------------------------------------------------------------------
@@ -159,6 +160,7 @@ export async function POST(req: Request) {
         searchDatabases: ["pubmed"],
         reviewStage: "search_strategy",
         settings: {},
+        isRapid: false,
       })
       .returning();
 
@@ -218,6 +220,8 @@ export async function PUT(req: Request) {
       updateValues.reviewStage = updates.reviewStage;
     if (updates.settings !== undefined)
       updateValues.settings = updates.settings;
+    if (updates.isRapid !== undefined)
+      updateValues.isRapid = updates.isRapid;
 
     const [config] = await db
       .update(systematicReviewConfig)
