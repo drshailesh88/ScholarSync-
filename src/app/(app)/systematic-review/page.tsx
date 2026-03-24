@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Plus,
   FlowArrow,
@@ -11,7 +12,8 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
-import type { SRProject } from "@/stores/systematic-review-store";
+import { ReviewTypeSelector } from "@/components/systematic-review/ReviewTypeSelector";
+import type { ReviewType, SRProject } from "@/stores/systematic-review-store";
 
 // ---------------------------------------------------------------------------
 // Stage labels for display
@@ -42,11 +44,15 @@ const STAGE_COLORS: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 export default function SystematicReviewHubPage() {
+  const router = useRouter();
   const [projects, setProjects] = useState<SRProject[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [showCreate, setShowCreate] = useState(false);
+  const [creationStep, setCreationStep] = useState<"title" | "type">("title");
+  const [selectedType, setSelectedType] =
+    useState<ReviewType>("intervention_rct");
   const [error, setError] = useState<string | null>(null);
 
   // Fetch projects
@@ -69,19 +75,37 @@ export default function SystematicReviewHubPage() {
     }
   }
 
-  async function createProject() {
+  function openCreateFlow() {
+    setError(null);
+    setCreationStep("title");
+    setSelectedType("intervention_rct");
+    setNewTitle("");
+    setShowCreate(true);
+  }
+
+  function resetCreateFlow() {
+    setShowCreate(false);
+    setCreationStep("title");
+    setSelectedType("intervention_rct");
+    setNewTitle("");
+  }
+
+  async function createProject(reviewType: ReviewType) {
     if (!newTitle.trim()) return;
     setIsCreating(true);
     try {
       const res = await fetch("/api/systematic-review/config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: newTitle.trim() }),
+        body: JSON.stringify({
+          title: newTitle.trim(),
+          reviewType,
+        }),
       });
       if (!res.ok) throw new Error("Failed to create project");
-      setNewTitle("");
-      setShowCreate(false);
-      await fetchProjects();
+      const data = await res.json();
+      resetCreateFlow();
+      router.push(`/systematic-review/${data.project.id}`);
     } catch {
       setError("Failed to create project. Please try again.");
     } finally {
@@ -105,10 +129,7 @@ export default function SystematicReviewHubPage() {
             </p>
           </div>
           <button
-            onClick={() => {
-              setError(null);
-              setShowCreate(true);
-            }}
+            onClick={openCreateFlow}
             className="px-4 py-2 bg-brand text-white rounded-lg text-sm font-medium hover:bg-brand/90 flex items-center gap-2"
           >
             <Plus weight="bold" size={16} />
@@ -129,61 +150,98 @@ export default function SystematicReviewHubPage() {
       <div className="flex-1 overflow-y-auto p-6">
         {/* Create form */}
         {showCreate && (
-          <GlassPanel className="p-6 mb-6 max-w-2xl">
-            <h2 className="text-lg font-semibold text-ink mb-3">
-              New Systematic Review
-            </h2>
-            <div className="mb-3">
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-ink">
-                  Review Title
-                </label>
-                <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand">
-                  Required
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-ink-muted">
-                Enter a working title to enable project creation. You can define
-                the full PICO and protocol once the review is open.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <input aria-label="Text input"
-                type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="e.g., Metformin vs Sulfonylureas for T2DM: A Systematic Review"
-                className="flex-1 px-3 py-2 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
-                onKeyDown={(e) => e.key === "Enter" && createProject()}
-                autoFocus
-              />
-              <button
-                onClick={createProject}
-                disabled={isCreating || !newTitle.trim()}
-                className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
-              >
-                {isCreating ? (
-                  <CircleNotch
-                    weight="bold"
-                    className="animate-spin"
-                    size={16}
+          <>
+            {creationStep === "title" && (
+              <GlassPanel className="p-6 mb-6 max-w-2xl">
+                <h2 className="text-lg font-semibold text-ink mb-3">
+                  New Systematic Review
+                </h2>
+                <div className="mb-3">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium text-ink">
+                      Review Title
+                    </label>
+                    <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand">
+                      Required
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-ink-muted">
+                    Enter a working title first, then choose the review type
+                    before the project is created.
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <input
+                    aria-label="Text input"
+                    type="text"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    placeholder="e.g., Metformin vs Sulfonylureas for T2DM: A Systematic Review"
+                    className="flex-1 px-3 py-2 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && newTitle.trim()) {
+                        setCreationStep("type");
+                      }
+                    }}
+                    autoFocus
                   />
-                ) : (
-                  <Plus weight="bold" size={16} />
-                )}
-                Create Review
-              </button>
-              <button
-                onClick={() => {
-                  setShowCreate(false);
-                  setNewTitle("");
-                }}
-                className="px-3 py-2 text-sm text-ink-muted hover:text-ink"
-              >
-                Cancel
-              </button>
-            </div>
-          </GlassPanel>
+                  <button
+                    onClick={() => setCreationStep("type")}
+                    disabled={isCreating || !newTitle.trim()}
+                    className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+                  >
+                    Next
+                    <ArrowRight weight="bold" size={16} />
+                  </button>
+                  <button
+                    onClick={resetCreateFlow}
+                    className="px-3 py-2 text-sm text-ink-muted hover:text-ink"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </GlassPanel>
+            )}
+
+            {creationStep === "type" && (
+              <div className="mb-6 max-w-5xl space-y-4">
+                <ReviewTypeSelector
+                  projectId={0}
+                  currentType={selectedType}
+                  onTypeSelected={(type) => {
+                    setSelectedType(type);
+                    void createProject(type);
+                  }}
+                />
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setCreationStep("title")}
+                    disabled={isCreating}
+                    className="px-3 py-2 text-sm text-ink-muted hover:text-ink disabled:opacity-50"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={resetCreateFlow}
+                    disabled={isCreating}
+                    className="px-3 py-2 text-sm text-ink-muted hover:text-ink disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  {isCreating && (
+                    <span className="inline-flex items-center gap-2 text-sm text-ink-muted">
+                      <CircleNotch
+                        weight="bold"
+                        className="animate-spin"
+                        size={16}
+                      />
+                      Creating review...
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* Loading */}
@@ -214,10 +272,7 @@ export default function SystematicReviewHubPage() {
               meta-analysis.
             </p>
             <button
-              onClick={() => {
-                setError(null);
-                setShowCreate(true);
-              }}
+              onClick={openCreateFlow}
               className="px-4 py-2 bg-brand text-white rounded-lg text-sm font-medium hover:bg-brand/90 flex items-center gap-2"
             >
               <Plus weight="bold" size={16} />

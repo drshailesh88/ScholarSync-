@@ -17,10 +17,24 @@ import { eq, and } from "drizzle-orm";
 // Schemas
 // ---------------------------------------------------------------------------
 
+const reviewTypeSchema = z.enum([
+  "intervention_rct",
+  "intervention_non_rct",
+  "observational_cohort",
+  "observational_case_control",
+  "diagnostic_accuracy",
+  "prognostic",
+  "qualitative",
+  "mixed_methods",
+  "scoping",
+  "umbrella",
+]);
+
 const createSchema = z.object({
   title: z.string().min(1).max(500),
   description: z.string().max(2000).optional(),
   researchQuestion: z.string().max(2000).optional(),
+  reviewType: reviewTypeSchema.optional(),
   pico: z
     .object({
       population: z.string(),
@@ -33,6 +47,7 @@ const createSchema = z.object({
 
 const updateSchema = z.object({
   projectId: z.number().int().positive(),
+  reviewType: reviewTypeSchema.optional(),
   pico: z
     .object({
       population: z.string(),
@@ -136,7 +151,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const { title, description, researchQuestion, pico } = parsed.data;
+    const { title, description, researchQuestion, reviewType, pico } =
+      parsed.data;
 
     // Create the project
     const [project] = await db
@@ -158,6 +174,7 @@ export async function POST(req: Request) {
         projectId: project.id,
         pico: pico ?? null,
         searchDatabases: ["pubmed"],
+        reviewType: reviewType ?? "intervention_rct",
         reviewStage: "search_strategy",
         settings: {},
         isRapid: false,
@@ -216,6 +233,8 @@ export async function PUT(req: Request) {
       updateValues.searchDatabases = updates.searchDatabases;
     if (updates.protocolRegistration !== undefined)
       updateValues.protocolRegistration = updates.protocolRegistration;
+    if (updates.reviewType !== undefined)
+      updateValues.reviewType = updates.reviewType;
     if (updates.reviewStage !== undefined)
       updateValues.reviewStage = updates.reviewStage;
     if (updates.settings !== undefined)

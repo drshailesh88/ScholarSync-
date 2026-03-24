@@ -21,6 +21,7 @@ import { ROBINSIPanel } from "./ROBINSIPanel";
 import { QUADAS2Panel } from "./QUADAS2Panel";
 import { AMSTAR2Panel } from "./AMSTAR2Panel";
 import { PROBASTPanel } from "./PROBASTPanel";
+import { NOSPanel } from "./NOSPanel";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -30,7 +31,13 @@ interface UnifiedRoBPanelProps {
   projectId: number;
 }
 
-type RoBTool = "rob2" | "robins_i" | "quadas2" | "amstar2" | "probast";
+type RoBTool =
+  | "rob2"
+  | "robins_i"
+  | "quadas2"
+  | "amstar2"
+  | "probast"
+  | "nos";
 type ToolFilter = "all" | RoBTool;
 type StudyType =
   | "rct"
@@ -97,6 +104,11 @@ const TOOL_META: Record<RoBTool, { label: string; shortLabel: string; color: str
     label: "PROBAST (Prediction Models)",
     shortLabel: "PROBAST",
     color: "bg-rose-500",
+  },
+  nos: {
+    label: "NOS (Observational)",
+    shortLabel: "NOS",
+    color: "bg-amber-500",
   },
 };
 
@@ -254,7 +266,14 @@ function suggestTool(studyType: StudyType): RoBTool {
 // Sub-view type
 // ---------------------------------------------------------------------------
 
-type SubView = "dashboard" | "rob2" | "robins_i" | "quadas2" | "amstar2" | "probast";
+type SubView =
+  | "dashboard"
+  | "rob2"
+  | "robins_i"
+  | "quadas2"
+  | "amstar2"
+  | "probast"
+  | "nos";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -423,14 +442,27 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
   );
 
   const toolDistribution = useMemo(() => {
-    const counts: Record<RoBTool, number> = { rob2: 0, robins_i: 0, quadas2: 0, amstar2: 0, probast: 0 };
+    const counts: Record<RoBTool, number> = {
+      rob2: 0,
+      robins_i: 0,
+      quadas2: 0,
+      amstar2: 0,
+      probast: 0,
+      nos: 0,
+    };
     for (const a of assignments.values()) {
       counts[a.assignedTool]++;
     }
     return counts;
   }, [assignments]);
 
-  const totalAssigned = toolDistribution.rob2 + toolDistribution.robins_i + toolDistribution.quadas2 + toolDistribution.amstar2 + toolDistribution.probast;
+  const totalAssigned =
+    toolDistribution.rob2 +
+    toolDistribution.robins_i +
+    toolDistribution.quadas2 +
+    toolDistribution.amstar2 +
+    toolDistribution.probast +
+    toolDistribution.nos;
 
   const filteredPapers = useMemo(() => {
     if (toolFilter === "all") return papers;
@@ -448,6 +480,7 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
       quadas2: quadas2Results,
       amstar2: [],
       probast: probastResults,
+      nos: [],
     };
 
     const summaries: Array<{
@@ -457,7 +490,13 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
       total: number;
     }> = [];
 
-    for (const tool of ["rob2", "robins_i", "quadas2", "probast"] as RoBTool[]) {
+    for (const tool of [
+      "rob2",
+      "robins_i",
+      "quadas2",
+      "probast",
+      "nos",
+    ] as RoBTool[]) {
       const results = toolResults[tool];
       if (results.length === 0) continue;
 
@@ -557,6 +596,7 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
         {subView === "quadas2" && <QUADAS2Panel projectId={projectId} />}
         {subView === "amstar2" && <AMSTAR2Panel projectId={projectId} />}
         {subView === "probast" && <PROBASTPanel projectId={projectId} />}
+        {subView === "nos" && <NOSPanel projectId={projectId} />}
       </div>
     );
   }
@@ -616,7 +656,9 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
             </div>
             <div className="flex h-3 rounded-full overflow-hidden bg-surface-raised border border-border">
               {/* empty state: no data, no results, nothing here */}
-              {(["rob2", "robins_i", "quadas2", "amstar2", "probast"] as RoBTool[]).map((tool) => {
+              {(
+                ["rob2", "robins_i", "quadas2", "amstar2", "probast", "nos"] as RoBTool[]
+              ).map((tool) => {
                 const count = toolDistribution[tool];
                 if (count === 0) return null;
                 const pct = (count / totalAssigned) * 100;
@@ -631,7 +673,9 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
               })}
             </div>
             <div className="flex items-center gap-4 mt-2">
-              {(["rob2", "robins_i", "quadas2", "amstar2", "probast"] as RoBTool[]).map((tool) => (
+              {(
+                ["rob2", "robins_i", "quadas2", "amstar2", "probast", "nos"] as RoBTool[]
+              ).map((tool) => (
                 <span key={tool} className="inline-flex items-center gap-1.5 text-xs text-ink-muted">
                   <span className={cn("w-2.5 h-2.5 rounded-full", TOOL_META[tool].color)} />
                   {TOOL_META[tool].shortLabel}: {toolDistribution[tool]}
@@ -731,6 +775,7 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
                 { key: "quadas2", label: `QUADAS-2 (${toolDistribution.quadas2})` },
                 { key: "amstar2", label: `AMSTAR 2 (${toolDistribution.amstar2})` },
                 { key: "probast", label: `PROBAST (${toolDistribution.probast})` },
+                { key: "nos", label: `NOS (${toolDistribution.nos})` },
               ] as Array<{ key: ToolFilter; label: string }>
             ).map((tab) => (
               <button
@@ -751,7 +796,9 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
           {/* Open Individual Tool Panels */}
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xs text-ink-muted">Open tool panel:</span>
-            {(["rob2", "robins_i", "quadas2", "amstar2", "probast"] as RoBTool[]).map((tool) => (
+            {(
+              ["rob2", "robins_i", "quadas2", "amstar2", "probast", "nos"] as RoBTool[]
+            ).map((tool) => (
               <button
                 key={tool}
                 onClick={() => setSubView(tool)}
@@ -765,6 +812,7 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
                 {tool === "quadas2" && <MagnifyingGlass size={14} />}
                 {tool === "amstar2" && <ShieldCheck size={14} />}
                 {tool === "probast" && <ShieldCheck size={14} />}
+                {tool === "nos" && <ShieldCheck size={14} />}
                 {TOOL_META[tool].shortLabel}
               </button>
             ))}
@@ -862,6 +910,7 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
                           <option value="quadas2">QUADAS-2</option>
                           <option value="amstar2">AMSTAR 2</option>
                           <option value="probast">PROBAST</option>
+                          <option value="nos">NOS</option>
                         </select>
                         {assignment?.overridden && (
                           <span className="ml-1.5 text-[10px] text-amber-500 font-medium">

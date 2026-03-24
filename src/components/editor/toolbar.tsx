@@ -61,7 +61,7 @@ export function Toolbar({ editor, onCollapse }: ToolbarProps) {
   const sep = <div className="w-px h-5 bg-border-subtle mx-0.5 shrink-0" />;
 
   return (
-    <div className="flex items-center gap-0.5 px-3 py-1 border-b border-border-subtle bg-surface overflow-x-auto">
+    <div className="ss-formatting-toolbar flex items-center gap-0.5 px-3 py-1 overflow-x-auto">
       {/* Text formatting */}
       {btn(editor.isActive("bold"), () => editor.chain().focus().toggleBold().run(), <TextB size={16} />, "Bold (⌘B)")}
       {btn(editor.isActive("italic"), () => editor.chain().focus().toggleItalic().run(), <TextItalic size={16} />, "Italic (⌘I)")}

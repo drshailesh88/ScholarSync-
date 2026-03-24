@@ -7,6 +7,7 @@ import {
   ArrowRight,
 } from "@phosphor-icons/react";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { PRESSChecklistPanel } from "./PRESSChecklistPanel";
 import { useSystematicReviewStore } from "@/stores/systematic-review-store";
 
 interface SearchStrategyPanelProps {
@@ -208,6 +209,10 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
               </div>
             </div>
           )}
+
+          <div className="mt-6 pt-4 border-t border-border">
+            <PRESSChecklistPanel projectId={projectId} />
+          </div>
 
           {/* CTA to import papers */}
           <div className="mt-6 pt-4 border-t border-border">

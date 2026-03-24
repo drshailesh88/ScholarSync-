@@ -1,17 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { PaperPlaneRight } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
-import { useResearchStore } from "@/stores/research-store";
-import {
-  useWorkbenchStore,
-  type WorkbenchAssistantMode,
-} from "@/stores/workbench-store";
 
+type Mode = "ask" | "draft" | "learn";
 type Intensity = "focus" | "collaborate" | "accelerate";
-type Scope = "manuscript" | "library";
 
 interface ChatMessage {
   id: string;
@@ -19,391 +15,248 @@ interface ChatMessage {
   content: string;
 }
 
-interface ModeConversationState {
-  messages: ChatMessage[];
-  conversationId: number | null;
-  isLoading: boolean;
-}
-
-const modeTabs: { mode: WorkbenchAssistantMode; label: string }[] = [
-  { mode: "ask", label: "Ask" },
-  { mode: "draft", label: "Draft" },
-  { mode: "learn", label: "Learn" },
+const modeTabs: { mode: Mode; label: string; color: string; icon: React.ReactNode }[] = [
+  {
+    mode: "ask",
+    label: "Ask",
+    color: "#6D28D9",
+    icon: <svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M3 4h10v7H6.5L3 14V4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" /></svg>,
+  },
+  {
+    mode: "draft",
+    label: "Draft",
+    color: "#0891B2",
+    icon: <svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M11 2l3 3-8.5 8.5H2.5v-3L11 2z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" /></svg>,
+  },
+  {
+    mode: "learn",
+    label: "Learn",
+    color: "#15803D",
+    icon: <svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 2.5C6.5 2.5 5 4 5 6c0 1.5 1 2.2 1.5 2.8.4.5.5 1 .5 1.7h2c0-.7.1-1.2.5-1.7C10 8.2 11 7.5 11 6c0-2-1.5-3.5-3-3.5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" /><path d="M6.5 12.5h3M7 14h2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>,
+  },
 ];
 
-const intensityLabels: Record<Intensity, string> = {
-  focus: "Focus",
-  collaborate: "Collaborate",
-  accelerate: "Accelerate",
-};
-
-const emptyModeState = (): Record<WorkbenchAssistantMode, ModeConversationState> => ({
-  ask: { messages: [], conversationId: null, isLoading: false },
-  draft: { messages: [], conversationId: null, isLoading: false },
-  learn: { messages: [], conversationId: null, isLoading: false },
-});
-
 export function WorkbenchAssistant() {
-  const mode = useWorkbenchStore((s) => s.activeAssistantMode);
-  const setActiveAssistantMode = useWorkbenchStore((s) => s.setActiveAssistantMode);
-  const pendingPrompt = useWorkbenchStore((s) => s.pendingPrompt);
-  const clearPendingPrompt = useWorkbenchStore((s) => s.clearPendingPrompt);
-
+  const [mode, setMode] = useState<Mode>("ask");
   const [intensity, setIntensity] = useState<Intensity>("collaborate");
-  const [scope, setScope] = useState<Scope>("manuscript");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const [modeState, setModeState] = useState<Record<WorkbenchAssistantMode, ModeConversationState>>(
-    emptyModeState
-  );
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const messages = modeState[mode].messages;
-  const isLoading = modeState[mode].isLoading;
+  const conversationIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const updateModeState = useCallback(
-    (
-      targetMode: WorkbenchAssistantMode,
-      updater: (state: ModeConversationState) => ModeConversationState
-    ) => {
-      setModeState((prev) => ({
-        ...prev,
-        [targetMode]: updater(prev[targetMode]),
-      }));
-    },
-    []
-  );
+  const sendMessage = useCallback(async () => {
+    if (!input.trim() || isLoading) return;
 
-  const sendMessage = useCallback(
-    async (promptOverride?: string) => {
-      const targetMode = mode;
-      const prompt = (promptOverride ?? input).trim();
-      const currentState = modeState[targetMode];
-      if (!prompt || currentState.isLoading) return;
+    const userMsg: ChatMessage = { id: `msg_${Date.now()}`, role: "user", content: input.trim() };
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
 
-      const userMsg: ChatMessage = {
-        id: `msg_${Date.now()}`,
-        role: "user",
-        content: prompt,
-      };
-      const nextMessages = [...currentState.messages, userMsg];
-
-      updateModeState(targetMode, (state) => ({
-        ...state,
-        messages: nextMessages,
-        isLoading: true,
-      }));
-      setInput("");
-
-      try {
-        let conversationId = currentState.conversationId;
-        if (!conversationId) {
-          const apiMode = targetMode === "learn" ? "learn" : "draft";
-          const convo = await createConversation({
-            mode: apiMode,
-            title: prompt.slice(0, 80),
-          });
-          conversationId = convo.id;
-          updateModeState(targetMode, (state) => ({
-            ...state,
-            conversationId,
-          }));
-        }
-
-        addMessage({
-          conversation_id: conversationId,
-          role: "user",
-          content: prompt,
-        }).catch(() => {});
-
-        const assistantMsg: ChatMessage = {
-          id: `msg_${Date.now() + 1}`,
-          role: "assistant",
-          content: "",
-        };
-        updateModeState(targetMode, (state) => ({
-          ...state,
-          messages: [...state.messages, assistantMsg],
-        }));
-
-        let fullText = "";
-
-        if (scope === "library") {
-          const { libraryPapers } = useResearchStore.getState();
-          if (libraryPapers.length === 0) {
-            throw new Error("Add papers to your library to ask questions about them.");
-          }
-
-          const res = await fetch("/api/research/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              question: prompt,
-              papers: libraryPapers.map((paper) => ({
-                id: paper.id,
-                title: paper.title,
-                authors: paper.authors,
-                year: paper.year,
-                journal: paper.journal,
-                abstract: paper.abstract,
-                studyType: paper.studyType,
-                pmid: paper.pmid,
-              })),
-              scopeLabel: `Library papers (${libraryPapers.length})`,
-            }),
-          });
-
-          if (!res.ok) throw new Error("Chat failed");
-
-          const reader = res.body?.getReader();
-          if (!reader) throw new Error("No stream");
-
-          const decoder = new TextDecoder();
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            fullText += decoder.decode(value, { stream: true });
-            updateModeState(targetMode, (state) => ({
-              ...state,
-              messages: state.messages.map((message) =>
-                message.id === assistantMsg.id
-                  ? { ...message, content: fullText }
-                  : message
-              ),
-            }));
-          }
-        } else {
-          const apiMode = targetMode === "learn" ? "learn" : "draft";
-          const res = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              messages: nextMessages.map((message) => ({
-                role: message.role,
-                content: message.content,
-              })),
-              mode: apiMode,
-              ...(targetMode === "draft" ? { draftContext: { intensity } } : {}),
-              ...(targetMode === "learn"
-                ? {
-                    guideContext: {
-                      documentType: "original_article",
-                      stage: "writing",
-                    },
-                  }
-                : {}),
-            }),
-          });
-
-          if (!res.ok) {
-            const errData = await res.json().catch(() => ({ error: "Chat failed" }));
-            throw new Error(errData.error || "Something went wrong.");
-          }
-
-          const reader = res.body?.getReader();
-          if (!reader) throw new Error("No stream");
-
-          const decoder = new TextDecoder();
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split("\n");
-            for (const line of lines) {
-              if (!line.startsWith("0:")) continue;
-              try {
-                fullText += JSON.parse(line.slice(2));
-                updateModeState(targetMode, (state) => ({
-                  ...state,
-                  messages: state.messages.map((message) =>
-                    message.id === assistantMsg.id
-                      ? { ...message, content: fullText }
-                      : message
-                  ),
-                }));
-              } catch {
-                // Skip malformed stream lines.
-              }
-            }
-          }
-        }
-
-        if (conversationId && fullText) {
-          addMessage({
-            conversation_id: conversationId,
-            role: "assistant",
-            content: fullText,
-          }).catch(() => {});
-        }
-      } catch (error) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : "Failed to connect. Please try again.";
-        updateModeState(targetMode, (state) => ({
-          ...state,
-          messages: [
-            ...state.messages,
-            { id: `err_${Date.now()}`, role: "assistant", content: message },
-          ],
-        }));
-      } finally {
-        updateModeState(targetMode, (state) => ({
-          ...state,
-          isLoading: false,
-        }));
+    try {
+      if (!conversationIdRef.current) {
+        const apiMode = mode === "ask" ? "draft" : mode;
+        const convo = await createConversation({ mode: apiMode as "draft" | "learn", title: input.trim().slice(0, 80) });
+        conversationIdRef.current = convo.id;
       }
-    },
-    [input, intensity, mode, modeState, scope, updateModeState]
-  );
 
-  useEffect(() => {
-    if (!pendingPrompt) return;
-    setInput(pendingPrompt);
-    clearPendingPrompt();
-    void sendMessage(pendingPrompt);
-  }, [clearPendingPrompt, pendingPrompt, sendMessage]);
+      addMessage({ conversation_id: conversationIdRef.current, role: "user", content: input.trim() }).catch(() => {});
+
+      const apiMode = mode === "learn" ? "learn" : "draft";
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
+          mode: apiMode,
+          ...(mode === "draft" ? { draftContext: { intensity } } : {}),
+          ...(mode === "learn" ? { guideContext: { documentType: "original_article", stage: "writing" } } : {}),
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({ error: "Chat failed" }));
+        setMessages((prev) => [...prev, { id: `err_${Date.now()}`, role: "assistant", content: errData.error || "Something went wrong." }]);
+        setIsLoading(false);
+        return;
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) { setIsLoading(false); return; }
+
+      const assistantMsg: ChatMessage = { id: `msg_${Date.now() + 1}`, role: "assistant", content: "" };
+      setMessages((prev) => [...prev, assistantMsg]);
+
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
+        for (const line of lines) {
+          if (line.startsWith("0:")) {
+            try {
+              const text = JSON.parse(line.slice(2));
+              fullText += text;
+              setMessages((prev) => {
+                const updated = [...prev];
+                updated[updated.length - 1] = { ...updated[updated.length - 1], content: fullText };
+                return updated;
+              });
+            } catch { /* skip */ }
+          }
+        }
+      }
+
+      if (conversationIdRef.current && fullText) {
+        addMessage({ conversation_id: conversationIdRef.current, role: "assistant", content: fullText }).catch(() => {});
+      }
+    } catch {
+      setMessages((prev) => [...prev, { id: `err_${Date.now()}`, role: "assistant", content: "Failed to connect." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [input, isLoading, messages, mode, intensity]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      void sendMessage();
-    }
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   };
 
+  const handleModeChange = (newMode: Mode) => {
+    setMode(newMode);
+    conversationIdRef.current = null;
+    setMessages([]);
+  };
+
+  const activeTab = modeTabs.find((t) => t.mode === mode)!;
+
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex shrink-0 border-b border-border-subtle px-2">
+    <div className="flex flex-col h-full" style={{ background: mode === "draft" ? "#F0FDFA" : mode === "learn" ? "#F0FDF4" : "transparent" }}>
+      {/* Buddy identity */}
+      <div className="flex items-center gap-2.5 px-4 py-2.5 shrink-0">
+        <div className="w-8 h-8 rounded-[8px] overflow-hidden shadow-sm shrink-0">
+          <Image src="/buddy-icon.png" alt="Buddy" width={32} height={32} className="w-full h-full object-cover" />
+        </div>
+        <span className="text-[14px] font-bold tracking-tight" style={{ color: "#1C1917" }}>Buddy</span>
+      </div>
+
+      {/* Mode tabs — Superhuman card style */}
+      <div className="flex gap-1.5 px-3 pb-2 shrink-0">
         {modeTabs.map((tab) => (
           <button
             key={tab.mode}
-            onClick={() => setActiveAssistantMode(tab.mode)}
+            onClick={() => handleModeChange(tab.mode)}
             className={cn(
-              "border-b-2 px-3 py-2 text-xs font-medium transition-colors",
-              mode === tab.mode
-                ? "border-brand text-brand"
-                : "border-transparent text-ink-muted hover:text-ink"
+              "flex-1 flex items-center justify-center gap-1.5 py-[7px] rounded-[8px] text-[12px] font-medium transition-all",
+              mode === tab.mode ? "bg-white shadow-sm" : "hover:bg-black/[0.03] hover:-translate-y-px"
             )}
+            style={{
+              border: mode === tab.mode ? `1.5px solid ${tab.color}` : "1.5px solid transparent",
+              color: mode === tab.mode ? tab.color : "#A8A29E",
+              fontWeight: mode === tab.mode ? 600 : 500,
+            }}
           >
+            <div className="w-[20px] h-[20px] rounded-[5px] flex items-center justify-center text-white shrink-0" style={{ background: tab.color }}>
+              {tab.icon}
+            </div>
             {tab.label}
           </button>
         ))}
       </div>
 
+      {/* Draft intensity */}
       {mode === "draft" && (
-        <div className="flex items-center gap-1 border-b border-border-subtle bg-surface-raised/30 px-3 py-1.5">
-          <span className="mr-1 text-[10px] text-ink-muted">Intensity:</span>
+        <div className="flex items-center gap-1 px-4 pb-2 shrink-0">
+          <span className="text-[10px] mr-1" style={{ color: "#A8A29E" }}>Intensity:</span>
           {(["focus", "collaborate", "accelerate"] as Intensity[]).map((level) => (
             <button
               key={level}
               onClick={() => setIntensity(level)}
-              className={cn(
-                "rounded px-2 py-0.5 text-[10px] font-medium transition-colors",
-                intensity === level
-                  ? "bg-brand/10 text-brand"
-                  : "text-ink-muted hover:text-ink"
-              )}
+              className="px-2 py-0.5 rounded text-[10px] font-medium transition-colors"
+              style={{
+                background: intensity === level ? "rgba(8,145,178,0.08)" : "transparent",
+                color: intensity === level ? "#0891B2" : "#A8A29E",
+              }}
             >
-              {intensityLabels[level]}
+              {level.charAt(0).toUpperCase() + level.slice(1)}
             </button>
           ))}
         </div>
       )}
 
-      <div className="flex-1 space-y-3 overflow-y-auto px-3 py-3" style={{ scrollbarWidth: "thin" }}>
+      <div className="mx-3" style={{ height: 1, background: "rgba(0,0,0,0.06)" }} />
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3" style={{ scrollbarWidth: "thin" }}>
         {messages.length === 0 && (
-          <div className="py-8 text-center text-xs text-ink-muted">
-            {mode === "ask" && "Ask me anything about your research."}
-            {mode === "draft" && "I'll help you write. What are you working on?"}
-            {mode === "learn" && "Let's explore a topic together."}
+          <div className="text-center py-12">
+            <div className="w-10 h-10 rounded-[10px] overflow-hidden shadow-sm mx-auto mb-3">
+              <Image src="/buddy-icon.png" alt="Buddy" width={40} height={40} className="w-full h-full object-cover" />
+            </div>
+            <p className="text-[13px]" style={{ color: "#78716C" }}>
+              {mode === "ask" && "Ask me anything about your research."}
+              {mode === "draft" && "I'll help you write. What are you working on?"}
+              {mode === "learn" && "Let's explore a topic together."}
+            </p>
           </div>
         )}
-        {messages.map((message) => (
+        {messages.map((msg) => (
           <div
-            key={message.id}
+            key={msg.id}
             className={cn(
-              "max-w-[85%] rounded-lg px-3 py-2 text-xs leading-relaxed",
-              message.role === "user"
-                ? "ml-auto bg-brand text-white"
-                : "bg-surface-raised text-ink"
+              "max-w-[88%] px-3.5 py-2.5 text-[13px] leading-relaxed",
+              msg.role === "user" ? "ml-auto rounded-[12px] rounded-br-[4px]" : "rounded-[12px] rounded-bl-[4px]"
             )}
+            style={{
+              background: msg.role === "user" ? activeTab.color : "rgba(0,0,0,0.03)",
+              color: msg.role === "user" ? "#fff" : "#1C1917",
+            }}
           >
-            {message.content ||
-              (isLoading && message.role === "assistant" ? (
-                <span className="inline-flex gap-1">
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/40" />
-                  <span
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/40"
-                    style={{ animationDelay: "150ms" }}
-                  />
-                  <span
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/40"
-                    style={{ animationDelay: "300ms" }}
-                  />
-                </span>
-              ) : (
-                ""
-              ))}
+            {msg.content || (isLoading && msg.role === "assistant" ? (
+              <span className="inline-flex gap-1">
+                <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: "#A8A29E" }} />
+                <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: "#A8A29E", animationDelay: "150ms" }} />
+                <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: "#A8A29E", animationDelay: "300ms" }} />
+              </span>
+            ) : "")}
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t border-border-subtle px-3 py-1.5">
-        <div className="flex gap-1">
+      {/* Input */}
+      <div className="px-3 py-2.5 shrink-0" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask Buddy anything..."
+            className="flex-1 px-3 py-2 rounded-[8px] text-[13px] outline-none"
+            style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", color: "#1C1917" }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = activeTab.color; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)"; }}
+          />
           <button
-            onClick={() => setScope("manuscript")}
-            className={cn(
-              "rounded px-2 py-0.5 text-[10px] font-medium transition-colors",
-              scope === "manuscript"
-                ? "bg-brand/10 text-brand"
-                : "text-ink-muted hover:text-ink"
-            )}
+            onClick={sendMessage}
+            disabled={!input.trim() || isLoading}
+            className="w-8 h-8 rounded-[8px] flex items-center justify-center transition-all shrink-0"
+            style={{
+              background: input.trim() && !isLoading ? activeTab.color : "rgba(0,0,0,0.04)",
+              color: input.trim() && !isLoading ? "#fff" : "#D4D4D4",
+            }}
           >
-            Manuscript
-          </button>
-          <button
-            onClick={() => setScope("library")}
-            className={cn(
-              "rounded px-2 py-0.5 text-[10px] font-medium transition-colors",
-              scope === "library"
-                ? "bg-brand/10 text-brand"
-                : "text-ink-muted hover:text-ink"
-            )}
-          >
-            Library papers
+            <PaperPlaneRight size={14} weight="fill" />
           </button>
         </div>
-      </div>
-
-      <div className="flex items-center gap-2 border-t border-border-subtle px-3 py-2 shrink-0">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={
-            scope === "library"
-              ? "Ask about your library papers..."
-              : "Ask anything..."
-          }
-          className="flex-1 rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-ink outline-none placeholder:text-ink-muted focus:border-brand"
-        />
-        <button
-          onClick={() => void sendMessage()}
-          disabled={!input.trim() || isLoading}
-          className={cn(
-            "flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-all",
-            input.trim() && !isLoading
-              ? "bg-brand text-white hover:bg-brand-hover"
-              : "bg-surface-raised text-ink-muted/30"
-          )}
-        >
-          <PaperPlaneRight size={14} weight="fill" />
-        </button>
       </div>
     </div>
   );

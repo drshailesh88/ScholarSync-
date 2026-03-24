@@ -14,6 +14,7 @@ import {
   Sparkle,
   ShieldCheck,
 } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 import { SaveIndicator } from "@/components/studio/SaveIndicator";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
 import { KeyboardShortcutsDialog } from "@/components/editor/KeyboardShortcutsDialog";
@@ -614,15 +615,17 @@ function StudioContent() {
   }, [referenceNumberMap, references]);
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* Clean toolbar — Title, Save, Cite, Audit, Export */}
-      <div className="flex items-center justify-between px-5 h-11 border-b border-border-subtle shrink-0 bg-surface">
+    <div className="flex flex-col h-screen" style={{ background: "var(--background)" }}>
+      {/* Toolbar — warm surface, visual hierarchy */}
+      <div className="flex items-center justify-between px-5 h-11 shrink-0" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <input aria-label="Text input"
             type="text"
             value={docTitle}
             onChange={(e) => setDocTitle(e.target.value)}
-            className="text-sm font-medium text-ink bg-transparent focus:outline-none flex-1 min-w-0"
+            className="ss-doc-title"
+            style={{ fontSize: 15, fontFamily: "var(--font-sans-family)", fontWeight: 600, letterSpacing: "-0.01em" }}
+            placeholder="Untitled"
           />
           <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
           {citationNotice && (
@@ -645,7 +648,12 @@ function StudioContent() {
               workbench.setActiveSourcesTab("search");
               workbench.toggle("sources");
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+            className={cn(
+              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
+              workbench.isOpen && workbench.activeTool === "sources"
+                ? "text-brand bg-brand/5"
+                : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+            )}
           >
             <Books size={14} />
             Sources
@@ -653,16 +661,21 @@ function StudioContent() {
               <span className="text-[10px] bg-brand/10 text-brand px-1.5 py-0.5 rounded-full font-semibold">{references.size}</span>
             )}
           </button>
-          {/* Assistant */}
+          {/* Buddy */}
           <button
             onClick={() => {
               workbench.setActiveAssistantMode("ask");
               workbench.toggle("assistant");
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+            className={cn(
+              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
+              workbench.isOpen && workbench.activeTool === "assistant"
+                ? "text-brand bg-brand/5"
+                : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+            )}
           >
             <Sparkle size={14} />
-            Assistant
+            Buddy
           </button>
           {/* Review */}
           <button
@@ -670,22 +683,28 @@ function StudioContent() {
               workbench.setActiveReviewTab("integrity");
               workbench.toggle("review");
             }}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+            className={cn(
+              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
+              workbench.isOpen && workbench.activeTool === "review"
+                ? "text-brand bg-brand/5"
+                : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+            )}
           >
             <ShieldCheck size={14} />
             Review
           </button>
-          {/* Cite (quick cite — opens modal) */}
+          {/* Cite — secondary action */}
           <button
             onClick={openCitationDialogWithSelection}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+            className="ss-toolbar-secondary flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs hover:bg-black/[0.03] transition-colors"
           >
             Cite
           </button>
+          {/* Export — secondary action */}
           <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+              className="ss-toolbar-secondary flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs hover:bg-black/[0.03] transition-colors"
             >
               <DownloadSimple size={14} />
               Export
@@ -733,8 +752,8 @@ function StudioContent() {
 
       {/* Main content area — editor + Workbench overlay */}
       <div className="flex-1 overflow-hidden relative">
-        {/* Editor — always full width, never pushed */}
-        <main className="h-full overflow-y-auto bg-surface">
+        {/* Editor — white writing surface on warm background */}
+        <main className="h-full overflow-y-auto ss-writing-surface" style={{ background: "var(--background)" }}>
           {docLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="flex flex-col items-center gap-3">

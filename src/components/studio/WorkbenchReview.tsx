@@ -34,17 +34,16 @@ export function WorkbenchReview({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex shrink-0 border-b border-border-subtle px-2">
+      <div className="flex gap-1 px-3 py-1.5 shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
         {subTabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveReviewTab(tab.key)}
-            className={cn(
-              "border-b-2 px-3 py-2 text-xs font-medium transition-colors",
-              activeReviewTab === tab.key
-                ? "border-brand text-brand"
-                : "border-transparent text-ink-muted hover:text-ink"
-            )}
+            className="px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors"
+            style={{
+              background: activeReviewTab === tab.key ? "rgba(109,40,217,0.06)" : "transparent",
+              color: activeReviewTab === tab.key ? "#6D28D9" : "#A8A29E",
+            }}
           >
             {tab.label}
           </button>

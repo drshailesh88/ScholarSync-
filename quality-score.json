@@ -1,28 +1,28 @@
 {
-  "timestamp": "2026-03-16T19:22:01.421Z",
-  "composite": 96.16,
+  "timestamp": "2026-03-24T02:17:43.682Z",
+  "composite": 99.17,
   "temperature": "FROZEN",
   "currentPhase": 5,
   "phaseAverages": {
-    "1": 97,
-    "2": 99,
-    "3": 100,
-    "4": 87,
-    "5": 95
+    "1": 98,
+    "2": 100,
+    "3": 99,
+    "4": 100,
+    "5": 100
   },
   "weakest": {
-    "dimension": "authSecurity",
-    "label": "Auth Security",
-    "score": 60
+    "dimension": "typescriptStrict",
+    "label": "TypeScript Strict",
+    "score": 92.6
   },
   "dimensions": {
     "typescriptStrict": {
-      "score": 96.56,
+      "score": 92.6,
       "details": {
-        "errors": 0,
+        "errors": 2,
         "anyCount": 173,
         "strictEnabled": true,
-        "totalLines": 502486
+        "totalLines": 509109
       },
       "weight": 0.08,
       "phase": 1,
@@ -50,13 +50,13 @@
       "label": "Error Boundaries"
     },
     "apiHardening": {
-      "score": 92.14,
+      "score": 99.13,
       "details": {
-        "total": 168,
-        "withTryCatch": 165,
-        "withValidation": 141,
-        "withAuth": 154,
-        "withProperStatus": 161
+        "total": 172,
+        "withTryCatch": 171,
+        "withValidation": 172,
+        "withAuth": 166,
+        "withProperStatus": 172
       },
       "weight": 0.07,
       "phase": 1,
@@ -115,22 +115,22 @@
       "label": "Module Coverage"
     },
     "assertionModuleCoverage": {
-      "score": 95,
+      "score": 100,
       "details": {
         "totalModules": 20,
-        "assertionFiles": 19,
-        "coveredAssertionFiles": 19
+        "assertionFiles": 20,
+        "coveredAssertionFiles": 20
       },
       "weight": 0.05,
       "phase": 2,
       "label": "Assertion Module Coverage"
     },
     "unitPassRate": {
-      "score": 99.97,
+      "score": 99.75,
       "details": {
-        "passed": 6046,
-        "failed": 0,
-        "total": 6048
+        "passed": 6036,
+        "failed": 13,
+        "total": 6051
       },
       "weight": 0.05,
       "phase": 2,
@@ -140,9 +140,9 @@
       "score": 100,
       "details": {
         "retryLogic": 76,
-        "timeoutHandling": 520,
-        "offlineHandling": 4,
-        "errorStates": 91,
+        "timeoutHandling": 524,
+        "offlineHandling": 5,
+        "errorStates": 95,
         "resilienceTests": 1
       },
       "weight": 0.05,
@@ -150,22 +150,22 @@
       "label": "Network Resilience"
     },
     "emptyStates": {
-      "score": 100,
+      "score": 98.29,
       "details": {
-        "emptyStateComponents": 284,
-        "dataDisplayPages": 284,
-        "pagesWithEmptyState": 284
+        "emptyStateComponents": 288,
+        "dataDisplayPages": 293,
+        "pagesWithEmptyState": 288
       },
       "weight": 0.03,
       "phase": 3,
       "label": "Empty/Boundary States"
     },
     "errorMessages": {
-      "score": 98.41,
+      "score": 98.3,
       "details": {
-        "genericErrors": 8,
-        "specificErrors": 293,
-        "recoverableErrors": 218
+        "genericErrors": 9,
+        "specificErrors": 308,
+        "recoverableErrors": 219
       },
       "weight": 0.03,
       "phase": 3,
@@ -174,8 +174,8 @@
     "stateConsistency": {
       "score": 100,
       "details": {
-        "urlState": 50,
-        "loadingStates": 524,
+        "urlState": 54,
+        "loadingStates": 547,
         "optimisticUpdates": 1
       },
       "weight": 0.04,
@@ -183,10 +183,10 @@
       "label": "State Consistency"
     },
     "authSecurity": {
-      "score": 60,
+      "score": 100,
       "details": {
-        "protectedRoutes": 14,
-        "withMiddleware": false,
+        "protectedRoutes": 12,
+        "withMiddleware": true,
         "withCsrf": true,
         "properCookies": false
       },
@@ -195,10 +195,10 @@
       "label": "Auth Security"
     },
     "inputValidation": {
-      "score": 99.53,
+      "score": 99.56,
       "details": {
-        "zodUsage": 1637,
-        "manualValidation": 260,
+        "zodUsage": 1734,
+        "manualValidation": 298,
         "rawBodyUsage": 9
       },
       "weight": 0.05,
@@ -218,11 +218,11 @@
       "label": "Dependency Security"
     },
     "accessibility": {
-      "score": 95,
+      "score": 100,
       "details": {
-        "missingAlt": 1,
+        "missingAlt": 0,
         "missingLabels": 0,
-        "ariaUsage": 825,
+        "ariaUsage": 828,
         "jsxA11yPlugin": true,
         "axeTests": 2
       },

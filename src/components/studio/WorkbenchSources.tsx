@@ -156,21 +156,20 @@ export function WorkbenchSources({
   return (
     <div className="flex flex-col h-full">
       {/* Sub-tab switcher */}
-      <div className="flex border-b border-border-subtle px-2 shrink-0">
+      <div className="flex gap-1 px-3 py-1.5 shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
         {subTabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setSubTab(tab.key)}
-            className={cn(
-              "px-3 py-2 text-xs font-medium border-b-2 transition-colors",
-              subTab === tab.key
-                ? "text-brand border-brand"
-                : "text-ink-muted hover:text-ink border-transparent"
-            )}
+            className="px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors"
+            style={{
+              background: subTab === tab.key ? "rgba(109,40,217,0.06)" : "transparent",
+              color: subTab === tab.key ? "#6D28D9" : "#A8A29E",
+            }}
           >
             {tab.label}
             {tab.count !== undefined && tab.count > 0 && (
-              <span className="ml-1 text-[10px] text-ink-muted">({tab.count})</span>
+              <span className="ml-1 text-[10px]" style={{ opacity: 0.6 }}>({tab.count})</span>
             )}
           </button>
         ))}

@@ -4,16 +4,10 @@ import { useEffect, useCallback } from "react";
 import type { Editor } from "@tiptap/react";
 import { X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { useWorkbenchStore, type WorkbenchTool } from "@/stores/workbench-store";
+import { useWorkbenchStore } from "@/stores/workbench-store";
 import { WorkbenchSources } from "./WorkbenchSources";
 import { WorkbenchAssistant } from "./WorkbenchAssistant";
 import { WorkbenchReview } from "./WorkbenchReview";
-
-const tools: { key: WorkbenchTool; label: string }[] = [
-  { key: "sources", label: "Sources" },
-  { key: "assistant", label: "Assistant" },
-  { key: "review", label: "Review" },
-];
 
 interface WorkbenchProps {
   editor: Editor | null;
@@ -29,6 +23,12 @@ interface WorkbenchProps {
   onInsertCitation: (referenceIds: string[]) => void;
 }
 
+const toolLabels = {
+  sources: "Sources",
+  assistant: "Buddy",
+  review: "Review",
+};
+
 export function Workbench({
   editor,
   documentId,
@@ -36,14 +36,11 @@ export function Workbench({
   onOpenCitationDialog,
   onInsertCitation,
 }: WorkbenchProps) {
-  const { isOpen, activeTool, setTool, close } = useWorkbenchStore();
+  const { isOpen, activeTool, close } = useWorkbenchStore();
 
-  // Close on Escape
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        close();
-      }
+      if (e.key === "Escape" && isOpen) close();
     },
     [isOpen, close]
   );
@@ -56,35 +53,28 @@ export function Workbench({
   return (
     <div
       className={cn(
-        "absolute top-0 right-0 bottom-0 z-30 flex flex-col bg-surface border-l border-border transition-all duration-300 ease-in-out",
-        "shadow-[-4px_0_16px_rgba(0,0,0,0.08)]",
+        "absolute top-0 right-0 bottom-0 z-30 flex flex-col transition-all duration-300 ease-in-out",
         isOpen ? "w-[380px] translate-x-0" : "w-0 translate-x-full overflow-hidden"
       )}
+      style={{
+        background: "#FAFAF9",
+        boxShadow: isOpen ? "-8px 0 24px rgba(0,0,0,0.06)" : "none",
+      }}
     >
-      {/* Tool switcher header */}
-      <div className="flex items-center h-11 px-3 border-b border-border-subtle shrink-0">
-        <div className="flex items-center gap-1 flex-1">
-          {tools.map((tool) => (
-            <button
-              key={tool.key}
-              onClick={() => setTool(tool.key)}
-              className={cn(
-                "px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
-                activeTool === tool.key
-                  ? "text-brand bg-brand/5"
-                  : "text-ink-muted hover:text-ink hover:bg-surface-raised"
-              )}
-            >
-              {tool.label}
-            </button>
-          ))}
-        </div>
+      {/* Minimal header — just the tool name + close */}
+      <div className="flex items-center justify-between h-10 px-4 shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
+        <span className="text-[13px] font-semibold tracking-tight" style={{ color: "#1C1917" }}>
+          {toolLabels[activeTool]}
+        </span>
         <button
           onClick={close}
-          className="p-1.5 rounded-md text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          className="w-6 h-6 flex items-center justify-center rounded-full transition-colors"
+          style={{ color: "#A8A29E" }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = "#1C1917"; e.currentTarget.style.background = "rgba(0,0,0,0.04)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = "#A8A29E"; e.currentTarget.style.background = "transparent"; }}
           title="Close (Esc)"
         >
-          <X size={14} />
+          <X size={12} weight="bold" />
         </button>
       </div>
 

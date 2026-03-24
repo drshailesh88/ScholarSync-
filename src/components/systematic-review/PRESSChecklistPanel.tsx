@@ -15,13 +15,6 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
-import {
-  PRESS_ELEMENTS,
-  PRESS_ASSESSMENT_LABELS,
-  PRESS_OVERALL_LABELS,
-  type PRESSElement,
-  type PRESSValidation,
-} from "@/lib/systematic-review/press-validation";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -31,14 +24,79 @@ interface PRESSChecklistPanelProps {
   projectId: number;
 }
 
+interface PRESSElement {
+  element: number;
+  name: string;
+  description: string;
+  assessment: "no_revision" | "minor_revision" | "major_revision";
+  feedback: string;
+  suggestions: string[];
+}
+
+interface PRESSValidation {
+  elements: PRESSElement[];
+  overallAssessment: "approved" | "minor_revisions" | "major_revisions";
+  summary: string;
+  assessedAt: string;
+}
+
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
+
+const PRESS_ELEMENTS: Array<{
+  element: number;
+  name: string;
+  description: string;
+}> = [
+  {
+    element: 1,
+    name: "Translation of Research Question",
+    description:
+      "Are all PICO elements present and adequately represented in the search? Are all key concepts from the research question included? Have concepts been appropriately translated into search terms?",
+  },
+  {
+    element: 2,
+    name: "Boolean and Proximity Operators",
+    description:
+      "Is AND used correctly to combine concept blocks? Is OR used correctly within concept blocks to combine synonyms? Is NOT used appropriately and sparingly? Are parentheses used correctly for grouping? Are proximity operators (NEAR, ADJ, W/n) used where appropriate?",
+  },
+  {
+    element: 3,
+    name: "Subject Headings",
+    description:
+      "Are appropriate controlled vocabulary terms (MeSH, Emtree, CINAHL headings) used? Are subject headings exploded where appropriate? Are subheadings applied correctly? Are any relevant subject headings missing?",
+  },
+  {
+    element: 4,
+    name: "Text Word Searching",
+    description:
+      "Are all relevant synonyms and alternate terms included? Is truncation used appropriately (not too broad or too narrow)? Are spelling variants covered (e.g., US vs. British English)? Are acronyms included? Are phrase searches used where appropriate?",
+  },
+  {
+    element: 5,
+    name: "Spelling, Syntax, and Line Numbers",
+    description:
+      "Are there any typographical or spelling errors in search terms? Is the database-specific syntax correct (e.g., [MeSH], [tiab], .af., :ti,ab)? Are field codes valid and appropriate? Are line numbers referenced correctly in combined searches?",
+  },
+  {
+    element: 6,
+    name: "Limits and Filters",
+    description:
+      "Are date range limits appropriate and justified? Are language filters justified? Are study design filters (e.g., RCT filter, human filter) appropriate and validated? Do filters risk inadvertently excluding relevant studies?",
+  },
+];
 
 const ASSESSMENT_COLORS: Record<PRESSElement["assessment"], string> = {
   no_revision: "bg-emerald-500 text-white",
   minor_revision: "bg-amber-500 text-white",
   major_revision: "bg-red-500 text-white",
+};
+
+const PRESS_ASSESSMENT_LABELS: Record<PRESSElement["assessment"], string> = {
+  no_revision: "No Revision Required",
+  minor_revision: "Minor Revision",
+  major_revision: "Major Revision",
 };
 
 const ASSESSMENT_BORDER: Record<PRESSElement["assessment"], string> = {
@@ -63,6 +121,15 @@ const OVERALL_BORDER: Record<PRESSValidation["overallAssessment"], string> = {
   approved: "border-emerald-500/40",
   minor_revisions: "border-amber-500/40",
   major_revisions: "border-red-500/40",
+};
+
+const PRESS_OVERALL_LABELS: Record<
+  PRESSValidation["overallAssessment"],
+  string
+> = {
+  approved: "Approved",
+  minor_revisions: "Minor Revisions Required",
+  major_revisions: "Major Revisions Required",
 };
 
 // ---------------------------------------------------------------------------
