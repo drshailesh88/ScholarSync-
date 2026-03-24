@@ -23,6 +23,7 @@ import {
   ShareNetwork,
   ChartScatter,
   ClockCounterClockwise,
+  Scales,
 } from "@phosphor-icons/react";
 import { Tabs } from "@/components/ui/tabs";
 import {
@@ -50,6 +51,7 @@ import { ManuscriptPanel } from "@/components/systematic-review/ManuscriptPanel"
 import { NMAPanel } from "@/components/systematic-review/NMAPanel";
 import { EvidenceGapMap } from "@/components/systematic-review/EvidenceGapMap";
 import { AuditTrailPanel } from "@/components/systematic-review/AuditTrailPanel";
+import { CERQualPanel } from "@/components/systematic-review/CERQualPanel";
 import { MOOSEChecklistPanel } from "@/components/systematic-review/MOOSEChecklistPanel";
 import { SRRoomProvider } from "@/lib/liveblocks/sr-config";
 import { CollaboratorPresence } from "@/components/systematic-review/CollaboratorPresence";
@@ -71,6 +73,7 @@ const ALL_WORKFLOW_TABS = [
   { key: "meta_analysis", label: "Meta-Analysis", icon: ChartBar },
   { key: "nma", label: "Network MA", icon: ShareNetwork },
   { key: "grade", label: "GRADE", icon: Certificate },
+  { key: "cerqual", label: "CERQual", icon: Scales },
   { key: "manuscript", label: "Manuscript", icon: Article },
   { key: "gap_map", label: "Evidence Gap Map", icon: ChartScatter },
   { key: "audit", label: "Audit Trail", icon: ClockCounterClockwise },
@@ -93,7 +96,7 @@ const TAB_VISIBILITY: Record<ReviewType, Set<string>> = {
   observational_case_control: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "living", "gap_map"]),
   diagnostic_accuracy: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "gap_map"]),
   prognostic: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "gap_map"]),
-  qualitative: new Set([...UNIVERSAL_TABS, "snowball", "gap_map"]),
+  qualitative: new Set([...UNIVERSAL_TABS, "cerqual", "snowball", "gap_map"]),
   mixed_methods: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "gap_map"]),
   scoping: new Set([...UNIVERSAL_TABS, "snowball"]),
   umbrella: new Set([...UNIVERSAL_TABS, "rob", "meta_analysis", "grade", "snowball", "gap_map"]),
@@ -340,6 +343,7 @@ function SystematicReviewWorkflowContent({
         )}
         {activeTab === "nma" && <NMAPanel projectId={projectId} />}
         {activeTab === "grade" && <GRADEPanel projectId={projectId} />}
+        {activeTab === "cerqual" && <CERQualPanel projectId={projectId} />}
         {activeTab === "manuscript" && (
           <ManuscriptPanel projectId={projectId} />
         )}

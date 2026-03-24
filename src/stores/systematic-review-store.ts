@@ -28,6 +28,7 @@ export type WorkflowTab =
   | "protocol"
   | "prospero"
   | "grade"
+  | "cerqual"
   | "manuscript"
   | "gap_map"
   | "audit";
