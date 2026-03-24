@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useResearchStore } from "@/stores/research-store";
 import { useReferenceStore } from "@/stores/reference-store";
@@ -8,11 +8,14 @@ import { usePaperDetail } from "@/hooks/usePaperDetail";
 import { useEvidenceTable } from "@/hooks/useEvidenceTable";
 import { getUserPapers } from "@/lib/actions/papers";
 import { normalizeTitle } from "@/lib/search/dedup";
+import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
 import { SearchTab } from "@/components/research/SearchTab";
 import { LibraryTab } from "@/components/research/LibraryTab";
 import type { PaperResult } from "@/lib/research/types";
-
-type SubTab = "search" | "library" | "cited";
+import {
+  useWorkbenchStore,
+  type WorkbenchSourcesTab,
+} from "@/stores/workbench-store";
 
 type UserPaper = Awaited<ReturnType<typeof getUserPapers>>[number];
 
@@ -70,8 +73,12 @@ interface WorkbenchSourcesProps {
   onInsertCitation: (referenceIds: string[]) => void;
 }
 
-export function WorkbenchSources({ onOpenCitationDialog: _onOpenCitationDialog, onInsertCitation: _onInsertCitation }: WorkbenchSourcesProps) {
-  const [subTab, setSubTab] = useState<SubTab>("search");
+export function WorkbenchSources({
+  onOpenCitationDialog,
+  onInsertCitation: _onInsertCitation,
+}: WorkbenchSourcesProps) {
+  const subTab = useWorkbenchStore((s) => s.activeSourcesTab);
+  const setSubTab = useWorkbenchStore((s) => s.setActiveSourcesTab);
   const store = useResearchStore();
   const detail = usePaperDetail();
   const evidence = useEvidenceTable();
@@ -94,8 +101,22 @@ export function WorkbenchSources({ onOpenCitationDialog: _onOpenCitationDialog, 
               libraryChanged = true;
             }
           }
-          if (!libraryChanged) return state;
-          return { libraryPapers: mergedLibrary };
+
+          let resultsChanged = false;
+          const updatedResults = state.results.map((result) => {
+            if (!mergedLibrary.some((paper) => papersMatch(paper, result))) {
+              return result;
+            }
+            if (result.inLibrary) return result;
+            resultsChanged = true;
+            return { ...result, inLibrary: true };
+          });
+
+          if (!libraryChanged && !resultsChanged) return state;
+          return {
+            libraryPapers: mergedLibrary,
+            results: updatedResults,
+          };
         });
       })
       .catch((error) => console.error("Failed to hydrate library:", error));
@@ -126,10 +147,10 @@ export function WorkbenchSources({ onOpenCitationDialog: _onOpenCitationDialog, 
     })
     .filter(Boolean) as { id: string; num: number; ref: NonNullable<ReturnType<typeof references.get>> }[];
 
-  const subTabs: { key: SubTab; label: string; count?: number }[] = [
+  const subTabs: { key: WorkbenchSourcesTab; label: string; count?: number }[] = [
     { key: "search", label: "Search" },
     { key: "library", label: "Library", count: store.libraryPapers.length },
-    { key: "cited", label: "Cited", count: references.size },
+    { key: "cited", label: "Cited", count: citedRefs.length },
   ];
 
   return (
@@ -173,27 +194,12 @@ export function WorkbenchSources({ onOpenCitationDialog: _onOpenCitationDialog, 
           />
         )}
         {subTab === "cited" && (
-          <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
-            {citedRefs.length === 0 ? (
-              <p className="text-xs text-ink-muted text-center py-4">
-                No citations yet. Use Cmd+Shift+C to add citations.
-              </p>
-            ) : (
-              citedRefs.map((item) => (
-                <div key={item.id} className="flex items-start gap-2 p-2 rounded-md bg-surface-raised/50">
-                  <span className="text-[10px] font-mono font-bold text-blue-500 shrink-0 mt-0.5">
-                    [{item.num}]
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-xs text-ink leading-tight line-clamp-2">{item.ref.title}</p>
-                    <p className="text-[10px] text-ink-muted mt-0.5">
-                      {item.ref.authors?.[0]?.family || "Unknown"}
-                      {item.ref.year ? ` · ${item.ref.year}` : ""}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
+          <div className="h-full [&>div]:h-full [&>div]:w-full [&>div]:border-l-0">
+            <ReferenceSidebar
+              open
+              onClose={() => setSubTab("search")}
+              onOpenCitationDialog={onOpenCitationDialog}
+            />
           </div>
         )}
       </div>

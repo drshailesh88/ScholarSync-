@@ -28,22 +28,9 @@ import {
 } from "@/lib/citations/document-reference-hydration";
 import { countSectionWords, getDocumentWordCount } from "@/lib/editor/word-counter";
 import type { Reference } from "@/types/citation";
-import {
-  type GuideDocumentType,
-  type GuideStage,
-} from "@/types/guide";
-import { type DraftModeIntensity } from "@/types/draft";
-import { getUserUsageStats } from "@/lib/actions/user";
-import { createConversation, addMessage } from "@/lib/actions/conversations";
 import { useResearchStore } from "@/stores/research-store";
 import { Workbench } from "@/components/studio/Workbench";
 import { useWorkbenchStore } from "@/stores/workbench-store";
-
-interface ChatMessage {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-}
 
 interface ResearchCitationDetail {
   title: string;
@@ -135,25 +122,29 @@ function StudioContent() {
   const initialProjectId = projectParam ? Number(projectParam) : null;
   const workbench = useWorkbenchStore();
 
-  const [isLearnMode, _setIsLearnMode] = useState(searchParams.get("mode") === "learn");
-  const [_aiTab, _setAiTab] = useState("chat");
-  const [_researchQuery, _setResearchQuery] = useState("");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [_chatError, setChatError] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [_usageStats, _setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
-  const [_showMark, _setShowMark] = useState(false);
-  const [_markImportant, _setMarkImportant] = useState(false);
-  const [_markNotes, _setMarkNotes] = useState(false);
   const [showFormattingToolbar, setShowFormattingToolbar] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
-  const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
-  const conversationIdRef = useRef<number | null>(null);
+  const [pendingCitationNotice] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+
+    const pending = sessionStorage.getItem("scholarsync_pending_citation");
+    if (!pending) return null;
+
+    sessionStorage.removeItem("scholarsync_pending_citation");
+    try {
+      const parsed = JSON.parse(pending) as { title?: string };
+      const title = parsed.title?.trim();
+      return title
+        ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
+        : "Paper saved to your library. Open Citation Dialog to cite it.";
+    } catch {
+      return "Paper saved to your library. Open Citation Dialog to cite it.";
+    }
+  });
   const editorRef = useRef<Editor | null>(null);
+  const [editorInstance, setEditorInstance] = useState<Editor | null>(null);
   const citationSelectionRef = useRef<{ from: number; to: number } | null>(null);
   const citationNoticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -163,22 +154,10 @@ function StudioContent() {
   const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
   const openCitationDialog = useReferenceStore((s) => s.openCitationDialog);
   const closeCitationDialog = useReferenceStore((s) => s.closeCitationDialog);
-  const _sidebarOpen = useReferenceStore((s) => s.sidebarOpen);
-  const _toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
-  const _setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
   const addReferences = useReferenceStore((s) => s.addReferences);
   const clearReferences = useReferenceStore((s) => s.clearReferences);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
-  const submitAiPrompt = useCallback((prompt: string) => {
-    setInput(prompt);
-    workbench.open("assistant");
-    setTimeout(() => {
-      setInput(prompt);
-      const form = document.querySelector<HTMLFormElement>("form");
-      form?.requestSubmit();
-    }, 100);
-  }, [workbench]);
 
   const showWordCountBreakdown = useCallback(() => {
     const editor = editorRef.current;
@@ -196,15 +175,7 @@ function StudioContent() {
       ? `Section word counts:\n${sectionLines.join("\n")}\n\nTotal: ${totalWords} words`
       : `Document word count: ${totalWords} words`;
 
-    workbench.open("assistant");
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `word-count-${Date.now()}`,
-        role: "assistant",
-        content,
-      },
-    ]);
+    workbench.submitPrompt(content);
   }, [workbench]);
 
   // -----------------------------------------------------------------------
@@ -225,37 +196,6 @@ function StudioContent() {
     selectedProjectId: _selectedProjectId,
     selectProject: _selectProject,
   } = useStudioDocument(initialProjectId);
-
-  // Guide mode context
-  const [guideDocType, _setGuideDocType] = useState<GuideDocumentType | null>(null);
-  const [guideStage, _setGuideStage] = useState<GuideStage>("understand");
-  const [_showDocTypePicker, _setShowDocTypePicker] = useState(false);
-
-  // Draft mode context
-  const [draftIntensity, _setDraftIntensity] = useState<DraftModeIntensity>("collaborate");
-
-  useEffect(() => {
-    getUserUsageStats().then((stats) => {
-      if (stats) _setUsageStats({ tokens_used: stats.tokens_used ?? 0, tokens_limit: stats.tokens_limit ?? 50000 });
-    }).catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    const pending = sessionStorage.getItem("scholarsync_pending_citation");
-    if (!pending) return;
-    sessionStorage.removeItem("scholarsync_pending_citation");
-    try {
-      const parsed = JSON.parse(pending) as { title?: string };
-      const title = parsed.title?.trim();
-      setPendingCitationNotice(
-        title
-          ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
-          : "Paper saved to your library. Open Citation Dialog to cite it."
-      );
-    } catch {
-      setPendingCitationNotice("Paper saved to your library. Open Citation Dialog to cite it.");
-    }
-  }, []);
 
   useEffect(() => {
     clearReferences();
@@ -293,10 +233,6 @@ function StudioContent() {
     };
   }, [addReferences, clearReferences, initialContent, studioDoc]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   const openCitationDialogWithSelection = useCallback(() => {
     const editor = editorRef.current;
     if (editor && !editor.isDestroyed) {
@@ -313,12 +249,31 @@ function StudioContent() {
     return () => window.removeEventListener("scholarsync:open-citation-dialog", handler);
   }, [openCitationDialogWithSelection]);
 
-  // Listen for Cmd+Shift+R to toggle sources in workbench
+  // Workbench keyboard shortcuts.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "R") {
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+
+      const key = e.key.toLowerCase();
+
+      if (!e.shiftKey && key === "l") {
         e.preventDefault();
+        workbench.toggle("assistant");
+        return;
+      }
+
+      if (e.shiftKey && key === "l") {
+        e.preventDefault();
+        workbench.setActiveSourcesTab("search");
         workbench.toggle("sources");
+        return;
+      }
+
+      if (e.shiftKey && key === "r") {
+        e.preventDefault();
+        workbench.setActiveSourcesTab("cited");
+        workbench.open("sources");
       }
     };
     document.addEventListener("keydown", handler);
@@ -346,10 +301,11 @@ function StudioContent() {
           prompt = `Improve the clarity, precision, and academic tone of this selected text while preserving meaning:\n\n${detail.context || ""}`;
           break;
         case "ask":
+          workbench.setActiveAssistantMode("ask");
           workbench.open("assistant");
           setTimeout(() => {
             document
-              .querySelector<HTMLInputElement>('input[placeholder*="AI research assistant"], input[placeholder*="challenge your thinking"]')
+              .querySelector<HTMLInputElement>('input[placeholder*="Ask"]')
               ?.focus();
           }, 0);
           return;
@@ -357,33 +313,32 @@ function StudioContent() {
           prompt = `Summarize the following text concisely:\n\n${detail.context || ""}`;
           break;
         case "find-sources": {
-          // Open the research sidebar with context from the editor
           const researchStore = useResearchStore.getState();
           const contextSnippet = (detail.context || "").slice(0, 200).trim();
           if (contextSnippet) {
             researchStore.setQuery(contextSnippet);
           }
-          researchStore.openSidebar();
-          researchStore.setActiveTab("search");
+          workbench.setActiveSourcesTab("search");
+          workbench.open("sources");
           return;
         }
         case "cite":
           prompt = "Help me add a citation from my library. What paper should I cite here?";
           break;
         case "integrity-check":
-          // Switch to the Checks tab — the IntegrityPanel handles the API call
+          workbench.setActiveReviewTab("integrity");
           workbench.open("review");
           return;
         default:
           return;
       }
 
-      submitAiPrompt(prompt);
+      workbench.submitPrompt(prompt);
     };
 
     window.addEventListener("scholarsync:ai-action", handler);
     return () => window.removeEventListener("scholarsync:ai-action", handler);
-  }, [submitAiPrompt, workbench]);
+  }, [workbench]);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -400,6 +355,7 @@ function StudioContent() {
         const { from, to } = editor.state.selection;
         const selectedText = editor.state.doc.textBetween(from, to, " ");
 
+        workbench.setActiveReviewTab("comments");
         workbench.open("review");
 
         window.dispatchEvent(
@@ -415,7 +371,14 @@ function StudioContent() {
       }
 
       if (detail.action === "toggle-comment-sidebar") {
+        workbench.setActiveReviewTab("comments");
         workbench.toggle("review");
+        return;
+      }
+
+      if (detail.action === "toggle-reference-sidebar") {
+        workbench.setActiveSourcesTab("cited");
+        workbench.open("sources");
         return;
       }
 
@@ -528,92 +491,8 @@ function StudioContent() {
 
   const handleEditorReady = useCallback((editor: Editor) => {
     editorRef.current = editor;
+    setEditorInstance(editor);
   }, []);
-
-  const sendMessage = useCallback(async () => {
-    if (!input.trim() || isLoading) return;
-    const userMsg: ChatMessage = { id: `msg_${Date.now()}`, role: "user", content: input.trim() };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
-    setInput("");
-    setIsLoading(true);
-    setChatError(null);
-
-    try {
-      if (!conversationIdRef.current) {
-        const mode = isLearnMode ? "learn" : ("draft" as const);
-        const convo = await createConversation({ mode, title: input.trim().slice(0, 80) });
-        conversationIdRef.current = convo.id;
-      }
-
-      addMessage({ conversation_id: conversationIdRef.current, role: "user", content: input.trim() }).catch(() => {});
-
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
-          mode: isLearnMode ? "learn" : "draft",
-          ...(isLearnMode && guideDocType
-            ? {
-                guideContext: {
-                  documentType: guideDocType,
-                  stage: guideStage,
-                  projectTitle: docTitle !== "Untitled Document" ? docTitle : undefined,
-                },
-              }
-            : {}),
-          ...(!isLearnMode
-            ? {
-                draftContext: {
-                  intensity: draftIntensity,
-                  projectTitle: docTitle !== "Untitled Document" ? docTitle : undefined,
-                },
-              }
-            : {}),
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({ error: "Chat failed" }));
-        setChatError(data.error || "Chat failed");
-        setIsLoading(false);
-        return;
-      }
-
-      const reader = res.body?.getReader();
-      if (!reader) {
-        setChatError("No response stream");
-        setIsLoading(false);
-        return;
-      }
-
-      const assistantMsg: ChatMessage = { id: `msg_${Date.now() + 1}`, role: "assistant", content: "" };
-      setMessages((prev) => [...prev, assistantMsg]);
-
-      const decoder = new TextDecoder();
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const text = decoder.decode(value, { stream: true });
-        assistantMsg.content += text;
-        setMessages((prev) => prev.map((m) => (m.id === assistantMsg.id ? { ...m, content: assistantMsg.content } : m)));
-      }
-
-      if (conversationIdRef.current && assistantMsg.content) {
-        addMessage({ conversation_id: conversationIdRef.current, role: "assistant", content: assistantMsg.content }).catch(() => {});
-      }
-    } catch {
-      setChatError("Failed to send message. Check your API key.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [input, isLoading, messages, isLearnMode, guideDocType, guideStage, docTitle, draftIntensity]);
-
-  const _handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    sendMessage();
-  };
 
   // Mark status as unsaved immediately on keystroke (before debounce fires)
   const handleDirty = useCallback(() => {
@@ -754,15 +633,18 @@ function StudioContent() {
             className="text-[11px] text-ink-muted hover:text-ink transition-colors cursor-pointer"
             title="Click for section breakdown"
           >
-            {editorRef.current && !editorRef.current.isDestroyed
-              ? `${getDocumentWordCount(editorRef.current.state.doc)} words`
+            {editorInstance && !editorInstance.isDestroyed
+              ? `${getDocumentWordCount(editorInstance.state.doc)} words`
               : ""}
           </button>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           {/* Sources */}
           <button
-            onClick={() => workbench.toggle("sources")}
+            onClick={() => {
+              workbench.setActiveSourcesTab("search");
+              workbench.toggle("sources");
+            }}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           >
             <Books size={14} />
@@ -773,7 +655,10 @@ function StudioContent() {
           </button>
           {/* Assistant */}
           <button
-            onClick={() => workbench.toggle("assistant")}
+            onClick={() => {
+              workbench.setActiveAssistantMode("ask");
+              workbench.toggle("assistant");
+            }}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           >
             <Sparkle size={14} />
@@ -781,7 +666,10 @@ function StudioContent() {
           </button>
           {/* Review */}
           <button
-            onClick={() => workbench.toggle("review")}
+            onClick={() => {
+              workbench.setActiveReviewTab("integrity");
+              workbench.toggle("review");
+            }}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           >
             <ShieldCheck size={14} />
@@ -871,7 +759,10 @@ function StudioContent() {
               debounceMs={2000}
               onEditorReady={handleEditorReady}
               onOpenCitationDialog={openCitationDialogWithSelection}
-              onToggleReferenceSidebar={() => workbench.toggle("sources")}
+              onToggleReferenceSidebar={() => {
+                workbench.setActiveSourcesTab("cited");
+                workbench.toggle("sources");
+              }}
               referenceCount={references.size}
               showToolbar={showFormattingToolbar}
               onToggleToolbar={() => setShowFormattingToolbar(false)}
@@ -881,7 +772,7 @@ function StudioContent() {
 
         {/* Workbench — overlays the right side */}
         <Workbench
-          editorRef={editorRef}
+          editor={editorInstance}
           documentId={studioDoc?.id ? String(studioDoc.id) : undefined}
           integritySources={integritySources}
           onOpenCitationDialog={openCitationDialogWithSelection}

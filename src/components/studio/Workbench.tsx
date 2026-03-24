@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, type RefObject } from "react";
+import { useEffect, useCallback } from "react";
 import type { Editor } from "@tiptap/react";
 import { X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ const tools: { key: WorkbenchTool; label: string }[] = [
 ];
 
 interface WorkbenchProps {
-  editorRef: RefObject<Editor | null>;
+  editor: Editor | null;
   documentId?: string;
   integritySources: {
     title: string;
@@ -30,7 +30,7 @@ interface WorkbenchProps {
 }
 
 export function Workbench({
-  editorRef,
+  editor,
   documentId,
   integritySources,
   onOpenCitationDialog,
@@ -101,7 +101,7 @@ export function Workbench({
         </div>
         <div className={cn("absolute inset-0 flex flex-col", activeTool !== "review" && "invisible")}>
           <WorkbenchReview
-            editorRef={editorRef}
+            editor={editor}
             documentId={documentId}
             integritySources={integritySources}
           />
