@@ -24,6 +24,7 @@ import type {
   ParsedFilter,
 } from "@/lib/research/types";
 import { DEFAULT_SEARCH_FILTERS } from "@/lib/research/types";
+import { normalizeTitle } from "@/lib/search/dedup";
 
 // ── Store interface ──────────────────────────────────────────────────
 
@@ -147,6 +148,24 @@ function generateId(): string {
   return `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
+function papersMatch(a: Pick<PaperResult, "doi" | "pmid" | "title">, b: Pick<PaperResult, "doi" | "pmid" | "title">): boolean {
+  if (a.doi && b.doi && a.doi.toLowerCase() === b.doi.toLowerCase()) {
+    return true;
+  }
+
+  if (a.pmid && b.pmid && a.pmid === b.pmid) {
+    return true;
+  }
+
+  return normalizeTitle(a.title) === normalizeTitle(b.title);
+}
+
+function getApiPaperSource(
+  source: PaperResult["source"]
+): "pubmed" | "semantic_scholar" {
+  return source === "semantic_scholar" ? "semantic_scholar" : "pubmed";
+}
+
 // ── Store ────────────────────────────────────────────────────────────
 
 export const useResearchStore = create<ResearchStore>()(
@@ -257,19 +276,56 @@ export const useResearchStore = create<ResearchStore>()(
 
   // ── Library actions ──────────────────────────────────────────────
 
-  addToLibrary: (paper) =>
+  addToLibrary: (paper) => {
+    let addedToLibrary = false;
+
     set((s) => {
-      if (s.libraryPapers.some((p) => p.id === paper.id)) return s;
-      const updated = { ...paper, inLibrary: true };
-      // Also update in results if present
+      const alreadyInLibrary = s.libraryPapers.some((p) => papersMatch(p, paper));
       const updatedResults = s.results.map((r) =>
-        r.id === paper.id ? { ...r, inLibrary: true } : r
+        papersMatch(r, paper) ? { ...r, inLibrary: true } : r
       );
+
+      if (alreadyInLibrary) {
+        return { results: updatedResults };
+      }
+
+      addedToLibrary = true;
       return {
-        libraryPapers: [...s.libraryPapers, updated],
+        libraryPapers: [...s.libraryPapers, { ...paper, inLibrary: true }],
         results: updatedResults,
       };
-    }),
+    });
+
+    if (!addedToLibrary) return;
+
+    void fetch("/api/papers/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paper: {
+          title: paper.title,
+          authors: paper.authors || [],
+          journal: paper.journal || null,
+          year: paper.year || null,
+          doi: paper.doi || null,
+          pmid: paper.pmid || null,
+          s2Id: paper.s2Id || null,
+          abstract: paper.abstract || null,
+          source: getApiPaperSource(paper.source || "pubmed"),
+          citationCount: paper.citationCount || 0,
+          influentialCitationCount: paper.influentialCitationCount || null,
+          referenceCount: paper.referenceCount || null,
+          publicationTypes: paper.publicationTypes || [],
+          fieldsOfStudy: paper.fieldsOfStudy || [],
+          studyType: paper.studyType || null,
+          evidenceLevel: paper.evidenceLevel || null,
+          openAccessPdfUrl: paper.openAccessPdfUrl || null,
+        },
+      }),
+    }).catch((err) => {
+      console.error("Background paper save failed:", err);
+    });
+  },
   removeFromLibrary: (paperId) =>
     set((s) => {
       const updatedResults = s.results.map((r) =>
