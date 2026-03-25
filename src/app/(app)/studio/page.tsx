@@ -4,15 +4,10 @@ import { useState, useRef, useEffect, useCallback, useMemo, Suspense } from "rea
 import { useSearchParams } from "next/navigation";
 import type { Editor } from "@tiptap/react";
 import {
-  FilePdf,
-  Books,
-  DownloadSimple,
-  FileDoc,
   CircleNotch,
   Warning,
-  CaretDown,
-  Sparkle,
-  ShieldCheck,
+  DotsThree,
+  X,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { SaveIndicator } from "@/components/studio/SaveIndicator";
@@ -123,10 +118,13 @@ function StudioContent() {
   const initialProjectId = projectParam ? Number(projectParam) : null;
   const workbench = useWorkbenchStore();
 
-  const [showExport, setShowExport] = useState(false);
-  const [showFormattingToolbar, setShowFormattingToolbar] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
+  const [wordCountCard, setWordCountCard] = useState<{
+    total: number;
+    sections: { name: string; words: number }[];
+  } | null>(null);
   const [pendingCitationNotice] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
 
@@ -150,6 +148,8 @@ function StudioContent() {
   const citationNoticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
+  const moreMenuRef = useRef<HTMLDivElement | null>(null);
+  const wordCountCardRef = useRef<HTMLDivElement | null>(null);
 
   // Citation system state
   const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
@@ -167,17 +167,32 @@ function StudioContent() {
     const doc = editor.state.doc;
     const totalWords = getDocumentWordCount(doc);
     const sectionCounts = countSectionWords(doc);
-    const sectionLines = Object.entries(sectionCounts).map(([key, words]) => {
-      const heading = key.split("__")[0] || "Untitled Section";
-      return `${heading}: ${words} words`;
+    const sections = Object.entries(sectionCounts).map(([key, words]) => ({
+      name: key.split("__")[0] || "Untitled Section",
+      words,
+    }));
+
+    setWordCountCard((current) => {
+      if (
+        current &&
+        current.total === totalWords &&
+        current.sections.length === sections.length &&
+        current.sections.every(
+          (section, index) =>
+            section.name === sections[index]?.name &&
+            section.words === sections[index]?.words
+        )
+      ) {
+        return null;
+      }
+
+      return {
+        total: totalWords,
+        sections,
+      };
     });
-
-    const content = sectionLines.length > 0
-      ? `Section word counts:\n${sectionLines.join("\n")}\n\nTotal: ${totalWords} words`
-      : `Document word count: ${totalWords} words`;
-
-    workbench.submitPrompt(content);
-  }, [workbench]);
+    setShowMoreMenu(false);
+  }, []);
 
   // -----------------------------------------------------------------------
   // Real DB persistence via hook
@@ -249,6 +264,38 @@ function StudioContent() {
     window.addEventListener("scholarsync:open-citation-dialog", handler);
     return () => window.removeEventListener("scholarsync:open-citation-dialog", handler);
   }, [openCitationDialogWithSelection]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      if (moreMenuRef.current && !moreMenuRef.current.contains(target)) {
+        setShowMoreMenu(false);
+      }
+
+      if (
+        wordCountCardRef.current &&
+        !wordCountCardRef.current.contains(target)
+      ) {
+        setWordCountCard(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowMoreMenu(false);
+        setWordCountCard(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   // Workbench keyboard shortcuts.
   useEffect(() => {
@@ -525,7 +572,7 @@ function StudioContent() {
   };
 
   const handleExportPDF = async () => {
-    setShowExport(false);
+    setShowMoreMenu(false);
     const content = getEditorContent();
     if (!content) return;
 
@@ -558,7 +605,7 @@ function StudioContent() {
   };
 
   const handleExportDocx = async () => {
-    setShowExport(false);
+    setShowMoreMenu(false);
     const content = getEditorContent();
     if (!content) return;
 
@@ -615,145 +662,169 @@ function StudioContent() {
   }, [referenceNumberMap, references]);
 
   return (
-    <div className="flex flex-col h-screen" style={{ background: "var(--background)" }}>
-      {/* Toolbar — warm surface, visual hierarchy */}
-      <div className="flex items-center justify-between px-5 h-11 shrink-0" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <input aria-label="Text input"
-            type="text"
-            value={docTitle}
-            onChange={(e) => setDocTitle(e.target.value)}
-            className="ss-doc-title"
-            style={{ fontSize: 15, fontFamily: "var(--font-sans-family)", fontWeight: 600, letterSpacing: "-0.01em" }}
-            placeholder="Untitled"
-          />
+    <div className="flex flex-col h-screen bg-background">
+      <div className="flex items-center justify-between px-5 h-10 shrink-0 bg-background">
+        <div className="flex items-center gap-3 min-w-0">
           <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
           {citationNotice && (
-            <span className="text-[11px] font-medium text-emerald-500 shrink-0">{citationNotice}</span>
+            <span className="text-[10px] font-medium text-emerald-500 shrink-0">
+              {citationNotice}
+            </span>
           )}
-          <button
-            onClick={showWordCountBreakdown}
-            className="text-[11px] text-ink-muted hover:text-ink transition-colors cursor-pointer"
-            title="Click for section breakdown"
-          >
-            {editorInstance && !editorInstance.isDestroyed
-              ? `${getDocumentWordCount(editorInstance.state.doc)} words`
-              : ""}
-          </button>
+          <div className="relative" ref={wordCountCardRef}>
+            <button
+              onClick={showWordCountBreakdown}
+              className="text-[11px] text-ink-muted hover:text-ink transition-colors"
+              title="Click for section breakdown"
+            >
+              {editorInstance && !editorInstance.isDestroyed
+                ? `${getDocumentWordCount(editorInstance.state.doc)} words`
+                : ""}
+            </button>
+            {wordCountCard && (
+              <div className="absolute left-0 top-full mt-2 w-64 rounded-xl bg-surface border border-border shadow-xl z-50 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold text-ink">
+                    Word Count
+                  </span>
+                  <button
+                    onClick={() => setWordCountCard(null)}
+                    className="text-ink-muted hover:text-ink transition-colors"
+                    aria-label="Close word count"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+                <div className="text-2xl font-bold text-ink mb-3 tabular-nums">
+                  {wordCountCard.total.toLocaleString()}
+                </div>
+                {wordCountCard.sections.length > 0 && (
+                  <div className="space-y-1.5 border-t border-border-subtle pt-2">
+                    {wordCountCard.sections.map((section, index) => (
+                      <div
+                        key={`${section.name}-${index}`}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-[11px] text-ink-muted truncate mr-2">
+                          {section.name}
+                        </span>
+                        <span className="text-[11px] font-medium text-ink tabular-nums">
+                          {section.words}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          {/* Sources */}
           <button
             onClick={() => {
               workbench.setActiveSourcesTab("search");
               workbench.toggle("sources");
+              setShowMoreMenu(false);
             }}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
+              "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "sources"
-                ? "text-brand bg-brand/5"
-                : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+                ? "text-ink"
+                : "text-ink-muted hover:text-ink"
             )}
           >
-            <Books size={14} />
             Sources
-            {references.size > 0 && (
-              <span className="text-[10px] bg-brand/10 text-brand px-1.5 py-0.5 rounded-full font-semibold">{references.size}</span>
-            )}
           </button>
-          {/* Buddy */}
           <button
             onClick={() => {
               workbench.setActiveAssistantMode("ask");
               workbench.toggle("assistant");
+              setShowMoreMenu(false);
             }}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
+              "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "assistant"
-                ? "text-brand bg-brand/5"
-                : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+                ? "text-ink"
+                : "text-ink-muted hover:text-ink"
             )}
           >
-            <Sparkle size={14} />
-            Buddy
+            Assistant
           </button>
-          {/* Review */}
           <button
             onClick={() => {
               workbench.setActiveReviewTab("integrity");
               workbench.toggle("review");
+              setShowMoreMenu(false);
             }}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
+              "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "review"
-                ? "text-brand bg-brand/5"
-                : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+                ? "text-ink"
+                : "text-ink-muted hover:text-ink"
             )}
           >
-            <ShieldCheck size={14} />
             Review
           </button>
-          {/* Cite — secondary action */}
-          <button
-            onClick={openCitationDialogWithSelection}
-            className="ss-toolbar-secondary flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs hover:bg-black/[0.03] transition-colors"
-          >
-            Cite
-          </button>
-          {/* Export — secondary action */}
-          <div className="relative">
+          <div className="relative" ref={moreMenuRef}>
             <button
-              onClick={() => setShowExport((v) => !v)}
-              className="ss-toolbar-secondary flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs hover:bg-black/[0.03] transition-colors"
+              onClick={() => {
+                setShowMoreMenu((value) => !value);
+                setWordCountCard(null);
+              }}
+              className="p-1.5 text-ink-muted hover:text-ink transition-colors"
+              aria-label="More actions"
             >
-              <DownloadSimple size={14} />
-              Export
+              <DotsThree size={16} />
             </button>
-            {showExport && (
-              <div className="absolute right-0 top-full mt-1 w-44 rounded-lg bg-surface border border-border shadow-lg z-50 py-1">
+            {showMoreMenu && (
+              <div className="absolute right-0 top-full mt-1 w-48 rounded-lg bg-surface border border-border shadow-lg z-50 py-1">
+                <button
+                  onClick={() => {
+                    setShowMoreMenu(false);
+                    openCitationDialogWithSelection();
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+                >
+                  Insert Citation
+                </button>
                 <button
                   onClick={handleExportPDF}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+                  className="w-full text-left px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
                 >
-                  <FilePdf size={14} className="text-red-400" />
                   Export as PDF
                 </button>
                 <button
                   onClick={handleExportDocx}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+                  className="w-full text-left px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
                 >
-                  <FileDoc size={14} className="text-blue-400" />
                   Export as Word
+                </button>
+                <div className="border-t border-border-subtle my-1" />
+                <button
+                  onClick={() => {
+                    setShowMoreMenu(false);
+                    setShowKeyboardShortcuts(true);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+                >
+                  Keyboard Shortcuts
                 </button>
               </div>
             )}
           </div>
-          {/* Toolbar expand/collapse chevron */}
-          <button
-            onClick={() => setShowFormattingToolbar((v) => !v)}
-            className="flex items-center justify-center w-7 h-7 rounded-md text-ink-muted hover:text-ink hover:bg-surface-raised transition-all"
-            title={showFormattingToolbar ? "Hide formatting toolbar" : "Show formatting toolbar"}
-          >
-            <CaretDown
-              size={12}
-              className="transition-transform"
-              style={{ transform: showFormattingToolbar ? "rotate(180deg)" : "" }}
-            />
-          </button>
         </div>
       </div>
 
-      {/* Pending citation notice */}
       {pendingCitationNotice && (
-        <div className="px-5 py-2 bg-blue-500/10 border-b border-blue-500/20 shrink-0">
-          <span className="text-xs text-blue-700 dark:text-blue-300">{pendingCitationNotice}</span>
+        <div className="px-5 py-2 bg-blue-500/8 shrink-0">
+          <span className="text-xs text-blue-700 dark:text-blue-300">
+            {pendingCitationNotice}
+          </span>
         </div>
       )}
 
-      {/* Main content area — editor + Workbench overlay */}
       <div className="flex-1 overflow-hidden relative">
-        {/* Editor — white writing surface on warm background */}
-        <main className="h-full overflow-y-auto ss-writing-surface" style={{ background: "var(--background)" }}>
+        <main className="h-full overflow-y-auto ss-writing-surface bg-background">
           {docLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="flex flex-col items-center gap-3">
@@ -769,27 +840,37 @@ function StudioContent() {
               </div>
             </div>
           ) : (
-            <TiptapEditor
-              className="max-w-[720px] mx-auto"
-              content={initialContent}
-              contentKey={studioDoc?.id ?? null}
-              onUpdate={handleEditorUpdate}
-              onDirty={handleDirty}
-              debounceMs={2000}
-              onEditorReady={handleEditorReady}
-              onOpenCitationDialog={openCitationDialogWithSelection}
-              onToggleReferenceSidebar={() => {
-                workbench.setActiveSourcesTab("cited");
-                workbench.toggle("sources");
-              }}
-              referenceCount={references.size}
-              showToolbar={showFormattingToolbar}
-              onToggleToolbar={() => setShowFormattingToolbar(false)}
-            />
+            <>
+              <div className="max-w-[720px] mx-auto pt-16 px-6">
+                <input
+                  aria-label="Document title"
+                  type="text"
+                  value={docTitle}
+                  onChange={(e) => setDocTitle(e.target.value)}
+                  placeholder="Untitled document"
+                  className="w-full text-[38px] font-bold leading-[1.2] tracking-[-0.02em] bg-transparent border-none outline-none placeholder:text-ink/15 caret-brand"
+                  style={{ fontFamily: "var(--font-serif-family)" }}
+                />
+              </div>
+              <TiptapEditor
+                className="max-w-[720px] mx-auto"
+                content={initialContent}
+                contentKey={studioDoc?.id ?? null}
+                onUpdate={handleEditorUpdate}
+                onDirty={handleDirty}
+                debounceMs={2000}
+                onEditorReady={handleEditorReady}
+                onOpenCitationDialog={openCitationDialogWithSelection}
+                onToggleReferenceSidebar={() => {
+                  workbench.setActiveSourcesTab("cited");
+                  workbench.toggle("sources");
+                }}
+                referenceCount={references.size}
+              />
+            </>
           )}
         </main>
 
-        {/* Workbench — overlays the right side */}
         <Workbench
           editor={editorInstance}
           documentId={studioDoc?.id ? String(studioDoc.id) : undefined}
@@ -799,7 +880,6 @@ function StudioContent() {
         />
       </div>
 
-      {/* Citation Dialog (modal overlay) — unchanged */}
       <CitationDialog
         open={citationDialogOpen}
         onClose={closeCitationDialog}

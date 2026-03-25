@@ -25,7 +25,7 @@ interface WorkbenchProps {
 
 const toolLabels = {
   sources: "Sources",
-  assistant: "Buddy",
+  assistant: "Assistant",
   review: "Review",
 };
 
@@ -53,32 +53,30 @@ export function Workbench({
   return (
     <div
       className={cn(
-        "absolute top-0 right-0 bottom-0 z-30 flex flex-col transition-all duration-300 ease-in-out",
-        isOpen ? "w-[380px] translate-x-0" : "w-0 translate-x-full overflow-hidden"
+        "absolute top-2 right-2 bottom-2 z-30 flex flex-col rounded-xl bg-surface transition-all duration-300 ease-in-out overflow-hidden",
+        isOpen
+          ? "w-[380px] translate-x-0 opacity-100"
+          : "w-0 translate-x-8 opacity-0 pointer-events-none"
       )}
       style={{
-        background: "#FAFAF9",
-        boxShadow: isOpen ? "-8px 0 24px rgba(0,0,0,0.06)" : "none",
+        boxShadow: isOpen
+          ? "0 8px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)"
+          : "none",
       }}
     >
-      {/* Minimal header — just the tool name + close */}
-      <div className="flex items-center justify-between h-10 px-4 shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-        <span className="text-[13px] font-semibold tracking-tight" style={{ color: "#1C1917" }}>
+      <div className="flex items-center justify-between h-10 px-4 shrink-0 border-b border-border-subtle">
+        <span className="text-[13px] font-semibold tracking-tight text-ink">
           {toolLabels[activeTool]}
         </span>
         <button
           onClick={close}
-          className="w-6 h-6 flex items-center justify-center rounded-full transition-colors"
-          style={{ color: "#A8A29E" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "#1C1917"; e.currentTarget.style.background = "rgba(0,0,0,0.04)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "#A8A29E"; e.currentTarget.style.background = "transparent"; }}
+          className="w-6 h-6 flex items-center justify-center rounded-full text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           title="Close (Esc)"
         >
           <X size={12} weight="bold" />
         </button>
       </div>
 
-      {/* Tool content — all mounted, visibility toggled to preserve state */}
       <div className="flex-1 overflow-hidden relative">
         <div className={cn("absolute inset-0 flex flex-col", activeTool !== "sources" && "invisible")}>
           <WorkbenchSources
