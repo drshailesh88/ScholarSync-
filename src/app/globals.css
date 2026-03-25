@@ -224,6 +224,21 @@ body {
 }
 .ss-user-area:hover .ss-user-chevron { color: rgba(255,255,255,0.5); }
 
+/* Sidebar lean scrollbar — barely visible, appears on hover/scroll */
+.ss-sidebar ::-webkit-scrollbar {
+  width: 4px;
+}
+.ss-sidebar ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ss-sidebar ::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+.ss-sidebar ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 /* ===== Academic Editor Styles ===== */
 
 /* ===== Premium Editor Surface ===== */

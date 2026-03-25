@@ -170,7 +170,12 @@ export function TiptapEditor({
         allowBase64: true,
       }),
       Placeholder.configure({
-        placeholder: "Start typing or press '/' for AI commands...",
+        placeholder: ({ editor }) => {
+          if (editor.isEmpty) {
+            return "Start typing or press '/' for AI commands...";
+          }
+          return "";
+        },
       }),
       CharacterCount,
       Typography,

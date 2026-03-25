@@ -171,7 +171,10 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
         {onClose && (
           <button
             onClick={onClose}
-            className="md:hidden p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+            className={cn(
+              "p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors",
+              !mobileOnly && "md:hidden"
+            )}
           >
             <X size={18} />
           </button>
