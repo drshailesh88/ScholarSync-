@@ -666,13 +666,13 @@ function StudioContent() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <div className="flex items-center justify-between px-5 h-10 shrink-0 bg-background">
+      <div className="flex items-center justify-between px-5 h-10 shrink-0 bg-background relative z-[60]">
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={() => {
               window.dispatchEvent(new CustomEvent("scholarsync:toggle-sidebar"));
             }}
-            className="p-1.5 rounded-md text-ink/30 hover:text-ink/60 transition-colors"
+            className="p-1.5 rounded-md text-ink/30 hover:text-ink/70 transition-colors"
             title="Navigation"
             aria-label="Open navigation"
           >
@@ -743,7 +743,7 @@ function StudioContent() {
               "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "sources"
                 ? "text-ink"
-                : "text-ink/40 hover:text-ink/70"
+                : "text-ink/40 hover:text-ink"
             )}
           >
             Sources
@@ -758,7 +758,7 @@ function StudioContent() {
               "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "assistant"
                 ? "text-ink"
-                : "text-ink/40 hover:text-ink/70"
+                : "text-ink/40 hover:text-ink"
             )}
           >
             Assistant
@@ -773,7 +773,7 @@ function StudioContent() {
               "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "review"
                 ? "text-ink"
-                : "text-ink/40 hover:text-ink/70"
+                : "text-ink/40 hover:text-ink"
             )}
           >
             Review
@@ -782,7 +782,7 @@ function StudioContent() {
             onClick={() => setShowFormattingBar((v) => !v)}
             className={cn(
               "px-2 py-1 transition-colors font-serif text-[13px]",
-              showFormattingBar ? "text-ink" : "text-ink/30 hover:text-ink/60"
+              showFormattingBar ? "text-ink" : "text-ink/30 hover:text-ink/80"
             )}
             title="Toggle formatting (Cmd+Shift+T)"
           >
@@ -796,7 +796,7 @@ function StudioContent() {
                 setShowMoreMenu((value) => !value);
                 setWordCountCard(null);
               }}
-              className="p-1.5 text-ink/40 hover:text-ink/70 transition-colors"
+              className="p-1.5 text-ink/40 hover:text-ink transition-colors"
               aria-label="More actions"
             >
               <DotsThree size={16} />
