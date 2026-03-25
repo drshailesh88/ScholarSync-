@@ -161,8 +161,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
   useEffect(() => setMounted(true), []);
 
   const sidebarContent = (
-    <div className="flex flex-col h-full overflow-y-auto overflow-x-hidden"
-      style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.1) transparent" }}>
+    <>
       {/* Logo */}
       <div className="flex items-center justify-between px-4 py-4 shrink-0">
         <Link href="/dashboard" className="flex items-center gap-2.5 no-underline">
@@ -295,24 +294,34 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
+
+  const sidebarScroll: React.CSSProperties = { scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.15) transparent" };
 
   return (
     <>
       {/* Desktop sidebar — hidden when mobileOnly */}
-      {!mobileOnly && <aside className={cn("hidden md:flex flex-col shrink-0 ss-sidebar h-screen", textSize === "large" && "text-large")} style={{ width }}>
-        {sidebarContent}
-      </aside>}
+      {!mobileOnly && (
+        <aside
+          className={cn("hidden md:flex flex-col shrink-0 ss-sidebar h-screen overflow-y-auto overflow-x-hidden", textSize === "large" && "text-large")}
+          style={{ width, ...sidebarScroll }}
+        >
+          {sidebarContent}
+        </aside>
+      )}
 
-      {/* Mobile overlay sidebar (also used on desktop when mobileOnly) */}
+      {/* Overlay sidebar (mobile always, desktop when mobileOnly/Studio) */}
       {open && (
         <div className={cn("fixed inset-0 z-50", !mobileOnly && "md:hidden")}>
           <div
             className="absolute inset-0 bg-transparent"
             onClick={onClose}
           />
-          <aside className={cn("absolute left-0 top-0 bottom-0 w-56 flex flex-col ss-sidebar", textSize === "large" && "text-large")}>
+          <aside
+            className={cn("absolute left-0 top-0 h-full w-56 flex flex-col ss-sidebar overflow-y-auto overflow-x-hidden", textSize === "large" && "text-large")}
+            style={sidebarScroll}
+          >
             {sidebarContent}
           </aside>
         </div>
