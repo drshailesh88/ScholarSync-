@@ -21,10 +21,10 @@
 
 :root {
   /* --- ScholarSync Premium Color System (aligned to landing page) --- */
-  --bg: #FAF9F6;
-  --background: #FAF9F6;
-  --surface: #FAF9F6;
-  --surface-raised: #F3F2EE;
+  --bg: #F7F5F3;
+  --background: #F7F5F3;
+  --surface: #F7F5F3;
+  --surface-raised: #EFEDE8;
   --ink: rgb(55, 53, 47);           /* warm off-black text (Notion's secret) */
   --ink-muted: rgba(55, 53, 47, 0.55); /* warm muted (same hue, lower opacity) */
   --border: rgba(0, 0, 0, 0.06);
@@ -304,17 +304,17 @@ body {
 
 /* #11: Empty state — warm, inviting placeholder */
 .academic-editor-content p.is-editor-empty:first-child::before {
-  color: rgba(55, 53, 47, 0.3);
+  color: var(--ink-muted);
   font-style: normal;
-  opacity: 1;
+  opacity: 0.5;
 }
 
 /* Selection highlight — warm purple tint (not default blue) */
 .academic-editor-content ::selection {
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(109, 40, 217, 0.12);
 }
 .academic-editor-content ::-moz-selection {
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(109, 40, 217, 0.12);
 }
 
 /* Block hover hint — subtle left border on hover (Notion-style) */
@@ -379,6 +379,7 @@ body {
 .academic-editor-content .ProseMirror {
   outline: none;
   min-height: 60vh;
+  padding-bottom: 40vh;
 }
 
 /* Headings — Source Serif for editorial feel */
@@ -434,10 +435,10 @@ body {
 .academic-editor-content p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;
-  color: rgba(55, 53, 47, 0.25);
+  color: var(--ink-muted);
   pointer-events: none;
   height: 0;
-  opacity: 1;
+  opacity: 0.5;
   font-style: normal;
 }
 

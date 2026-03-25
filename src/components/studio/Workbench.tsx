@@ -36,7 +36,11 @@ export function Workbench({
   onOpenCitationDialog,
   onInsertCitation,
 }: WorkbenchProps) {
-  const { isOpen, activeTool, close } = useWorkbenchStore();
+  const { isOpen, activeTool, close, setTool } = useWorkbenchStore();
+  const tools = Object.entries(toolLabels).map(([key, label]) => ({
+    key: key as keyof typeof toolLabels,
+    label,
+  }));
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -64,16 +68,29 @@ export function Workbench({
           : "none",
       }}
     >
-      <div className="flex items-center justify-between h-10 px-4 shrink-0 border-b border-border-subtle">
-        <span className="text-[13px] font-semibold tracking-tight text-ink">
-          {toolLabels[activeTool]}
-        </span>
+      <div className="flex items-center h-10 px-3 shrink-0 border-b border-border-subtle">
+        <div className="flex items-center gap-0.5 flex-1">
+          {tools.map((tool) => (
+            <button
+              key={tool.key}
+              onClick={() => setTool(tool.key)}
+              className={cn(
+                "px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
+                activeTool === tool.key
+                  ? "text-ink bg-black/[0.04]"
+                  : "text-ink-muted hover:text-ink"
+              )}
+            >
+              {tool.label}
+            </button>
+          ))}
+        </div>
         <button
           onClick={close}
-          className="w-6 h-6 flex items-center justify-center rounded-full text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          className="p-1 rounded-md text-ink-muted/40 hover:text-ink-muted transition-colors"
           title="Close (Esc)"
         >
-          <X size={12} weight="bold" />
+          <X size={14} />
         </button>
       </div>
 

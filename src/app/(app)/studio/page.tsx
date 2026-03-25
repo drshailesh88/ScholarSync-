@@ -7,6 +7,7 @@ import {
   CircleNotch,
   Warning,
   DotsThree,
+  List,
   X,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
@@ -665,6 +666,16 @@ function StudioContent() {
     <div className="flex flex-col h-screen bg-background">
       <div className="flex items-center justify-between px-5 h-10 shrink-0 bg-background">
         <div className="flex items-center gap-3 min-w-0">
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("scholarsync:toggle-sidebar"));
+            }}
+            className="p-1.5 rounded-md text-ink-muted/40 hover:text-ink-muted transition-colors"
+            title="Navigation"
+            aria-label="Open navigation"
+          >
+            <List size={18} />
+          </button>
           <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
           {citationNotice && (
             <span className="text-[10px] font-medium text-emerald-500 shrink-0">
@@ -816,7 +827,7 @@ function StudioContent() {
       </div>
 
       {pendingCitationNotice && (
-        <div className="px-5 py-2 bg-blue-500/8 shrink-0">
+        <div className="px-5 py-2 bg-blue-500/10 shrink-0">
           <span className="text-xs text-blue-700 dark:text-blue-300">
             {pendingCitationNotice}
           </span>
@@ -848,7 +859,7 @@ function StudioContent() {
                   value={docTitle}
                   onChange={(e) => setDocTitle(e.target.value)}
                   placeholder="Untitled document"
-                  className="w-full text-[38px] font-bold leading-[1.2] tracking-[-0.02em] bg-transparent border-none outline-none placeholder:text-ink/15 caret-brand"
+                  className="w-full text-[38px] font-bold leading-[1.2] tracking-[-0.02em] bg-transparent border-none outline-none placeholder:text-ink/25 caret-brand"
                   style={{ fontFamily: "var(--font-serif-family)" }}
                 />
               </div>

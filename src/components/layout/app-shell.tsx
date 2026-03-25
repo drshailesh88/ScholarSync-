@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { AppSidebar } from "./app-sidebar";
 import { AppHeader } from "./app-header";
@@ -38,6 +38,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const handleBuddyResize = useCallback((delta: number) => {
     const maxWidth = typeof window !== "undefined" ? window.innerWidth * BUDDY_MAX_RATIO : 600;
     setBuddyWidth((w) => Math.min(maxWidth, Math.max(BUDDY_MIN, w + delta)));
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setSidebarOpen(true);
+    window.addEventListener("scholarsync:toggle-sidebar", handler);
+    return () => window.removeEventListener("scholarsync:toggle-sidebar", handler);
   }, []);
 
   return (
