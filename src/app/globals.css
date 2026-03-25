@@ -291,10 +291,16 @@ body {
 
 /* Selection highlight — warm purple tint (not default blue) */
 .academic-editor-content ::selection {
-  background: rgba(109, 40, 217, 0.12);
+  background: rgba(109, 40, 217, 0.15);
 }
 .academic-editor-content ::-moz-selection {
-  background: rgba(109, 40, 217, 0.12);
+  background: rgba(109, 40, 217, 0.15);
+}
+.dark .academic-editor-content ::selection {
+  background: rgba(139, 123, 244, 0.3);
+}
+.dark .academic-editor-content ::-moz-selection {
+  background: rgba(139, 123, 244, 0.3);
 }
 
 /* Block hover hint — subtle left border on hover (Notion-style) */
