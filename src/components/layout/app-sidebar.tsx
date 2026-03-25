@@ -315,7 +315,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
       {open && (
         <div className={cn("fixed inset-0 z-50", !mobileOnly && "md:hidden")}>
           <div
-            className="absolute inset-0 bg-transparent"
+            className="absolute top-10 left-0 right-0 bottom-0 bg-transparent"
             onClick={onClose}
           />
           <aside

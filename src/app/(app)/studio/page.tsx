@@ -666,7 +666,7 @@ function StudioContent() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <div className="flex items-center justify-between px-5 h-10 shrink-0 bg-background relative z-[60]">
+      <div className="flex items-center justify-between px-5 h-10 shrink-0 bg-background">
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={() => {
