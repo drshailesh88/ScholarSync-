@@ -28,6 +28,7 @@ import type { Reference } from "@/types/citation";
 import { useResearchStore } from "@/stores/research-store";
 import { Workbench } from "@/components/studio/Workbench";
 import { useWorkbenchStore } from "@/stores/workbench-store";
+import { BottomFormattingBar } from "@/components/editor/BottomFormattingBar";
 
 interface ResearchCitationDetail {
   title: string;
@@ -121,6 +122,7 @@ function StudioContent() {
 
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const [showFormattingBar, setShowFormattingBar] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
   const [wordCountCard, setWordCountCard] = useState<{
     total: number;
@@ -776,6 +778,18 @@ function StudioContent() {
           >
             Review
           </button>
+          <button
+            onClick={() => setShowFormattingBar((v) => !v)}
+            className={cn(
+              "px-2 py-1 transition-colors font-serif text-[13px]",
+              showFormattingBar ? "text-ink" : "text-ink-muted/40 hover:text-ink-muted"
+            )}
+            title="Toggle formatting (Cmd+Shift+T)"
+          >
+            <span className="font-bold">B</span>
+            <span className="italic mx-0.5">I</span>
+            <span className="underline">U</span>
+          </button>
           <div className="relative" ref={moreMenuRef}>
             <button
               onClick={() => {
@@ -879,6 +893,11 @@ function StudioContent() {
                 referenceCount={references.size}
               />
             </>
+          )}
+          {showFormattingBar && editorInstance && (
+            <div className="sticky bottom-0 z-20">
+              <BottomFormattingBar editor={editorInstance} />
+            </div>
           )}
         </main>
 

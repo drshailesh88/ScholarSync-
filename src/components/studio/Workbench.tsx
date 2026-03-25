@@ -68,7 +68,7 @@ export function Workbench({
           : "none",
       }}
     >
-      <div className="flex items-center h-10 px-3 shrink-0 border-b border-border-subtle">
+      <div className="flex items-center h-10 px-3 shrink-0">
         <div className="flex items-center gap-0.5 flex-1">
           {tools.map((tool) => (
             <button
@@ -94,7 +94,7 @@ export function Workbench({
         </button>
       </div>
 
-      <div className="flex-1 overflow-hidden relative">
+      <div className="flex-1 overflow-hidden relative bg-surface">
         <div className={cn("absolute inset-0 flex flex-col", activeTool !== "sources" && "invisible")}>
           <WorkbenchSources
             onOpenCitationDialog={onOpenCitationDialog}

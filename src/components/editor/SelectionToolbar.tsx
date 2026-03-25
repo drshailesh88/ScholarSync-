@@ -181,7 +181,7 @@ export function SelectionToolbar({ editor }: SelectionToolbarProps) {
         transform: "translate(-50%, -100%)",
       }}
     >
-      <div className="flex items-center gap-0.5 bg-surface border border-border rounded-lg shadow-lg px-1 py-0.5">
+      <div className="ss-selection-toolbar flex items-center gap-0.5 bg-white border border-border rounded-lg shadow-lg px-1.5 py-1">
         {/* Style dropdown */}
         <div className="relative">
           <button
@@ -350,10 +350,8 @@ function ToolbarButton({
       }}
       onContextMenu={onContextMenu}
       className={cn(
-        "p-1.5 rounded-md transition-colors",
-        active
-          ? "bg-brand/10 text-brand"
-          : "text-ink-muted hover:text-ink hover:bg-surface-raised",
+        "p-1.5 rounded-md text-ink-muted hover:text-ink hover:bg-black/[0.04] transition-colors",
+        active && "text-brand bg-brand/5",
         className
       )}
     >

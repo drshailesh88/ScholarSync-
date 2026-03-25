@@ -302,11 +302,11 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
         {sidebarContent}
       </aside>}
 
-      {/* Mobile overlay sidebar */}
+      {/* Mobile overlay sidebar (also used on desktop when mobileOnly) */}
       {open && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className={cn("fixed inset-0 z-50", !mobileOnly && "md:hidden")}>
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-transparent"
             onClick={onClose}
           />
           <aside className={cn("absolute left-0 top-0 bottom-0 w-56 flex flex-col ss-sidebar", textSize === "large" && "text-large")}>
