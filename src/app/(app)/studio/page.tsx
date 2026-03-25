@@ -672,7 +672,7 @@ function StudioContent() {
             onClick={() => {
               window.dispatchEvent(new CustomEvent("scholarsync:toggle-sidebar"));
             }}
-            className="p-1.5 rounded-md text-ink-muted/40 hover:text-ink-muted transition-colors"
+            className="p-1.5 rounded-md text-ink/30 hover:text-ink/60 transition-colors"
             title="Navigation"
             aria-label="Open navigation"
           >
@@ -743,7 +743,7 @@ function StudioContent() {
               "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "sources"
                 ? "text-ink"
-                : "text-ink-muted hover:text-ink"
+                : "text-ink/40 hover:text-ink/70"
             )}
           >
             Sources
@@ -758,7 +758,7 @@ function StudioContent() {
               "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "assistant"
                 ? "text-ink"
-                : "text-ink-muted hover:text-ink"
+                : "text-ink/40 hover:text-ink/70"
             )}
           >
             Assistant
@@ -773,7 +773,7 @@ function StudioContent() {
               "px-2.5 py-1.5 text-[11px] transition-colors",
               workbench.isOpen && workbench.activeTool === "review"
                 ? "text-ink"
-                : "text-ink-muted hover:text-ink"
+                : "text-ink/40 hover:text-ink/70"
             )}
           >
             Review
@@ -782,7 +782,7 @@ function StudioContent() {
             onClick={() => setShowFormattingBar((v) => !v)}
             className={cn(
               "px-2 py-1 transition-colors font-serif text-[13px]",
-              showFormattingBar ? "text-ink" : "text-ink-muted/40 hover:text-ink-muted"
+              showFormattingBar ? "text-ink" : "text-ink/30 hover:text-ink/60"
             )}
             title="Toggle formatting (Cmd+Shift+T)"
           >
@@ -796,7 +796,7 @@ function StudioContent() {
                 setShowMoreMenu((value) => !value);
                 setWordCountCard(null);
               }}
-              className="p-1.5 text-ink-muted hover:text-ink transition-colors"
+              className="p-1.5 text-ink/40 hover:text-ink/70 transition-colors"
               aria-label="More actions"
             >
               <DotsThree size={16} />
