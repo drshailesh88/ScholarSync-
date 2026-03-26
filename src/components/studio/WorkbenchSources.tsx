@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect } from "react";
-import { cn } from "@/lib/utils";
 import { useResearchStore } from "@/stores/research-store";
 import { useReferenceStore } from "@/stores/reference-store";
 import { usePaperDetail } from "@/hooks/usePaperDetail";
@@ -91,7 +90,9 @@ export function WorkbenchSources({
     getUserPapers()
       .then((papers) => {
         if (cancelled) return;
+
         const hydratedPapers = papers.map(dbPaperToPaperResult);
+
         useResearchStore.setState((state) => {
           let libraryChanged = false;
           const mergedLibrary = [...state.libraryPapers];
@@ -118,6 +119,39 @@ export function WorkbenchSources({
             results: updatedResults,
           };
         });
+
+        const { libraryPapers, results, totalResults, setResults } =
+          useResearchStore.getState();
+
+        if (results.length > 0 && libraryPapers.length > 0) {
+          const libraryDois = new Set(
+            libraryPapers
+              .map((paper) => paper.doi?.toLowerCase())
+              .filter((doi): doi is string => Boolean(doi))
+          );
+          const libraryTitles = new Set(
+            libraryPapers
+              .map((paper) => paper.title?.toLowerCase())
+              .filter((title): title is string => Boolean(title))
+          );
+
+          const flagged = results.map((result) => ({
+            ...result,
+            inLibrary:
+              (result.doi && libraryDois.has(result.doi.toLowerCase())) ||
+              (result.title &&
+                libraryTitles.has(result.title.toLowerCase())) ||
+              Boolean(result.inLibrary),
+          }));
+
+          const hasChanges = flagged.some(
+            (result, index) => result.inLibrary !== results[index]?.inLibrary
+          );
+
+          if (hasChanges) {
+            setResults(flagged, totalResults);
+          }
+        }
       })
       .catch((error) => console.error("Failed to hydrate library:", error));
     return () => { cancelled = true; };

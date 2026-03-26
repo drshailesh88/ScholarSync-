@@ -4,12 +4,13 @@ import { db } from "@/lib/db";
 import {
   users,
   projects,
+  synthesisDocuments,
   searchQueries,
   activityLog,
   userReferences,
   conversations,
 } from "@/lib/db/schema";
-import { eq, and, desc, isNull, count } from "drizzle-orm";
+import { eq, and, desc, isNull, count, sql } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { ensureUser } from "@/lib/actions/user";
 
@@ -17,12 +18,21 @@ import { ensureUser } from "@/lib/actions/user";
 // Types from Phase 1 (comprehensive dashboard data)
 // ---------------------------------------------------------------------------
 
+type DashboardProjectMarks = {
+  important?: boolean;
+  note?: boolean;
+  hasImportantBlocks?: boolean;
+  hasNoteBlocks?: boolean;
+};
+
 export type DashboardProject = {
   id: number;
   title: string;
   status: string | null;
   project_type: string | null;
   updated_at: Date | null;
+  document_type?: string | null;
+  marks?: DashboardProjectMarks;
 };
 
 export type RecentSearch = {
@@ -160,9 +170,47 @@ export async function getDashboardData(): Promise<DashboardData> {
   const user = userResult[0];
   const projectCount = projectCountResult[0]?.value ?? 0;
   const searchCount = searchCountResult[0]?.value ?? 0;
+  const recentProjectIds = recentProjectsResult.map((project) => project.id);
+  const latestDocumentsByProject = new Map<
+    number,
+    { document_type: string | null; marks: DashboardProjectMarks }
+  >();
+
+  if (recentProjectIds.length > 0) {
+    const recentDocuments = await db
+      .select({
+        project_id: synthesisDocuments.project_id,
+        document_type: synthesisDocuments.document_type,
+        marks: synthesisDocuments.marks,
+      })
+      .from(synthesisDocuments)
+      .where(
+        and(
+          sql`${synthesisDocuments.project_id} IN ${recentProjectIds}`,
+          isNull(synthesisDocuments.deleted_at)
+        )
+      )
+      .orderBy(desc(synthesisDocuments.updated_at));
+
+    for (const doc of recentDocuments) {
+      if (!latestDocumentsByProject.has(doc.project_id)) {
+        latestDocumentsByProject.set(doc.project_id, {
+          document_type: doc.document_type,
+          marks: (doc.marks ?? {}) as DashboardProjectMarks,
+        });
+      }
+    }
+  }
 
   return {
-    recentProjects: recentProjectsResult,
+    recentProjects: recentProjectsResult.map((project) => {
+      const latestDocument = latestDocumentsByProject.get(project.id);
+      return {
+        ...project,
+        document_type: latestDocument?.document_type ?? null,
+        marks: latestDocument?.marks ?? {},
+      };
+    }),
     stats: {
       projectCount,
       paperCount: paperCountResult[0]?.value ?? 0,

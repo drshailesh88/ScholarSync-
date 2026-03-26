@@ -321,6 +321,14 @@ export const synthesisDocuments = pgTable(
     submission_status: text("submission_status"),
     last_export_at: timestamp("last_export_at"),
     latex_export_path: text("latex_export_path"),
+    marks: jsonb("marks")
+      .$type<{
+        important?: boolean;
+        note?: boolean;
+        hasImportantBlocks?: boolean;
+        hasNoteBlocks?: boolean;
+      }>()
+      .default({}),
     created_at: timestamp("created_at").defaultNow(),
     updated_at: timestamp("updated_at").defaultNow(),
     deleted_at: timestamp("deleted_at"),

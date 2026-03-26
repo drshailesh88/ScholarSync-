@@ -34,6 +34,7 @@ import { LinkPopover } from "./LinkPopover";
 import { SlashCommandsExtension } from "./extensions/slash-commands";
 import { createSlashMenuRenderer } from "./SlashMenu";
 import { Footnote } from "./extensions/footnote-node";
+import { BlockMarkExtension } from "./extensions/block-mark";
 import { FootnoteSection } from "./FootnoteSection";
 import { OutlinePlugin } from "./extensions/outline-plugin";
 import { DocumentOutline } from "./DocumentOutline";
@@ -194,6 +195,7 @@ export function TiptapEditor({
         },
         debounceMs: 500,
       }),
+      BlockMarkExtension,
       Footnote,
       AcademicKeyboardShortcuts,
       CitationNode,

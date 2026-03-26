@@ -19,6 +19,8 @@ import {
   BookOpen,
   ShieldCheck,
   Minus,
+  Star,
+  Notepad,
 } from "@phosphor-icons/react";
 
 interface CommandItem {
@@ -26,7 +28,7 @@ interface CommandItem {
   description: string;
   icon: typeof TextHOne;
   command: (props: { editor: Editor; range: Range }) => void;
-  category: "formatting" | "ai" | "insert";
+  category: "formatting" | "ai" | "insert" | "marks";
 }
 
 const commands: CommandItem[] = [
@@ -155,6 +157,25 @@ const commands: CommandItem[] = [
       window.dispatchEvent(new CustomEvent("scholarsync:ai-action", { detail: { action: "integrity-check", context: editor.getText() } }));
     },
   },
+  // Block Marks
+  {
+    title: "Mark Important",
+    description: "Mark this block as important",
+    icon: Star,
+    category: "marks",
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).toggleImportant().run();
+    },
+  },
+  {
+    title: "Mark as Note",
+    description: "Mark this block as a note",
+    icon: Notepad,
+    category: "marks",
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).toggleNote().run();
+    },
+  },
 ];
 
 // --- Command List Component ---
@@ -225,7 +246,13 @@ function CommandList({ items, command }: CommandListProps) {
           <div key={item.title}>
             {showCategory && (
               <p className="text-[10px] font-medium text-ink-muted uppercase tracking-wider px-2 pt-2 pb-1">
-                {item.category === "formatting" ? "Format" : item.category === "ai" ? "AI Actions" : "Insert"}
+                {item.category === "formatting"
+                  ? "Format"
+                  : item.category === "ai"
+                    ? "AI Actions"
+                    : item.category === "insert"
+                      ? "Insert"
+                      : "Block Marks"}
               </p>
             )}
             <button

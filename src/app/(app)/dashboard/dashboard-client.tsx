@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   GlobeHemisphereWest,
@@ -134,6 +134,33 @@ function formatActivityAction(action: string): string {
     .join(" ");
 }
 
+function getProjectFilterType(project: DashboardProject): string {
+  const rawType = project.document_type?.toLowerCase().replace(/_/g, "-");
+
+  if (rawType === "systematic-review") return "systematic-review";
+  if (rawType === "latex") return "latex";
+  if (rawType === "canvas") return "canvas";
+  if (rawType === "poster" || rawType === "poster-session") return "poster";
+  if (rawType === "slides" || rawType === "presentation" || rawType === "grant-presentation") {
+    return "slides";
+  }
+
+  return "draft";
+}
+
+function matchesMarkFilter(
+  project: DashboardProject,
+  markFilter: "all" | "important" | "notes"
+): boolean {
+  if (markFilter === "all") return true;
+
+  if (markFilter === "important") {
+    return Boolean(project.marks?.important || project.marks?.hasImportantBlocks);
+  }
+
+  return Boolean(project.marks?.note || project.marks?.hasNoteBlocks);
+}
+
 // ── Component Props ─────────────────────────────────────────────
 
 interface DashboardClientProps {
@@ -151,6 +178,9 @@ export default function DashboardClient({
   recentSearches,
   recentActivity,
 }: DashboardClientProps) {
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [markFilter, setMarkFilter] = useState<"all" | "important" | "notes">("all");
+
   useEffect(() => {
     const storage = window.localStorage;
     if (hasCompletedLocalDocumentMigration(storage)) {
@@ -184,6 +214,15 @@ export default function DashboardClient({
       cancelled = true;
     };
   }, []);
+
+  const filteredProjects = useMemo(() => {
+    return recentProjects.filter((project) => {
+      const matchesType =
+        typeFilter === "all" || getProjectFilterType(project) === typeFilter;
+
+      return matchesType && matchesMarkFilter(project, markFilter);
+    });
+  }, [markFilter, recentProjects, typeFilter]);
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -283,13 +322,56 @@ export default function DashboardClient({
           </Link>
         </div>
 
+        <div className="flex items-center gap-3 mb-4">
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className="text-xs bg-surface border border-border rounded-md px-2 py-1 text-ink"
+          >
+            <option value="all">All</option>
+            <option value="draft">Drafts</option>
+            <option value="latex">LaTeX</option>
+            <option value="canvas">Canvas</option>
+            <option value="poster">Posters</option>
+            <option value="slides">Slides</option>
+            <option value="systematic-review">Systematic Reviews</option>
+          </select>
+
+          <div className="flex items-center gap-1">
+            {(["all", "important", "notes"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setMarkFilter(f)}
+                className={cn(
+                  "px-2.5 py-1 text-xs rounded-md transition-colors",
+                  markFilter === f ? "bg-black/[0.06] text-ink font-medium" : "text-ink/40 hover:text-ink/70"
+                )}
+              >
+                {f === "all" ? (
+                  "All"
+                ) : f === "important" ? (
+                  <>
+                    <span className="text-amber-500">●</span> Important
+                  </>
+                ) : (
+                  <>
+                    <span className="text-blue-500">●</span> Notes
+                  </>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="glass-panel rounded-2xl overflow-hidden border border-border">
-          {recentProjects.length === 0 ? (
+          {filteredProjects.length === 0 ? (
             <div className="p-8 text-center text-ink-muted text-sm">
-              No projects yet. Create your first manuscript to get started.
+              {recentProjects.length === 0
+                ? "No projects yet. Create your first manuscript to get started."
+                : "No manuscripts match the selected filters."}
             </div>
           ) : (
-            recentProjects.map((project, idx) => {
+            filteredProjects.map((project, idx) => {
               const status =
                 statusMap[(project.status as DbStatus) || "drafting"];
               return (
@@ -298,7 +380,7 @@ export default function DashboardClient({
                   href={`/studio?projectId=${project.id}`}
                   className={cn(
                     "group flex items-center justify-between p-5 hover:bg-surface-raised/50 transition-colors cursor-pointer",
-                    idx < recentProjects.length - 1 &&
+                    idx < filteredProjects.length - 1 &&
                       "border-b border-border-subtle"
                   )}
                 >
@@ -307,8 +389,28 @@ export default function DashboardClient({
                       <FileText size={20} />
                     </div>
                     <div className="min-w-0">
-                      <h4 className="font-serif text-ink group-hover:text-brand transition-colors truncate">
-                        {project.title}
+                      <h4 className="font-serif text-ink group-hover:text-brand transition-colors truncate flex items-center min-w-0">
+                        {(project.marks?.important ||
+                          project.marks?.note ||
+                          project.marks?.hasImportantBlocks ||
+                          project.marks?.hasNoteBlocks) && (
+                          <div className="flex items-center gap-0.5 mr-1.5 shrink-0">
+                            {project.marks?.important && (
+                              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                            )}
+                            {!project.marks?.important &&
+                              project.marks?.hasImportantBlocks && (
+                                <span className="h-1.5 w-1.5 rounded-full border border-amber-500" />
+                              )}
+                            {project.marks?.note && (
+                              <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                            )}
+                            {!project.marks?.note && project.marks?.hasNoteBlocks && (
+                              <span className="h-1.5 w-1.5 rounded-full border border-blue-500" />
+                            )}
+                          </div>
+                        )}
+                        <span className="truncate">{project.title}</span>
                       </h4>
                       <p className="text-xs text-ink-muted mt-0.5">
                         {formatRelativeTime(project.updated_at)} ·{" "}

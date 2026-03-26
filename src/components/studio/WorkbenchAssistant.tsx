@@ -56,6 +56,8 @@ function extractPaperIds(references: Map<string, unknown>): number[] {
 
 export function WorkbenchAssistant() {
   const mode = useWorkbenchStore((s) => s.activeAssistantMode);
+  const pendingPrompt = useWorkbenchStore((s) => s.pendingPrompt);
+  const clearPendingPrompt = useWorkbenchStore((s) => s.clearPendingPrompt);
   const setActiveAssistantMode = useWorkbenchStore(
     (s) => s.setActiveAssistantMode
   );
@@ -93,6 +95,18 @@ export function WorkbenchAssistant() {
     setMessages([]);
     setInput("");
   }, [mode]);
+
+  useEffect(() => {
+    if (!pendingPrompt) return;
+
+    setInput(pendingPrompt);
+    clearPendingPrompt();
+
+    setTimeout(() => {
+      const form = document.querySelector('[aria-label="Send message"]');
+      if (form instanceof HTMLButtonElement) form.click();
+    }, 50);
+  }, [pendingPrompt, clearPendingPrompt]);
 
   /** Resolve paper IDs based on current scope */
   const resolvePaperIds = useCallback(async (): Promise<number[]> => {

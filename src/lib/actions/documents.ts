@@ -10,6 +10,13 @@ import {
 import { eq, and, desc, isNull } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 
+type DocumentMarks = {
+  important?: boolean;
+  note?: boolean;
+  hasImportantBlocks?: boolean;
+  hasNoteBlocks?: boolean;
+};
+
 async function getNextVersionNumber(documentId: number): Promise<number> {
   const [latestVersion] = await db
     .select({ versionNumber: synthesisVersions.version_number })
@@ -19,6 +26,34 @@ async function getNextVersionNumber(documentId: number): Promise<number> {
     .limit(1);
 
   return (latestVersion?.versionNumber ?? 0) + 1;
+}
+
+async function getOwnedDocumentMarks(documentId: number, userId: string) {
+  const [doc] = await db
+    .select({
+      id: synthesisDocuments.id,
+      marks: synthesisDocuments.marks,
+    })
+    .from(synthesisDocuments)
+    .innerJoin(projects, eq(synthesisDocuments.project_id, projects.id))
+    .where(
+      and(
+        eq(synthesisDocuments.id, documentId),
+        eq(projects.user_id, userId),
+        isNull(synthesisDocuments.deleted_at),
+        isNull(projects.deleted_at)
+      )
+    )
+    .limit(1);
+
+  if (!doc) {
+    throw new Error("Document not found");
+  }
+
+  return {
+    id: doc.id,
+    marks: (doc.marks ?? {}) as DocumentMarks,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -286,6 +321,70 @@ export async function updateDocumentTitle(documentId: number, title: string) {
     .where(eq(synthesisDocuments.id, documentId))
     .returning();
   return doc;
+}
+
+// ---------------------------------------------------------------------------
+// Toggle a document-level mark
+// ---------------------------------------------------------------------------
+export async function toggleDocumentMark(
+  documentId: number,
+  mark: "important" | "note"
+) {
+  const userId = await getCurrentUserId();
+  const { marks } = await getOwnedDocumentMarks(documentId, userId);
+
+  const updatedMarks: DocumentMarks = {
+    ...marks,
+    [mark]: !Boolean(marks[mark]),
+  };
+
+  const [doc] = await db
+    .update(synthesisDocuments)
+    .set({
+      marks: updatedMarks,
+      updated_at: new Date(),
+    })
+    .where(eq(synthesisDocuments.id, documentId))
+    .returning({ marks: synthesisDocuments.marks });
+
+  if (!doc) {
+    throw new Error("Document not found");
+  }
+
+  return (doc.marks ?? {}) as DocumentMarks;
+}
+
+// ---------------------------------------------------------------------------
+// Update derived document block-mark flags during save
+// ---------------------------------------------------------------------------
+export async function updateDocumentBlockMarks(
+  documentId: number,
+  hasImportantBlocks: boolean,
+  hasNoteBlocks: boolean
+) {
+  const userId = await getCurrentUserId();
+  const { marks } = await getOwnedDocumentMarks(documentId, userId);
+
+  const updatedMarks: DocumentMarks = {
+    ...marks,
+    hasImportantBlocks,
+    hasNoteBlocks,
+  };
+
+  const [doc] = await db
+    .update(synthesisDocuments)
+    .set({
+      marks: updatedMarks,
+      updated_at: new Date(),
+    })
+    .where(eq(synthesisDocuments.id, documentId))
+    .returning({ marks: synthesisDocuments.marks });
+
+  if (!doc) {
+    throw new Error("Document not found");
+  }
+
+  return (doc.marks ?? {}) as DocumentMarks;
 }
 
 // ---------------------------------------------------------------------------

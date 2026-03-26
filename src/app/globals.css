@@ -665,6 +665,52 @@ body {
   animation: editor-fade-in 0.2s ease-out;
 }
 
+.academic-editor-content [data-block-mark="important"] {
+  border-left: 3px solid #F59E0B;
+  padding-left: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.academic-editor-content [data-block-mark="note"] {
+  border-left: 3px solid #3B82F6;
+  padding-left: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.academic-editor-content [data-block-mark="both"] {
+  position: relative;
+  border-left: 3px solid #F59E0B;
+  padding-left: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.academic-editor-content [data-block-mark="both"]::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: -8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #3B82F6;
+}
+
+.dark .academic-editor-content [data-block-mark="important"] {
+  border-left-color: #FBBF24;
+}
+
+.dark .academic-editor-content [data-block-mark="note"] {
+  border-left-color: #60A5FA;
+}
+
+.dark .academic-editor-content [data-block-mark="both"] {
+  border-left-color: #FBBF24;
+}
+
+.dark .academic-editor-content [data-block-mark="both"]::before {
+  background: #60A5FA;
+}
+
 /* Print styles */
 @media print {
   .academic-editor-content {
