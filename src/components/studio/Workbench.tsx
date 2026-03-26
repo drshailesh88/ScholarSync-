@@ -58,15 +58,13 @@ export function Workbench({
           : "none",
       }}
     >
-      <div className="flex items-center justify-end h-8 px-2 shrink-0">
-        <button
-          onClick={close}
-          className="p-1 rounded-md text-ink/30 hover:text-ink/60 transition-colors"
-          title="Close (Esc)"
-        >
-          <X size={14} />
-        </button>
-      </div>
+      <button
+        onClick={close}
+        className="absolute top-2 right-2 z-10 p-1 rounded-md text-ink/30 hover:text-ink/60 transition-colors"
+        title="Close (Esc)"
+      >
+        <X size={14} />
+      </button>
 
       <div className="flex-1 overflow-hidden relative bg-surface">
         <div className={cn("absolute inset-0 flex flex-col", activeTool !== "sources" && "invisible")}>
