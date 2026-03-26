@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { X, CaretDown, Gear, Keyboard, SignOut } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { useUIScale } from "@/hooks/use-ui-scale";
 
 const ClerkUserButton = dynamic(
   () => import("@clerk/nextjs").then((mod) => mod.UserButton),
@@ -154,7 +155,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [userPanelOpen, setUserPanelOpen] = useState(false);
-  const [textSize, setTextSize] = useState<"normal" | "large">("normal");
+  const { scale, setScale } = useUIScale();
   const [mounted, setMounted] = useState(false);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect -- needed for hydration safety
@@ -259,23 +260,30 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
         </div>
 
         <div className={cn("ss-user-panel", userPanelOpen && "open")}>
-          {/* Text size */}
+          {/* UI Scale */}
           <div className="ss-user-panel-item">
-            <span>Text size</span>
+            <span>UI scale</span>
             <div className="ss-text-size-toggle">
               <span
-                className={cn("ss-text-size-opt", textSize === "normal" && "active")}
-                style={{ fontSize: 11 }}
-                onClick={() => setTextSize("normal")}
+                className={cn("ss-text-size-opt", scale === "default" && "active")}
+                style={{ fontSize: 10 }}
+                onClick={() => setScale("default")}
               >
-                A<span style={{ fontSize: 9, opacity: 0.6 }}>−</span>
+                100%
               </span>
               <span
-                className={cn("ss-text-size-opt", textSize === "large" && "active")}
-                style={{ fontSize: 15 }}
-                onClick={() => setTextSize("large")}
+                className={cn("ss-text-size-opt", scale === "large" && "active")}
+                style={{ fontSize: 10 }}
+                onClick={() => setScale("large")}
               >
-                A<span style={{ fontSize: 11, opacity: 0.6 }}>+</span>
+                110%
+              </span>
+              <span
+                className={cn("ss-text-size-opt", scale === "larger" && "active")}
+                style={{ fontSize: 10 }}
+                onClick={() => setScale("larger")}
+              >
+                120%
               </span>
             </div>
           </div>
@@ -317,7 +325,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
       {/* Desktop sidebar — hidden when mobileOnly */}
       {!mobileOnly && (
         <aside
-          className={cn("hidden md:flex flex-col shrink-0 ss-sidebar h-screen overflow-y-auto overflow-x-hidden", textSize === "large" && "text-large")}
+          className={cn("hidden md:flex flex-col shrink-0 ss-sidebar h-screen overflow-y-auto overflow-x-hidden", )}
           style={{ width, ...sidebarScroll }}
         >
           {sidebarContent}
@@ -332,7 +340,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
             onClick={onClose}
           />
           <aside
-            className={cn("absolute left-0 top-0 h-full w-56 flex flex-col ss-sidebar overflow-y-auto overflow-x-hidden", textSize === "large" && "text-large")}
+            className={cn("absolute left-0 top-0 h-full w-56 flex flex-col ss-sidebar overflow-y-auto overflow-x-hidden", )}
             style={sidebarScroll}
           >
             {sidebarContent}

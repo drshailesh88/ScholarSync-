@@ -22,6 +22,7 @@ import {
 } from "@phosphor-icons/react";
 import { universalDocumentSearch } from "@/lib/actions/hashtags";
 import type { DocumentSearchResult } from "@/lib/actions/hashtags";
+import { useUIScale } from "@/hooks/use-ui-scale";
 
 const navigationCommands = [
   { label: "Dashboard", href: "/dashboard", icon: House },
@@ -56,6 +57,7 @@ function formatDocumentType(type: string): string {
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const { scale, cycleScale } = useUIScale();
   const [searchResults, setSearchResults] = useState<DocumentSearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const router = useRouter();
@@ -268,6 +270,14 @@ export function CommandPalette() {
                   <Moon size={18} className="text-ink-muted" />
                 )}
                 Toggle Theme
+              </Command.Item>
+              <Command.Item
+                value="UI Scale Zoom"
+                onSelect={() => runCommand(() => cycleScale())}
+                className={itemClass}
+              >
+                <MagnifyingGlass size={18} className="text-ink-muted" />
+                UI Scale ({scale === "default" ? "100%" : scale === "large" ? "110%" : "120%"})
               </Command.Item>
               <Command.Item
                 value="New Project"

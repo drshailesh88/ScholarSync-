@@ -40,6 +40,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     setBuddyWidth((w) => Math.min(maxWidth, Math.max(BUDDY_MIN, w + delta)));
   }, []);
 
+  // Apply persisted UI zoom on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("scholarsync_ui_scale");
+    const scaleMap: Record<string, number> = { default: 1.0, large: 1.1, larger: 1.2 };
+    const zoom = scaleMap[stored ?? ""] ?? 1.0;
+    document.documentElement.style.zoom = String(zoom);
+  }, []);
+
   useEffect(() => {
     const handler = () => setSidebarOpen(true);
     window.addEventListener("scholarsync:toggle-sidebar", handler);
