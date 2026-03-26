@@ -29,7 +29,7 @@ const scopeLabels: Record<Scope, string> = {
 };
 
 const scopeDescriptions: Record<Scope, string> = {
-  open: "Not limited to your papers",
+  open: "General research assistant",
   papers: "Cited papers in this document",
   library: "All imported papers",
 };
