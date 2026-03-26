@@ -5,6 +5,8 @@ import { PaperPlaneRight, CaretDown } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
 import { useWorkbenchStore } from "@/stores/workbench-store";
+import { useReferenceStore } from "@/stores/reference-store";
+import { getUserPapers } from "@/lib/actions/papers";
 
 type Mode = "ask" | "draft" | "learn";
 type Intensity = "focus" | "collaborate" | "accelerate";
@@ -14,6 +16,12 @@ interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
+  /** Provenance: how many papers grounded the response */
+  groundedIn?: number;
+  /** Provenance: scope used for this response */
+  responseScope?: Scope;
+  /** Whether RAG found no support */
+  noSupport?: boolean;
 }
 
 const modeTabs: { mode: Mode; label: string }[] = [
@@ -34,11 +42,24 @@ const scopeDescriptions: Record<Scope, string> = {
   library: "All imported papers",
 };
 
+/** Extract numeric paper IDs from reference store (refs created via paperToReference have id = "ref-paper-{id}") */
+function extractPaperIds(references: Map<string, unknown>): number[] {
+  const ids: number[] = [];
+  for (const refId of references.keys()) {
+    const match = refId.match(/^ref-paper-(\d+)$/);
+    if (match) {
+      ids.push(Number(match[1]));
+    }
+  }
+  return ids;
+}
+
 export function WorkbenchAssistant() {
   const mode = useWorkbenchStore((s) => s.activeAssistantMode);
   const setActiveAssistantMode = useWorkbenchStore(
     (s) => s.setActiveAssistantMode
   );
+  const references = useReferenceStore((s) => s.references);
   const [intensity, setIntensity] = useState<Intensity>("collaborate");
   const [scope, setScope] = useState<Scope>("open");
   const [showScopeDropdown, setShowScopeDropdown] = useState(false);
@@ -73,6 +94,22 @@ export function WorkbenchAssistant() {
     setInput("");
   }, [mode]);
 
+  /** Resolve paper IDs based on current scope */
+  const resolvePaperIds = useCallback(async (): Promise<number[]> => {
+    if (scope === "papers") {
+      return extractPaperIds(references);
+    }
+    if (scope === "library") {
+      try {
+        const allPapers = await getUserPapers();
+        return allPapers.map((p) => p.id);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  }, [scope, references]);
+
   const sendMessage = useCallback(async () => {
     if (!input.trim() || isLoading) return;
 
@@ -86,6 +123,8 @@ export function WorkbenchAssistant() {
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
+
+    const currentScope = scope;
 
     try {
       if (!conversationIdRef.current) {
@@ -103,27 +142,67 @@ export function WorkbenchAssistant() {
         content,
       }).catch(() => {});
 
-      const apiMode = mode === "learn" ? "learn" : "draft";
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: newMessages.map((message) => ({
-            role: message.role,
-            content: message.content,
-          })),
-          mode: apiMode,
-          ...(mode === "draft" ? { draftContext: { intensity } } : {}),
-          ...(mode === "learn"
-            ? {
-                guideContext: {
-                  documentType: "original_article",
-                  stage: "writing",
-                },
-              }
-            : {}),
-        }),
-      });
+      let res: Response;
+
+      if (currentScope === "open") {
+        // Open scope — use /api/chat as before
+        const apiMode = mode === "learn" ? "learn" : "draft";
+        res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: newMessages.map((message) => ({
+              role: message.role,
+              content: message.content,
+            })),
+            mode: apiMode,
+            ...(mode === "draft" ? { draftContext: { intensity } } : {}),
+            ...(mode === "learn"
+              ? {
+                  guideContext: {
+                    documentType: "original_article",
+                    stage: "writing",
+                  },
+                }
+              : {}),
+          }),
+        });
+      } else {
+        // Papers or Library scope — use /api/rag-chat
+        const paperIds = await resolvePaperIds();
+
+        if (paperIds.length === 0) {
+          // No papers available for this scope
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `err_${Date.now()}`,
+              role: "assistant",
+              content:
+                currentScope === "papers"
+                  ? "No cited papers found in this document. Add citations first, or switch to Library or Open scope."
+                  : "No papers found in your library. Import papers first, or switch to Open scope.",
+              noSupport: true,
+              responseScope: currentScope,
+            },
+          ]);
+          setIsLoading(false);
+          return;
+        }
+
+        res = await fetch("/api/rag-chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: newMessages.map((message) => ({
+              role: message.role,
+              content: message.content,
+            })),
+            paperIds,
+            mode: mode === "learn" ? "learn" : "notebook",
+          }),
+        });
+      }
 
       if (!res.ok) {
         const errData = await res
@@ -141,6 +220,20 @@ export function WorkbenchAssistant() {
         return;
       }
 
+      // Parse provenance from RAG response headers
+      let groundedCount = 0;
+      if (currentScope !== "open") {
+        try {
+          const coverageHeader = res.headers.get("X-RAG-Coverage");
+          if (coverageHeader) {
+            const coverage = JSON.parse(coverageHeader);
+            groundedCount = coverage.papersUsed ?? 0;
+          }
+        } catch {
+          // Coverage header parsing failed — not critical
+        }
+      }
+
       const reader = res.body?.getReader();
       if (!reader) {
         setIsLoading(false);
@@ -151,6 +244,8 @@ export function WorkbenchAssistant() {
         id: `msg_${Date.now() + 1}`,
         role: "assistant",
         content: "",
+        responseScope: currentScope,
+        groundedIn: currentScope !== "open" ? groundedCount : undefined,
       };
       setMessages((prev) => [...prev, assistantMsg]);
 
@@ -182,6 +277,18 @@ export function WorkbenchAssistant() {
         }
       }
 
+      // Check if RAG returned empty/no-support response
+      if (currentScope !== "open" && groundedCount === 0 && fullText) {
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...updated[updated.length - 1],
+            noSupport: true,
+          };
+          return updated;
+        });
+      }
+
       if (conversationIdRef.current && fullText) {
         addMessage({
           conversation_id: conversationIdRef.current,
@@ -201,7 +308,7 @@ export function WorkbenchAssistant() {
     } finally {
       setIsLoading(false);
     }
-  }, [input, intensity, isLoading, messages, mode]);
+  }, [input, intensity, isLoading, messages, mode, scope, resolvePaperIds]);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -244,6 +351,56 @@ export function WorkbenchAssistant() {
       papers: "Let's learn from your cited papers.",
       library: "Let's explore using your full library.",
     },
+  };
+
+  /** Provenance badge for assistant messages */
+  const ProvenanceBadge = ({ msg }: { msg: ChatMessage }) => {
+    if (msg.role !== "assistant") return null;
+    if (!msg.responseScope) return null;
+
+    if (msg.responseScope === "open") {
+      return (
+        <span className="mb-1 inline-block text-[10px] text-ink/40">
+          Open response
+        </span>
+      );
+    }
+
+    if (msg.noSupport) {
+      return (
+        <div className="mb-1.5">
+          <span className="inline-block text-[10px] text-amber-600 dark:text-amber-400">
+            No support found in {msg.responseScope === "papers" ? "cited papers" : "library"}
+          </span>
+          <div className="mt-1 flex gap-1.5">
+            {msg.responseScope === "papers" && (
+              <button
+                onClick={() => setScope("library")}
+                className="rounded-md bg-surface-raised px-2 py-0.5 text-[10px] text-ink/60 transition-colors hover:text-ink"
+              >
+                Search library
+              </button>
+            )}
+            <button
+              onClick={() => setScope("open")}
+              className="rounded-md bg-surface-raised px-2 py-0.5 text-[10px] text-ink/60 transition-colors hover:text-ink"
+            >
+              Answer openly
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (msg.groundedIn && msg.groundedIn > 0) {
+      return (
+        <span className="mb-1 inline-block text-[10px] text-emerald-600 dark:text-emerald-400">
+          Grounded in {msg.groundedIn} {msg.groundedIn === 1 ? "paper" : "papers"}
+        </span>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -318,31 +475,33 @@ export function WorkbenchAssistant() {
         )}
 
         {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={cn(
-              "max-w-[88%] px-3.5 py-2.5 text-[13px] leading-relaxed",
-              msg.role === "user"
-                ? "ml-auto rounded-[12px] rounded-br-[4px] bg-brand text-white"
-                : "rounded-[12px] rounded-bl-[4px] bg-black/[0.03] text-ink"
-            )}
-          >
-            {msg.content ||
-              (isLoading && msg.role === "assistant" ? (
-                <span className="inline-flex gap-1">
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/60" />
-                  <span
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/60"
-                    style={{ animationDelay: "150ms" }}
-                  />
-                  <span
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/60"
-                    style={{ animationDelay: "300ms" }}
-                  />
-                </span>
-              ) : (
-                ""
-              ))}
+          <div key={msg.id}>
+            {msg.role === "assistant" && <ProvenanceBadge msg={msg} />}
+            <div
+              className={cn(
+                "max-w-[88%] px-3.5 py-2.5 text-[13px] leading-relaxed",
+                msg.role === "user"
+                  ? "ml-auto rounded-[12px] rounded-br-[4px] bg-brand text-white"
+                  : "rounded-[12px] rounded-bl-[4px] bg-black/[0.03] text-ink"
+              )}
+            >
+              {msg.content ||
+                (isLoading && msg.role === "assistant" ? (
+                  <span className="inline-flex gap-1">
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/60" />
+                    <span
+                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/60"
+                      style={{ animationDelay: "150ms" }}
+                    />
+                    <span
+                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-muted/60"
+                      style={{ animationDelay: "300ms" }}
+                    />
+                  </span>
+                ) : (
+                  ""
+                ))}
+            </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
