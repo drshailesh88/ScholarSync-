@@ -17,6 +17,11 @@ import { KeyboardShortcutsDialog } from "@/components/editor/KeyboardShortcutsDi
 import { CitationDialog } from "@/components/citations/citation-dialog";
 import { useReferenceStore } from "@/stores/reference-store";
 import { getProjectPapersForCitation } from "@/lib/actions/papers";
+import {
+  toggleDocumentMark,
+  updateDocumentBlockMarks,
+} from "@/lib/actions/documents";
+import { getUserUsageStats } from "@/lib/actions/user";
 import { useStudioDocument } from "@/hooks/use-studio-document";
 import { paperToReference } from "@/lib/citations/paper-to-reference";
 import {
@@ -28,6 +33,7 @@ import type { Reference } from "@/types/citation";
 import { useResearchStore } from "@/stores/research-store";
 import { Workbench } from "@/components/studio/Workbench";
 import { useWorkbenchStore } from "@/stores/workbench-store";
+import { useEditorStore } from "@/stores/editor-store";
 import { BottomFormattingBar } from "@/components/editor/BottomFormattingBar";
 
 interface ResearchCitationDetail {
@@ -38,6 +44,8 @@ interface ResearchCitationDetail {
   doi?: string;
   pmid?: string;
 }
+
+type UsageStats = Awaited<ReturnType<typeof getUserUsageStats>> | null;
 
 function toCitationAuthors(authors?: string[]) {
   if (!authors?.length) return [];
@@ -103,6 +111,27 @@ function buildResearchReference(
   };
 }
 
+function scanBlockMarks(
+  content: unknown
+): { hasImportant: boolean; hasNote: boolean } {
+  let hasImportant = false;
+  let hasNote = false;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- recursive JSON walker
+  function walk(node: any) {
+    if (node?.attrs?.blockMark === "important" || node?.attrs?.blockMark === "both") {
+      hasImportant = true;
+    }
+    if (node?.attrs?.blockMark === "note" || node?.attrs?.blockMark === "both") {
+      hasNote = true;
+    }
+    if (node?.content) node.content.forEach(walk);
+  }
+
+  walk(content);
+  return { hasImportant, hasNote };
+}
+
 export default function StudioPage() {
   return (
     <Suspense>
@@ -124,6 +153,8 @@ function StudioContent() {
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [showFormattingBar, setShowFormattingBar] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
+  const [docMarksOverride, setDocMarks] = useState<{ important?: boolean; note?: boolean } | null>(null);
+  const [usageStats, setUsageStats] = useState<UsageStats>(null);
   const [wordCountCard, setWordCountCard] = useState<{
     total: number;
     sections: { name: string; words: number }[];
@@ -153,6 +184,12 @@ function StudioContent() {
   );
   const moreMenuRef = useRef<HTMLDivElement | null>(null);
   const wordCountCardRef = useRef<HTMLDivElement | null>(null);
+  const [pendingBlockMarks, setPendingBlockMarks] = useState<{
+    documentId: number;
+    hasImportantBlocks: boolean;
+    hasNoteBlocks: boolean;
+  } | null>(null);
+  const [isSyncingBlockMarks, setIsSyncingBlockMarks] = useState(false);
 
   // Citation system state
   const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
@@ -210,11 +247,13 @@ function StudioContent() {
     lastSavedAt,
     isLoading: docLoading,
     error: docError,
-    handleEditorUpdate,
+    handleEditorUpdate: persistEditorUpdate,
     projects: _userProjects,
     selectedProjectId: _selectedProjectId,
     selectProject: _selectProject,
   } = useStudioDocument(initialProjectId);
+
+  const docMarks = docMarksOverride ?? (studioDoc as ({ marks?: { important?: boolean; note?: boolean } } & typeof studioDoc) | null)?.marks ?? {};
 
   useEffect(() => {
     clearReferences();
@@ -251,6 +290,23 @@ function StudioContent() {
       canceled = true;
     };
   }, [addReferences, clearReferences, initialContent, studioDoc]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    getUserUsageStats()
+      .then((stats) => {
+        if (cancelled) return;
+        setUsageStats(stats);
+      })
+      .catch((error) => {
+        console.error("Failed to load usage stats:", error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openCitationDialogWithSelection = useCallback(() => {
     const editor = editorRef.current;
@@ -321,10 +377,30 @@ function StudioContent() {
         return;
       }
 
+      if (e.shiftKey && key === "p") {
+        e.preventDefault();
+        workbench.setActiveSourcesTab("library");
+        workbench.toggle("sources");
+        return;
+      }
+
       if (e.shiftKey && key === "r") {
         e.preventDefault();
         workbench.setActiveSourcesTab("cited");
         workbench.open("sources");
+        return;
+      }
+
+      if (!e.shiftKey && key === "/") {
+        e.preventDefault();
+        workbench.setActiveReviewTab("comments");
+        workbench.toggle("review");
+        return;
+      }
+
+      if (e.shiftKey && key === "o") {
+        e.preventDefault();
+        useEditorStore.getState().toggleOutline();
       }
     };
     document.addEventListener("keydown", handler);
@@ -545,6 +621,66 @@ function StudioContent() {
     setEditorInstance(editor);
   }, []);
 
+  const handleEditorUpdate = useCallback(
+    (data: {
+      editor_content: Record<string, unknown>;
+      plain_text_content: string;
+      word_count: number;
+    }) => {
+      persistEditorUpdate(data);
+
+      if (!studioDoc?.id) return;
+
+      const { hasImportant, hasNote } = scanBlockMarks(data.editor_content);
+      setPendingBlockMarks({
+        documentId: studioDoc.id,
+        hasImportantBlocks: hasImportant,
+        hasNoteBlocks: hasNote,
+      });
+    },
+    [persistEditorUpdate, studioDoc]
+  );
+
+  useEffect(() => {
+    if (
+      saveStatus !== "saved" ||
+      !pendingBlockMarks ||
+      pendingBlockMarks.documentId !== studioDoc?.id ||
+      isSyncingBlockMarks
+    ) {
+      return;
+    }
+
+    let cancelled = false;
+    const currentPending = pendingBlockMarks;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- guarding concurrent syncs
+    setIsSyncingBlockMarks(true);
+
+    updateDocumentBlockMarks(
+      currentPending.documentId,
+      currentPending.hasImportantBlocks,
+      currentPending.hasNoteBlocks
+    )
+      .then(() => {
+        if (cancelled) return;
+        setPendingBlockMarks((value) =>
+          value === currentPending ? null : value
+        );
+      })
+      .catch((error) => {
+        console.error("Failed to sync document block marks:", error);
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setIsSyncingBlockMarks(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isSyncingBlockMarks, pendingBlockMarks, saveStatus, studioDoc?.id]);
+
   // Mark status as unsaved immediately on keystroke (before debounce fires)
   const handleDirty = useCallback(() => {
     markUnsaved();
@@ -679,58 +815,17 @@ function StudioContent() {
             <List size={18} />
           </button>
           <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
+          {(docMarks.important || docMarks.note) && (
+            <div className="flex items-center gap-0.5 ml-1">
+              {docMarks.important && <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />}
+              {docMarks.note && <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />}
+            </div>
+          )}
           {citationNotice && (
             <span className="text-[10px] font-medium text-emerald-500 shrink-0">
               {citationNotice}
             </span>
           )}
-          <div className="relative" ref={wordCountCardRef}>
-            <button
-              onClick={showWordCountBreakdown}
-              className="text-[11px] text-ink-muted hover:text-ink transition-colors"
-              title="Click for section breakdown"
-            >
-              {editorInstance && !editorInstance.isDestroyed
-                ? `${getDocumentWordCount(editorInstance.state.doc)} words`
-                : ""}
-            </button>
-            {wordCountCard && (
-              <div className="absolute left-0 top-full mt-2 w-64 rounded-xl bg-surface border border-border shadow-xl z-50 p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-ink">
-                    Word Count
-                  </span>
-                  <button
-                    onClick={() => setWordCountCard(null)}
-                    className="text-ink-muted hover:text-ink transition-colors"
-                    aria-label="Close word count"
-                  >
-                    <X size={12} />
-                  </button>
-                </div>
-                <div className="text-2xl font-bold text-ink mb-3 tabular-nums">
-                  {wordCountCard.total.toLocaleString()}
-                </div>
-                {wordCountCard.sections.length > 0 && (
-                  <div className="space-y-1.5 border-t border-border-subtle pt-2">
-                    {wordCountCard.sections.map((section, index) => (
-                      <div
-                        key={`${section.name}-${index}`}
-                        className="flex items-center justify-between"
-                      >
-                        <span className="text-[11px] text-ink-muted truncate mr-2">
-                          {section.name}
-                        </span>
-                        <span className="text-[11px] font-medium text-ink tabular-nums">
-                          {section.words}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           <button
@@ -790,7 +885,44 @@ function StudioContent() {
             <span className="italic mx-0.5">I</span>
             <span className="underline">U</span>
           </button>
-          <div className="relative" ref={moreMenuRef}>
+          <div className="relative" ref={wordCountCardRef}>
+            {wordCountCard && (
+              <div className="absolute right-0 top-full mt-2 w-64 rounded-xl bg-surface border border-border shadow-xl z-50 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold text-ink">
+                    Word Count
+                  </span>
+                  <button
+                    onClick={() => setWordCountCard(null)}
+                    className="text-ink-muted hover:text-ink transition-colors"
+                    aria-label="Close word count"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+                <div className="text-2xl font-bold text-ink mb-3 tabular-nums">
+                  {wordCountCard.total.toLocaleString()}
+                </div>
+                {wordCountCard.sections.length > 0 && (
+                  <div className="space-y-1.5 border-t border-border-subtle pt-2">
+                    {wordCountCard.sections.map((section, index) => (
+                      <div
+                        key={`${section.name}-${index}`}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-[11px] text-ink-muted truncate mr-2">
+                          {section.name}
+                        </span>
+                        <span className="text-[11px] font-medium text-ink tabular-nums">
+                          {section.words}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="relative" ref={moreMenuRef}>
             <button
               onClick={() => {
                 setShowMoreMenu((value) => !value);
@@ -813,6 +945,39 @@ function StudioContent() {
                   Insert Citation
                 </button>
                 <button
+                  onClick={async () => {
+                    if (!studioDoc?.id) return;
+                    const updated = await toggleDocumentMark(
+                      studioDoc.id,
+                      "important"
+                    );
+                    setDocMarks(updated);
+                    setShowMoreMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors flex items-center justify-between"
+                >
+                  <span>
+                    {docMarks.important ? "Remove Important" : "Mark as Important"}
+                  </span>
+                  <span className="h-2 w-2 rounded-full bg-amber-500" />
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!studioDoc?.id) return;
+                    const updated = await toggleDocumentMark(
+                      studioDoc.id,
+                      "note"
+                    );
+                    setDocMarks(updated);
+                    setShowMoreMenu(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors flex items-center justify-between"
+                >
+                  <span>{docMarks.note ? "Remove Note" : "Mark as Note"}</span>
+                  <span className="h-2 w-2 rounded-full bg-blue-500" />
+                </button>
+                <div className="border-t border-border-subtle my-1" />
+                <button
                   onClick={handleExportPDF}
                   className="w-full text-left px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
                 >
@@ -825,6 +990,20 @@ function StudioContent() {
                   Export as Word
                 </button>
                 <div className="border-t border-border-subtle my-1" />
+                <div
+                  onClick={showWordCountBreakdown}
+                  className="px-3 py-2 text-[10px] text-ink-muted cursor-pointer hover:bg-surface-raised transition-colors"
+                >
+                  {editorInstance && !editorInstance.isDestroyed
+                    ? `${getDocumentWordCount(editorInstance.state.doc)} words`
+                    : "0 words"}
+                </div>
+                <div className="px-3 py-2 text-[10px] text-ink-muted">
+                  {usageStats
+                    ? `${usageStats.tokens_used?.toLocaleString()} / ${usageStats.tokens_limit?.toLocaleString()} credits`
+                    : ""}
+                </div>
+                <div className="border-t border-border-subtle my-1" />
                 <button
                   onClick={() => {
                     setShowMoreMenu(false);
@@ -836,6 +1015,7 @@ function StudioContent() {
                 </button>
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
