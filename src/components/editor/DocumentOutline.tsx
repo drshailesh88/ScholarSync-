@@ -22,8 +22,9 @@ export function DocumentOutline({ editor }: DocumentOutlineProps) {
         node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
       target?.scrollIntoView({ behavior: "smooth", block: "start" });
       editor.chain().focus().setTextSelection(pos + 1).run();
+      toggleOutline();
     },
-    [editor]
+    [editor, toggleOutline]
   );
 
   const headingItems = outline.filter((item) => item.type === "heading");
