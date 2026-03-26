@@ -33,6 +33,9 @@ import { SelectionToolbar } from "./SelectionToolbar";
 import { LinkPopover } from "./LinkPopover";
 import { SlashCommandsExtension } from "./extensions/slash-commands";
 import { createSlashMenuRenderer } from "./SlashMenu";
+import { HashtagNode } from "./extensions/hashtag-node";
+import { HashtagSuggestionExtension } from "./extensions/hashtag-suggestion";
+import { createHashtagMenuRenderer } from "./HashtagMenu";
 import { Footnote } from "./extensions/footnote-node";
 import { BlockMarkExtension } from "./extensions/block-mark";
 import { FootnoteSection } from "./FootnoteSection";
@@ -187,6 +190,12 @@ export function TiptapEditor({
       SlashCommandsExtension.configure({
         suggestion: {
           render: createSlashMenuRenderer,
+        },
+      }),
+      HashtagNode,
+      HashtagSuggestionExtension.configure({
+        suggestion: {
+          render: createHashtagMenuRenderer,
         },
       }),
       OutlinePlugin.configure({

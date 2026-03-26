@@ -7,6 +7,7 @@ import {
   updateDocumentTitle,
   listUserProjects,
 } from "@/lib/actions/documents";
+import { syncDocumentHashtags } from "@/lib/actions/hashtags";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -208,6 +209,15 @@ export function useStudioDocument(
 
           setSaveStatus("saved");
           setLastSavedAt(result.updatedAt);
+
+          // Fire-and-forget hashtag sync
+          if (doc.id && (activeSectionId || result.sectionId)) {
+            syncDocumentHashtags(
+              doc.id,
+              activeSectionId || result.sectionId!
+            ).catch(console.error);
+          }
+
           // Update activeSectionId if it was auto-determined
           if (!activeSectionId && result.sectionId) {
             setActiveSectionId(result.sectionId);

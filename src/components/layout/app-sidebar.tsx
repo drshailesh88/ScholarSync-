@@ -168,17 +168,30 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
           <div className="ss-logo-mark">S</div>
           <span className="ss-logo-text">ScholarSync</span>
         </Link>
-        {onClose && (
+        <div className="flex items-center gap-1.5">
           <button
-            onClick={onClose}
-            className={cn(
-              "p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors",
-              !mobileOnly && "md:hidden"
-            )}
+            onClick={() =>
+              window.dispatchEvent(
+                new CustomEvent("scholarsync:open-command-palette")
+              )
+            }
+            className="hidden md:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/[0.08] text-[10px] text-white/30 font-mono hover:text-white/50 hover:bg-white/[0.1] transition-colors"
+            title="Search (⌘K)"
           >
-            <X size={18} />
+            ⌘K
           </button>
-        )}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className={cn(
+                "p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors",
+                !mobileOnly && "md:hidden"
+              )}
+            >
+              <X size={18} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Nav area — grows to fill space */}

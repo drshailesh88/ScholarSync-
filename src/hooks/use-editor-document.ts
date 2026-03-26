@@ -7,6 +7,7 @@ import {
   autoSaveVersion,
   getDocument,
 } from "@/lib/actions/documents";
+import { syncDocumentHashtags } from "@/lib/actions/hashtags";
 import { useEditorStore } from "@/stores/editor-store";
 import { enqueueSave, processQueue } from "@/lib/editor/offline-queue";
 import { withRetry } from "@/lib/editor/save-retry";
@@ -349,6 +350,13 @@ export function useEditorDocument(
           setSaveStatus("saved");
           setLastSavedAt(new Date());
           setError(null);
+
+          // Fire-and-forget hashtag sync
+          if (dbDocumentId && currentSectionIdRef.current) {
+            syncDocumentHashtags(dbDocumentId, currentSectionIdRef.current).catch(
+              console.error
+            );
+          }
 
           // Clear error if we were in offline mode
           if (loadedFromLocalStorage && error) {

@@ -26,6 +26,9 @@ import { TaskList } from "@tiptap/extension-task-list";
 import { TaskItem } from "@tiptap/extension-task-item";
 
 import { SlashCommandsExtension } from "./extensions/slash-commands";
+import { HashtagNode } from "./extensions/hashtag-node";
+import { HashtagSuggestionExtension } from "./extensions/hashtag-suggestion";
+import { createHashtagMenuRenderer } from "./HashtagMenu";
 import { OutlinePlugin } from "./extensions/outline-plugin";
 import { Footnote } from "./extensions/footnote-node";
 import { AcademicKeyboardShortcuts } from "./extensions/keyboard-shortcuts";
@@ -168,6 +171,12 @@ export function AcademicEditor({
       SlashCommandsExtension.configure({
         suggestion: {
           render: createSlashMenuRenderer,
+        },
+      }),
+      HashtagNode,
+      HashtagSuggestionExtension.configure({
+        suggestion: {
+          render: createHashtagMenuRenderer,
         },
       }),
       OutlinePlugin.configure({

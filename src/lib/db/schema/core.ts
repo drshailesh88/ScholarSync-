@@ -9,6 +9,7 @@ import {
   date,
   jsonb,
   index,
+  uniqueIndex,
   bigint,
   unique,
   type AnyPgColumn,
@@ -558,3 +559,34 @@ export const snowballSessions = pgTable("snowball_sessions", {
   started_at: timestamp("started_at").defaultNow(),
   completed_at: timestamp("completed_at"),
 });
+
+// ============================================================
+// 17. document_hashtags
+// ============================================================
+export const documentHashtags = pgTable(
+  "document_hashtags",
+  {
+    id: serial("id").primaryKey(),
+    document_id: integer("document_id")
+      .notNull()
+      .references(() => synthesisDocuments.id, { onDelete: "cascade" }),
+    section_id: integer("section_id")
+      .notNull()
+      .references(() => synthesisSections.id, { onDelete: "cascade" }),
+    tag: text("tag").notNull(),
+    user_id: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    created_at: timestamp("created_at").defaultNow(),
+  },
+  (table) => [
+    index("idx_doc_hashtags_user").on(table.user_id),
+    index("idx_doc_hashtags_tag").on(table.tag),
+    index("idx_doc_hashtags_doc").on(table.document_id),
+    uniqueIndex("idx_doc_hashtags_unique").on(
+      table.document_id,
+      table.section_id,
+      table.tag
+    ),
+  ]
+);
