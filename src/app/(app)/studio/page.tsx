@@ -9,6 +9,7 @@ import {
   DotsThree,
   List,
   X,
+  Compass,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { SaveIndicator } from "@/components/studio/SaveIndicator";
@@ -148,6 +149,9 @@ function StudioContent() {
   const projectParam = searchParams.get("projectId");
   const initialProjectId = projectParam ? Number(projectParam) : null;
   const workbench = useWorkbenchStore();
+  const outlineVisible = useEditorStore((s) => s.outlineVisible);
+  const toggleOutline = useEditorStore((s) => s.toggleOutline);
+  const setOutlineVisible = useEditorStore((s) => s.setOutlineVisible);
 
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
@@ -806,6 +810,7 @@ function StudioContent() {
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={() => {
+              setOutlineVisible(false);
               window.dispatchEvent(new CustomEvent("scholarsync:toggle-sidebar"));
             }}
             className="p-1.5 rounded-md text-ink/30 hover:text-ink/70 transition-colors"
@@ -813,6 +818,19 @@ function StudioContent() {
             aria-label="Open navigation"
           >
             <List size={18} />
+          </button>
+          <button
+            onClick={toggleOutline}
+            className={cn(
+              "p-1.5 rounded-md transition-colors",
+              outlineVisible
+                ? "text-ink/70"
+                : "text-ink/30 hover:text-ink/70"
+            )}
+            title="Document outline (Cmd+Shift+O)"
+            aria-label="Toggle document outline"
+          >
+            <Compass size={16} />
           </button>
           <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
           {(docMarks.important || docMarks.note) && (
