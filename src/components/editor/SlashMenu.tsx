@@ -113,7 +113,7 @@ export const SlashMenuList = forwardRef<SlashMenuListRef, SlashMenuListProps>(
 
     if (items.length === 0) {
       return (
-        <div className="bg-surface border border-border rounded-xl shadow-lg dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)] p-3 w-80">
+        <div className="bg-surface border border-border rounded-xl shadow-lg dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] dark:border-white/[0.12] p-3 w-80">
           <p className="text-xs text-ink-muted text-center py-4">
             No commands found
           </p>
@@ -124,7 +124,7 @@ export const SlashMenuList = forwardRef<SlashMenuListRef, SlashMenuListProps>(
     return (
       <div
         ref={scrollRef}
-        className="bg-surface border border-border rounded-xl shadow-lg dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)] p-1.5 w-80 max-h-[400px] overflow-y-auto"
+        className="bg-surface border border-border rounded-xl shadow-lg dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] dark:border-white/[0.12] p-1.5 w-80 max-h-[400px] overflow-y-auto"
       >
         {items.map((item, idx) => {
           const showCategory = idx === 0 || items[idx - 1]?.category !== item.category;

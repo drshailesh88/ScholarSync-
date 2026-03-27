@@ -181,7 +181,7 @@ export function SelectionToolbar({ editor }: SelectionToolbarProps) {
         transform: "translate(-50%, -100%)",
       }}
     >
-      <div className="ss-selection-toolbar flex items-center gap-0.5 bg-surface border border-border rounded-lg shadow-lg px-1.5 py-1 dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+      <div className="ss-selection-toolbar flex items-center gap-0.5 bg-surface border border-border rounded-lg shadow-lg px-1.5 py-1 dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] dark:border-white/[0.12]">
         {/* Style dropdown */}
         <div className="relative">
           <button

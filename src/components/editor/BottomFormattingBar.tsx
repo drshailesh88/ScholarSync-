@@ -41,7 +41,7 @@ export function BottomFormattingBar({ editor }: BottomFormattingBarProps) {
 
   return (
     <div className="flex justify-center pb-3 px-4">
-      <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-raised/80 dark:bg-[#252422] backdrop-blur-sm shadow-sm border border-border-subtle">
+      <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-raised/80 dark:bg-surface-raised backdrop-blur-sm shadow-sm border border-border-subtle">
         {/* Heading selector */}
         <div className="relative">
           <button

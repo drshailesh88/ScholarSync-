@@ -68,22 +68,22 @@ const accentColors: Record<
 > = {
   sky: {
     bg: "bg-sky-500/10",
-    text: "text-sky-400",
+    text: "text-sky-500 dark:text-sky-300",
     glow: "hover:shadow-[0_0_40px_rgba(56,189,248,0.15)] hover:border-sky-500/30",
   },
   indigo: {
     bg: "bg-indigo-500/10",
-    text: "text-indigo-400",
+    text: "text-indigo-500 dark:text-indigo-300",
     glow: "hover:shadow-[0_0_40px_rgba(99,102,241,0.15)] hover:border-indigo-500/30",
   },
   emerald: {
     bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
+    text: "text-emerald-500 dark:text-emerald-300",
     glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/30",
   },
   amber: {
     bg: "bg-amber-500/10",
-    text: "text-amber-400",
+    text: "text-amber-500 dark:text-amber-300",
     glow: "hover:shadow-[0_0_40px_rgba(245,158,11,0.15)] hover:border-amber-500/30",
   },
 };
