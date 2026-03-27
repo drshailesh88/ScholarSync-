@@ -26,7 +26,10 @@
     "qa:run:module": "npx tsx qa/controller.ts --module",
     "qa:run:spec": "npx tsx qa/controller.ts --spec",
     "qa:report": "npx tsx qa/reporter.ts",
-    "qa:dry-run": "npx tsx qa/controller.ts --dry-run"
+    "qa:dry-run": "npx tsx qa/controller.ts --dry-run",
+    "ux:score": "node qa/ux-score.mjs",
+    "ux:score:zone": "node qa/ux-score.mjs --zone",
+    "ux:screenshot": "npx playwright test qa/ux-screenshot.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
