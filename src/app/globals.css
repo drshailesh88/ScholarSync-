@@ -730,6 +730,62 @@ body {
   .academic-editor-content h4 { font-size: 11pt; }
 }
 
+/* ===== Systematic Review Panel System ===== */
+
+/* sr-panel — standard container for SR assessment panels */
+.sr-panel {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+/* sr-content — inner content area with consistent spacing */
+.sr-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Traffic light indicator system for SR domain assessments */
+.sr-traffic-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.sr-traffic-light:hover {
+  transform: scale(1.15);
+}
+
+.sr-traffic-light--green {
+  background: #10b981;
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.35);
+}
+.sr-traffic-light--amber {
+  background: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.35);
+}
+.sr-traffic-light--orange {
+  background: #f97316;
+  border-color: rgba(249, 115, 22, 0.3);
+  box-shadow: 0 0 6px rgba(249, 115, 22, 0.35);
+}
+.sr-traffic-light--red {
+  background: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.35);
+}
+
 /* Hashtag inline tags */
 .hashtag-tag {
   background: rgba(99, 102, 241, 0.15);

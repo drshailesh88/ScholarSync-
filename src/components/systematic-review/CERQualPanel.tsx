@@ -12,9 +12,9 @@ import {
   CaretDown,
   CaretRight,
   Warning,
+  ArrowsClockwise,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/components/ui/glass-panel";
 import {
   type CERQualComponent,
   type CERQualConcern,
@@ -62,6 +62,14 @@ const CONCERN_COLORS: Record<CERQualConcern, string> = {
   serious: "bg-red-500/10 text-red-600 border-red-500/20",
 };
 
+/** Map concern level to the traffic light CSS modifier */
+const CONCERN_TRAFFIC_LIGHT: Record<CERQualConcern, string> = {
+  "no concerns": "sr-traffic-light--green",
+  minor: "sr-traffic-light--amber",
+  moderate: "sr-traffic-light--orange",
+  serious: "sr-traffic-light--red",
+};
+
 function makeEmptyComponents(): CERQualComponentAssessment[] {
   return COMPONENTS.map((component) => ({
     component,
@@ -71,8 +79,28 @@ function makeEmptyComponents(): CERQualComponentAssessment[] {
   }));
 }
 
+/** Traffic light dot indicator for a domain concern level */
+function TrafficLight({
+  concern,
+  title,
+}: {
+  concern: CERQualConcern;
+  title?: string;
+}) {
+  return (
+    <span
+      className={cn("sr-traffic-light", CONCERN_TRAFFIC_LIGHT[concern])}
+      title={title || CERQUAL_CONCERN_LABELS[concern]}
+      role="img"
+      aria-label={CERQUAL_CONCERN_LABELS[concern]}
+    />
+  );
+}
+
 export function CERQualPanel({ projectId }: CERQualPanelProps) {
-  const [assessments, setAssessments] = useState<CERQualFindingAssessment[]>([]);
+  const [assessments, setAssessments] = useState<CERQualFindingAssessment[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -208,35 +236,41 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      <GlassPanel className="p-6">
-        <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
-          <Scales weight="duotone" className="text-brand" size={24} />
-          GRADE-CERQual Assessment
-        </h2>
-        <p className="text-sm text-ink-muted mb-4">
-          CERQual provides a transparent framework for assessing confidence in
-          findings from qualitative evidence syntheses. Each finding is assessed
-          across 4 components: Methodological Limitations, Coherence, Adequacy
-          of Data, and Relevance.
-        </p>
+      {/* ── Header Panel ── */}
+      <div className="sr-panel">
+        <div className="sr-content">
+          <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
+            <Scales weight="duotone" className="text-brand" size={24} />
+            GRADE-CERQual Assessment
+          </h2>
+          <p className="text-sm text-ink-muted">
+            CERQual provides a transparent framework for assessing confidence in
+            findings from qualitative evidence syntheses. Each finding is
+            assessed across 4 components: Methodological Limitations, Coherence,
+            Adequacy of Data, and Relevance.
+          </p>
 
-        <div className="grid grid-cols-4 gap-2 mb-6">
-          {COMPONENTS.map((comp) => (
-            <div
-              key={comp}
-              className="text-center p-2 bg-surface-raised rounded border border-border"
-            >
-              <div className="text-xs font-medium text-ink">
-                {CERQUAL_COMPONENT_LABELS[comp]}
+          {/* Domain legend with traffic lights */}
+          <div className="grid grid-cols-4 gap-2">
+            {COMPONENTS.map((comp) => (
+              <div
+                key={comp}
+                className="flex items-center gap-2 p-2 bg-surface-raised rounded border border-border"
+              >
+                <TrafficLight concern="no concerns" />
+                <span className="text-xs font-medium text-ink">
+                  {CERQUAL_COMPONENT_LABELS[comp]}
+                </span>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        <div className="flex items-center gap-4 mb-6">
-          <span className="text-xs text-ink-muted">Confidence levels:</span>
-          {(["high", "moderate", "low", "very low"] as CERQualConfidence[]).map(
-            (level) => (
+          {/* Confidence level legend */}
+          <div className="flex items-center gap-4">
+            <span className="text-xs text-ink-muted">Confidence levels:</span>
+            {(
+              ["high", "moderate", "low", "very low"] as CERQualConfidence[]
+            ).map((level) => (
               <span
                 key={level}
                 className="inline-flex items-center gap-1.5 text-xs"
@@ -250,39 +284,67 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
                   {CERQUAL_CONFIDENCE_LABELS[level]}
                 </span>
               </span>
-            )
-          )}
-        </div>
+            ))}
+          </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
-              "bg-brand text-white hover:bg-brand/90"
-            )}
-          >
-            <Plus weight="bold" size={16} />
-            {showForm ? "Cancel" : "Add Finding"}
-          </button>
+          {/* Traffic light legend */}
+          <div className="flex items-center gap-4">
+            <span className="text-xs text-ink-muted">Domain concerns:</span>
+            {CONCERNS.map((concern) => (
+              <span
+                key={concern}
+                className="inline-flex items-center gap-1.5 text-xs text-ink-muted"
+              >
+                <TrafficLight concern={concern} />
+                {CERQUAL_CONCERN_LABELS[concern]}
+              </span>
+            ))}
+          </div>
 
-          {assessments.length > 0 && (
+          {/* Action buttons */}
+          <div className="flex items-center gap-3 pt-1">
             <button
-              onClick={handleExport}
+              onClick={() => setShowForm(!showForm)}
               className={cn(
                 "flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
-                "bg-surface-raised border border-border text-ink hover:bg-surface-raised/80"
+                "bg-brand text-white hover:bg-brand/90"
               )}
             >
-              <Export weight="bold" size={16} />
-              Export SoQF CSV
+              <Plus weight="bold" size={16} />
+              {showForm ? "Cancel" : "Add Finding"}
             </button>
-          )}
-        </div>
-      </GlassPanel>
 
+            {assessments.length > 0 && (
+              <button
+                onClick={handleExport}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
+                  "bg-surface-raised border border-border text-ink hover:bg-surface-raised/80"
+                )}
+              >
+                <Export weight="bold" size={16} />
+                Export SoQF CSV
+              </button>
+            )}
+
+            <button
+              onClick={loadAssessments}
+              disabled={isLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-ink-muted hover:bg-surface-raised transition-colors"
+            >
+              <ArrowsClockwise
+                className={cn(isLoading && "animate-spin")}
+                size={16}
+              />
+              Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Error state ── */}
       {error && (
-        <GlassPanel className="p-4 border-red-500/30">
+        <div className="sr-panel" style={{ borderColor: "rgba(239,68,68,0.3)" }}>
           <div className="flex items-start gap-2">
             <Warning
               weight="fill"
@@ -299,23 +361,28 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
               </button>
             </div>
           </div>
-        </GlassPanel>
+        </div>
       )}
 
+      {/* ── Success message ── */}
       {successMessage && (
-        <GlassPanel className="p-4 border-emerald-500/30">
+        <div
+          className="sr-panel"
+          style={{ borderColor: "rgba(16,185,129,0.3)" }}
+        >
           <p className="text-sm text-emerald-500">{successMessage}</p>
-        </GlassPanel>
+        </div>
       )}
 
+      {/* ── New Finding Form ── */}
       {showForm && (
-        <GlassPanel className="p-6">
-          <h3 className="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
-            <Plus weight="duotone" className="text-brand" size={18} />
-            New Finding Assessment
-          </h3>
+        <div className="sr-panel">
+          <div className="sr-content">
+            <h3 className="text-sm font-semibold text-ink flex items-center gap-2">
+              <Plus weight="duotone" className="text-brand" size={18} />
+              New Finding Assessment
+            </h3>
 
-          <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-ink-muted mb-1">
@@ -361,6 +428,7 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
               />
             </div>
 
+            {/* Domain assessment cards */}
             <div className="space-y-4">
               {components.map((comp, index) => (
                 <div
@@ -369,11 +437,7 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <Scales
-                        weight="duotone"
-                        className="text-brand"
-                        size={16}
-                      />
+                      <TrafficLight concern={comp.concern} />
                       <span className="text-sm font-medium text-ink">
                         {CERQUAL_COMPONENT_LABELS[comp.component]}
                       </span>
@@ -415,6 +479,7 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
                           }
                           className="sr-only"
                         />
+                        <TrafficLight concern={concern} />
                         {CERQUAL_CONCERN_LABELS[concern]}
                       </label>
                     ))}
@@ -434,6 +499,7 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
               ))}
             </div>
 
+            {/* Supporting text: overall explanation */}
             <div>
               <label className="block text-xs font-medium text-ink-muted mb-1">
                 Overall Explanation (optional)
@@ -448,6 +514,7 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
               />
             </div>
 
+            {/* Auto-calculated overall confidence + actions */}
             <div className="flex items-center justify-between pt-2 border-t border-border">
               <div className="flex items-center gap-2">
                 <Certificate
@@ -498,21 +565,23 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
               </div>
             </div>
           </div>
-        </GlassPanel>
+        </div>
       )}
 
+      {/* ── Loading state ── */}
       {isLoading && assessments.length === 0 && (
-        <GlassPanel className="p-8">
-          <div className="flex flex-col items-center justify-center gap-3 text-ink-muted">
+        <div className="sr-panel">
+          <div className="flex flex-col items-center justify-center gap-3 text-ink-muted py-4">
             <CircleNotch className="animate-spin" size={28} />
             <p className="text-sm">Loading assessments...</p>
           </div>
-        </GlassPanel>
+        </div>
       )}
 
+      {/* ── Empty state ── */}
       {!isLoading && assessments.length === 0 && !showForm && (
-        <GlassPanel className="p-8">
-          <div className="flex flex-col items-center justify-center gap-3 text-ink-muted">
+        <div className="sr-panel">
+          <div className="flex flex-col items-center justify-center gap-3 text-ink-muted py-4">
             <Scales weight="duotone" size={40} className="opacity-40" />
             <p className="text-sm">No CERQual assessments yet.</p>
             <p className="text-xs text-ink-muted/70">
@@ -520,193 +589,233 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
               qualitative review finding.
             </p>
           </div>
-        </GlassPanel>
+        </div>
       )}
 
+      {/* ── Findings list (SoQF Table) with traffic lights ── */}
       {assessments.length > 0 && (
-        <GlassPanel className="p-6">
-          <h3 className="text-sm font-semibold text-ink mb-1 flex items-center gap-2">
-            <Certificate
-              weight="duotone"
-              className="text-emerald-500"
-              size={18}
-            />
-            Summary of Qualitative Findings (SoQF)
-          </h3>
-          <p className="text-xs text-ink-muted mb-4">
-            {assessments.length} finding{assessments.length !== 1 ? "s" : ""}{" "}
-            assessed. Click a row to expand component details.
-          </p>
+        <div className="sr-panel">
+          <div className="sr-content">
+            <div>
+              <h3 className="text-sm font-semibold text-ink mb-1 flex items-center gap-2">
+                <Certificate
+                  weight="duotone"
+                  className="text-emerald-500"
+                  size={18}
+                />
+                Summary of Qualitative Findings (SoQF)
+              </h3>
+              <p className="text-xs text-ink-muted">
+                {assessments.length} finding
+                {assessments.length !== 1 ? "s" : ""} assessed. Click a row to
+                expand component details.
+              </p>
+            </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-2 pr-4 text-ink-muted font-medium w-8" />
-                  <th className="text-left py-2 pr-4 text-ink-muted font-medium">
-                    Finding
-                  </th>
-                  <th className="text-center py-2 px-2 text-ink-muted font-medium">
-                    Studies
-                  </th>
-                  {COMPONENTS.map((comp) => (
-                    <th
-                      key={comp}
-                      className="text-center py-2 px-2 text-ink-muted font-medium"
-                      title={CERQUAL_COMPONENT_LABELS[comp]}
-                    >
-                      {CERQUAL_COMPONENT_LABELS[comp].split(" ")[0]}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2 pr-4 text-ink-muted font-medium w-8" />
+                    <th className="text-left py-2 pr-4 text-ink-muted font-medium">
+                      Finding
                     </th>
-                  ))}
-                  <th className="text-center py-2 px-2 text-ink-muted font-medium">
-                    Confidence
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {assessments.map((a) => {
-                  const isExpanded = expandedRow === a.findingId;
-                  const componentMap = new Map(
-                    a.components.map((c) => [c.component, c])
-                  );
-                  return (
-                    <Fragment key={a.findingId}>
-                      <tr
-                        className={cn(
-                          "border-b border-border/50 cursor-pointer transition-colors",
-                          isExpanded
-                            ? "bg-surface-raised/50"
-                            : "hover:bg-surface-raised/30"
-                        )}
-                        onClick={() =>
-                          setExpandedRow(isExpanded ? null : a.findingId)
-                        }
+                    <th className="text-center py-2 px-2 text-ink-muted font-medium">
+                      Studies
+                    </th>
+                    {COMPONENTS.map((comp) => (
+                      <th
+                        key={comp}
+                        className="text-center py-2 px-2 text-ink-muted font-medium"
+                        title={CERQUAL_COMPONENT_LABELS[comp]}
                       >
-                        <td className="py-2 pr-1 text-ink-muted">
-                          {isExpanded ? (
-                            <CaretDown size={14} />
-                          ) : (
-                            <CaretRight size={14} />
+                        {CERQUAL_COMPONENT_LABELS[comp].split(" ")[0]}
+                      </th>
+                    ))}
+                    <th className="text-center py-2 px-2 text-ink-muted font-medium">
+                      Confidence
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {assessments.map((a) => {
+                    const isExpanded = expandedRow === a.findingId;
+                    const componentMap = new Map(
+                      a.components.map((c) => [c.component, c])
+                    );
+                    return (
+                      <Fragment key={a.findingId}>
+                        <tr
+                          className={cn(
+                            "border-b border-border/50 cursor-pointer transition-colors",
+                            isExpanded
+                              ? "bg-surface-raised/50"
+                              : "hover:bg-surface-raised/30"
                           )}
-                        </td>
-                        <td className="py-2 pr-4 text-ink max-w-xs">
-                          <div className="font-medium text-xs text-ink-muted mb-0.5">
-                            {a.findingId}
-                          </div>
-                          <div className="truncate">{a.findingStatement}</div>
-                        </td>
-                        <td className="text-center py-2 px-2 text-ink-muted">
-                          {a.contributingStudies}
-                        </td>
-                        {COMPONENTS.map((comp) => {
-                          const c = componentMap.get(comp);
-                          const concern = c?.concern || "no concerns";
-                          return (
-                            <td key={comp} className="text-center py-2 px-2">
-                              <span
-                                className={cn(
-                                  "inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-medium border",
-                                  CONCERN_COLORS[concern as CERQualConcern]
-                                )}
-                              >
-                                {concern === "no concerns"
-                                  ? "None"
-                                  : concern.charAt(0).toUpperCase() +
-                                    concern.slice(1)}
-                              </span>
-                            </td>
-                          );
-                        })}
-                        <td className="text-center py-2 px-2">
-                          <span
-                            className={cn(
-                              "px-2.5 py-1 rounded text-xs font-medium",
-                              CONFIDENCE_COLORS[a.overallConfidence]
+                          onClick={() =>
+                            setExpandedRow(isExpanded ? null : a.findingId)
+                          }
+                        >
+                          <td className="py-2 pr-1 text-ink-muted">
+                            {isExpanded ? (
+                              <CaretDown size={14} />
+                            ) : (
+                              <CaretRight size={14} />
                             )}
-                          >
-                            {generateConfidenceIndicator(a.overallConfidence)}
-                          </span>
-                        </td>
-                      </tr>
-
-                      {isExpanded && (
-                        <tr>
-                          <td
-                            colSpan={COMPONENTS.length + 4}
-                            className="p-0"
-                          >
-                            <div className="bg-surface-raised/30 border-b border-border/50 px-6 py-4 space-y-3">
-                              {a.components.map((comp) => (
-                                <div
-                                  key={comp.component}
-                                  className="flex items-start gap-3"
-                                >
-                                  <span
-                                    className={cn(
-                                      "shrink-0 mt-0.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-medium border",
-                                      CONCERN_COLORS[comp.concern]
-                                    )}
-                                  >
-                                    {comp.concern === "no concerns"
-                                      ? "None"
-                                      : comp.concern.charAt(0).toUpperCase() +
-                                        comp.concern.slice(1)}
-                                  </span>
-                                  <div className="min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-xs font-semibold text-ink">
-                                        {CERQUAL_COMPONENT_LABELS[comp.component]}
-                                      </span>
-                                      {comp.downgradeLevels > 0 && (
-                                        <span className="text-[10px] text-ink-muted">
-                                          (-{comp.downgradeLevels}{" "}
-                                          {comp.downgradeLevels === 1
-                                            ? "level"
-                                            : "levels"}
-                                          )
-                                        </span>
-                                      )}
-                                    </div>
-                                    {comp.explanation && (
-                                      <p className="text-xs text-ink-muted mt-1 leading-relaxed">
-                                        {comp.explanation}
-                                      </p>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-
-                              {a.explanation && (
-                                <div className="mt-3 pt-3 border-t border-border/30">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-xs font-semibold text-ink">
-                                      Overall Rationale
-                                    </span>
-                                    <span
-                                      className={cn(
-                                        "text-[10px] px-1.5 py-0.5 rounded font-medium",
-                                        CONFIDENCE_COLORS[a.overallConfidence]
-                                      )}
-                                    >
-                                      {CERQUAL_CONFIDENCE_LABELS[a.overallConfidence]}
-                                    </span>
-                                  </div>
-                                  <p className="text-xs text-ink-muted leading-relaxed">
-                                    {a.explanation}
-                                  </p>
-                                </div>
-                              )}
+                          </td>
+                          <td className="py-2 pr-4 text-ink max-w-xs">
+                            <div className="font-medium text-xs text-ink-muted mb-0.5">
+                              {a.findingId}
+                            </div>
+                            <div className="truncate">
+                              {a.findingStatement}
                             </div>
                           </td>
+                          <td className="text-center py-2 px-2 text-ink-muted">
+                            {a.contributingStudies}
+                          </td>
+                          {COMPONENTS.map((comp) => {
+                            const c = componentMap.get(comp);
+                            const concern = c?.concern || "no concerns";
+                            return (
+                              <td
+                                key={comp}
+                                className="text-center py-2 px-2"
+                              >
+                                <div className="flex items-center justify-center gap-1.5">
+                                  <TrafficLight
+                                    concern={concern as CERQualConcern}
+                                    title={`${CERQUAL_COMPONENT_LABELS[comp]}: ${CERQUAL_CONCERN_LABELS[concern as CERQualConcern]}`}
+                                  />
+                                  <span
+                                    className={cn(
+                                      "text-[10px] font-medium",
+                                      concern === "no concerns"
+                                        ? "text-emerald-600"
+                                        : concern === "minor"
+                                          ? "text-amber-600"
+                                          : concern === "moderate"
+                                            ? "text-orange-600"
+                                            : "text-red-600"
+                                    )}
+                                  >
+                                    {concern === "no concerns"
+                                      ? "None"
+                                      : concern.charAt(0).toUpperCase() +
+                                        concern.slice(1)}
+                                  </span>
+                                </div>
+                              </td>
+                            );
+                          })}
+                          <td className="text-center py-2 px-2">
+                            <span
+                              className={cn(
+                                "px-2.5 py-1 rounded text-xs font-medium",
+                                CONFIDENCE_COLORS[a.overallConfidence]
+                              )}
+                            >
+                              {generateConfidenceIndicator(
+                                a.overallConfidence
+                              )}
+                            </span>
+                          </td>
                         </tr>
-                      )}
-                    </Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
+
+                        {/* Expanded row: domain details with traffic lights + supporting text */}
+                        {isExpanded && (
+                          <tr>
+                            <td
+                              colSpan={COMPONENTS.length + 4}
+                              className="p-0"
+                            >
+                              <div className="bg-surface-raised/30 border-b border-border/50 px-6 py-4 space-y-3">
+                                {a.components.map((comp) => (
+                                  <div
+                                    key={comp.component}
+                                    className="flex items-start gap-3"
+                                  >
+                                    <TrafficLight concern={comp.concern} />
+                                    <div className="min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-xs font-semibold text-ink">
+                                          {
+                                            CERQUAL_COMPONENT_LABELS[
+                                              comp.component
+                                            ]
+                                          }
+                                        </span>
+                                        <span
+                                          className={cn(
+                                            "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium border",
+                                            CONCERN_COLORS[comp.concern]
+                                          )}
+                                        >
+                                          {comp.concern === "no concerns"
+                                            ? "No concerns"
+                                            : comp.concern
+                                                .charAt(0)
+                                                .toUpperCase() +
+                                              comp.concern.slice(1) +
+                                              " concerns"}
+                                        </span>
+                                        {comp.downgradeLevels > 0 && (
+                                          <span className="text-[10px] text-ink-muted">
+                                            (-{comp.downgradeLevels}{" "}
+                                            {comp.downgradeLevels === 1
+                                              ? "level"
+                                              : "levels"}
+                                            )
+                                          </span>
+                                        )}
+                                      </div>
+                                      {comp.explanation && (
+                                        <p className="text-xs text-ink-muted mt-1 leading-relaxed">
+                                          {comp.explanation}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+
+                                {a.explanation && (
+                                  <div className="mt-3 pt-3 border-t border-border/30">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <span className="text-xs font-semibold text-ink">
+                                        Overall Rationale
+                                      </span>
+                                      <span
+                                        className={cn(
+                                          "text-[10px] px-1.5 py-0.5 rounded font-medium",
+                                          CONFIDENCE_COLORS[
+                                            a.overallConfidence
+                                          ]
+                                        )}
+                                      >
+                                        {
+                                          CERQUAL_CONFIDENCE_LABELS[
+                                            a.overallConfidence
+                                          ]
+                                        }
+                                      </span>
+                                    </div>
+                                    <p className="text-xs text-ink-muted leading-relaxed">
+                                      {a.explanation}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </Fragment>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </GlassPanel>
+        </div>
       )}
     </div>
   );
