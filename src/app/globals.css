@@ -94,7 +94,7 @@ body {
 
 /* Sidebar nav item — clean flat hover */
 .ss-nav-item {
-  display: flex; align-items: center; gap: 10px; padding: 7px 12px;
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   cursor: pointer; border-radius: 6px; position: relative;
   color: rgba(255,255,255,0.5);
   transition: all 0.2s ease;
@@ -111,7 +111,7 @@ body {
 .ss-nav-item.active::before {
   content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
   width: 3px; height: 16px; border-radius: 0 3px 3px 0;
-  background: rgba(255,255,255,0.3);
+  background: var(--glow);
 }
 
 /* Sidebar nav icon */

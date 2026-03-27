@@ -11,7 +11,7 @@ import { ResizeHandle } from "@/components/ui/resize-handle";
 
 const SIDEBAR_MIN = 180;
 const SIDEBAR_MAX = 320;
-const SIDEBAR_DEFAULT = 224;
+const SIDEBAR_DEFAULT = 248;
 const BUDDY_MIN = 280;
 const BUDDY_MAX_RATIO = 0.5;
 
