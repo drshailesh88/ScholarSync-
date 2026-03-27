@@ -32,7 +32,10 @@ export {
   updatePRISMAFlowStage,
   generatePRISMAFlowSVG,
   generatePRISMAChecklist,
+  fetchPapersForFlowBox,
   type PRISMAFlowData,
+  type FlowBoxKey,
+  type FlowPaperSummary,
 } from "./prisma-flow";
 
 export {
