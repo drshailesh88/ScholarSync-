@@ -56,7 +56,6 @@ export function ForestPlot({
   studies,
   pooled,
   effectType,
-  heterogeneity,
   predictionInterval,
   title,
 }: ForestPlotProps) {
@@ -253,7 +252,7 @@ export function ForestPlot({
                 y={y - dotSize / 2}
                 width={dotSize}
                 height={dotSize}
-                fill="#6366f1"
+                fill="#6D28D9"
               />
 
               {/* Stats: effect [CI] */}
@@ -314,7 +313,7 @@ export function ForestPlot({
               {/* Diamond */}
               <polygon
                 points={`${dLeft},${y} ${cx},${y - dh} ${dRight},${y} ${cx},${y + dh}`}
-                fill="#dc2626"
+                fill="#1E1145"
                 opacity={0.85}
               />
 
@@ -364,7 +363,7 @@ export function ForestPlot({
                 <polygon
                   points={`${piLeft},${y} ${cx},${y - dh} ${piRight},${y} ${cx},${y + dh}`}
                   fill="none"
-                  stroke="#dc2626"
+                  stroke="#1E1145"
                   strokeWidth={1.5}
                   strokeDasharray="4,3"
                   opacity={0.55}
@@ -383,23 +382,6 @@ export function ForestPlot({
               </g>
             );
           })()}
-
-        {/* Footer: heterogeneity stats */}
-        {heterogeneity && (
-          <text
-            x={8}
-            y={config.totalHeight - 15}
-            className="text-[10px] fill-current"
-            opacity={0.6}
-          >
-            Heterogeneity: I² = {heterogeneity.I2.toFixed(1)}%, τ² ={" "}
-            {heterogeneity.tau2.toFixed(4)}, p ={" "}
-            {heterogeneity.pValue < 0.001
-              ? "<0.001"
-              : heterogeneity.pValue.toFixed(3)}
-          </text>
-        )}
-
         {/* Axis labels */}
         <text
           x={config.labelWidth + config.plotWidth * 0.25}
