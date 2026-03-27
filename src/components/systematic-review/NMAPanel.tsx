@@ -281,7 +281,7 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
   return (
     <div className="space-y-6 sr-content max-w-[1200px]">
       {/* Header */}
-      <div>
+      <GlassPanel className="sr-panel">
         <h2 className="sr-panel-title">
           Network Meta-Analysis
         </h2>
@@ -289,10 +289,10 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
           Compare multiple treatments simultaneously using the graph-theoretical
           approach (Ruecker 2012). Enter pairwise study data below.
         </p>
-      </div>
+      </GlassPanel>
 
       {/* Study Input Table */}
-      <GlassPanel>
+      <GlassPanel className="sr-panel">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-ink">Study Data</h3>
           <div className="flex items-center gap-2">
@@ -459,7 +459,32 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
 
       {/* Results */}
       {result && (
-        <GlassPanel>
+        <GlassPanel className="sr-panel">
+          <div className="mb-4 grid gap-3 md:grid-cols-4">
+            <div className="rounded-2xl border border-border bg-surface-raised px-4 py-3">
+              <div className="text-xs uppercase tracking-[0.12em] text-ink-muted">Treatments</div>
+              <div className="mt-2 text-2xl font-semibold text-ink">{result.treatments.length}</div>
+            </div>
+            <div className="rounded-2xl border border-border bg-surface-raised px-4 py-3">
+              <div className="text-xs uppercase tracking-[0.12em] text-ink-muted">Network Edges</div>
+              <div className="mt-2 text-2xl font-semibold text-ink">{result.networkGeometry.edges.length}</div>
+            </div>
+            <div className="rounded-2xl border border-border bg-surface-raised px-4 py-3">
+              <div className="text-xs uppercase tracking-[0.12em] text-ink-muted">Consistency Alerts</div>
+              <div className="mt-2 text-2xl font-semibold text-ink">
+                {result.inconsistency.filter((row) => row.pValue < 0.05).length}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border bg-surface-raised px-4 py-3">
+              <div className="text-xs uppercase tracking-[0.12em] text-ink-muted">Consistency Status</div>
+              <div className="mt-2 text-sm font-semibold text-ink">
+                {result.inconsistency.some((row) => row.pValue < 0.05)
+                  ? "Investigate loop disagreement"
+                  : "No significant inconsistency detected"}
+              </div>
+            </div>
+          </div>
+
           {/* Result tabs */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-1">
@@ -497,6 +522,13 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
                 {result.treatments.length} treatments
               </span>
             </div>
+          </div>
+
+          <div className="mb-4 rounded-2xl border border-border/70 bg-surface px-4 py-3 text-xs text-ink-muted">
+            Consistency indicators:{" "}
+            {result.inconsistency.length === 0
+              ? "the current network has no closed loops with both direct and indirect evidence."
+              : `${result.inconsistency.filter((row) => row.pValue < 0.05).length} of ${result.inconsistency.length} node-splitting checks cross the p < 0.05 threshold.`}
           </div>
 
           {/* Tab Content */}

@@ -235,8 +235,8 @@ export function NMAForestPlot({
           const x1 = xScale(Math.max(row.ciLower, config.xMin));
           const x2 = xScale(Math.min(row.ciUpper, config.xMax));
           const diamondHalf = 5;
-          const color = row.significant ? "#6366f1" : "#6366f1";
-          const fillOpacity = row.significant ? 0.9 : 0.5;
+          const color = row.significant ? "#6D28D9" : "#D4B060";
+          const fillOpacity = row.significant ? 0.92 : 0.65;
 
           return (
             <g key={row.treatment}>
