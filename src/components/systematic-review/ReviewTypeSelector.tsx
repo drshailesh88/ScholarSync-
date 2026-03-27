@@ -155,10 +155,10 @@ export function ReviewTypeSelector({
   const [selected, setSelected] = useState<ReviewType | null>(currentType);
 
   return (
-    <GlassPanel className="p-6 space-y-6">
+    <GlassPanel className="sr-panel space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
+        <h2 className="sr-panel-title">
           <CheckCircle weight="duotone" className="text-brand" />
           Review Type
         </h2>
@@ -231,7 +231,7 @@ export function ReviewTypeSelector({
             if (selected) onTypeSelected(selected);
           }}
           disabled={!selected}
-          className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+          className="sr-btn sr-btn-primary"
         >
           <CheckCircle weight="bold" size={16} />
           Confirm Selection

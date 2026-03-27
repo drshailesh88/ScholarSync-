@@ -279,10 +279,10 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
   }
 
   return (
-    <div className="space-y-6 max-w-[1200px]">
+    <div className="space-y-6 sr-content max-w-[1200px]">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-ink">
+        <h2 className="sr-panel-title">
           Network Meta-Analysis
         </h2>
         <p className="text-sm text-ink/60 mt-1">
@@ -438,7 +438,7 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
             <button
               onClick={handleRunNMA}
               disabled={isRunning || validationErrors.length > 0}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-brand text-white text-xs font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="sr-btn sr-btn-primary"
             >
               {isRunning ? (
                 <CircleNotch size={14} weight="bold" className="animate-spin" />

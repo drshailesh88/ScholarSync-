@@ -7,9 +7,9 @@
 
 ## Project Status
 
-**Current Phase**: Sprint 2 - Screening Speed Mode
+**Current Phase**: Sprint 3 - Typography & Spacing
 **Last Updated**: March 27, 2026
-**Overall Progress**: ██░░░░░░░░ 20%
+**Overall Progress**: ███░░░░░░░ 30%
 
 -----
 
@@ -87,13 +87,13 @@
 
 |Task                            |Status|Notes                     |
 |--------------------------------|------|--------------------------|
-|Create SR-specific CSS classes  |⬜ TODO|.sr-panel, .sr-title, etc.|
-|Apply Source Serif 4 to headings|⬜ TODO|                          |
-|Apply DM Sans to UI elements    |⬜ TODO|                          |
-|Increase panel padding to p-6   |⬜ TODO|                          |
-|Set content max-width to 900px  |⬜ TODO|                          |
-|Update button styles            |⬜ TODO|Match Studio buttons      |
-|Add transitions (200ms)         |⬜ TODO|                          |
+|Create SR-specific CSS classes  |✅ Done|.sr-panel, .sr-panel-title, .sr-content in globals.css|
+|Apply Source Serif 4 to headings|✅ Done|.sr-panel-title uses font-serif across 25+ panels|
+|Apply DM Sans to UI elements    |✅ Done|.sr-panel scopes font-sans to UI elements|
+|Increase panel padding to p-6   |✅ Done|.sr-panel sets 1.5rem padding on all primary GlassPanels|
+|Set content max-width to 900px  |✅ Done|.sr-content (900px centered), wider panels override with max-w-5xl+|
+|Update button styles            |✅ Done|.sr-btn, .sr-btn-primary, .sr-btn-secondary, .sr-btn-ghost — 42 buttons across 16 panels|
+|Add transitions (200ms)         |✅ Done|200ms cubic-bezier on .sr-panel interactive elements|
 |Visual QA pass                  |⬜ TODO|LLM-as-judge test         |
 
 **Acceptance Criteria**:

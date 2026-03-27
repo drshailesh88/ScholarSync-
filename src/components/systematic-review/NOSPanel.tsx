@@ -300,7 +300,7 @@ export function NOSPanel({ projectId }: NOSPanelProps) {
         <div className="flex items-center gap-3">
           <Scales weight="duotone" className="h-6 w-6 text-brand" />
           <div>
-            <h2 className="text-lg font-semibold text-ink">
+            <h2 className="sr-panel-title mb-0">
               Newcastle-Ottawa Scale
             </h2>
             <p className="text-sm text-ink-muted">

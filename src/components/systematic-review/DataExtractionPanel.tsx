@@ -812,8 +812,8 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
         )}
 
         {/* ---- Schema Editor ---- */}
-        <GlassPanel className="p-6">
-          <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+        <GlassPanel className="sr-panel">
+          <h2 className="sr-panel-title">
             <Table weight="duotone" className="text-brand" />
             Data Extraction Schema
           </h2>
@@ -883,7 +883,7 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
           <div className="flex items-center justify-between mt-3">
             <button
               onClick={addField}
-              className="px-3 py-1.5 text-sm text-brand hover:bg-brand/10 rounded flex items-center gap-1"
+              className="sr-btn sr-btn-ghost"
             >
               <Plus size={14} /> Add Field
             </button>
@@ -903,9 +903,9 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
         </GlassPanel>
 
         {/* ---- Papers & Extraction Actions ---- */}
-        <GlassPanel className="p-6">
+        <GlassPanel className="sr-panel">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
+            <h2 className="sr-panel-title mb-0">
               <Lightning weight="duotone" className="text-brand" />
               Included Papers
             </h2>
@@ -925,11 +925,7 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
                 <button
                   onClick={extractAll}
                   disabled={extractingAll || !isSchemaValid}
-                  className={cn(
-                    "px-4 py-1.5 text-sm font-medium rounded flex items-center gap-1.5",
-                    "bg-brand text-white hover:bg-brand/90",
-                    "disabled:opacity-50 disabled:cursor-not-allowed"
-                  )}
+                  className="sr-btn sr-btn-primary"
                 >
                   {extractingAll ? (
                     <>
@@ -1046,8 +1042,8 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
 
         {/* ---- Results Table ---- */}
         {(hasResults || loadingTable) && (
-          <GlassPanel className="p-6">
-            <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+          <GlassPanel className="sr-panel">
+            <h2 className="sr-panel-title">
               <Table weight="duotone" className="text-brand" />
               Extraction Results
               {hasResults && (

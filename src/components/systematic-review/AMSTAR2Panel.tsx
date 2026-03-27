@@ -291,12 +291,12 @@ export function AMSTAR2Panel({ projectId }: AMSTAR2PanelProps) {
   // -------------------------------------------------------------------------
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 sr-content">
       {/* Header */}
-      <GlassPanel className="p-6">
+      <GlassPanel className="sr-panel">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h2 className="text-lg font-semibold text-ink mb-1 flex items-center gap-2">
+            <h2 className="sr-panel-title mb-1">
               <ClipboardText weight="duotone" className="text-brand" size={24} />
               AMSTAR 2 Self-Assessment
             </h2>

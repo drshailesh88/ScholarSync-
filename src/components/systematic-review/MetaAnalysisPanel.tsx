@@ -348,10 +348,10 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
   );
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 sr-content max-w-5xl">
       {/* Configuration */}
-      <GlassPanel className="p-6">
-        <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+      <GlassPanel className="sr-panel">
+        <h2 className="sr-panel-title">
           <ChartBar weight="duotone" className="text-brand" />
           Meta-Analysis Configuration
         </h2>
@@ -551,7 +551,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
         <div className="flex items-center justify-between mt-3">
           <button
             onClick={addStudy}
-            className="px-3 py-1.5 text-sm text-brand hover:bg-brand/10 rounded flex items-center gap-1"
+            className="sr-btn sr-btn-ghost"
           >
             <Plus size={14} /> Add Study
           </button>
@@ -559,7 +559,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
           <button
             onClick={runAnalysis}
             disabled={isRunning}
-            className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+            className="sr-btn sr-btn-primary"
           >
             {isRunning ? (
               <CircleNotch weight="bold" className="animate-spin" size={16} />
@@ -792,7 +792,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
             <button
               onClick={runSubgroupAnalysis}
               disabled={isRunningSubgroup}
-              className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+              className="sr-btn sr-btn-primary"
             >
               {isRunningSubgroup ? (
                 <CircleNotch weight="bold" className="animate-spin" size={16} />
@@ -907,7 +907,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
             <button
               onClick={runSensitivity}
               disabled={isRunningSensitivity}
-              className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+              className="sr-btn sr-btn-primary"
             >
               {isRunningSensitivity ? (
                 <CircleNotch weight="bold" className="animate-spin" size={16} />

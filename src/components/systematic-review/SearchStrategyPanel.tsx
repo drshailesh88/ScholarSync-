@@ -62,9 +62,9 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
   }, [pico, projectId, setGeneratedStrategy]);
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <GlassPanel className="p-6">
-        <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+    <div className="space-y-6 sr-content">
+      <GlassPanel className="sr-panel">
+        <h2 className="sr-panel-title">
           <MagnifyingGlass weight="duotone" className="text-brand" />
           PICO Framework
         </h2>
@@ -116,7 +116,7 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
           disabled={
             loading || !pico.population || !pico.intervention || !pico.outcome
           }
-          className="mt-4 px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="sr-btn sr-btn-primary mt-4"
         >
           {loading ? (
             <CircleNotch weight="bold" className="animate-spin" size={16} />
@@ -128,8 +128,8 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
       </GlassPanel>
 
       {strategy && (
-        <GlassPanel className="p-6">
-          <h3 className="text-lg font-semibold text-ink mb-4">
+        <GlassPanel className="sr-panel">
+          <h3 className="sr-panel-title">
             Generated Search Strategy
           </h3>
 
@@ -218,7 +218,7 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
           <div className="mt-6 pt-4 border-t border-border">
             <button
               onClick={() => setActiveTab("import")}
-              className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 flex items-center gap-2"
+              className="sr-btn sr-btn-primary"
             >
               Import Papers Using This Strategy
               <ArrowRight weight="bold" size={16} />

@@ -134,10 +134,10 @@ export function PROSPEROExport({ projectId }: PROSPEROExportProps) {
   };
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="sr-content space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
+        <h2 className="sr-panel-title">
           <ArrowSquareOut weight="duotone" className="text-brand" />
           PROSPERO Registration Helper
         </h2>
@@ -216,7 +216,7 @@ export function PROSPEROExport({ projectId }: PROSPEROExportProps) {
             <div className="flex gap-2 pt-1">
               <button
                 onClick={handleCopyAll}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 transition-colors"
+                className="sr-btn sr-btn-primary"
               >
                 {isCopied ? (
                   <>
@@ -233,7 +233,7 @@ export function PROSPEROExport({ projectId }: PROSPEROExportProps) {
               <button
                 onClick={handleDownload}
                 disabled={isDownloading}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-md text-sm text-ink-muted hover:text-ink hover:border-brand transition-colors disabled:opacity-50"
+                className="sr-btn sr-btn-secondary"
               >
                 {isDownloading ? (
                   <>

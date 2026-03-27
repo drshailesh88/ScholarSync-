@@ -613,7 +613,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const _activePaper = queue[activeIndex];
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 sr-content max-w-5xl">
       {error && (
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
           <span>{error}</span>
@@ -831,8 +831,8 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
       )}
 
       {/* Criteria Setup */}
-      <GlassPanel className="p-6">
-        <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+      <GlassPanel className="sr-panel">
+        <h2 className="sr-panel-title">
           <Funnel weight="duotone" className="text-brand" />
           Screening Criteria
         </h2>
@@ -879,7 +879,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
         <button
           onClick={addCriterion}
-          className="mt-3 px-3 py-1.5 text-sm text-brand hover:bg-brand/10 rounded flex items-center gap-1"
+          className="sr-btn sr-btn-ghost mt-3"
         >
           <Plus size={14} /> Add Criterion
         </button>
@@ -888,7 +888,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
           <button
             onClick={saveCriteria}
             disabled={isSavingCriteria || criteria.length === 0}
-            className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+            className="sr-btn sr-btn-primary"
           >
             {isSavingCriteria ? (
               <CircleNotch weight="bold" className="animate-spin" size={16} />
@@ -1017,7 +1017,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
           <button
             onClick={recomputePriorities}
             disabled={isRecomputing}
-            className="px-3 py-1.5 text-sm text-ink-muted hover:text-brand hover:bg-brand/10 rounded flex items-center gap-1 disabled:opacity-50"
+            className="sr-btn sr-btn-ghost"
             title="Recompute paper priorities using active learning"
           >
             {isRecomputing ? (
@@ -1036,7 +1036,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                 isScreeningAI ||
                 queue.filter((p) => !p.screeningDecision).length === 0
               }
-              className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+              className="sr-btn sr-btn-primary"
             >
               {isScreeningAI ? (
                 <CircleNotch weight="bold" className="animate-spin" size={16} />
@@ -1305,7 +1305,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                   <div className="flex justify-center mt-4">
                     <button
                       onClick={() => openPdfViewer(paper)}
-                      className="px-3 py-1.5 text-xs text-brand bg-brand/10 hover:bg-brand/20 rounded font-medium flex items-center gap-1 transition-colors"
+                      className="sr-btn sr-btn-ghost"
                     >
                       <FileText weight="bold" size={12} />
                       View Full Text
@@ -1603,7 +1603,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                               e.stopPropagation();
                               openPdfViewer(paper);
                             }}
-                            className="px-2 py-1 text-brand bg-brand/10 hover:bg-brand/20 rounded font-medium flex items-center gap-1 transition-colors"
+                            className="sr-btn sr-btn-ghost"
                           >
                             <FileText weight="bold" size={12} />
                             Full Text
@@ -1856,7 +1856,7 @@ function ConflictRow({ conflict, isResolving, onResolve, isEven }: ConflictRowPr
               />
               <button
                 onClick={confirmResolve}
-                className="px-2 py-1 text-xs bg-brand text-white rounded hover:bg-brand/90"
+                className="sr-btn sr-btn-primary"
               >
                 Confirm
               </button>

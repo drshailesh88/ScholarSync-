@@ -162,7 +162,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
   }, [loadPapers]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sr-content">
       {error && (
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
           <span>{error}</span>
@@ -171,8 +171,8 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
       )}
 
       {/* Database Import */}
-      <GlassPanel className="p-6">
-        <h3 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+      <GlassPanel className="sr-panel">
+        <h3 className="sr-panel-title">
           <Database weight="duotone" className="text-brand" />
           Import from Databases
         </h3>
@@ -262,7 +262,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
             (!customSearch.trim() && !generatedStrategy?.fullSearchString) ||
             selectedSources.length === 0
           }
-          className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="sr-btn sr-btn-primary"
         >
           {isImporting ? (
             <CircleNotch weight="bold" className="animate-spin" size={16} />
@@ -292,8 +292,8 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
       </GlassPanel>
 
       {/* PDF Upload */}
-      <GlassPanel className="p-6">
-        <h3 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+      <GlassPanel className="sr-panel">
+        <h3 className="sr-panel-title">
           <FileArrowUp weight="duotone" className="text-brand" />
           Upload PDFs
         </h3>
@@ -350,9 +350,9 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
 
       {/* Papers List */}
       {papers.length > 0 && (
-        <GlassPanel className="p-6">
+        <GlassPanel className="sr-panel">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-ink">
+            <h3 className="sr-panel-title mb-0">
               Project Papers ({papers.length})
             </h3>
             <button
