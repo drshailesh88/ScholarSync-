@@ -717,6 +717,39 @@ body {
   background: #60A5FA;
 }
 
+/* Systematic Review design-system tokens */
+.sr-panel-title {
+  font-family: var(--font-serif-family);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.sr-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--brand);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sr-btn-primary:hover {
+  background: var(--brand-hover);
+}
+
+.sr-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Print styles */
 @media print {
   .academic-editor-content {

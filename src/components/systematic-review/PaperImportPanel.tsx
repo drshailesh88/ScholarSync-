@@ -9,6 +9,7 @@ import {
   FileArrowUp,
   FilePdf,
 } from "@phosphor-icons/react";
+import { EmptyState } from "@/components/systematic-review/EmptyState";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { useSystematicReviewStore } from "@/stores/systematic-review-store";
@@ -347,6 +348,16 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
           )}
         </div>
       </GlassPanel>
+
+      {/* Papers List — empty state */}
+      {!isLoadingPapers && papers.length === 0 && (
+        <EmptyState
+          icon={Database}
+          title="No papers imported"
+          description="Search PubMed, Semantic Scholar, or OpenAlex above to import papers into your review, or upload a RIS/BibTeX file."
+          tip="Tip: You can import from multiple sources to maximise coverage."
+        />
+      )}
 
       {/* Papers List */}
       {papers.length > 0 && (

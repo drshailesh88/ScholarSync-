@@ -10,6 +10,7 @@ import {
   MagnifyingGlass,
   ArrowRight,
 } from "@phosphor-icons/react";
+import { EmptyState } from "@/components/systematic-review/EmptyState";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { ReviewTypeSelector } from "@/components/systematic-review/ReviewTypeSelector";
@@ -257,28 +258,14 @@ export default function SystematicReviewHubPage() {
 
         {/* Empty state */}
         {!isLoading && projects.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <MagnifyingGlass
-              weight="duotone"
-              className="text-ink-muted mb-4"
-              size={48}
-            />
-            <h2 className="text-lg font-semibold text-ink mb-2">
-              No systematic reviews yet
-            </h2>
-            <p className="text-sm text-ink-muted max-w-md mb-6">
-              Create your first PRISMA 2020-compliant systematic review. Our AI
-              will help you through every step — from search strategy to
-              meta-analysis.
-            </p>
-            <button
-              onClick={openCreateFlow}
-              className="px-4 py-2 bg-brand text-white rounded-lg text-sm font-medium hover:bg-brand/90 flex items-center gap-2"
-            >
-              <Plus weight="bold" size={16} />
-              Create Your First Review
-            </button>
-          </div>
+          <EmptyState
+            icon={MagnifyingGlass}
+            title="No systematic reviews yet"
+            description="Create your first PRISMA 2020-compliant systematic review. Our AI will help you through every step — from search strategy to meta-analysis."
+            actionLabel="Create Your First Review"
+            onAction={openCreateFlow}
+            tip="Tip: Each review follows the PRISMA 2020 checklist automatically."
+          />
         )}
 
         {/* Project cards */}

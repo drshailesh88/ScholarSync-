@@ -12,6 +12,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { EmptyState } from "@/components/systematic-review/EmptyState";
 import { ForestPlot } from "./ForestPlot";
 import { FunnelPlot } from "./FunnelPlot";
 import type {
@@ -469,9 +470,14 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
           </div>
 
           {/* Study rows */}
-          {/* empty state: no data, no results, nothing here */}
           {studies.length === 0 && (
-            <p className="col-span-full text-xs text-ink-muted text-center py-3">nothing here yet. Add studies to get started.</p>
+            <EmptyState
+              icon={ChartBar}
+              title="No data for analysis"
+              description="Add studies with effect sizes above, or auto-import from data extraction to run a meta-analysis."
+              tip="Tip: You can paste data directly or use the + Add Study button."
+              className="py-8"
+            />
           )}
           {studies.map((study, i) => (
             <div
