@@ -7,9 +7,9 @@
 
 ## Project Status
 
-**Current Phase**: Sprint 0 - Documentation
+**Current Phase**: Sprint 2 - Screening Speed Mode
 **Last Updated**: March 27, 2026
-**Overall Progress**: ░░░░░░░░░░ 0%
+**Overall Progress**: ██░░░░░░░░ 20%
 
 -----
 
@@ -62,13 +62,13 @@
 
 |Task                                  |Status|Notes|
 |--------------------------------------|------|-----|
-|Create ScreeningSpeedMode component   |⬜ TODO|     |
-|Add keyboard shortcuts (I, E, M, ←, →)|⬜ TODO|     |
-|Single paper centered layout          |⬜ TODO|     |
-|Progress indicator (234 / 1,616)      |⬜ TODO|     |
-|Auto-advance after decision           |⬜ TODO|     |
-|Keyboard shortcut overlay (?)         |⬜ TODO|     |
-|Integrate with existing screening API |⬜ TODO|     |
+|Create ScreeningSpeedMode component   |✅ Done|Integrated into ScreeningPanel as speed mode toggle|
+|Add keyboard shortcuts (I, E, M, ←, →)|✅ Done|With contenteditable guard, input/textarea guard|
+|Single paper centered layout          |✅ Done|max-width 720px centered card|
+|Progress indicator (234 / 1,616)      |✅ Done|With locale-formatted numbers and mini progress bar|
+|Auto-advance after decision           |✅ Done|Handles both unscreened filter (queue shrink) and other filters|
+|Keyboard shortcut overlay (?)         |✅ Done|Press ? to toggle, Esc to close|
+|Integrate with existing screening API |✅ Done|Reuses existing handleDecision, no API changes|
 |Write Playwright tests                |⬜ TODO|     |
 
 **Acceptance Criteria**:

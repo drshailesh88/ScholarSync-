@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Funnel,
   Plus,
@@ -21,6 +21,10 @@ import {
   CheckSquare,
   FileText,
   FloppyDisk,
+  Keyboard,
+  CaretLeft,
+  CaretRight,
+  X,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
@@ -174,6 +178,11 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const [pdfViewerPaper, setPdfViewerPaper] = useState<ScreeningPaper | null>(
     null
   );
+
+  // Speed mode state
+  const [speedMode, setSpeedMode] = useState(false);
+  const [showHelpOverlay, setShowHelpOverlay] = useState(false);
+  const speedModeRef = useRef<HTMLDivElement>(null);
 
   // Conflict resolution state
   const [viewMode, setViewMode] = useState<ViewMode>("queue");
@@ -469,31 +478,83 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
     [handleDecision, projectId]
   );
 
-  // Keyboard shortcuts (only active in queue view)
+  // Speed mode decision handler — wraps handleDecision with auto-advance
+  const handleSpeedDecision = useCallback(
+    async (paperId: number, decision: "include" | "exclude" | "maybe") => {
+      await handleDecision(paperId, decision);
+      // Auto-advance to next paper after decision
+      setActiveIndex((prev) => {
+        if (filter === "unscreened") {
+          // Queue shrinks by 1 since the decided paper is removed, so keep same index
+          // but clamp to new length - 1
+          return Math.min(prev, queue.length - 2);
+        }
+        return Math.min(prev + 1, queue.length - 1);
+      });
+    },
+    [handleDecision, filter, queue.length]
+  );
+
+  // Keyboard shortcuts (only active in queue view, respects speed mode)
   useEffect(() => {
     if (viewMode !== "queue") return;
 
     function handleKeyDown(e: KeyboardEvent) {
+      // Disable shortcuts when any input/textarea/contenteditable is focused
+      const target = e.target as HTMLElement;
       if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        e.target instanceof HTMLSelectElement
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        target.isContentEditable
       )
         return;
+
+      // "?" toggle help overlay (works in speed mode)
+      if (e.key === "?") {
+        e.preventDefault();
+        setShowHelpOverlay((prev) => !prev);
+        return;
+      }
+
+      // Escape closes help overlay
+      if (e.key === "Escape" && showHelpOverlay) {
+        e.preventDefault();
+        setShowHelpOverlay(false);
+        return;
+      }
+
+      // Don't process shortcuts when help overlay is open
+      if (showHelpOverlay) return;
 
       const currentPaper = queue[activeIndex];
       if (!currentPaper) return;
 
+      const decisionFn = speedMode ? handleSpeedDecision : handleDecision;
+
       switch (e.key.toLowerCase()) {
         case "i":
-          handleDecision(currentPaper.paperId, "include");
+          decisionFn(currentPaper.paperId, "include");
           break;
         case "e":
-          handleDecision(currentPaper.paperId, "exclude");
+          decisionFn(currentPaper.paperId, "exclude");
           break;
+        case "m":
+          decisionFn(currentPaper.paperId, "maybe");
+          break;
+        // Legacy "u" for uncertain still works in non-speed mode
         case "u":
-          handleDecision(currentPaper.paperId, "maybe");
+          if (!speedMode) handleDecision(currentPaper.paperId, "maybe");
           break;
+        case "arrowleft":
+          e.preventDefault();
+          setActiveIndex((prev) => Math.max(prev - 1, 0));
+          break;
+        case "arrowright":
+          e.preventDefault();
+          setActiveIndex((prev) => Math.min(prev + 1, queue.length - 1));
+          break;
+        // Legacy J/K navigation still works
         case "arrowdown":
         case "j":
           e.preventDefault();
@@ -509,7 +570,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [queue, activeIndex, handleDecision, viewMode]);
+  }, [queue, activeIndex, handleDecision, handleSpeedDecision, viewMode, speedMode, showHelpOverlay]);
 
   // Criteria management
   const addCriterion = () => {
@@ -909,6 +970,23 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Speed Mode Toggle (queue view only) */}
+          {viewMode === "queue" && (
+            <button
+              onClick={() => setSpeedMode((prev) => !prev)}
+              className={cn(
+                "px-3 py-1.5 text-sm rounded flex items-center gap-1.5 transition-colors border",
+                speedMode
+                  ? "border-brand/40 bg-brand/10 text-brand font-medium"
+                  : "border-border text-ink-muted hover:text-ink hover:bg-surface-raised"
+              )}
+              title={speedMode ? "Exit Speed Mode" : "Enter Speed Mode for keyboard-first screening"}
+            >
+              <Keyboard weight={speedMode ? "bold" : "regular"} size={14} />
+              {speedMode ? "Speed Mode" : "Speed Mode"}
+            </button>
+          )}
+
           {/* Blinded Mode Toggle (queue view only) */}
           {viewMode === "queue" && (
             <button
@@ -1042,9 +1120,295 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
       )}
 
       {/* ------------------------------------------------------------------ */}
-      {/* QUEUE VIEW */}
+      {/* SPEED MODE VIEW */}
       {/* ------------------------------------------------------------------ */}
-      {viewMode === "queue" && (
+      {viewMode === "queue" && speedMode && (
+        <div ref={speedModeRef} className="relative">
+          {/* Loading */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-24">
+              <CircleNotch weight="bold" className="animate-spin text-brand" size={24} />
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!isLoading && queue.length === 0 && (
+            <div className="flex items-center justify-center py-24">
+              <GlassPanel className="p-8 text-center max-w-md">
+                <Funnel weight="duotone" className="text-ink-muted mb-3 mx-auto" size={40} />
+                <h3 className="text-sm font-semibold text-ink mb-1">
+                  {filter === "unscreened" ? "All papers screened!" : `No ${filter} papers`}
+                </h3>
+                <p className="text-xs text-ink-muted">
+                  {filter === "unscreened" ? "Import more papers or review conflicts." : "Try a different filter."}
+                </p>
+              </GlassPanel>
+            </div>
+          )}
+
+          {/* Single paper centered layout */}
+          {!isLoading && queue.length > 0 && (() => {
+            const paper = queue[Math.min(activeIndex, queue.length - 1)];
+            if (!paper) return null;
+            return (
+              <div className="mx-auto max-w-[720px]">
+                {/* Progress indicator: "234 / 1,616" */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setActiveIndex((prev) => Math.max(prev - 1, 0))}
+                      disabled={activeIndex === 0}
+                      className="p-1.5 rounded hover:bg-surface-raised text-ink-muted hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      aria-label="Previous paper"
+                    >
+                      <CaretLeft weight="bold" size={18} />
+                    </button>
+                    <span className="text-sm font-medium text-ink tabular-nums">
+                      {progress
+                        ? `${(progress.screened + 1).toLocaleString()} / ${progress.total.toLocaleString()}`
+                        : `${(activeIndex + 1).toLocaleString()} / ${queue.length.toLocaleString()}`}
+                    </span>
+                    <button
+                      onClick={() => setActiveIndex((prev) => Math.min(prev + 1, queue.length - 1))}
+                      disabled={activeIndex >= queue.length - 1}
+                      className="p-1.5 rounded hover:bg-surface-raised text-ink-muted hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                      aria-label="Next paper"
+                    >
+                      <CaretRight weight="bold" size={18} />
+                    </button>
+                  </div>
+
+                  {/* Mini progress bar */}
+                  {progress && progress.total > 0 && (
+                    <div className="flex items-center gap-3">
+                      <div className="w-32 h-1.5 bg-surface-raised rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-brand rounded-full transition-all"
+                          style={{ width: `${progress.progress}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-ink-muted tabular-nums">{progress.progress}%</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Paper card */}
+                <GlassPanel className="p-8">
+                  {/* Decision badge if already screened */}
+                  {paper.screeningDecision && (
+                    <div className="mb-4">
+                      <DecisionBadge
+                        decision={paper.screeningDecision}
+                        icon={paper.screeningDecision === "include" ? <CheckCircle size={12} /> : paper.screeningDecision === "exclude" ? <XCircle size={12} /> : <Warning size={12} />}
+                      />
+                    </div>
+                  )}
+
+                  {/* Title */}
+                  <h2 className="text-lg font-semibold text-ink leading-snug mb-3">
+                    {paper.title}
+                  </h2>
+
+                  {/* Metadata row */}
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-ink-muted mb-4">
+                    {paper.journal && <span>{paper.journal}</span>}
+                    {paper.year && <span>({paper.year})</span>}
+                    {paper.citationCount != null && paper.citationCount > 0 && (
+                      <span>{paper.citationCount} citations</span>
+                    )}
+                    {paper.studyType && (
+                      <span className="px-1.5 py-0.5 bg-surface-raised rounded">{paper.studyType}</span>
+                    )}
+                    {paper.doi && (
+                      <a
+                        href={`https://doi.org/${paper.doi}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand hover:underline"
+                      >
+                        DOI
+                      </a>
+                    )}
+                    {paper.pmid && (
+                      <a
+                        href={`https://pubmed.ncbi.nlm.nih.gov/${paper.pmid}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand hover:underline"
+                      >
+                        PubMed
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Abstract */}
+                  {paper.abstract && (
+                    <p className="text-sm text-ink-muted leading-relaxed mb-6">
+                      {paper.abstract}
+                    </p>
+                  )}
+
+                  {/* AI reasoning (hidden in blinded mode) */}
+                  {!blindedMode && paper.aiReason && (
+                    <div className="mb-6 px-4 py-3 bg-surface-raised rounded-lg text-sm">
+                      <span className="font-medium text-ink flex items-center gap-1 mb-1">
+                        <Robot size={14} /> AI reasoning
+                      </span>
+                      <span className="text-ink-muted">{paper.aiReason}</span>
+                    </div>
+                  )}
+
+                  {/* Decision buttons */}
+                  <div className="flex items-center justify-center gap-3 pt-2">
+                    <button
+                      onClick={() => handleSpeedDecision(paper.paperId, "include")}
+                      className={cn(
+                        "px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all",
+                        paper.screeningDecision === "include"
+                          ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20"
+                          : "border border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10"
+                      )}
+                    >
+                      <CheckCircle weight="bold" size={16} />
+                      Include
+                      <kbd className="ml-1 px-1.5 py-0.5 text-[10px] rounded bg-black/10 font-mono">I</kbd>
+                    </button>
+                    <button
+                      onClick={() => handleSpeedDecision(paper.paperId, "exclude")}
+                      className={cn(
+                        "px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all",
+                        paper.screeningDecision === "exclude"
+                          ? "bg-red-500 text-white shadow-lg shadow-red-500/20"
+                          : "border border-red-500/30 text-red-600 hover:bg-red-500/10"
+                      )}
+                    >
+                      <XCircle weight="bold" size={16} />
+                      Exclude
+                      <kbd className="ml-1 px-1.5 py-0.5 text-[10px] rounded bg-black/10 font-mono">E</kbd>
+                    </button>
+                    <button
+                      onClick={() => handleSpeedDecision(paper.paperId, "maybe")}
+                      className={cn(
+                        "px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all",
+                        paper.screeningDecision === "maybe"
+                          ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
+                          : "border border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
+                      )}
+                    >
+                      <Warning weight="bold" size={16} />
+                      Maybe
+                      <kbd className="ml-1 px-1.5 py-0.5 text-[10px] rounded bg-black/10 font-mono">M</kbd>
+                    </button>
+                  </div>
+
+                  {/* Full text button */}
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={() => openPdfViewer(paper)}
+                      className="px-3 py-1.5 text-xs text-brand bg-brand/10 hover:bg-brand/20 rounded font-medium flex items-center gap-1 transition-colors"
+                    >
+                      <FileText weight="bold" size={12} />
+                      View Full Text
+                    </button>
+                  </div>
+                </GlassPanel>
+
+                {/* Shortcut hint bar — small, unobtrusive, at the bottom */}
+                <div className="mt-6 flex items-center justify-center gap-4 text-[11px] text-ink-muted/60 select-none">
+                  <span>
+                    <kbd className="px-1 py-0.5 bg-surface-raised rounded font-mono text-[10px]">I</kbd> = Include
+                  </span>
+                  <span>
+                    <kbd className="px-1 py-0.5 bg-surface-raised rounded font-mono text-[10px]">E</kbd> = Exclude
+                  </span>
+                  <span>
+                    <kbd className="px-1 py-0.5 bg-surface-raised rounded font-mono text-[10px]">M</kbd> = Maybe
+                  </span>
+                  <span>
+                    <kbd className="px-1 py-0.5 bg-surface-raised rounded font-mono text-[10px]">?</kbd> = Help
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Help overlay modal */}
+          {showHelpOverlay && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+              onClick={() => setShowHelpOverlay(false)}
+            >
+              <div
+                className="bg-surface border border-border rounded-xl shadow-2xl p-6 max-w-md w-full mx-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-base font-semibold text-ink flex items-center gap-2">
+                    <Keyboard weight="duotone" size={20} className="text-brand" />
+                    Keyboard Shortcuts
+                  </h3>
+                  <button
+                    onClick={() => setShowHelpOverlay(false)}
+                    className="p-1 rounded hover:bg-surface-raised text-ink-muted hover:text-ink transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="grid grid-cols-2 gap-y-2.5 gap-x-6">
+                    <div className="font-medium text-ink-muted">Decisions</div>
+                    <div />
+                    <div className="flex items-center gap-2">
+                      <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">I</kbd>
+                      <span className="text-ink">Include paper</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">E</kbd>
+                      <span className="text-ink">Exclude paper</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">M</kbd>
+                      <span className="text-ink">Maybe / Uncertain</span>
+                    </div>
+                    <div />
+                    <div className="col-span-2 border-t border-border pt-2.5 mt-1 font-medium text-ink-muted">Navigation</div>
+                    <div className="flex items-center gap-2">
+                      <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">&larr;</kbd>
+                      <span className="text-ink">Previous paper</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">&rarr;</kbd>
+                      <span className="text-ink">Next paper</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">J</kbd> / <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">K</kbd>
+                      <span className="text-ink">Next / Previous</span>
+                    </div>
+                    <div />
+                    <div className="col-span-2 border-t border-border pt-2.5 mt-1 font-medium text-ink-muted">Other</div>
+                    <div className="flex items-center gap-2">
+                      <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">?</kbd>
+                      <span className="text-ink">Toggle this help</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">Esc</kbd>
+                      <span className="text-ink">Close help</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-5 text-xs text-ink-muted">
+                  Shortcuts are disabled when typing in input fields.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------------ */}
+      {/* QUEUE VIEW (list mode) */}
+      {/* ------------------------------------------------------------------ */}
+      {viewMode === "queue" && !speedMode && (
         <>
           {/* Loading */}
           {isLoading && (
@@ -1083,8 +1447,9 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                   Keyboard: <kbd className="px-1 bg-surface-raised rounded">I</kbd>
                   =Include{" "}
                   <kbd className="px-1 bg-surface-raised rounded">E</kbd>=Exclude{" "}
-                  <kbd className="px-1 bg-surface-raised rounded">U</kbd>=Uncertain{" "}
-                  <kbd className="px-1 bg-surface-raised rounded">J/K</kbd>=Navigate
+                  <kbd className="px-1 bg-surface-raised rounded">M</kbd>=Maybe{" "}
+                  <kbd className="px-1 bg-surface-raised rounded">J/K</kbd>=Navigate{" "}
+                  <kbd className="px-1 bg-surface-raised rounded">?</kbd>=Help
                 </span>
               </div>
 
@@ -1274,6 +1639,77 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
             </div>
           )}
         </>
+      )}
+
+      {/* Help overlay for list mode (shared with speed mode via state) */}
+      {viewMode === "queue" && !speedMode && showHelpOverlay && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setShowHelpOverlay(false)}
+        >
+          <div
+            className="bg-surface border border-border rounded-xl shadow-2xl p-6 max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-base font-semibold text-ink flex items-center gap-2">
+                <Keyboard weight="duotone" size={20} className="text-brand" />
+                Keyboard Shortcuts
+              </h3>
+              <button
+                onClick={() => setShowHelpOverlay(false)}
+                className="p-1 rounded hover:bg-surface-raised text-ink-muted hover:text-ink transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="space-y-3 text-sm">
+              <div className="grid grid-cols-2 gap-y-2.5 gap-x-6">
+                <div className="font-medium text-ink-muted">Decisions</div>
+                <div />
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">I</kbd>
+                  <span className="text-ink">Include paper</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">E</kbd>
+                  <span className="text-ink">Exclude paper</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">M</kbd>
+                  <span className="text-ink">Maybe / Uncertain</span>
+                </div>
+                <div />
+                <div className="col-span-2 border-t border-border pt-2.5 mt-1 font-medium text-ink-muted">Navigation</div>
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">&larr;</kbd>
+                  <span className="text-ink">Previous paper</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">&rarr;</kbd>
+                  <span className="text-ink">Next paper</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">J</kbd> / <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">K</kbd>
+                  <span className="text-ink">Next / Previous</span>
+                </div>
+                <div />
+                <div className="col-span-2 border-t border-border pt-2.5 mt-1 font-medium text-ink-muted">Other</div>
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">?</kbd>
+                  <span className="text-ink">Toggle this help</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <kbd className="px-2 py-1 bg-surface-raised border border-border rounded font-mono text-xs min-w-[28px] text-center">Esc</kbd>
+                  <span className="text-ink">Close help</span>
+                </div>
+              </div>
+            </div>
+            <p className="mt-5 text-xs text-ink-muted">
+              Shortcuts are disabled when typing in input fields. Try Speed Mode for single-paper focused screening.
+            </p>
+          </div>
+        </div>
       )}
 
       {/* PDF Screening Viewer (full-screen overlay) */}
