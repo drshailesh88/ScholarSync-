@@ -496,7 +496,7 @@ export function WorkbenchAssistant() {
                 "max-w-[88%] px-3.5 py-2.5 text-[13px] leading-relaxed",
                 msg.role === "user"
                   ? "ml-auto rounded-[12px] rounded-br-[4px] bg-brand text-white"
-                  : "rounded-[12px] rounded-bl-[4px] bg-black/[0.03] text-ink"
+                  : "rounded-[12px] rounded-bl-[4px] bg-black/[0.03] dark:bg-white/[0.06] text-ink"
               )}
             >
               {msg.content ||
