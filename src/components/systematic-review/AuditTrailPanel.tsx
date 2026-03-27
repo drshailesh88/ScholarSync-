@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Funnel,
   Table,
@@ -11,6 +11,9 @@ import {
   Robot,
   User,
   CaretDown,
+  CalendarBlank,
+  MagnifyingGlass,
+  X,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
@@ -122,6 +125,43 @@ function formatTimestamp(iso: string | null): string {
   });
 }
 
+function formatDate(iso: string | null): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function formatTime(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return d.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function entriesToCSV(entries: AuditLogEntry[]): string {
+  const header = "ID,User,Action,Entity Type,Entity ID,AI Involved,Timestamp,Details";
+  const rows = entries.map((e) => {
+    const details =
+      e.details != null ? JSON.stringify(e.details).replace(/"/g, '""') : "";
+    return [
+      e.id,
+      `"${e.userId}"`,
+      `"${ACTION_LABELS[e.action] ?? e.action}"`,
+      `"${e.entityType}"`,
+      e.entityId ?? "",
+      e.aiInvolved ? "Yes" : "No",
+      e.createdAt ?? "",
+      `"${details}"`,
+    ].join(",");
+  });
+  return [header, ...rows].join("\n");
+}
+
 // ---------------------------------------------------------------------------
 // SummaryCard
 // ---------------------------------------------------------------------------
@@ -136,10 +176,81 @@ function SummaryCard({
   sub?: string;
 }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-3">
-      <p className="text-xs text-white/50">{label}</p>
+    <div className="sr-panel">
+      <p className="sr-label text-xs text-white/50">{label}</p>
       <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
       {sub && <p className="mt-0.5 text-xs text-white/40">{sub}</p>}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// DateRangeFilter
+// ---------------------------------------------------------------------------
+
+function DateRangeFilter({
+  startDate,
+  endDate,
+  onStartChange,
+  onEndChange,
+  onClear,
+}: {
+  startDate: string;
+  endDate: string;
+  onStartChange: (v: string) => void;
+  onEndChange: (v: string) => void;
+  onClear: () => void;
+}) {
+  const hasRange = startDate || endDate;
+  return (
+    <div className="flex items-center gap-2">
+      <CalendarBlank className="h-4 w-4 shrink-0 text-white/40" />
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) => onStartChange(e.target.value)}
+        aria-label="Start date"
+        className={cn(
+          "rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-white/80",
+          "focus:outline-none focus:ring-1 focus:ring-violet-500/50",
+          "[color-scheme:dark]"
+        )}
+      />
+      <span className="text-xs text-white/30">to</span>
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => onEndChange(e.target.value)}
+        aria-label="End date"
+        className={cn(
+          "rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-white/80",
+          "focus:outline-none focus:ring-1 focus:ring-violet-500/50",
+          "[color-scheme:dark]"
+        )}
+      />
+      {hasRange && (
+        <button
+          onClick={onClear}
+          className="rounded p-1 text-white/40 hover:bg-white/10 hover:text-white/70"
+          aria-label="Clear date range"
+        >
+          <X className="h-3 w-3" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TimelineConnector
+// ---------------------------------------------------------------------------
+
+function TimelineConnector({ isLast }: { isLast: boolean }) {
+  return (
+    <div className="flex w-7 shrink-0 flex-col items-center">
+      <div className="h-2 w-px bg-white/10" />
+      <div className="h-2.5 w-2.5 rounded-full border-2 border-white/20 bg-white/5" />
+      {!isLast && <div className="w-px flex-1 bg-white/10" />}
     </div>
   );
 }
@@ -153,6 +264,9 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actionFilter, setActionFilter] = useState("");
+  const [userFilter, setUserFilter] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [offset, setOffset] = useState(0);
   const [exporting, setExporting] = useState(false);
 
@@ -193,17 +307,67 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
     fetchLog(offset, actionFilter);
   }, [fetchLog, offset, actionFilter]);
 
-  // Reset to page 0 whenever the filter changes
   const handleActionChange = (value: string) => {
     setActionFilter(value);
     setOffset(0);
   };
+
+  // ---- Client-side filters (user + date range) -----------------------------
+
+  const filteredEntries = useMemo(() => {
+    let entries = data?.entries ?? [];
+
+    if (userFilter) {
+      const q = userFilter.toLowerCase();
+      entries = entries.filter((e) => e.userId.toLowerCase().includes(q));
+    }
+
+    if (startDate) {
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+      entries = entries.filter(
+        (e) => e.createdAt && new Date(e.createdAt) >= start
+      );
+    }
+
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      entries = entries.filter(
+        (e) => e.createdAt && new Date(e.createdAt) <= end
+      );
+    }
+
+    return entries;
+  }, [data?.entries, userFilter, startDate, endDate]);
+
+  // ---- Unique users for display --------------------------------------------
+
+  const uniqueUsers = useMemo(() => {
+    const users = new Set((data?.entries ?? []).map((e) => e.userId));
+    return Array.from(users).sort();
+  }, [data?.entries]);
+
+  // ---- Group entries by date for timeline ----------------------------------
+
+  const groupedByDate = useMemo(() => {
+    const groups: Record<string, AuditLogEntry[]> = {};
+    for (const entry of filteredEntries) {
+      const dateKey = entry.createdAt
+        ? new Date(entry.createdAt).toDateString()
+        : "Unknown";
+      if (!groups[dateKey]) groups[dateKey] = [];
+      groups[dateKey].push(entry);
+    }
+    return groups;
+  }, [filteredEntries]);
 
   // ---- CSV Export ----------------------------------------------------------
 
   const handleExportCSV = async () => {
     setExporting(true);
     try {
+      // Try server-side export first
       const params = new URLSearchParams({
         projectId: String(projectId),
         format: "csv",
@@ -211,17 +375,36 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
       const res = await fetch(
         `/api/systematic-review/audit?${params.toString()}`
       );
-      if (!res.ok) throw new Error("Export failed");
 
-      const blob = await res.blob();
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `audit-log-project-${projectId}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        // Fallback: generate CSV client-side from current filtered data
+        const csv = entriesToCSV(filteredEntries);
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `audit-log-project-${projectId}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch {
+      // Client-side fallback on network error
+      const csv = entriesToCSV(filteredEntries);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = `audit-log-project-${projectId}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Export failed");
     } finally {
       setExporting(false);
     }
@@ -230,12 +413,13 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
   // ---- Render --------------------------------------------------------------
 
   const summary = data?.summary;
-  const entries = data?.entries ?? [];
-  const hasMore = entries.length === PAGE_SIZE;
+  const allEntries = data?.entries ?? [];
+  const hasMore = allEntries.length === PAGE_SIZE;
   const hasPrev = offset > 0;
+  const dateKeys = Object.keys(groupedByDate);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="sr-panel sr-content flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -283,14 +467,11 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
         </div>
       )}
 
-      {/* Action breakdown */}
+      {/* Action breakdown pills */}
       {summary && Object.keys(summary.eventsByAction).length > 0 && (
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <p className="mb-3 text-xs font-medium uppercase tracking-wider text-white/50">
-            Events by Action
-          </p>
+        <div className="sr-panel">
+          <p className="sr-label mb-3">Events by Action</p>
           <div className="flex flex-wrap gap-2">
-            {/* empty state: no data, no results, nothing here */}
             {Object.entries(summary.eventsByAction).map(([action, count]) => (
               <button
                 key={action}
@@ -313,10 +494,12 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
         </div>
       )}
 
-      {/* Filter bar */}
-      <div className="flex items-center gap-3">
+      {/* Filter bar: action type + user + date range */}
+      <div className="flex flex-wrap items-center gap-3">
+        {/* Action filter */}
         <div className="relative">
-          <select aria-label="Select option"
+          <select
+            aria-label="Filter by action type"
             value={actionFilter}
             onChange={(e) => handleActionChange(e.target.value)}
             className={cn(
@@ -334,11 +517,68 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
           <CaretDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-white/40" />
         </div>
 
+        {/* User filter */}
+        <div className="relative">
+          {uniqueUsers.length > 0 ? (
+            <>
+              <select
+                aria-label="Filter by user"
+                value={userFilter}
+                onChange={(e) => setUserFilter(e.target.value)}
+                className={cn(
+                  "appearance-none rounded-lg border border-white/10 bg-white/5",
+                  "py-2 pl-3 pr-8 text-sm text-white/80 focus:outline-none focus:ring-1",
+                  "focus:ring-violet-500/50"
+                )}
+              >
+                <option value="" className="bg-gray-900">
+                  All Users
+                </option>
+                {uniqueUsers.map((u) => (
+                  <option key={u} value={u} className="bg-gray-900">
+                    {u}
+                  </option>
+                ))}
+              </select>
+              <CaretDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-white/40" />
+            </>
+          ) : (
+            <div className="relative">
+              <MagnifyingGlass className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/30" />
+              <input
+                type="text"
+                placeholder="Filter by user…"
+                value={userFilter}
+                onChange={(e) => setUserFilter(e.target.value)}
+                aria-label="Filter by user"
+                className={cn(
+                  "rounded-lg border border-white/10 bg-white/5 py-2 pl-8 pr-3",
+                  "text-sm text-white/80 placeholder:text-white/30",
+                  "focus:outline-none focus:ring-1 focus:ring-violet-500/50"
+                )}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Date range filter */}
+        <DateRangeFilter
+          startDate={startDate}
+          endDate={endDate}
+          onStartChange={(v) => setStartDate(v)}
+          onEndChange={(v) => setEndDate(v)}
+          onClear={() => {
+            setStartDate("");
+            setEndDate("");
+          }}
+        />
+
+        {/* Refresh */}
         <button
           onClick={() => fetchLog(offset, actionFilter)}
           disabled={loading}
           className={cn(
-            "flex items-center gap-2 rounded-lg border border-white/10 bg-white/5",
+            "ml-auto flex items-center gap-2 rounded-lg border border-white/10 bg-white/5",
             "px-3 py-2 text-sm text-white/80 transition hover:bg-white/10",
             "disabled:opacity-40"
           )}
@@ -350,6 +590,25 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
         </button>
       </div>
 
+      {/* Active filters indicator */}
+      {(userFilter || startDate || endDate) && (
+        <div className="flex items-center gap-2 text-xs text-white/50">
+          <span>
+            Showing {filteredEntries.length} of {allEntries.length} entries
+          </span>
+          <button
+            onClick={() => {
+              setUserFilter("");
+              setStartDate("");
+              setEndDate("");
+            }}
+            className="text-violet-400/70 hover:text-violet-300"
+          >
+            Clear all filters
+          </button>
+        </div>
+      )}
+
       {/* Error */}
       {error && (
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
@@ -357,24 +616,48 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
         </div>
       )}
 
-      {/* Event list */}
-      <div className="flex flex-col gap-1">
-        {loading && entries.length === 0 && (
+      {/* Timeline view */}
+      <div className="flex flex-col gap-0">
+        {loading && allEntries.length === 0 && (
           <div className="py-12 text-center text-sm text-white/40">
             <ArrowsClockwise className="mx-auto mb-2 h-6 w-6 animate-spin" />
             Loading audit log…
           </div>
         )}
 
-        {!loading && entries.length === 0 && (
+        {!loading && filteredEntries.length === 0 && (
           <div className="py-12 text-center text-sm text-white/40">
             No audit events found.
           </div>
         )}
 
-        {entries.map((entry) => (
-          <AuditEntry key={entry.id} entry={entry} />
-        ))}
+        {dateKeys.map((dateKey) => {
+          const dayEntries = groupedByDate[dateKey];
+          return (
+            <div key={dateKey} className="mb-4">
+              {/* Date group header */}
+              <div className="mb-2 flex items-center gap-2">
+                <div className="h-px flex-1 bg-white/10" />
+                <span className="sr-label shrink-0 px-2 text-xs text-white/40">
+                  {dateKey === "Unknown"
+                    ? "Unknown Date"
+                    : formatDate(dayEntries[0].createdAt)}
+                </span>
+                <div className="h-px flex-1 bg-white/10" />
+              </div>
+
+              {/* Timeline entries */}
+              {dayEntries.map((entry, idx) => (
+                <div key={entry.id} className="flex">
+                  <TimelineConnector isLast={idx === dayEntries.length - 1} />
+                  <div className="min-w-0 flex-1 pb-1">
+                    <AuditEntry entry={entry} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          );
+        })}
       </div>
 
       {/* Pagination */}
@@ -392,7 +675,7 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
             Previous
           </button>
           <span className="text-xs text-white/40">
-            Showing {offset + 1}–{offset + entries.length}
+            Showing {offset + 1}–{offset + allEntries.length}
           </span>
           <button
             onClick={() => setOffset(offset + PAGE_SIZE)}
@@ -412,7 +695,7 @@ export function AuditTrailPanel({ projectId }: AuditTrailPanelProps) {
 }
 
 // ---------------------------------------------------------------------------
-// AuditEntry row
+// AuditEntry row (timeline item)
 // ---------------------------------------------------------------------------
 
 function AuditEntry({ entry }: { entry: AuditLogEntry }) {
@@ -425,7 +708,7 @@ function AuditEntry({ entry }: { entry: AuditLogEntry }) {
   return (
     <div
       className={cn(
-        "rounded-lg border border-white/5 bg-white/[0.03] px-4 py-3",
+        "sr-content rounded-lg border border-white/5 bg-white/[0.03] px-4 py-3",
         "transition hover:bg-white/[0.06]"
       )}
     >
@@ -442,8 +725,9 @@ function AuditEntry({ entry }: { entry: AuditLogEntry }) {
           <ActionIcon action={entry.action} className="h-3.5 w-3.5" />
         </div>
 
-        {/* Main content */}
+        {/* Main content: who, what, when, details */}
         <div className="min-w-0 flex-1">
+          {/* What */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium text-white">
               {ACTION_LABELS[entry.action] ?? entry.action}
@@ -469,13 +753,20 @@ function AuditEntry({ entry }: { entry: AuditLogEntry }) {
             )}
           </div>
 
+          {/* Who + When */}
           <div className="mt-1 flex items-center gap-3 text-xs text-white/40">
-            <span className="font-mono">{entry.userId}</span>
+            <span className="flex items-center gap-1">
+              <User className="h-3 w-3" weight="bold" />
+              <span className="font-mono">{entry.userId}</span>
+            </span>
             <span>·</span>
-            <span>{formatTimestamp(entry.createdAt)}</span>
+            <span className="flex items-center gap-1">
+              <CalendarBlank className="h-3 w-3" />
+              {formatTimestamp(entry.createdAt)}
+            </span>
           </div>
 
-          {/* Expandable details */}
+          {/* Expandable details for full context */}
           {hasDetails && (
             <button
               onClick={() => setExpanded((v) => !v)}
@@ -497,6 +788,11 @@ function AuditEntry({ entry }: { entry: AuditLogEntry }) {
             </pre>
           )}
         </div>
+
+        {/* Timestamp shorthand on right */}
+        <span className="shrink-0 text-xs text-white/30">
+          {formatTime(entry.createdAt)}
+        </span>
       </div>
     </div>
   );
