@@ -29,6 +29,7 @@ import {
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { EmptyState } from "@/components/systematic-review/EmptyState";
+import { ScreeningEmptyState } from "@/components/systematic-review/SREmptyState";
 import { useSystematicReviewStore } from "@/stores/systematic-review-store";
 import dynamic from "next/dynamic";
 import { type ScreeningPaper } from "@/components/systematic-review/ScreeningPDFViewer";
@@ -620,6 +621,13 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
           <span>{error}</span>
           <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
         </div>
+      )}
+
+      {/* Empty state — no papers imported yet */}
+      {!isLoading && progress && progress.total === 0 && (
+        <ScreeningEmptyState
+          onGoToImport={() => useSystematicReviewStore.getState().setActiveTab("import")}
+        />
       )}
 
       {/* Overall Progress Bar */}

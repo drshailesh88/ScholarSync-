@@ -228,6 +228,43 @@ body {
   background: rgba(255,255,255,0.2);
 }
 
+/* ===== Systematic Review Design System ===== */
+
+/* SR panel wrapper — consistent padding and glass surface */
+.sr-panel {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* SR content area — max-width + centered for readability */
+.sr-content {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem;
+}
+
+/* SR serif title — Source Serif 4 for editorial feel */
+.sr-title {
+  font-family: var(--font-serif-family);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* SR subtitle — DM Sans secondary text */
+.sr-subtitle {
+  font-family: var(--font-sans-family);
+  color: var(--ink-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
 /* ===== Academic Editor Styles ===== */
 
 /* ===== Premium Editor Surface ===== */

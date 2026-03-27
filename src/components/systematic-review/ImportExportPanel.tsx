@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Upload,
   Download,
@@ -12,6 +12,7 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { ImportEmptyState } from "@/components/systematic-review/SREmptyState";
 import type { RevManExportPackage } from "@/lib/systematic-review/revman-export";
 
 // ---------------------------------------------------------------------------
@@ -30,6 +31,16 @@ type PaperFilter = "all" | "included" | "excluded";
 // ---------------------------------------------------------------------------
 
 export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
+  // Paper count for empty state
+  const [paperCount, setPaperCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/systematic-review/screen?projectId=${projectId}&limit=0`)
+      .then((r) => r.json())
+      .then((d) => setPaperCount(d.progress?.total ?? 0))
+      .catch(() => setPaperCount(0));
+  }, [projectId]);
+
   // Import state
   const [importContent, setImportContent] = useState("");
   const [isImporting, setIsImporting] = useState(false);
@@ -194,6 +205,11 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
           papers for use in reference managers.
         </p>
       </div>
+
+      {/* Empty state when no papers imported yet */}
+      {paperCount === 0 && !importResult && (
+        <ImportEmptyState />
+      )}
 
       {/* ─── Import Section ─── */}
       <div className="space-y-4">

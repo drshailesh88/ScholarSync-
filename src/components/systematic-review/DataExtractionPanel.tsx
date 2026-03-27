@@ -10,7 +10,6 @@ import {
   Lightning,
   CheckCircle,
   WarningCircle,
-  Info,
   ArrowsClockwise,
   Quotes,
   X,
@@ -22,7 +21,8 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
-import { EmptyState } from "@/components/systematic-review/EmptyState";
+import { ExtractionEmptyState } from "@/components/systematic-review/SREmptyState";
+import { useSystematicReviewStore } from "@/stores/systematic-review-store";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -953,12 +953,8 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
               Loading papers...
             </div>
           ) : papers.length === 0 ? (
-            <EmptyState
-              icon={Info}
-              title="No extractions yet"
-              description="Screen and include papers first, then return here to extract structured data from each study."
-              tip="Tip: Define your extraction columns above before running bulk extraction."
-              className="py-10"
+            <ExtractionEmptyState
+              onGoToScreening={() => useSystematicReviewStore.getState().setActiveTab("screening")}
             />
           ) : (
             <div className="space-y-2 max-h-80 overflow-y-auto">

@@ -7,17 +7,16 @@ import {
   Plus,
   FlowArrow,
   CircleNotch,
-  MagnifyingGlass,
   ArrowRight,
 } from "@phosphor-icons/react";
-import { EmptyState } from "@/components/systematic-review/EmptyState";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { ReviewTypeSelector } from "@/components/systematic-review/ReviewTypeSelector";
-import type { ReviewType, SRProject } from "@/stores/systematic-review-store";
+import { HubEmptyState } from "@/components/systematic-review/SREmptyState";
+import type { ReviewType, ReviewStage, SRProject } from "@/stores/systematic-review-store";
 
 // ---------------------------------------------------------------------------
-// Stage labels for display
+// Stage labels & colours
 // ---------------------------------------------------------------------------
 
 const STAGE_LABELS: Record<string, string> = {
@@ -31,14 +30,44 @@ const STAGE_LABELS: Record<string, string> = {
 };
 
 const STAGE_COLORS: Record<string, string> = {
-  search_strategy: "bg-blue-500/10 text-blue-600",
-  screening: "bg-amber-500/10 text-amber-600",
-  full_text_screening: "bg-orange-500/10 text-orange-600",
-  data_extraction: "bg-purple-500/10 text-purple-600",
-  risk_of_bias: "bg-rose-500/10 text-rose-600",
-  meta_analysis: "bg-emerald-500/10 text-emerald-600",
-  reporting: "bg-sky-500/10 text-sky-600",
+  search_strategy: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  screening: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  full_text_screening: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
+  data_extraction: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+  risk_of_bias: "bg-rose-500/10 text-rose-600 dark:text-rose-400",
+  meta_analysis: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  reporting: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
 };
+
+// Ordered phases for the progress dots
+const PHASES: ReviewStage[] = [
+  "search_strategy",
+  "screening",
+  "full_text_screening",
+  "data_extraction",
+  "risk_of_bias",
+  "meta_analysis",
+  "reporting",
+];
+
+function phaseIndex(stage: ReviewStage) {
+  const idx = PHASES.indexOf(stage);
+  return idx === -1 ? 0 : idx;
+}
+
+function relativeTime(dateStr: string) {
+  const now = Date.now();
+  const then = new Date(dateStr).getTime();
+  const diff = now - then;
+  const mins = Math.floor(diff / 60_000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString();
+}
 
 // ---------------------------------------------------------------------------
 // Main Page — Project Hub
@@ -120,7 +149,9 @@ export default function SystematicReviewHubPage() {
       <div className="px-6 py-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-ink flex items-center gap-2">
+            <h1
+              className="text-xl font-semibold text-ink flex items-center gap-2 sr-title"
+            >
               <FlowArrow weight="duotone" className="text-brand" />
               Systematic Reviews
             </h1>
@@ -131,7 +162,7 @@ export default function SystematicReviewHubPage() {
           </div>
           <button
             onClick={openCreateFlow}
-            className="px-4 py-2 bg-brand text-white rounded-lg text-sm font-medium hover:bg-brand/90 flex items-center gap-2"
+            className="px-4 py-2 bg-brand text-white rounded-lg text-sm font-medium hover:bg-brand-hover transition-colors flex items-center gap-2"
           >
             <Plus weight="bold" size={16} />
             New Review
@@ -148,13 +179,13 @@ export default function SystematicReviewHubPage() {
       )}
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-6 sr-content">
         {/* Create form */}
         {showCreate && (
           <>
             {creationStep === "title" && (
               <GlassPanel className="p-6 mb-6 max-w-2xl">
-                <h2 className="text-lg font-semibold text-ink mb-3">
+                <h2 className="text-lg font-semibold text-ink mb-3 sr-title">
                   New Systematic Review
                 </h2>
                 <div className="mb-3">
@@ -189,7 +220,7 @@ export default function SystematicReviewHubPage() {
                   <button
                     onClick={() => setCreationStep("type")}
                     disabled={isCreating || !newTitle.trim()}
-                    className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+                    className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-50 flex items-center gap-2"
                   >
                     Next
                     <ArrowRight weight="bold" size={16} />
@@ -256,74 +287,102 @@ export default function SystematicReviewHubPage() {
           </div>
         )}
 
-        {/* Empty state */}
-        {!isLoading && projects.length === 0 && (
-          <EmptyState
-            icon={MagnifyingGlass}
-            title="No systematic reviews yet"
-            description="Create your first PRISMA 2020-compliant systematic review. Our AI will help you through every step — from search strategy to meta-analysis."
-            actionLabel="Create Your First Review"
-            onAction={openCreateFlow}
-            tip="Tip: Each review follows the PRISMA 2020 checklist automatically."
-          />
+        {/* Empty state — Sprint 4 SREmptyState */}
+        {!isLoading && projects.length === 0 && !showCreate && (
+          <HubEmptyState onCreateReview={openCreateFlow} />
         )}
 
-        {/* Project cards */}
+        {/* Project card grid — Sprint 5 card layout */}
         {!isLoading && projects.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project) => (
-              <Link
-                key={project.id}
-                href={`/systematic-review/${project.id}`}
-                className="group"
-              >
-                <GlassPanel className="p-5 hover:border-brand/30 transition-colors h-full">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-sm font-semibold text-ink group-hover:text-brand transition-colors line-clamp-2">
-                      {project.title}
-                    </h3>
-                    <ArrowRight
-                      weight="bold"
-                      size={16}
-                      className="text-ink-muted group-hover:text-brand transition-colors shrink-0 mt-0.5"
-                    />
-                  </div>
-
-                  {/* Stage badge */}
-                  <div className="mb-3">
-                    <span
-                      className={cn(
-                        "px-2 py-0.5 rounded text-xs font-medium",
-                        STAGE_COLORS[project.reviewStage] ||
-                          "bg-surface-raised text-ink-muted"
-                      )}
-                    >
-                      {STAGE_LABELS[project.reviewStage] || project.reviewStage}
-                    </span>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="flex items-center gap-4 text-xs text-ink-muted">
-                    <span>{project.paperCount} papers</span>
-                    {project.screeningProgress > 0 && (
-                      <span>{project.screeningProgress}% screened</span>
-                    )}
-                  </div>
-
-                  {/* Progress bar */}
-                  {project.paperCount > 0 && (
-                    <div className="mt-3 h-1 bg-surface-raised rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-brand/60 rounded-full transition-all"
-                        style={{
-                          width: `${project.screeningProgress}%`,
-                        }}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {projects.map((project) => {
+              const currentPhase = phaseIndex(project.reviewStage);
+              return (
+                <Link
+                  key={project.id}
+                  href={`/systematic-review/${project.id}`}
+                  className="group"
+                >
+                  <div className="sr-panel h-full flex flex-col hover:border-brand/30 transition-all">
+                    {/* Title + arrow */}
+                    <div className="flex items-start justify-between mb-3">
+                      <h3
+                        className="text-sm font-semibold text-ink group-hover:text-brand transition-colors line-clamp-2 leading-snug"
+                        style={{ fontFamily: "var(--font-serif-family)" }}
+                      >
+                        {project.title}
+                      </h3>
+                      <ArrowRight
+                        weight="bold"
+                        size={16}
+                        className="text-ink-muted group-hover:text-brand transition-colors shrink-0 mt-0.5 ml-2"
                       />
                     </div>
-                  )}
-                </GlassPanel>
-              </Link>
-            ))}
+
+                    {/* Phase badge */}
+                    <div className="mb-3">
+                      <span
+                        className={cn(
+                          "px-2 py-0.5 rounded-md text-xs font-medium",
+                          STAGE_COLORS[project.reviewStage] ||
+                            "bg-surface-raised text-ink-muted"
+                        )}
+                      >
+                        {STAGE_LABELS[project.reviewStage] || project.reviewStage}
+                      </span>
+                    </div>
+
+                    {/* Stats row */}
+                    <div className="flex items-center gap-4 text-xs text-ink-muted mb-3">
+                      <span>{project.paperCount.toLocaleString()} papers</span>
+                      <span>{relativeTime(project.createdAt)}</span>
+                    </div>
+
+                    {/* Phase progress dots */}
+                    <div className="mt-auto pt-3 border-t border-border-subtle">
+                      <div className="flex items-center gap-1.5">
+                        {PHASES.map((phase, i) => (
+                          <div
+                            key={phase}
+                            className={cn(
+                              "h-1.5 flex-1 rounded-full transition-colors",
+                              i <= currentPhase
+                                ? "bg-brand/70"
+                                : "bg-surface-raised"
+                            )}
+                            title={STAGE_LABELS[phase]}
+                          />
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-ink-muted mt-1.5">
+                        {STAGE_LABELS[project.reviewStage]}
+                        {project.screeningProgress > 0 &&
+                          ` · ${project.screeningProgress}% screened`}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+
+            {/* "Start New Review" CTA card */}
+            <button
+              onClick={openCreateFlow}
+              className="sr-panel h-full flex flex-col items-center justify-center min-h-[200px] border-dashed hover:border-brand/40 hover:bg-brand/3 transition-all cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-brand/8 flex items-center justify-center mb-3 group-hover:bg-brand/15 transition-colors">
+                <Plus weight="bold" size={24} className="text-brand" />
+              </div>
+              <span
+                className="text-sm font-semibold text-ink-muted group-hover:text-brand transition-colors"
+                style={{ fontFamily: "var(--font-serif-family)" }}
+              >
+                Start New Review
+              </span>
+              <span className="text-xs text-ink-muted/70 mt-1">
+                PRISMA 2020 compliant
+              </span>
+            </button>
           </div>
         )}
       </div>
