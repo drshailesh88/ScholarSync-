@@ -25,6 +25,8 @@ function looksLikeMarkdown(text: string): boolean {
     else if (/^```/.test(trimmed)) markdownSignals++;
     // Horizontal rules
     else if (/^---/.test(trimmed)) markdownSignals++;
+    // Tables
+    else if (/^\|.+\|/.test(trimmed)) markdownSignals++;
   }
 
   // Need at least 2 markdown signals to avoid false positives
@@ -63,6 +65,8 @@ function markdownToHtml(md: string): string {
     result = result.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>");
     // Bold
     result = result.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    // Strikethrough
+    result = result.replace(/~~(.+?)~~/g, "<s>$1</s>");
     // Italic
     result = result.replace(/\*(.+?)\*/g, "<em>$1</em>");
     // Inline code
@@ -125,10 +129,51 @@ function markdownToHtml(md: string): string {
       continue;
     }
 
-    // Blockquote
-    if (/^>\s/.test(trimmed)) {
+    // Table — detect `|`-delimited rows (at least 2 cells)
+    if (/^\|(.+)\|/.test(trimmed)) {
       closeList();
-      html.push(`<blockquote><p>${processInline(trimmed.slice(2))}</p></blockquote>`);
+      // Collect all consecutive table rows
+      const tableRows: string[] = [trimmed];
+      while (i + 1 < lines.length && /^\|(.+)\|/.test(lines[i + 1].trimStart())) {
+        i++;
+        tableRows.push(lines[i].trimStart());
+      }
+      // Parse table: skip separator row (|---|---|)
+      const dataRows = tableRows.filter(
+        (row) => !/^\|[\s\-:|]+\|$/.test(row)
+      );
+      if (dataRows.length > 0) {
+        html.push('<table class="academic-table">');
+        dataRows.forEach((row, idx) => {
+          const cells = row
+            .split("|")
+            .slice(1, -1)
+            .map((c) => c.trim());
+          const tag = idx === 0 ? "th" : "td";
+          if (idx === 0) html.push("<thead>");
+          if (idx === 1) html.push("<tbody>");
+          html.push("<tr>");
+          cells.forEach((cell) => {
+            html.push(`<${tag}>${processInline(cell)}</${tag}>`);
+          });
+          html.push("</tr>");
+          if (idx === 0) html.push("</thead>");
+        });
+        if (dataRows.length > 1) html.push("</tbody>");
+        html.push("</table>");
+      }
+      continue;
+    }
+
+    // Blockquote — merge consecutive `>` lines into one blockquote
+    if (/^>\s?/.test(trimmed)) {
+      closeList();
+      const quoteLines: string[] = [trimmed.replace(/^>\s?/, "")];
+      while (i + 1 < lines.length && /^>\s?/.test(lines[i + 1].trimStart())) {
+        i++;
+        quoteLines.push(lines[i].trimStart().replace(/^>\s?/, ""));
+      }
+      html.push(`<blockquote><p>${quoteLines.map(processInline).join("<br>")}</p></blockquote>`);
       continue;
     }
 
