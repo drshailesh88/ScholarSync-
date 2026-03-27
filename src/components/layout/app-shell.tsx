@@ -21,6 +21,7 @@ const DISTRACTION_FREE_ROUTES = ["/studio", "/latex"];
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [buddyOpen, setBuddyOpen] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_DEFAULT);
@@ -63,11 +64,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             open={sidebarOpen}
             onClose={() => setSidebarOpen(false)}
             onShortcutsOpen={() => setShortcutsOpen(true)}
-            width={sidebarWidth}
+            width={sidebarCollapsed ? 48 : sidebarWidth}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed((c) => !c)}
           />
-          <div className="hidden md:flex h-screen">
-            <ResizeHandle side="right" onResize={handleSidebarResize} />
-          </div>
+          {!sidebarCollapsed && (
+            <div className="hidden md:flex h-screen">
+              <ResizeHandle side="right" onResize={handleSidebarResize} />
+            </div>
+          )}
         </>
       )}
 

@@ -38,6 +38,7 @@ import { HashtagSuggestionExtension } from "./extensions/hashtag-suggestion";
 import { createHashtagMenuRenderer } from "./HashtagMenu";
 import { Footnote } from "./extensions/footnote-node";
 import { BlockMarkExtension } from "./extensions/block-mark";
+import { MarkdownPaste } from "./extensions/markdown-paste";
 import { FootnoteSection } from "./FootnoteSection";
 import { OutlinePlugin } from "./extensions/outline-plugin";
 import { DocumentOutline } from "./DocumentOutline";
@@ -210,6 +211,7 @@ export function TiptapEditor({
       CitationNode,
       BibliographyNode,
       CitationNumbering,
+      MarkdownPaste,
     ],
     content: content || undefined,
     editorProps: {

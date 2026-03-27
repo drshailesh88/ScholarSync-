@@ -2,6 +2,7 @@ import { Extension } from "@tiptap/core";
 import type { Editor, Range } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import type { SuggestionOptions } from "@tiptap/suggestion";
+import { PluginKey } from "@tiptap/pm/state";
 
 export interface HashtagSuggestionItem {
   tag: string;
@@ -22,6 +23,17 @@ export const HashtagSuggestionExtension =
         suggestion: {
           char: "#",
           allowSpaces: false,
+          allow: ({ state, range }: { state: unknown; range: unknown }) => {
+            const s = state as {
+              doc: {
+                resolve: (pos: number) => { parentOffset: number };
+              };
+            };
+            const r = range as { from: number };
+            const $from = s.doc.resolve(r.from);
+            // Don't trigger hashtag at the start of a paragraph — let heading input rules handle # at pos 0
+            return $from.parentOffset > 0;
+          },
           items: async ({ query }: { query: string }) => {
             if (!query) return [];
 
@@ -80,6 +92,7 @@ export const HashtagSuggestionExtension =
     addProseMirrorPlugins() {
       return [
         Suggestion({
+          pluginKey: new PluginKey("hashtagSuggestion"),
           editor: this.editor,
           ...this.options.suggestion,
         }),

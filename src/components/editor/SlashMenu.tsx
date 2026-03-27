@@ -113,7 +113,7 @@ export const SlashMenuList = forwardRef<SlashMenuListRef, SlashMenuListProps>(
 
     if (items.length === 0) {
       return (
-        <div className="bg-surface border border-border rounded-lg shadow-lg p-3 w-80">
+        <div className="bg-surface border border-border rounded-xl shadow-lg dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)] p-3 w-80">
           <p className="text-xs text-ink-muted text-center py-4">
             No commands found
           </p>
@@ -124,7 +124,7 @@ export const SlashMenuList = forwardRef<SlashMenuListRef, SlashMenuListProps>(
     return (
       <div
         ref={scrollRef}
-        className="bg-surface border border-border rounded-lg shadow-lg p-1.5 w-80 max-h-[400px] overflow-y-auto"
+        className="bg-surface border border-border rounded-xl shadow-lg dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)] p-1.5 w-80 max-h-[400px] overflow-y-auto"
       >
         {items.map((item, idx) => {
           const showCategory = idx === 0 || items[idx - 1]?.category !== item.category;
@@ -149,17 +149,17 @@ export const SlashMenuList = forwardRef<SlashMenuListRef, SlashMenuListProps>(
               >
                 <div
                   className={cn(
-                    "w-8 h-8 rounded-md flex items-center justify-center shrink-0",
+                    "w-7 h-7 rounded-md flex items-center justify-center shrink-0",
                     idx === selectedIndex
-                      ? "bg-brand/15"
-                      : "bg-surface-raised"
+                      ? "bg-brand/12"
+                      : "bg-surface-raised/60"
                   )}
                 >
                   <IconComponent
-                    size={16}
+                    size={15}
                     weight={item.icon === "ai" ? "fill" : "regular"}
                     className={
-                      idx === selectedIndex ? "text-brand" : "text-ink-muted"
+                      idx === selectedIndex ? "text-brand" : "text-ink-muted/70"
                     }
                   />
                 </div>

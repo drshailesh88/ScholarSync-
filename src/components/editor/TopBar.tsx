@@ -97,7 +97,7 @@ export function TopBar({ editor, onToggleReferenceSidebar }: TopBarProps) {
 
   return (
     <>
-      <div className="h-9 flex items-center justify-between px-3 bg-surface-raised/50 border-b border-border text-xs select-none shrink-0">
+      <div className="h-8 flex items-center justify-between px-3 bg-surface/80 backdrop-blur-sm border-b border-border/50 text-xs select-none shrink-0">
       {/* Left: Undo/Redo */}
       <div className="flex items-center gap-0.5">
         <button

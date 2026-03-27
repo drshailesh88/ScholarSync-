@@ -202,7 +202,7 @@ export function CitationNodeView(props: NodeViewProps) {
       {showPopover && (
         <div
           ref={popoverRef}
-          className="absolute z-50 top-full left-0 mt-1 w-72 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl"
+          className="absolute z-50 top-full left-0 mt-1 w-72 rounded-xl bg-surface border border-border shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-3 space-y-2">

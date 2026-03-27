@@ -32,7 +32,7 @@ export function DocumentOutline({ editor }: DocumentOutlineProps) {
 
   return (
     <div className="fixed left-6 top-14 z-30">
-      <div className="w-56 bg-white/95 dark:bg-surface/95 backdrop-blur-sm border border-border rounded-lg shadow-sm overflow-hidden animate-in fade-in slide-in-from-left-2 duration-200">
+      <div className="w-56 bg-surface/95 backdrop-blur-sm border border-border rounded-lg shadow-sm overflow-hidden animate-in fade-in slide-in-from-left-2 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between px-3 py-2 border-b border-border">
           <span className="text-[11px] font-medium text-ink/40">

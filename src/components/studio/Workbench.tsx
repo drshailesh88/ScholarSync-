@@ -1,13 +1,28 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import type { Editor } from "@tiptap/react";
-import { X } from "@phosphor-icons/react";
+import {
+  X,
+  MagnifyingGlass,
+  Robot,
+  CheckCircle,
+} from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useWorkbenchStore } from "@/stores/workbench-store";
 import { WorkbenchSources } from "./WorkbenchSources";
 import { WorkbenchAssistant } from "./WorkbenchAssistant";
 import { WorkbenchReview } from "./WorkbenchReview";
+
+const WORKBENCH_MIN = 320;
+const WORKBENCH_MAX = 560;
+const WORKBENCH_DEFAULT = 380;
+
+const TOOL_TABS = [
+  { key: "sources" as const, label: "Sources", icon: MagnifyingGlass },
+  { key: "assistant" as const, label: "Assistant", icon: Robot },
+  { key: "review" as const, label: "Review", icon: CheckCircle },
+];
 
 interface WorkbenchProps {
   editor: Editor | null;
@@ -30,7 +45,10 @@ export function Workbench({
   onOpenCitationDialog,
   onInsertCitation,
 }: WorkbenchProps) {
-  const { isOpen, activeTool, close } = useWorkbenchStore();
+  const { isOpen, activeTool, setTool, close } = useWorkbenchStore();
+  const [panelWidth, setPanelWidth] = useState(WORKBENCH_DEFAULT);
+  const resizing = useRef(false);
+  const lastX = useRef(0);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -44,29 +62,86 @@ export function Workbench({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
+  // Resize handle drag
+  const onResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    resizing.current = true;
+    lastX.current = e.clientX;
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+
+    const onMouseMove = (ev: MouseEvent) => {
+      if (!resizing.current) return;
+      const delta = lastX.current - ev.clientX; // dragging left = wider
+      lastX.current = ev.clientX;
+      setPanelWidth((w) => Math.min(WORKBENCH_MAX, Math.max(WORKBENCH_MIN, w + delta)));
+    };
+
+    const onMouseUp = () => {
+      resizing.current = false;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  }, []);
+
   return (
     <div
       className={cn(
-        "absolute top-2 right-2 bottom-2 z-30 flex flex-col rounded-xl bg-surface transition-all duration-300 ease-in-out overflow-hidden",
+        "absolute top-0 right-0 bottom-0 z-30 flex flex-col bg-surface border-l border-border transition-all duration-200 ease-in-out overflow-hidden",
         isOpen
-          ? "w-[380px] translate-x-0 opacity-100"
-          : "w-0 translate-x-8 opacity-0 pointer-events-none"
+          ? "translate-x-0 opacity-100"
+          : "w-0 translate-x-4 opacity-0 pointer-events-none"
       )}
-      style={{
-        boxShadow: isOpen
-          ? "0 8px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)"
-          : "none",
-      }}
+      style={{ width: isOpen ? panelWidth : 0 }}
     >
-      <button
-        onClick={close}
-        className="absolute top-2 right-2 z-10 p-1 rounded-md text-ink/30 hover:text-ink/60 transition-colors"
-        title="Close (Esc)"
+      {/* Resize handle — left edge */}
+      <div
+        onMouseDown={onResizeStart}
+        className="absolute left-0 top-0 bottom-0 w-1 cursor-col-resize z-40 group"
+        style={{ marginLeft: -2 }}
       >
-        <X size={14} />
-      </button>
+        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-brand/40 group-active:bg-brand transition-colors" />
+      </div>
 
-      <div className="flex-1 overflow-hidden relative bg-surface">
+      {/* VSCode-style tab bar */}
+      <div className="flex items-center justify-between px-1 h-9 border-b border-border shrink-0">
+        <div className="flex items-center gap-0.5">
+          {TOOL_TABS.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTool === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setTool(tab.key)}
+                className={cn(
+                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors",
+                  isActive
+                    ? "text-ink font-medium bg-surface-raised"
+                    : "text-ink-muted hover:text-ink hover:bg-surface-raised/50"
+                )}
+              >
+                <Icon size={13} weight={isActive ? "bold" : "regular"} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        <button
+          onClick={close}
+          className="p-1 rounded-md text-ink-muted/50 hover:text-ink-muted transition-colors"
+          title="Close (Esc)"
+        >
+          <X size={13} />
+        </button>
+      </div>
+
+      {/* Panel content */}
+      <div className="flex-1 overflow-hidden relative">
         <div className={cn("absolute inset-0 flex flex-col", activeTool !== "sources" && "invisible")}>
           <WorkbenchSources
             onOpenCitationDialog={onOpenCitationDialog}

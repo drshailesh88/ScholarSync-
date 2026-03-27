@@ -36,6 +36,7 @@ import { CitationNode } from "./extensions/citation-node";
 import { BibliographyNode } from "./extensions/bibliography-node";
 import { createCitationPlugin } from "./extensions/citation-plugin";
 import { createSlashMenuRenderer } from "./SlashMenu";
+import { MarkdownPaste } from "./extensions/markdown-paste";
 import { SelectionToolbar } from "./SelectionToolbar";
 import { TopBar } from "./TopBar";
 import { DocumentOutline } from "./DocumentOutline";
@@ -190,13 +191,14 @@ export function AcademicEditor({
       CitationNode,
       BibliographyNode,
       CitationNumbering,
+      MarkdownPaste,
     ],
     content: content || undefined,
     editable: !readOnly && mode !== "viewing",
     editorProps: {
       attributes: {
         class:
-          "academic-editor-content prose prose-lg max-w-none focus:outline-none min-h-[calc(100vh-12rem)]",
+          "academic-editor-content max-w-none focus:outline-none min-h-[calc(100vh-12rem)]",
         spellcheck: "true",
       },
       handleKeyDown: (_view, event) => {
