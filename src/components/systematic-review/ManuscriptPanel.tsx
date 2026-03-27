@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import {
   Article,
   CircleNotch,
@@ -8,9 +8,11 @@ import {
   Download,
   Clipboard,
   CheckCircle,
-  ArrowRight,
+  ArrowsClockwise,
   Lightning,
   FileText,
+  FileTex,
+  Export,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
@@ -19,11 +21,12 @@ import { cn } from "@/lib/utils";
 // ---------------------------------------------------------------------------
 
 type ManuscriptSection =
-  | "introduction"
   | "methods"
   | "results"
-  | "discussion"
-  | "abstract";
+  | "discussion";
+
+type CitationStyle = "apa" | "vancouver" | "harvard" | "chicago";
+type ExportFormat = "docx" | "latex" | "plaintext";
 
 interface SectionData {
   section: ManuscriptSection;
@@ -41,16 +44,6 @@ interface ManuscriptPanelProps {
 
 const SECTIONS: { key: ManuscriptSection; label: string; description: string }[] = [
   {
-    key: "abstract",
-    label: "Abstract",
-    description: "Structured abstract (Background, Objectives, Methods, Results, Conclusions)",
-  },
-  {
-    key: "introduction",
-    label: "Introduction",
-    description: "Background, rationale, and review objectives using PICO framework",
-  },
-  {
     key: "methods",
     label: "Methods",
     description: "Protocol, search strategy, eligibility, screening, data extraction, RoB 2, synthesis",
@@ -67,38 +60,68 @@ const SECTIONS: { key: ManuscriptSection; label: string; description: string }[]
   },
 ];
 
+const CITATION_STYLES: { value: CitationStyle; label: string }[] = [
+  { value: "apa", label: "APA 7th" },
+  { value: "vancouver", label: "Vancouver" },
+  { value: "harvard", label: "Harvard" },
+  { value: "chicago", label: "Chicago" },
+];
+
+const EXPORT_FORMATS: { value: ExportFormat; label: string; icon: typeof Download }[] = [
+  { value: "docx", label: "DOCX", icon: FileText },
+  { value: "latex", label: "LaTeX", icon: FileTex },
+  { value: "plaintext", label: "Plain Text", icon: Export },
+];
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function countWords(text: string): number {
+  if (!text || !text.trim()) return 0;
+  return text.trim().split(/\s+/).length;
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
   const [sections, setSections] = useState<Record<ManuscriptSection, SectionData | null>>({
-    abstract: null,
-    introduction: null,
     methods: null,
     results: null,
     discussion: null,
   });
-  const [activeSection, setActiveSection] = useState<ManuscriptSection>("introduction");
+  const [activeTab, setActiveTab] = useState<ManuscriptSection>("methods");
   const [generatingSection, setGeneratingSection] = useState<ManuscriptSection | null>(null);
   const [isGeneratingAll, setIsGeneratingAll] = useState(false);
   const [editingSection, setEditingSection] = useState<ManuscriptSection | null>(null);
   const [editContent, setEditContent] = useState("");
-  const [customInstructions, setCustomInstructions] = useState("");
+  const [citationStyle, setCitationStyle] = useState<CitationStyle>("apa");
   const [error, setError] = useState<string | null>(null);
   const [copiedSection, setCopiedSection] = useState<ManuscriptSection | null>(null);
-  const [isExportingDocx, setIsExportingDocx] = useState(false);
+  const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
 
   const generatedCount = Object.values(sections).filter(Boolean).length;
 
-  // Build existing sections map for context when generating abstract
-  const getExistingSectionsMap = useCallback((): Record<string, string> => {
-    const map: Record<string, string> = {};
-    for (const [key, data] of Object.entries(sections)) {
-      if (data) map[key] = data.content;
+  // Word counts per section
+  const wordCounts = useMemo(() => {
+    const counts: Record<ManuscriptSection, number> = {
+      methods: 0,
+      results: 0,
+      discussion: 0,
+    };
+    for (const key of Object.keys(counts) as ManuscriptSection[]) {
+      const data = sections[key];
+      if (data) counts[key] = countWords(data.content);
     }
-    return map;
+    return counts;
   }, [sections]);
+
+  const totalWords = useMemo(
+    () => Object.values(wordCounts).reduce((a: number, b: number) => a + b, 0),
+    [wordCounts]
+  );
 
   // Generate a single section
   const generateSection = useCallback(
@@ -113,9 +136,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
           body: JSON.stringify({
             projectId,
             section,
-            customInstructions: customInstructions || undefined,
-            existingSections:
-              section === "abstract" ? getExistingSectionsMap() : undefined,
+            citationStyle,
           }),
         });
 
@@ -125,7 +146,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
         }
 
         const data = await res.json();
-        setSections((prev) => ({
+        setSections((prev: Record<ManuscriptSection, SectionData | null>) => ({
           ...prev,
           [section]: data.result,
         }));
@@ -137,7 +158,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
         setGeneratingSection(null);
       }
     },
-    [projectId, customInstructions, getExistingSectionsMap]
+    [projectId, citationStyle]
   );
 
   // Generate all sections sequentially
@@ -145,16 +166,10 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     setIsGeneratingAll(true);
     setError(null);
 
-    const order: ManuscriptSection[] = [
-      "introduction",
-      "methods",
-      "results",
-      "discussion",
-      "abstract",
-    ];
+    const order: ManuscriptSection[] = ["methods", "results", "discussion"];
 
     for (const section of order) {
-      setActiveSection(section);
+      setActiveTab(section);
       try {
         setGeneratingSection(section);
         const res = await fetch("/api/systematic-review/manuscript", {
@@ -163,21 +178,17 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
           body: JSON.stringify({
             projectId,
             section,
-            customInstructions: customInstructions || undefined,
-            existingSections:
-              section === "abstract" ? getExistingSectionsMap() : undefined,
+            citationStyle,
           }),
         });
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(
-            err.error || `Failed to generate ${section}`
-          );
+          throw new Error(err.error || `Failed to generate ${section}`);
         }
 
         const data = await res.json();
-        setSections((prev) => ({
+        setSections((prev: Record<ManuscriptSection, SectionData | null>) => ({
           ...prev,
           [section]: data.result,
         }));
@@ -192,9 +203,9 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     }
 
     setIsGeneratingAll(false);
-  }, [projectId, customInstructions, getExistingSectionsMap]);
+  }, [projectId, citationStyle]);
 
-  // Start editing
+  // Editing
   const startEdit = (section: ManuscriptSection) => {
     const data = sections[section];
     if (!data) return;
@@ -202,10 +213,9 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     setEditContent(data.content);
   };
 
-  // Save edit
   const saveEdit = () => {
     if (!editingSection || !sections[editingSection]) return;
-    setSections((prev) => ({
+    setSections((prev: Record<ManuscriptSection, SectionData | null>) => ({
       ...prev,
       [editingSection]: {
         ...prev[editingSection]!,
@@ -216,7 +226,12 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     setEditContent("");
   };
 
-  // Copy section to clipboard
+  const cancelEdit = () => {
+    setEditingSection(null);
+    setEditContent("");
+  };
+
+  // Copy section
   const copySection = (section: ManuscriptSection) => {
     const data = sections[section];
     if (!data) return;
@@ -225,74 +240,14 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     setTimeout(() => setCopiedSection(null), 2000);
   };
 
-  // Export as markdown file
-  const exportMarkdown = async () => {
-    const generatedSections = Object.values(sections).filter(
-      Boolean
-    ) as SectionData[];
-    if (generatedSections.length === 0) return;
-
-    // Build markdown client-side for immediate download
-    const sectionOrder: ManuscriptSection[] = [
-      "abstract",
-      "introduction",
-      "methods",
-      "results",
-      "discussion",
-    ];
-    const sectionTitles: Record<ManuscriptSection, string> = {
-      abstract: "Abstract",
-      introduction: "Introduction",
-      methods: "Methods",
-      results: "Results",
-      discussion: "Discussion",
-    };
-
-    const sorted = generatedSections.sort(
-      (a, b) =>
-        sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section)
-    );
-
-    const lines = [
-      "# Systematic Review Manuscript Draft",
-      "",
-      `*Generated on ${new Date().toLocaleDateString()} — AI-assisted draft requiring human review and editing.*`,
-      "",
-      "---",
-      "",
-    ];
-
-    for (const s of sorted) {
-      lines.push(`## ${sectionTitles[s.section]}`);
-      lines.push("");
-      lines.push(s.content);
-      lines.push("");
-      lines.push("---");
-      lines.push("");
-    }
-
-    lines.push(
-      "*Note: [PLACEHOLDER] markers indicate areas requiring manual input. All content should be verified for accuracy before submission.*"
-    );
-
-    const markdown = lines.join("\n");
-    const blob = new Blob([markdown], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "manuscript-draft.md";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  // Export as DOCX via API
-  const exportDocx = async () => {
+  // Export handler
+  const handleExport = async (format: ExportFormat) => {
     const generatedSections = Object.entries(sections).filter(
       ([, data]) => data !== null
     ) as [ManuscriptSection, SectionData][];
     if (generatedSections.length === 0) return;
 
-    setIsExportingDocx(true);
+    setExportingFormat(format);
     setError(null);
 
     try {
@@ -301,76 +256,152 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
         sectionsMap[key] = data.content;
       }
 
-      const res = await fetch("/api/systematic-review/manuscript-export", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          projectId,
-          title: "Systematic Review Manuscript Draft",
-          sections: sectionsMap,
-          format: "docx",
-        }),
-      });
+      if (format === "plaintext") {
+        // Client-side plain text export
+        const sectionOrder: ManuscriptSection[] = ["methods", "results", "discussion"];
+        const lines = ["SYSTEMATIC REVIEW MANUSCRIPT DRAFT", "", `Citation Style: ${citationStyle.toUpperCase()}`, ""];
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "DOCX export failed");
+        for (const key of sectionOrder) {
+          const data = sections[key];
+          if (!data) continue;
+          const label = SECTIONS.find((s) => s.key === key)?.label ?? key;
+          lines.push(`=== ${label.toUpperCase()} ===`, "", data.content, "");
+        }
+
+        lines.push(
+          "---",
+          "Note: [PLACEHOLDER] markers indicate areas requiring manual input.",
+          "All content should be verified for accuracy before submission."
+        );
+
+        const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "manuscript-draft.txt";
+        a.click();
+        URL.revokeObjectURL(url);
+      } else if (format === "latex") {
+        // Client-side LaTeX export
+        const sectionOrder: ManuscriptSection[] = ["methods", "results", "discussion"];
+        const lines = [
+          "\\documentclass[12pt]{article}",
+          "\\usepackage[utf8]{inputenc}",
+          "\\usepackage{geometry}",
+          "\\geometry{a4paper, margin=1in}",
+          "\\usepackage{setspace}",
+          "\\doublespacing",
+          "",
+          "\\title{Systematic Review Manuscript Draft}",
+          "\\date{\\today}",
+          "",
+          "\\begin{document}",
+          "\\maketitle",
+          "",
+        ];
+
+        for (const key of sectionOrder) {
+          const data = sections[key];
+          if (!data) continue;
+          const label = SECTIONS.find((s) => s.key === key)?.label ?? key;
+          // Escape LaTeX special characters in content
+          const escaped = data.content
+            .replace(/\\/g, "\\textbackslash{}")
+            .replace(/[&%$#_{}~^]/g, (m: string) => `\\${m}`);
+          lines.push(`\\section{${label}}`, "", escaped, "");
+        }
+
+        lines.push("\\end{document}");
+
+        const blob = new Blob([lines.join("\n")], { type: "application/x-latex" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "manuscript-draft.tex";
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        // DOCX via API
+        const res = await fetch("/api/systematic-review/manuscript-export", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectId,
+            title: "Systematic Review Manuscript Draft",
+            sections: sectionsMap,
+            format: "docx",
+            citationStyle,
+          }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || "DOCX export failed");
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "manuscript-draft.docx";
+        a.click();
+        URL.revokeObjectURL(url);
       }
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "manuscript-draft.docx";
-      a.click();
-      URL.revokeObjectURL(url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to export DOCX");
+      setError(err instanceof Error ? err.message : `Failed to export ${format}`);
     } finally {
-      setIsExportingDocx(false);
+      setExportingFormat(null);
     }
   };
 
-  const currentData = sections[activeSection];
-  const isEditing = editingSection === activeSection;
-  const isLoading = generatingSection === activeSection;
+  const currentData = sections[activeTab];
+  const isEditing = editingSection === activeTab;
+  const isLoading = generatingSection === activeTab;
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="max-w-5xl space-y-6">
       {/* Header */}
-      <div>
-        <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
-          <Article weight="duotone" className="text-brand" />
+      <div className="sr-panel p-6">
+        <h2 className="sr-panel-title">
+          <Article weight="duotone" className="text-brand" size={22} />
           Manuscript Draft Generator
         </h2>
         <p className="text-sm text-ink-muted mt-1">
           Generate IMRAD-structured manuscript sections from your review data.
-          Each section is pre-filled using your PICO, screening results,
+          Each section is auto-populated using your PICO, screening results,
           meta-analysis, and risk of bias assessments.
         </p>
-      </div>
 
-      {/* Custom instructions */}
-      <div className="p-4 bg-surface border border-border rounded-lg space-y-3">
-        <label className="text-xs text-ink-muted font-medium block">
-          Custom Instructions (optional)
-        </label>
-        <textarea aria-label="Text area"
-          value={customInstructions}
-          onChange={(e) => setCustomInstructions(e.target.value)}
-          placeholder="e.g., Focus on clinical implications, use APA style, emphasize heterogeneity..."
-          className="w-full h-16 px-3 py-2 bg-surface-alt border border-border rounded text-sm text-ink placeholder:text-ink-faint resize-y focus:outline-none focus:ring-2 focus:ring-brand/30"
-        />
-        <div className="flex gap-2">
+        {/* Controls row */}
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          {/* Citation style selector */}
+          <div className="flex items-center gap-2">
+            <label className="text-xs text-ink-muted font-medium">Citation Style</label>
+            <select
+              value={citationStyle}
+              onChange={(e) => setCitationStyle(e.target.value as CitationStyle)}
+              className="px-2.5 py-1.5 bg-surface-raised border border-border rounded-md text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"
+            >
+              {CITATION_STYLES.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="h-5 w-px bg-border" />
+
+          {/* Generate all */}
           <button
             onClick={generateAll}
             disabled={isGeneratingAll || !!generatingSection}
-            className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand-hover disabled:opacity-50 transition-colors"
           >
             {isGeneratingAll ? (
               <>
                 <CircleNotch weight="bold" className="animate-spin" size={16} />
-                Generating all sections...
+                Generating...
               </>
             ) : (
               <>
@@ -379,42 +410,41 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
               </>
             )}
           </button>
+
+          {/* Export buttons */}
           {generatedCount > 0 && (
             <>
-              <button
-                onClick={exportMarkdown}
-                className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink transition-colors"
-              >
-                <Download size={14} />
-                Export Markdown
-              </button>
-              <button
-                onClick={exportDocx}
-                disabled={isExportingDocx}
-                className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink disabled:opacity-50 transition-colors"
-              >
-                {isExportingDocx ? (
-                  <>
+              <div className="h-5 w-px bg-border" />
+              {EXPORT_FORMATS.map(({ value, label, icon: Icon }) => (
+                <button
+                  key={value}
+                  onClick={() => handleExport(value)}
+                  disabled={exportingFormat !== null}
+                  className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink disabled:opacity-50 transition-colors"
+                >
+                  {exportingFormat === value ? (
                     <CircleNotch weight="bold" className="animate-spin" size={14} />
-                    Exporting...
-                  </>
-                ) : (
-                  <>
-                    <Download size={14} />
-                    Download DOCX
-                  </>
-                )}
-              </button>
-              <a
-                href="/studio"
-                className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink transition-colors"
-              >
-                <FileText size={14} />
-                Open in Studio
-              </a>
+                  ) : (
+                    <Icon size={14} />
+                  )}
+                  {label}
+                </button>
+              ))}
             </>
           )}
         </div>
+
+        {/* Word count summary */}
+        {generatedCount > 0 && (
+          <div className="mt-3 flex items-center gap-4 text-[11px] text-ink-muted">
+            <span className="font-medium">
+              Total: {totalWords.toLocaleString()} words
+            </span>
+            <span className="text-ink-faint">
+              {generatedCount}/{SECTIONS.length} sections
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Error */}
@@ -430,94 +460,72 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
         </div>
       )}
 
-      {/* Section selector + content */}
-      <div className="flex gap-4">
-        {/* Left: section list */}
-        <div className="w-56 flex-shrink-0 space-y-1">
+      {/* Section tabs + content */}
+      <div className="sr-panel overflow-hidden">
+        {/* Tab bar */}
+        <div className="flex border-b border-border">
           {SECTIONS.map(({ key, label }) => {
+            const isActive = activeTab === key;
             const hasContent = !!sections[key];
-            const isActive = activeSection === key;
-            const isCurrentlyGenerating = generatingSection === key;
+            const wc = wordCounts[key];
 
             return (
               <button
                 key={key}
-                onClick={() => setActiveSection(key)}
+                onClick={() => setActiveTab(key)}
                 className={cn(
-                  "w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm text-left transition-colors",
+                  "relative flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-brand/10 text-brand font-medium"
-                    : "text-ink-muted hover:bg-surface-alt hover:text-ink"
+                    ? "text-brand"
+                    : "text-ink-muted hover:text-ink hover:bg-surface-raised/50"
                 )}
               >
-                {isCurrentlyGenerating ? (
-                  <CircleNotch
-                    weight="bold"
-                    className="animate-spin flex-shrink-0"
-                    size={14}
-                  />
+                {generatingSection === key ? (
+                  <CircleNotch weight="bold" className="animate-spin" size={14} />
                 ) : hasContent ? (
-                  <CheckCircle
-                    weight="fill"
-                    className="text-emerald-500 flex-shrink-0"
-                    size={14}
-                  />
-                ) : (
-                  <span className="w-3.5 h-3.5 rounded-full border border-current flex-shrink-0" />
-                )}
+                  <CheckCircle weight="fill" className="text-emerald-500" size={14} />
+                ) : null}
                 {label}
+                {hasContent && (
+                  <span className="text-[10px] text-ink-faint font-normal">
+                    {wc.toLocaleString()}w
+                  </span>
+                )}
+                {/* Active indicator */}
                 {isActive && (
-                  <ArrowRight
-                    size={12}
-                    className="ml-auto flex-shrink-0"
-                  />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand rounded-t" />
                 )}
               </button>
             );
           })}
-
-          {/* Progress indicator */}
-          <div className="pt-3 px-3">
-            <div className="text-[11px] text-ink-faint">
-              {generatedCount} / {SECTIONS.length} sections generated
-            </div>
-            <div className="mt-1 h-1 bg-surface-alt rounded-full overflow-hidden">
-              <div
-                className="h-full bg-brand rounded-full transition-all"
-                style={{
-                  width: `${(generatedCount / SECTIONS.length) * 100}%`,
-                }}
-              />
-            </div>
-          </div>
         </div>
 
-        {/* Right: content area */}
-        <div className="flex-1 min-w-0">
-          {/* Section header */}
-          <div className="flex items-center justify-between mb-3">
+        {/* Section content area */}
+        <div className="p-5">
+          {/* Section header + actions */}
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-semibold text-ink">
-                {SECTIONS.find((s) => s.key === activeSection)?.label}
+                {SECTIONS.find((s) => s.key === activeTab)?.label}
               </h3>
               <p className="text-[11px] text-ink-faint mt-0.5">
-                {SECTIONS.find((s) => s.key === activeSection)?.description}
+                {SECTIONS.find((s) => s.key === activeTab)?.description}
               </p>
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1.5">
               {currentData && (
                 <>
                   <button
-                    onClick={() => copySection(activeSection)}
+                    onClick={() => copySection(activeTab)}
                     className={cn(
-                      "flex items-center gap-1 px-2.5 py-1 border border-border rounded text-xs transition-colors",
-                      copiedSection === activeSection
+                      "flex items-center gap-1 px-2.5 py-1.5 border border-border rounded-md text-xs transition-colors",
+                      copiedSection === activeTab
                         ? "text-emerald-500 border-emerald-500/30"
                         : "text-ink-muted hover:text-ink"
                     )}
                     title="Copy to clipboard"
                   >
-                    {copiedSection === activeSection ? (
+                    {copiedSection === activeTab ? (
                       <>
                         <CheckCircle size={12} weight="bold" />
                         Copied
@@ -531,9 +539,9 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
                   </button>
                   <button
                     onClick={() =>
-                      isEditing ? saveEdit() : startEdit(activeSection)
+                      isEditing ? saveEdit() : startEdit(activeTab)
                     }
-                    className="flex items-center gap-1 px-2.5 py-1 border border-border rounded text-xs text-ink-muted hover:text-ink transition-colors"
+                    className="flex items-center gap-1 px-2.5 py-1.5 border border-border rounded-md text-xs text-ink-muted hover:text-ink transition-colors"
                     title={isEditing ? "Save edits" : "Edit section"}
                   >
                     <PencilSimple size={12} />
@@ -541,28 +549,42 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
                   </button>
                 </>
               )}
+              {/* Regenerate button */}
               <button
-                onClick={() => generateSection(activeSection)}
+                onClick={() => generateSection(activeTab)}
                 disabled={!!generatingSection || isGeneratingAll}
-                className="flex items-center gap-1 px-2.5 py-1 bg-brand text-white rounded text-xs font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 bg-brand text-white rounded-md text-xs font-medium hover:bg-brand-hover disabled:opacity-50 transition-colors"
               >
                 {isLoading ? (
                   <>
-                    <CircleNotch
-                      weight="bold"
-                      className="animate-spin"
-                      size={12}
-                    />
+                    <CircleNotch weight="bold" className="animate-spin" size={12} />
                     Generating...
                   </>
                 ) : currentData ? (
-                  "Regenerate"
+                  <>
+                    <ArrowsClockwise size={12} weight="bold" />
+                    Regenerate
+                  </>
                 ) : (
                   "Generate"
                 )}
               </button>
             </div>
           </div>
+
+          {/* Word count badge for active section */}
+          {currentData && (
+            <div className="mb-3 flex items-center gap-3 text-[11px]">
+              <span className="px-2 py-0.5 rounded-full bg-surface-raised text-ink-muted">
+                {wordCounts[activeTab].toLocaleString()} words
+              </span>
+              {currentData.citations.length > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-surface-raised text-ink-muted">
+                  {currentData.citations.length} citations
+                </span>
+              )}
+            </div>
+          )}
 
           {/* Content */}
           <div className="border border-border rounded-lg overflow-hidden bg-surface min-h-[300px]">
@@ -574,7 +596,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
                   size={24}
                 />
                 <p className="text-sm">
-                  Generating {SECTIONS.find((s) => s.key === activeSection)?.label?.toLowerCase()}...
+                  Generating {SECTIONS.find((s) => s.key === activeTab)?.label?.toLowerCase()}...
                 </p>
                 <p className="text-[11px] text-ink-faint mt-1">
                   This may take 15-30 seconds
@@ -582,32 +604,35 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
               </div>
             ) : isEditing && currentData ? (
               <div className="p-4 space-y-3">
-                <textarea aria-label="Text area"
+                <textarea
+                  aria-label="Edit section content"
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
-                  className="w-full h-80 px-3 py-2 bg-surface-alt border border-border rounded text-sm text-ink leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-brand/30 font-mono"
+                  className="w-full h-80 px-3 py-2 bg-surface-raised border border-border rounded text-sm text-ink leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-brand/30 font-mono"
                 />
-                <div className="flex gap-2">
-                  <button
-                    onClick={saveEdit}
-                    className="px-3 py-1 bg-brand text-white rounded text-xs font-medium hover:bg-brand/90"
-                  >
-                    Save Changes
-                  </button>
-                  <button
-                    onClick={() => {
-                      setEditingSection(null);
-                      setEditContent("");
-                    }}
-                    className="px-3 py-1 text-xs text-ink-muted hover:text-ink"
-                  >
-                    Cancel
-                  </button>
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] text-ink-faint">
+                    {countWords(editContent).toLocaleString()} words
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={cancelEdit}
+                      className="px-3 py-1.5 text-xs text-ink-muted hover:text-ink transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={saveEdit}
+                      className="px-3 py-1.5 bg-brand text-white rounded-md text-xs font-medium hover:bg-brand-hover transition-colors"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : currentData ? (
               <div className="p-4">
-                <div className="text-sm text-ink leading-relaxed whitespace-pre-wrap">
+                <div className="sr-content">
                   {currentData.content}
                 </div>
               </div>
@@ -626,13 +651,12 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
       </div>
 
       {/* Info footer */}
-      <div className="text-xs text-ink-faint p-3 bg-surface-alt rounded-lg border border-border">
+      <div className="text-xs text-ink-faint p-3 bg-surface-raised rounded-lg border border-border">
         <strong>About this draft:</strong> AI-generated content is based on
         your project&apos;s PICO, screening results, meta-analysis, and risk of
         bias data. All sections follow PRISMA 2020 reporting guidelines.
         [PLACEHOLDER] markers indicate areas requiring manual input. Review and
-        edit all content before submission. Use &quot;Open in Studio&quot; to
-        continue editing in the full-featured editor.
+        edit all content before submission.
       </div>
     </div>
   );
