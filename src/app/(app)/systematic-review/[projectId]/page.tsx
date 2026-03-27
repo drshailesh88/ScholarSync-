@@ -25,13 +25,12 @@ import {
   ClockCounterClockwise,
   Scales,
 } from "@phosphor-icons/react";
-import { Tabs } from "@/components/ui/tabs";
 import {
   useSystematicReviewStore,
-  type WorkflowTab,
   type ReviewConfig,
   type ReviewType,
 } from "@/stores/systematic-review-store";
+import { PhaseNavigation } from "@/components/systematic-review/PhaseNavigation";
 import { ProjectHeader } from "@/components/systematic-review/ProjectHeader";
 import { SearchStrategyPanel } from "@/components/systematic-review/SearchStrategyPanel";
 import { ScreeningPanel } from "@/components/systematic-review/ScreeningPanel";
@@ -168,6 +167,10 @@ function SystematicReviewWorkflowContent({
   const [paperCount, setPaperCount] = useState(0);
 
   const visibleTabs = useMemo(() => getVisibleTabs(reviewType), [reviewType]);
+  const visibleTabKeys = useMemo(
+    () => new Set(visibleTabs.map((t) => t.key)),
+    [visibleTabs]
+  );
 
   // Reset activeTab to 'strategy' if it's no longer visible for this review type
   useEffect(() => {
@@ -285,8 +288,8 @@ function SystematicReviewWorkflowContent({
 
   return (
     <div className="flex flex-col h-full">
-      {/* Back link */}
-      <div className="px-6 pt-3 flex items-center justify-between">
+      {/* Top bar: Back link + collaborators */}
+      <div className="px-6 pt-3 pb-2 flex items-center justify-between">
         <Link
           href="/systematic-review"
           className="text-xs text-ink-muted hover:text-brand flex items-center gap-1"
@@ -306,20 +309,20 @@ function SystematicReviewWorkflowContent({
         paperCount={paperCount}
       />
 
-      {/* Workflow Tabs */}
-      <div className="px-6 pt-4 border-b border-border">
-        <Tabs
-          tabs={visibleTabs.map((t) => ({
-            key: t.key,
-            label: t.label,
-          }))}
-          activeTab={activeTab}
-          onChange={(key) => setActiveTab(key as WorkflowTab)}
-        />
-      </div>
+      {/* Main area: Phase sidebar + content */}
+      <div className="flex flex-1 min-h-0">
+        {/* Phase navigation sidebar */}
+        <aside className="w-56 flex-shrink-0 border-r border-border overflow-y-auto py-3 px-2">
+          <PhaseNavigation
+            activeTab={activeTab}
+            visibleTabs={visibleTabKeys}
+            reviewStage={reviewStage}
+            onTabChange={(tab) => setActiveTab(tab)}
+          />
+        </aside>
 
-      {/* Tab Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+        {/* Tab Content */}
+        <div className="flex-1 overflow-y-auto p-6">
         {activeTab === "strategy" && (
           <SearchStrategyPanel projectId={projectId} />
         )}
@@ -378,6 +381,7 @@ function SystematicReviewWorkflowContent({
         {activeTab === "audit" && (
           <AuditTrailPanel projectId={projectId} />
         )}
+        </div>
       </div>
 
       {/* Real-time activity feed sidebar */}
