@@ -31,6 +31,20 @@ function isSignificant(ci: { lower: number; upper: number }): boolean {
   return ci.lower > 0 || ci.upper < 0;
 }
 
+function cellTone(effect: number, ci: { lower: number; upper: number }) {
+  if (effect > 0) {
+    return isSignificant(ci)
+      ? { fill: "#0A6847", opacity: 0.18 }
+      : { fill: "#0A6847", opacity: 0.08 };
+  }
+  if (effect < 0) {
+    return isSignificant(ci)
+      ? { fill: "#C06090", opacity: 0.18 }
+      : { fill: "#C06090", opacity: 0.08 };
+  }
+  return { fill: "#D4B060", opacity: 0.08 };
+}
+
 // ---------------------------------------------------------------------------
 // LeagueTable Component
 // ---------------------------------------------------------------------------
@@ -86,28 +100,19 @@ export function LeagueTable({
               const isUpper = row < col;
               const isHovered =
                 hoveredCell?.row === row && hoveredCell?.col === col;
-
-              // Colors
-              let bgFill: string;
-              let bgOpacity: number;
-
-              if (isDiagonal) {
-                bgFill = "#6366f1";
-                bgOpacity = 0.15;
-              } else {
-                const ci = leagueTableCI[row][col];
-                const sig = isSignificant(ci);
-                if (sig) {
-                  bgFill = "#22c55e"; // green
-                  bgOpacity = isHovered ? 0.18 : 0.08;
-                } else {
-                  bgFill = "currentColor";
-                  bgOpacity = isHovered ? 0.08 : 0.03;
-                }
-              }
-
               const effect = leagueTable[row][col];
               const ci = leagueTableCI[row][col];
+
+              let bgFill = "#6D28D9";
+              let bgOpacity = 0.15;
+
+              if (!isDiagonal) {
+                const tone = cellTone(effect, ci);
+                bgFill = tone.fill;
+                bgOpacity = isHovered
+                  ? Math.min(tone.opacity + 0.08, 0.26)
+                  : tone.opacity;
+              }
 
               return (
                 <g
@@ -173,7 +178,7 @@ export function LeagueTable({
                         y={y + cellHeight / 2 - 4}
                         textAnchor="middle"
                         className="text-[11px] fill-current font-medium"
-                        opacity={isSignificant(ci) ? 1 : 0.7}
+                        opacity={isSignificant(ci) ? 1 : 0.78}
                       >
                         {formatEffect(effect, decimals)}
                       </text>
@@ -196,7 +201,7 @@ export function LeagueTable({
                           className="text-[7px] fill-current"
                           opacity={0.25}
                         >
-                          {treatments[row].slice(0, 3)} v {treatments[col].slice(0, 3)}
+                          {effect > 0 ? "favours row" : effect < 0 ? "favours column" : "tie"}
                         </text>
                       )}
                     </>
@@ -212,21 +217,21 @@ export function LeagueTable({
           <div className="flex items-center gap-1.5">
             <span
               className="inline-block w-3 h-3 rounded-sm"
-              style={{ backgroundColor: "#22c55e", opacity: 0.3 }}
+              style={{ backgroundColor: "#0A6847", opacity: 0.3 }}
             />
-            <span>Statistically significant (95% CI excludes 0)</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span
-              className="inline-block w-3 h-3 rounded-sm border border-current"
-              style={{ opacity: 0.15 }}
-            />
-            <span>Not significant</span>
+            <span>Positive effect estimate</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span
               className="inline-block w-3 h-3 rounded-sm"
-              style={{ backgroundColor: "#6366f1", opacity: 0.3 }}
+              style={{ backgroundColor: "#C06090", opacity: 0.3 }}
+            />
+            <span>Negative effect estimate</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span
+              className="inline-block w-3 h-3 rounded-sm"
+              style={{ backgroundColor: "#6D28D9", opacity: 0.3 }}
             />
             <span>Diagonal (treatment + P-score)</span>
           </div>
