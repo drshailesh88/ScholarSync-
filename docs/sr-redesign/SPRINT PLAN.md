@@ -7,9 +7,9 @@
 
 ## Project Status
 
-**Current Phase**: Sprint 0 - Documentation
+**Current Phase**: Sprint 1 - Phase Navigation
 **Last Updated**: March 27, 2026
-**Overall Progress**: ░░░░░░░░░░ 0%
+**Overall Progress**: █░░░░░░░░░ 10%
 
 -----
 
@@ -34,16 +34,16 @@
 
 **Goal**: Transform flat 19-tab navigation into grouped phase navigation.
 
-|Task                            |Status|Notes                                         |
-|--------------------------------|------|----------------------------------------------|
-|Design phase grouping component |⬜ TODO|                                              |
-|Map tabs to phases              |⬜ TODO|Setup, Search, Screen, Assess, Analyze, Report|
-|Create PhaseNavigation component|⬜ TODO|                                              |
-|Add phase completion indicators |⬜ TODO|                                              |
-|Wire to existing tab state      |⬜ TODO|Don’t break activeTab in store                |
-|Update workflow page layout     |⬜ TODO|                                              |
-|Test all tabs still accessible  |⬜ TODO|                                              |
-|Write Playwright tests          |⬜ TODO|                                              |
+|Task                            |Status       |Notes                                         |
+|--------------------------------|-------------|----------------------------------------------|
+|Design phase grouping component |✅ Done       |6 phases with icons, accordion expand         |
+|Map tabs to phases              |✅ Done       |Setup, Search, Screen, Assess, Analyze, Report|
+|Create PhaseNavigation component|✅ Done       |PhaseNavigation.tsx with completion indicators |
+|Add phase completion indicators |✅ Done       |Green checkmark for completed, dot for current |
+|Wire to existing tab state      |✅ Done       |Uses existing activeTab + setActiveTab         |
+|Update workflow page layout     |✅ Done       |Sidebar layout replacing flat tabs bar         |
+|Test all tabs still accessible  |🔄 In Progress|TypeScript passes, E2E needs dev server        |
+|Write Playwright tests          |⬜ TODO       |                                              |
 
 **Acceptance Criteria**:
 
