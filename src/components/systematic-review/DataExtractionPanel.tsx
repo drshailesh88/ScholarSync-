@@ -18,6 +18,7 @@ import {
   PencilSimple,
   BookOpenText,
   FilePdf,
+  DownloadSimple,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
@@ -300,6 +301,7 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
     field: string;
   } | null>(null);
   const [editValue, setEditValue] = useState("");
+  const [removedColumns, setRemovedColumns] = useState<Set<string>>(new Set());
 
   // Extraction progress state
   const [extractingPaperIds, setExtractingPaperIds] = useState<Set<number>>(
@@ -692,9 +694,20 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
     setLiveExtractions((prev) => {
       const next = new Map(prev);
       const existing = next.get(editingCell.paperId) ?? [];
-      const updated = existing.map((e) =>
-        e.field === editingCell.field ? { ...e, value: editValue } : e
-      );
+      const hasExistingField = existing.some((e) => e.field === editingCell.field);
+      const updated = hasExistingField
+        ? existing.map((e) =>
+            e.field === editingCell.field ? { ...e, value: editValue } : e
+          )
+        : [
+            ...existing,
+            {
+              field: editingCell.field,
+              value: editValue,
+              sourceQuote: "",
+              confidence: 1,
+            },
+          ];
       next.set(editingCell.paperId, updated);
       return next;
     });
@@ -780,15 +793,79 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
     for (const f of schema) {
       if (f.field.trim()) colSet.add(f.field);
     }
-    return Array.from(colSet);
+    return Array.from(colSet).filter((column) => !removedColumns.has(column));
   })();
+
+  const removeColumnByName = useCallback((columnName: string) => {
+    setRemovedColumns((prev) => new Set(prev).add(columnName));
+    setSchema((prev) => prev.filter((field) => field.field !== columnName));
+    setLiveExtractions((prev) => {
+      const next = new Map<number, ExtractedField[]>();
+      for (const [paperId, fields] of prev.entries()) {
+        next.set(
+          paperId,
+          fields.filter((field) => field.field !== columnName)
+        );
+      }
+      return next;
+    });
+  }, []);
+
+  const exportGrid = useCallback(
+    (format: "csv" | "excel") => {
+      if (!hasResults) return;
+
+      const headers = ["paper_title", ...resultColumns];
+      const rows = resultRows.map((row) => [
+        row.title,
+        ...resultColumns.map((column) => row.cells.get(column)?.value ?? ""),
+      ]);
+
+      const escapeCell = (value: string) => `"${value.replaceAll('"', '""')}"`;
+      const csv = [headers, ...rows]
+        .map((row) => row.map((cell) => escapeCell(String(cell))).join(","))
+        .join("\n");
+
+      const blob =
+        format === "csv"
+          ? new Blob([csv], { type: "text/csv;charset=utf-8;" })
+          : new Blob(
+              [
+                `<table><thead><tr>${headers
+                  .map((header) => `<th>${header}</th>`)
+                  .join("")}</tr></thead><tbody>${rows
+                  .map(
+                    (row) =>
+                      `<tr>${row
+                        .map((cell) => `<td>${String(cell)}</td>`)
+                        .join("")}</tr>`
+                  )
+                  .join("")}</tbody></table>`,
+              ],
+              { type: "application/vnd.ms-excel;charset=utf-8;" }
+            );
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download =
+        format === "csv"
+          ? `extraction-grid-${projectId}.csv`
+          : `extraction-grid-${projectId}.xls`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    },
+    [hasResults, projectId, resultColumns, resultRows]
+  );
 
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="flex gap-4">
+    <div className="sr-content flex gap-4">
       {/* Main content area */}
       <div className={cn(
         "space-y-6 transition-all duration-300",
@@ -1040,15 +1117,46 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
         {/* ---- Results Table ---- */}
         {(hasResults || loadingTable) && (
           <GlassPanel className="sr-panel">
-            <h2 className="sr-panel-title">
-              <Table weight="duotone" className="text-brand" />
-              Extraction Results
+            <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <h2 className="sr-panel-title">
+                  <Table weight="duotone" className="text-brand" />
+                  Data Extraction Grid
+                </h2>
+                {hasResults && (
+                  <p className="mt-1 text-xs text-ink-muted">
+                    Spreadsheet-style view with inline edits, removable columns,
+                    and source-linked values.
+                  </p>
+                )}
+              </div>
+
               {hasResults && (
-                <span className="ml-2 text-xs font-normal text-ink-muted">
-                  Click any value to view source passage
-                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={addField}
+                    className="sr-btn sr-btn-secondary"
+                  >
+                    <Plus size={14} />
+                    Add Column
+                  </button>
+                  <button
+                    onClick={() => exportGrid("csv")}
+                    className="sr-btn sr-btn-secondary"
+                  >
+                    <DownloadSimple size={14} />
+                    Export CSV
+                  </button>
+                  <button
+                    onClick={() => exportGrid("excel")}
+                    className="sr-btn sr-btn-secondary"
+                  >
+                    <DownloadSimple size={14} />
+                    Export Excel
+                  </button>
+                </div>
               )}
-            </h2>
+            </div>
 
             {loadingTable && !hasResults ? (
               <div className="flex items-center justify-center py-10 text-ink-muted text-sm gap-2">
@@ -1056,30 +1164,45 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
                 Loading extraction data...
               </div>
             ) : (
-              <div className="overflow-x-auto -mx-6 px-6">
-                <table className="w-full text-sm border-collapse min-w-[600px]">
+              <div className="overflow-x-auto rounded-[1.25rem] border border-border/70 bg-surface-raised/35">
+                <table className="w-full min-w-[860px] border-collapse text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="text-left py-2 px-3 text-xs font-medium text-ink-muted whitespace-nowrap sticky left-0 bg-surface z-10">
+                      <th className="sticky left-0 z-20 w-12 border-r border-border bg-surface px-3 py-3 text-center text-xs font-medium text-ink-muted">
+                        #
+                      </th>
+                      <th className="sticky left-12 z-20 min-w-[240px] border-r border-border bg-surface px-3 py-3 text-left text-xs font-medium text-ink-muted whitespace-nowrap">
                         Paper
                       </th>
                       {resultColumns.map((col) => (
                         <th
                           key={col}
-                          className="text-left py-2 px-3 text-xs font-medium text-ink-muted whitespace-nowrap"
+                          className="min-w-[220px] border-r border-border bg-surface px-3 py-3 text-left text-xs font-medium text-ink-muted last:border-r-0"
                         >
-                          {col}
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="truncate">{col}</span>
+                            <button
+                              onClick={() => removeColumnByName(col)}
+                              className="rounded p-1 text-ink-muted transition-colors hover:bg-red-50 hover:text-red-600"
+                              title={`Remove ${col}`}
+                            >
+                              <Trash size={12} />
+                            </button>
+                          </div>
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {resultRows.map((row) => (
+                    {resultRows.map((row, rowIndex) => (
                       <tr
                         key={row.paperId}
                         className="border-b border-border/50 hover:bg-surface-raised/30"
                       >
-                        <td className="py-2 px-3 text-ink max-w-[200px] truncate sticky left-0 bg-surface z-10">
+                        <td className="sticky left-0 z-10 border-r border-border bg-surface px-3 py-3 text-center text-xs font-medium text-ink-muted">
+                          {rowIndex + 1}
+                        </td>
+                        <td className="sticky left-12 z-10 max-w-[240px] border-r border-border bg-surface px-3 py-3 text-ink">
                           <span title={row.title}>{row.title}</span>
                         </td>
                         {resultColumns.map((col) => {
@@ -1094,77 +1217,87 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
                           return (
                             <td
                               key={col}
-                              className="py-2 px-3 text-ink-muted max-w-[200px]"
+                              className="max-w-[220px] border-r border-border px-3 py-3 align-top text-ink-muted last:border-r-0"
                             >
-                              {cell?.value != null ? (
-                                isEditing ? (
-                                  <div className="flex items-center gap-1">
-                                    <input aria-label="Text input"
-                                      type="text"
-                                      value={editValue}
-                                      onChange={(e) =>
-                                        setEditValue(e.target.value)
-                                      }
-                                      onKeyDown={(e) => {
-                                        if (e.key === "Enter") saveEdit();
-                                        if (e.key === "Escape") cancelEdit();
-                                      }}
-                                      autoFocus
-                                      className="flex-1 px-1.5 py-0.5 text-sm bg-surface-raised border border-brand/40 rounded text-ink outline-none focus:ring-1 focus:ring-brand/40"
-                                    />
-                                    <button
-                                      onClick={saveEdit}
-                                      className="p-0.5 text-emerald-400 hover:text-emerald-300"
-                                      title="Save"
-                                    >
-                                      <CheckCircle size={14} weight="fill" />
-                                    </button>
-                                    <button
-                                      onClick={cancelEdit}
-                                      className="p-0.5 text-ink-muted hover:text-red-400"
-                                      title="Cancel"
-                                    >
-                                      <X size={14} />
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <div className="flex items-center gap-1.5 group">
+                              {isEditing ? (
+                                <div className="flex items-center gap-1">
+                                  <input
+                                    aria-label={`${col} value`}
+                                    type="text"
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") saveEdit();
+                                      if (e.key === "Escape") cancelEdit();
+                                    }}
+                                    autoFocus
+                                    className="flex-1 rounded border border-brand/40 bg-white px-2 py-1.5 text-sm text-ink outline-none focus:ring-1 focus:ring-brand/40"
+                                  />
+                                  <button
+                                    onClick={saveEdit}
+                                    className="p-0.5 text-emerald-400 hover:text-emerald-300"
+                                    title="Save"
+                                  >
+                                    <CheckCircle size={14} weight="fill" />
+                                  </button>
+                                  <button
+                                    onClick={cancelEdit}
+                                    className="p-0.5 text-ink-muted hover:text-red-400"
+                                    title="Cancel"
+                                  >
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() =>
+                                    startEditing(row.paperId, col, cell?.value || "")
+                                  }
+                                  className="group flex w-full items-start gap-1.5 rounded-lg border border-transparent px-2 py-2 text-left transition-colors hover:border-brand/20 hover:bg-white"
+                                  title="Click to edit"
+                                >
+                                  <div className="min-w-0 flex-1">
                                     <span
                                       className={cn(
-                                        "truncate",
+                                        "block truncate",
+                                        !cell?.value && "text-ink-muted/40 italic",
                                         hasSourceLink &&
                                           "cursor-pointer hover:text-brand underline decoration-dotted underline-offset-2"
                                       )}
-                                      title={
-                                        hasSourceLink
-                                          ? "Click to view source passage"
-                                          : cell.sourceQuote
-                                            ? `Source: "${cell.sourceQuote}"`
-                                            : undefined
-                                      }
-                                      onClick={() => {
+                                      onClick={(event) => {
                                         if (hasSourceLink) {
+                                          event.stopPropagation();
                                           viewSource(row.paperId, col);
                                         }
                                       }}
+                                      title={
+                                        hasSourceLink
+                                          ? "Click to view source passage"
+                                          : cell?.sourceQuote
+                                            ? `Source: "${cell.sourceQuote}"`
+                                            : undefined
+                                      }
                                     >
-                                      {cell.value}
+                                      {cell?.value || "Click to edit"}
                                     </span>
+                                  </div>
+                                  <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                                     {hasSourceLink && (
                                       <button
-                                        onClick={() =>
-                                          viewSource(row.paperId, col)
-                                        }
-                                        className="opacity-0 group-hover:opacity-100 p-0.5 text-brand/60 hover:text-brand transition-opacity"
+                                        onClick={(event) => {
+                                          event.stopPropagation();
+                                          viewSource(row.paperId, col);
+                                        }}
+                                        className="p-0.5 text-brand/60 hover:text-brand"
                                         title="View source passage"
                                       >
                                         <Quotes size={12} weight="fill" />
                                       </button>
                                     )}
-                                    {!hasSourceLink && cell.sourceQuote && (
+                                    {!hasSourceLink && cell?.sourceQuote && (
                                       <button
-                                        onClick={() => {
-                                          // Show sourceQuote in a simple tooltip-like view
+                                        onClick={(event) => {
+                                          event.stopPropagation();
                                           setSourceViewer({
                                             chunk: {
                                               chunkId: 0,
@@ -1178,34 +1311,20 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
                                             paperTitle: row.title,
                                           });
                                         }}
-                                        className="opacity-0 group-hover:opacity-100 p-0.5 text-ink-muted/60 hover:text-ink-muted transition-opacity"
+                                        className="p-0.5 text-ink-muted/60 hover:text-ink-muted"
                                         title="View source quote"
                                       >
                                         <Quotes size={12} />
                                       </button>
                                     )}
-                                    <button
-                                      onClick={() =>
-                                        startEditing(
-                                          row.paperId,
-                                          col,
-                                          cell.value || ""
-                                        )
-                                      }
-                                      className="opacity-0 group-hover:opacity-100 p-0.5 text-ink-muted/60 hover:text-ink-muted transition-opacity"
-                                      title="Edit value"
-                                    >
+                                    <span className="p-0.5 text-ink-muted/60">
                                       <PencilSimple size={12} />
-                                    </button>
-                                    {cell.confidence != null && (
-                                      <ConfidenceBadge
-                                        confidence={cell.confidence}
-                                      />
-                                    )}
+                                    </span>
                                   </div>
-                                )
-                              ) : (
-                                <span className="text-ink-muted/40">--</span>
+                                  {cell?.confidence != null && (
+                                    <ConfidenceBadge confidence={cell.confidence} />
+                                  )}
+                                </button>
                               )}
                             </td>
                           );
@@ -1221,8 +1340,9 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
 
         {/* ---- How It Works (shown when no results yet) ---- */}
         {!hasResults && !loadingTable && (
-          <GlassPanel className="p-6 bg-gradient-to-r from-indigo-500/5 to-purple-500/5">
-            <h3 className="text-sm font-semibold text-ink mb-3">
+          <GlassPanel className="sr-panel bg-gradient-to-r from-indigo-500/5 to-purple-500/5 p-6">
+            <h3 className="sr-panel-title mb-3 text-sm">
+              <Table weight="duotone" className="text-brand" />
               How AI Extraction Works
             </h3>
             <div className="space-y-2 text-sm text-ink-muted">
@@ -1266,7 +1386,7 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
       {/* ---- Source Passage Side Panel ---- */}
       {sourceViewer && (
         <div className="w-[400px] shrink-0 sticky top-4 self-start">
-          <GlassPanel className="h-[calc(100vh-8rem)] flex flex-col overflow-hidden">
+          <GlassPanel className="sr-panel flex h-[calc(100vh-8rem)] flex-col overflow-hidden">
             {/* Panel header with context */}
             <div className="px-4 py-2.5 border-b border-border bg-surface-raised/30">
               <div className="flex items-center gap-1.5 text-xs text-ink-muted mb-1">
