@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, Fragment } from "react";
+import { useState, useEffect, useCallback, Fragment, useMemo } from "react";
 import {
   Certificate,
   CaretDown,
@@ -11,6 +11,7 @@ import {
   Lightning,
   ArrowsClockwise,
   DownloadSimple,
+  Table,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
@@ -23,9 +24,12 @@ interface GRADEPanelProps {
   projectId: number;
 }
 
+type GRADEDomainRating = "no_concern" | "serious" | "very_serious";
+type GRADEOverallCertainty = "high" | "moderate" | "low" | "very_low";
+
 interface GRADEDomainResult {
   domain: string;
-  rating: "no_concern" | "serious" | "very_serious";
+  rating: GRADEDomainRating;
   rationale: string;
   downgradeBy: number;
 }
@@ -34,7 +38,7 @@ interface GRADEAssessmentResult {
   outcome: string;
   analysisId: number | null;
   domains: GRADEDomainResult[];
-  overallCertainty: "high" | "moderate" | "low" | "very_low";
+  overallCertainty: GRADEOverallCertainty;
   overallRationale: string;
   effectEstimate: string | null;
   numberOfStudies: number;
@@ -52,6 +56,13 @@ interface MetaAnalysisRecord {
   pooledCiUpper: number | null;
   heterogeneityI2: number | null;
 }
+
+interface DraftGRADEDomain {
+  rating: GRADEDomainRating;
+  rationale: string;
+}
+
+type DraftGRADEProfile = Record<(typeof GRADE_DOMAINS)[number], DraftGRADEDomain>;
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -105,6 +116,75 @@ function ratingSymbol(rating: string): string {
   return "\u2193\u2193";
 }
 
+function createEmptyDraftProfile(): DraftGRADEProfile {
+  return GRADE_DOMAINS.reduce((acc, domain) => {
+    acc[domain] = {
+      rating: "no_concern",
+      rationale: "",
+    };
+    return acc;
+  }, {} as DraftGRADEProfile);
+}
+
+function buildDraftProfile(
+  assessment?: GRADEAssessmentResult | null
+): DraftGRADEProfile {
+  const draft = createEmptyDraftProfile();
+
+  assessment?.domains.forEach((domain) => {
+    if (domain.domain in draft) {
+      draft[domain.domain as keyof DraftGRADEProfile] = {
+        rating: domain.rating,
+        rationale: domain.rationale,
+      };
+    }
+  });
+
+  return draft;
+}
+
+function computeDowngradeBy(rating: GRADEDomainRating): number {
+  if (rating === "serious") return 1;
+  if (rating === "very_serious") return 2;
+  return 0;
+}
+
+function computeOverallCertainty(
+  domains: Pick<GRADEDomainResult, "rating">[]
+): GRADEOverallCertainty {
+  const downgrades = domains.reduce(
+    (total, domain) => total + computeDowngradeBy(domain.rating),
+    0
+  );
+
+  if (downgrades <= 0) return "high";
+  if (downgrades === 1) return "moderate";
+  if (downgrades === 2) return "low";
+  return "very_low";
+}
+
+function summarizeDraftRationale(profile: DraftGRADEProfile): string {
+  const flaggedDomains = GRADE_DOMAINS.filter(
+    (domain) => profile[domain].rating !== "no_concern"
+  );
+
+  if (flaggedDomains.length === 0) {
+    return "No serious concerns identified across the five GRADE domains.";
+  }
+
+  return flaggedDomains
+    .map((domain) => {
+      const details = profile[domain];
+      const domainLabel = GRADE_DOMAIN_LABELS[domain];
+      const severity = RATING_LABELS[details.rating].toLowerCase();
+      const rationale = details.rationale.trim();
+      return rationale
+        ? `${domainLabel}: ${severity} concern. ${rationale}`
+        : `${domainLabel}: ${severity} concern.`;
+    })
+    .join(" ");
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -115,6 +195,9 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
   const [selectedOutcome, setSelectedOutcome] = useState("");
   const [selectedAnalysisId, setSelectedAnalysisId] = useState<number | null>(
     null
+  );
+  const [draftProfile, setDraftProfile] = useState<DraftGRADEProfile>(
+    createEmptyDraftProfile
   );
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
@@ -255,6 +338,60 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
     assessments.map((a) => a.outcome.toLowerCase())
   );
 
+  const selectedExistingAssessment = useMemo(
+    () =>
+      assessments.find(
+        (assessment) =>
+          assessment.outcome.toLowerCase() === selectedOutcome.trim().toLowerCase()
+      ) ?? null,
+    [assessments, selectedOutcome]
+  );
+
+  useEffect(() => {
+    setDraftProfile(buildDraftProfile(selectedExistingAssessment));
+  }, [selectedExistingAssessment]);
+
+  const draftCertainty = useMemo(
+    () =>
+      computeOverallCertainty(
+        GRADE_DOMAINS.map((domain) => ({
+          rating: draftProfile[domain].rating,
+        }))
+      ),
+    [draftProfile]
+  );
+
+  const draftRationale = useMemo(
+    () => summarizeDraftRationale(draftProfile),
+    [draftProfile]
+  );
+
+  const handleDraftRatingChange = useCallback(
+    (domain: (typeof GRADE_DOMAINS)[number], rating: GRADEDomainRating) => {
+      setDraftProfile((current) => ({
+        ...current,
+        [domain]: {
+          ...current[domain],
+          rating,
+        },
+      }));
+    },
+    []
+  );
+
+  const handleDraftRationaleChange = useCallback(
+    (domain: (typeof GRADE_DOMAINS)[number], rationale: string) => {
+      setDraftProfile((current) => ({
+        ...current,
+        [domain]: {
+          ...current[domain],
+          rationale,
+        },
+      }));
+    },
+    []
+  );
+
   // -------------------------------------------------------------------------
   // Render
   // -------------------------------------------------------------------------
@@ -310,118 +447,263 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
           ))}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-3 flex-wrap">
-          {/* Outcome input or selector */}
-          {outcomeOptions.length > 0 ? (
-            <select aria-label="Select option"
-              value={selectedAnalysisId ?? ""}
-              onChange={(e) => {
-                const val = e.target.value;
-                if (val) {
-                  const id = Number(val);
-                  setSelectedAnalysisId(id);
-                  const opt = outcomeOptions.find((o) => o.id === id);
-                  if (opt) setSelectedOutcome(opt.label);
-                } else {
-                  setSelectedAnalysisId(null);
-                  setSelectedOutcome("");
-                }
-              }}
-              disabled={isLoading || isAssessing}
-              className="text-sm rounded-md border border-border bg-surface px-3 py-1.5 text-ink disabled:opacity-50"
-            >
-              <option value="">Select an outcome...</option>
-              {/* empty state: no data, no results, nothing here */}
-              {outcomeOptions.length === 0 && (
-                <option value="" disabled>no results — nothing here to display</option>
-              )}
-              {outcomeOptions.map((opt) => {
-                const assessed = alreadyAssessedOutcomes.has(
-                  opt.label.toLowerCase()
-                );
-                return (
-                  <option key={opt.id} value={opt.id}>
-                    {assessed ? "[Done] " : ""}
-                    {opt.label}
-                  </option>
-                );
-              })}
-            </select>
-          ) : null}
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.95fr)]">
+          <div className="space-y-4">
+            <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,0.9fr)]">
+              {outcomeOptions.length > 0 ? (
+                <label className="space-y-1.5">
+                  <span className="text-xs font-medium uppercase tracking-[0.18em] text-ink-muted">
+                    Meta-analysis outcome
+                  </span>
+                  <select
+                    aria-label="Select outcome"
+                    value={selectedAnalysisId ?? ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val) {
+                        const id = Number(val);
+                        setSelectedAnalysisId(id);
+                        const opt = outcomeOptions.find((o) => o.id === id);
+                        if (opt) setSelectedOutcome(opt.label);
+                      } else {
+                        setSelectedAnalysisId(null);
+                        setSelectedOutcome("");
+                      }
+                    }}
+                    disabled={isLoading || isAssessing}
+                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-ink disabled:opacity-50"
+                  >
+                    <option value="">Select an outcome...</option>
+                    {outcomeOptions.map((opt) => {
+                      const assessed = alreadyAssessedOutcomes.has(
+                        opt.label.toLowerCase()
+                      );
+                      return (
+                        <option key={opt.id} value={opt.id}>
+                          {assessed ? "[Done] " : ""}
+                          {opt.label}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </label>
+              ) : null}
 
-          <input aria-label="Text input"
-            type="text"
-            value={selectedOutcome}
-            onChange={(e) => {
-              setSelectedOutcome(e.target.value);
-              setSelectedAnalysisId(null);
-            }}
-            placeholder="Or type an outcome name..."
-            disabled={isLoading || isAssessing}
-            className="text-sm rounded-md border border-border bg-surface px-3 py-1.5 text-ink placeholder:text-ink-muted/50 disabled:opacity-50 min-w-[200px]"
-          />
+              <label className="space-y-1.5">
+                <span className="text-xs font-medium uppercase tracking-[0.18em] text-ink-muted">
+                  Outcome label
+                </span>
+                <input
+                  aria-label="Outcome label"
+                  type="text"
+                  value={selectedOutcome}
+                  onChange={(e) => {
+                    setSelectedOutcome(e.target.value);
+                    setSelectedAnalysisId(null);
+                  }}
+                  placeholder="Enter an outcome name..."
+                  disabled={isLoading || isAssessing}
+                  className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-muted/50 disabled:opacity-50"
+                />
+              </label>
+            </div>
 
-          <button
-            onClick={runAssessment}
-            disabled={!selectedOutcome.trim() || isAssessing || isLoading}
-            className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
-              "bg-brand text-white hover:bg-brand/90",
-              "disabled:opacity-50 disabled:cursor-not-allowed"
-            )}
-          >
-            {isAssessing ? (
-              <CircleNotch className="animate-spin" size={16} />
-            ) : (
-              <Lightning weight="fill" size={16} />
-            )}
-            Assess Certainty
-          </button>
+            <div className="overflow-hidden rounded-[1.5rem] border border-border/70 bg-surface shadow-[0_18px_50px_rgba(95,76,56,0.06)]">
+              <div className="flex items-center justify-between border-b border-border/70 bg-warm-muted/45 px-5 py-4">
+                <div>
+                  <h3 className="flex items-center gap-2 text-sm font-semibold text-ink">
+                    <Table size={18} className="text-brand" />
+                    Evidence profile
+                  </h3>
+                  <p className="mt-1 text-xs text-ink-muted">
+                    Rate each GRADE domain and capture supporting text before
+                    running the assessment.
+                  </p>
+                </div>
+                <span
+                  className={cn(
+                    "rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]",
+                    CERTAINTY_COLORS[draftCertainty]
+                  )}
+                >
+                  {CERTAINTY_LABELS[draftCertainty]}
+                </span>
+              </div>
 
-          {assessments.length > 0 && (
-            <button
-              onClick={exportCSV}
-              disabled={isExporting}
-              className={cn(
-                "flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
-                "bg-surface-raised border border-border text-ink hover:bg-surface-raised/80",
-                "disabled:opacity-50 disabled:cursor-not-allowed"
-              )}
-            >
-              {isExporting ? (
-                <CircleNotch className="animate-spin" size={16} />
-              ) : (
-                <DownloadSimple weight="bold" size={16} />
-              )}
-              Export CSV
-            </button>
-          )}
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead className="bg-surface-raised/55">
+                    <tr className="border-b border-border/70">
+                      <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+                        Domain
+                      </th>
+                      <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+                        Rating
+                      </th>
+                      <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+                        Supporting text
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {GRADE_DOMAINS.map((domain) => (
+                      <tr
+                        key={domain}
+                        className="border-b border-border/50 align-top last:border-b-0"
+                      >
+                        <td className="px-5 py-4">
+                          <div className="font-medium text-ink">
+                            {GRADE_DOMAIN_LABELS[domain]}
+                          </div>
+                          <div className="mt-1 text-xs text-ink-muted">
+                            {computeDowngradeBy(draftProfile[domain].rating) > 0
+                              ? `Downgrade: ${computeDowngradeBy(
+                                  draftProfile[domain].rating
+                                )} ${
+                                  computeDowngradeBy(
+                                    draftProfile[domain].rating
+                                  ) === 1
+                                    ? "level"
+                                    : "levels"
+                                }`
+                              : "No downgrade"}
+                          </div>
+                        </td>
+                        <td className="px-5 py-4">
+                          <select
+                            aria-label={`${GRADE_DOMAIN_LABELS[domain]} rating`}
+                            value={draftProfile[domain].rating}
+                            onChange={(e) =>
+                              handleDraftRatingChange(
+                                domain,
+                                e.target.value as GRADEDomainRating
+                              )
+                            }
+                            className="w-full min-w-[160px] rounded-xl border border-border bg-white px-3 py-2 text-sm text-ink"
+                          >
+                            {(Object.keys(RATING_LABELS) as GRADEDomainRating[]).map(
+                              (rating) => (
+                                <option key={rating} value={rating}>
+                                  {RATING_LABELS[rating]}
+                                </option>
+                              )
+                            )}
+                          </select>
+                        </td>
+                        <td className="px-5 py-4">
+                          <textarea
+                            aria-label={`${GRADE_DOMAIN_LABELS[domain]} supporting text`}
+                            value={draftProfile[domain].rationale}
+                            onChange={(e) =>
+                              handleDraftRationaleChange(domain, e.target.value)
+                            }
+                            rows={2}
+                            placeholder="Add why this domain is or is not a concern..."
+                            className="w-full rounded-xl border border-border bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-muted/50"
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
-          <button
-            onClick={() => {
-              loadAssessments();
-              loadMetaAnalyses();
-            }}
-            disabled={isLoading}
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-ink-muted",
-              "hover:bg-surface-raised transition-colors",
-              "disabled:opacity-50"
-            )}
-          >
-            <ArrowsClockwise
-              className={cn(isLoading && "animate-spin")}
-              size={16}
-            />
-            Refresh
-          </button>
+          <div className="space-y-4">
+            <div className="rounded-[1.5rem] border border-border/70 bg-surface px-5 py-5 shadow-[0_18px_50px_rgba(95,76,56,0.06)]">
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink-muted">
+                Overall certainty
+              </p>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <span
+                  className={cn(
+                    "rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]",
+                    CERTAINTY_COLORS[draftCertainty]
+                  )}
+                >
+                  {CERTAINTY_LABELS[draftCertainty]}
+                </span>
+                <span className="text-xs text-ink-muted">
+                  Auto-calculated from domain downgrades
+                </span>
+              </div>
+              <p className="mt-4 text-sm leading-6 text-ink-muted">
+                {draftRationale}
+              </p>
+            </div>
+
+            <div className="rounded-[1.5rem] border border-border/70 bg-surface px-5 py-5 shadow-[0_18px_50px_rgba(95,76,56,0.06)]">
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink-muted">
+                Assessment actions
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <button
+                  onClick={runAssessment}
+                  disabled={!selectedOutcome.trim() || isAssessing || isLoading}
+                  className={cn(
+                    "flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors",
+                    "bg-brand text-white hover:bg-brand/90",
+                    "disabled:cursor-not-allowed disabled:opacity-50"
+                  )}
+                >
+                  {isAssessing ? (
+                    <CircleNotch className="animate-spin" size={16} />
+                  ) : (
+                    <Lightning weight="fill" size={16} />
+                  )}
+                  Assess Certainty
+                </button>
+
+                {assessments.length > 0 && (
+                  <button
+                    onClick={exportCSV}
+                    disabled={isExporting}
+                    className={cn(
+                      "flex items-center gap-2 rounded-xl border border-border bg-surface-raised px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface-raised/80",
+                      "disabled:cursor-not-allowed disabled:opacity-50"
+                    )}
+                  >
+                    {isExporting ? (
+                      <CircleNotch className="animate-spin" size={16} />
+                    ) : (
+                      <DownloadSimple weight="bold" size={16} />
+                    )}
+                    Export CSV
+                  </button>
+                )}
+
+                <button
+                  onClick={() => {
+                    loadAssessments();
+                    loadMetaAnalyses();
+                  }}
+                  disabled={isLoading}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm text-ink-muted transition-colors hover:bg-surface-raised",
+                    "disabled:opacity-50"
+                  )}
+                >
+                  <ArrowsClockwise
+                    className={cn(isLoading && "animate-spin")}
+                    size={16}
+                  />
+                  Refresh
+                </button>
+              </div>
+              <p className="mt-4 text-xs leading-5 text-ink-muted">
+                The editor above is a live evidence-profile worksheet. Running
+                the assessment still uses the saved project evidence and outcome
+                selection, then writes a new summary of findings row below.
+              </p>
+            </div>
+          </div>
         </div>
       </GlassPanel>
 
       {/* Error State */}
       {error && (
-        <GlassPanel className="p-4 border-red-500/30">
+        <GlassPanel className="sr-panel border-red-500/30 p-4">
           <div className="flex items-start gap-2">
             <Warning
               weight="fill"
@@ -443,7 +725,7 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
 
       {/* Loading State */}
       {isLoading && assessments.length === 0 && (
-        <GlassPanel className="p-8">
+        <GlassPanel className="sr-panel p-8">
           <div className="flex flex-col items-center justify-center gap-3 text-ink-muted">
             <CircleNotch className="animate-spin" size={28} />
             <p className="text-sm">Loading assessments...</p>
@@ -453,7 +735,7 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
 
       {/* Empty State */}
       {!isLoading && assessments.length === 0 && (
-        <GlassPanel className="p-8">
+        <GlassPanel className="sr-panel p-8">
           <div className="flex flex-col items-center justify-center gap-3 text-ink-muted">
             <Certificate weight="duotone" size={40} className="opacity-40" />
             <p className="text-sm">No GRADE assessments yet.</p>
@@ -468,8 +750,8 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
 
       {/* Summary of Findings Table */}
       {assessments.length > 0 && (
-        <GlassPanel className="p-6">
-          <h3 className="text-sm font-semibold text-ink mb-1 flex items-center gap-2">
+        <GlassPanel className="sr-panel p-6">
+          <h3 className="sr-panel-title mb-1 text-sm">
             <CheckCircle
               weight="duotone"
               className="text-emerald-500"
@@ -513,6 +795,7 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
                   const domainMap = new Map(
                     a.domains.map((d) => [d.domain, d])
                   );
+                  const computedCertainty = computeOverallCertainty(a.domains);
                   return (
                     <Fragment key={a.outcome}>
                       <tr
@@ -569,12 +852,12 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
                           <span
                             className={cn(
                               "px-2.5 py-1 rounded text-xs font-medium",
-                              CERTAINTY_COLORS[a.overallCertainty] ||
+                              CERTAINTY_COLORS[computedCertainty] ||
                                 "bg-gray-200 text-gray-500"
                             )}
                           >
-                            {CERTAINTY_LABELS[a.overallCertainty] ||
-                              a.overallCertainty}
+                            {CERTAINTY_LABELS[computedCertainty] ||
+                              computedCertainty}
                           </span>
                         </td>
                       </tr>
@@ -643,11 +926,11 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
                                   <span
                                     className={cn(
                                       "text-[10px] px-1.5 py-0.5 rounded font-medium",
-                                      CERTAINTY_COLORS[a.overallCertainty] ||
+                                      CERTAINTY_COLORS[computedCertainty] ||
                                         "bg-gray-200 text-gray-500"
                                     )}
                                   >
-                                    {CERTAINTY_LABELS[a.overallCertainty]}
+                                    {CERTAINTY_LABELS[computedCertainty]}
                                   </span>
                                 </div>
                                 <p className="text-xs text-ink-muted leading-relaxed">
