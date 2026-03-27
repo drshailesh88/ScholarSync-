@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import {
   CaretLeft,
@@ -107,6 +107,10 @@ export function ScreeningPDFViewer({
   onDecision,
   onClose,
 }: ScreeningPDFViewerProps) {
+  const splitContainerRef = useRef<HTMLDivElement>(null);
+  const notesTimerRef = useRef<number | null>(null);
+  const skipNextSaveRef = useRef(true);
+
   // PDF state
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
@@ -132,6 +136,10 @@ export function ScreeningPDFViewer({
   );
   const [exclusionFreeText, setExclusionFreeText] = useState("");
   const [showExclusionForm, setShowExclusionForm] = useState(false);
+  const [notes, setNotes] = useState("");
+  const [notesStatus, setNotesStatus] = useState<"saved" | "saving">("saved");
+  const [splitPercent, setSplitPercent] = useState(60);
+  const [isResizing, setIsResizing] = useState(false);
 
   // Active highlight chunk (for "jump to relevant section")
   const [activeChunkId, setActiveChunkId] = useState<number | null>(null);
@@ -266,6 +274,69 @@ export function ScreeningPDFViewer({
   }, [paper.authors]);
 
   const hasPdf = !!(paper.pdfUrl || paper.pdfStoragePath);
+  const notesStorageKey = useMemo(
+    () => `sr-fulltext-notes:${projectId}:${paper.paperId}`,
+    [projectId, paper.paperId]
+  );
+
+  useEffect(() => {
+    skipNextSaveRef.current = true;
+    const storedNotes = window.localStorage.getItem(notesStorageKey);
+    setNotes(storedNotes ?? "");
+    setNotesStatus("saved");
+  }, [notesStorageKey]);
+
+  useEffect(() => {
+    if (skipNextSaveRef.current) {
+      skipNextSaveRef.current = false;
+      return;
+    }
+
+    if (notesTimerRef.current) {
+      window.clearTimeout(notesTimerRef.current);
+    }
+
+    setNotesStatus("saving");
+    notesTimerRef.current = window.setTimeout(() => {
+      window.localStorage.setItem(notesStorageKey, notes);
+      setNotesStatus("saved");
+      notesTimerRef.current = null;
+    }, 700);
+
+    return () => {
+      if (notesTimerRef.current) {
+        window.clearTimeout(notesTimerRef.current);
+      }
+    };
+  }, [notes, notesStorageKey]);
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handlePointerMove = (event: MouseEvent) => {
+      const rect = splitContainerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+
+      const rawPercent = ((event.clientX - rect.left) / rect.width) * 100;
+      setSplitPercent(Math.min(75, Math.max(35, rawPercent)));
+    };
+
+    const handlePointerUp = () => {
+      setIsResizing(false);
+    };
+
+    window.addEventListener("mousemove", handlePointerMove);
+    window.addEventListener("mouseup", handlePointerUp);
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+
+    return () => {
+      window.removeEventListener("mousemove", handlePointerMove);
+      window.removeEventListener("mouseup", handlePointerUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [isResizing]);
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black/60 backdrop-blur-sm">
@@ -373,11 +444,14 @@ export function ScreeningPDFViewer({
       </div>
 
       {/* Split-pane body: PDF viewer (70%) | Controls (30%) */}
-      <div className="flex-1 flex overflow-hidden">
+      <div ref={splitContainerRef} className="flex-1 flex overflow-hidden">
         {/* ---------------------------------------------------------------- */}
-        {/* LEFT: PDF / Title-Abstract Viewer (70%) */}
+        {/* LEFT: PDF / Title-Abstract Viewer */}
         {/* ---------------------------------------------------------------- */}
-        <div className="w-[70%] flex flex-col border-r border-border bg-surface/30">
+        <div
+          className="flex flex-col border-r border-border bg-surface/30 min-w-0"
+          style={{ width: `${splitPercent}%` }}
+        >
           {stageView === "title-abstract" ? (
             /* Title/Abstract View */
             <div className="flex-1 overflow-y-auto p-8">
@@ -529,14 +603,50 @@ export function ScreeningPDFViewer({
         </div>
 
         {/* ---------------------------------------------------------------- */}
-        {/* RIGHT: Screening Controls (30%) */}
+        {/* Drag handle */}
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize full-text split view"
+          aria-valuenow={Math.round(splitPercent)}
+          className={cn(
+            "relative w-3 shrink-0 cursor-col-resize bg-surface/40 transition-colors",
+            isResizing ? "bg-brand/20" : "hover:bg-brand/10"
+          )}
+          onMouseDown={() => setIsResizing(true)}
+        >
+          <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-border" />
+          <div className="absolute left-1/2 top-1/2 flex h-14 w-1.5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-brand/20">
+            <div className="h-8 w-[2px] rounded-full bg-brand/60" />
+          </div>
+        </div>
+
         {/* ---------------------------------------------------------------- */}
-        <div className="w-[30%] flex flex-col bg-surface overflow-y-auto">
+        {/* RIGHT: Screening Controls */}
+        {/* ---------------------------------------------------------------- */}
+        <div
+          className="flex min-w-[320px] flex-col bg-surface overflow-y-auto"
+          style={{ width: `${100 - splitPercent}%` }}
+        >
           {/* Decision section */}
-          <div className="p-4 border-b border-border">
-            <h3 className="text-sm font-semibold text-ink mb-3">
+          <div className="m-4 mb-0 sr-panel">
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div>
+                <h3 className="sr-panel-title mb-1 text-base">
+                  Full-Text Checklist
+                </h3>
+                <p className="text-xs text-ink-muted">
+                  Record the final decision, exclusion rationale, and reading notes.
+                </p>
+              </div>
+              <span className="rounded-full bg-brand/10 px-2.5 py-1 text-[11px] font-medium text-brand">
+                {Math.round(splitPercent)}/{100 - Math.round(splitPercent)}
+              </span>
+            </div>
+
+            <h4 className="text-sm font-semibold text-ink mb-3">
               Screening Decision
-            </h3>
+            </h4>
 
             {/* Current decision badge */}
             {paper.screeningDecision && (
@@ -612,10 +722,10 @@ export function ScreeningPDFViewer({
             </div>
 
             {/* Exclusion reason form (shown in full-text mode) */}
-            {showExclusionForm && (
-              <GlassPanel className="mt-3 p-3 space-y-2">
+            {(showExclusionForm || paper.screeningDecision === "exclude") && (
+              <div className="mt-3 space-y-3 rounded-2xl border border-red-500/20 bg-red-500/5 p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-ink">
+                  <span className="text-xs font-semibold uppercase tracking-[0.12em] text-red-600">
                     Exclusion Reason
                   </span>
                   <button
@@ -627,12 +737,11 @@ export function ScreeningPDFViewer({
                 </div>
 
                 <div className="relative">
-                  <select aria-label="Select option"
+                  <select
+                    aria-label="Select exclusion reason"
                     value={exclusionDropdown}
-                    onChange={(e) =>
-                      setExclusionDropdown(e.target.value)
-                    }
-                    className="w-full px-3 py-2 bg-surface-raised border border-border rounded-lg text-sm text-ink appearance-none pr-8 focus:ring-2 focus:ring-brand/40 outline-none"
+                    onChange={(e) => setExclusionDropdown(e.target.value)}
+                    className="w-full appearance-none rounded-xl border border-border bg-surface-raised px-3 py-2 pr-8 text-sm text-ink outline-none focus:ring-2 focus:ring-brand/40"
                   >
                     {EXCLUSION_REASONS.map((r) => (
                       <option key={r} value={r}>
@@ -642,31 +751,51 @@ export function ScreeningPDFViewer({
                   </select>
                   <CaretDown
                     size={14}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none"
+                    className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted"
                   />
                 </div>
 
-                <textarea aria-label="Text area"
+                <textarea
+                  aria-label="Exclusion notes"
                   value={exclusionFreeText}
                   onChange={(e) => setExclusionFreeText(e.target.value)}
-                  placeholder="Additional details (optional)..."
-                  rows={2}
-                  className="w-full px-3 py-2 bg-surface-raised border border-border rounded-lg text-sm text-ink placeholder:text-ink-muted resize-none focus:ring-2 focus:ring-brand/40 outline-none"
+                  placeholder="Why does this paper fail full-text eligibility?"
+                  rows={3}
+                  className="w-full resize-none rounded-xl border border-border bg-surface-raised px-3 py-2 text-sm text-ink placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-brand/40"
                 />
 
                 <button
                   onClick={handleExcludeWithReason}
-                  className="w-full px-3 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
+                  className="w-full rounded-xl bg-red-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
                 >
                   Confirm Exclusion
                 </button>
-              </GlassPanel>
+              </div>
             )}
+
+            <div className="mt-4 rounded-2xl border border-border/70 bg-surface-raised/70 p-4">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+                  Reading Notes
+                </span>
+                <span className="text-[11px] text-ink-muted">
+                  {notesStatus === "saving" ? "Saving..." : "Auto-saved"}
+                </span>
+              </div>
+              <textarea
+                aria-label="Screening notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Capture population details, edge cases, or follow-up questions while reading."
+                rows={6}
+                className="w-full resize-none rounded-xl border border-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-brand/40"
+              />
+            </div>
           </div>
 
           {/* AI Screening Reasoning */}
           {paper.aiDecision && (
-            <div className="p-4 border-b border-border">
+            <div className="m-4 mb-0 sr-panel">
               <h3 className="text-sm font-semibold text-ink mb-2 flex items-center gap-1.5">
                 <Robot weight="duotone" size={16} className="text-brand" />
                 AI Assessment
@@ -694,7 +823,7 @@ export function ScreeningPDFViewer({
 
           {/* Jump to Relevant Sections */}
           {chunks.length > 0 && (
-            <div className="p-4 border-b border-border">
+            <div className="m-4 mb-0 sr-panel">
               <h3 className="text-sm font-semibold text-ink mb-3 flex items-center gap-1.5">
                 <Crosshair weight="duotone" size={16} className="text-brand" />
                 Relevant Sections
@@ -847,7 +976,7 @@ export function ScreeningPDFViewer({
           )}
 
           {/* Paper metadata footer */}
-          <div className="p-4 mt-auto">
+          <div className="m-4 mt-auto sr-panel">
             <div className="text-xs text-ink-muted space-y-1">
               {paper.screeningReason && (
                 <div>
