@@ -1,17 +1,107 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   MagnifyingGlass,
   CircleNotch,
   ArrowRight,
+  Copy,
+  Check,
+  Sparkle,
 } from "@phosphor-icons/react";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { PRESSChecklistPanel } from "./PRESSChecklistPanel";
-import { useSystematicReviewStore } from "@/stores/systematic-review-store";
+import {
+  useSystematicReviewStore,
+  type PICOInput,
+  type SearchStrategy,
+} from "@/stores/systematic-review-store";
 
 interface SearchStrategyPanelProps {
   projectId: number;
+}
+
+const PICO_FIELDS = [
+  ["population", "Population", "e.g., Adults with type 2 diabetes"],
+  ["intervention", "Intervention", "e.g., Metformin monotherapy"],
+  ["comparison", "Comparison", "e.g., Sulfonylurea monotherapy"],
+  ["outcome", "Outcome", "e.g., HbA1c reduction at 12 months"],
+] as const;
+
+const MESH_LIBRARY: Record<keyof PICOInput, string[]> = {
+  population: [
+    "Diabetes Mellitus, Type 2",
+    "Adults",
+    "Aged",
+    "Obesity",
+    "Hypertension",
+    "Cardiovascular Diseases",
+  ],
+  intervention: [
+    "Metformin",
+    "Hypoglycemic Agents",
+    "Exercise Therapy",
+    "Diet Therapy",
+    "Insulin",
+    "Drug Therapy, Combination",
+  ],
+  comparison: [
+    "Placebos",
+    "Standard of Care",
+    "Sulfonylurea Compounds",
+    "Insulin",
+    "Usual Care",
+    "Watchful Waiting",
+  ],
+  outcome: [
+    "Hemoglobin A, Glycosylated",
+    "Treatment Outcome",
+    "Mortality",
+    "Quality of Life",
+    "Hospitalization",
+    "Blood Glucose",
+  ],
+};
+
+type MeshSelections = Record<keyof PICOInput, string[]>;
+
+function emptyMeshSelections(): MeshSelections {
+  return {
+    population: [],
+    intervention: [],
+    comparison: [],
+    outcome: [],
+  };
+}
+
+function parseTerms(value: string): string[] {
+  return value
+    .split(/[,\n;]/)
+    .map((term) => term.trim())
+    .filter(Boolean);
+}
+
+function buildBooleanBlock(meshTerms: string[], freeTextTerms: string[]): string {
+  const parts = [
+    ...meshTerms.map((term) => `"${term}"[MeSH Terms]`),
+    ...freeTextTerms.map((term) => `"${term}"[Title/Abstract]`),
+  ];
+
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0];
+
+  return `(${parts.join(" OR ")})`;
+}
+
+function hydrateMeshSelections(strategy: SearchStrategy | null): MeshSelections {
+  const next = emptyMeshSelections();
+  strategy?.blocks.forEach((block) => {
+    const key = block.picoElement.toLowerCase() as keyof PICOInput;
+    if (key in next) {
+      next[key] = block.meshTerms;
+    }
+  });
+  return next;
 }
 
 export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
@@ -24,15 +114,60 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
   } = useSystematicReviewStore();
 
   const [error, setError] = useState<string | null>(null);
+  const [meshSelections, setMeshSelections] = useState<MeshSelections>(
+    emptyMeshSelections
+  );
+  const [copied, setCopied] = useState(false);
 
   const loading = useSystematicReviewStore(
     (s) => s.reviewConfig === null && s.projectId !== null
   );
 
+  useEffect(() => {
+    if (strategy) {
+      setMeshSelections(hydrateMeshSelections(strategy));
+    }
+  }, [strategy]);
+
+  const previewBlocks = useMemo(() => {
+    return PICO_FIELDS.map(([key, label]) => {
+      const freeTextTerms = parseTerms(pico[key]);
+      const meshTerms = meshSelections[key];
+      return {
+        key,
+        label,
+        meshTerms,
+        freeTextTerms,
+        booleanBlock: buildBooleanBlock(meshTerms, freeTextTerms),
+      };
+    }).filter((block) => block.booleanBlock);
+  }, [meshSelections, pico]);
+
+  const previewSearchString = useMemo(() => {
+    if (previewBlocks.length === 0) return "";
+    return previewBlocks.map((block) => block.booleanBlock).join("\nAND\n");
+  }, [previewBlocks]);
+
+  const addMeshTerm = useCallback((field: keyof PICOInput, term: string) => {
+    setMeshSelections((current) => {
+      if (current[field].includes(term)) return current;
+      return {
+        ...current,
+        [field]: [...current[field], term],
+      };
+    });
+  }, []);
+
+  const removeMeshTerm = useCallback((field: keyof PICOInput, term: string) => {
+    setMeshSelections((current) => ({
+      ...current,
+      [field]: current[field].filter((item) => item !== term),
+    }));
+  }, []);
+
   const generateStrategy = useCallback(async () => {
     if (!pico.population || !pico.intervention || !pico.outcome) return;
 
-    // Optimistic: mark generating
     setGeneratedStrategy(null);
     setError(null);
 
@@ -45,8 +180,8 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
       if (!res.ok) throw new Error("Failed to generate strategy");
       const data = await res.json();
       setGeneratedStrategy(data);
+      setMeshSelections(hydrateMeshSelections(data));
 
-      // Persist strategy to project config
       await fetch("/api/systematic-review/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -61,161 +196,260 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
     }
   }, [pico, projectId, setGeneratedStrategy]);
 
+  const copyPreview = useCallback(async () => {
+    if (!previewSearchString) return;
+    await navigator.clipboard.writeText(previewSearchString);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1500);
+  }, [previewSearchString]);
+
   return (
-    <div className="space-y-6 sr-content">
-      <GlassPanel className="sr-panel">
-        <h2 className="sr-panel-title">
-          <MagnifyingGlass weight="duotone" className="text-brand" />
-          PICO Framework
-        </h2>
-        <p className="text-sm text-ink-muted mb-4">
-          Define your research question using the PICO framework. The AI will
-          generate a comprehensive PubMed search strategy with MeSH terms and
-          Boolean operators.
-        </p>
+    <div className="sr-content space-y-6">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
+        <GlassPanel className="sr-panel">
+          <h2 className="sr-panel-title">
+            <MagnifyingGlass weight="duotone" className="text-brand" />
+            Search Strategy Builder
+          </h2>
+          <p className="mb-5 text-sm text-ink-muted">
+            Build PICO blocks on the left, refine with MeSH suggestions, and
+            preview the Boolean logic in real time before generating the final
+            PubMed strategy.
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {(
-            [
-              ["population", "Population", "e.g., Adults with type 2 diabetes"],
-              ["intervention", "Intervention", "e.g., Metformin monotherapy"],
-              ["comparison", "Comparison", "e.g., Sulfonylurea monotherapy"],
-              ["outcome", "Outcome", "e.g., HbA1c reduction at 12 months"],
-            ] as const
-          /* empty state: renders nothing when no data */
-          ).map(([key, label, placeholder]) => (
-            <div key={key}>
-              <label className="block text-sm font-medium text-ink mb-1">
-                {label}{" "}
-                {key !== "comparison" && (
-                  <span className="text-red-500">*</span>
-                )}
-              </label>
-              <input aria-label="Text input"
-                type="text"
-                value={pico[key]}
-                onChange={(e) =>
-                  setPICO({ ...pico, [key]: e.target.value })
-                }
-                placeholder={placeholder}
-                className="w-full px-3 py-2 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 focus:border-brand outline-none"
-              />
-            </div>
-          ))}
-        </div>
+          <div className="space-y-4">
+            {PICO_FIELDS.map(([key, label, placeholder]) => {
+              const fieldValue = pico[key];
+              const fieldTerms = parseTerms(fieldValue);
+              const suggestions = MESH_LIBRARY[key].filter((term) => {
+                const query = fieldValue.trim().toLowerCase();
+                if (!query) return true;
+                return term.toLowerCase().includes(query);
+              }).slice(0, 5);
 
-        {error && (
-          <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
-            <span>{error}</span>
-            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+              return (
+                <div
+                  key={key}
+                  className="rounded-[1.35rem] border border-border/70 bg-surface-raised/45 p-4"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <label className="text-sm font-semibold text-ink">
+                      {label}{" "}
+                      {key !== "comparison" && (
+                        <span className="text-red-500">*</span>
+                      )}
+                    </label>
+                    <span className="text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+                      PICO block
+                    </span>
+                  </div>
+
+                  <input
+                    aria-label={`${label} field`}
+                    type="text"
+                    value={fieldValue}
+                    onChange={(e) => setPICO({ ...pico, [key]: e.target.value })}
+                    placeholder={placeholder}
+                    className="mt-3 w-full rounded-xl border border-border bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
+                  />
+
+                  <div className="mt-3">
+                    <p className="text-xs font-medium uppercase tracking-[0.16em] text-ink-muted">
+                      Selected MeSH terms
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {meshSelections[key].length === 0 ? (
+                        <span className="rounded-full border border-dashed border-border px-3 py-1 text-xs text-ink-muted">
+                          No MeSH terms selected yet
+                        </span>
+                      ) : (
+                        meshSelections[key].map((term) => (
+                          <button
+                            key={term}
+                            onClick={() => removeMeshTerm(key, term)}
+                            className="rounded-full bg-emerald-500/12 px-3 py-1 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-500/20"
+                          >
+                            {term} [MeSH] &#x2715;
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-3">
+                    <p className="text-xs font-medium uppercase tracking-[0.16em] text-ink-muted">
+                      MeSH autocomplete
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {suggestions.map((term) => (
+                        <button
+                          key={term}
+                          onClick={() => addMeshTerm(key, term)}
+                          disabled={meshSelections[key].includes(term)}
+                          className="rounded-full border border-border bg-white px-3 py-1 text-xs text-ink transition-colors hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-45"
+                        >
+                          {term}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {fieldTerms.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-xs font-medium uppercase tracking-[0.16em] text-ink-muted">
+                        Free-text terms
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {fieldTerms.map((term) => (
+                          <span
+                            key={term}
+                            className="rounded-full bg-sky-500/12 px-3 py-1 text-xs font-medium text-sky-700"
+                          >
+                            {term}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        )}
 
-        <button
-          onClick={generateStrategy}
-          disabled={
-            loading || !pico.population || !pico.intervention || !pico.outcome
-          }
-          className="sr-btn sr-btn-primary mt-4"
-        >
-          {loading ? (
-            <CircleNotch weight="bold" className="animate-spin" size={16} />
-          ) : (
-            <MagnifyingGlass weight="bold" size={16} />
+          {error && (
+            <div className="mt-4 flex items-center justify-between rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400">
+              <span>{error}</span>
+              <button
+                onClick={() => setError(null)}
+                className="text-red-400 hover:text-red-300"
+              >
+                &#x2715;
+              </button>
+            </div>
           )}
-          Generate Search Strategy
-        </button>
-      </GlassPanel>
+
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <button
+              onClick={generateStrategy}
+              disabled={
+                loading || !pico.population || !pico.intervention || !pico.outcome
+              }
+              className="sr-btn sr-btn-primary"
+            >
+              {loading ? (
+                <CircleNotch weight="bold" className="animate-spin" size={16} />
+              ) : (
+                <Sparkle weight="bold" size={16} />
+              )}
+              Generate Search Strategy
+            </button>
+          </div>
+        </GlassPanel>
+
+        <GlassPanel className="sr-panel">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h3 className="sr-panel-title">
+                <Sparkle size={18} className="text-brand" />
+                Live Preview
+              </h3>
+              <p className="mb-4 text-sm text-ink-muted">
+                Review the Boolean logic assembled from your PICO blocks and
+                selected MeSH terms.
+              </p>
+            </div>
+
+            <button
+              onClick={copyPreview}
+              disabled={!previewSearchString}
+              className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-3 py-2 text-sm text-ink transition-colors hover:bg-surface-raised disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+              {copied ? "Copied" : "Copy"}
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {previewBlocks.length === 0 ? (
+              <div className="rounded-[1.35rem] border border-dashed border-border px-5 py-10 text-center text-sm text-ink-muted">
+                Start entering PICO concepts to build a live Boolean preview.
+              </div>
+            ) : (
+              previewBlocks.map((block) => (
+                <div
+                  key={block.key}
+                  className="rounded-[1.35rem] border border-border/70 bg-surface-raised/45 p-4"
+                >
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span className="text-sm font-semibold text-ink">
+                      {block.label}
+                    </span>
+                    <span className="text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+                      {block.meshTerms.length} MeSH / {block.freeTextTerms.length} text
+                    </span>
+                  </div>
+                  <code className="block whitespace-pre-wrap rounded-xl border border-border bg-white px-3 py-3 text-xs leading-6 text-ink">
+                    {block.booleanBlock}
+                  </code>
+                </div>
+              ))
+            )}
+
+            <div className="rounded-[1.35rem] border border-border/70 bg-warm-muted/35 p-4">
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <span className="text-sm font-semibold text-ink">
+                  Complete Boolean preview
+                </span>
+                <span className="text-[11px] uppercase tracking-[0.16em] text-ink-muted">
+                  Real-time
+                </span>
+              </div>
+              <pre className="min-h-[180px] whitespace-pre-wrap rounded-xl border border-border bg-white px-3 py-3 text-xs leading-6 text-ink">
+                {previewSearchString || "No search string yet."}
+              </pre>
+            </div>
+
+            {strategy && (
+              <div className="rounded-[1.35rem] border border-border/70 bg-surface-raised/45 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-ink">
+                    AI-generated strategy
+                  </span>
+                  {strategy.estimatedResults !== undefined && (
+                    <span className="rounded-full bg-brand/10 px-3 py-1 text-xs font-medium text-brand">
+                      {strategy.estimatedResults.toLocaleString()} estimated
+                      results
+                    </span>
+                  )}
+                </div>
+                <pre className="mt-3 whitespace-pre-wrap rounded-xl border border-border bg-white px-3 py-3 text-xs leading-6 text-ink">
+                  {strategy.fullSearchString}
+                </pre>
+
+                {strategy.suggestedFilters.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {strategy.suggestedFilters.map((filter) => (
+                      <span
+                        key={filter}
+                        className="rounded-full bg-amber-500/12 px-3 py-1 text-xs font-medium text-amber-700"
+                      >
+                        {filter}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </GlassPanel>
+      </div>
 
       {strategy && (
         <GlassPanel className="sr-panel">
-          <h3 className="sr-panel-title">
-            Generated Search Strategy
-          </h3>
+          <h3 className="sr-panel-title">PRESS Review</h3>
+          <PRESSChecklistPanel projectId={projectId} />
 
-          {strategy.estimatedResults !== undefined && (
-            <div className="mb-4 px-3 py-2 bg-blue-500/10 border border-blue-500/20 rounded text-sm text-blue-700">
-              Estimated PubMed results:{" "}
-              <strong>{strategy.estimatedResults.toLocaleString()}</strong>
-            </div>
-          )}
-
-          {/* PICO Blocks */}
-          <div className="space-y-3 mb-6">
-            {strategy.blocks.map((block, i) => (
-              <div key={i} className="border border-border rounded p-3">
-                <div className="text-sm font-medium text-ink capitalize mb-2">
-                  {block.picoElement}
-                </div>
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {block.meshTerms.map((term, j) => (
-                    <span
-                      key={j}
-                      className="px-2 py-0.5 bg-emerald-500/10 text-emerald-700 text-xs rounded"
-                    >
-                      {term} [MeSH]
-                    </span>
-                  ))}
-                  {block.freeTextTerms.map((term, j) => (
-                    <span
-                      key={j}
-                      className="px-2 py-0.5 bg-sky-500/10 text-sky-700 text-xs rounded"
-                    >
-                      {term}
-                    </span>
-                  ))}
-                </div>
-                <code className="block text-xs text-ink-muted bg-surface-raised p-2 rounded overflow-x-auto">
-                  {block.booleanBlock}
-                </code>
-              </div>
-            ))}
-          </div>
-
-          {/* Full Search String */}
-          <div>
-            <div className="text-sm font-medium text-ink mb-2">
-              Complete PubMed Search String
-            </div>
-            <div className="relative">
-              <pre className="text-xs text-ink bg-surface-raised p-3 rounded border border-border overflow-x-auto whitespace-pre-wrap">
-                {strategy.fullSearchString}
-              </pre>
-              <button
-                onClick={() =>
-                  navigator.clipboard.writeText(strategy.fullSearchString)
-                }
-                className="absolute top-2 right-2 px-2 py-1 text-xs bg-brand/10 text-brand rounded hover:bg-brand/20"
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-
-          {strategy.suggestedFilters.length > 0 && (
-            <div className="mt-4">
-              <div className="text-sm font-medium text-ink mb-1">
-                Suggested Filters
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {strategy.suggestedFilters.map((filter, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-0.5 bg-amber-500/10 text-amber-700 text-xs rounded"
-                  >
-                    {filter}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="mt-6 pt-4 border-t border-border">
-            <PRESSChecklistPanel projectId={projectId} />
-          </div>
-
-          {/* CTA to import papers */}
-          <div className="mt-6 pt-4 border-t border-border">
+          <div className="mt-6 border-t border-border pt-4">
             <button
               onClick={() => setActiveTab("import")}
               className="sr-btn sr-btn-primary"
