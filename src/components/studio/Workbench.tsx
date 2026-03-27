@@ -99,13 +99,13 @@ export function Workbench({
       )}
       style={{ width: isOpen ? panelWidth : 0 }}
     >
-      {/* Resize handle — left edge */}
+      {/* Resize handle — left edge (5px hit area for discoverability) */}
       <div
         onMouseDown={onResizeStart}
-        className="absolute left-0 top-0 bottom-0 w-1 cursor-col-resize z-40 group"
-        style={{ marginLeft: -2 }}
+        className="absolute left-0 top-0 bottom-0 w-[5px] cursor-col-resize z-40 group"
+        style={{ marginLeft: -3 }}
       >
-        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-brand/40 group-active:bg-brand transition-colors" />
+        <div className="absolute left-[1px] top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-brand/40 group-active:bg-brand transition-colors" />
       </div>
 
       {/* VSCode-style tab bar */}
@@ -119,14 +119,17 @@ export function Workbench({
                 key={tab.key}
                 onClick={() => setTool(tab.key)}
                 className={cn(
-                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors",
+                  "flex items-center gap-1.5 px-2.5 py-1.5 text-xs transition-colors relative",
                   isActive
-                    ? "text-ink font-medium bg-surface-raised"
-                    : "text-ink-muted hover:text-ink hover:bg-surface-raised/50"
+                    ? "text-ink font-medium"
+                    : "text-ink-muted hover:text-ink hover:bg-surface-raised/50 rounded-md"
                 )}
               >
                 <Icon size={13} weight={isActive ? "bold" : "regular"} />
                 <span>{tab.label}</span>
+                {isActive && (
+                  <span className="absolute bottom-0 left-1 right-1 h-[2px] bg-brand rounded-full" />
+                )}
               </button>
             );
           })}
