@@ -1,28 +1,28 @@
 {
-  "timestamp": "2026-03-24T02:17:43.682Z",
-  "composite": 99.17,
+  "timestamp": "2026-03-27T14:52:50.256Z",
+  "composite": 94.42,
   "temperature": "FROZEN",
   "currentPhase": 5,
   "phaseAverages": {
-    "1": 98,
-    "2": 100,
+    "1": 99,
+    "2": 80,
     "3": 99,
     "4": 100,
     "5": 100
   },
   "weakest": {
-    "dimension": "typescriptStrict",
-    "label": "TypeScript Strict",
-    "score": 92.6
+    "dimension": "unitPassRate",
+    "label": "Unit Pass Rate",
+    "score": 0
   },
   "dimensions": {
     "typescriptStrict": {
-      "score": 92.6,
+      "score": 96.63,
       "details": {
-        "errors": 2,
-        "anyCount": 173,
+        "errors": 0,
+        "anyCount": 174,
         "strictEnabled": true,
-        "totalLines": 509109
+        "totalLines": 516371
       },
       "weight": 0.08,
       "phase": 1,
@@ -50,10 +50,10 @@
       "label": "Error Boundaries"
     },
     "apiHardening": {
-      "score": 99.13,
+      "score": 98.73,
       "details": {
-        "total": 172,
-        "withTryCatch": 171,
+        "total": 173,
+        "withTryCatch": 172,
         "withValidation": 172,
         "withAuth": 166,
         "withProperStatus": 172
@@ -126,11 +126,12 @@
       "label": "Assertion Module Coverage"
     },
     "unitPassRate": {
-      "score": 99.75,
+      "score": 0,
       "details": {
-        "passed": 6036,
-        "failed": 13,
-        "total": 6051
+        "passed": 0,
+        "failed": 0,
+        "total": 0,
+        "note": "No tests"
       },
       "weight": 0.05,
       "phase": 2,
@@ -140,9 +141,9 @@
       "score": 100,
       "details": {
         "retryLogic": 76,
-        "timeoutHandling": 524,
+        "timeoutHandling": 525,
         "offlineHandling": 5,
-        "errorStates": 95,
+        "errorStates": 94,
         "resilienceTests": 1
       },
       "weight": 0.05,
@@ -150,22 +151,22 @@
       "label": "Network Resilience"
     },
     "emptyStates": {
-      "score": 98.29,
+      "score": 96.68,
       "details": {
-        "emptyStateComponents": 288,
-        "dataDisplayPages": 293,
-        "pagesWithEmptyState": 288
+        "emptyStateComponents": 291,
+        "dataDisplayPages": 301,
+        "pagesWithEmptyState": 291
       },
       "weight": 0.03,
       "phase": 3,
       "label": "Empty/Boundary States"
     },
     "errorMessages": {
-      "score": 98.3,
+      "score": 98.15,
       "details": {
-        "genericErrors": 9,
-        "specificErrors": 308,
-        "recoverableErrors": 219
+        "genericErrors": 10,
+        "specificErrors": 315,
+        "recoverableErrors": 217
       },
       "weight": 0.03,
       "phase": 3,
@@ -174,8 +175,8 @@
     "stateConsistency": {
       "score": 100,
       "details": {
-        "urlState": 54,
-        "loadingStates": 547,
+        "urlState": 56,
+        "loadingStates": 562,
         "optimisticUpdates": 1
       },
       "weight": 0.04,
@@ -197,7 +198,7 @@
     "inputValidation": {
       "score": 99.56,
       "details": {
-        "zodUsage": 1734,
+        "zodUsage": 1736,
         "manualValidation": 298,
         "rawBodyUsage": 9
       },
@@ -222,7 +223,7 @@
       "details": {
         "missingAlt": 0,
         "missingLabels": 0,
-        "ariaUsage": 828,
+        "ariaUsage": 849,
         "jsxA11yPlugin": true,
         "axeTests": 2
       },

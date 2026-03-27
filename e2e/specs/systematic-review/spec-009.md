@@ -1,8 +1,8 @@
 # systematic-review — Spec 009
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/systematic-review
@@ -11,53 +11,53 @@ MODULE: systematic-review
 ---
 ### Snowballing Panel
 #### Configuration
-- [ ] **Depth 2** — citations of citations
+- [x] PASS: **Depth 2** — citations of citations
 #### Execution
-- [ ] **Run snowballing** — triggers citation search
-- [ ] **API call** — `POST /api/systematic-review/snowball`
-- [ ] **Progress indicator** — shows progress during search
-- [ ] **Results list** — newly discovered papers displayed
+- [x] PASS: **Run snowballing** — triggers citation search
+- [x] PASS: **API call** — `POST /api/systematic-review/snowball`
+- [x] PASS: **Progress indicator** — shows progress during search
+- [x] PASS: **Results list** — newly discovered papers displayed
 #### Session History
-- [ ] **Session tracking** — previous snowballing runs saved
-- [ ] **Session list** — past sessions viewable with date and results
-- [ ] **Session details** — expand to see papers found in each session
+- [x] PASS: **Session tracking** — previous snowballing runs saved
+- [x] PASS: **Session list** — past sessions viewable with date and results
+- [x] PASS: **Session details** — expand to see papers found in each session
 #### Citation Network Visualization
-- [ ] **Network graph** — visual network of citation relationships
-- [ ] **Node interaction** — click nodes to view paper details
-- [ ] **Edge display** — citation direction shown on edges
-- [ ] **Included papers highlighted** — distinguish between included and new papers
+- [x] PASS: **Network graph** — visual network of citation relationships
+- [x] PASS: **Node interaction** — click nodes to view paper details
+- [x] PASS: **Edge display** — citation direction shown on edges
+- [x] PASS: **Included papers highlighted** — distinguish between included and new papers
 #### API
-- [ ] `POST /api/systematic-review/snowball` — initiates snowball search
-- [ ] `GET /api/systematic-review/snowball` — retrieves snowball results
+- [x] PASS: `POST /api/systematic-review/snowball` — initiates snowball search
+- [x] PASS: `GET /api/systematic-review/snowball` — retrieves snowball results
 
 ### Import/Export Panel
 #### Import
-- [ ] **Drag-and-drop** — files can be dragged onto import area
-- [ ] **Click to upload** — file picker for selecting import files
-- [ ] **File validation** — invalid files show error message
-- [ ] **Parse preview** — shows count of papers found before confirming import
-- [ ] **Duplicate handling** — detects and flags duplicates against existing papers
+- [x] PASS: **Drag-and-drop** — files can be dragged onto import area
+- [x] PASS: **Click to upload** — file picker for selecting import files
+- [x] PASS: **File validation** — invalid files show error message
+- [x] PASS: **Parse preview** — shows count of papers found before confirming import
+- [x] PASS: **Duplicate handling** — detects and flags duplicates against existing papers
 #### Export
-- [ ] **Format selector** — dropdown or buttons to choose export format
-- [ ] **Filter selector** — choose which papers to include in export
+- [x] PASS: **Format selector** — dropdown or buttons to choose export format
+- [x] PASS: **Filter selector** — choose which papers to include in export
 #### RevMan Export
-- [ ] **RevMan export** — specialized export compatible with Cochrane RevMan software
-- [ ] **RevMan format** — correct XML structure for RevMan import
+- [x] PASS: **RevMan export** — specialized export compatible with Cochrane RevMan software
+- [x] PASS: **RevMan format** — correct XML structure for RevMan import
 #### API
-- [ ] `POST /api/systematic-review/import-references` — imports reference files
-- [ ] `GET /api/systematic-review/import-references` — retrieves imported references
+- [x] PASS: `POST /api/systematic-review/import-references` — imports reference files
+- [x] PASS: `GET /api/systematic-review/import-references` — retrieves imported references
 
 ### Protocol Panel
 #### Protocol Generation
-- [ ] **Generate from config** — auto-generates protocol from review configuration
-- [ ] **API call** — `POST /api/systematic-review/protocol`
-- [ ] **Generated sections** — protocol structured with standard sections
+- [x] PASS: **Generate from config** — auto-generates protocol from review configuration
+- [x] PASS: **API call** — `POST /api/systematic-review/protocol`
+- [x] PASS: **Generated sections** — protocol structured with standard sections
 #### Section Editing
-- [ ] **Editable sections** — each protocol section individually editable
-- [ ] **Guidance text** — each section shows guidance on what to include
-- [ ] **Rich text editing** — formatting supported within sections
+- [x] PASS: **Editable sections** — each protocol section individually editable
+- [x] PASS: **Guidance text** — each section shows guidance on what to include
+- [x] PASS: **Rich text editing** — formatting supported within sections
 #### Protocol Sections (Expected)
-- [ ] **Title and registration** — review title and registration details
-- [ ] **Background/rationale** — justification for the review
-- [ ] **Objectives** — review question and aims
-- [ ] **Methods** — search strategy, eligibility, screening, extraction, analysis
+- [x] PASS: **Title and registration** — review title and registration details
+- [x] PASS: **Background/rationale** — justification for the review
+- [x] PASS: **Objectives** — review question and aims
+- [x] PASS: **Methods** — search strategy, eligibility, screening, extraction, analysis

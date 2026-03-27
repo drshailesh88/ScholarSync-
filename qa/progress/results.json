@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
-    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "configFile": "/Users/shaileshsingh/ScholarSync/qa/playwright.config.ts",
+    "rootDir": "/Users/shaileshsingh/ScholarSync/qa/generated",
     "forbidOnly": true,
     "fullyParallel": true,
     "globalSetup": null,
@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 4
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "reporter": [
@@ -33,15 +33,15 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/home/user/ScholarSync-/test-results",
+        "outputDir": "/Users/shaileshsingh/ScholarSync/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "qa-chromium",
         "name": "qa-chromium",
-        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testDir": "/Users/shaileshsingh/ScholarSync/qa/generated",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -53,32 +53,25 @@
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.56.1",
-    "workers": 4,
-    "webServer": {
-      "command": "PORT=3001 npm run dev",
-      "port": 3001,
-      "reuseExistingServer": true,
-      "timeout": 120000,
-      "stdout": "pipe",
-      "stderr": "pipe"
-    }
+    "workers": 1,
+    "webServer": null
   },
   "suites": [
     {
-      "title": "analysis/spec-007.spec.ts",
-      "file": "analysis/spec-007.spec.ts",
+      "title": "systematic-review/spec-031.spec.ts",
+      "file": "systematic-review/spec-031.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "analysis / spec-007",
-          "file": "analysis/spec-007.spec.ts",
+          "title": "systematic-review / spec-031",
+          "file": "systematic-review/spec-031.spec.ts",
           "line": 36,
           "column": 6,
           "specs": [
             {
-              "title": "cp-000: Results write-good issue cards show uppercase type labels",
+              "title": "cp-000: POST apisystematic-reviewpress validates search strategy using PRESS 2015 framew",
               "ok": true,
               "tags": [],
               "tests": [
@@ -93,18 +86,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3827,
+                      "duration": 5370,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:03.265Z",
+                      "startTime": "2026-03-27T14:35:50.726Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b43cd--show-uppercase-type-labels-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-5788d-egy-using-PRESS-2015-framew-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -112,13 +105,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-d31084e95d51e31cdc7a",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-27320cc4674616b0fca1",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 49,
               "column": 3
             },
             {
-              "title": "cp-001: Results write-good issue cards display the issue reason text only",
+              "title": "cp-001: GET apisystematic-reviewprisma-flowprojectIdid returns PRISMA flow data in JSON ",
               "ok": true,
               "tags": [],
               "tests": [
@@ -130,21 +123,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5333,
+                      "duration": 1489,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:03.438Z",
+                      "startTime": "2026-03-27T14:35:56.496Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-69189--the-issue-reason-text-only-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-d0310-s-PRISMA-flow-data-in-JSON--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -152,13 +145,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-96142f895af3df091618",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-241edfc4c05ba02646d6",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 99,
               "column": 3
             },
             {
-              "title": "cp-002: Plagiarism Indicators section renders only when resultplagiarismIndicatorslength",
+              "title": "cp-002: POST apisystematic-reviewprisma-flow updates specific PRISMA flow stages",
               "ok": true,
               "tags": [],
               "tests": [
@@ -170,21 +163,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4942,
+                      "duration": 1371,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:03.322Z",
+                      "startTime": "2026-03-27T14:35:58.001Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d2e78-tplagiarismIndicatorslength-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-c823a-specific-PRISMA-flow-stages-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -192,13 +185,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-3ddac93a1331db37e7ab",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-2598495f7883f2ba4bb3",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 149,
               "column": 3
             },
             {
-              "title": "cp-003: High-severity plagiarism cards use red textbackground styling",
+              "title": "cp-003: GET apisystematic-reviewprisma-checklist returns static checklist items",
               "ok": true,
               "tags": [],
               "tests": [
@@ -210,21 +203,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4165,
+                      "duration": 1659,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:03.266Z",
+                      "startTime": "2026-03-27T14:35:59.382Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-f7330--red-textbackground-styling-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-98901-urns-static-checklist-items-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -232,13 +225,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-d405467e4cb3cbb4dfce",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-4a5da6ac18a6be7855bf",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 199,
               "column": 3
             },
             {
-              "title": "cp-004: Medium-severity plagiarism cards use yellow textbackground styling",
+              "title": "cp-004: POST apisystematic-reviewprisma-checklist verifies manuscript compliance against",
               "ok": true,
               "tags": [],
               "tests": [
@@ -253,18 +246,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5024,
+                      "duration": 1446,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:07.277Z",
+                      "startTime": "2026-03-27T14:36:01.054Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-afa05-llow-textbackground-styling-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-e61d8-nuscript-compliance-against-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -272,13 +265,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-1e7ce6552fc802d887f3",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-cd4d34596dd086e8cbd6",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 249,
               "column": 3
             },
             {
-              "title": "cp-005: Low-severity plagiarism cards use muted text on bg-surface-raised",
+              "title": "cp-005: POST apisystematic-reviewimport imports papers from search databases pubmed sema",
               "ok": true,
               "tags": [],
               "tests": [
@@ -290,21 +283,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4838,
+                      "duration": 1441,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:07.596Z",
+                      "startTime": "2026-03-27T14:36:02.517Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e6da2-d-text-on-bg-surface-raised-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-44d3c-earch-databases-pubmed-sema-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -312,13 +305,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-374c56e7513543b7ce0e",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-dfc913181f3e41fdb00f",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 299,
               "column": 3
             },
             {
-              "title": "cp-006: Plagiarism cards display uppercase SEVERITY Risk labels an italic excerpt and a ",
+              "title": "cp-006: GET apisystematic-reviewimportprojectIdid fetches papers with full details",
               "ok": true,
               "tags": [],
               "tests": [
@@ -330,21 +323,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4801,
+                      "duration": 1435,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:08.418Z",
+                      "startTime": "2026-03-27T14:36:03.968Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-8e9e6-ls-an-italic-excerpt-and-a--qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-076d7-es-papers-with-full-details-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -352,13 +345,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-15d77c1fa226ce49e5c2",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-9e60eaec9e8d8c734f6a",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 349,
               "column": 3
             },
             {
-              "title": "cp-007: Detailed Metrics tab renders Readability Writing Quality and AI Detection sectio",
+              "title": "cp-007: POST apisystematic-reviewscreen sets maxDuration 300 5-minute timeout for batch ",
               "ok": true,
               "tags": [],
               "tests": [
@@ -370,21 +363,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4529,
+                      "duration": 1481,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:08.921Z",
+                      "startTime": "2026-03-27T14:36:05.416Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-11be0-ity-and-AI-Detection-sectio-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-c2986-5-minute-timeout-for-batch--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -392,13 +385,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-293839cfca5a0c0ebe99",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-80b9b0cb2d83da753b62",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 399,
               "column": 3
             },
             {
-              "title": "cp-008: Readability section always shows Readability Grade",
+              "title": "cp-008: Screen API is rate-limited via checkRateLimituserId systematic-review RATE_LIMIT",
               "ok": true,
               "tags": [],
               "tests": [
@@ -413,18 +406,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4207,
+                      "duration": 1507,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:12.338Z",
+                      "startTime": "2026-03-27T14:36:06.915Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-11c7b-ays-shows-Readability-Grade-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-dad91-ystematic-review-RATE-LIMIT-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -432,13 +425,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-926941599057a3c5e6a3",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-1c132d1fc52a61d85ffe",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 449,
               "column": 3
             },
             {
-              "title": "cp-009: Results readability section adds Flesch-Kincaid Grade Gunning Fog Index and Fles",
+              "title": "cp-009: Screen API returns 400 with message No screening criteria found Define inclusion",
               "ok": true,
               "tags": [],
               "tests": [
@@ -450,21 +443,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4764,
+                      "duration": 1359,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:12.453Z",
+                      "startTime": "2026-03-27T14:36:08.432Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-6c2e3--Gunning-Fog-Index-and-Fles-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-3e99e-eria-found-Define-inclusion-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -472,13 +465,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-36b9a05979a79a9ad507",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-fd8b656993c01a7c3108",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 499,
               "column": 3
             },
             {
-              "title": "cp-010: Results Avg Sentence Length row comes from resultwritingQualityaverageSentenceLe",
+              "title": "cp-010: Screen batch mode Zod validates papers array min 1 max 100 items",
               "ok": true,
               "tags": [],
               "tests": [
@@ -490,21 +483,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4007,
+                      "duration": 1399,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:13.260Z",
+                      "startTime": "2026-03-27T14:36:09.802Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-2fbfd-ingQualityaverageSentenceLe-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-2bb93-s-array-min-1-max-100-items-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -512,13 +505,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-ea36ec17b5f39e9455df",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-c557bbe2824e0d0c360a",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 549,
               "column": 3
             },
             {
-              "title": "cp-011: Writing Quality Passive Voice falls back to resultwritingQualitypassiveVoiceCoun",
+              "title": "cp-011: Screen batch response includes summary object total included excluded conflicts",
               "ok": true,
               "tags": [],
               "tests": [
@@ -530,21 +523,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3852,
+                      "duration": 1372,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:13.470Z",
+                      "startTime": "2026-03-27T14:36:11.221Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-376e4-tingQualitypassiveVoiceCoun-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-766d8-included-excluded-conflicts-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -552,13 +545,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-93463f3ce6f00b4fc3e4",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-a14a43876ba367adbc65",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 599,
               "column": 3
             },
             {
-              "title": "cp-012: Writing Quality Weasel Words Adverbs and Complex Sentences rows render only when",
+              "title": "cp-012: GET apisystematic-reviewscreenprojectIdid returns screening summary separate fro",
               "ok": true,
               "tags": [],
               "tests": [
@@ -573,18 +566,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4383,
+                      "duration": 1401,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:16.566Z",
+                      "startTime": "2026-03-27T14:36:12.608Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-074ec-ences-rows-render-only-when-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-0dbd4-eening-summary-separate-fro-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -592,13 +585,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-47e4b6ef61976e2cc5be",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-d1a72dbd10021db6963b",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 649,
               "column": 3
             },
             {
-              "title": "cp-013: AI Detection section renders Human Score AI Score and Overall Risk as ToneBadge ",
+              "title": "cp-013: Extract API supports 4 discriminated modes single single-fulltext batch batch-fu",
               "ok": true,
               "tags": [],
               "tests": [
@@ -610,21 +603,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4383,
+                      "duration": 1415,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:17.231Z",
+                      "startTime": "2026-03-27T14:36:14.021Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-33a74--Overall-Risk-as-ToneBadge--qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-98543-gle-fulltext-batch-batch-fu-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -632,13 +625,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-ca1b14ab776170650d2c",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-953c40427927b608eaea",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 699,
               "column": 3
             },
             {
-              "title": "cp-014: Human Score uses emerald for 70 yellow for 40-69 and red below 40",
+              "title": "cp-014: Extract schema allows max 50 fields per extraction",
               "ok": true,
               "tags": [],
               "tests": [
@@ -650,21 +643,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4490,
+                      "duration": 1346,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:17.281Z",
+                      "startTime": "2026-03-27T14:36:15.447Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d466f--for-40-69-and-red-below-40-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-fc9f5-ax-50-fields-per-extraction-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -672,13 +665,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-a9113a49a66305468bd4",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-4fdc57e7f0e32af18200",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 749,
               "column": 3
             },
             {
-              "title": "cp-015: AI Score uses emerald for 30 yellow for 31-60 and red above 60",
+              "title": "cp-015: single mode textContent Zod min 50 max 100000 characters",
               "ok": true,
               "tags": [],
               "tests": [
@@ -690,21 +683,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5095,
+                      "duration": 1351,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:17.336Z",
+                      "startTime": "2026-03-27T14:36:16.805Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-0e283--for-31-60-and-red-above-60-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-90029-in-50-max-100000-characters-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -712,13 +705,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-c961e9c59b05e5c4e6e7",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-e59364a77bde166bf2c8",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 799,
               "column": 3
             },
             {
-              "title": "cp-016: Overall Risk uses low - emerald medium - yellow and high - red",
+              "title": "cp-016: batch and batch-fulltext modes allow max 50 papers per request",
               "ok": true,
               "tags": [],
               "tests": [
@@ -733,18 +726,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5086,
+                      "duration": 1348,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:20.965Z",
+                      "startTime": "2026-03-27T14:36:18.168Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-64e72-ium---yellow-and-high---red-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-6ea96-w-max-50-papers-per-request-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -752,13 +745,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-550a7fca1ff416876c8f",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-b7636dfc80ecd02b239e",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 849,
               "column": 3
             },
             {
-              "title": "cp-017: Paragraph Breakdown section renders only when resultparagraphAnalysislength 0",
+              "title": "cp-017: single-fulltext mode returns extractions chunks for source linking",
               "ok": true,
               "tags": [],
               "tests": [
@@ -770,21 +763,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4566,
+                      "duration": 1365,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:21.661Z",
+                      "startTime": "2026-03-27T14:36:19.530Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-538ff-ltparagraphAnalysislength-0-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-baf87-s-chunks-for-source-linking-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -792,13 +785,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-361b5d9225363d297e9b",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-d47e77b78713c2494feb",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 899,
               "column": 3
             },
             {
-              "title": "cp-018: Paragraph Breakdown rows display Paragraph n on the left and humanProbability hu",
+              "title": "cp-018: GET apisystematic-reviewextractpaperIdid returns chunks for a specific paper",
               "ok": true,
               "tags": [],
               "tests": [
@@ -810,21 +803,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4344,
+                      "duration": 1572,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:21.790Z",
+                      "startTime": "2026-03-27T14:36:20.910Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-1837f-eft-and-humanProbability-hu-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-c4122-chunks-for-a-specific-paper-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -832,13 +825,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-c3c82ee50b582af0bcc2",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-d6b238dc8dd73770823e",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 949,
               "column": 3
             },
             {
-              "title": "cp-019: MetricBar caps bar fill width at 100 with Mathminvalue max 100 100",
+              "title": "cp-019: GET apisystematic-reviewextractprojectIdid returns the full extraction table ret",
               "ok": true,
               "tags": [],
               "tests": [
@@ -850,21 +843,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4558,
+                      "duration": 1760,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:22.455Z",
+                      "startTime": "2026-03-27T14:36:22.500Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e352d-th-Mathminvalue-max-100-100-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-57aee-e-full-extraction-table-ret-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -872,13 +865,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-b853c6830e482396e57a",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-3edc926485bea5581133",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 999,
               "column": 3
             },
             {
-              "title": "cp-020: MetricBar appends suffix text such as words instances or sentences in the value ",
+              "title": "cp-020: Screening queue GET supports stage parameter title_abstract default or full_text",
               "ok": true,
               "tags": [],
               "tests": [
@@ -893,18 +886,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4328,
+                      "duration": 1495,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:26.101Z",
+                      "startTime": "2026-03-27T14:36:24.278Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-9a6d5--or-sentences-in-the-value--qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-609fd-stract-default-or-full-text-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -912,13 +905,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-c42cdf360bc44ad5e0f8",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-f338e767a4107f64ac0b",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1049,
               "column": 3
             },
             {
-              "title": "cp-021: IssueBadge color map is yellow orange blue and red",
+              "title": "cp-021: Screening queue GET supports mode parameter conflicts or unblind",
               "ok": true,
               "tags": [],
               "tests": [
@@ -930,21 +923,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4584,
+                      "duration": 1400,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:26.150Z",
+                      "startTime": "2026-03-27T14:36:25.787Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-55bf1--yellow-orange-blue-and-red-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-be66c-ameter-conflicts-or-unblind-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -952,13 +945,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-9955589dc657c88e0cd5",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-8e6c25f46c458b3bb160",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1099,
               "column": 3
             },
             {
-              "title": "cp-022: CircularGauge color thresholds are green 80 yellow 60 orange 40 and red below 40",
+              "title": "cp-022: Screening queue verifies project access via verifyProjectAccessprojectId userId ",
               "ok": true,
               "tags": [],
               "tests": [
@@ -970,21 +963,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4516,
+                      "duration": 1406,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:26.242Z",
+                      "startTime": "2026-03-27T14:36:27.200Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d433b--orange-40-and-red-below-40-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-fca0c-jectAccessprojectId-userId--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -992,13 +985,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-46bc8c0324dfd8f7806a",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-3df215dcb7adae16fc6d",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1149,
               "column": 3
             },
             {
-              "title": "cp-023: Results gauge readability label uses Excellent Good Needs Improvement and Poor",
+              "title": "cp-023: modeconflicts returns conflicts total from detectConflictsprojectId stage",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1010,21 +1003,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4588,
+                      "duration": 1453,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:27.033Z",
+                      "startTime": "2026-03-27T14:36:28.618Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-75652--Needs-Improvement-and-Poor-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-d7a6a-ectConflictsprojectId-stage-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1032,13 +1025,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-323f47376abb3fdd2d75",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-a4f77c5decbb3a2f0340",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1199,
               "column": 3
             },
             {
-              "title": "cp-024: Instant gauge readability label uses the analyzeWriting labels not the results-g",
+              "title": "cp-024: modeunblind returns results with results summary total withBothDecisions agreeme",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1053,18 +1046,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4574,
+                      "duration": 1380,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:30.491Z",
+                      "startTime": "2026-03-27T14:36:30.086Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-2a1d9-ng-labels-not-the-results-g-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-cc028-l-withBothDecisions-agreeme-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1072,13 +1065,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-5d4db00b7bb5d1b04e24",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-043694b8708edf74f4d0",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1249,
               "column": 3
             },
             {
-              "title": "cp-025: When statsavgSentenceLength 28 the API returns the suggestion Your average sente",
+              "title": "cp-025: Standard queue GET returns queue progress agreement reviewerProgress from 4 para",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1090,21 +1083,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3661,
+                      "duration": 1339,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:30.778Z",
+                      "startTime": "2026-03-27T14:36:31.482Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b9efd-ggestion-Your-average-sente-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-45e64-eviewerProgress-from-4-para-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1112,13 +1105,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-2ac3c0308d7a055d71c7",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-b0140bd57af373aa5457",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1299,
               "column": 3
             },
             {
-              "title": "cp-026: When statssentenceLengthStdDev 3 the API returns Your sentence lengths are very ",
+              "title": "cp-026: Queue POST discriminates actions via zunionresolveSchema decisionSchema",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1130,21 +1123,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3856,
+                      "duration": 1388,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:30.786Z",
+                      "startTime": "2026-03-27T14:36:32.832Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d02a4--sentence-lengths-are-very--qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-5b389-esolveSchema-decisionSchema-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1152,13 +1145,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-722e82d9d0b3170e27d7",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-8919dec2b56fc27de023",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1349,
               "column": 3
             },
             {
-              "title": "cp-027: When statspassiveVoicePercent 30 the API returns N of sentences use passive voic",
+              "title": "cp-027: Resolve action calls resolveConflictprojectId paperId stage resolution userId re",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1170,21 +1163,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4456,
+                      "duration": 1392,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:31.633Z",
+                      "startTime": "2026-03-27T14:36:34.236Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-0217d--sentences-use-passive-voic-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-0d42c--stage-resolution-userId-re-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1192,13 +1185,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-06ac14c0a61320aa904f",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-69754c442ff269fe1034",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1399,
               "column": 3
             },
             {
-              "title": "cp-028: When statstypeTokenRatio 035 and 0 the API returns Vocabulary diversity is low U",
+              "title": "cp-028: Decision action calls recordHumanDecision with both userId and reviewerId set to",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1210,21 +1203,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4605,
+                      "duration": 1514,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:34.489Z",
+                      "startTime": "2026-03-27T14:36:35.643Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b1c4c-cabulary-diversity-is-low-U-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-54684-serId-and-reviewerId-set-to-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1232,13 +1225,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-bbb8e2ddf4b21f8cedc7",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-2d5467e650b46778e443",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1449,
               "column": 3
             },
             {
-              "title": "cp-029: When statshedgingPhraseCount 5 the API returns Found N hedging phrases eg It is ",
+              "title": "cp-029: Queue PUT recomputes priorities via updateScreeningPrioritiesprojectId from acti",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1250,21 +1243,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4778,
+                      "duration": 1484,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:34.679Z",
+                      "startTime": "2026-03-27T14:36:37.169Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-9059e-N-hedging-phrases-eg-It-is--qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-ef4d2-ioritiesprojectId-from-acti-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1272,13 +1265,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-951eba0431da1e7a7545",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-daba8d7456c753ff9cb1",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1499,
               "column": 3
             },
             {
-              "title": "cp-030: When statsreadabilityGrade 16 the API returns Readability grade is above 16 post",
+              "title": "cp-030: Liveblocks SR rooms use empty storage SRStorage Recordstring never all data pers",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1293,18 +1286,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4933,
+                      "duration": 1549,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:35.088Z",
+                      "startTime": "2026-03-27T14:36:38.664Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-07a14-lity-grade-is-above-16-post-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-1ea45-dstring-never-all-data-pers-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1312,133 +1305,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-388548aa11d85b18cb2f",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-934be6899d30abddbc8e",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1549,
               "column": 3
             },
             {
-              "title": "cp-031: When none of the above conditions fire the suggestions array is empty and the Is",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 4538,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T19:14:36.114Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e6846-s-array-is-empty-and-the-Is-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "30b3ed08af7f982ad1a1-4647df1074d660db408b",
-              "file": "analysis/spec-007.spec.ts",
-              "line": 1599,
-              "column": 3
-            },
-            {
-              "title": "cp-032: 401 response body is error Not authenticated line 47",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 4326,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T19:14:39.155Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-93fdf-r-Not-authenticated-line-47-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "30b3ed08af7f982ad1a1-f48b6a6e96e9799e5422",
-              "file": "analysis/spec-007.spec.ts",
-              "line": 1649,
-              "column": 3
-            },
-            {
-              "title": "cp-033: 400 response body is error Invalid request details fieldErrors where details com",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 4108,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-16T19:14:39.491Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-ed43b-eldErrors-where-details-com-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "30b3ed08af7f982ad1a1-f3427c582cb6498ec84f",
-              "file": "analysis/spec-007.spec.ts",
-              "line": 1699,
-              "column": 3
-            },
-            {
-              "title": "cp-034: 503 when AI is not configured returns error AI service is not configured line 62",
+              "title": "cp-031: Liveblocks auth endpoint is apiliveblocks-auth",
               "ok": true,
               "tags": [],
               "tests": [
@@ -1453,18 +1326,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4149,
+                      "duration": 1327,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T19:14:40.046Z",
+                      "startTime": "2026-03-27T14:36:40.228Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-f3789-e-is-not-configured-line-62-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-339a3-point-is-apiliveblocks-auth-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1472,8 +1345,128 @@
                   "status": "expected"
                 }
               ],
-              "id": "30b3ed08af7f982ad1a1-0b5a445b13d3f040d69c",
-              "file": "analysis/spec-007.spec.ts",
+              "id": "5b68f8b30be8dc82fa75-2eb533409a59a932cd43",
+              "file": "systematic-review/spec-031.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: SRUserMeta includes id string and info name avatar color",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1367,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-27T14:36:41.566Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-459a6--and-info-name-avatar-color-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5b68f8b30be8dc82fa75-f12ecaee65b2cf311414",
+              "file": "systematic-review/spec-031.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: SRRoomEvent is a 5-variant discriminated union on type field",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1428,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-27T14:36:42.944Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-f8992-minated-union-on-type-field-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5b68f8b30be8dc82fa75-b2e431b16a17b7766e27",
+              "file": "systematic-review/spec-031.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: useCollaborativeReview hook exposes 5 broadcast helpers broadcastDecision broadc",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1370,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-27T14:36:44.381Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-c3b38-rs-broadcastDecision-broadc-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5b68f8b30be8dc82fa75-c971ecb8abec35ba066c",
+              "file": "systematic-review/spec-031.spec.ts",
               "line": 1749,
               "column": 3
             }
@@ -1484,8 +1477,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-16T19:14:01.791Z",
-    "duration": 42558.216,
+    "startTime": "2026-03-27T14:35:49.057Z",
+    "duration": 86850.823,
     "expected": 35,
     "skipped": 0,
     "unexpected": 0,

@@ -1,6 +1,6 @@
 # ScholarSync QA Progress
 
-Updated: 2026-03-16T19:14:45.065Z
+Updated: 2026-03-27T14:37:17.312Z
 
 ## Overall
 
@@ -11,8 +11,8 @@ Updated: 2026-03-16T19:14:45.065Z
 | Total specs | 376 |
 | Total checkpoints | 12804 |
 | Pending | 0 |
-| Pass 1 done | 376 |
-| Pass 2 done | 0 |
+| Pass 1 done | 344 |
+| Pass 2 done | 32 |
 | Blocked | 0 |
 
 ## Per Module

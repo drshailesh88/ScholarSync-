@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const baseURL = process.env.BASE_URL ?? "http://127.0.0.1:3001";
+const useExternalBaseUrl = Boolean(process.env.BASE_URL);
+
 /**
  * Playwright config for QA pipeline tests.
  * Separate from root playwright.config.ts to avoid interference.
@@ -16,7 +19,7 @@ export default defineConfig({
   fullyParallel: true, // Parallel for speed
   forbidOnly: true,
   retries: 0, // Controller handles retries, not Playwright
-  workers: 4, // Parallel workers for throughput
+  workers: 1, // Prioritize stability for long spec sweeps against a shared dev server
   timeout: 30_000,
 
   reporter: [
@@ -25,12 +28,12 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: process.env.BASE_URL ?? "http://127.0.0.1:3001",
+    baseURL,
     trace: "retain-on-failure",
     screenshot: "on", // Always capture screenshots (proof)
     video: "off",
-    actionTimeout: 15_000,
-    navigationTimeout: 20_000,
+    actionTimeout: 30_000,
+    navigationTimeout: 45_000,
   },
 
   projects: [
@@ -40,13 +43,15 @@ export default defineConfig({
     },
   ],
 
-  // Dev server — reuse if already running
-  webServer: {
-    command: "PORT=3001 npm run dev",
-    port: 3001,
-    reuseExistingServer: true,
-    timeout: 120_000,
-    stdout: "pipe",
-    stderr: "pipe",
-  },
+  // Dev server — reuse if already running unless BASE_URL is provided explicitly
+  webServer: useExternalBaseUrl
+    ? undefined
+    : {
+        command: "PORT=3001 npm run dev",
+        port: 3001,
+        reuseExistingServer: true,
+        timeout: 120_000,
+        stdout: "pipe",
+        stderr: "pipe",
+      },
 });

@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
-    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "configFile": "/Users/shaileshsingh/ScholarSync/qa/playwright.config.ts",
+    "rootDir": "/Users/shaileshsingh/ScholarSync/qa/generated",
     "forbidOnly": true,
     "fullyParallel": true,
     "globalSetup": null,
@@ -33,7 +33,7 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/home/user/ScholarSync-/test-results",
+        "outputDir": "/Users/shaileshsingh/ScholarSync/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -41,7 +41,7 @@
         },
         "id": "qa-chromium",
         "name": "qa-chromium",
-        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testDir": "/Users/shaileshsingh/ScholarSync/qa/generated",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -54,14 +54,7 @@
     "updateSourceMethod": "patch",
     "version": "1.56.1",
     "workers": 4,
-    "webServer": {
-      "command": "PORT=3001 npm run dev",
-      "port": 3001,
-      "reuseExistingServer": true,
-      "timeout": 120000,
-      "stdout": "pipe",
-      "stderr": "pipe"
-    }
+    "webServer": null
   },
   "suites": [
     {
@@ -93,18 +86,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3520,
+                      "duration": 16311,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:00.252Z",
+                      "startTime": "2026-03-27T13:01:33.621Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-b8bb9-s-match-actual-project-data-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-b8bb9-s-match-actual-project-data-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -133,18 +126,18 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3002,
+                      "duration": 16411,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:00.058Z",
+                      "startTime": "2026-03-27T13:01:33.585Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-76691--PRISMA-diagram-as-SVG-file-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-76691--PRISMA-diagram-as-SVG-file-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -173,18 +166,18 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3256,
+                      "duration": 16231,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:00.141Z",
+                      "startTime": "2026-03-27T13:01:33.604Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-09878-le-is-valid-well-formed-SVG-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-09878-le-is-valid-well-formed-SVG-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -213,18 +206,18 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3743,
+                      "duration": 15753,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:00.185Z",
+                      "startTime": "2026-03-27T13:01:33.894Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-8d8a4-le-for-manuscript-inclusion-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-8d8a4-le-for-manuscript-inclusion-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -250,21 +243,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3814,
+                      "duration": 4504,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:03.198Z",
+                      "startTime": "2026-03-27T13:01:50.373Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-fef70-etween-3-checklist-variants-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-fef70-etween-3-checklist-variants-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -293,18 +286,18 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3627,
+                      "duration": 3817,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:03.541Z",
+                      "startTime": "2026-03-27T13:01:50.515Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-44993-the-correct-number-of-items-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-44993-the-correct-number-of-items-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -333,18 +326,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3430,
+                      "duration": 4271,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:03.940Z",
+                      "startTime": "2026-03-27T13:01:50.652Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-27deb-items-status-can-be-changed-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-27deb-items-status-can-be-changed-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -370,21 +363,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3100,
+                      "duration": 4297,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:04.087Z",
+                      "startTime": "2026-03-27T13:01:50.683Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-19f92--item-shows-its-description-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-19f92--item-shows-its-description-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -410,21 +403,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3995,
+                      "duration": 2979,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:07.057Z",
+                      "startTime": "2026-03-27T13:01:54.417Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-4ea78-s-grouped-by-PRISMA-section-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-4ea78-s-grouped-by-PRISMA-section-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -450,21 +443,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3987,
+                      "duration": 3014,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:07.217Z",
+                      "startTime": "2026-03-27T13:01:54.964Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-1fe4b-ea-to-paste-manuscript-text-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-1fe4b-ea-to-paste-manuscript-text-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -490,21 +483,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3695,
+                      "duration": 2959,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:07.238Z",
+                      "startTime": "2026-03-27T13:01:54.977Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-4e728-ification-against-checklist-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-4e728-ification-against-checklist-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -530,21 +523,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3550,
+                      "duration": 2944,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:07.403Z",
+                      "startTime": "2026-03-27T13:01:55.016Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-e9b7d-pulates-compliance-statuses-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-e9b7d-pulates-compliance-statuses-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -570,21 +563,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3477,
+                      "duration": 2881,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:10.983Z",
+                      "startTime": "2026-03-27T13:01:57.568Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-20927-verall-percentage-displayed-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-20927-verall-percentage-displayed-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -613,18 +606,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3462,
+                      "duration": 2984,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:10.974Z",
+                      "startTime": "2026-03-27T13:01:57.967Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-925a6-d-partially-not-reported-NA-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-925a6-d-partially-not-reported-NA-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -653,18 +646,18 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3511,
+                      "duration": 3180,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:11.068Z",
+                      "startTime": "2026-03-27T13:01:58.014Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-148ec-s-colors-in-summary-display-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-148ec-s-colors-in-summary-display-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -690,21 +683,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3208,
+                      "duration": 2806,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:11.234Z",
+                      "startTime": "2026-03-27T13:01:58.005Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-7683e-leted-checklist-as-CSV-file-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-7683e-leted-checklist-as-CSV-file-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -733,18 +726,18 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3698,
+                      "duration": 3610,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:14.455Z",
+                      "startTime": "2026-03-27T13:02:00.493Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-a86bc-escription-status-and-notes-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-a86bc-escription-status-and-notes-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -770,21 +763,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3714,
+                      "duration": 3253,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:14.463Z",
+                      "startTime": "2026-03-27T13:02:00.848Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-12aa1-elect-which-RoB-tool-to-use-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-12aa1-elect-which-RoB-tool-to-use-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -810,21 +803,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3583,
+                      "duration": 3188,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:14.490Z",
+                      "startTime": "2026-03-27T13:02:01.008Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-b67aa-te-tool-based-on-study-type-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-b67aa-te-tool-based-on-study-type-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -853,18 +846,18 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3704,
+                      "duration": 2917,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:14.593Z",
+                      "startTime": "2026-03-27T13:02:01.289Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-3a7e9-uto-detected-tool-selection-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-3a7e9-uto-detected-tool-selection-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -890,21 +883,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3075,
+                      "duration": 3131,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:18.089Z",
+                      "startTime": "2026-03-27T13:02:04.152Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-bff92-s-with-its-designated-color-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-bff92-s-with-its-designated-color-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -930,21 +923,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3271,
+                      "duration": 3420,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:18.170Z",
+                      "startTime": "2026-03-27T13:02:04.165Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-a8016-nt-assess-each-RoB-2-domain-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-a8016-nt-assess-each-RoB-2-domain-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -973,18 +966,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3391,
+                      "duration": 3642,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:18.211Z",
+                      "startTime": "2026-03-27T13:02:04.219Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-ad212--data-measurement-selection-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-ad212--data-measurement-selection-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1013,18 +1006,18 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3255,
+                      "duration": 3575,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:18.313Z",
+                      "startTime": "2026-03-27T13:02:04.220Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-a0132-Low-Some-concerns-High-risk-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-a0132-Low-Some-concerns-High-risk-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1050,21 +1043,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 4007,
+                      "duration": 3219,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:21.186Z",
+                      "startTime": "2026-03-27T13:02:07.306Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-d354b-or-justification-per-domain-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-d354b-or-justification-per-domain-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1090,21 +1083,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3706,
+                      "duration": 2991,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:21.456Z",
+                      "startTime": "2026-03-27T13:02:07.624Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-aa243-t-aggregated-across-domains-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-aa243-t-aggregated-across-domains-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1133,18 +1126,18 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3852,
+                      "duration": 3290,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:21.580Z",
+                      "startTime": "2026-03-27T13:02:07.816Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-5803d-assess-each-ROBINS-I-domain-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-5803d-assess-each-ROBINS-I-domain-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1173,18 +1166,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3961,
+                      "duration": 3249,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:21.627Z",
+                      "startTime": "2026-03-27T13:02:07.890Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-b04f3-ns-missing-measurement-repo-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-b04f3-ns-missing-measurement-repo-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1213,18 +1206,18 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3632,
+                      "duration": 3002,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:25.177Z",
+                      "startTime": "2026-03-27T13:02:10.551Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-0e66c-erate-Serious-Critical-risk-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-0e66c-erate-Serious-Critical-risk-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1253,18 +1246,18 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3636,
+                      "duration": 3305,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:25.215Z",
+                      "startTime": "2026-03-27T13:02:10.638Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-72df6-xt-justification-per-domain-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-72df6-xt-justification-per-domain-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1293,18 +1286,18 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3387,
+                      "duration": 2862,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:25.445Z",
+                      "startTime": "2026-03-27T13:02:11.129Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-0195f-t-aggregated-across-domains-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-0195f-t-aggregated-across-domains-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1333,18 +1326,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3183,
+                      "duration": 2837,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:25.617Z",
+                      "startTime": "2026-03-27T13:02:11.161Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-c75e0-assess-each-QUADAS-2-domain-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-c75e0-assess-each-QUADAS-2-domain-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1373,18 +1366,18 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 2638,
+                      "duration": 2299,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:28.825Z",
+                      "startTime": "2026-03-27T13:02:13.575Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-f2c38-ce-standard-flow-and-timing-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-f2c38-ce-standard-flow-and-timing-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1410,21 +1403,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2758,
+                      "duration": 1870,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:28.841Z",
+                      "startTime": "2026-03-27T13:02:13.987Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-baaf9-gment-Low-High-Unclear-risk-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-baaf9-gment-Low-High-Unclear-risk-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1453,18 +1446,18 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2680,
+                      "duration": 1897,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-16T18:05:28.850Z",
+                      "startTime": "2026-03-27T13:02:14.012Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-005-226eb-te-applicability-assessment-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-005-226eb-te-applicability-assessment-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1484,8 +1477,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-16T18:04:58.678Z",
-    "duration": 33122.227,
+    "startTime": "2026-03-27T13:01:31.619Z",
+    "duration": 74579.653,
     "expected": 35,
     "skipped": 0,
     "unexpected": 0,
