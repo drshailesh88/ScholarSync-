@@ -945,6 +945,44 @@ body {
   background-color: rgba(139, 123, 244, 0.1);
 }
 
+/* SR description + stat helpers used by later SR panels */
+.sr-description {
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+  margin-top: 0.25rem;
+}
+
+.sr-stat {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+  transition: border-color 200ms ease;
+}
+
+.sr-stat:hover {
+  border-color: var(--brand);
+}
+
+.sr-stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: var(--font-sans-family);
+  color: var(--ink);
+  line-height: 1;
+}
+
+.sr-stat-label {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* Hashtag inline tags */
 .hashtag-tag {
   background: rgba(99, 102, 241, 0.15);
