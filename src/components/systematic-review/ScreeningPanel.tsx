@@ -613,7 +613,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const _activePaper = queue[activeIndex];
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 sr-content max-w-5xl">
       {error && (
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
           <span>{error}</span>
@@ -831,8 +831,8 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
       )}
 
       {/* Criteria Setup */}
-      <GlassPanel className="p-6">
-        <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+      <GlassPanel className="sr-panel">
+        <h2 className="sr-panel-title">
           <Funnel weight="duotone" className="text-brand" />
           Screening Criteria
         </h2>

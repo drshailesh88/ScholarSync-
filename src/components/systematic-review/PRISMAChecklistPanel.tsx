@@ -260,10 +260,10 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
     : [];
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="sr-content space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
+        <h2 className="sr-panel-title">
           <ClipboardText weight="duotone" className="text-brand" />
           PRISMA Compliance Checker
         </h2>

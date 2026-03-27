@@ -207,9 +207,9 @@ export function CERQualPanel({ projectId }: CERQualPanelProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl">
-      <GlassPanel className="p-6">
-        <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+    <div className="space-y-6 sr-content max-w-5xl">
+      <GlassPanel className="sr-panel">
+        <h2 className="sr-panel-title">
           <Scales weight="duotone" className="text-brand" size={24} />
           GRADE-CERQual Assessment
         </h2>

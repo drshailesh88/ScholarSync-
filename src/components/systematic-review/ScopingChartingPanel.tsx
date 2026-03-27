@@ -274,14 +274,14 @@ export function ScopingChartingPanel({ projectId }: ScopingChartingPanelProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sr-content">
       {/* Header */}
-      <GlassPanel className="p-6">
+      <GlassPanel className="sr-panel">
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-3">
             <Notepad weight="duotone" size={28} className="text-brand" />
             <div>
-              <h2 className="text-lg font-semibold text-ink">
+              <h2 className="sr-panel-title mb-0">
                 Scoping Review Data Charting
               </h2>
               <p className="text-sm text-ink-muted">

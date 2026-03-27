@@ -260,10 +260,10 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
   // -------------------------------------------------------------------------
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 sr-content max-w-5xl">
       {/* Header */}
-      <GlassPanel className="p-6">
-        <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+      <GlassPanel className="sr-panel">
+        <h2 className="sr-panel-title">
           <Certificate weight="duotone" className="text-brand" size={24} />
           GRADE Certainty of Evidence
         </h2>

@@ -366,7 +366,7 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
         <div className="flex items-center gap-3">
           <ShieldCheck weight="duotone" className="h-6 w-6 text-brand" />
           <div>
-            <h2 className="text-lg font-semibold text-ink">PROBAST</h2>
+            <h2 className="sr-panel-title mb-0">PROBAST</h2>
             <p className="text-sm text-ink-muted">
               Prediction model Risk Of Bias ASsessment Tool. Assess risk of bias
               and applicability of prediction model studies across 4 domains.

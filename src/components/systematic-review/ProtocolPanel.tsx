@@ -181,10 +181,10 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
   const collapseAll = () => setExpandedSections(new Set());
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="sr-content space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
+        <h2 className="sr-panel-title">
           <Scroll weight="duotone" className="text-brand" />
           Protocol Builder
         </h2>

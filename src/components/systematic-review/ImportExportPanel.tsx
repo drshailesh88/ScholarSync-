@@ -183,10 +183,10 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
   };
 
   return (
-    <div className="max-w-4xl space-y-8">
+    <div className="sr-content space-y-8">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-ink">
+        <h2 className="sr-panel-title">
           Import & Export References
         </h2>
         <p className="text-sm text-ink-muted mt-1">

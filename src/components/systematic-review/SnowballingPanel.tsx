@@ -194,7 +194,7 @@ export function SnowballingPanel({ projectId }: SnowballingPanelProps) {
   }
 
   return (
-    <div className="max-w-5xl space-y-6">
+    <div className="sr-content max-w-5xl space-y-6">
       {error && (
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
           <span>{error}</span>
@@ -204,7 +204,7 @@ export function SnowballingPanel({ projectId }: SnowballingPanelProps) {
 
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-ink">Citation Snowballing</h2>
+        <h2 className="sr-panel-title">Citation Snowballing</h2>
         <p className="text-sm text-ink-muted mt-1">
           Discover related papers by following citation chains forward (who cites
           these?) and backward (what do these cite?).

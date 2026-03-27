@@ -279,10 +279,10 @@ export function NMAPanel({ projectId }: NMAPanelProps) {
   }
 
   return (
-    <div className="space-y-6 max-w-[1200px]">
+    <div className="space-y-6 sr-content max-w-[1200px]">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold text-ink">
+        <h2 className="sr-panel-title">
           Network Meta-Analysis
         </h2>
         <p className="text-sm text-ink/60 mt-1">

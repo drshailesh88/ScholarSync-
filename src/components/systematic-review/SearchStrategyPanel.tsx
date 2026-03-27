@@ -62,9 +62,9 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
   }, [pico, projectId, setGeneratedStrategy]);
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <GlassPanel className="p-6">
-        <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+    <div className="space-y-6 sr-content">
+      <GlassPanel className="sr-panel">
+        <h2 className="sr-panel-title">
           <MagnifyingGlass weight="duotone" className="text-brand" />
           PICO Framework
         </h2>
@@ -128,8 +128,8 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
       </GlassPanel>
 
       {strategy && (
-        <GlassPanel className="p-6">
-          <h3 className="text-lg font-semibold text-ink mb-4">
+        <GlassPanel className="sr-panel">
+          <h3 className="sr-panel-title">
             Generated Search Strategy
           </h3>
 

@@ -812,8 +812,8 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
         )}
 
         {/* ---- Schema Editor ---- */}
-        <GlassPanel className="p-6">
-          <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+        <GlassPanel className="sr-panel">
+          <h2 className="sr-panel-title">
             <Table weight="duotone" className="text-brand" />
             Data Extraction Schema
           </h2>
@@ -903,9 +903,9 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
         </GlassPanel>
 
         {/* ---- Papers & Extraction Actions ---- */}
-        <GlassPanel className="p-6">
+        <GlassPanel className="sr-panel">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
+            <h2 className="sr-panel-title mb-0">
               <Lightning weight="duotone" className="text-brand" />
               Included Papers
             </h2>
@@ -1046,8 +1046,8 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
 
         {/* ---- Results Table ---- */}
         {(hasResults || loadingTable) && (
-          <GlassPanel className="p-6">
-            <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+          <GlassPanel className="sr-panel">
+            <h2 className="sr-panel-title">
               <Table weight="duotone" className="text-brand" />
               Extraction Results
               {hasResults && (
