@@ -450,7 +450,7 @@ export function MOOSEChecklistPanel({ projectId }: MOOSEChecklistPanelProps) {
         <button
           onClick={downloadCSV}
           disabled={!assessment}
-          className="flex items-center gap-1.5 px-4 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="sr-btn sr-btn-secondary"
         >
           <Download size={14} />
           Export CSV
@@ -458,7 +458,7 @@ export function MOOSEChecklistPanel({ projectId }: MOOSEChecklistPanelProps) {
         <button
           onClick={save}
           disabled={saving}
-          className="flex items-center gap-1.5 px-5 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="sr-btn sr-btn-primary"
         >
           {saving ? (
             <>

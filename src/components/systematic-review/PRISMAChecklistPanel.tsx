@@ -305,7 +305,7 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
           <button
             onClick={verify}
             disabled={isVerifying || manuscriptText.length < 100}
-            className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="sr-btn sr-btn-primary"
           >
             {isVerifying ? (
               <>
@@ -444,7 +444,7 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
             </div>
             <button
               onClick={downloadCSV}
-              className="flex items-center gap-1 px-3 py-1.5 border border-border rounded text-xs text-ink-muted hover:text-ink transition-colors"
+              className="sr-btn sr-btn-secondary"
             >
               <Download size={12} />
               Export CSV

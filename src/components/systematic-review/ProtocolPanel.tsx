@@ -212,7 +212,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
         <button
           onClick={saveProsperoId}
           disabled={!prosperoId.trim()}
-          className="flex items-center gap-1 px-3 py-1.5 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+          className="sr-btn sr-btn-primary"
         >
           {prosperoSaved ? (
             <>
@@ -237,7 +237,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
           <button
             onClick={generate}
             disabled={isGenerating}
-            className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+            className="sr-btn sr-btn-primary"
           >
             {isGenerating ? (
               <>
@@ -298,7 +298,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
             <div className="flex gap-1">
               <button
                 onClick={copyToClipboard}
-                className="flex items-center gap-1 px-2.5 py-1 border border-border rounded text-xs text-ink-muted hover:text-ink transition-colors"
+                className="sr-btn sr-btn-secondary"
                 title="Copy to clipboard"
               >
                 <Clipboard size={12} />
@@ -306,7 +306,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
               </button>
               <button
                 onClick={() => exportProtocol("text")}
-                className="flex items-center gap-1 px-2.5 py-1 border border-border rounded text-xs text-ink-muted hover:text-ink transition-colors"
+                className="sr-btn sr-btn-secondary"
                 title="Download as plain text"
               >
                 <FileText size={12} />
@@ -314,7 +314,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
               </button>
               <button
                 onClick={() => exportProtocol("html")}
-                className="flex items-center gap-1 px-2.5 py-1 border border-border rounded text-xs text-ink-muted hover:text-ink transition-colors"
+                className="sr-btn sr-btn-secondary"
                 title="Download as HTML (open in browser → Print to PDF)"
               >
                 <FileHtml size={12} />
@@ -380,7 +380,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
                           <div className="flex gap-2">
                             <button
                               onClick={saveEdit}
-                              className="px-3 py-1 bg-brand text-white rounded text-xs font-medium hover:bg-brand/90"
+                              className="sr-btn sr-btn-primary"
                             >
                               Save
                             </button>

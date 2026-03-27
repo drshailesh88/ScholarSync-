@@ -320,7 +320,7 @@ export function SnowballingPanel({ projectId }: SnowballingPanelProps) {
               <button
                 onClick={runSnowball}
                 disabled={isRunning || selectedSeeds.size === 0}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="sr-btn sr-btn-primary"
               >
                 {isRunning ? (
                   <>

@@ -365,7 +365,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
           <button
             onClick={generateAll}
             disabled={isGeneratingAll || !!generatingSection}
-            className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+            className="sr-btn sr-btn-primary"
           >
             {isGeneratingAll ? (
               <>
@@ -383,7 +383,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
             <>
               <button
                 onClick={exportMarkdown}
-                className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink transition-colors"
+                className="sr-btn sr-btn-secondary"
               >
                 <Download size={14} />
                 Export Markdown
@@ -391,7 +391,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
               <button
                 onClick={exportDocx}
                 disabled={isExportingDocx}
-                className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink disabled:opacity-50 transition-colors"
+                className="sr-btn sr-btn-secondary"
               >
                 {isExportingDocx ? (
                   <>
@@ -407,7 +407,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
               </button>
               <a
                 href="/studio"
-                className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink transition-colors"
+                className="sr-btn sr-btn-secondary"
               >
                 <FileText size={14} />
                 Open in Studio
@@ -510,10 +510,10 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
                   <button
                     onClick={() => copySection(activeSection)}
                     className={cn(
-                      "flex items-center gap-1 px-2.5 py-1 border border-border rounded text-xs transition-colors",
+                      "sr-btn sr-btn-secondary",
                       copiedSection === activeSection
                         ? "text-emerald-500 border-emerald-500/30"
-                        : "text-ink-muted hover:text-ink"
+                        : ""
                     )}
                     title="Copy to clipboard"
                   >
@@ -533,7 +533,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
                     onClick={() =>
                       isEditing ? saveEdit() : startEdit(activeSection)
                     }
-                    className="flex items-center gap-1 px-2.5 py-1 border border-border rounded text-xs text-ink-muted hover:text-ink transition-colors"
+                    className="sr-btn sr-btn-secondary"
                     title={isEditing ? "Save edits" : "Edit section"}
                   >
                     <PencilSimple size={12} />
@@ -544,7 +544,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
               <button
                 onClick={() => generateSection(activeSection)}
                 disabled={!!generatingSection || isGeneratingAll}
-                className="flex items-center gap-1 px-2.5 py-1 bg-brand text-white rounded text-xs font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+                className="sr-btn sr-btn-primary"
               >
                 {isLoading ? (
                   <>
@@ -590,7 +590,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
                 <div className="flex gap-2">
                   <button
                     onClick={saveEdit}
-                    className="px-3 py-1 bg-brand text-white rounded text-xs font-medium hover:bg-brand/90"
+                    className="sr-btn sr-btn-primary"
                   >
                     Save Changes
                   </button>

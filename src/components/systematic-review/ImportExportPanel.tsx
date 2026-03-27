@@ -268,7 +268,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
           <button
             onClick={handleImport}
             disabled={isImporting || !importContent.trim()}
-            className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="sr-btn sr-btn-primary"
           >
             {isImporting ? (
               <>
@@ -397,7 +397,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
           <button
             onClick={handleExport}
             disabled={isExporting}
-            className="flex items-center gap-1.5 px-4 py-1.5 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors ml-auto"
+            className="sr-btn sr-btn-primary ml-auto"
           >
             {isExporting ? (
               <>
@@ -468,7 +468,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
           <button
             onClick={handleRevManExport}
             disabled={isRevmanLoading}
-            className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="sr-btn sr-btn-primary"
           >
             {isRevmanLoading ? (
               <>

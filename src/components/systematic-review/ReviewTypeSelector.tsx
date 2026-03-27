@@ -231,7 +231,7 @@ export function ReviewTypeSelector({
             if (selected) onTypeSelected(selected);
           }}
           disabled={!selected}
-          className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+          className="sr-btn sr-btn-primary"
         >
           <CheckCircle weight="bold" size={16} />
           Confirm Selection

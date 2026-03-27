@@ -204,7 +204,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 transition-colors"
+          className="sr-btn sr-btn-primary"
         >
           <Plus weight="bold" size={14} />
           New Alert
@@ -284,7 +284,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
               <button
                 onClick={createAlert}
                 disabled={isCreating || !newSearchString.trim()}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 transition-colors"
+                className="sr-btn sr-btn-primary"
               >
                 {isCreating ? (
                   <CircleNotch

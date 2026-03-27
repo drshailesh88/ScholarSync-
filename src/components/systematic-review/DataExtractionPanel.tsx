@@ -883,7 +883,7 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
           <div className="flex items-center justify-between mt-3">
             <button
               onClick={addField}
-              className="px-3 py-1.5 text-sm text-brand hover:bg-brand/10 rounded flex items-center gap-1"
+              className="sr-btn sr-btn-ghost"
             >
               <Plus size={14} /> Add Field
             </button>
@@ -925,11 +925,7 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
                 <button
                   onClick={extractAll}
                   disabled={extractingAll || !isSchemaValid}
-                  className={cn(
-                    "px-4 py-1.5 text-sm font-medium rounded flex items-center gap-1.5",
-                    "bg-brand text-white hover:bg-brand/90",
-                    "disabled:opacity-50 disabled:cursor-not-allowed"
-                  )}
+                  className="sr-btn sr-btn-primary"
                 >
                   {extractingAll ? (
                     <>

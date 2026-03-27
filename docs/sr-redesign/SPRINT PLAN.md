@@ -92,7 +92,7 @@
 |Apply DM Sans to UI elements    |✅ Done|.sr-panel scopes font-sans to UI elements|
 |Increase panel padding to p-6   |✅ Done|.sr-panel sets 1.5rem padding on all primary GlassPanels|
 |Set content max-width to 900px  |✅ Done|.sr-content (900px centered), wider panels override with max-w-5xl+|
-|Update button styles            |⬜ TODO|Match Studio buttons      |
+|Update button styles            |✅ Done|.sr-btn, .sr-btn-primary, .sr-btn-secondary, .sr-btn-ghost — 42 buttons across 16 panels|
 |Add transitions (200ms)         |✅ Done|200ms cubic-bezier on .sr-panel interactive elements|
 |Visual QA pass                  |⬜ TODO|LLM-as-judge test         |
 

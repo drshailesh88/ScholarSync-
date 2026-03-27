@@ -64,7 +64,7 @@ export function PRISMAFlowPanel({ projectId }: PRISMAFlowPanelProps) {
           <button
             onClick={loadFlow}
             disabled={loading}
-            className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+            className="sr-btn sr-btn-primary"
           >
             {loading ? (
               <CircleNotch weight="bold" className="animate-spin" size={16} />
@@ -76,7 +76,7 @@ export function PRISMAFlowPanel({ projectId }: PRISMAFlowPanelProps) {
           {flowSvg && (
             <button
               onClick={downloadSvg}
-              className="px-4 py-2 border border-border text-ink rounded text-sm font-medium hover:bg-surface-raised flex items-center gap-2"
+              className="sr-btn sr-btn-secondary"
             >
               <Download size={16} />
               Download SVG
