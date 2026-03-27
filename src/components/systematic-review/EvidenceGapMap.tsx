@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   ChartScatter,
   CircleNotch,
@@ -12,9 +12,14 @@ import {
   ListBullets,
   X,
   ArrowsClockwise,
+  MagnifyingGlassPlus,
+  MagnifyingGlassMinus,
+  ArrowsOut,
+  Export,
+  FilePng,
+  FileSvg,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/components/ui/glass-panel";
 
 // ---------------------------------------------------------------------------
 // Types (mirrored from the lib module to avoid server-only import)
@@ -90,6 +95,9 @@ const DIRECTION_LABEL: Record<EffectDirection, string> = {
   unknown: "Direction unknown",
 };
 
+/** Base colour for study-count intensity (hsl hue/sat for violet). */
+const INTENSITY_BASE = { h: 263, s: 70 };
+
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
@@ -125,6 +133,18 @@ function bubbleSize(studyCount: number, maxCount: number): number {
   return Math.round(MIN_PX + ratio * (MAX_PX - MIN_PX));
 }
 
+/**
+ * Return a CSS background-color string where lightness scales with study count.
+ * More studies → darker/more saturated.
+ */
+function intensityColor(studyCount: number, maxCount: number): string {
+  const minL = 30;
+  const maxL = 75;
+  const ratio = maxCount <= 1 ? 0.5 : studyCount / maxCount;
+  const lightness = Math.round(maxL - ratio * (maxL - minL));
+  return `hsl(${INTENSITY_BASE.h}, ${INTENSITY_BASE.s}%, ${lightness}%)`;
+}
+
 // ---------------------------------------------------------------------------
 // Tooltip state
 // ---------------------------------------------------------------------------
@@ -134,6 +154,14 @@ interface TooltipState {
   x: number;
   y: number;
 }
+
+// ---------------------------------------------------------------------------
+// Zoom / pan constants
+// ---------------------------------------------------------------------------
+
+const ZOOM_MIN = 0.5;
+const ZOOM_MAX = 3;
+const ZOOM_STEP = 0.25;
 
 // ---------------------------------------------------------------------------
 // Main component
@@ -150,6 +178,19 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
 
   // Hover tooltip
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
+
+  // Zoom / pan state
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+
+  // Export ref
+  const matrixRef = useRef<HTMLDivElement>(null);
+
+  // Export dropdown
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
 
   // ---------------------------------------------------------------------------
   // Load / generate
@@ -172,16 +213,36 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
       setData(json);
       setIsGenerated(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to load evidence data. Please try again.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to load evidence data. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
   }, [projectId]);
 
-  // Auto-load on mount (cheap GET — only runs AI if extraction is sparse)
+  // Auto-load on mount
   useEffect(() => {
     generateMap();
   }, [generateMap]);
+
+  // Close export menu on outside click
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (
+        exportMenuRef.current &&
+        !exportMenuRef.current.contains(e.target as Node)
+      ) {
+        setShowExportMenu(false);
+      }
+    }
+    if (showExportMenu) {
+      document.addEventListener("mousedown", onClickOutside);
+      return () => document.removeEventListener("mousedown", onClickOutside);
+    }
+  }, [showExportMenu]);
 
   // ---------------------------------------------------------------------------
   // Derived values
@@ -189,17 +250,91 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
 
   const maxStudyCount =
     data && data.cells.length > 0
-      ? Math.max(...data.cells.map((c) => c.studyCount))
+      ? Math.max(...data.cells.map((c: GapMapCell) => c.studyCount))
       : 1;
 
-  function cellForPair(intervention: string, outcome: string): GapMapCell | undefined {
+  function cellForPair(
+    intervention: string,
+    outcome: string
+  ): GapMapCell | undefined {
     return data?.cells.find(
-      (c) => c.intervention === intervention && c.outcome === outcome
+      (c: GapMapCell) => c.intervention === intervention && c.outcome === outcome
     );
   }
 
   // ---------------------------------------------------------------------------
-  // Handlers
+  // Zoom / pan handlers
+  // ---------------------------------------------------------------------------
+
+  function handleZoomIn() {
+    setZoom((z: number) => Math.min(ZOOM_MAX, z + ZOOM_STEP));
+  }
+
+  function handleZoomOut() {
+    setZoom((z: number) => Math.max(ZOOM_MIN, z - ZOOM_STEP));
+  }
+
+  function handleResetView() {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  }
+
+  function handlePointerDown(e: React.PointerEvent) {
+    // Only pan with middle button or when holding space via meta key
+    if (e.button === 1 || e.altKey) {
+      e.preventDefault();
+      setIsPanning(true);
+      panStart.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
+      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+    }
+  }
+
+  function handlePointerMove(e: React.PointerEvent) {
+    if (!isPanning) return;
+    const dx = e.clientX - panStart.current.x;
+    const dy = e.clientY - panStart.current.y;
+    setPan({ x: panStart.current.panX + dx, y: panStart.current.panY + dy });
+  }
+
+  function handlePointerUp() {
+    setIsPanning(false);
+  }
+
+  function handleWheel(e: React.WheelEvent) {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP;
+      setZoom((z: number) => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z + delta)));
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Export handlers
+  // ---------------------------------------------------------------------------
+
+  async function handleExportPng() {
+    setShowExportMenu(false);
+    if (!matrixRef.current) return;
+    const { toPng } = await import("html-to-image");
+    const dataUrl = await toPng(matrixRef.current, {
+      backgroundColor: "#1C1B1A",
+      pixelRatio: 2,
+    });
+    downloadDataUrl(dataUrl, "evidence-gap-map.png");
+  }
+
+  async function handleExportSvg() {
+    setShowExportMenu(false);
+    if (!matrixRef.current) return;
+    const { toSvg } = await import("html-to-image");
+    const dataUrl = await toSvg(matrixRef.current, {
+      backgroundColor: "#1C1B1A",
+    });
+    downloadDataUrl(dataUrl, "evidence-gap-map.svg");
+  }
+
+  // ---------------------------------------------------------------------------
+  // Bubble event handlers
   // ---------------------------------------------------------------------------
 
   function handleBubbleMouseEnter(
@@ -220,7 +355,7 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
 
   function handleBubbleClick(cell: GapMapCell) {
     setTooltip(null);
-    setSelectedCell((prev) =>
+    setSelectedCell((prev: GapMapCell | null) =>
       prev?.intervention === cell.intervention &&
       prev?.outcome === cell.outcome
         ? null
@@ -233,38 +368,79 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
   // ---------------------------------------------------------------------------
 
   return (
-    <GlassPanel className="flex flex-col gap-6 p-6">
+    <div className="sr-panel">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <ChartScatter size={24} weight="duotone" className="text-violet-400 shrink-0" />
+          <ChartScatter
+            size={24}
+            weight="duotone"
+            className="text-violet-400 shrink-0"
+          />
           <div>
             <h2 className="text-lg font-semibold text-white">
               Evidence Gap Map
             </h2>
             <p className="text-sm text-white/60">
-              Intervention × outcome matrix — size reflects study count, colour
-              reflects certainty
+              Intervention &times; outcome matrix &mdash; size reflects study
+              count, colour reflects certainty, intensity reflects volume
             </p>
           </div>
         </div>
 
-        <button
-          onClick={generateMap}
-          disabled={isLoading}
-          className={cn(
-            "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all",
-            "bg-violet-600 hover:bg-violet-500 text-white",
-            "disabled:opacity-50 disabled:cursor-not-allowed"
+        <div className="flex items-center gap-2">
+          {/* Export dropdown */}
+          {data && data.cells.length > 0 && (
+            <div className="relative" ref={exportMenuRef}>
+              <button
+                onClick={() => setShowExportMenu((v) => !v)}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+                  "bg-white/10 hover:bg-white/15 text-white/80 hover:text-white"
+                )}
+                aria-label="Export gap map"
+              >
+                <Export size={16} />
+                Export
+              </button>
+              {showExportMenu && (
+                <div className="absolute right-0 top-full mt-1 z-50 rounded-lg bg-slate-800 border border-white/15 shadow-xl py-1 min-w-[140px]">
+                  <button
+                    onClick={handleExportPng}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+                  >
+                    <FilePng size={16} />
+                    Export PNG
+                  </button>
+                  <button
+                    onClick={handleExportSvg}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+                  >
+                    <FileSvg size={16} />
+                    Export SVG
+                  </button>
+                </div>
+              )}
+            </div>
           )}
-        >
-          {isLoading ? (
-            <CircleNotch size={16} className="animate-spin" />
-          ) : (
-            <ArrowsClockwise size={16} />
-          )}
-          {isGenerated ? "Regenerate" : "Generate Gap Map"}
-        </button>
+
+          <button
+            onClick={generateMap}
+            disabled={isLoading}
+            className={cn(
+              "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all",
+              "bg-violet-600 hover:bg-violet-500 text-white",
+              "disabled:opacity-50 disabled:cursor-not-allowed"
+            )}
+          >
+            {isLoading ? (
+              <CircleNotch size={16} className="animate-spin" />
+            ) : (
+              <ArrowsClockwise size={16} />
+            )}
+            {isGenerated ? "Regenerate" : "Generate Gap Map"}
+          </button>
+        </div>
       </div>
 
       {/* Error */}
@@ -279,7 +455,7 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-white/50">
           <CircleNotch size={32} className="animate-spin text-violet-400" />
           <p className="text-sm">
-            Analysing extraction data and building gap map…
+            Analysing extraction data and building gap map&hellip;
           </p>
         </div>
       )}
@@ -287,10 +463,15 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
       {/* Empty state — no included papers */}
       {!isLoading && isGenerated && data && data.totalStudies === 0 && (
         <div className="rounded-xl border border-white/10 bg-white/5 px-6 py-12 text-center">
-          <ListBullets size={40} className="mx-auto mb-3 text-white/30" weight="duotone" />
+          <ListBullets
+            size={40}
+            className="mx-auto mb-3 text-white/30"
+            weight="duotone"
+          />
           <p className="text-white/70 font-medium">No included studies found</p>
           <p className="mt-1 text-sm text-white/40">
-            Screen papers and mark them as &quot;Include&quot; to populate the gap map.
+            Screen papers and mark them as &quot;Include&quot; to populate the
+            gap map.
           </p>
         </div>
       )}
@@ -318,11 +499,14 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
 
       {/* Matrix */}
       {!isLoading && data && data.cells.length > 0 && (
-        <>
+        <div className="sr-content">
           {/* Stats bar */}
           <div className="flex flex-wrap gap-4 text-sm text-white/60">
             <span>
-              <span className="font-semibold text-white">{data.totalStudies}</span> included studies
+              <span className="font-semibold text-white">
+                {data.totalStudies}
+              </span>{" "}
+              included studies
             </span>
             <span>
               <span className="font-semibold text-white">
@@ -344,89 +528,161 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
             </span>
           </div>
 
-          {/* Scrollable matrix wrapper */}
-          <div className="overflow-auto rounded-xl border border-white/10">
-            <table className="border-collapse text-sm">
-              <thead>
-                <tr>
-                  {/* Corner cell */}
-                  <th className="sticky left-0 z-20 bg-slate-900/90 backdrop-blur border-b border-r border-white/10 px-4 py-3 text-left text-xs text-white/40 font-normal min-w-[160px]">
-                    Intervention / Outcome
-                  </th>
-                  {data.outcomes.map((outcome) => (
-                    <th
-                      key={outcome}
-                      className="border-b border-r border-white/10 px-3 py-3 text-center text-xs font-medium text-white/70 min-w-[110px] whitespace-normal leading-snug bg-slate-900/60"
-                    >
-                      {outcome}
+          {/* Zoom / pan controls */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center rounded-lg border border-white/10 bg-white/5 overflow-hidden">
+              <button
+                onClick={handleZoomOut}
+                disabled={zoom <= ZOOM_MIN}
+                className="p-2 text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Zoom out"
+              >
+                <MagnifyingGlassMinus size={16} />
+              </button>
+              <span className="px-2 text-xs text-white/60 min-w-[3.5rem] text-center select-none">
+                {Math.round(zoom * 100)}%
+              </span>
+              <button
+                onClick={handleZoomIn}
+                disabled={zoom >= ZOOM_MAX}
+                className="p-2 text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Zoom in"
+              >
+                <MagnifyingGlassPlus size={16} />
+              </button>
+            </div>
+            <button
+              onClick={handleResetView}
+              className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Reset view"
+            >
+              <ArrowsOut size={14} />
+              Reset
+            </button>
+            <span className="text-[10px] text-white/30 ml-1">
+              Alt+drag to pan &middot; Ctrl+scroll to zoom
+            </span>
+          </div>
+
+          {/* Scrollable matrix wrapper with zoom/pan */}
+          <div
+            className="overflow-auto rounded-xl border border-white/10"
+            style={{ cursor: isPanning ? "grabbing" : "default" }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            onWheel={handleWheel}
+          >
+            <div
+              ref={matrixRef}
+              style={{
+                transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`,
+                transformOrigin: "top left",
+                transition: isPanning ? "none" : "transform 0.15s ease",
+              }}
+            >
+              <table className="border-collapse text-sm">
+                <thead>
+                  <tr>
+                    {/* Corner cell */}
+                    <th className="sticky left-0 z-20 bg-slate-900/90 backdrop-blur border-b border-r border-white/10 px-4 py-3 text-left text-xs text-white/40 font-normal min-w-[160px]">
+                      Intervention / Outcome
                     </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {/* empty state: no data, no results, nothing here */}
-                {data.interventions.length === 0 && (
-                  <tr><td colSpan={data.outcomes.length + 1} className="text-xs text-center py-6 opacity-40">no results found. nothing here to display.</td></tr>
-                )}
-                {data.interventions.map((intervention, rowIdx) => (
-                  <tr key={intervention}>
-                    {/* Row header */}
-                    <td
-                      className={cn(
-                        "sticky left-0 z-10 border-b border-r border-white/10 px-4 py-3",
-                        "text-xs font-medium text-white/80 bg-slate-900/90 backdrop-blur",
-                        rowIdx % 2 === 0 ? "bg-slate-900/90" : "bg-slate-800/90"
-                      )}
-                    >
-                      {intervention}
-                    </td>
-
-                    {/* Data cells */}
-                    {data.outcomes.map((outcome) => {
-                      const cell = cellForPair(intervention, outcome);
-                      const isSelected =
-                        selectedCell?.intervention === intervention &&
-                        selectedCell?.outcome === outcome;
-
-                      return (
-                        <td
-                          key={outcome}
-                          className={cn(
-                            "border-b border-r border-white/10",
-                            "text-center align-middle",
-                            rowIdx % 2 === 0
-                              ? "bg-slate-900/40"
-                              : "bg-slate-800/40"
-                          )}
-                          style={{ height: 80, width: 110 }}
-                        >
-                          {cell ? (
-                            <div className="flex items-center justify-center h-full">
-                              <BubbleCell
-                                cell={cell}
-                                size={bubbleSize(cell.studyCount, maxStudyCount)}
-                                isSelected={isSelected}
-                                onMouseEnter={handleBubbleMouseEnter}
-                                onMouseLeave={handleBubbleMouseLeave}
-                                onClick={handleBubbleClick}
-                              />
-                            </div>
-                          ) : (
-                            <span className="text-white/15 text-xs select-none">
-                              —
-                            </span>
-                          )}
-                        </td>
-                      );
-                    })}
+                    {data.outcomes.map((outcome) => (
+                      <th
+                        key={outcome}
+                        className="border-b border-r border-white/10 px-3 py-3 text-center text-xs font-medium text-white/70 min-w-[110px] whitespace-normal leading-snug bg-slate-900/60"
+                      >
+                        {outcome}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.interventions.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={data.outcomes.length + 1}
+                        className="text-xs text-center py-6 opacity-40"
+                      >
+                        No results found.
+                      </td>
+                    </tr>
+                  )}
+                  {data.interventions.map((intervention, rowIdx) => (
+                    <tr key={intervention}>
+                      {/* Row header */}
+                      <td
+                        className={cn(
+                          "sticky left-0 z-10 border-b border-r border-white/10 px-4 py-3",
+                          "text-xs font-medium text-white/80 bg-slate-900/90 backdrop-blur",
+                          rowIdx % 2 === 0
+                            ? "bg-slate-900/90"
+                            : "bg-slate-800/90"
+                        )}
+                      >
+                        {intervention}
+                      </td>
+
+                      {/* Data cells */}
+                      {data.outcomes.map((outcome) => {
+                        const cell = cellForPair(intervention, outcome);
+                        const isSelected =
+                          selectedCell?.intervention === intervention &&
+                          selectedCell?.outcome === outcome;
+
+                        return (
+                          <td
+                            key={outcome}
+                            className={cn(
+                              "border-b border-r border-white/10",
+                              "text-center align-middle"
+                            )}
+                            style={{
+                              height: 80,
+                              width: 110,
+                              backgroundColor: cell
+                                ? intensityColor(
+                                    cell.studyCount,
+                                    maxStudyCount
+                                  )
+                                : rowIdx % 2 === 0
+                                  ? "rgba(15,23,42,0.4)"
+                                  : "rgba(30,41,59,0.4)",
+                            }}
+                          >
+                            {cell ? (
+                              <div className="flex items-center justify-center h-full">
+                                <BubbleCell
+                                  cell={cell}
+                                  size={bubbleSize(
+                                    cell.studyCount,
+                                    maxStudyCount
+                                  )}
+                                  isSelected={isSelected}
+                                  onMouseEnter={handleBubbleMouseEnter}
+                                  onMouseLeave={handleBubbleMouseLeave}
+                                  onClick={handleBubbleClick}
+                                />
+                              </div>
+                            ) : (
+                              <span className="text-white/15 text-xs select-none">
+                                &mdash;
+                              </span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Legend */}
-          <Legend />
+          <Legend maxStudyCount={maxStudyCount} />
 
           {/* Study list drawer */}
           {selectedCell && (
@@ -435,19 +691,26 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
               onClose={() => setSelectedCell(null)}
             />
           )}
-        </>
+        </div>
       )}
 
       {/* Floating tooltip */}
       {tooltip && (
-        <CellTooltip
-          cell={tooltip.cell}
-          x={tooltip.x}
-          y={tooltip.y}
-        />
+        <CellTooltip cell={tooltip.cell} x={tooltip.x} y={tooltip.y} />
       )}
-    </GlassPanel>
+    </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function downloadDataUrl(dataUrl: string, filename: string) {
+  const link = document.createElement("a");
+  link.download = filename;
+  link.href = dataUrl;
+  link.click();
 }
 
 // ---------------------------------------------------------------------------
@@ -458,7 +721,10 @@ interface BubbleCellProps {
   cell: GapMapCell;
   size: number;
   isSelected: boolean;
-  onMouseEnter: (e: React.MouseEvent<HTMLDivElement>, cell: GapMapCell) => void;
+  onMouseEnter: (
+    e: React.MouseEvent<HTMLDivElement>,
+    cell: GapMapCell
+  ) => void;
   onMouseLeave: () => void;
   onClick: (cell: GapMapCell) => void;
 }
@@ -530,13 +796,15 @@ function CellTooltip({ cell, x, y }: CellTooltipProps) {
     >
       <div className="rounded-lg bg-slate-800 border border-white/20 shadow-xl px-3 py-2 text-xs text-white whitespace-nowrap">
         <p className="font-semibold mb-1">
-          {cell.intervention} × {cell.outcome}
+          {cell.intervention} &times; {cell.outcome}
         </p>
         <p className="text-white/70">
           {cell.studyCount} {cell.studyCount === 1 ? "study" : "studies"}
         </p>
         <p className="text-white/70">{CERTAINTY_LABEL[cell.certainty]}</p>
-        <p className="text-white/70">{DIRECTION_LABEL[cell.effectDirection]}</p>
+        <p className="text-white/70">
+          {DIRECTION_LABEL[cell.effectDirection]}
+        </p>
         <p className="mt-1 text-white/40 text-[10px]">Click to see studies</p>
       </div>
     </div>
@@ -571,7 +839,10 @@ function StudyDrawer({ cell, onClose }: StudyDrawerProps) {
               {CERTAINTY_LABEL[cell.certainty]}
             </span>
             <span className="flex items-center gap-1">
-              <DirectionIcon direction={cell.effectDirection} className="w-3 h-3" />
+              <DirectionIcon
+                direction={cell.effectDirection}
+                className="w-3 h-3"
+              />
               {DIRECTION_LABEL[cell.effectDirection]}
             </span>
           </div>
@@ -616,7 +887,11 @@ function StudyDrawer({ cell, onClose }: StudyDrawerProps) {
 // Legend
 // ---------------------------------------------------------------------------
 
-function Legend() {
+interface LegendProps {
+  maxStudyCount: number;
+}
+
+function Legend({ maxStudyCount }: LegendProps) {
   const certaintyLevels: CertaintyLevel[] = [
     "high",
     "moderate",
@@ -632,6 +907,11 @@ function Legend() {
     { key: "no_effect", label: "No effect" },
     { key: "unknown", label: "Unknown" },
   ];
+
+  // Intensity gradient steps
+  const intensitySteps = [1, Math.ceil(maxStudyCount / 2), maxStudyCount].filter(
+    (v, i, a) => a.indexOf(v) === i
+  );
 
   return (
     <div className="flex flex-wrap gap-6 text-xs text-white/60">
@@ -662,7 +942,10 @@ function Legend() {
         <div className="flex flex-col gap-1.5">
           {directions.map(({ key, label }) => (
             <div key={key} className="flex items-center gap-2">
-              <DirectionIcon direction={key} className="w-3.5 h-3.5 text-white/70" />
+              <DirectionIcon
+                direction={key}
+                className="w-3.5 h-3.5 text-white/70"
+              />
               <span>{label}</span>
             </div>
           ))}
@@ -682,7 +965,28 @@ function Legend() {
               <span className="text-[10px]">{n}</span>
             </div>
           ))}
-          <span className="text-[10px] text-white/40 self-center">studies</span>
+          <span className="text-[10px] text-white/40 self-center">
+            studies
+          </span>
+        </div>
+      </div>
+
+      {/* Cell intensity */}
+      <div>
+        <p className="font-semibold text-white/80 mb-2">
+          Cell intensity (volume)
+        </p>
+        <div className="flex items-center gap-1">
+          {intensitySteps.map((n) => (
+            <div key={n} className="flex flex-col items-center gap-1">
+              <span
+                className="inline-block w-6 h-4 rounded"
+                style={{ backgroundColor: intensityColor(n, maxStudyCount) }}
+              />
+              <span className="text-[10px]">{n}</span>
+            </div>
+          ))}
+          <span className="text-[10px] text-white/40 ml-1">studies</span>
         </div>
       </div>
     </div>
