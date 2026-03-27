@@ -182,7 +182,7 @@ export function TopBar({ editor, onToggleReferenceSidebar }: TopBarProps) {
         {/* Divider */}
         <div className="w-px h-4 bg-border" />
 
-        {/* Word count */}
+        {/* Word count + reading time */}
         <div ref={wordCountRef} className="relative">
           <button
             onClick={() => setShowWordCountDetail((open) => !open)}
@@ -190,6 +190,8 @@ export function TopBar({ editor, onToggleReferenceSidebar }: TopBarProps) {
             title="Click for section breakdown"
           >
             {wordCount.toLocaleString()} words
+            <span className="text-ink-muted/60 ml-1.5">·</span>
+            <span className="text-ink-muted/60 ml-1.5">{Math.max(1, Math.ceil(wordCount / 238))} min read</span>
           </button>
           {showWordCountDetail && (
             <div className="absolute top-full left-1/2 z-50 mt-2 w-64 -translate-x-1/2 rounded-lg border border-border bg-surface p-3 shadow-xl">
