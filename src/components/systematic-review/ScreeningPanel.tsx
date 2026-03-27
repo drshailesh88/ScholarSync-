@@ -28,6 +28,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { EmptyState } from "@/components/systematic-review/EmptyState";
 import { useSystematicReviewStore } from "@/stores/systematic-review-store";
 import dynamic from "next/dynamic";
 import { type ScreeningPaper } from "@/components/systematic-review/ScreeningPDFViewer";
@@ -1133,17 +1134,12 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
           {/* Empty state */}
           {!isLoading && queue.length === 0 && (
-            <div className="flex items-center justify-center py-24">
-              <GlassPanel className="p-8 text-center max-w-md">
-                <Funnel weight="duotone" className="text-ink-muted mb-3 mx-auto" size={40} />
-                <h3 className="text-sm font-semibold text-ink mb-1">
-                  {filter === "unscreened" ? "All papers screened!" : `No ${filter} papers`}
-                </h3>
-                <p className="text-xs text-ink-muted">
-                  {filter === "unscreened" ? "Import more papers or review conflicts." : "Try a different filter."}
-                </p>
-              </GlassPanel>
-            </div>
+            <EmptyState
+              icon={Funnel}
+              title={filter === "unscreened" ? "All papers screened!" : `No ${filter} papers`}
+              description={filter === "unscreened" ? "Import more papers or review conflicts." : "Try a different filter."}
+              tip="Tip: Use keyboard shortcuts I / E / M for faster screening."
+            />
           )}
 
           {/* Single paper centered layout */}
@@ -1423,19 +1419,12 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
           {/* Empty state */}
           {!isLoading && queue.length === 0 && (
-            <GlassPanel className="p-8 text-center">
-              <Funnel weight="duotone" className="text-ink-muted mb-3 mx-auto" size={40} />
-              <h3 className="text-sm font-semibold text-ink mb-1">
-                {filter === "unscreened"
-                  ? "All papers screened!"
-                  : `No ${filter} papers`}
-              </h3>
-              <p className="text-xs text-ink-muted">
-                {filter === "unscreened"
-                  ? "Import more papers or review conflicts."
-                  : "Try a different filter."}
-              </p>
-            </GlassPanel>
+            <EmptyState
+              icon={Funnel}
+              title={filter === "unscreened" ? "All papers screened!" : `No ${filter} papers`}
+              description={filter === "unscreened" ? "Import more papers or review conflicts." : "Try a different filter."}
+              tip="Tip: Use keyboard shortcuts I / E / M for faster screening."
+            />
           )}
 
           {/* Paper Queue */}

@@ -22,6 +22,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { EmptyState } from "@/components/systematic-review/EmptyState";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -952,13 +953,13 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
               Loading papers...
             </div>
           ) : papers.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 text-ink-muted text-sm gap-2">
-              <Info size={24} className="text-ink-muted/50" />
-              <p>No included papers found.</p>
-              <p className="text-xs">
-                Screen and include papers first, then return here to extract data.
-              </p>
-            </div>
+            <EmptyState
+              icon={Info}
+              title="No extractions yet"
+              description="Screen and include papers first, then return here to extract structured data from each study."
+              tip="Tip: Define your extraction columns above before running bulk extraction."
+              className="py-10"
+            />
           ) : (
             <div className="space-y-2 max-h-80 overflow-y-auto">
               {/* empty state: no data, no results, nothing here */}
