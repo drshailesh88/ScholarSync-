@@ -55,6 +55,12 @@ const JUDGMENT_BADGE: Record<PROBASTJudgment, string> = {
   Unclear: "bg-amber-500/20 text-amber-400 border-amber-500/30",
 };
 
+function judgmentEmoji(judgment: PROBASTJudgment): string {
+  if (judgment === "Low") return "🟢";
+  if (judgment === "High") return "🔴";
+  return "🟡";
+}
+
 interface DomainFormState {
   answers: Record<number, PROBASTSignalingAnswer>;
   applicabilityConcern: PROBASTJudgment | null;
@@ -435,14 +441,14 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
                         const j = dom?.riskOfBias || "Unclear";
                         return (
                           <td key={domKey} className="text-center px-3 py-2">
-                            <span
-                              className={cn(
-                                "inline-block rounded-full border px-2 py-0.5 text-xs font-semibold",
-                                JUDGMENT_BADGE[j]
-                              )}
-                            >
-                              {j}
-                            </span>
+                        <span
+                          className={cn(
+                            "inline-block rounded-full border px-2 py-0.5 text-xs font-semibold",
+                            JUDGMENT_BADGE[j]
+                          )}
+                        >
+                              {judgmentEmoji(j)} {j}
+                        </span>
                           </td>
                         );
                       }
@@ -454,7 +460,7 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
                           JUDGMENT_BADGE[a.overallRoB]
                         )}
                       >
-                        {a.overallRoB}
+                        {judgmentEmoji(a.overallRoB)} {a.overallRoB}
                       </span>
                     </td>
                     <td className="text-center px-3 py-2">
@@ -464,7 +470,7 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
                           JUDGMENT_BADGE[a.overallApplicability]
                         )}
                       >
-                        {a.overallApplicability}
+                        {judgmentEmoji(a.overallApplicability)} {a.overallApplicability}
                       </span>
                     </td>
                   </tr>
@@ -502,6 +508,9 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
               const total = totalQuestions();
               const isSaving = savingPaper === paper.paperId;
               const liveOverall = computeLiveOverall(paper.paperId);
+              const savedOverall = savedAssessment
+                ? computeOverallPROBAST(savedAssessment.domains)
+                : null;
 
               return (
                 <div
@@ -537,18 +546,18 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
                         <span
                           className={cn(
                             "rounded-full border px-2 py-0.5 text-xs font-semibold",
-                            JUDGMENT_BADGE[savedAssessment.overallRoB]
+                            JUDGMENT_BADGE[savedOverall!.overallRoB]
                           )}
                         >
-                          RoB: {savedAssessment.overallRoB}
+                          {judgmentEmoji(savedOverall!.overallRoB)} RoB: {savedOverall!.overallRoB}
                         </span>
                         <span
                           className={cn(
                             "rounded-full border px-2 py-0.5 text-xs font-semibold",
-                            JUDGMENT_BADGE[savedAssessment.overallApplicability]
+                            JUDGMENT_BADGE[savedOverall!.overallApplicability]
                           )}
                         >
-                          App: {savedAssessment.overallApplicability}
+                          {judgmentEmoji(savedOverall!.overallApplicability)} App: {savedOverall!.overallApplicability}
                         </span>
                       </div>
                     )}
@@ -586,7 +595,7 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
                                 JUDGMENT_BADGE[liveOverall.overallRoB]
                               )}
                             >
-                              {liveOverall.overallRoB}
+                              {judgmentEmoji(liveOverall.overallRoB)} {liveOverall.overallRoB}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-sm">
@@ -599,7 +608,7 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
                                 JUDGMENT_BADGE[liveOverall.overallApplicability]
                               )}
                             >
-                              {liveOverall.overallApplicability}
+                              {judgmentEmoji(liveOverall.overallApplicability)} {liveOverall.overallApplicability}
                             </span>
                           </div>
                           <span className="ml-auto text-xs text-ink-muted">
@@ -656,6 +665,9 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
                               <span className="text-xs text-ink-muted mr-2">
                                 {domAnswered}/
                                 {domDef.signalingQuestions.length}
+                              </span>
+                              <span className="text-base leading-none">
+                                {judgmentEmoji(domJudgment)}
                               </span>
                               <span
                                 className={cn(
@@ -751,7 +763,7 @@ export function PROBASTPanel({ projectId }: PROBASTPanelProps) {
 
                                 <div className="space-y-1">
                                   <label className="text-xs font-medium text-ink-muted">
-                                    Rationale (optional)
+                                    Supporting text (optional)
                                   </label>
                                   <textarea
                                     value={domForm.rationale}

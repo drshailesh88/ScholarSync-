@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { Fragment, useState, useEffect, useCallback, useMemo } from "react";
 import {
   ShieldCheck,
   CircleNotch,
@@ -16,6 +16,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { RiskDomainAccordion } from "./RiskDomainAccordion";
 import { RoB2Panel } from "./RoB2Panel";
 import { ROBINSIPanel } from "./ROBINSIPanel";
 import { QUADAS2Panel } from "./QUADAS2Panel";
@@ -290,6 +291,7 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
   const [isAutoAssigning, setIsAutoAssigning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedPaperId, setExpandedPaperId] = useState<number | null>(null);
+  const [expandedInsightId, setExpandedInsightId] = useState<string | null>(null);
 
   // Assessment summaries from each tool
   const [rob2Results, setRob2Results] = useState<ToolSummaryResult[]>([]);
@@ -848,6 +850,9 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
                     (r) => r.paperId === paper.paperId
                   );
                   const isExpanded = expandedPaperId === paper.paperId;
+                  const normalizedJudgment = result
+                    ? normalizeJudgment(result.overallJudgment)
+                    : null;
                   const year = paper.year ? ` (${paper.year})` : "";
                   const shortTitle =
                     paper.title.length > 55
@@ -855,98 +860,174 @@ export function UnifiedRoBPanel({ projectId }: UnifiedRoBPanelProps) {
                       : paper.title;
 
                   return (
-                    <tr
-                      key={paper.paperId}
-                      className={cn(
-                        "border-b border-border/50 transition-colors",
-                        isExpanded
-                          ? "bg-surface-raised/50"
-                          : "hover:bg-surface-raised/30"
-                      )}
-                    >
-                      <td className="py-2 pr-1">
-                        <button
-                          onClick={() =>
-                            setExpandedPaperId(isExpanded ? null : paper.paperId)
-                          }
-                          className="text-ink-muted hover:text-ink"
-                        >
-                          {isExpanded ? (
-                            <CaretDown size={14} />
-                          ) : (
-                            <CaretRight size={14} />
-                          )}
-                        </button>
-                      </td>
-                      <td className="py-2 pr-4 text-ink max-w-xs">
-                        <span title={paper.title}>
-                          {shortTitle}
-                          {year}
-                        </span>
-                      </td>
-                      <td className="py-2 px-3">
-                        <span className="text-xs text-ink-muted">
-                          {assignment
-                            ? STUDY_TYPE_LABELS[assignment.detectedType]
-                            : "..."}
-                        </span>
-                      </td>
-                      <td className="py-2 px-3">
-                        <select aria-label="Select option"
-                          value={assignment?.assignedTool ?? "rob2"}
-                          onChange={(e) =>
-                            handleToolOverride(
-                              paper.paperId,
-                              e.target.value as RoBTool
-                            )
-                          }
-                          className={cn(
-                            "text-xs rounded border border-border bg-surface px-2 py-1 text-ink",
-                            assignment?.overridden && "ring-1 ring-amber-400/50"
-                          )}
-                        >
-                          <option value="rob2">RoB 2</option>
-                          <option value="robins_i">ROBINS-I</option>
-                          <option value="quadas2">QUADAS-2</option>
-                          <option value="amstar2">AMSTAR 2</option>
-                          <option value="probast">PROBAST</option>
-                          <option value="nos">NOS</option>
-                        </select>
-                        {assignment?.overridden && (
-                          <span className="ml-1.5 text-[10px] text-amber-500 font-medium">
-                            overridden
-                          </span>
+                    <Fragment key={paper.paperId}>
+                      <tr
+                        className={cn(
+                          "border-b border-border/50 transition-colors",
+                          isExpanded
+                            ? "bg-surface-raised/50"
+                            : "hover:bg-surface-raised/30"
                         )}
-                      </td>
-                      <td className="py-2 px-3 text-center">
-                        {result ? (
-                          <span className="inline-flex items-center gap-1 text-xs text-emerald-500">
-                            <CheckCircle weight="fill" size={14} />
-                            Done
+                      >
+                        <td className="py-2 pr-1">
+                          <button
+                            onClick={() =>
+                              setExpandedPaperId(isExpanded ? null : paper.paperId)
+                            }
+                            className="text-ink-muted hover:text-ink"
+                          >
+                            {isExpanded ? (
+                              <CaretDown size={14} />
+                            ) : (
+                              <CaretRight size={14} />
+                            )}
+                          </button>
+                        </td>
+                        <td className="py-2 pr-4 text-ink max-w-xs">
+                          <span title={paper.title}>
+                            {shortTitle}
+                            {year}
                           </span>
-                        ) : (
-                          <span className="text-xs text-ink-muted/60">
-                            Pending
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className="text-xs text-ink-muted">
+                            {assignment
+                              ? STUDY_TYPE_LABELS[assignment.detectedType]
+                              : "..."}
                           </span>
-                        )}
-                      </td>
-                      <td className="py-2 px-3 text-center">
-                        {result ? (
-                          <span
+                        </td>
+                        <td className="py-2 px-3">
+                          <select aria-label="Select option"
+                            value={assignment?.assignedTool ?? "rob2"}
+                            onChange={(e) =>
+                              handleToolOverride(
+                                paper.paperId,
+                                e.target.value as RoBTool
+                              )
+                            }
                             className={cn(
-                              "px-2 py-0.5 rounded text-xs font-medium text-white",
-                              JUDGMENT_COLORS[result.overallJudgment] ||
-                                "bg-gray-400"
+                              "text-xs rounded border border-border bg-surface px-2 py-1 text-ink",
+                              assignment?.overridden && "ring-1 ring-amber-400/50"
                             )}
                           >
-                            {JUDGMENT_DISPLAY[result.overallJudgment] ||
-                              result.overallJudgment}
-                          </span>
-                        ) : (
-                          <span className="text-xs text-ink-muted/40">--</span>
-                        )}
-                      </td>
-                    </tr>
+                            <option value="rob2">RoB 2</option>
+                            <option value="robins_i">ROBINS-I</option>
+                            <option value="quadas2">QUADAS-2</option>
+                            <option value="amstar2">AMSTAR 2</option>
+                            <option value="probast">PROBAST</option>
+                            <option value="nos">NOS</option>
+                          </select>
+                          {assignment?.overridden && (
+                            <span className="ml-1.5 text-[10px] text-amber-500 font-medium">
+                              overridden
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2 px-3 text-center">
+                          {result ? (
+                            <span className="inline-flex items-center gap-1 text-xs text-emerald-500">
+                              <CheckCircle weight="fill" size={14} />
+                              Done
+                            </span>
+                          ) : (
+                            <span className="text-xs text-ink-muted/60">
+                              Pending
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2 px-3 text-center">
+                          {result ? (
+                            <span
+                              className={cn(
+                                "px-2 py-0.5 rounded text-xs font-medium text-white",
+                                JUDGMENT_COLORS[result.overallJudgment] ||
+                                  "bg-gray-400"
+                              )}
+                            >
+                              {judgmentEmoji(normalizedJudgment)}{" "}
+                              {JUDGMENT_DISPLAY[result.overallJudgment] ||
+                                result.overallJudgment}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-ink-muted/40">--</span>
+                          )}
+                        </td>
+                      </tr>
+
+                      {isExpanded && (
+                        <tr>
+                          <td colSpan={6} className="p-0">
+                            <div className="space-y-3 border-b border-border/50 bg-surface-raised/25 px-6 py-4">
+                              <RiskDomainAccordion
+                                title="Study Type Detection"
+                                indicator="🟢"
+                                label={assignment ? STUDY_TYPE_LABELS[assignment.detectedType] : "Unknown"}
+                                toneClassName="bg-emerald-500/15 text-emerald-600"
+                                open={expandedInsightId === `${paper.paperId}:study`}
+                                onToggle={() =>
+                                  setExpandedInsightId((current) =>
+                                    current === `${paper.paperId}:study`
+                                      ? null
+                                      : `${paper.paperId}:study`
+                                  )
+                                }
+                                supportingText={paper.abstract || "Detection is based on the imported study metadata and abstract text."}
+                                meta="Auto-detected review design"
+                              />
+                              <RiskDomainAccordion
+                                title="Assigned RoB Workflow"
+                                indicator={assignment?.overridden ? "🟡" : "🟢"}
+                                label={assignment ? TOOL_META[assignment.assignedTool].shortLabel : "Pending"}
+                                toneClassName={assignment?.overridden ? "bg-amber-500/15 text-amber-700" : "bg-brand/10 text-brand"}
+                                open={expandedInsightId === `${paper.paperId}:tool`}
+                                onToggle={() =>
+                                  setExpandedInsightId((current) =>
+                                    current === `${paper.paperId}:tool`
+                                      ? null
+                                      : `${paper.paperId}:tool`
+                                  )
+                                }
+                                supportingText={
+                                  assignment
+                                    ? `This paper is routed to ${TOOL_META[assignment.assignedTool].label}.${assignment.overridden ? " The tool was manually overridden." : ""}`
+                                    : "No tool has been assigned yet."
+                                }
+                                meta={assignment?.overridden ? "Manual override" : "Default assignment"}
+                              />
+                              <RiskDomainAccordion
+                                title="Assessment Status"
+                                indicator={result ? judgmentEmoji(normalizedJudgment) : "⚪"}
+                                label={
+                                  result
+                                    ? JUDGMENT_DISPLAY[result.overallJudgment] ||
+                                      result.overallJudgment
+                                    : "Pending"
+                                }
+                                toneClassName={
+                                  result
+                                    ? dashboardToneClass(normalizedJudgment)
+                                    : "bg-surface text-ink-muted"
+                                }
+                                open={expandedInsightId === `${paper.paperId}:assessment`}
+                                onToggle={() =>
+                                  setExpandedInsightId((current) =>
+                                    current === `${paper.paperId}:assessment`
+                                      ? null
+                                      : `${paper.paperId}:assessment`
+                                  )
+                                }
+                                supportingText={
+                                  result
+                                    ? `${result.domainCount} domains completed. Open the assigned tool to review the supporting text and domain-level judgments.`
+                                    : "No completed assessment yet for the currently assigned tool."
+                                }
+                                meta={result ? "Overall judgment auto-normalized for the dashboard" : "Awaiting assessment"}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   );
                 })}
                 {filteredPapers.length === 0 && (
@@ -1073,6 +1154,40 @@ const ROBVIS_LABELS: Record<string, string> = {
   unclear: "Unclear",
   no_info: "No information",
 };
+
+function judgmentEmoji(judgment: string | null): string {
+  switch (judgment) {
+    case "low":
+      return "🟢";
+    case "some_concerns":
+    case "moderate":
+    case "unclear":
+      return "🟡";
+    case "serious":
+    case "high":
+    case "critical":
+      return "🔴";
+    default:
+      return "⚪";
+  }
+}
+
+function dashboardToneClass(judgment: string | null): string {
+  switch (judgment) {
+    case "low":
+      return "bg-emerald-500/15 text-emerald-700";
+    case "some_concerns":
+    case "moderate":
+    case "unclear":
+      return "bg-amber-500/15 text-amber-700";
+    case "serious":
+    case "high":
+    case "critical":
+      return "bg-red-500/15 text-red-700";
+    default:
+      return "bg-surface text-ink-muted";
+  }
+}
 
 function normalizeJudgment(j: string): string {
   const lower = j.toLowerCase().trim();

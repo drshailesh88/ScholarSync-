@@ -13,6 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { RiskDomainAccordion } from "./RiskDomainAccordion";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -74,11 +75,25 @@ const JUDGMENT_LABELS: Record<string, string> = {
   High: "High",
 };
 
-function judgmentSymbol(judgment: string): string {
+function judgmentEmoji(judgment: string): string {
   const j = judgment.toLowerCase();
-  if (j === "low") return "+";
-  if (j === "high") return "-";
-  return "?";
+  if (j === "low") return "🟢";
+  if (j === "high") return "🔴";
+  if (j === "some concerns" || j === "some_concerns") return "🟡";
+  return "⚪";
+}
+
+function computeOverallRoB2(domains: RoB2Domain[]): string {
+  const normalized = domains.map((domain) => domain.judgment.toLowerCase());
+  if (normalized.includes("high")) return "high";
+  if (
+    normalized.includes("some concerns") ||
+    normalized.includes("some_concerns")
+  ) {
+    return "some_concerns";
+  }
+  if (normalized.includes("low")) return "low";
+  return "some_concerns";
 }
 
 // ---------------------------------------------------------------------------
@@ -90,6 +105,7 @@ export function RoB2Panel({ projectId }: RoB2PanelProps) {
   const [papers, setPapers] = useState<ImportedPaper[]>([]);
   const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [expandedDomainId, setExpandedDomainId] = useState<string | null>(null);
 
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [isLoadingPapers, setIsLoadingPapers] = useState(false);
@@ -493,6 +509,7 @@ export function RoB2Panel({ projectId }: RoB2PanelProps) {
               <tbody>
                 {results.map((r) => {
                   const isExpanded = expandedRow === r.paperId;
+                  const overallJudgment = computeOverallRoB2(r.domains);
                   return (
                     <Fragment key={r.paperId}>
                       <tr
@@ -535,7 +552,7 @@ export function RoB2Panel({ projectId }: RoB2PanelProps) {
                               >
                                 {judgment === "—"
                                   ? "—"
-                                  : judgmentSymbol(judgment)}
+                                  : judgmentEmoji(judgment)}
                               </span>
                             </td>
                           );
@@ -544,12 +561,13 @@ export function RoB2Panel({ projectId }: RoB2PanelProps) {
                           <span
                             className={cn(
                               "px-2.5 py-1 rounded text-xs font-medium",
-                              JUDGMENT_COLORS[r.overallJudgment] ||
+                              JUDGMENT_COLORS[overallJudgment] ||
                                 "bg-gray-200 text-gray-500"
                             )}
                           >
-                            {JUDGMENT_LABELS[r.overallJudgment] ||
-                              r.overallJudgment}
+                            {judgmentEmoji(overallJudgment)}{" "}
+                            {JUDGMENT_LABELS[overallJudgment] ||
+                              overallJudgment}
                           </span>
                         </td>
                       </tr>
@@ -563,47 +581,38 @@ export function RoB2Panel({ projectId }: RoB2PanelProps) {
                             }
                             className="p-0"
                           >
-                            <div className="bg-surface-raised/30 border-b border-border/50 px-6 py-4 space-y-3">
+                            <div className="space-y-3 border-b border-border/50 bg-surface-raised/30 px-6 py-4">
                               {r.domains.map((domain) => (
-                                <div
+                                <RiskDomainAccordion
                                   key={domain.domain}
-                                  className="flex items-start gap-3"
+                                  title={`${domain.domain} — ${ROB2_DOMAIN_LABELS[domain.domain] ?? domain.domain}`}
+                                  indicator={judgmentEmoji(domain.judgment)}
+                                  label={
+                                    JUDGMENT_LABELS[domain.judgment] ||
+                                    domain.judgment
+                                  }
+                                  toneClassName={
+                                    JUDGMENT_COLORS[domain.judgment] ||
+                                    "bg-gray-200 text-gray-500"
+                                  }
+                                  open={
+                                    expandedDomainId ===
+                                    `${r.paperId}:${domain.domain}`
+                                  }
+                                  onToggle={() =>
+                                    setExpandedDomainId((current) =>
+                                      current === `${r.paperId}:${domain.domain}`
+                                        ? null
+                                        : `${r.paperId}:${domain.domain}`
+                                    )
+                                  }
+                                  supportingText={domain.supportText}
+                                  meta="Supporting text"
                                 >
-                                  <span
-                                    className={cn(
-                                      "shrink-0 mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold",
-                                      JUDGMENT_COLORS[domain.judgment] ||
-                                        "bg-gray-200 text-gray-500"
-                                    )}
-                                  >
-                                    {judgmentSymbol(domain.judgment)}
-                                  </span>
-                                  <div className="min-w-0">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-xs font-semibold text-ink">
-                                        {domain.domain}
-                                        {ROB2_DOMAIN_LABELS[domain.domain]
-                                          ? ` — ${ROB2_DOMAIN_LABELS[domain.domain]}`
-                                          : ""}
-                                      </span>
-                                      <span
-                                        className={cn(
-                                          "text-[10px] px-1.5 py-0.5 rounded font-medium",
-                                          JUDGMENT_COLORS[domain.judgment] ||
-                                            "bg-gray-200 text-gray-500"
-                                        )}
-                                      >
-                                        {JUDGMENT_LABELS[domain.judgment] ||
-                                          domain.judgment}
-                                      </span>
-                                    </div>
-                                    {domain.supportText && (
-                                      <p className="text-xs text-ink-muted mt-1 leading-relaxed">
-                                        {domain.supportText}
-                                      </p>
-                                    )}
+                                  <div className="text-[11px] text-ink-muted">
+                                    Overall RoB 2 rollup updates automatically from the domain judgments shown above.
                                   </div>
-                                </div>
+                                </RiskDomainAccordion>
                               ))}
                             </div>
                           </td>
