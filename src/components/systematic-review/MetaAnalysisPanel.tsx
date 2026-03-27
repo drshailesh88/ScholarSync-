@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import {
   ChartBar,
   Plus,
@@ -9,7 +9,9 @@ import {
   Play,
   TreeStructure,
   MagnifyingGlass,
+  DownloadSimple,
 } from "@phosphor-icons/react";
+import { toPng } from "html-to-image";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { EmptyState } from "@/components/systematic-review/EmptyState";
@@ -61,7 +63,57 @@ function createEmptyStudy(index: number): StudyInput {
   };
 }
 
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function buildMetaAnalysisCSV(
+  result: MetaAnalysisOutput,
+  effectType: EffectType,
+  model: ModelType,
+  outcomeMeasure: string
+) {
+  const rows = [
+    ["Outcome", outcomeMeasure || effectType],
+    ["Effect measure", effectType],
+    ["Model", model],
+    [],
+    ["Study", "Effect", "CI lower", "CI upper", "SE", "Weight"],
+    ...result.studies.map((study) => [
+      study.studyLabel,
+      study.effect.toString(),
+      study.ciLower.toString(),
+      study.ciUpper.toString(),
+      study.se.toString(),
+      (study.weight ?? 0).toString(),
+    ]),
+    [],
+    ["Pooled effect", result.pooled.effect.toString()],
+    ["Pooled CI lower", result.pooled.ciLower.toString()],
+    ["Pooled CI upper", result.pooled.ciUpper.toString()],
+    ["Pooled p-value", result.pooled.pValue.toString()],
+    ["Heterogeneity I2", result.heterogeneity.I2.toString()],
+    ["Heterogeneity tau2", result.heterogeneity.tau2.toString()],
+    ["Heterogeneity Q", result.heterogeneity.Q.toString()],
+  ];
+
+  return rows
+    .map((row) =>
+      row
+        .map((value) => `"${String(value ?? "").replace(/"/g, '""')}"`)
+        .join(",")
+    )
+    .join("\n");
+}
+
 export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
+  const forestPlotRef = useRef<HTMLDivElement>(null);
+  const funnelPlotRef = useRef<HTMLDivElement>(null);
   const [effectType, setEffectType] = useState<EffectType>("OR");
   const [model, setModel] = useState<ModelType>("random");
   const [analysisName, setAnalysisName] = useState("Primary Analysis");
@@ -96,6 +148,45 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
   >(null);
   const [isRunningSensitivity, setIsRunningSensitivity] = useState(false);
   const [sensitivityError, setSensitivityError] = useState<string | null>(null);
+
+  const exportPlotPNG = useCallback(
+    async (container: HTMLDivElement | null, filename: string) => {
+      if (!container) return;
+      try {
+        const dataUrl = await toPng(container, {
+          cacheBust: true,
+          pixelRatio: 2,
+          backgroundColor: "#f2f0eb",
+        });
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = filename;
+        link.click();
+      } catch {
+        setError("Failed to export PNG. Please try again.");
+      }
+    },
+    []
+  );
+
+  const exportPlotSVG = useCallback((container: HTMLDivElement | null, filename: string) => {
+    if (!container) return;
+    const svg = container.querySelector("svg");
+    if (!svg) {
+      setError("No SVG available to export.");
+      return;
+    }
+
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    downloadBlob(new Blob([clone.outerHTML], { type: "image/svg+xml;charset=utf-8" }), filename);
+  }, []);
+
+  const exportResultsCSV = useCallback(() => {
+    if (!result) return;
+    const csv = buildMetaAnalysisCSV(result, effectType, model, outcomeMeasure);
+    downloadBlob(new Blob([csv], { type: "text/csv;charset=utf-8" }), "meta-analysis-results.csv");
+  }, [result, effectType, model, outcomeMeasure]);
 
   const addStudy = () => {
     setStudies((prev) => [...prev, createEmptyStudy(prev.length + 1)]);
@@ -364,10 +455,13 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
       <GlassPanel className="sr-panel">
         <h2 className="sr-panel-title">
           <ChartBar weight="duotone" className="text-brand" />
-          Meta-Analysis Configuration
+          Meta-Analysis Workspace
         </h2>
+        <p className="mb-5 text-sm text-ink-muted">
+          Controls stay visible here so the outcome, effect measure, and model are legible while you inspect the plots.
+        </p>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid gap-4 rounded-2xl border border-border/70 bg-surface-raised/35 p-4 lg:grid-cols-[1.1fr_1.1fr_1.2fr]">
           <div>
             <label className="block text-sm font-medium text-ink mb-1">
               Analysis Name
@@ -381,7 +475,7 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
           </div>
           <div>
             <label className="block text-sm font-medium text-ink mb-1">
-              Outcome Measure
+              Outcome
             </label>
             <input aria-label="Text input"
               type="text"
@@ -390,74 +484,76 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
               placeholder="e.g., HbA1c reduction at 12 months"
               className="w-full px-3 py-2 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
             />
+            <p className="mt-1 text-xs text-ink-muted">
+              Used in plot subtitles, CSV exports, and downstream evidence summaries.
+            </p>
           </div>
-        </div>
-
-        {/* Effect type selector */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-ink mb-2">
-            Effect Measure
-          </label>
-          <div className="flex gap-2 flex-wrap">
-            {EFFECT_TYPES.map((et) => (
-              <button
-                key={et.key}
-                onClick={() => setEffectType(et.key)}
-                className={cn(
-                  "px-3 py-2 rounded text-sm border transition-colors",
-                  effectType === et.key
-                    ? "bg-brand/10 border-brand/30 text-brand font-medium"
-                    : "bg-surface-raised border-border text-ink-muted hover:border-brand/20"
-                )}
-                title={et.description}
-              >
-                {et.label}
-              </button>
-            ))}
+          <div className="rounded-2xl border border-border bg-surface px-4 py-3">
+            <div className="mb-2 text-sm font-medium text-ink">Controls Bar</div>
+            <div className="mb-3">
+              <label className="mb-2 block text-xs font-medium uppercase tracking-[0.12em] text-ink-muted">
+                Effect Measure
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {EFFECT_TYPES.map((et) => (
+                  <button
+                    key={et.key}
+                    onClick={() => setEffectType(et.key)}
+                    className={cn(
+                      "rounded-full border px-3 py-1.5 text-sm transition-colors",
+                      effectType === et.key
+                        ? "border-brand/30 bg-brand/10 font-medium text-brand"
+                        : "border-border bg-surface-raised text-ink-muted hover:border-brand/20"
+                    )}
+                    title={et.description}
+                  >
+                    {et.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-ink">Model</span>
+                <button
+                  onClick={() => setModel("fixed")}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-sm transition-colors",
+                    model === "fixed"
+                      ? "border-brand/30 bg-brand/10 font-medium text-brand"
+                      : "border-border bg-surface-raised text-ink-muted"
+                  )}
+                >
+                  Fixed
+                </button>
+                <button
+                  onClick={() => setModel("random")}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-sm transition-colors",
+                    model === "random"
+                      ? "border-brand/30 bg-brand/10 font-medium text-brand"
+                      : "border-border bg-surface-raised text-ink-muted"
+                  )}
+                >
+                  Random
+                </button>
+              </div>
+              <label className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer">
+                <input aria-label="Checkbox"
+                  type="checkbox"
+                  checked={includeTrimFill}
+                  onChange={(e) => setIncludeTrimFill(e.target.checked)}
+                  className="rounded"
+                />
+                Include trim-and-fill analysis
+              </label>
+            </div>
           </div>
-        </div>
-
-        {/* Model selector + options */}
-        <div className="flex items-center gap-6 mb-4">
-          <div className="flex items-center gap-3">
-            <label className="text-sm font-medium text-ink">Model:</label>
-            <button
-              onClick={() => setModel("fixed")}
-              className={cn(
-                "px-3 py-1.5 rounded text-sm border transition-colors",
-                model === "fixed"
-                  ? "bg-brand/10 border-brand/30 text-brand font-medium"
-                  : "bg-surface-raised border-border text-ink-muted"
-              )}
-            >
-              Fixed
-            </button>
-            <button
-              onClick={() => setModel("random")}
-              className={cn(
-                "px-3 py-1.5 rounded text-sm border transition-colors",
-                model === "random"
-                  ? "bg-brand/10 border-brand/30 text-brand font-medium"
-                  : "bg-surface-raised border-border text-ink-muted"
-              )}
-            >
-              Random
-            </button>
-          </div>
-          <label className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer">
-            <input aria-label="Checkbox"
-              type="checkbox"
-              checked={includeTrimFill}
-              onChange={(e) => setIncludeTrimFill(e.target.checked)}
-              className="rounded"
-            />
-            Include trim-and-fill analysis
-          </label>
         </div>
       </GlassPanel>
 
       {/* Study Data Input */}
-      <GlassPanel className="p-6">
+      <GlassPanel className="sr-panel">
         <h3 className="text-sm font-semibold text-ink mb-3">
           Study Data
           {isLogScale && (
@@ -621,54 +717,86 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
       {/* ===== Main Tab ===== */}
       {activeTab === "main" && result && (
         <>
-          {/* Heterogeneity Stats Table */}
-          <GlassPanel className="p-6">
-            <h3 className="text-sm font-semibold text-ink mb-3">
-              Results Summary
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              <div className="text-center p-3 bg-surface-raised rounded">
-                <div className="text-lg font-bold text-ink">
-                  {result.studies.length}
-                </div>
-                <div className="text-xs text-ink-muted">Studies</div>
+          <GlassPanel className="sr-panel">
+            <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold text-ink">
+                  Forest Plot
+                </h3>
+                <p className="mt-1 text-xs text-ink-muted">
+                  Outcome: {outcomeMeasure || effectType} · Effect measure: {effectType} · Model: {model}
+                </p>
               </div>
-              <div className="text-center p-3 bg-brand/5 rounded">
-                <div className="text-lg font-bold text-brand">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => exportPlotPNG(forestPlotRef.current, "forest-plot.png")}
+                  className="sr-btn sr-btn-secondary"
+                >
+                  <DownloadSimple size={14} />
+                  Export PNG
+                </button>
+                <button
+                  onClick={() => exportPlotSVG(forestPlotRef.current, "forest-plot.svg")}
+                  className="sr-btn sr-btn-secondary"
+                >
+                  <DownloadSimple size={14} />
+                  Export SVG
+                </button>
+                <button
+                  onClick={exportResultsCSV}
+                  className="sr-btn sr-btn-secondary"
+                >
+                  <DownloadSimple size={14} />
+                  Export CSV
+                </button>
+              </div>
+            </div>
+
+            <div ref={forestPlotRef} className="rounded-2xl border border-border/70 bg-surface px-3 py-4">
+              <ForestPlot
+                studies={result.studies}
+                pooled={result.pooled}
+                effectType={effectType}
+                title={analysisName}
+              />
+            </div>
+
+            <div className="mt-4 grid gap-3 md:grid-cols-4">
+              <div className="rounded-2xl border border-border bg-surface-raised px-4 py-3">
+                <div className="text-xs uppercase tracking-[0.12em] text-ink-muted">Studies</div>
+                <div className="mt-2 text-2xl font-semibold text-ink">{result.studies.length}</div>
+              </div>
+              <div className="rounded-2xl border border-brand/20 bg-brand/5 px-4 py-3">
+                <div className="text-xs uppercase tracking-[0.12em] text-ink-muted">Pooled {effectType}</div>
+                <div className="mt-2 text-2xl font-semibold text-brand">
                   {isLogScale
                     ? Math.exp(result.pooled.effect).toFixed(3)
                     : result.pooled.effect.toFixed(3)}
                 </div>
-                <div className="text-xs text-ink-muted">
-                  Pooled {effectType}
-                </div>
               </div>
-              <div className="text-center p-3 bg-surface-raised rounded">
-                <div className="text-lg font-bold text-ink">
-                  {result.heterogeneity.I2.toFixed(1)}%
-                </div>
-                <div className="text-xs text-ink-muted">I&#178;</div>
+              <div className="rounded-2xl border border-border bg-surface-raised px-4 py-3">
+                <div className="text-xs uppercase tracking-[0.12em] text-ink-muted">Heterogeneity I²</div>
+                <div className="mt-2 text-2xl font-semibold text-ink">{result.heterogeneity.I2.toFixed(1)}%</div>
               </div>
-              <div className="text-center p-3 bg-surface-raised rounded">
-                <div className="text-lg font-bold text-ink">
+              <div className="rounded-2xl border border-border bg-surface-raised px-4 py-3">
+                <div className="text-xs uppercase tracking-[0.12em] text-ink-muted">P-value</div>
+                <div className="mt-2 text-2xl font-semibold text-ink">
                   {result.pooled.pValue < 0.001
                     ? "<0.001"
                     : result.pooled.pValue.toFixed(4)}
                 </div>
-                <div className="text-xs text-ink-muted">p-value</div>
               </div>
             </div>
 
-            {/* Detailed stats */}
-            <div className="text-xs text-ink-muted space-y-1">
-              <div>
-                Pooled {effectType} ({model}-effects):{" "}
-                <strong className="text-ink">
-                  {isLogScale
-                    ? Math.exp(result.pooled.effect).toFixed(3)
-                    : result.pooled.effect.toFixed(3)}
-                </strong>{" "}
-                (95% CI:{" "}
+            <div className="mt-4 grid gap-3 text-xs text-ink-muted md:grid-cols-2">
+              <div className="rounded-2xl border border-border/70 bg-surface px-4 py-3">
+                Heterogeneity: Q = {result.heterogeneity.Q.toFixed(2)} (df = {result.heterogeneity.df}, p ={" "}
+                {result.heterogeneity.pValue < 0.001
+                  ? "<0.001"
+                  : result.heterogeneity.pValue.toFixed(3)}), τ² = {result.heterogeneity.tau2.toFixed(4)}
+              </div>
+              <div className="rounded-2xl border border-border/70 bg-surface px-4 py-3">
+                95% CI:{" "}
                 {isLogScale
                   ? Math.exp(result.pooled.ciLower).toFixed(3)
                   : result.pooled.ciLower.toFixed(3)}{" "}
@@ -676,64 +804,64 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
                 {isLogScale
                   ? Math.exp(result.pooled.ciUpper).toFixed(3)
                   : result.pooled.ciUpper.toFixed(3)}
-                ), z = {result.pooled.zValue.toFixed(3)}, p ={" "}
-                {result.pooled.pValue < 0.001
-                  ? "<0.001"
-                  : result.pooled.pValue.toFixed(4)}
+                ; z = {result.pooled.zValue.toFixed(3)}
+                {result.eggerTest && (
+                  <>
+                    {" · "}Egger&apos;s p ={" "}
+                    {result.eggerTest.pValue < 0.001
+                      ? "<0.001"
+                      : result.eggerTest.pValue.toFixed(3)}
+                  </>
+                )}
               </div>
-              <div>
-                Heterogeneity: Q = {result.heterogeneity.Q.toFixed(2)} (df ={" "}
-                {result.heterogeneity.df}, p ={" "}
-                {result.heterogeneity.pValue < 0.001
-                  ? "<0.001"
-                  : result.heterogeneity.pValue.toFixed(3)}
-                ), I&#178; = {result.heterogeneity.I2.toFixed(1)}%, &#964;&#178; ={" "}
-                {result.heterogeneity.tau2.toFixed(4)}
-              </div>
-              {result.eggerTest && (
-                <div>
-                  Egger&apos;s test: intercept ={" "}
-                  {result.eggerTest.intercept.toFixed(3)}, p ={" "}
-                  {result.eggerTest.pValue < 0.001
-                    ? "<0.001"
-                    : result.eggerTest.pValue.toFixed(3)}
-                  {result.eggerTest.pValue < 0.1 && (
-                    <span className="text-amber-600 ml-1">
-                      (potential publication bias)
-                    </span>
-                  )}
-                </div>
-              )}
             </div>
           </GlassPanel>
 
-          {/* Forest Plot */}
-          <GlassPanel className="p-6">
-            <ForestPlot
-              studies={result.studies}
-              pooled={result.pooled}
-              effectType={effectType}
-              heterogeneity={result.heterogeneity}
-              title={`Forest Plot — ${analysisName}`}
-            />
-          </GlassPanel>
+          <GlassPanel className="sr-panel">
+            <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold text-ink">
+                  Funnel Plot
+                </h3>
+                <p className="mt-1 text-xs text-ink-muted">
+                  Publication-bias check for {outcomeMeasure || effectType}
+                  {trimFillResult ? ` · ${trimFillResult.imputedCount} imputed studies` : ""}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => exportPlotPNG(funnelPlotRef.current, "funnel-plot.png")}
+                  className="sr-btn sr-btn-secondary"
+                >
+                  <DownloadSimple size={14} />
+                  Export PNG
+                </button>
+                <button
+                  onClick={() => exportPlotSVG(funnelPlotRef.current, "funnel-plot.svg")}
+                  className="sr-btn sr-btn-secondary"
+                >
+                  <DownloadSimple size={14} />
+                  Export SVG
+                </button>
+              </div>
+            </div>
 
-          {/* Funnel Plot */}
-          <GlassPanel className="p-6">
-            <FunnelPlot
-              studies={
-                trimFillResult
-                  ? trimFillResult.adjustedStudies.map((s) => ({
-                      ...s,
-                      isImputed: s.studyId.startsWith("imputed_"),
-                    }))
-                  : result.studies
-              }
-              pooledEffect={result.pooled.effect}
-              effectType={effectType}
-              eggerTest={result.eggerTest}
-              title={`Funnel Plot — ${analysisName}${trimFillResult ? ` (${trimFillResult.imputedCount} imputed studies)` : ""}`}
-            />
+            <div ref={funnelPlotRef} className="rounded-2xl border border-border/70 bg-surface px-3 py-4">
+              <FunnelPlot
+                studies={
+                  trimFillResult
+                    ? trimFillResult.adjustedStudies.map((s) => ({
+                        ...s,
+                        isImputed: s.studyId.startsWith("imputed_"),
+                      }))
+                    : result.studies
+                }
+                pooledEffect={result.pooled.effect}
+                effectType={effectType}
+                eggerTest={result.eggerTest}
+                title={analysisName}
+              />
+            </div>
           </GlassPanel>
 
           {/* Trim-and-fill results */}

@@ -632,7 +632,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
       {/* Overall Progress Bar */}
       {progress && progress.total > 0 && (
-        <GlassPanel className="p-4">
+        <GlassPanel className="sr-panel">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-ink">
               Screening Progress
@@ -678,7 +678,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
       {/* Reviewer-specific Progress */}
       {reviewerProgress && reviewerProgress.total > 0 && (
-        <GlassPanel className="p-3 bg-gradient-to-r from-brand/5 to-indigo-500/5">
+        <GlassPanel className="sr-panel bg-gradient-to-r from-brand/5 to-indigo-500/5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <User weight="duotone" className="text-brand" size={16} />
@@ -717,7 +717,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
       {/* Inter-rater Agreement */}
       {agreement && agreement.totalPapers > 0 && (
-        <GlassPanel className="p-4 bg-gradient-to-r from-indigo-500/5 to-purple-500/5">
+        <GlassPanel className="sr-panel bg-gradient-to-r from-indigo-500/5 to-purple-500/5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Handshake weight="duotone" className="text-brand" size={20} />
@@ -774,7 +774,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
       {/* Unblinded Conflict Summary (AI vs Human) */}
       {unblindedData && !blindedMode && (
-        <GlassPanel className="p-4 border-amber-500/20">
+        <GlassPanel className="sr-panel border-amber-500/20">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Eye weight="duotone" className="text-brand" size={20} />

@@ -135,7 +135,7 @@ export function FunnelPlot({
           {/* Pooled effect vertical line */}
           <ReferenceLine
             x={pooledDisplay}
-            stroke="#6366f1"
+            stroke="#6D28D9"
             strokeWidth={1.5}
             strokeDasharray="4 4"
           />
@@ -143,7 +143,7 @@ export function FunnelPlot({
           {/* Real studies */}
           <Scatter
             data={realStudies}
-            fill="#6366f1"
+            fill="#6D28D9"
             shape="circle"
             r={4}
           />
@@ -153,7 +153,7 @@ export function FunnelPlot({
             <Scatter
               data={imputedStudies}
               fill="none"
-              stroke="#f59e0b"
+              stroke="#d4b060"
               strokeWidth={1.5}
               shape="circle"
               r={4}
