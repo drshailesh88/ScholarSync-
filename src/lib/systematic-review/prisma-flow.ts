@@ -8,8 +8,8 @@
  */
 
 import { db } from "@/lib/db";
-import { prismaFlow, screeningDecisions } from "@/lib/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { prismaFlow, screeningDecisions, papers, projectPapers } from "@/lib/db/schema";
+import { eq, and, sql, inArray } from "drizzle-orm";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -287,6 +287,154 @@ export function generatePRISMAFlowSVG(data: PRISMAFlowData): string {
   <text x="290" y="570" text-anchor="middle" class="label">Studies included in review</text>
   <text x="290" y="590" text-anchor="middle" class="value">(n = ${inc.studiesIncluded})</text>
 </svg>`;
+}
+
+// ---------------------------------------------------------------------------
+// Fetch papers for a PRISMA flow box (clickable paper lists)
+// ---------------------------------------------------------------------------
+
+export type FlowBoxKey =
+  | "identified_databases"
+  | "identified_registers"
+  | "identified_other"
+  | "duplicates_removed"
+  | "automation_excluded"
+  | "records_screened"
+  | "records_excluded"
+  | "reports_sought"
+  | "reports_not_retrieved"
+  | "reports_assessed"
+  | "reports_excluded"
+  | "studies_included"
+  | "reports_included";
+
+export interface FlowPaperSummary {
+  id: number;
+  title: string;
+  authors: string[];
+  journal: string | null;
+  year: number | null;
+  doi: string | null;
+  decision?: string;
+  reason?: string;
+}
+
+export async function fetchPapersForFlowBox(
+  projectId: number,
+  boxKey: FlowBoxKey
+): Promise<FlowPaperSummary[]> {
+  // Map box keys to screening decision filters
+  const stageDecisionMap: Record<
+    string,
+    { stage?: string; decision?: string; includeAll?: boolean }
+  > = {
+    // Identification: all papers in the project
+    identified_databases: { includeAll: true },
+    identified_registers: { includeAll: false }, // placeholder - no register data yet
+    identified_other: { includeAll: false },
+    duplicates_removed: { includeAll: false }, // duplicates aren't tracked as decisions
+    automation_excluded: { includeAll: false },
+
+    // Screening
+    records_screened: { stage: "title_abstract" },
+    records_excluded: { stage: "title_abstract", decision: "exclude" },
+
+    // Eligibility
+    reports_sought: { stage: "title_abstract", decision: "include" },
+    reports_not_retrieved: { includeAll: false },
+    reports_assessed: { stage: "full_text" },
+    reports_excluded: { stage: "full_text", decision: "exclude" },
+
+    // Included
+    studies_included: { stage: "full_text", decision: "include" },
+    reports_included: { stage: "full_text", decision: "include" },
+  };
+
+  const filter = stageDecisionMap[boxKey];
+  if (!filter || filter.includeAll === false) {
+    return [];
+  }
+
+  if (filter.includeAll) {
+    // Return all papers in the project
+    const rows = await db
+      .select({
+        id: papers.id,
+        title: papers.title,
+        authors: papers.authors,
+        journal: papers.journal,
+        year: papers.year,
+        doi: papers.doi,
+      })
+      .from(projectPapers)
+      .innerJoin(papers, eq(projectPapers.paper_id, papers.id))
+      .where(eq(projectPapers.project_id, projectId))
+      .limit(500);
+
+    return rows.map((r) => ({
+      id: r.id,
+      title: r.title,
+      authors: Array.isArray(r.authors)
+        ? (r.authors as string[])
+        : [],
+      journal: r.journal,
+      year: r.year,
+      doi: r.doi,
+    }));
+  }
+
+  // Get paper IDs from screening decisions matching the filter
+  const conditions = [eq(screeningDecisions.projectId, projectId)];
+  if (filter.stage) {
+    conditions.push(sql`${screeningDecisions.stage} = ${filter.stage}` as ReturnType<typeof eq>);
+  }
+  if (filter.decision) {
+    conditions.push(sql`${screeningDecisions.decision} = ${filter.decision}` as ReturnType<typeof eq>);
+  }
+
+  const decisionRows = await db
+    .select({
+      paperId: screeningDecisions.paperId,
+      decision: screeningDecisions.decision,
+      reason: screeningDecisions.reason,
+    })
+    .from(screeningDecisions)
+    .where(and(...conditions))
+    .limit(500);
+
+  if (decisionRows.length === 0) return [];
+
+  const paperIds = [...new Set(decisionRows.map((d) => d.paperId))];
+  const reasonMap = new Map(
+    decisionRows.map((d) => [d.paperId, { decision: d.decision, reason: d.reason }])
+  );
+
+  const paperRows = await db
+    .select({
+      id: papers.id,
+      title: papers.title,
+      authors: papers.authors,
+      journal: papers.journal,
+      year: papers.year,
+      doi: papers.doi,
+    })
+    .from(papers)
+    .where(inArray(papers.id, paperIds))
+    .limit(500);
+
+  return paperRows.map((r) => {
+    const meta = reasonMap.get(r.id);
+    return {
+      id: r.id,
+      title: r.title,
+      authors: Array.isArray(r.authors) ? (r.authors as string[]) : [],
+      journal: r.journal,
+      year: r.year,
+      doi: r.doi,
+      decision: meta?.decision ?? undefined,
+      reason: meta?.reason ?? undefined,
+    };
+  });
 }
 
 // ---------------------------------------------------------------------------

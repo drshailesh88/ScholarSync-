@@ -1,5 +1,7 @@
 /**
  * GET  /api/systematic-review/prisma-flow?projectId=123
+ * GET  /api/systematic-review/prisma-flow?projectId=123&format=svg
+ * GET  /api/systematic-review/prisma-flow?projectId=123&papers=records_excluded
  * POST /api/systematic-review/prisma-flow
  *
  * Compute and return PRISMA 2020 flow diagram data + SVG.
@@ -15,7 +17,25 @@ import {
   updatePRISMAFlowStage,
   generatePRISMAFlowSVG,
   generatePRISMAChecklist,
+  fetchPapersForFlowBox,
+  type FlowBoxKey,
 } from "@/lib/systematic-review";
+
+const VALID_BOX_KEYS = new Set<FlowBoxKey>([
+  "identified_databases",
+  "identified_registers",
+  "identified_other",
+  "duplicates_removed",
+  "automation_excluded",
+  "records_screened",
+  "records_excluded",
+  "reports_sought",
+  "reports_not_retrieved",
+  "reports_assessed",
+  "reports_excluded",
+  "studies_included",
+  "reports_included",
+]);
 
 export async function GET(req: Request) {
   const log = logger.withRequestId();
@@ -26,12 +46,25 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const projectId = parseInt(searchParams.get("projectId") || "0", 10);
     const format = searchParams.get("format") || "json"; // "json" | "svg"
+    const papersBoxKey = searchParams.get("papers") as FlowBoxKey | null;
 
     if (!projectId) {
       return NextResponse.json(
         { error: "projectId is required" },
         { status: 400 }
       );
+    }
+
+    // Paper list query for clickable boxes
+    if (papersBoxKey) {
+      if (!VALID_BOX_KEYS.has(papersBoxKey)) {
+        return NextResponse.json(
+          { error: "Invalid box key" },
+          { status: 400 }
+        );
+      }
+      const papers = await fetchPapersForFlowBox(projectId, papersBoxKey);
+      return NextResponse.json({ papers });
     }
 
     const flowData = await computePRISMAFlow(projectId);
