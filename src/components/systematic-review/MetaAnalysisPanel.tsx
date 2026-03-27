@@ -12,6 +12,8 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { MetaAnalysisEmptyState } from "@/components/systematic-review/SREmptyState";
+import { useSystematicReviewStore } from "@/stores/systematic-review-store";
 import { ForestPlot } from "./ForestPlot";
 import { FunnelPlot } from "./FunnelPlot";
 import type {
@@ -347,8 +349,17 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
     new Set(studies.map((s) => s.subgroup).filter(Boolean))
   );
 
+  const hasStudyData = studies.some((s) => s.studyLabel.trim() !== "");
+
   return (
     <div className="space-y-6 max-w-5xl">
+      {/* Empty state — no studies entered yet */}
+      {!hasStudyData && !result && (
+        <MetaAnalysisEmptyState
+          onGoToExtraction={() => useSystematicReviewStore.getState().setActiveTab("extraction")}
+        />
+      )}
+
       {/* Configuration */}
       <GlassPanel className="p-6">
         <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">

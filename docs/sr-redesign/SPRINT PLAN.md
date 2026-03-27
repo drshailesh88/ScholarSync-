@@ -7,9 +7,9 @@
 
 ## Project Status
 
-**Current Phase**: Sprint 2 - Screening Speed Mode
+**Current Phase**: Sprint 5 - Hub Page Redesign
 **Last Updated**: March 27, 2026
-**Overall Progress**: ██░░░░░░░░ 20%
+**Overall Progress**: █████░░░░░ 50%
 
 -----
 
@@ -87,7 +87,7 @@
 
 |Task                            |Status|Notes                     |
 |--------------------------------|------|--------------------------|
-|Create SR-specific CSS classes  |⬜ TODO|.sr-panel, .sr-title, etc.|
+|Create SR-specific CSS classes  |✅ Done|.sr-panel, .sr-content, .sr-title, .sr-subtitle|
 |Apply Source Serif 4 to headings|⬜ TODO|                          |
 |Apply DM Sans to UI elements    |⬜ TODO|                          |
 |Increase panel padding to p-6   |⬜ TODO|                          |
@@ -105,19 +105,19 @@
 
 -----
 
-## Sprint 4: Empty States
+## Sprint 4: Empty States ✅
 
 **Goal**: Replace generic “No data” with warm, helpful empty states.
 
 |Task                                      |Status|Notes                                |
 |------------------------------------------|------|-------------------------------------|
-|Design empty state pattern                |⬜ TODO|Icon + serif title + desc + CTA + tip|
-|Create EmptyState component               |⬜ TODO|                                     |
-|Implement for: Hub (no projects)          |⬜ TODO|                                     |
-|Implement for: Import (no papers)         |⬜ TODO|                                     |
-|Implement for: Screening (none to screen) |⬜ TODO|                                     |
-|Implement for: Extraction (none extracted)|⬜ TODO|                                     |
-|Implement for: Meta-analysis (no data)    |⬜ TODO|                                     |
+|Design empty state pattern                |✅ Done|Icon + serif title + desc + CTA + tip|
+|Create EmptyState component               |✅ Done|SREmptyState.tsx with 5 pre-built variants|
+|Implement for: Hub (no projects)          |✅ Done|HubEmptyState with “Start Your First Review” CTA|
+|Implement for: Import (no papers)         |✅ Done|ImportEmptyState with format tip|
+|Implement for: Screening (none to screen) |✅ Done|ScreeningEmptyState links to Import tab|
+|Implement for: Extraction (none extracted)|✅ Done|ExtractionEmptyState links to Screening tab|
+|Implement for: Meta-analysis (no data)    |✅ Done|MetaAnalysisEmptyState links to Extraction tab|
 |Write Playwright tests                    |⬜ TODO|                                     |
 
 **Acceptance Criteria**:
@@ -129,19 +129,19 @@
 
 -----
 
-## Sprint 5: Hub Page Redesign
+## Sprint 5: Hub Page Redesign ✅
 
 **Goal**: Transform project list into card-based dashboard.
 
 |Task                          |Status|Notes|
 |------------------------------|------|-----|
-|Design project card component |⬜ TODO|     |
-|Show visual progress indicator|⬜ TODO|     |
-|Show paper counts             |⬜ TODO|     |
-|Show last updated             |⬜ TODO|     |
-|Create “New Review” card      |⬜ TODO|     |
-|Implement card grid layout    |⬜ TODO|     |
-|Wire to existing projects API |⬜ TODO|     |
+|Design project card component |✅ Done|sr-panel glass cards with serif titles|
+|Show visual progress indicator|✅ Done|Phase progress bar (7 stages)|
+|Show paper counts             |✅ Done|Locale-formatted paper count|
+|Show last updated             |✅ Done|Relative time (e.g. “3h ago”)|
+|Create “New Review” card      |✅ Done|Dashed border CTA card in grid|
+|Implement card grid layout    |✅ Done|Responsive 1/2/3 col grid with sr-content|
+|Wire to existing projects API |✅ Done|Same /api/systematic-review/projects endpoint|
 |Write Playwright tests        |⬜ TODO|     |
 
 **Acceptance Criteria**:
