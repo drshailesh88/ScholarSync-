@@ -13,6 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { RiskDomainAccordion } from "./RiskDomainAccordion";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -85,12 +86,25 @@ const DOMAIN_ORDER = [
 /** Flow & Timing has no applicability concern */
 const NO_APPLICABILITY_DOMAIN = "flow_timing";
 
-function judgmentSymbol(judgment: string | null): string {
-  if (!judgment) return "—";
-  const j = judgment.toLowerCase();
-  if (j === "low") return "+";
-  if (j === "high") return "-";
-  return "?"; // some_concerns / Unclear
+function judgmentEmoji(judgment: string | null): string {
+  if (!judgment) return "⚪";
+  const normalized = judgment.toLowerCase();
+  if (normalized === "low") return "🟢";
+  if (normalized === "high") return "🔴";
+  return "🟡";
+}
+
+function computeOverallQUADAS(values: Array<string | null>): string {
+  const normalized = values
+    .filter((value): value is string => Boolean(value))
+    .map((value) => value.toLowerCase());
+
+  if (normalized.includes("high")) return "high";
+  if (normalized.includes("unclear") || normalized.includes("some_concerns")) {
+    return "some_concerns";
+  }
+  if (normalized.includes("low")) return "low";
+  return "some_concerns";
 }
 
 // ---------------------------------------------------------------------------
@@ -102,6 +116,7 @@ export function QUADAS2Panel({ projectId }: QUADAS2PanelProps) {
   const [papers, setPapers] = useState<ImportedPaper[]>([]);
   const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [expandedDomainId, setExpandedDomainId] = useState<string | null>(null);
 
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [isLoadingPapers, setIsLoadingPapers] = useState(false);
@@ -560,6 +575,16 @@ export function QUADAS2Panel({ projectId }: QUADAS2PanelProps) {
                   const domainMap = new Map(
                     r.domains.map((d) => [d.domain, d])
                   );
+                  const overallRoB = computeOverallQUADAS(
+                    r.domains.map((domain) => domain.riskOfBias)
+                  );
+                  const overallApplicability = computeOverallQUADAS(
+                    r.domains
+                      .map((domain) => domain.applicabilityConcern)
+                      .filter(
+                        (judgment): judgment is string => judgment !== null
+                      )
+                  );
 
                   return (
                     <Fragment key={r.paperId}>
@@ -619,23 +644,25 @@ export function QUADAS2Panel({ projectId }: QUADAS2PanelProps) {
                           <span
                             className={cn(
                               "px-2 py-0.5 rounded text-xs font-medium",
-                              JUDGMENT_COLORS[r.overallRoB] ||
+                              JUDGMENT_COLORS[overallRoB] ||
                                 "bg-gray-200 text-gray-500"
                             )}
                           >
-                            {JUDGMENT_LABELS[r.overallRoB] || r.overallRoB}
+                            {judgmentEmoji(overallRoB)}{" "}
+                            {JUDGMENT_LABELS[overallRoB] || overallRoB}
                           </span>
                         </td>
                         <td className="text-center py-2 px-2">
                           <span
                             className={cn(
                               "px-2 py-0.5 rounded text-xs font-medium",
-                              JUDGMENT_COLORS[r.overallApplicability] ||
+                              JUDGMENT_COLORS[overallApplicability] ||
                                 "bg-gray-200 text-gray-500"
                             )}
                           >
-                            {JUDGMENT_LABELS[r.overallApplicability] ||
-                              r.overallApplicability}
+                            {judgmentEmoji(overallApplicability)}{" "}
+                            {JUDGMENT_LABELS[overallApplicability] ||
+                              overallApplicability}
                           </span>
                         </td>
                       </tr>
@@ -650,101 +677,63 @@ export function QUADAS2Panel({ projectId }: QUADAS2PanelProps) {
                             }
                             className="p-0"
                           >
-                            <div className="bg-surface-raised/30 border-b border-border/50 px-6 py-4 space-y-4">
+                            <div className="space-y-3 border-b border-border/50 bg-surface-raised/30 px-6 py-4">
                               {DOMAIN_ORDER.map((domainKey) => {
                                 const domainData = domainMap.get(domainKey);
                                 if (!domainData) return null;
                                 const hasApp =
                                   domainKey !== NO_APPLICABILITY_DOMAIN;
+                                const robLabel =
+                                  JUDGMENT_LABELS[domainData.riskOfBias ?? ""] ||
+                                  domainData.riskOfBias ||
+                                  "Not rated";
+                                const applicabilityLabel = hasApp
+                                  ? JUDGMENT_LABELS[
+                                      domainData.applicabilityConcern ?? ""
+                                    ] ||
+                                    domainData.applicabilityConcern ||
+                                    "Not rated"
+                                  : "Not applicable";
 
                                 return (
-                                  <div key={domainKey} className="space-y-1.5">
-                                    <div className="text-xs font-semibold text-ink">
-                                      {DOMAIN_LABELS[domainKey]}
-                                    </div>
-
-                                    {/* Risk of Bias row */}
-                                    <div className="flex items-start gap-2 pl-2">
-                                      <span
-                                        className={cn(
-                                          "shrink-0 mt-0.5 inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold",
-                                          JUDGMENT_COLORS[
-                                            domainData.riskOfBias ?? ""
-                                          ] || "bg-gray-200 text-gray-500"
-                                        )}
-                                      >
-                                        {judgmentSymbol(domainData.riskOfBias)}
-                                      </span>
-                                      <div className="min-w-0">
-                                        <span className="text-xs text-ink-muted font-medium">
-                                          Risk of Bias:{" "}
-                                        </span>
-                                        <span
-                                          className={cn(
-                                            "text-[10px] px-1.5 py-0.5 rounded font-medium",
-                                            JUDGMENT_COLORS[
-                                              domainData.riskOfBias ?? ""
-                                            ] || "bg-gray-200 text-gray-500"
-                                          )}
-                                        >
-                                          {JUDGMENT_LABELS[
-                                            domainData.riskOfBias ?? ""
-                                          ] || domainData.riskOfBias}
-                                        </span>
-                                        {domainData.rationale && (
-                                          <p className="text-xs text-ink-muted mt-1 leading-relaxed">
-                                            {domainData.rationale}
-                                          </p>
-                                        )}
+                                  <RiskDomainAccordion
+                                    key={domainKey}
+                                    title={DOMAIN_LABELS[domainKey]}
+                                    indicator={judgmentEmoji(domainData.riskOfBias)}
+                                    label={`RoB ${robLabel}`}
+                                    toneClassName={
+                                      JUDGMENT_COLORS[domainData.riskOfBias ?? ""] ||
+                                      "bg-gray-200 text-gray-500"
+                                    }
+                                    open={
+                                      expandedDomainId ===
+                                      `${r.paperId}:${domainKey}`
+                                    }
+                                    onToggle={() =>
+                                      setExpandedDomainId((current) =>
+                                        current === `${r.paperId}:${domainKey}`
+                                          ? null
+                                          : `${r.paperId}:${domainKey}`
+                                      )
+                                    }
+                                    supportingText={domainData.rationale}
+                                    meta={
+                                      hasApp
+                                        ? `Applicability ${judgmentEmoji(domainData.applicabilityConcern)} ${applicabilityLabel}`
+                                        : "Applicability not applicable for this domain"
+                                    }
+                                  >
+                                    <div className="grid gap-2 sm:grid-cols-2">
+                                      <div className="rounded-xl border border-border bg-surface px-3 py-2 text-xs text-ink-muted">
+                                        <span className="font-semibold text-ink">Risk of Bias:</span>{" "}
+                                        {robLabel}
+                                      </div>
+                                      <div className="rounded-xl border border-border bg-surface px-3 py-2 text-xs text-ink-muted">
+                                        <span className="font-semibold text-ink">Applicability:</span>{" "}
+                                        {applicabilityLabel}
                                       </div>
                                     </div>
-
-                                    {/* Applicability Concern row (only for applicable domains) */}
-                                    {hasApp && (
-                                      <div className="flex items-start gap-2 pl-2">
-                                        <span
-                                          className={cn(
-                                            "shrink-0 mt-0.5 inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold",
-                                            JUDGMENT_COLORS[
-                                              domainData.applicabilityConcern ??
-                                                ""
-                                            ] || "bg-gray-200 text-gray-500"
-                                          )}
-                                        >
-                                          {judgmentSymbol(
-                                            domainData.applicabilityConcern
-                                          )}
-                                        </span>
-                                        <div className="min-w-0">
-                                          <span className="text-xs text-ink-muted font-medium">
-                                            Applicability Concern:{" "}
-                                          </span>
-                                          <span
-                                            className={cn(
-                                              "text-[10px] px-1.5 py-0.5 rounded font-medium",
-                                              JUDGMENT_COLORS[
-                                                domainData.applicabilityConcern ??
-                                                  ""
-                                              ] || "bg-gray-200 text-gray-500"
-                                            )}
-                                          >
-                                            {JUDGMENT_LABELS[
-                                              domainData.applicabilityConcern ??
-                                                ""
-                                            ] || domainData.applicabilityConcern}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    )}
-
-                                    {/* N/A note for Flow & Timing */}
-                                    {!hasApp && (
-                                      <div className="pl-7 text-[10px] text-ink-muted/50">
-                                        Applicability concern not applicable for
-                                        this domain.
-                                      </div>
-                                    )}
-                                  </div>
+                                  </RiskDomainAccordion>
                                 );
                               })}
                             </div>
@@ -783,7 +772,7 @@ function JudgmentBadge({ judgment }: { judgment: string | null }) {
       )}
       title={JUDGMENT_LABELS[judgment] || judgment}
     >
-      {judgmentSymbol(judgment)}
+      {judgmentEmoji(judgment)}
     </span>
   );
 }

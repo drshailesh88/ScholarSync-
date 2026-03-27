@@ -88,6 +88,7 @@ export function NOSPanel({ projectId }: NOSPanelProps) {
   );
   const [rationales, setRationales] = useState<Record<string, string>>({});
   const [expandedPaper, setExpandedPaper] = useState<number | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, string[]>>({});
   const [savingPaper, setSavingPaper] = useState<number | null>(null);
   const [loadingPapers, setLoadingPapers] = useState(false);
   const [loadingAssessments, setLoadingAssessments] = useState(false);
@@ -287,6 +288,37 @@ export function NOSPanel({ projectId }: NOSPanelProps) {
       }
     }
     return groups;
+  }
+
+  function categorySummary(
+    category: string,
+    liveScore: NOSAssessment | null,
+    savedAssessment?: NOSAssessment
+  ) {
+    const source = liveScore ?? savedAssessment;
+    if (!source) return { score: 0, max: 0 };
+
+    if (category === "selection") return source.categoryScores.selection;
+    if (category === "comparability") return source.categoryScores.comparability;
+    return source.categoryScores.outcomeOrExposure;
+  }
+
+  function categoryIndicator(score: number, max: number): string {
+    if (max === 0) return "⚪";
+    const ratio = score / max;
+    if (ratio >= 0.75) return "🟢";
+    if (ratio >= 0.4) return "🟡";
+    return "🔴";
+  }
+
+  function toggleCategory(paperId: number, category: string) {
+    setExpandedCategories((prev) => {
+      const key = String(paperId);
+      const current = new Set(prev[key] ?? []);
+      if (current.has(category)) current.delete(category);
+      else current.add(category);
+      return { ...prev, [key]: Array.from(current) };
+    });
   }
 
   // -------------------------------------------------------------------------
@@ -545,68 +577,121 @@ export function NOSPanel({ projectId }: NOSPanelProps) {
 
                       {/* NOS items grouped by category */}
                       {groupByCategory().map((group) => (
-                        <div key={group.category} className="space-y-3">
-                          <h4 className="text-sm font-semibold text-ink border-b border-border/50 pb-1">
-                            {group.label}
-                          </h4>
-                          {group.items.map((item) => {
-                            const selectedIdx = selections[item.id];
-                            return (
-                              <div key={item.id} className="space-y-1.5 pl-2">
-                                <p className="text-sm text-ink">
-                                  <span className="font-medium text-brand">
-                                    {item.id}.
-                                  </span>{" "}
-                                  {item.question}
-                                  <span className="ml-1 text-xs text-ink-muted">
-                                    (max {item.maxStars}{" "}
-                                    {"★".repeat(item.maxStars)})
-                                  </span>
-                                </p>
-                                <div className="space-y-1 pl-4">
-                                  {item.options.map((option, optIdx) => (
-                                    <label
-                                      key={optIdx}
-                                      className={cn(
-                                        "flex items-start gap-2 rounded-lg px-3 py-1.5 cursor-pointer text-sm transition-colors",
-                                        selectedIdx === optIdx
-                                          ? "bg-brand/10 border border-brand/30"
-                                          : "hover:bg-surface-raised/60 border border-transparent"
-                                      )}
-                                    >
-                                      <input
-                                        type="radio"
-                                        name={`nos-${paper.paperId}-${item.id}`}
-                                        checked={selectedIdx === optIdx}
-                                        onChange={() =>
-                                          setSelection(
-                                            paper.paperId,
-                                            item.id,
-                                            optIdx
-                                          )
-                                        }
-                                        className="mt-0.5 accent-brand"
-                                      />
-                                      <span className="text-ink flex-1">
-                                        {option.label}
-                                      </span>
-                                      <span
-                                        className={cn(
-                                          "shrink-0 text-xs font-mono",
-                                          option.stars > 0
-                                            ? "text-amber-400"
-                                            : "text-ink-muted"
-                                        )}
-                                      >
-                                        {"★".repeat(option.stars)}
-                                        {option.stars === 0 && "No star"}
-                                      </span>
-                                    </label>
-                                  ))}
-                                </div>
-                              </div>
+                        <div
+                          key={group.category}
+                          className="overflow-hidden rounded-xl border border-border"
+                        >
+                          {(() => {
+                            const summary = categorySummary(
+                              group.category,
+                              liveScore,
+                              savedAssessment
                             );
-                          })}
+                            const isCategoryExpanded = (
+                              expandedCategories[String(paper.paperId)] ?? []
+                            ).includes(group.category);
+
+                            return (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    toggleCategory(paper.paperId, group.category)
+                                  }
+                                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-raised/40"
+                                >
+                                  {isCategoryExpanded ? (
+                                    <CaretDown
+                                      weight="bold"
+                                      className="h-4 w-4 shrink-0 text-ink-muted"
+                                    />
+                                  ) : (
+                                    <CaretRight
+                                      weight="bold"
+                                      className="h-4 w-4 shrink-0 text-ink-muted"
+                                    />
+                                  )}
+                                  <span className="text-lg leading-none">
+                                    {categoryIndicator(summary.score, summary.max)}
+                                  </span>
+                                  <div className="min-w-0 flex-1">
+                                    <h4 className="text-sm font-semibold text-ink">
+                                      {group.label}
+                                    </h4>
+                                    <p className="mt-1 text-xs text-ink-muted">
+                                      Supporting detail: {summary.score}/{summary.max} stars awarded across {group.items.length} criteria.
+                                    </p>
+                                  </div>
+                                  <span className="rounded-full border border-border bg-surface px-2 py-0.5 text-xs font-semibold text-ink">
+                                    {summary.score}/{summary.max}
+                                  </span>
+                                </button>
+
+                                {isCategoryExpanded && (
+                                  <div className="space-y-3 border-t border-border bg-surface-raised/20 px-4 py-4">
+                                    {group.items.map((item) => {
+                                      const selectedIdx = selections[item.id];
+                                      return (
+                                        <div key={item.id} className="space-y-1.5 pl-2">
+                                          <p className="text-sm text-ink">
+                                            <span className="font-medium text-brand">
+                                              {item.id}.
+                                            </span>{" "}
+                                            {item.question}
+                                            <span className="ml-1 text-xs text-ink-muted">
+                                              (max {item.maxStars}{" "}
+                                              {"★".repeat(item.maxStars)})
+                                            </span>
+                                          </p>
+                                          <div className="space-y-1 pl-4">
+                                            {item.options.map((option, optIdx) => (
+                                              <label
+                                                key={optIdx}
+                                                className={cn(
+                                                  "flex items-start gap-2 rounded-lg px-3 py-1.5 cursor-pointer text-sm transition-colors",
+                                                  selectedIdx === optIdx
+                                                    ? "bg-brand/10 border border-brand/30"
+                                                    : "hover:bg-surface-raised/60 border border-transparent"
+                                                )}
+                                              >
+                                                <input
+                                                  type="radio"
+                                                  name={`nos-${paper.paperId}-${item.id}`}
+                                                  checked={selectedIdx === optIdx}
+                                                  onChange={() =>
+                                                    setSelection(
+                                                      paper.paperId,
+                                                      item.id,
+                                                      optIdx
+                                                    )
+                                                  }
+                                                  className="mt-0.5 accent-brand"
+                                                />
+                                                <span className="text-ink flex-1">
+                                                  {option.label}
+                                                </span>
+                                                <span
+                                                  className={cn(
+                                                    "shrink-0 text-xs font-mono",
+                                                    option.stars > 0
+                                                      ? "text-amber-400"
+                                                      : "text-ink-muted"
+                                                  )}
+                                                >
+                                                  {"★".repeat(option.stars)}
+                                                  {option.stars === 0 && "No star"}
+                                                </span>
+                                              </label>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
                         </div>
                       ))}
 

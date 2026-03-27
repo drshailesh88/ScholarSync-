@@ -13,6 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { RiskDomainAccordion } from "./RiskDomainAccordion";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -104,24 +105,32 @@ const JUDGMENT_LABELS: Record<string, string> = {
   high: "Serious",
 };
 
-function judgmentSymbol(judgment: string): string {
+function judgmentEmoji(judgment: string): string {
   switch (judgment) {
     case "Low":
     case "low":
-      return "+";
+      return "🟢";
     case "Moderate":
     case "some_concerns":
-      return "~";
+      return "🟡";
     case "Serious":
-      return "!";
     case "Critical":
     case "high":
-      return "-";
-    case "No information":
-      return "?";
+      return "🔴";
     default:
-      return "?";
+      return "⚪";
   }
+}
+
+function computeOverallROBINSI(domains: ROBINSIDomain[]): string {
+  const judgments = domains.map((domain) => domain.judgment);
+  if (judgments.includes("Critical")) return "Critical";
+  if (judgments.includes("Serious") || judgments.includes("high")) return "Serious";
+  if (judgments.includes("Moderate") || judgments.includes("some_concerns")) {
+    return "Moderate";
+  }
+  if (judgments.includes("Low") || judgments.includes("low")) return "Low";
+  return "No information";
 }
 
 // ---------------------------------------------------------------------------
@@ -133,6 +142,7 @@ export function ROBINSIPanel({ projectId }: ROBINSIPanelProps) {
   const [papers, setPapers] = useState<ImportedPaper[]>([]);
   const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [expandedDomainId, setExpandedDomainId] = useState<string | null>(null);
 
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [isLoadingPapers, setIsLoadingPapers] = useState(false);
@@ -545,6 +555,7 @@ export function ROBINSIPanel({ projectId }: ROBINSIPanelProps) {
               <tbody>
                 {results.map((r) => {
                   const isExpanded = expandedRow === r.paperId;
+                  const overallJudgment = computeOverallROBINSI(r.domains);
                   return (
                     <Fragment key={r.paperId}>
                       <tr
@@ -591,7 +602,7 @@ export function ROBINSIPanel({ projectId }: ROBINSIPanelProps) {
                               >
                                 {judgment === "—"
                                   ? "—"
-                                  : judgmentSymbol(judgment)}
+                                  : judgmentEmoji(judgment)}
                               </span>
                             </td>
                           );
@@ -600,12 +611,13 @@ export function ROBINSIPanel({ projectId }: ROBINSIPanelProps) {
                           <span
                             className={cn(
                               "px-2 py-1 rounded text-xs font-medium",
-                              JUDGMENT_COLORS[r.overallJudgment] ||
+                              JUDGMENT_COLORS[overallJudgment] ||
                                 "bg-gray-200 text-gray-500"
                             )}
                           >
-                            {JUDGMENT_LABELS[r.overallJudgment] ||
-                              r.overallJudgment}
+                            {judgmentEmoji(overallJudgment)}{" "}
+                            {JUDGMENT_LABELS[overallJudgment] ||
+                              overallJudgment}
                           </span>
                         </td>
                       </tr>
@@ -617,50 +629,46 @@ export function ROBINSIPanel({ projectId }: ROBINSIPanelProps) {
                             colSpan={DOMAIN_ORDER.length + 3}
                             className="p-0"
                           >
-                            <div className="bg-surface-raised/30 border-b border-border/50 px-6 py-4 space-y-3">
+                            <div className="space-y-3 border-b border-border/50 bg-surface-raised/30 px-6 py-4">
                               {DOMAIN_ORDER.map((domainKey) => {
                                 const domain = r.domains.find(
                                   (d) => d.domain === domainKey
                                 );
                                 if (!domain) return null;
                                 return (
-                                  <div
+                                  <RiskDomainAccordion
                                     key={domainKey}
-                                    className="flex items-start gap-3"
+                                    title={
+                                      ROBINS_I_DOMAIN_LABELS[domainKey] ||
+                                      domainKey
+                                    }
+                                    indicator={judgmentEmoji(domain.judgment)}
+                                    label={
+                                      JUDGMENT_LABELS[domain.judgment] ||
+                                      domain.judgment
+                                    }
+                                    toneClassName={
+                                      JUDGMENT_COLORS[domain.judgment] ||
+                                      "bg-gray-200 text-gray-500"
+                                    }
+                                    open={
+                                      expandedDomainId ===
+                                      `${r.paperId}:${domainKey}`
+                                    }
+                                    onToggle={() =>
+                                      setExpandedDomainId((current) =>
+                                        current === `${r.paperId}:${domainKey}`
+                                          ? null
+                                          : `${r.paperId}:${domainKey}`
+                                      )
+                                    }
+                                    supportingText={domain.rationale}
+                                    meta="Supporting text"
                                   >
-                                    <span
-                                      className={cn(
-                                        "shrink-0 mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold",
-                                        JUDGMENT_COLORS[domain.judgment] ||
-                                          "bg-gray-200 text-gray-500"
-                                      )}
-                                    >
-                                      {judgmentSymbol(domain.judgment)}
-                                    </span>
-                                    <div className="min-w-0">
-                                      <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="text-xs font-semibold text-ink">
-                                          {ROBINS_I_DOMAIN_LABELS[domainKey] ||
-                                            domainKey}
-                                        </span>
-                                        <span
-                                          className={cn(
-                                            "text-[10px] px-1.5 py-0.5 rounded font-medium",
-                                            JUDGMENT_COLORS[domain.judgment] ||
-                                              "bg-gray-200 text-gray-500"
-                                          )}
-                                        >
-                                          {JUDGMENT_LABELS[domain.judgment] ||
-                                            domain.judgment}
-                                        </span>
-                                      </div>
-                                      {domain.rationale && (
-                                        <p className="text-xs text-ink-muted mt-1 leading-relaxed">
-                                          {domain.rationale}
-                                        </p>
-                                      )}
+                                    <div className="text-[11px] text-ink-muted">
+                                      Overall ROBINS-I severity is recalculated from the worst domain shown here.
                                     </div>
-                                  </div>
+                                  </RiskDomainAccordion>
                                 );
                               })}
                             </div>
