@@ -1,7 +1,6 @@
 "use server";
 
 import { db } from "@/lib/db";
-import * as dbSchema from "@/lib/db/schema";
 import {
   feedSources,
   userFeedSubscriptions,
@@ -15,9 +14,9 @@ import { discoverFeeds, validateFeedUrl } from "@/lib/feeds/feed-discovery";
 import { createPubMedSearchFeed } from "@/lib/feeds/pubmed-feed";
 import {
   JOURNAL_FEEDS,
-  FEED_CATEGORIES,
-  FEED_SPECIALTIES,
 } from "@/data/journal-feeds";
+import { getDomainConfig } from "@/lib/search/domains";
+import { getCurrentUserDomainId } from "@/lib/search/domains/user-domain";
 import type { FeedSubscription, FeedArticleWithStatus } from "@/types/feed";
 
 // =====================================================================
@@ -814,11 +813,12 @@ export async function getCuratedFeeds(filters: {
   } | null;
 }> {
   const userId = await getCurrentUserId();
+  const domainId = await getCurrentUserDomainId(userId);
+  const domainConfig = getDomainConfig(domainId);
   const search = filters.search?.trim() ?? "";
   const shouldSuggestPubMed = search.length >= 3;
   const shouldPersonalize =
     !search && !filters.category && !filters.specialty;
-  const usersTable = dbSchema.users;
 
   // Get user's subscribed feed URLs
   const subscribedRows = await db
@@ -828,28 +828,20 @@ export async function getCuratedFeeds(filters: {
     .where(eq(userFeedSubscriptions.userId, userId));
 
   const subscribedUrls = new Set(subscribedRows.map((r) => r.feedUrl));
-  let userSpecialties = new Set<string>();
-
-  if (shouldPersonalize && usersTable) {
-    try {
-      const [user] = await db
-        .select({ specialty: usersTable.specialty })
-        .from(usersTable)
-        .where(eq(usersTable.id, userId));
-
-      userSpecialties = new Set(
-        (user?.specialty ?? "")
-          .split(",")
-          .map((value) => value.trim().toLowerCase())
-          .filter(Boolean)
-      );
-    } catch {
-      userSpecialties = new Set();
-    }
-  }
+  const visibleCategorySet =
+    domainConfig.id === "multidisciplinary"
+      ? null
+      : new Set(domainConfig.journalCategories);
+  const suggestedCategorySet = new Set(
+    domainConfig.journalCategories.map((category) => category.toLowerCase())
+  );
 
   // Filter JOURNAL_FEEDS
-  let filtered = JOURNAL_FEEDS;
+  const domainFeeds = visibleCategorySet
+    ? JOURNAL_FEEDS.filter((feed) => visibleCategorySet.has(feed.category))
+    : JOURNAL_FEEDS;
+
+  let filtered = domainFeeds;
 
   if (filters.category) {
     filtered = filtered.filter((f) => f.category === filters.category);
@@ -879,8 +871,7 @@ export async function getCuratedFeeds(filters: {
     isSubscribed: subscribedUrls.has(f.feedUrl),
     isSuggested:
       shouldPersonalize &&
-      (userSpecialties.has(f.specialty.toLowerCase()) ||
-        userSpecialties.has(f.category.toLowerCase())),
+      suggestedCategorySet.has(f.category.toLowerCase()),
   }));
 
   const orderedFeeds = shouldPersonalize
@@ -897,8 +888,8 @@ export async function getCuratedFeeds(filters: {
 
   return {
     feeds: orderedFeeds,
-    categories: [...FEED_CATEGORIES],
-    specialties: [...FEED_SPECIALTIES],
+    categories: [...new Set(domainFeeds.map((feed) => feed.category))],
+    specialties: [...new Set(domainFeeds.map((feed) => feed.specialty))],
     suggestedFeeds,
     pubmedSuggestion: shouldSuggestPubMed
       ? {

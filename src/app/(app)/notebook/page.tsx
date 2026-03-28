@@ -51,6 +51,7 @@ import { getExtractionForPaper, verifyExtraction } from "@/lib/actions/extractio
 import { extractUploadedPdf } from "@/lib/actions/pdf-advanced";
 import { ingestUrl } from "@/lib/actions/url-ingest";
 import { getFollowUpSuggestions } from "@/lib/actions/follow-up-suggestions";
+import { useDomain } from "@/components/providers/domain-provider";
 import type { FollowUpSuggestion } from "@/lib/ai/prompts/follow-up-suggestions";
 
 interface ChatMessage {
@@ -274,6 +275,7 @@ function ExtractionCard({
 }
 
 export default function NotebookPage(): React.ReactElement {
+  const domain = useDomain();
   const [files, setFiles] = useState<SourceFile[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -1133,7 +1135,7 @@ export default function NotebookPage(): React.ReactElement {
                 </div>
                 <div className="flex items-center gap-1">
                   {/* Extract Facts button */}
-                  {file.paperId && file.status === "ready" && (
+                  {domain?.features.picoExtraction !== false && file.paperId && file.status === "ready" && (
                     <>
                       {file.isExtracted || extractions.has(file.paperId) ? (
                         <button
@@ -1170,7 +1172,7 @@ export default function NotebookPage(): React.ReactElement {
                 </div>
               </div>
               {/* Extraction card expanded inline */}
-              {file.paperId && expandedExtraction === file.paperId && extractions.has(file.paperId) && (
+              {domain?.features.picoExtraction !== false && file.paperId && expandedExtraction === file.paperId && extractions.has(file.paperId) && (
                 <div className="ml-6 mr-2 mb-1">
                   <ExtractionCard
                     extraction={extractions.get(file.paperId)!}

@@ -7,6 +7,7 @@ import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { db } from "@/lib/db";
 import { paperExtractions } from "@/lib/db/schema";
+import { getCurrentUserDomainConfig } from "@/lib/search/domains/user-domain";
 
 const picoSchema = z.object({
   population: z.string().describe("Study population/participants"),
@@ -53,6 +54,14 @@ export async function POST(req: Request) {
 
   try {
     const userId = await getCurrentUserId();
+    const domain = await getCurrentUserDomainConfig(userId);
+
+    if (!domain.features.picoExtraction) {
+      return NextResponse.json(
+        { error: "PICO extraction is not available for this research domain" },
+        { status: 400 }
+      );
+    }
 
     const rateLimitResponse = await checkRateLimit(userId, "extract-pico", RATE_LIMITS.ai);
     if (rateLimitResponse) return rateLimitResponse;

@@ -4,6 +4,7 @@ import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
+import { searchArxiv } from "@/lib/search/sources/arxiv";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
 import { getDomainEvidenceLevel } from "@/lib/search/evidence-level";
@@ -14,6 +15,20 @@ import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { lookupJournalQuality } from "@/lib/search/journal-quality";
 import { getDevelopmentFallbackResults } from "@/lib/search/dev-fallback";
+import { getCurrentUserDomainConfig } from "@/lib/search/domains/user-domain";
+import type { SourceId } from "@/lib/search/domains";
+import type { UnifiedSearchResult } from "@/types/search";
+
+type SourceSearchResponse = {
+  results: UnifiedSearchResult[];
+  total: number;
+};
+
+type SourceDefinition = {
+  sourceId: SourceId;
+  label: string;
+  run: () => Promise<SourceSearchResponse>;
+};
 
 async function withSourceTimeout<T>(
   label: string,
@@ -70,7 +85,10 @@ export async function GET(req: Request) {
   const openAccessOnly = searchParams.get("openAccessOnly") === "true";
   const augment = searchParams.get("augment") !== "false";
   const sort = searchParams.get("sort") || "relevance";
-  const domain = getDomainConfig(searchParams.get("domain"));
+  const requestedDomainId = searchParams.get("domain");
+  const domain = requestedDomainId
+    ? getDomainConfig(requestedDomainId)
+    : await getCurrentUserDomainConfig(userId);
 
   if (!q) {
     return NextResponse.json(
@@ -114,112 +132,144 @@ export async function GET(req: Request) {
     // We need (page+1)*perPage results after fusion to serve the slice,
     // so ask each source for that many (capped at 100 for API limits).
     const neededPerSource = Math.min((page + 1) * perPage, 100);
-    const [pubmedResult, s2Result, oaResult, ctResult] =
-      await Promise.allSettled([
-        withSourceTimeout(
-          "PubMed",
+    const sourceDefinitions: SourceDefinition[] = [];
+
+    if (domain.sources.includes("pubmed")) {
+      sourceDefinitions.push({
+        sourceId: "pubmed",
+        label: "PubMed",
+        run: () =>
           searchPubMed(pubmedQuery, {
             maxResults: neededPerSource,
             page: 0,
             yearStart,
             yearEnd,
-          })
-        ),
-        withSourceTimeout(
-          "Semantic Scholar",
+          }),
+      });
+    }
+
+    if (domain.sources.includes("semantic_scholar")) {
+      sourceDefinitions.push({
+        sourceId: "semantic_scholar",
+        label: "Semantic Scholar",
+        run: () =>
           searchSemanticScholar(s2Query, {
             limit: neededPerSource,
             offset: 0,
             yearStart,
             yearEnd,
-          })
-        ),
-        withSourceTimeout(
-          "OpenAlex",
+          }),
+      });
+    }
+
+    if (domain.sources.includes("openalex")) {
+      sourceDefinitions.push({
+        sourceId: "openalex",
+        label: "OpenAlex",
+        run: () =>
           searchOpenAlex(oaQuery, {
             limit: neededPerSource,
             page: 1,
             yearStart,
             yearEnd,
             onlyOpenAccess: openAccessOnly,
-          })
-        ),
-        withSourceTimeout(
-          "ClinicalTrials.gov",
+          }),
+      });
+    }
+
+    if (
+      domain.features.clinicalTrialsSearch &&
+      domain.sources.includes("clinical_trials")
+    ) {
+      sourceDefinitions.push({
+        sourceId: "clinical_trials",
+        label: "ClinicalTrials.gov",
+        run: () =>
           searchClinicalTrials(q, {
             limit: perPage,
             yearStart,
             yearEnd,
-          })
-        ),
-      ]);
+          }),
+      });
+    }
 
-    let pubmedResults =
-      pubmedResult.status === "fulfilled" ? pubmedResult.value.results : [];
-    let s2Results =
-      s2Result.status === "fulfilled" ? s2Result.value.results : [];
-    let oaResults =
-      oaResult.status === "fulfilled" ? oaResult.value.results : [];
-    let ctResults =
-      ctResult.status === "fulfilled" ? ctResult.value.results : [];
+    if (domain.sources.includes("arxiv")) {
+      sourceDefinitions.push({
+        sourceId: "arxiv",
+        label: "arXiv",
+        run: () =>
+          searchArxiv(q, {
+            maxResults: neededPerSource,
+            start: 0,
+            yearStart,
+            yearEnd,
+          }),
+      });
+    }
+
+    const sourceResults = await Promise.allSettled(
+      sourceDefinitions.map((source) =>
+        withSourceTimeout(source.label, source.run())
+      )
+    );
+
+    const resultsBySource: Partial<Record<SourceId, UnifiedSearchResult[]>> = {};
+
+    sourceDefinitions.forEach((source, index) => {
+      const result = sourceResults[index];
+      if (result.status === "fulfilled") {
+        resultsBySource[source.sourceId] = result.value.results;
+        return;
+      }
+
+      resultsBySource[source.sourceId] = [];
+      log.warn(`${source.label} search degraded`, {
+        query: q,
+        error: String(result.reason),
+      });
+    });
 
     if (
-      pubmedResults.length === 0 &&
-      s2Results.length === 0 &&
-      oaResults.length === 0 &&
-      ctResults.length === 0
+      sourceDefinitions.length > 0 &&
+      sourceDefinitions.every(
+        (source) => (resultsBySource[source.sourceId] ?? []).length === 0
+      )
     ) {
       const fallback = await getDevelopmentFallbackResults(q, neededPerSource);
       if (fallback) {
-        pubmedResults = fallback.pubmedResults;
-        s2Results = fallback.semanticScholarResults;
-        oaResults = fallback.openAlexResults;
-        ctResults = fallback.clinicalTrialsResults;
+        const fallbackBySource: Partial<Record<SourceId, UnifiedSearchResult[]>> = {
+          pubmed: fallback.pubmedResults,
+          semantic_scholar: fallback.semanticScholarResults,
+          openalex: fallback.openAlexResults,
+          clinical_trials: fallback.clinicalTrialsResults,
+        };
+
+        sourceDefinitions.forEach((source) => {
+          if (fallbackBySource[source.sourceId]) {
+            resultsBySource[source.sourceId] = fallbackBySource[source.sourceId];
+          }
+        });
+
         log.info("Unified search served development fallback results", {
           query: q,
         });
       }
     }
 
-    if (pubmedResult.status === "rejected") {
-      log.warn("PubMed search degraded", {
-        query: q,
-        error: String(pubmedResult.reason),
-      });
-    }
-    if (s2Result.status === "rejected") {
-      log.warn("Semantic Scholar search degraded", {
-        query: q,
-        error: String(s2Result.reason),
-      });
-    }
-    if (oaResult.status === "rejected") {
-      log.warn("OpenAlex search degraded", {
-        query: q,
-        error: String(oaResult.reason),
-      });
-    }
-    if (ctResult.status === "rejected") {
-      log.warn("ClinicalTrials search degraded", {
-        query: q,
-        error: String(ctResult.reason),
-      });
-    }
-
-    const sourceCounts = {
-      pubmed: pubmedResults.length,
-      semanticScholar: s2Results.length,
-      openAlex: oaResults.length,
-      clinicalTrials: ctResults.length,
-    };
+    const sourceCounts = Object.fromEntries(
+      sourceDefinitions.map((source) => [
+        source.sourceId,
+        (resultsBySource[source.sourceId] ?? []).length,
+      ])
+    );
 
     // Step 3: RRF fusion
-    let fused = reciprocalRankFusion([
-      { source: "pubmed", results: pubmedResults },
-      { source: "semantic_scholar", results: s2Results },
-      { source: "openalex", results: oaResults },
-      { source: "clinical_trials", results: ctResults },
-    ]);
+    let fused = reciprocalRankFusion(
+      sourceDefinitions.map((source) => ({
+        source: source.sourceId,
+        results: resultsBySource[source.sourceId] ?? [],
+      }))
+    );
 
     // Step 4: Rerank (if Cohere key available)
     fused = await rerankResults(q, fused);

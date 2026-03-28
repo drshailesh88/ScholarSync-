@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Check } from "@phosphor-icons/react";
+import { useDomain } from "@/components/providers/domain-provider";
 import { cn } from "@/lib/utils";
 import { SearchInput } from "@/components/ui/search-input";
 import { useFeedStore } from "@/stores/feed-store";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { JournalDirectoryEntry } from "@/types/feed";
+import type { DomainConfig } from "@/lib/search/domains";
 
 interface DiscoverJournal extends JournalDirectoryEntry {
   isSubscribed: boolean;
@@ -25,7 +27,19 @@ interface DiscoverResponse {
   } | null;
 }
 
+export function filterFeedsForDomain<T extends { category: string }>(
+  feeds: T[],
+  domain: Pick<DomainConfig, "id" | "journalCategories"> | null,
+) {
+  if (!domain || domain.id === "multidisciplinary") {
+    return feeds;
+  }
+
+  return feeds.filter((feed) => domain.journalCategories.includes(feed.category));
+}
+
 export function JournalBrowser() {
+  const domain = useDomain();
   const subscriptions = useFeedStore((s) => s.subscriptions);
   const subscribe = useFeedStore((s) => s.subscribe);
   const subscribePubMed = useFeedStore((s) => s.subscribePubMed);
@@ -88,9 +102,26 @@ export function JournalBrowser() {
 
   const trimmedSearch = search.trim();
   const hasSearch = trimmedSearch.length > 0;
-  const feeds = data?.feeds ?? data?.journals ?? [];
-  const suggestedFeeds = hasSearch ? [] : data?.suggestedFeeds ?? [];
+  const feeds = useMemo(
+    () => filterFeedsForDomain(data?.feeds ?? data?.journals ?? [], domain),
+    [data?.feeds, data?.journals, domain]
+  );
+  const suggestedFeeds = useMemo(
+    () =>
+      hasSearch
+        ? []
+        : filterFeedsForDomain(data?.suggestedFeeds ?? [], domain),
+    [data?.suggestedFeeds, domain, hasSearch]
+  );
   const browseFeeds = hasSearch ? feeds : feeds.filter((feed) => !feed.isSuggested);
+  const visibleCategories = useMemo(
+    () =>
+      filterFeedsForDomain(
+        (data?.categories ?? []).map((item) => ({ category: item })),
+        domain
+      ).map((item) => item.category),
+    [data?.categories, domain]
+  );
 
   const handleSubscribe = async (feedUrl: string) => {
     setSubscribingUrl(feedUrl);
@@ -224,7 +255,7 @@ export function JournalBrowser() {
           className="flex-1 rounded-xl border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
         >
           <option value="">All Categories</option>
-          {data?.categories.map((item) => (
+          {visibleCategories.map((item) => (
             <option key={item} value={item}>
               {item}
             </option>
@@ -311,7 +342,7 @@ export function JournalBrowser() {
               <div>
                 <h3 className="text-sm font-semibold text-ink">Suggested for you</h3>
                 <p className="mt-1 text-xs text-ink-muted">
-                  Personalized from the specialties you selected during onboarding.
+                  Personalized for your current research domain.
                 </p>
               </div>
               {renderJournalList(suggestedFeeds, "No personalized suggestions yet.")}

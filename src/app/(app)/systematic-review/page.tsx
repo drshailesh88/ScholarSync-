@@ -9,6 +9,7 @@ import {
   CircleNotch,
   ArrowRight,
 } from "@phosphor-icons/react";
+import { useDomain } from "@/components/providers/domain-provider";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { ReviewTypeSelector } from "@/components/systematic-review/ReviewTypeSelector";
@@ -75,6 +76,7 @@ function relativeTime(dateStr: string) {
 
 export default function SystematicReviewHubPage() {
   const router = useRouter();
+  const domain = useDomain();
   const [projects, setProjects] = useState<SRProject[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
@@ -141,6 +143,26 @@ export default function SystematicReviewHubPage() {
     } finally {
       setIsCreating(false);
     }
+  }
+
+  if (domain?.features.systematicReview === false) {
+    return (
+      <div className="mx-auto flex max-w-3xl flex-col gap-4 px-6 py-12">
+        <h1 className="text-2xl font-semibold text-ink">
+          Systematic Review is not available for {domain.label}
+        </h1>
+        <p className="text-sm text-ink-muted">
+          This workspace is configured for a research domain that does not yet
+          include the systematic review module.
+        </p>
+        <Link
+          href="/dashboard"
+          className="inline-flex w-fit items-center rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-hover"
+        >
+          Back to dashboard
+        </Link>
+      </div>
+    );
   }
 
   return (
