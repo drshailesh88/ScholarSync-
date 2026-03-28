@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import {
   Article,
   CircleNotch,
@@ -21,9 +21,11 @@ import { cn } from "@/lib/utils";
 // ---------------------------------------------------------------------------
 
 type ManuscriptSection =
+  | "introduction"
   | "methods"
   | "results"
-  | "discussion";
+  | "discussion"
+  | "abstract";
 
 type CitationStyle = "apa" | "vancouver" | "harvard" | "chicago";
 type ExportFormat = "docx" | "latex" | "plaintext";
@@ -44,6 +46,11 @@ interface ManuscriptPanelProps {
 
 const SECTIONS: { key: ManuscriptSection; label: string; description: string }[] = [
   {
+    key: "introduction",
+    label: "Introduction",
+    description: "Background, rationale, objectives, and PICO framework for the review",
+  },
+  {
     key: "methods",
     label: "Methods",
     description: "Protocol, search strategy, eligibility, screening, data extraction, RoB 2, synthesis",
@@ -57,6 +64,11 @@ const SECTIONS: { key: ManuscriptSection; label: string; description: string }[]
     key: "discussion",
     label: "Discussion",
     description: "Summary of findings, comparison with literature, strengths, limitations, implications",
+  },
+  {
+    key: "abstract",
+    label: "Abstract",
+    description: "Structured abstract summarising objectives, methods, results, and conclusions",
   },
 ];
 
@@ -88,11 +100,20 @@ function countWords(text: string): number {
 
 export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
   const [sections, setSections] = useState<Record<ManuscriptSection, SectionData | null>>({
+    introduction: null,
     methods: null,
     results: null,
     discussion: null,
+    abstract: null,
   });
-  const [activeTab, setActiveTab] = useState<ManuscriptSection>("methods");
+  const [activeTab, setActiveTab] = useState<ManuscriptSection>("introduction");
+  const [customInstructions, setCustomInstructions] = useState<Record<ManuscriptSection, string>>({
+    introduction: "",
+    methods: "",
+    results: "",
+    discussion: "",
+    abstract: "",
+  });
   const [generatingSection, setGeneratingSection] = useState<ManuscriptSection | null>(null);
   const [isGeneratingAll, setIsGeneratingAll] = useState(false);
   const [editingSection, setEditingSection] = useState<ManuscriptSection | null>(null);
@@ -107,9 +128,11 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
   // Word counts per section
   const wordCounts = useMemo(() => {
     const counts: Record<ManuscriptSection, number> = {
+      introduction: 0,
       methods: 0,
       results: 0,
       discussion: 0,
+      abstract: 0,
     };
     for (const key of Object.keys(counts) as ManuscriptSection[]) {
       const data = sections[key];
@@ -137,6 +160,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
             projectId,
             section,
             citationStyle,
+            customInstructions: customInstructions[section] || undefined,
           }),
         });
 
@@ -158,7 +182,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
         setGeneratingSection(null);
       }
     },
-    [projectId, citationStyle]
+    [projectId, citationStyle, customInstructions]
   );
 
   // Generate all sections sequentially
@@ -166,7 +190,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     setIsGeneratingAll(true);
     setError(null);
 
-    const order: ManuscriptSection[] = ["methods", "results", "discussion"];
+    const order: ManuscriptSection[] = ["introduction", "methods", "results", "discussion", "abstract"];
 
     for (const section of order) {
       setActiveTab(section);
@@ -179,6 +203,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
             projectId,
             section,
             citationStyle,
+            customInstructions: customInstructions[section] || undefined,
           }),
         });
 
@@ -203,7 +228,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     }
 
     setIsGeneratingAll(false);
-  }, [projectId, citationStyle]);
+  }, [projectId, citationStyle, customInstructions]);
 
   // Editing
   const startEdit = (section: ManuscriptSection) => {
@@ -230,6 +255,25 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     setEditingSection(null);
     setEditContent("");
   };
+
+  // Auto-save: debounce editContent changes
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!editingSection || !sections[editingSection]) return;
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(() => {
+      setSections((prev: Record<ManuscriptSection, SectionData | null>) => ({
+        ...prev,
+        [editingSection]: {
+          ...prev[editingSection]!,
+          content: editContent,
+        },
+      }));
+    }, 1500);
+    return () => {
+      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    };
+  }, [editContent, editingSection]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Copy section
   const copySection = (section: ManuscriptSection) => {
@@ -258,7 +302,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
 
       if (format === "plaintext") {
         // Client-side plain text export
-        const sectionOrder: ManuscriptSection[] = ["methods", "results", "discussion"];
+        const sectionOrder: ManuscriptSection[] = ["introduction", "methods", "results", "discussion", "abstract"];
         const lines = ["SYSTEMATIC REVIEW MANUSCRIPT DRAFT", "", `Citation Style: ${citationStyle.toUpperCase()}`, ""];
 
         for (const key of sectionOrder) {
@@ -283,7 +327,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
         URL.revokeObjectURL(url);
       } else if (format === "latex") {
         // Client-side LaTeX export
-        const sectionOrder: ManuscriptSection[] = ["methods", "results", "discussion"];
+        const sectionOrder: ManuscriptSection[] = ["introduction", "methods", "results", "discussion", "abstract"];
         const lines = [
           "\\documentclass[12pt]{article}",
           "\\usepackage[utf8]{inputenc}",
@@ -570,6 +614,25 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
                 )}
               </button>
             </div>
+          </div>
+
+          {/* Custom instructions per section */}
+          <div className="mb-3">
+            <label className="text-[11px] text-ink-muted font-medium block mb-1">
+              Custom instructions for this section
+            </label>
+            <input
+              type="text"
+              value={customInstructions[activeTab]}
+              onChange={(e) =>
+                setCustomInstructions((prev) => ({
+                  ...prev,
+                  [activeTab]: e.target.value,
+                }))
+              }
+              placeholder="e.g. Focus on RCTs only, include subgroup analyses..."
+              className="w-full px-3 py-1.5 bg-surface-raised border border-border rounded-md text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-brand/30"
+            />
           </div>
 
           {/* Word count badge for active section */}

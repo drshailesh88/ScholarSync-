@@ -185,6 +185,8 @@ const DEFAULT_PICO: PICOInput = {
 // Store
 // ---------------------------------------------------------------------------
 
+const STORAGE_KEY = "scholarsync-systematic-review";
+
 export const useSystematicReviewStore = create<SystematicReviewStore>()(
   persist(
     (set) => ({
@@ -261,7 +263,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
         set({ isLoadingProjects: loading }),
     }),
     {
-      name: "scholarsync-systematic-review",
+      name: STORAGE_KEY,
       partialize: (state) => ({
         projectId: state.projectId,
         projectTitle: state.projectTitle,
@@ -275,3 +277,18 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
     }
   )
 );
+
+// Cross-tab sync: listen for storage events from other tabs
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (e) => {
+    if (e.key !== STORAGE_KEY || !e.newValue) return;
+    try {
+      const { state } = JSON.parse(e.newValue);
+      if (state) {
+        useSystematicReviewStore.setState(state);
+      }
+    } catch {
+      // Ignore malformed storage
+    }
+  });
+}
