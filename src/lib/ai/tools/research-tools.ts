@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { tool } from "ai";
 import { z } from "zod";
 import type { DomainConfig } from "@/lib/search/domains/types";
@@ -28,7 +27,12 @@ async function getXmlParser() {
   });
 }
 
-function parsePubMedArticle(node: any) {
+/** Recursive XML node type from fast-xml-parser.
+ *  Uses permissive values since XML nodes are arbitrarily nested. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type XmlNode = Record<string, any>; // single centralized any for XML node access
+
+function parsePubMedArticle(node: XmlNode) {
   const mc = node?.MedlineCitation;
   const art = mc?.Article;
   const pmid = String(mc?.PMID?.["#text"] ?? mc?.PMID ?? "");
@@ -37,7 +41,7 @@ function parsePubMedArticle(node: any) {
   const authorList = art?.AuthorList?.Author;
   const authors: string[] = Array.isArray(authorList)
     ? authorList
-        .map((a: any) => `${a.LastName || ""} ${a.Initials || ""}`.trim())
+        .map((a: XmlNode) => `${a.LastName || ""} ${a.Initials || ""}`.trim())
         .filter(Boolean)
     : [];
 
@@ -46,16 +50,16 @@ function parsePubMedArticle(node: any) {
   if (typeof absNode === "string") abstract = absNode;
   else if (Array.isArray(absNode))
     abstract = absNode
-      .map((s: any) =>
+      .map((s: XmlNode | string) =>
         typeof s === "string"
           ? s
-          : `${s["@_Label"] || ""}: ${s["#text"] || ""}`
+          : `${(s as XmlNode)["@_Label"] || ""}: ${(s as XmlNode)["#text"] || ""}`
       )
       .join(" ");
 
   const idList = node?.PubmedData?.ArticleIdList?.ArticleId;
   const doi = Array.isArray(idList)
-    ? (idList.find((id: any) => id?.["@_IdType"] === "doi")?.["#text"] ?? "")
+    ? (idList.find((id: XmlNode) => id?.["@_IdType"] === "doi")?.["#text"] ?? "")
     : "";
 
   const journal =
@@ -194,10 +198,10 @@ export const searchSemanticScholar = tool({
     if (!res.ok) throw new Error(`Semantic Scholar returned ${res.status}`);
 
     const data = await res.json();
-    const results = (data.data || []).map((paper: any) => ({
+    const results = (data.data || []).map((paper: XmlNode) => ({
       semanticScholarId: paper.paperId,
       title: paper.title || "",
-      authors: paper.authors?.map((a: any) => a.name) || [],
+      authors: paper.authors?.map((a: XmlNode) => a.name) || [],
       year: paper.year || 0,
       abstract: paper.abstract || "",
       citationCount: paper.citationCount || 0,
@@ -244,9 +248,9 @@ export const getPaperDetails = tool({
     }
 
     const paper = await res.json();
-    const mapPaper = (p: any) => ({
+    const mapPaper = (p: XmlNode) => ({
       title: (p.title || "") as string,
-      authors: (p.authors?.map((a: any) => a.name) || []) as string[],
+      authors: (p.authors?.map((a: XmlNode) => a.name) || []) as string[],
       year: p.year as number | null,
       doi: (p.externalIds?.DOI || "") as string,
     });
@@ -254,7 +258,7 @@ export const getPaperDetails = tool({
     return {
       found: true as const,
       title: paper.title as string,
-      authors: (paper.authors?.map((a: any) => a.name) || []) as string[],
+      authors: (paper.authors?.map((a: XmlNode) => a.name) || []) as string[],
       year: paper.year as number,
       abstract: (paper.abstract || "") as string,
       citationCount: (paper.citationCount || 0) as number,
@@ -291,11 +295,11 @@ export const exploreCitationNetwork = tool({
     }
 
     const data = await res.json();
-    const papers = (data.data || []).map((item: any) => {
+    const papers = (data.data || []).map((item: XmlNode) => {
       const p = item.citedPaper || item.citingPaper || item;
       return {
         title: (p.title || "") as string,
-        authors: (p.authors?.map((a: any) => a.name) || []) as string[],
+        authors: (p.authors?.map((a: XmlNode) => a.name) || []) as string[],
         year: p.year as number | null,
         abstract: (p.abstract || "") as string,
         citationCount: (p.citationCount || 0) as number,

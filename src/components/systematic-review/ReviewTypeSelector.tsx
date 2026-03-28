@@ -171,7 +171,7 @@ export function ReviewTypeSelector({
 
       {/* Categories & Cards */}
       <div className="space-y-5">
-        {categories.map((category) => (
+        {!categories.length ? null : categories.map((category) => (
           <div key={category.name} className="space-y-2">
             <h3 className="text-xs font-medium text-ink-muted uppercase tracking-wide">
               {category.name}

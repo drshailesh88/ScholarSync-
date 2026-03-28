@@ -14,6 +14,32 @@
 
 import type { FabricCanvas } from '@/lib/illustration/types';
 import type { Tool, ToolMouseEvent, ToolKeyEvent, Point } from './ToolRegistry';
+import type { Object as FabricObject } from 'fabric';
+
+/** Fabric.js object reference (dynamically created via window.fabric) */
+/** Extended FabricObject with IText/Textbox methods */
+interface FabricTextObj extends FabricObject {
+  enterEditing?: () => void;
+  exitEditing?: () => void;
+  selectAll?: () => void;
+  isEditing?: boolean;
+  text?: string;
+  editable?: boolean;
+}
+
+/** Type-safe accessor for the global fabric namespace (loaded at runtime) */
+function getFabricLib(): Record<string, unknown> | undefined {
+  return (globalThis as unknown as Record<string, unknown>).fabric as Record<string, unknown> | undefined;
+}
+
+/** Create a Fabric.js object via its constructor by name */
+function fabricCreate(className: string, ...args: unknown[]): FabricTextObj | null {
+  const lib = getFabricLib();
+  if (!lib) return null;
+  const Ctor = lib[className];
+  if (typeof Ctor !== 'function') return null;
+  return new (Ctor as new (...a: unknown[]) => FabricTextObj)(...args);
+}
 
 // ============================================================================
 // Types
@@ -37,7 +63,7 @@ export interface TextStyle {
  * Text created event data
  */
 export interface TextCreatedEvent {
-  text: any;
+  text: unknown;
   isNew: boolean;
 }
 
@@ -87,7 +113,7 @@ export class TextTool implements Tool {
   private canvas: FabricCanvas | null = null;
 
   /** Currently active/editing text object */
-  private currentText: any = null;
+  private currentText: FabricTextObj | null = null;
 
   /** Whether the tool is active */
   private isActive = false;
@@ -105,10 +131,10 @@ export class TextTool implements Tool {
   private onTextCreated?: (event: TextCreatedEvent) => void;
 
   /** Text editing started callback */
-  private onEditStart?: (text: any) => void;
+  private onEditStart?: (text: unknown) => void;
 
   /** Text editing ended callback */
-  private onEditEnd?: (text: any) => void;
+  private onEditEnd?: (text: unknown) => void;
 
   constructor(options: TextToolOptions = {}) {
     this.options = {
@@ -146,7 +172,7 @@ export class TextTool implements Tool {
     canvas.selection = false;
 
     // Allow clicking on text objects to edit them
-    canvas.forEachObject((obj: any) => {
+    canvas.forEachObject((obj: FabricObject) => {
       const isText = obj.type === 'i-text' || obj.type === 'textbox';
       obj.selectable = isText;
       obj.evented = isText;
@@ -191,7 +217,7 @@ export class TextTool implements Tool {
     if (target && (target.type === 'i-text' || target.type === 'textbox')) {
       // Select existing text but don't enter edit mode yet
       // (Double-click will enter edit mode)
-      this.currentText = target;
+      this.currentText = target as FabricTextObj;
       this.canvas.setActiveObject(target);
     } else if (!this.isEditing) {
       // Clicked on empty space - create new text
@@ -226,7 +252,7 @@ export class TextTool implements Tool {
 
     if (target && (target.type === 'i-text' || target.type === 'textbox')) {
       // Double-clicked on text - enter edit mode
-      this.currentText = target;
+      this.currentText = target as FabricTextObj;
       this.enterEditMode();
     }
   }
@@ -273,11 +299,8 @@ export class TextTool implements Tool {
   createText(position: Point): void {
     if (!this.canvas) return;
 
-    const fabric = (window as any).fabric;
-    if (!fabric?.IText) return;
-
     // Create an IText object (interactive text)
-    this.currentText = new fabric.IText(this.options.placeholder, {
+    this.currentText = fabricCreate('IText', this.options.placeholder, {
       left: position.x,
       top: position.y,
       fontFamily: this.style.fontFamily,
@@ -293,13 +316,15 @@ export class TextTool implements Tool {
       editable: true,
     });
 
+    if (!this.currentText) return;
+
     this.canvas.add(this.currentText);
 
     // Enter edit mode immediately
     this.enterEditMode();
 
     // Select all text for easy replacement
-    this.currentText.selectAll();
+    this.currentText.selectAll?.();
 
     // Emit text created event
     if (this.onTextCreated) {
@@ -316,13 +341,10 @@ export class TextTool implements Tool {
    * @param width - Box width
    * @returns Created textbox object
    */
-  createTextbox(position: Point, width = 200): any {
+  createTextbox(position: Point, width = 200): FabricTextObj | null {
     if (!this.canvas) return null;
 
-    const fabric = (window as any).fabric;
-    if (!fabric?.Textbox) return null;
-
-    const textbox = new fabric.Textbox(this.options.placeholder, {
+    const textbox = fabricCreate('Textbox', this.options.placeholder, {
       left: position.x,
       top: position.y,
       width,
@@ -339,11 +361,13 @@ export class TextTool implements Tool {
       editable: true,
     });
 
+    if (!textbox) return null;
+
     this.canvas.add(textbox);
     this.canvas.setActiveObject(textbox);
 
-    textbox.enterEditing();
-    textbox.selectAll();
+    textbox.enterEditing?.();
+    textbox.selectAll?.();
 
     this.currentText = textbox;
     this.isEditing = true;
@@ -370,7 +394,7 @@ export class TextTool implements Tool {
 
     this.isEditing = true;
     this.canvas.setActiveObject(this.currentText);
-    this.currentText.enterEditing();
+    this.currentText.enterEditing?.();
 
     if (this.onEditStart) {
       this.onEditStart(this.currentText);
@@ -383,7 +407,7 @@ export class TextTool implements Tool {
   exitEditMode(): void {
     if (!this.currentText) return;
 
-    this.currentText.exitEditing();
+    this.currentText.exitEditing?.();
     this.isEditing = false;
 
     // Remove empty text objects
@@ -413,7 +437,7 @@ export class TextTool implements Tool {
    * Get the currently active text object
    * @returns Current text object or null
    */
-  getCurrentText(): any {
+  getCurrentText(): FabricTextObj | null {
     return this.currentText;
   }
 
@@ -545,8 +569,9 @@ export class TextTool implements Tool {
   private applyStyleToCurrentText(style: Partial<TextStyle>): void {
     if (!this.currentText || !this.canvas) return;
 
+    const textObj = this.currentText;
     Object.entries(style).forEach(([key, value]) => {
-      this.currentText.set(key, value);
+      textObj.set(key, value);
     });
 
     this.canvas.requestRenderAll();
@@ -584,7 +609,7 @@ export class TextTool implements Tool {
    * Set edit start callback
    * @param callback - Callback function
    */
-  setOnEditStart(callback: (text: any) => void): void {
+  setOnEditStart(callback: (text: unknown) => void): void {
     this.onEditStart = callback;
   }
 
@@ -592,7 +617,7 @@ export class TextTool implements Tool {
    * Set edit end callback
    * @param callback - Callback function
    */
-  setOnEditEnd(callback: (text: any) => void): void {
+  setOnEditEnd(callback: (text: unknown) => void): void {
     this.onEditEnd = callback;
   }
 }
@@ -621,13 +646,13 @@ export class PenTool implements Tool {
   private pathData: (string | number)[][] = [];
 
   /** Current path object on canvas */
-  private currentPath: any = null;
+  private currentPath: FabricTextObj | null = null;
 
   /** Preview line for next segment */
-  private previewLine: any = null;
+  private previewLine: FabricTextObj | null = null;
 
   /** Point markers for visualization */
-  private pointMarkers: any[] = [];
+  private pointMarkers: FabricTextObj[] = [];
 
   /** Last anchor point */
   private lastPoint: Point | null = null;
@@ -662,7 +687,7 @@ export class PenTool implements Tool {
     this.isActive = true;
 
     canvas.selection = false;
-    canvas.forEachObject((obj: any) => {
+    canvas.forEachObject((obj: FabricObject) => {
       obj.selectable = false;
       obj.evented = false;
     });
@@ -695,7 +720,7 @@ export class PenTool implements Tool {
     }
 
     // Check for double-click to finish open path
-    if ((e.e as any).detail === 2 && this.pathData.length > 0) {
+    if ((e.e as unknown as { detail?: number }).detail === 2 && this.pathData.length > 0) {
       this.finishPath();
       return;
     }
@@ -833,7 +858,7 @@ export class PenTool implements Tool {
 
     if (this.pointMarkers.length > 0) {
       const marker = this.pointMarkers.pop();
-      this.canvas?.remove(marker);
+      if (marker) this.canvas?.remove(marker);
     }
 
     this.updatePath();
@@ -894,12 +919,9 @@ export class PenTool implements Tool {
 
     if (this.pathData.length < 1) return;
 
-    const fabric = (window as any).fabric;
-    if (!fabric?.Path) return;
-
     const pathString = this.pathData.map((cmd) => cmd.join(' ')).join(' ');
 
-    this.currentPath = new fabric.Path(pathString, {
+    this.currentPath = fabricCreate('Path', pathString, {
       fill: 'transparent',
       stroke: this.stroke,
       strokeWidth: this.strokeWidth,
@@ -907,6 +929,8 @@ export class PenTool implements Tool {
       selectable: false,
       evented: false,
     });
+
+    if (!this.currentPath) return;
 
     this.canvas.add(this.currentPath);
     this.canvas.requestRenderAll();
@@ -919,14 +943,11 @@ export class PenTool implements Tool {
   private updatePreviewLine(point: Point): void {
     if (!this.canvas || !this.lastPoint) return;
 
-    const fabric = (window as any).fabric;
-    if (!fabric?.Line) return;
-
     if (this.previewLine) {
       this.canvas.remove(this.previewLine);
     }
 
-    this.previewLine = new fabric.Line(
+    this.previewLine = fabricCreate('Line',
       [this.lastPoint.x, this.lastPoint.y, point.x, point.y],
       {
         stroke: '#666666',
@@ -937,15 +958,14 @@ export class PenTool implements Tool {
       }
     );
 
+    if (!this.previewLine) return;
+
     this.canvas.add(this.previewLine);
     this.canvas.requestRenderAll();
   }
 
   private updateCurvePreview(controlPoint: Point): void {
     if (!this.canvas || !this.startPoint) return;
-
-    const fabric = (window as any).fabric;
-    if (!fabric) return;
 
     this.clearPreview();
 
@@ -954,7 +974,7 @@ export class PenTool implements Tool {
       y: 2 * this.startPoint.y - controlPoint.y,
     };
 
-    const handleLine = new fabric.Line(
+    const handleLine = fabricCreate('Line',
       [reflected.x, reflected.y, controlPoint.x, controlPoint.y],
       {
         stroke: '#0066ff',
@@ -964,6 +984,8 @@ export class PenTool implements Tool {
       }
     );
 
+    if (!handleLine) return;
+
     this.canvas.add(handleLine);
     this.previewLine = handleLine;
     this.canvas.requestRenderAll();
@@ -972,10 +994,7 @@ export class PenTool implements Tool {
   private addPointMarker(point: Point): void {
     if (!this.canvas) return;
 
-    const fabric = (window as any).fabric;
-    if (!fabric?.Circle) return;
-
-    const marker = new fabric.Circle({
+    const marker = fabricCreate('Circle', {
       left: point.x,
       top: point.y,
       radius: 4,
@@ -987,6 +1006,8 @@ export class PenTool implements Tool {
       selectable: false,
       evented: false,
     });
+
+    if (!marker) return;
 
     this.canvas.add(marker);
     this.pointMarkers.push(marker);

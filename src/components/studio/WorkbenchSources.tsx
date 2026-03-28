@@ -191,7 +191,7 @@ export function WorkbenchSources({
     <div className="flex flex-col h-full">
       {/* Sub-tab switcher */}
       <div className="flex gap-1 px-3 py-1.5 shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-        {subTabs.map((tab) => (
+        {!subTabs.length ? null : subTabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setSubTab(tab.key)}

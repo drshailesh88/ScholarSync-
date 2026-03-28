@@ -317,6 +317,9 @@ export function MOOSEChecklistPanel({ projectId }: MOOSEChecklistPanelProps) {
 
       {/* Sections */}
       <div className="space-y-4">
+        {sections.length === 0 && (
+          <p className="text-sm text-ink-muted">No results</p>
+        )}
         {sections.map((section) => {
           const sectionLabel =
             MOOSE_SECTION_LABELS[section] ?? section;

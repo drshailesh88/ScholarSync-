@@ -96,7 +96,7 @@ export async function importSVGToCanvas(
 
   // Parse SVG
   const parsed = parseSVG(cleaned) as RootNode;
-  const svgElement = findSVGElement(parsed);
+  const svgElement = findSVGElement(parsed) as SVGNode | null;
 
   if (!svgElement) {
     throw new Error('No SVG element found in input');
@@ -159,7 +159,16 @@ function findSVGElement(parsed: RootNode) {
   return null;
 }
 
-function extractDimensions(svgElement: any): { width: number; height: number } {
+interface SVGNode {
+  type: string;
+  tagName?: string;
+  properties?: Record<string, string | number>;
+  children: SVGNode[];
+  value?: string;
+  [key: string]: unknown;
+}
+
+function extractDimensions(svgElement: SVGNode): { width: number; height: number } {
   const props = svgElement.properties || {};
 
   let width = parseLength(props.width);
@@ -204,7 +213,7 @@ function parseLength(value: string | number | undefined): number {
 // =============================================================================
 
 async function convertToFabricObjects(
-  svgElement: any,
+  svgElement: SVGNode,
   options: Required<SVGImportOptions>
 ): Promise<FabricObject[]> {
   const objects: FabricObject[] = [];
@@ -221,7 +230,7 @@ async function convertToFabricObjects(
 }
 
 async function convertElement(
-  element: any,
+  element: SVGNode,
   inheritedStyles: Record<string, string | number>,
   options: Required<SVGImportOptions>
 ): Promise<FabricObject[]> {
@@ -262,7 +271,7 @@ async function convertElement(
   }
 }
 
-function extractStyles(element: any): Record<string, string | number> {
+function extractStyles(element: SVGNode): Record<string, string | number> {
   const styles: Record<string, string | number> = {};
   const props = element.properties || {};
 
@@ -323,8 +332,11 @@ function applyStylesToFabricOptions(
 // FABRIC OBJECT CREATION
 // =============================================================================
 
-function createRect(props: any, styles: any): fabric.Rect {
-  const options: any = {
+type SVGProps = Record<string, string | number | undefined>;
+type SVGStyles = Record<string, string | number>;
+
+function createRect(props: SVGProps, styles: SVGStyles): fabric.Rect {
+  const options: Record<string, unknown> = {
     left: parseLength(props.x) || 0,
     top: parseLength(props.y) || 0,
     width: parseLength(props.width) || 100,
@@ -338,9 +350,9 @@ function createRect(props: any, styles: any): fabric.Rect {
   return new fabric.Rect(options);
 }
 
-function createCircle(props: any, styles: any): fabric.Circle {
+function createCircle(props: SVGProps, styles: SVGStyles): fabric.Circle {
   const r = parseLength(props.r) || 50;
-  const options: any = {
+  const options: Record<string, unknown> = {
     left: (parseLength(props.cx) || 0) - r,
     top: (parseLength(props.cy) || 0) - r,
     radius: r,
@@ -351,10 +363,10 @@ function createCircle(props: any, styles: any): fabric.Circle {
   return new fabric.Circle(options);
 }
 
-function createEllipse(props: any, styles: any): fabric.Ellipse {
+function createEllipse(props: SVGProps, styles: SVGStyles): fabric.Ellipse {
   const rx = parseLength(props.rx) || 50;
   const ry = parseLength(props.ry) || 30;
-  const options: any = {
+  const options: Record<string, unknown> = {
     left: (parseLength(props.cx) || 0) - rx,
     top: (parseLength(props.cy) || 0) - ry,
     rx,
@@ -366,7 +378,7 @@ function createEllipse(props: any, styles: any): fabric.Ellipse {
   return new fabric.Ellipse(options);
 }
 
-function createLine(props: any, styles: any): fabric.Line {
+function createLine(props: SVGProps, styles: SVGStyles): fabric.Line {
   const coords: [number, number, number, number] = [
     parseLength(props.x1) || 0,
     parseLength(props.y1) || 0,
@@ -374,7 +386,7 @@ function createLine(props: any, styles: any): fabric.Line {
     parseLength(props.y2) || 0,
   ];
 
-  const options: any = {};
+  const options: Record<string, unknown> = {};
   applyStylesToFabricOptions(options, styles);
 
   // Lines default to no fill
@@ -385,9 +397,9 @@ function createLine(props: any, styles: any): fabric.Line {
   return new fabric.Line(coords, options);
 }
 
-function createPolyline(props: any, styles: any): fabric.Polyline {
-  const points = parsePoints(props.points);
-  const options: any = {};
+function createPolyline(props: SVGProps, styles: SVGStyles): fabric.Polyline {
+  const points = parsePoints(props.points as string);
+  const options: Record<string, unknown> = {};
 
   applyStylesToFabricOptions(options, styles);
 
@@ -399,9 +411,9 @@ function createPolyline(props: any, styles: any): fabric.Polyline {
   return new fabric.Polyline(points, options);
 }
 
-function createPolygon(props: any, styles: any): fabric.Polygon {
-  const points = parsePoints(props.points);
-  const options: any = {};
+function createPolygon(props: SVGProps, styles: SVGStyles): fabric.Polygon {
+  const points = parsePoints(props.points as string);
+  const options: Record<string, unknown> = {};
 
   applyStylesToFabricOptions(options, styles);
 
@@ -423,20 +435,20 @@ function parsePoints(pointsStr: string): Array<{ x: number; y: number }> {
   return points;
 }
 
-function createPath(props: any, styles: any): fabric.Path {
-  const d = props.d || '';
-  const options: any = {};
+function createPath(props: SVGProps, styles: SVGStyles): fabric.Path {
+  const d = (props.d as string) || '';
+  const options: Record<string, unknown> = {};
 
   applyStylesToFabricOptions(options, styles);
 
   return new fabric.Path(d, options);
 }
 
-function createText(element: any, styles: any): fabric.IText {
+function createText(element: SVGNode, styles: SVGStyles): fabric.IText {
   const props = element.properties || {};
   const textContent = extractTextContent(element);
 
-  const options: any = {
+  const options: Record<string, unknown> = {
     left: parseLength(props.x) || 0,
     top: parseLength(props.y) || 0,
     fontFamily: 'Arial',
@@ -448,7 +460,7 @@ function createText(element: any, styles: any): fabric.IText {
   return new fabric.IText(textContent, options);
 }
 
-function extractTextContent(element: any): string {
+function extractTextContent(element: SVGNode): string {
   let text = '';
 
   for (const child of element.children) {
@@ -463,8 +475,8 @@ function extractTextContent(element: any): string {
 }
 
 async function createGroup(
-  element: any,
-  styles: any,
+  element: SVGNode,
+  styles: SVGStyles,
   options: Required<SVGImportOptions>
 ): Promise<FabricObject[]> {
   const childObjects: FabricObject[] = [];
@@ -486,7 +498,7 @@ async function createGroup(
   }
 
   // Create a group
-  const groupOptions: any = {};
+  const groupOptions: Record<string, unknown> = {};
   applyStylesToFabricOptions(groupOptions, styles);
 
   const group = new fabric.Group(childObjects, groupOptions);

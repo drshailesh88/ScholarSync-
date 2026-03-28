@@ -229,6 +229,9 @@ export function ShortcutsPanel({ isOpen, onClose }: ShortcutsPanelProps) {
         className="flex-1 overflow-y-auto px-3 pb-3"
         style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(0,0,0,0.1) transparent" }}
       >
+        {filteredGroups.length === 0 && (
+          <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-4">No results</p>
+        )}
         {filteredGroups.map((group) => (
           <div key={group.label} className="mb-3">
             <div className="text-[9px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider py-1">

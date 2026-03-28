@@ -74,7 +74,7 @@ describe('professional illustration tools', () => {
 
     tool.onMouseDown({
       e: { clientX: 20, clientY: 20 } as MouseEvent,
-      target,
+      target: target as any,
       pointer: { x: 20, y: 20 },
     });
 

@@ -111,7 +111,7 @@ export function Workbench({
       {/* VSCode-style tab bar */}
       <div className="flex items-center justify-between px-1 h-9 border-b border-border shrink-0">
         <div className="flex items-center gap-0.5">
-          {TOOL_TABS.map((tab) => {
+          {!TOOL_TABS.length ? null : TOOL_TABS.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTool === tab.key;
             return (

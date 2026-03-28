@@ -233,7 +233,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
         </div>
 
         {/* Nav sections */}
-        {visibleNavSections.map((section) => (
+        {!visibleNavSections.length ? null : visibleNavSections.map((section) => (
           <div key={section.label} className={cn("mb-4", collapsed && "mb-2")}>
             {!collapsed && <div className="ss-section-label">{section.label}</div>}
             {collapsed && <div className="w-5 mx-auto my-2 border-t border-white/[0.06]" />}
