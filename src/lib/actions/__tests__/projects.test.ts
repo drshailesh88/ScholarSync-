@@ -199,6 +199,9 @@ describe("projects actions", () => {
         updated_at: new Date(),
       };
 
+      mockDb.select.mockImplementation(() =>
+        createQueryBuilder([{ domain: "medicine" }])
+      );
       mockDb.insert.mockImplementation(() =>
         createQueryBuilder([createdProject])
       );
@@ -226,6 +229,9 @@ describe("projects actions", () => {
         updated_at: new Date(),
       };
 
+      mockDb.select.mockImplementation(() =>
+        createQueryBuilder([{ domain: "medicine" }])
+      );
       mockDb.insert.mockImplementation(() =>
         createQueryBuilder([createdProject])
       );
@@ -244,6 +250,9 @@ describe("projects actions", () => {
     });
 
     it("returns an object with an id property", async () => {
+      mockDb.select.mockImplementation(() =>
+        createQueryBuilder([{ domain: "medicine" }])
+      );
       mockDb.insert.mockImplementation(() =>
         createQueryBuilder([{ id: 99, title: "Test" }])
       );

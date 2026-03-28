@@ -49,6 +49,7 @@ export async function updateUserProfile(data: {
   preferred_language?: string;
   default_citation_style?: string;
   orcid_id?: string;
+  domain?: string;
 }) {
   const userId = await getCurrentUserId();
 
@@ -62,6 +63,7 @@ export async function updateUserProfile(data: {
   if (data.preferred_language !== undefined) payload.preferred_language = data.preferred_language;
   if (data.default_citation_style !== undefined) payload.default_citation_style = data.default_citation_style;
   if (data.orcid_id !== undefined) payload.orcid_id = data.orcid_id;
+  if (data.domain !== undefined) payload.domain = data.domain;
 
   const [user] = await db
     .update(users)
