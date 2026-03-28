@@ -70,12 +70,7 @@ export interface SearchResponse {
   page: number;
   perPage: number;
   hasMore: boolean;
-  sourceCounts: {
-    pubmed: number;
-    semanticScholar: number;
-    openAlex: number;
-    clinicalTrials: number;
-  };
+  sourceCounts: Record<string, number>;
   augmentedQueries?: {
     pubmed: string;
     semanticScholar: string;

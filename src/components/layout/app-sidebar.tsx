@@ -6,7 +6,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
-import { X, CaretDown, Gear, Keyboard, SignOut, CaretLeft, CaretRight } from "@phosphor-icons/react";
+import { X, CaretDown, Gear, Keyboard, SignOut, CaretLeft, CaretRight, Rss } from "@phosphor-icons/react";
+import { useDomain } from "@/components/providers/domain-provider";
 import { cn } from "@/lib/utils";
 import { useUIScale } from "@/hooks/use-ui-scale";
 
@@ -101,7 +102,7 @@ const navSections: NavSection[] = [
     items: [
       { label: "Discover", href: "/research", icon: { type: "svg", element: svgIcons.discover } },
       { label: "Reading Room", href: "/notebook", icon: { type: "png", src: "/sidebar-icons/reading-room.png" } },
-      { label: "Pulse", href: "/feeds", icon: { type: "svg", element: svgIcons.pulse } },
+      { label: "Journal Feed", href: "/feeds", icon: { type: "svg", element: <Rss size={16} weight="bold" /> } },
       { label: "Deep Research", href: "/deep-research", icon: { type: "png", src: "/sidebar-icons/creativity.png", size: 20 } },
       { label: "Library", href: "/library", icon: { type: "svg", element: svgIcons.library } },
       { label: "Systematic Review", href: "/systematic-review", icon: { type: "svg", element: svgIcons.systematicReview } },
@@ -155,10 +156,22 @@ function NavIcon({ icon }: { icon: NavIcon }) {
 
 export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobileOnly = false, collapsed = false, onToggleCollapse }: AppSidebarProps) {
   const pathname = usePathname();
+  const domain = useDomain();
   const { theme, setTheme } = useTheme();
   const [userPanelOpen, setUserPanelOpen] = useState(false);
   const { scale, setScale } = useUIScale();
   const [mounted, setMounted] = useState(false);
+
+  const visibleNavSections = navSections.map((section) => ({
+    ...section,
+    items: section.items.filter((item) => {
+      if (item.href === "/systematic-review") {
+        return domain?.features.systematicReview !== false;
+      }
+
+      return true;
+    }),
+  }));
 
   // eslint-disable-next-line react-hooks/set-state-in-effect -- needed for hydration safety
   useEffect(() => setMounted(true), []);
@@ -220,7 +233,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
         </div>
 
         {/* Nav sections */}
-        {navSections.map((section) => (
+        {visibleNavSections.map((section) => (
           <div key={section.label} className={cn("mb-4", collapsed && "mb-2")}>
             {!collapsed && <div className="ss-section-label">{section.label}</div>}
             {collapsed && <div className="w-5 mx-auto my-2 border-t border-white/[0.06]" />}

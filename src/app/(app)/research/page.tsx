@@ -57,6 +57,14 @@ const EVIDENCE_LABELS: Record<string, string> = {
   V: "Level V",
 };
 
+const SOURCE_LABELS: Record<string, string> = {
+  pubmed: "PubMed",
+  semantic_scholar: "Semantic Scholar",
+  openalex: "OpenAlex",
+  clinical_trials: "ClinicalTrials.gov",
+  arxiv: "arXiv",
+};
+
 type SortOption = "relevance" | "citations" | "year" | "evidence";
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
@@ -108,6 +116,12 @@ const DEFAULT_FILTERS: FilterState = {
   yearEnd: "",
 };
 
+function formatSourceCounts(sourceCounts: Record<string, number>) {
+  return Object.entries(sourceCounts)
+    .map(([sourceId, count]) => `${count} from ${SOURCE_LABELS[sourceId] ?? sourceId}`)
+    .join(", ");
+}
+
 interface PersistedState {
   query: string;
   results: UnifiedSearchResult[];
@@ -117,12 +131,7 @@ interface PersistedState {
   page: number;
   totalResults: number;
   hasMore: boolean;
-  sourceCounts: {
-    pubmed: number;
-    semanticScholar: number;
-    openAlex: number;
-    clinicalTrials: number;
-  };
+  sourceCounts: Record<string, number>;
   augmentedQueries: SearchResponse["augmentedQueries"] | null;
   aiSummary: string | null;
 }
@@ -157,12 +166,7 @@ export default function ResearchPage() {
   const [results, setResults] = useState<UnifiedSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sourceCounts, setSourceCounts] = useState({
-    pubmed: 0,
-    semanticScholar: 0,
-    openAlex: 0,
-    clinicalTrials: 0,
-  });
+  const [sourceCounts, setSourceCounts] = useState<Record<string, number>>({});
   const [filters, setFilters] = useState<FilterState>({ ...DEFAULT_FILTERS });
   const [sort, setSort] = useState<SortOption>("relevance");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
@@ -782,10 +786,7 @@ export default function ResearchPage() {
         {hasSearched && !loading && results.length > 0 && (
           <div className="mb-4">
             <p className="text-xs text-ink-muted">
-              {sourceCounts.pubmed} from PubMed, {sourceCounts.semanticScholar}{" "}
-              from Semantic Scholar, {sourceCounts.openAlex} from OpenAlex,{" "}
-              {sourceCounts.clinicalTrials} from ClinicalTrials.gov —{" "}
-              {totalResults} total results
+              {formatSourceCounts(sourceCounts)} — {totalResults} total results
             </p>
             {augmentedQueries && (
               <button
