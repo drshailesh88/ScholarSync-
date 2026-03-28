@@ -20,6 +20,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getUser, updateUserProfile, getUserUsageStats } from "@/lib/actions/user";
 import { mockInvoices, type MockInvoice } from "@/lib/mock-data";
+import { DOMAIN_OPTIONS } from "@/data/domain-options";
 
 const settingsTabs = [
   { key: "account", label: "My Account", icon: UserCircle },
@@ -58,6 +59,7 @@ interface UserData {
   full_name: string | null;
   plan: string | null;
   specialty: string | null;
+  domain: string | null;
   country: string | null;
   bio: string | null;
   research_interests: string[] | unknown | null;
@@ -82,6 +84,7 @@ export default function SettingsPage() {
   // --------------- Profile fields ---------------
   const [profileName, setProfileName] = useState("");
   const [specialty, setSpecialty] = useState("");
+  const [domain, setDomain] = useState("medicine");
   const [country, setCountry] = useState("");
   const [bio, setBio] = useState("");
   const [researchInterests, setResearchInterests] = useState<string[]>([]);
@@ -96,6 +99,8 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [savingDomain, setSavingDomain] = useState(false);
+  const [domainSaveMessage, setDomainSaveMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const [savingPrefs, setSavingPrefs] = useState(false);
   const [prefsSaveMessage, setPrefsSaveMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
@@ -123,6 +128,7 @@ export default function SettingsPage() {
           setUser(u);
           setProfileName(u.full_name || "");
           setSpecialty(u.specialty || "");
+          setDomain(u.domain || "medicine");
           setCountry(u.country || "");
           setBio(u.bio || "");
           setResearchInterests(parseResearchInterests(u.research_interests));
@@ -178,6 +184,32 @@ export default function SettingsPage() {
       setSaving(false);
     }
   }, [profileName, specialty, country, bio, researchInterests, orcidId]);
+
+  const handleDomainChange = useCallback(async (newDomain: string) => {
+    const previousDomain = domain;
+    setDomain(newDomain);
+    setSavingDomain(true);
+    setDomainSaveMessage(null);
+
+    try {
+      const updated = await updateUserProfile({ domain: newDomain });
+      setUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              domain: updated?.domain ?? newDomain,
+            }
+          : prev
+      );
+      showSaveMessage(setDomainSaveMessage, "Research field updated.", "success");
+    } catch (err) {
+      console.error("Failed to update domain:", err);
+      setDomain(previousDomain);
+      showSaveMessage(setDomainSaveMessage, "Failed to update research field. Please try again.", "error");
+    } finally {
+      setSavingDomain(false);
+    }
+  }, [domain]);
 
   // --------------- Save preferences ---------------
   const handleSavePreferences = useCallback(async () => {
@@ -321,6 +353,39 @@ export default function SettingsPage() {
                     placeholder="e.g. Cardiology, AIIMS New Delhi"
                     className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
                   />
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-medium text-ink mb-1.5">Research Field</h3>
+                  <p className="text-sm text-ink-muted mb-3">
+                    This controls which databases are searched, which AI personas are used, and which features are available.
+                  </p>
+                  <select
+                    aria-label="Research field"
+                    value={domain}
+                    onChange={(e) => void handleDomainChange(e.target.value)}
+                    disabled={savingDomain}
+                    className="w-full px-3 py-2 rounded-lg bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40 disabled:opacity-60"
+                  >
+                    {DOMAIN_OPTIONS.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[10px] text-ink-muted mt-1">
+                    Changing this affects new projects only. Existing projects keep their current domain.
+                  </p>
+                  {domainSaveMessage && (
+                    <p
+                      className={cn(
+                        "text-xs font-medium mt-2",
+                        domainSaveMessage.type === "success" ? "text-emerald-500" : "text-red-500"
+                      )}
+                    >
+                      {domainSaveMessage.text}
+                    </p>
+                  )}
                 </div>
 
                 {/* Country */}

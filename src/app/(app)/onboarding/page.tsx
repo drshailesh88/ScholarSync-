@@ -16,30 +16,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { updateUserProfile } from "@/lib/actions/user";
-
-const SPECIALTIES = [
-  "Internal Medicine",
-  "Surgery",
-  "Pediatrics",
-  "Obstetrics & Gynecology",
-  "Orthopedics",
-  "Radiology",
-  "Pathology",
-  "Pharmacology",
-  "Microbiology",
-  "Anatomy",
-  "Physiology",
-  "Biochemistry",
-  "Community Medicine",
-  "Forensic Medicine",
-  "Dermatology",
-  "Psychiatry",
-  "Ophthalmology",
-  "ENT",
-  "Anesthesiology",
-  "Emergency Medicine",
-  "Other",
-];
+import { DOMAIN_OPTIONS } from "@/data/domain-options";
 
 const GOALS = [
   {
@@ -87,17 +64,11 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [name, setName] = useState("");
   const [institution, setInstitution] = useState("");
-  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
+  const [selectedDomain, setSelectedDomain] = useState("");
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
   const totalSteps = 4;
-
-  const toggleSpecialty = (s: string) => {
-    setSelectedSpecialties((prev) =>
-      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
-    );
-  };
 
   const toggleGoal = (id: string) => {
     setSelectedGoals((prev) =>
@@ -110,7 +81,8 @@ export default function OnboardingPage() {
     try {
       await updateUserProfile({
         full_name: name || undefined,
-        specialty: selectedSpecialties.join(", ") || undefined,
+        specialty: selectedDomain || undefined,
+        domain: selectedDomain || undefined,
         bio: institution || undefined,
       });
       // Mark onboarding as complete via API
@@ -122,11 +94,11 @@ export default function OnboardingPage() {
     } finally {
       setSaving(false);
     }
-  }, [name, institution, selectedSpecialties, router]);
+  }, [name, institution, selectedDomain, router]);
 
   const canNext =
     step === 0 ? true : // Welcome step, always can proceed
-    step === 1 ? selectedSpecialties.length > 0 :
+    step === 1 ? selectedDomain.length > 0 :
     step === 2 ? selectedGoals.length > 0 :
     true;
 
@@ -181,30 +153,45 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* Step 1: Specialties */}
+        {/* Step 1: Research Domain */}
         {step === 1 && (
           <div className="glass-panel rounded-2xl p-8">
-            <h2 className="text-xl font-bold text-ink mb-2">Your Research Interests</h2>
+            <h2 className="text-xl font-bold text-ink mb-2">Choose Your Research Field</h2>
             <p className="text-sm text-ink-muted mb-6">
-              Select your specialties so we can personalize search results and suggestions.
+              Pick the domain that best matches your work. You can change this later in Settings, and new projects will inherit it by default.
             </p>
-            <div className="flex flex-wrap gap-2">
-              {/* empty state: no data, no results, nothing here */}
-              {SPECIALTIES.map((s) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {DOMAIN_OPTIONS.map((domain) => {
+                const isSelected = selectedDomain === domain.id;
+                return (
                 <button
-                  key={s}
-                  onClick={() => toggleSpecialty(s)}
+                  key={domain.id}
+                  onClick={() => setSelectedDomain(domain.id)}
                   className={cn(
-                    "px-3 py-2 rounded-lg text-sm font-medium transition-all border",
-                    selectedSpecialties.includes(s)
-                      ? "bg-brand/10 text-brand border-brand/30"
-                      : "bg-surface-raised text-ink-muted border-border hover:text-ink hover:border-border"
+                    "relative rounded-2xl border p-4 text-left transition-all",
+                    isSelected
+                      ? "border-brand bg-brand/5 shadow-[0_0_0_1px_rgba(79,70,229,0.15)]"
+                      : "border-border bg-surface-raised/50 hover:border-brand/30 hover:bg-surface-raised"
                   )}
                 >
-                  {selectedSpecialties.includes(s) && <Check size={14} className="inline mr-1" />}
-                  {s}
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className={cn("text-sm font-semibold", isSelected ? "text-ink" : "text-ink")}>
+                        {domain.label}
+                      </h3>
+                      <p className="mt-1 text-xs leading-5 text-ink-muted">
+                        {domain.description}
+                      </p>
+                    </div>
+                    {isSelected && (
+                      <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand/10 text-brand">
+                        <Check size={14} weight="bold" />
+                      </span>
+                    )}
+                  </div>
                 </button>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

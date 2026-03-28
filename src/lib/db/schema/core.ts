@@ -59,6 +59,7 @@ export const users = pgTable("users", {
   avatar_url: text("avatar_url"),
   degree_level: degreeLevelEnum("degree_level"),
   specialty: text("specialty"),
+  domain: text("domain").default("medicine"),
   country: text("country").default("India"),
   bio: text("bio"),
   research_interests: jsonb("research_interests").default([]),

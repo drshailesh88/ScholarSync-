@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { projects, projectPapers, synthesisDocuments } from "@/lib/db/schema";
+import { projects, projectPapers, synthesisDocuments, users } from "@/lib/db/schema";
 import { eq, and, desc, isNull, sql, count } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -108,8 +108,19 @@ export async function createProject(data: {
   target_journal?: string;
   deadline?: string; // ISO date string, e.g. "2026-03-15"
   citation_style?: string;
+  domain?: string;
 }) {
   const userId = await getCurrentUserId();
+  let projectDomain = data.domain;
+
+  if (!projectDomain) {
+    const [user] = await db
+      .select({ domain: users.domain })
+      .from(users)
+      .where(eq(users.id, userId));
+    projectDomain = user?.domain ?? "medicine";
+  }
+
   const [project] = await db
     .insert(projects)
     .values({
@@ -118,6 +129,7 @@ export async function createProject(data: {
       project_type: data.project_type || "review_article",
       description: data.description,
       target_journal: data.target_journal,
+      field: projectDomain,
       deadline: data.deadline,
       citation_style: data.citation_style || "vancouver",
       status: "planning",

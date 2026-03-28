@@ -35,6 +35,8 @@ import {
   updateProjectStatus,
   archiveProject,
 } from "@/lib/actions/projects";
+import { getUser } from "@/lib/actions/user";
+import { DOMAIN_OPTIONS, getDomainLabel } from "@/data/domain-options";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -189,7 +191,9 @@ export default function ProjectsPage() {
   const [newTargetJournal, setNewTargetJournal] = useState("");
   const [newDeadline, setNewDeadline] = useState("");
   const [newCitationStyle, setNewCitationStyle] = useState("vancouver");
+  const [newDomain, setNewDomain] = useState("");
   const [creating, setCreating] = useState(false);
+  const [userDomain, setUserDomain] = useState("medicine");
 
   // Status update modal
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -215,6 +219,19 @@ export default function ProjectsPage() {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
+
+  useEffect(() => {
+    async function fetchUserDomain() {
+      try {
+        const user = await getUser();
+        setUserDomain(user?.domain ?? "medicine");
+      } catch (err) {
+        console.error("Failed to load user domain:", err);
+      }
+    }
+
+    void fetchUserDomain();
+  }, []);
 
   // -----------------------------------------------------------------------
   // Filtered list
@@ -269,6 +286,7 @@ export default function ProjectsPage() {
         target_journal: newTargetJournal.trim() || undefined,
         deadline: newDeadline || undefined,
         citation_style: newCitationStyle,
+        domain: newDomain || undefined,
       });
       setShowNewModal(false);
       resetCreateForm();
@@ -288,6 +306,7 @@ export default function ProjectsPage() {
     setNewTargetJournal("");
     setNewDeadline("");
     setNewCitationStyle("vancouver");
+    setNewDomain("");
   };
 
   const openStatusModal = (project: Project) => {
@@ -707,6 +726,29 @@ export default function ProjectsPage() {
                 ))}
               </select>
             </div>
+          </div>
+          <div>
+            <label className="block text-sm text-ink-muted mb-1.5">
+              Research Field <span className="text-ink-muted/60">(optional)</span>
+            </label>
+            <select
+              aria-label="Research field"
+              value={newDomain}
+              onChange={(e) => setNewDomain(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none focus:ring-2 focus:ring-brand/40"
+            >
+              <option value="">
+                {`Use profile default (${getDomainLabel(userDomain)})`}
+              </option>
+              {DOMAIN_OPTIONS.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-xs text-ink-muted">
+              Leave this on your profile default unless this project belongs to a different research field.
+            </p>
           </div>
           <button
             onClick={handleCreate}
