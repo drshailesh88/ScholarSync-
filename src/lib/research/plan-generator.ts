@@ -6,8 +6,11 @@
  */
 
 import type { SearchPlan, StudyType } from "./types";
+import type { DomainConfig } from "@/lib/search/domains/types";
 
-const PLAN_SYSTEM_PROMPT = `You are a medical librarian assistant. Given a research question, generate a structured PubMed search strategy.
+const DEFAULT_LIBRARIAN_PERSONA = "You are a medical librarian assistant.";
+
+const PLAN_SYSTEM_PROMPT_TEMPLATE = ` Given a research question, generate a structured PubMed search strategy.
 
 Rules:
 - Identify key concepts and map to MeSH terms where possible
@@ -36,6 +39,17 @@ Respond in JSON format only, matching this schema exactly:
 
 For studyTypes, use only these values: rct, systematic_review, meta_analysis, cohort, case_control, cross_sectional, case_report, case_series, clinical_trial, guideline, narrative_review, other`;
 
+function buildSystemPrompt(domain?: DomainConfig): string {
+  const persona = domain?.personas.librarian ?? DEFAULT_LIBRARIAN_PERSONA;
+  let prompt = persona + PLAN_SYSTEM_PROMPT_TEMPLATE;
+
+  if (domain?.researchFramework) {
+    prompt += `\n\nUse the ${domain.researchFramework.name} framework to structure your search strategy.`;
+  }
+
+  return prompt;
+}
+
 export interface PlanGenerationInput {
   question: string;
   currentFilters?: {
@@ -53,7 +67,7 @@ export interface PlanGenerationInput {
  * Generate a search plan from a research question.
  * Called server-side from the /api/research/plan route.
  */
-export function buildPlanPrompt(input: PlanGenerationInput): {
+export function buildPlanPrompt(input: PlanGenerationInput, domain?: DomainConfig): {
   system: string;
   user: string;
 } {
@@ -83,7 +97,7 @@ export function buildPlanPrompt(input: PlanGenerationInput): {
   }
 
   return {
-    system: PLAN_SYSTEM_PROMPT,
+    system: buildSystemPrompt(domain),
     user: userPrompt,
   };
 }

@@ -18,6 +18,7 @@
  */
 
 import type { UnifiedSearchResult } from "@/types/search";
+import type { DomainConfig } from "@/lib/search/domains/types";
 import { getEvidenceLevel } from "./evidence-level";
 
 // ── Pattern definitions ────────────────────────────────────────────
@@ -147,6 +148,36 @@ export function detectStudyType(
   }
 
   return null;
+}
+
+/**
+ * Detect study type using domain-specific patterns.
+ * Falls back to the existing hardcoded medical patterns if no domain config provided.
+ */
+export function detectStudyTypeForDomain(
+  title: string,
+  abstract: string | undefined,
+  domain?: DomainConfig
+): string {
+  if (!domain || domain.studyTypePatterns.length === 0) {
+    return detectStudyType(title, abstract) ?? "other";
+  }
+
+  const text = `${title} ${abstract || ""}`.toLowerCase();
+  const titleLower = title.toLowerCase();
+
+  for (const entry of domain.studyTypePatterns) {
+    for (const patternStr of entry.patterns) {
+      const regex = new RegExp(patternStr, "i");
+      if (entry.titleOnly) {
+        if (regex.test(titleLower)) return entry.studyType;
+      } else {
+        if (regex.test(text)) return entry.studyType;
+      }
+    }
+  }
+
+  return "other";
 }
 
 /**

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { tool } from "ai";
 import { z } from "zod";
+import type { DomainConfig } from "@/lib/search/domains/types";
+import { SOURCE_DESCRIPTIONS } from "@/lib/search/sources/descriptions";
 
 /**
  * Research tools for the AI agent (Research Copilot, Deep Research).
@@ -337,6 +339,31 @@ export const savePaperToLibrary = tool({
     return { saved: true, paperId };
   },
 });
+
+// ---------------------------------------------------------------------------
+// Domain-aware tool descriptions
+// ---------------------------------------------------------------------------
+
+export interface ToolDescription {
+  id: string;
+  description: string;
+}
+
+function getDefaultToolDescriptions(): ToolDescription[] {
+  return [
+    { id: "pubmed", description: "Search PubMed for biomedical papers. Returns titles, authors, abstracts, DOIs, and PMIDs. Use for clinical/medical literature." },
+    { id: "semantic_scholar", description: "Search Semantic Scholar for academic papers. Returns titles, abstracts, TL;DR summaries, citation counts, and DOIs. Broader coverage than PubMed." },
+  ];
+}
+
+export function getToolDescriptionsForDomain(domain?: DomainConfig): ToolDescription[] {
+  if (!domain) return getDefaultToolDescriptions();
+
+  return domain.sources.map(sourceId => ({
+    id: sourceId,
+    description: SOURCE_DESCRIPTIONS[sourceId] ?? `Search ${sourceId} for academic papers`,
+  }));
+}
 
 // ---------------------------------------------------------------------------
 // Export all tools as a single object for use with streamText()

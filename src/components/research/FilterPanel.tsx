@@ -1,13 +1,15 @@
 "use client";
 
 import type { ResearchSearchFilters, StudyType } from "@/lib/research/types";
+import type { DomainConfig } from "@/lib/search/domains/types";
 
 interface FilterPanelProps {
   filters: ResearchSearchFilters;
   onFiltersChange: (filters: Partial<ResearchSearchFilters>) => void;
+  domain?: DomainConfig;
 }
 
-const STUDY_TYPE_OPTIONS: { value: StudyType; label: string }[] = [
+const DEFAULT_STUDY_TYPE_OPTIONS: { value: StudyType; label: string }[] = [
   { value: "rct", label: "RCT" },
   { value: "systematic_review", label: "Systematic Review" },
   { value: "meta_analysis", label: "Meta-Analysis" },
@@ -18,7 +20,20 @@ const STUDY_TYPE_OPTIONS: { value: StudyType; label: string }[] = [
   { value: "guideline", label: "Guideline" },
 ];
 
-export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
+const DEFAULT_SOURCES: ResearchSearchFilters["sources"] = ["pubmed", "semantic_scholar"];
+
+const SOURCE_LABELS: Record<string, string> = {
+  pubmed: "PubMed",
+  semantic_scholar: "Semantic Scholar",
+  openalex: "OpenAlex",
+  clinical_trials: "ClinicalTrials.gov",
+  arxiv: "arXiv",
+};
+
+export function FilterPanel({ filters, onFiltersChange, domain }: FilterPanelProps) {
+  const studyTypeOptions = (domain?.filterOptions as { value: StudyType; label: string }[] | undefined) ?? DEFAULT_STUDY_TYPE_OPTIONS;
+  const sourceOptions = domain?.sources ?? DEFAULT_SOURCES;
+
   const toggleStudyType = (type: StudyType) => {
     const current = filters.studyTypes;
     const updated = current.includes(type)
@@ -66,7 +81,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
         </label>
         <div className="flex flex-wrap gap-1">
           {/* empty state: renders nothing when no data */}
-          {STUDY_TYPE_OPTIONS.map(({ value, label }) => (
+          {studyTypeOptions.map(({ value, label }) => (
             <button
               key={value}
               onClick={() => toggleStudyType(value)}
@@ -101,35 +116,24 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
         <label className="text-[10px] font-medium text-ink-muted uppercase tracking-wider block mb-1">
           Sources
         </label>
-        <div className="flex gap-2">
-          <label className="flex items-center gap-1 text-xs text-ink-muted">
-            <input aria-label="Checkbox"
-              type="checkbox"
-              checked={filters.sources.includes("pubmed")}
-              onChange={(e) => {
-                const sources = e.target.checked
-                  ? [...new Set([...filters.sources, "pubmed" as const])]
-                  : filters.sources.filter((s) => s !== "pubmed");
-                onFiltersChange({ sources: sources.length > 0 ? sources : ["pubmed"] });
-              }}
-              className="rounded border-border"
-            />
-            PubMed
-          </label>
-          <label className="flex items-center gap-1 text-xs text-ink-muted">
-            <input aria-label="Checkbox"
-              type="checkbox"
-              checked={filters.sources.includes("semantic_scholar")}
-              onChange={(e) => {
-                const sources = e.target.checked
-                  ? [...new Set([...filters.sources, "semantic_scholar" as const])]
-                  : filters.sources.filter((s) => s !== "semantic_scholar");
-                onFiltersChange({ sources: sources.length > 0 ? sources : ["pubmed"] });
-              }}
-              className="rounded border-border"
-            />
-            Semantic Scholar
-          </label>
+        <div className="flex gap-2 flex-wrap">
+          {sourceOptions.map((sourceId) => (
+            <label key={sourceId} className="flex items-center gap-1 text-xs text-ink-muted">
+              <input aria-label="Checkbox"
+                type="checkbox"
+                checked={filters.sources.includes(sourceId as ResearchSearchFilters["sources"][number])}
+                onChange={(e) => {
+                  const sid = sourceId as ResearchSearchFilters["sources"][number];
+                  const sources = e.target.checked
+                    ? [...new Set([...filters.sources, sid])]
+                    : filters.sources.filter((s) => s !== sid);
+                  onFiltersChange({ sources: sources.length > 0 ? sources : [DEFAULT_SOURCES[0]] });
+                }}
+                className="rounded border-border"
+              />
+              {SOURCE_LABELS[sourceId] ?? sourceId}
+            </label>
+          ))}
         </div>
       </div>
     </div>
