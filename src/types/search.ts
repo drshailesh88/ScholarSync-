@@ -6,6 +6,7 @@ export interface UnifiedSearchResult {
   pmid?: string;
   s2Id?: string;
   openalexId?: string;
+  arxivId?: string;
 
   // Core metadata
   title: string;
