@@ -1007,3 +1007,17 @@ No new dead-import discoveries — Codex's dead code section (Pass 2) remains ac
 - The deep-research UI components read `source.pdfUrl`, but the execute route serializes `openAccessPdfUrl` and `fullTextUrl` instead; as a result, live report data will typically not render `PDF` anchors unless the source objects were populated elsewhere with `pdfUrl`.
 - `POST /api/deep-research/save` and `POST /api/deep-research/open-in-studio` do not special-case malformed JSON bodies; `request.json()` failures fall through to their generic `500` error responses.
 - The Open in Studio placeholder-user insert is documented as a dev fallback in comments, but the actual insert path runs whenever the authenticated user is missing from the DB, regardless of environment.
+
+## Multi-Domain Awareness (Added 2026-03-28)
+
+### Domain Selection
+- [ ] Deep research accepts an optional `?domain=` query parameter
+
+### Domain-Specific Behavior
+- [ ] Medicine and biology use the proven hardcoded perspective generator path
+- [ ] Non-medicine domains use config-driven perspectives
+- [ ] Generic fallback perspectives are used when a domain has no dedicated templates
+- [ ] RAG query-enhancer uses a domain-specific persona
+- [ ] RAG HyDE uses the selected domain's textbook persona
+- [ ] RAG source-summarizer uses domain-appropriate extraction hints
+- [ ] Feeds copilot summarize uses a domain-specific prompt

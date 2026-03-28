@@ -577,3 +577,14 @@
 
 ### Naming Inconsistency
 - [ ] Feature tour constants use `title` / `desc`, while goal constants use `label` / `description`
+
+## Multi-Domain Awareness (Added 2026-03-28)
+
+### Domain Selection
+- [ ] Onboarding shows all 15 domain options from the multi-domain registry
+- [ ] Domain picker is single-select, not multi-select
+- [ ] Selected domain is saved to `users.domain`
+- [ ] Users who skip domain selection default to `medicine`
+
+### Domain-Specific Behavior
+- [ ] Domain descriptions are accurate, distinct, and helpful for each of the 15 options

@@ -1182,3 +1182,15 @@
 - [ ] `unsubscribe()` removes the subscription from local state only after the DELETE request succeeds; it is not optimistic
 - [ ] Closing Copilot through `closeCopilot()` only sets `copilotOpen = false` and preserves messages/source state for the same selected article
 - [ ] Re-selecting the same article id does not clear Copilot state because `clearCopilot()` only runs when `articleId !== prev`
+
+## Multi-Domain Awareness (Added 2026-03-28)
+
+### Domain Selection
+- [ ] Journal browser filters feeds and journals by the active domain
+- [ ] Feed recommendations use the selected domain instead of medical specialty
+
+### Domain-Specific Behavior
+- [ ] Feed empty state shows domain-relevant suggestions
+- [ ] Physics users see physics journals and suggestions, not medical journals
+- [ ] Medicine users still see all current medical journals with no regression
+- [ ] Copilot summarization uses a domain-appropriate prompt

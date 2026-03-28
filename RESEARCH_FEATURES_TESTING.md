@@ -943,3 +943,18 @@ The live `/research` page does not call `/api/research/verify` or render `Verifi
 - [ ] Pagination UI is hidden entirely when `totalResults === 0`, even though the inner page-count text uses `Math.max(totalPages, 1)`
 
 *Document generated from source code analysis. Last updated: 2026-03-10.*
+
+## Multi-Domain Awareness (Added 2026-03-28)
+
+### Domain Selection
+- [ ] Search accepts an optional `?domain=` query parameter
+- [ ] Default domain (`medicine`) produces identical results to pre-multi-domain behavior when no domain is specified
+
+### Domain-Specific Behavior
+- [ ] Query augmentation uses the selected domain's persona and terminology
+- [ ] Evidence badges display the hierarchy configured for the active domain
+- [ ] Study type filters show only domain-relevant options
+- [ ] Source filters show only the sources configured for the active domain
+- [ ] Domain-driven source fan-out routes physics searches to arXiv and medicine searches to PubMed
+- [ ] arXiv source adapter returns results with correct field mapping into the unified search result shape
+- [ ] Tool descriptions show only domain-relevant databases
