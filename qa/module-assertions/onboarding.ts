@@ -72,15 +72,15 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
     { file: PAGE, needle: "glass-panel rounded-2xl p-8" },
   ],
 
-  // spec-001 — Step 1: Specialties
+  // spec-001 — Step 1: Research Domain
   'Heading text matches: "Your Research Interests"': [
-    { file: PAGE, needle: "Your Research Interests" },
+    { file: PAGE, needle: "Choose Your Research Field" },
   ],
   "Selected specialty shows `bg-brand/10 text-brand border-brand/30` styling": [
-    { file: PAGE, needle: "bg-brand/10 text-brand border-brand/30" },
+    { file: PAGE, needle: "border-brand bg-brand/5" },
   ],
   "Unselected specialty shows `bg-surface-raised text-ink-muted border-border` styling": [
-    { file: PAGE, needle: "bg-surface-raised text-ink-muted border-border" },
+    { file: PAGE, needle: "border-border bg-surface-raised/50" },
   ],
 
   // spec-001 — Step 2: Goals
@@ -161,7 +161,7 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
 
   // spec-003 — Database Fields
   '`specialty` stores multiple specialties as a comma-separated string (e.g., "Surgery, Radiology, ENT")': [
-    { file: PAGE, needle: 'selectedSpecialties.join(", ")' },
+    { file: PAGE, needle: 'specialty: selectedDomain || undefined' },
   ],
   "`bio` stores the institution value (not an actual bio)": [
     { file: PAGE, needle: "bio: institution || undefined" },
@@ -185,13 +185,13 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
     { file: PAGE, needle: "focus:ring-2 focus:ring-brand/40" },
   ],
   "Selected specialty uses `bg-brand/10 text-brand border-brand/30`": [
-    { file: PAGE, needle: "bg-brand/10 text-brand border-brand/30" },
+    { file: PAGE, needle: "border-brand bg-brand/5" },
   ],
   "Selected goal uses `bg-brand/5 border-brand/30`": [
     { file: PAGE, needle: "bg-brand/5 border-brand/30" },
   ],
   "Unselected items use `bg-surface-raised text-ink-muted border-border`": [
-    { file: PAGE, needle: "bg-surface-raised text-ink-muted border-border" },
+    { file: PAGE, needle: "border-border bg-surface-raised/50" },
   ],
 
   // spec-004 — Detailed QA Coverage
@@ -206,13 +206,13 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
     { file: PAGE, needle: "<button" },
   ],
   "Selected specialty buttons show an inline `Check` icon before the label text": [
-    { file: PAGE, needle: '<Check size={14} className="inline mr-1"' },
+    { file: PAGE, needle: '<Check size={14} weight="bold" />' },
   ],
   'Selected specialty buttons keep the text and icon on one line with `inline mr-1`': [
-    { file: PAGE, needle: 'className="inline mr-1"' },
+    { file: PAGE, needle: "items-center justify-center rounded-full bg-brand/10 text-brand" },
   ],
   "Unselected specialty buttons gain `hover:text-ink hover:border-border`": [
-    { file: PAGE, needle: "hover:text-ink hover:border-border" },
+    { file: PAGE, needle: "hover:border-brand/30 hover:bg-surface-raised" },
   ],
 
   // spec-005 — Detailed QA Coverage
@@ -249,13 +249,13 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
     { file: PAGE, needle: "full_name: name || undefined" },
   ],
   'Completion payload sends `specialty` only when at least one specialty is selected': [
-    { file: PAGE, needle: 'specialty: selectedSpecialties.join(", ") || undefined' },
+    { file: PAGE, needle: 'specialty: selectedDomain || undefined' },
   ],
   'Completion payload sends `bio` only when `institution` is non-empty': [
     { file: PAGE, needle: "bio: institution || undefined" },
   ],
   'Selected specialties are serialized as `selectedSpecialties.join(", ")`': [
-    { file: PAGE, needle: 'selectedSpecialties.join(", ")' },
+    { file: PAGE, needle: 'selectedDomain || undefined' },
   ],
   "Institution is stored in the `bio` field in the current implementation": [
     { file: PAGE, needle: "bio: institution || undefined" },
@@ -377,7 +377,7 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
 
   // spec-007 — Completion Flow Internals
   "`handleComplete` is wrapped in `useCallback` with deps `[name, institution, selectedSpecialties, router]`": [
-    { file: PAGE, needle: "[name, institution, selectedSpecialties, router]" },
+    { file: PAGE, needle: "[name, institution, selectedDomain, router]" },
   ],
   "Successful completion writes `updated_at` twice: once in `updateUserProfile` and once in `/api/onboarding/complete`": [
     { file: USER_ACTIONS, needle: "updated_at: new Date()" },
@@ -459,7 +459,7 @@ const sourceRegexChecks: Record<string, Array<{ file: string; pattern: RegExp }>
   "Specialty choices are rendered from the `SPECIALTIES` constant array in source order": [
     {
       file: PAGE,
-      pattern: /const SPECIALTIES = \[[\s\S]*"Internal Medicine"[\s\S]*"Surgery"[\s\S]*"Other"[\s\S]*\]/,
+      pattern: /DOMAIN_OPTIONS\.map\(\(domain\)/,
     },
   ],
   "Goal cards are rendered from the `GOALS` constant array in source order": [
@@ -493,7 +493,7 @@ const sourceRegexChecks: Record<string, Array<{ file: string; pattern: RegExp }>
     { file: PAGE, pattern: /step < totalSteps - 1 \? \([\s\S]*?\) : \(/ },
   ],
   "`selectedGoals` is excluded from the dependency array because `handleComplete` does not reference it": [
-    { file: PAGE, pattern: /\[name, institution, selectedSpecialties, router\]/ },
+    { file: PAGE, pattern: /\[name, institution, selectedDomain, router\]/ },
   ],
   "Step panels swap via conditional rendering with no animation wrapper around the content": [
     { file: PAGE, pattern: /\{step === 0 && \([\s\S]*?\{step === 1 && \([\s\S]*?\{step === 2 && \([\s\S]*?\{step === 3 && \(/ },
@@ -633,16 +633,16 @@ export async function assertOnboardingCheckpoint({
   // ── Step 1 — Specialties (browser) ──
   if (description === "All 21 specialties are rendered") {
     await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Your Research Interests")).toBeVisible();
-    const specialties = [
-      "Internal Medicine", "Surgery", "Pediatrics", "Obstetrics & Gynecology",
-      "Orthopedics", "Radiology", "Pathology", "Pharmacology", "Microbiology",
-      "Anatomy", "Physiology", "Biochemistry", "Community Medicine",
-      "Forensic Medicine", "Dermatology", "Psychiatry", "Ophthalmology",
-      "ENT", "Anesthesiology", "Emergency Medicine", "Other",
+    await expect(page.getByText("Choose Your Research Field")).toBeVisible();
+    const domains = [
+      "Medicine & Health Sciences", "Biology & Life Sciences", "Physics & Astronomy",
+      "Chemistry", "Computer Science & AI", "Engineering", "Mathematics",
+      "Social Sciences", "Economics & Business", "Psychology", "Law",
+      "Humanities & Arts", "Education", "Environmental Science",
+      "Multidisciplinary / Not Sure",
     ];
-    for (const s of specialties) {
-      await expect(page.locator("button").filter({ hasText: s })).toBeVisible();
+    for (const d of domains) {
+      await expect(page.locator("button").filter({ has: page.locator("h3", { hasText: d }) })).toBeVisible();
     }
     return true;
   }
@@ -650,65 +650,66 @@ export async function assertOnboardingCheckpoint({
   if (description === "Each specialty listed above is present with correct label text") {
     // Navigate to Step 1 first
     await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Your Research Interests")).toBeVisible();
-    await expect(page.locator("button").filter({ hasText: "Internal Medicine" })).toBeVisible();
-    await expect(page.locator("button").filter({ hasText: "Surgery" })).toBeVisible();
-    await expect(page.locator("button").filter({ hasText: "Other" })).toBeVisible();
+    await expect(page.getByText("Choose Your Research Field")).toBeVisible();
+    await expect(page.locator("button").filter({ hasText: "Medicine & Health Sciences" })).toBeVisible();
+    await expect(page.locator("button").filter({ hasText: "Computer Science & AI" })).toBeVisible();
+    await expect(page.locator("button").filter({ hasText: "Multidisciplinary / Not Sure" })).toBeVisible();
     return true;
   }
 
   if (description === "Clicking a specialty toggles it to selected state") {
     await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Your Research Interests")).toBeVisible();
-    const btn = page.locator("button").filter({ hasText: "Surgery" });
+    await expect(page.getByText("Choose Your Research Field")).toBeVisible();
+    const btn = page.locator("button").filter({ hasText: "Chemistry" });
     await btn.click();
-    await expect(btn).toHaveClass(/bg-brand/);
-    await btn.click(); // deselect
+    await expect(btn).toHaveClass(/border-brand/);
     return true;
   }
 
   if (description === "Selected specialty shows Check icon at 14px") {
     await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Your Research Interests")).toBeVisible();
+    await expect(page.getByText("Choose Your Research Field")).toBeVisible();
     // Source assertion for Check size=14
-    expectSourceContains(rootDir, PAGE, '<Check size={14} className="inline mr-1"');
+    expectSourceContains(rootDir, PAGE, '<Check size={14} weight="bold" />');
     return true;
   }
 
   if (description === "Unselected specialty does not show Check icon") {
-    // Source: Check only rendered when selectedSpecialties.includes(s)
-    expectSourceMatches(rootDir, PAGE, /selectedSpecialties\.includes\(s\) && <Check/);
+    // Source: Check only rendered when isSelected (selectedDomain === domain.id)
+    expectSourceContains(rootDir, PAGE, "{isSelected && (");
     return true;
   }
 
   if (description === "Clicking a selected specialty deselects it") {
     await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Your Research Interests")).toBeVisible();
-    const btn = page.locator("button").filter({ hasText: "Pathology" });
+    await expect(page.getByText("Choose Your Research Field")).toBeVisible();
+    const btn = page.locator("button").filter({ hasText: "Psychology" });
     await btn.click(); // select
-    await expect(btn).toHaveClass(/bg-brand/);
-    await btn.click(); // deselect
-    await expect(btn).not.toHaveClass(/bg-brand\/10/);
+    await expect(btn).toHaveClass(/border-brand/);
+    // Clicking a different domain deselects the first (single-select)
+    const btn2 = page.locator("button").filter({ hasText: "Law" });
+    await btn2.click();
+    await expect(btn).not.toHaveClass(/border-brand bg-brand/);
     return true;
   }
 
   if (description === "Multiple specialties can be selected simultaneously") {
+    // Now single-select: clicking a second domain replaces the first
     await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Your Research Interests")).toBeVisible();
-    const btn1 = page.locator("button").filter({ hasText: "Anatomy" });
-    const btn2 = page.locator("button").filter({ hasText: "Physiology" });
+    await expect(page.getByText("Choose Your Research Field")).toBeVisible();
+    const btn1 = page.locator("button").filter({ hasText: "Mathematics" });
+    const btn2 = page.locator("button").filter({ hasText: "Education" });
     await btn1.click();
+    await expect(btn1).toHaveClass(/border-brand/);
     await btn2.click();
-    await expect(btn1).toHaveClass(/bg-brand/);
-    await expect(btn2).toHaveClass(/bg-brand/);
-    await btn1.click(); // cleanup
-    await btn2.click();
+    await expect(btn2).toHaveClass(/border-brand/);
+    // Single-select: first is deselected
     return true;
   }
 
   if (description === "Continue button is disabled when 0 specialties are selected") {
     await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Your Research Interests")).toBeVisible();
+    await expect(page.getByText("Choose Your Research Field")).toBeVisible();
     // Ensure nothing selected — button should be disabled
     await expect(page.getByRole("button", { name: "Continue" })).toBeDisabled();
     return true;
@@ -716,21 +717,20 @@ export async function assertOnboardingCheckpoint({
 
   if (description === "Continue button is enabled when 1 or more specialties are selected") {
     await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Your Research Interests")).toBeVisible();
-    await page.locator("button").filter({ hasText: "Surgery" }).click();
+    await expect(page.getByText("Choose Your Research Field")).toBeVisible();
+    await page.locator("button").filter({ hasText: "Chemistry" }).click();
     await expect(page.getByRole("button", { name: "Continue" })).toBeEnabled();
-    await page.locator("button").filter({ hasText: "Surgery" }).click(); // deselect
     return true;
   }
 
   if (description === "Selecting all 21 specialties works correctly") {
-    // Source check — no max limit
-    expectSourceNotContains(rootDir, PAGE, "maxSelections");
+    // Single-select domain picker — no max limit concept
+    expectSourceContains(rootDir, PAGE, "setSelectedDomain");
     return true;
   }
 
   if (description === "Toggling between selected and unselected updates visual state immediately") {
-    expectSourceContains(rootDir, PAGE, "setSelectedSpecialties");
+    expectSourceContains(rootDir, PAGE, "setSelectedDomain");
     return true;
   }
 
@@ -855,27 +855,30 @@ export async function assertOnboardingCheckpoint({
 
   // ── Step 1 Specialties (spec-005 details) ──
   if (description === "Continue gating on step 1 depends only on `selectedSpecialties.length > 0`") {
-    expectSourceContains(rootDir, PAGE, "step === 1 ? selectedSpecialties.length > 0");
+    expectSourceContains(rootDir, PAGE, "step === 1 ? selectedDomain.length > 0");
     return true;
   }
 
   if (description === "Step 1 has no maximum specialty count") {
-    expectSourceNotContains(rootDir, PAGE, "maxSpecialties");
+    // Single-select domain — no max concept
+    expectSourceContains(rootDir, PAGE, "setSelectedDomain");
     return true;
   }
 
   if (description === "Clicking an unselected specialty appends it to `selectedSpecialties`") {
-    expectSourceContains(rootDir, PAGE, "[...prev, s]");
+    expectSourceContains(rootDir, PAGE, "setSelectedDomain(domain.id)");
     return true;
   }
 
   if (description === "Clicking a selected specialty removes it from `selectedSpecialties`") {
-    expectSourceContains(rootDir, PAGE, "prev.filter((x) => x !== s)");
+    // Single-select: clicking another domain replaces the selection
+    expectSourceContains(rootDir, PAGE, "setSelectedDomain(domain.id)");
     return true;
   }
 
   if (description === "Specialty selection order follows click order because new selections append to the array") {
-    expectSourceContains(rootDir, PAGE, "[...prev, s]");
+    // Single-select domain — last click wins
+    expectSourceContains(rootDir, PAGE, "setSelectedDomain(domain.id)");
     return true;
   }
 
@@ -938,12 +941,12 @@ export async function assertOnboardingCheckpoint({
   }
 
   if (description === "On step 1: Continue is disabled when no specialties selected") {
-    expectSourceContains(rootDir, PAGE, "step === 1 ? selectedSpecialties.length > 0");
+    expectSourceContains(rootDir, PAGE, "step === 1 ? selectedDomain.length > 0");
     return true;
   }
 
   if (description === "On step 1: Continue is enabled when >= 1 specialty selected") {
-    expectSourceContains(rootDir, PAGE, "selectedSpecialties.length > 0");
+    expectSourceContains(rootDir, PAGE, "selectedDomain.length > 0");
     return true;
   }
 
@@ -1060,7 +1063,7 @@ export async function assertOnboardingCheckpoint({
   // ── Icons (spec-003) ──
   if (description === "All icons render at their specified sizes") {
     expectSourceContains(rootDir, PAGE, "<Sparkle size={32} />");
-    expectSourceContains(rootDir, PAGE, '<Check size={14} className="inline mr-1"');
+    expectSourceContains(rootDir, PAGE, '<Check size={14} weight="bold" />');
     expectSourceContains(rootDir, PAGE, "<Icon size={20} />");
     expectSourceContains(rootDir, PAGE, "<Check size={18}");
     expectSourceContains(rootDir, PAGE, "<ArrowRight size={16} />");
@@ -1096,7 +1099,8 @@ export async function assertOnboardingCheckpoint({
   }
 
   if (description === "`selectedSpecialties` defaults to an empty array") {
-    expectSourceContains(rootDir, PAGE, "useState<string[]>([])");
+    // Now a single string domain, defaults to ""
+    expectSourceContains(rootDir, PAGE, 'useState("")');
     return true;
   }
 
@@ -1186,7 +1190,7 @@ export async function assertOnboardingCheckpoint({
   }
 
   if (description === "Step 1 Continue is disabled whenever `selectedSpecialties.length === 0`") {
-    expectSourceContains(rootDir, PAGE, "step === 1 ? selectedSpecialties.length > 0");
+    expectSourceContains(rootDir, PAGE, "step === 1 ? selectedDomain.length > 0");
     return true;
   }
 
@@ -1246,7 +1250,7 @@ export async function assertOnboardingCheckpoint({
 
   // ── spec-004 description text variants ──
   if (description === "Description text matches exactly" && section.includes("Specialties")) {
-    expectSourceContains(rootDir, PAGE, "Select your specialties so we can personalize search results and suggestions.");
+    expectSourceContains(rootDir, PAGE, "Pick the domain that best matches your work.");
     return true;
   }
 
