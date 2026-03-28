@@ -46,14 +46,14 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   }),
   buildJournalFeed({
     title: "eLife",
-    feedUrl: "https://elifesciences.org/rss/current.xml",
+    feedUrl: "https://elifesciences.org/rss/recent.xml",
     siteUrl: "https://elifesciences.org/",
     publisher: "eLife Sciences Publications",
     category: "Multidisciplinary",
   }),
   buildJournalFeed({
     title: "PeerJ",
-    feedUrl: "https://peerj.com/rss/",
+    feedUrl: "https://peerj.com/articles/index.rss2",
     siteUrl: "https://peerj.com/",
     publisher: "PeerJ",
     category: "Multidisciplinary",
@@ -120,14 +120,14 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   }),
   buildJournalFeed({
     title: "BMC Biology",
-    feedUrl: "https://bmcbiol.biomedcentral.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=12915",
     siteUrl: "https://bmcbiol.biomedcentral.com/",
     publisher: "Springer Nature",
     category: "General Biology",
   }),
   buildJournalFeed({
     title: "Genome Biology",
-    feedUrl: "https://genomebiology.biomedcentral.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=13059",
     siteUrl: "https://genomebiology.biomedcentral.com/",
     publisher: "Springer Nature",
     category: "Genetics",
@@ -155,14 +155,14 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   }),
   buildJournalFeed({
     title: "BMC Genomics",
-    feedUrl: "https://bmcgenomics.biomedcentral.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=12864",
     siteUrl: "https://bmcgenomics.biomedcentral.com/",
     publisher: "Springer Nature",
     category: "Genetics",
   }),
   buildJournalFeed({
     title: "Microbiome",
-    feedUrl: "https://microbiomejournal.biomedcentral.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=40168",
     siteUrl: "https://microbiomejournal.biomedcentral.com/",
     publisher: "Springer Nature",
     category: "Microbiology",
@@ -180,14 +180,14 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   }),
   buildJournalFeed({
     title: "Physical Review Letters",
-    feedUrl: "https://journals.aps.org/prl/recent.rss",
+    feedUrl: "https://feeds.aps.org/rss/recent/prl.xml",
     siteUrl: "https://journals.aps.org/prl/",
     publisher: "APS",
     category: "General Physics",
   }),
   buildJournalFeed({
     title: "Physical Review X",
-    feedUrl: "https://journals.aps.org/prx/recent.rss",
+    feedUrl: "https://feeds.aps.org/rss/recent/prx.xml",
     siteUrl: "https://journals.aps.org/prx/",
     publisher: "APS",
     category: "General Physics",
@@ -384,7 +384,7 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   }),
   buildJournalFeed({
     title: "Journal of Machine Learning Research",
-    feedUrl: "https://www.jmlr.org/papers/rss.xml",
+    feedUrl: "https://www.jmlr.org/jmlr.xml",
     siteUrl: "https://www.jmlr.org/",
     publisher: "Microtome Publishing",
     category: "AI & Machine Learning",
@@ -606,7 +606,7 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   }),
   buildJournalFeed({
     title: "SN Social Sciences",
-    feedUrl: "https://link.springer.com/journal/43545/rss",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=43545",
     siteUrl: "https://link.springer.com/journal/43545",
     publisher: "Springer Nature",
     category: "Interdisciplinary Social Science",
@@ -698,7 +698,7 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   }),
   buildJournalFeed({
     title: "BMC Psychology",
-    feedUrl: "https://bmcpsychology.biomedcentral.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=40359",
     siteUrl: "https://bmcpsychology.biomedcentral.com/",
     publisher: "Springer Nature",
     category: "Clinical Psychology",
@@ -723,13 +723,6 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     siteUrl: "https://www.frontiersin.org/journals/human-neuroscience",
     publisher: "Frontiers",
     category: "Neuroscience & Behavior",
-  }),
-  buildJournalFeed({
-    title: "Behavioral Sciences",
-    feedUrl: "https://www.mdpi.com/rss/journal/behavsci-psychology",
-    siteUrl: "https://www.mdpi.com/journal/behavsci",
-    publisher: "MDPI",
-    category: "Social Psychology",
   }),
   buildJournalFeed({
     title: "Psych",
@@ -771,13 +764,6 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     category: "Constitutional Law",
   }),
   buildJournalFeed({
-    title: "Yale Law Journal",
-    feedUrl: "https://www.yalelawjournal.org/feed",
-    siteUrl: "https://www.yalelawjournal.org/",
-    publisher: "Yale Law Journal",
-    category: "Legal Theory",
-  }),
-  buildJournalFeed({
     title: "Stanford Law Review",
     feedUrl: "https://stanfordlawreview.org/feed/",
     siteUrl: "https://stanfordlawreview.org/",
@@ -811,13 +797,6 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     siteUrl: "https://www.law.georgetown.edu/georgetown-law-journal/",
     publisher: "Georgetown University Law Center",
     category: "International Law",
-  }),
-  buildJournalFeed({
-    title: "University of Pennsylvania Law Review",
-    feedUrl: "https://scholarship.law.upenn.edu/penn_law_review/recent.rss",
-    siteUrl: "https://scholarship.law.upenn.edu/penn_law_review/",
-    publisher: "University of Pennsylvania Carey Law School",
-    category: "Administrative Law",
   }),
   buildJournalFeed({
     title: "Laws",
@@ -900,13 +879,6 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     publisher: "MDPI",
     category: "Art & Media Studies",
   }),
-  buildJournalFeed({
-    title: "Genealogy",
-    feedUrl: "https://www.mdpi.com/rss/journal/genealogy-humanities",
-    siteUrl: "https://www.mdpi.com/journal/genealogy",
-    publisher: "MDPI",
-    category: "Cultural Studies",
-  }),
 
   // ═══════════════════════════════════════════════════════════════════
   // EDUCATION
@@ -926,59 +898,38 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     category: "Higher Education",
   }),
   buildJournalFeed({
-    title: "Teaching",
-    feedUrl: "https://www.mdpi.com/rss/journal/teaching",
-    siteUrl: "https://www.mdpi.com/journal/teaching",
-    publisher: "MDPI",
-    category: "Teacher Education",
-  }),
-  buildJournalFeed({
     title: "International Journal of STEM Education",
-    feedUrl: "https://stemeducationjournal.springeropen.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=40594",
     siteUrl: "https://stemeducationjournal.springeropen.com/",
     publisher: "Springer Nature",
     category: "Learning Sciences",
   }),
   buildJournalFeed({
     title: "International Journal of Educational Technology in Higher Education",
-    feedUrl: "https://educationaltechnologyjournal.springeropen.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=41239",
     siteUrl: "https://educationaltechnologyjournal.springeropen.com/",
     publisher: "Springer Nature",
     category: "Educational Technology",
   }),
   buildJournalFeed({
     title: "Smart Learning Environments",
-    feedUrl: "https://slejournal.springeropen.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=40561",
     siteUrl: "https://slejournal.springeropen.com/",
     publisher: "Springer Nature",
     category: "Educational Technology",
   }),
   buildJournalFeed({
     title: "Language Testing in Asia",
-    feedUrl: "https://languagetestingasia.springeropen.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=40468",
     siteUrl: "https://languagetestingasia.springeropen.com/",
     publisher: "Springer Nature",
     category: "Assessment & Evaluation",
-  }),
-  buildJournalFeed({
-    title: "Education Research International",
-    feedUrl: "https://www.hindawi.com/journals/edri/rss.xml",
-    siteUrl: "https://www.hindawi.com/journals/edri/",
-    publisher: "Hindawi / Wiley",
-    category: "Higher Education",
   }),
   buildJournalFeed({
     title: "Journal of Learning Analytics",
     feedUrl: "https://learning-analytics.info/index.php/JLA/gateway/plugin/WebFeedGatewayPlugin/rss2",
     siteUrl: "https://learning-analytics.info/index.php/JLA",
     publisher: "Society for Learning Analytics Research",
-    category: "Assessment & Evaluation",
-  }),
-  buildJournalFeed({
-    title: "Journal of Educational Evaluation for Health Professions",
-    feedUrl: "https://jeehp.org/rss/current.xml",
-    siteUrl: "https://jeehp.org/",
-    publisher: "National Health Personnel Licensing Examination Board of Korea",
     category: "Assessment & Evaluation",
   }),
 
@@ -1050,7 +1001,7 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   }),
   buildJournalFeed({
     title: "Environmental Sciences Europe",
-    feedUrl: "https://enveurope.springeropen.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=12302",
     siteUrl: "https://enveurope.springeropen.com/",
     publisher: "Springer Nature",
     category: "Environmental Chemistry",
@@ -1114,7 +1065,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "JAMA Internal Medicine",
-    feedUrl: "https://jamanetwork.com/rss/site_110/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_17/73.xml",
     siteUrl: "https://jamanetwork.com/journals/jamainternalmedicine",
     publisher: "American Medical Association",
     category: "General Medicine",
@@ -1157,7 +1108,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "European Heart Journal",
-    feedUrl: "https://academic.oup.com/rss/site_5375/3048.xml",
+    feedUrl: "https://academic.oup.com/rss/site_5375/3236.xml",
     siteUrl: "https://academic.oup.com/eurheartj",
     publisher: "Oxford University Press / ESC",
     category: "Cardiology",
@@ -1176,7 +1127,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "JAMA Cardiology",
-    feedUrl: "https://jamanetwork.com/rss/site_174/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_20/76.xml",
     siteUrl: "https://jamanetwork.com/journals/jamacardiology",
     publisher: "American Medical Association",
     category: "Cardiology",
@@ -1226,7 +1177,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "JAMA Surgery",
-    feedUrl: "https://jamanetwork.com/rss/site_117/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_12/68.xml",
     siteUrl: "https://jamanetwork.com/journals/jamasurgery",
     publisher: "American Medical Association",
     category: "Surgery",
@@ -1235,21 +1186,12 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "British Journal of Surgery",
-    feedUrl: "https://academic.oup.com/rss/site_5282/3162.xml",
+    feedUrl: "https://academic.oup.com/rss/site_6337/advanceAccess_4087.xml",
     siteUrl: "https://academic.oup.com/bjs",
     publisher: "Oxford University Press",
     category: "Surgery",
     specialty: "Surgery",
     issn: "0007-1323",
-  },
-  {
-    title: "The Lancet — General Surgery",
-    feedUrl: "https://www.thelancet.com/rssfeed/lancet_surgery.xml",
-    siteUrl: "https://www.thelancet.com",
-    publisher: "Elsevier",
-    category: "Surgery",
-    specialty: "Surgery",
-    issn: "0140-6736",
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -1258,7 +1200,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "JAMA Pediatrics",
-    feedUrl: "https://jamanetwork.com/rss/site_75/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_14/70.xml",
     siteUrl: "https://jamanetwork.com/journals/jamapediatrics",
     publisher: "American Medical Association",
     category: "Pediatrics",
@@ -1299,7 +1241,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "JAMA Oncology",
-    feedUrl: "https://jamanetwork.com/rss/site_172/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_19/75.xml",
     siteUrl: "https://jamanetwork.com/journals/jamaoncology",
     publisher: "American Medical Association",
     category: "Oncology",
@@ -1331,7 +1273,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "JAMA Neurology",
-    feedUrl: "https://jamanetwork.com/rss/site_112/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_15/71.xml",
     siteUrl: "https://jamanetwork.com/journals/jamaneurology",
     publisher: "American Medical Association",
     category: "Neurology",
@@ -1358,7 +1300,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "JAMA Psychiatry",
-    feedUrl: "https://jamanetwork.com/rss/site_70/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_16/72.xml",
     siteUrl: "https://jamanetwork.com/journals/jamapsychiatry",
     publisher: "American Medical Association",
     category: "Psychiatry",
@@ -1390,7 +1332,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "JAMA Radiology (Diagnostic Imaging)",
-    feedUrl: "https://jamanetwork.com/rss/site_176/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_192/184.xml",
     siteUrl: "https://jamanetwork.com/journals/jama/diagnostic-imaging",
     publisher: "American Medical Association",
     category: "Radiology",
@@ -1435,7 +1377,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "JAMA Dermatology",
-    feedUrl: "https://jamanetwork.com/rss/site_68/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_214/187.xml",
     siteUrl: "https://jamanetwork.com/journals/jamadermatology",
     publisher: "American Medical Association",
     category: "Dermatology",
@@ -1444,7 +1386,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "British Journal of Dermatology",
-    feedUrl: "https://academic.oup.com/rss/site_5102/3128.xml",
+    feedUrl: "https://academic.oup.com/rss/site_5367/3228.xml",
     siteUrl: "https://academic.oup.com/bjd",
     publisher: "Oxford University Press",
     category: "Dermatology",
@@ -1458,7 +1400,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "JAMA Ophthalmology",
-    feedUrl: "https://jamanetwork.com/rss/site_116/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_159/174.xml",
     siteUrl: "https://jamanetwork.com/journals/jamaophthalmology",
     publisher: "American Medical Association",
     category: "Ophthalmology",
@@ -1481,7 +1423,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "JAMA Otolaryngology — Head & Neck Surgery",
-    feedUrl: "https://jamanetwork.com/rss/site_113/67.xml",
+    feedUrl: "https://jamanetwork.com/rss/site_18/74.xml",
     siteUrl: "https://jamanetwork.com/journals/jamaotolaryngology",
     publisher: "American Medical Association",
     category: "Otolaryngology",
@@ -1513,7 +1455,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "The Lancet — Obstetrics, Gynaecology & Women's Health",
-    feedUrl: "https://www.thelancet.com/rssfeed/lancet_obsgyn.xml",
+    feedUrl: "https://www.thelancet.com/rssfeed/lanogw_current.xml",
     siteUrl: "https://www.thelancet.com",
     publisher: "Elsevier",
     category: "Obstetrics & Gynecology",
@@ -1558,7 +1500,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "Anesthesiology",
-    feedUrl: "https://pubs.asahq.org/anesthesiology/pages/rss",
+    feedUrl: "https://journals.lww.com/anesthesiology/_layouts/OAKS.Journals/feed.aspx?FeedType=LatestArticles",
     siteUrl: "https://pubs.asahq.org/anesthesiology",
     publisher: "ASA / Wolters Kluwer",
     category: "Anesthesiology",
@@ -1567,7 +1509,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "British Journal of Anaesthesia",
-    feedUrl: "https://academic.oup.com/rss/site_5290/3166.xml",
+    feedUrl: "https://academic.oup.com/rss/site_5285/3151.xml",
     siteUrl: "https://academic.oup.com/bja",
     publisher: "Oxford University Press",
     category: "Anesthesiology",
@@ -1590,7 +1532,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "Clinical Infectious Diseases",
-    feedUrl: "https://academic.oup.com/rss/site_5176/3091.xml",
+    feedUrl: "https://academic.oup.com/rss/site_5301/3167.xml",
     siteUrl: "https://academic.oup.com/cid",
     publisher: "Oxford University Press / IDSA",
     category: "Infectious Disease",
@@ -1608,7 +1550,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "American Journal of Clinical Pathology",
-    feedUrl: "https://academic.oup.com/rss/site_5188/3097.xml",
+    feedUrl: "https://academic.oup.com/rss/site_5269/3135.xml",
     siteUrl: "https://academic.oup.com/ajcp",
     publisher: "Oxford University Press",
     category: "Pathology",
@@ -1696,7 +1638,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "Cell",
-    feedUrl: "https://www.cell.com/cell/rss",
+    feedUrl: "https://www.cell.com/cell/current.rss",
     siteUrl: "https://www.cell.com/cell/home",
     publisher: "Cell Press / Elsevier",
     category: "Cell Biology",
@@ -1737,7 +1679,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "The Cochrane Database of Systematic Reviews",
-    feedUrl: "https://www.cochranelibrary.com/rss/content/feed?topic=&contentLanguage=&searchBy=&orderBy=publishedDate&feed=rss",
+    feedUrl: "https://www.cochranelibrary.com/cdsr/table-of-contents/rss.xml",
     siteUrl: "https://www.cochranelibrary.com",
     publisher: "Cochrane",
     category: "Evidence-Based Medicine",
@@ -1746,7 +1688,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "Systematic Reviews",
-    feedUrl: "https://systematicreviewsjournal.biomedcentral.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=13643",
     siteUrl: "https://systematicreviewsjournal.biomedcentral.com",
     publisher: "BioMed Central / Springer Nature",
     category: "Research Methods",
@@ -1755,7 +1697,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   },
   {
     title: "Trials",
-    feedUrl: "https://trialsjournal.biomedcentral.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=13063",
     siteUrl: "https://trialsjournal.biomedcentral.com",
     publisher: "BioMed Central / Springer Nature",
     category: "Research Methods",
@@ -1833,7 +1775,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   {
     title: "BMC Medicine",
-    feedUrl: "https://bmcmedicine.biomedcentral.com/articles/most-recent/rss.xml",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=12916",
     siteUrl: "https://bmcmedicine.biomedcentral.com",
     publisher: "BioMed Central / Springer Nature",
     category: "General Medicine",
