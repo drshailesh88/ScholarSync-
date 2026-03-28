@@ -13,6 +13,7 @@
 // ---------------------------------------------------------------------------
 
 import type { GuideDocumentType, GuideStage, GuideContext } from "@/types/guide";
+import type { DomainConfig } from "@/lib/search/domains/types";
 
 // ============================================================================
 // 1. BASE SYSTEM PROMPT (applies to ALL document types and stages)
@@ -484,7 +485,7 @@ Use CARE checklist for systematic review: "Let's go through the CARE checklist a
  *   3. Stage-specific behavior overlay (what to do in this stage)
  *   4. Context integration (project-specific details)
  */
-export function getGuideSystemPrompt(context: GuideContext): string {
+function buildLegacyGuideSystemPrompt(context: GuideContext): string {
   const parts: string[] = [BASE_SYSTEM_PROMPT];
 
   // Layer 2: Document-type persona
@@ -504,6 +505,66 @@ export function getGuideSystemPrompt(context: GuideContext): string {
   }
 
   return parts.join("\n");
+}
+
+function buildConfigDrivenGuidePrompt(domain: DomainConfig): string {
+  const ctx = domain.guidanceContext;
+  if (!ctx) {
+    return BASE_SYSTEM_PROMPT;
+  }
+
+  return `You are ScholarSync's AI research mentor for ${domain.label} researchers.
+
+Your role is to TEACH users how to write scholarly manuscripts, not to write for them.
+
+TARGET READER: ${ctx.targetReader}
+
+CORE PRINCIPLES:
+- Socratic questioning: ask before telling
+- Never fabricate citations, statistics, or data
+- Evidence is sacred — always ground advice in published conventions
+- Academic precision is non-negotiable
+
+REPORTING GUIDELINES for this field:
+${ctx.reportingGuidelines.length > 0 ? ctx.reportingGuidelines.map((guideline) => `- ${guideline}`).join("\n") : "- Follow the conventions of your target journal"}
+
+WRITING CONVENTIONS:
+${ctx.writingConventions}
+
+AVAILABLE DOCUMENT TYPES:
+${ctx.documentTypes.map((documentType) => `- ${documentType}`).join("\n")}
+
+For each document type, guide the user through:
+1. UNDERSTAND — Clarify the research question and audience
+2. PLAN — Select target venue, understand required structure
+3. OUTLINE — Section-by-section planning
+4. DRAFT — Help with writing, offer sentence starters (NOT complete sentences)
+5. REVISE — Structured feedback using field conventions
+6. POLISH — Abstract formatting, title selection, ethical requirements`;
+}
+
+function buildConfigDrivenContextSection(context: GuideContext): string {
+  return [
+    `CURRENT DOCUMENT TYPE: ${context.documentType}`,
+    `CURRENT STAGE: ${context.stage.toUpperCase()}`,
+    buildContextSection(context),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+export function getGuideSystemPrompt(
+  context: GuideContext,
+  domain?: DomainConfig
+): string {
+  if (!domain || domain.useProvenGuidance || !domain.guidanceContext) {
+    return buildLegacyGuideSystemPrompt(context);
+  }
+
+  return [
+    buildConfigDrivenGuidePrompt(domain),
+    `--- PROJECT CONTEXT ---\n${buildConfigDrivenContextSection(context)}`,
+  ].join("\n\n");
 }
 
 /**
@@ -532,7 +593,7 @@ function buildContextSection(context: GuideContext): string {
  * Returns a simple guide system prompt when no context is available yet
  * (e.g., the user just toggled Learn mode and hasn't started a project).
  */
-export function getDefaultGuidePrompt(): string {
+function buildLegacyDefaultGuidePrompt(): string {
   return `${BASE_SYSTEM_PROMPT}
 
 --- ONBOARDING ---
@@ -546,4 +607,24 @@ Your first task is to understand their project:
 Be welcoming and warm. This may be their first time using guided writing support.
 
 Example opening: "Welcome to Guided Mode! I'm here to help you learn the craft of scientific writing — step by step. Tell me: what are you working on? Do you have a specific manuscript in mind, or are you exploring an idea?"`;
+}
+
+export function getDefaultGuidePrompt(domain?: DomainConfig): string {
+  if (!domain || domain.useProvenGuidance || !domain.guidanceContext) {
+    return buildLegacyDefaultGuidePrompt();
+  }
+
+  return `${buildConfigDrivenGuidePrompt(domain)}
+
+--- ONBOARDING ---
+The user has just entered Guided Mode. You don't yet know what they want to write.
+
+Your first task is to understand their project:
+1. Ask what they want to write about
+2. Ask what type of scholarly document they're working on
+3. Assess their current stage — are they starting from scratch, or do they have a draft?
+
+Be welcoming, precise, and field-aware.
+
+Example opening: "Welcome to Guided Mode! I'm here to help you learn the craft of scholarly writing in ${domain.label} — step by step. What are you working on?"`;
 }

@@ -9,6 +9,7 @@ import { eq, inArray } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+import { getDomainConfig } from "@/lib/search/domains";
 
 const preprocessSchema = z.object({
   sourceType: z.enum(["papers", "document", "text", "deep_research", "references"]),
@@ -18,6 +19,7 @@ const preprocessSchema = z.object({
   rawText: z.string().max(500000).optional(),
   /** Formatted reference content (used when sourceType is "references") */
   referenceContent: z.string().max(500000).optional(),
+  domain: z.string().optional(),
 });
 
 export async function POST(req: Request) {
@@ -106,9 +108,11 @@ export async function POST(req: Request) {
       );
     }
 
+    const domain = body.domain ? getDomainConfig(body.domain) : undefined;
+
     const result = streamText({
       model: getModel(),
-      system: getPreProcessorSystemPrompt(sourceLabel),
+      system: getPreProcessorSystemPrompt(sourceLabel, domain),
       prompt: sourceContent.slice(0, 60000),
     });
 

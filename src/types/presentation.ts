@@ -1017,7 +1017,9 @@ export type AudienceType =
   | "poster_session"
   | "systematic_review"
   | "patient_case"
-  | "grand_rounds";
+  | "grand_rounds"
+  | "lab_meeting"
+  | "departmental_seminar";
 
 export type GenerationStatus = "pending" | "processing" | "completed" | "failed";
 

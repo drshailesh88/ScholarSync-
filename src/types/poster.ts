@@ -4,6 +4,7 @@
 // ============================================================================
 
 import type { ContentBlock, ThemeConfig, InstitutionKit } from "./presentation";
+import type { DomainConfig, DomainId } from "@/lib/search/domains/types";
 
 // ---------------------------------------------------------------------------
 // Poster Sizes — standard academic conference poster dimensions
@@ -147,6 +148,7 @@ export interface PosterTemplateSection {
 export interface PosterTemplate {
   name: string;
   description: string;
+  domains: DomainId[];
   gridLayout: PosterGridLayout;
   sections: PosterTemplateSection[];
 }
@@ -155,6 +157,7 @@ export const POSTER_TEMPLATES: Record<string, PosterTemplate> = {
   clinical_research: {
     name: "Clinical Research",
     description: "Standard IMRAD poster for clinical studies with emphasis on results",
+    domains: ["medicine", "biology"],
     gridLayout: "three_column",
     sections: [
       { title: "Title", column: 0, row: 0, colSpan: 3, guidance: "Title, authors, affiliations, institutional logos" },
@@ -171,6 +174,7 @@ export const POSTER_TEMPLATES: Record<string, PosterTemplate> = {
   basic_science: {
     name: "Basic Science",
     description: "Lab research poster with detailed methodology and data visualization",
+    domains: ["medicine", "biology", "physics", "chemistry", "environmental"],
     gridLayout: "three_column",
     sections: [
       { title: "Title", column: 0, row: 0, colSpan: 3, guidance: "Title, authors, affiliations, lab logo" },
@@ -187,6 +191,7 @@ export const POSTER_TEMPLATES: Record<string, PosterTemplate> = {
   systematic_review: {
     name: "Systematic Review",
     description: "PRISMA-compliant poster for systematic reviews and meta-analyses",
+    domains: ["medicine", "biology", "psychology"],
     gridLayout: "three_column",
     sections: [
       { title: "Title", column: 0, row: 0, colSpan: 3, guidance: "Title, authors, PROSPERO registration number" },
@@ -203,6 +208,7 @@ export const POSTER_TEMPLATES: Record<string, PosterTemplate> = {
   engineering: {
     name: "Engineering / CS",
     description: "Technical poster for engineering and computer science research",
+    domains: ["engineering", "computer_science", "mathematics"],
     gridLayout: "two_column_wide",
     sections: [
       { title: "Title", column: 0, row: 0, colSpan: 2, guidance: "Title, authors, affiliations, lab/group logos" },
@@ -217,3 +223,13 @@ export const POSTER_TEMPLATES: Record<string, PosterTemplate> = {
     ],
   },
 };
+
+export function getPosterTemplatesForDomain(domain?: DomainConfig): PosterTemplate[] {
+  if (!domain) {
+    return Object.values(POSTER_TEMPLATES);
+  }
+
+  return Object.entries(POSTER_TEMPLATES)
+    .filter(([key]) => domain.posterTemplates.includes(key))
+    .map(([, template]) => template);
+}

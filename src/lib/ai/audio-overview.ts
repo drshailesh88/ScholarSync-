@@ -77,7 +77,7 @@ export async function generateAudioScript(
   const paperCount = input.paperOverviews.length;
   const modeContext =
     input.mode === "learn"
-      ? "The listener is a medical student studying these papers. Be educational, explain concepts clearly, and use occasional rhetorical questions to keep attention."
+      ? "The listener is a student studying these papers. Be educational, explain concepts clearly, and use occasional rhetorical questions to keep attention."
       : "The listener is a researcher reviewing these papers. Focus on methodology, key findings, and how the papers connect or disagree.";
 
   // Length targets based on user selection

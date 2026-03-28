@@ -126,6 +126,10 @@ export function BuddyPanel({ isOpen, onClose, width = 360 }: BuddyPanelProps) {
 
       // Determine API mode
       const apiMode = mode === "learn" ? "learn" : "draft";
+      const domainId =
+        typeof window !== "undefined"
+          ? (new URLSearchParams(window.location.search).get("domain") ?? undefined)
+          : undefined;
 
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -134,7 +138,9 @@ export function BuddyPanel({ isOpen, onClose, width = 360 }: BuddyPanelProps) {
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
           mode: apiMode,
           ...(mode === "draft" ? { draftContext: { intensity } } : {}),
-          ...(mode === "learn" ? { guideContext: { documentType: "original_article", stage: "writing" } } : {}),
+          ...(mode === "learn"
+            ? { guideContext: { documentType: "original_article", stage: "writing", domainId } }
+            : {}),
         }),
       });
 
