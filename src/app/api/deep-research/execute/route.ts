@@ -18,6 +18,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { runDeepResearch } from "@/lib/deep-research/engine";
+import { getDomainConfig } from "@/lib/search/domains";
 import type {
   ResearchConfig,
   ResearchStage,
@@ -99,6 +100,8 @@ export async function POST(req: NextRequest) {
   }
 
   const { topic, mode, perspectives: planPerspectives, config } = body;
+  const domainParam = req.nextUrl.searchParams.get("domain");
+  const domain = domainParam ? getDomainConfig(domainParam) : undefined;
 
   // Convert PlanPerspective[] to engine Perspective[] format
   const enginePerspectives: Perspective[] = planPerspectives.map((p, idx) => ({
@@ -139,7 +142,8 @@ export async function POST(req: NextRequest) {
           resolvedConfig,
           onProgress,
           undefined, // no onPerspectives callback needed
-          enginePerspectives
+          enginePerspectives,
+          domain
         );
 
         // Send the full report

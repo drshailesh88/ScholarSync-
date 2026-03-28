@@ -12,6 +12,7 @@
 import { generateObject } from "ai";
 import { z } from "zod";
 import { getSmallModel } from "@/lib/ai/models";
+import type { DomainConfig } from "@/lib/search/domains/types";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -73,7 +74,8 @@ const sourceOverviewSchema = z.object({
 export async function generateSourceOverview(
   paperTitle: string,
   paperAuthors: string[],
-  chunks: SummarizerChunk[]
+  chunks: SummarizerChunk[],
+  domain?: DomainConfig
 ): Promise<SourceOverview> {
   // Take first 10 chunks max, sorted by chunk_index
   const selectedChunks = [...chunks]
@@ -90,6 +92,10 @@ export async function generateSourceOverview(
     })
     .join("\n\n");
 
+  const extractionHint = domain
+    ? `Summarize the key findings from this research excerpt relevant to ${domain.label}.`
+    : "If the excerpts are from a clinical trial, mention the intervention, population, and key findings. If from a systematic review, mention the number of included studies and main conclusions.";
+
   const systemPrompt = `You are a research paper summarizer. Given excerpts from an academic paper, generate a structured overview.
 
 CRITICAL RULES:
@@ -97,7 +103,7 @@ CRITICAL RULES:
 2. Key topics must reflect the actual content of the excerpts.
 3. Suggested questions must be answerable from the excerpts provided — do NOT ask about information that isn't covered.
 4. Keep the summary to 3-4 sentences. Be precise and factual.
-5. If the excerpts are from a clinical trial, mention the intervention, population, and key findings — but ONLY what is stated in the text.`;
+5. ${extractionHint}`;
 
   const userPrompt = `Paper: "${paperTitle}" by ${paperAuthors.slice(0, 3).join(", ")}
 

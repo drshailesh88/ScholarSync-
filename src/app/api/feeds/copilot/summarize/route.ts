@@ -17,6 +17,7 @@ import {
   resolveArticleSource,
   type ArticleInput,
 } from "@/lib/feeds/copilot-source-resolver";
+import { getDomainConfig } from "@/lib/search/domains";
 import { z } from "zod";
 
 const inputSchema = z.object({
@@ -31,15 +32,6 @@ const inputSchema = z.object({
   publishedAt: z.string().nullable(),
   link: z.string().nullable(),
 });
-
-const SUMMARIZE_PROMPT = `Based on the article provided, generate a clinical summary in exactly 3 sentences:
-1. What was studied (population, intervention/exposure)
-2. What was found (primary outcome, key statistics)
-3. What it means for clinical practice (significance)
-
-Keep the language accessible to a medical student. Include key numbers (HR, OR, p-values, NNT) when available. Do NOT start with "This study..." — lead with the finding.
-
-Then on a new line, output exactly 3 suggested follow-up questions the reader might want to ask, prefixed with "Q: ".`;
 
 export async function POST(req: NextRequest) {
   try {
@@ -77,6 +69,18 @@ export async function POST(req: NextRequest) {
     }
 
     const article: ArticleInput = parsed.data;
+    const domainParam = req.nextUrl.searchParams.get("domain");
+    const domain = domainParam ? getDomainConfig(domainParam) : undefined;
+    const summaryPrompt = `${domain?.feedsSummaryPrompt ?? `Generate a clinical summary in exactly 3 sentences:
+1. What was studied (population, intervention/exposure)
+2. What was found (primary outcome, key statistics)
+3. What it means for clinical practice (significance)
+
+Keep language accessible to a medical student. Include key numbers (HR, OR, p-values, NNT).
+Do NOT start with "This study..." — lead with the finding.
+Then output exactly 3 suggested follow-up questions.`}
+
+Output the follow-up questions on separate lines prefixed with "Q: ".`;
 
     // Resolve source material
     const source = await resolveArticleSource(article);
@@ -92,7 +96,7 @@ export async function POST(req: NextRequest) {
     const { text, usage } = await generateText({
       model: getSmallModel(),
       system: source.systemPrompt,
-      prompt: `${source.context}\n\n---\n\n${SUMMARIZE_PROMPT}`,
+      prompt: `${source.context}\n\n---\n\n${summaryPrompt}`,
       temperature: 0.2,
     });
 

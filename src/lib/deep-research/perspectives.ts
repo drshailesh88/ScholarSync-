@@ -8,6 +8,7 @@
 
 import { generateText } from "ai";
 import { getDeepResearchModel } from "@/lib/ai/models";
+import type { DomainConfig } from "@/lib/search/domains/types";
 import type { ResearchConfig, Perspective } from "./types";
 
 /**
@@ -97,6 +98,30 @@ Ensure the perspectives together provide comprehensive coverage of the topic fro
 
   // Fallback: generate basic perspectives if AI parsing fails
   return generateFallbackPerspectives(topic, perspectiveCount);
+}
+
+/**
+ * Generate perspectives from domain config templates.
+ * ONLY used for non-medicine/biology domains.
+ * Medicine/biology use the existing hardcoded generatePerspectives() function.
+ */
+export function generateDomainPerspectives(
+  topic: string,
+  domain: DomainConfig
+): Perspective[] {
+  if (domain.perspectiveTemplates.length === 0) {
+    return generateGenericPerspectives(topic);
+  }
+
+  return domain.perspectiveTemplates.map((template, idx) => ({
+    id: `perspective-${idx + 1}`,
+    name: template.name,
+    description: template.description,
+    searchQueries: template.queryTemplates.map((queryTemplate) =>
+      queryTemplate.replace(/\$\{topic\}/g, topic)
+    ),
+    expectedPaperTypes: template.expectedStudyTypes,
+  }));
 }
 
 /**
@@ -193,4 +218,59 @@ function generateFallbackPerspectives(
     searchQueries: t.queryTemplates,
     expectedPaperTypes: t.expectedTypes,
   }));
+}
+
+function generateGenericPerspectives(topic: string): Perspective[] {
+  return [
+    {
+      id: "perspective-1",
+      name: "Foundational Research",
+      description: "Core theoretical and empirical foundations",
+      searchQueries: [
+        `${topic} foundational research theory`,
+        `${topic} seminal papers`,
+      ],
+      expectedPaperTypes: ["journal_article", "review"],
+    },
+    {
+      id: "perspective-2",
+      name: "Recent Advances",
+      description: "Latest developments and breakthroughs",
+      searchQueries: [
+        `${topic} recent advances 2024 2025`,
+        `${topic} latest developments`,
+      ],
+      expectedPaperTypes: ["journal_article", "preprint"],
+    },
+    {
+      id: "perspective-3",
+      name: "Methodology",
+      description: "Research methods and approaches",
+      searchQueries: [
+        `${topic} methodology research methods`,
+        `${topic} experimental design`,
+      ],
+      expectedPaperTypes: ["journal_article"],
+    },
+    {
+      id: "perspective-4",
+      name: "Review & Synthesis",
+      description: "Survey papers and literature reviews",
+      searchQueries: [
+        `${topic} review survey state of the art`,
+        `${topic} systematic review`,
+      ],
+      expectedPaperTypes: ["review", "meta_analysis"],
+    },
+    {
+      id: "perspective-5",
+      name: "Applications & Impact",
+      description: "Practical applications and real-world impact",
+      searchQueries: [
+        `${topic} applications practical impact`,
+        `${topic} real-world deployment`,
+      ],
+      expectedPaperTypes: ["journal_article"],
+    },
+  ];
 }

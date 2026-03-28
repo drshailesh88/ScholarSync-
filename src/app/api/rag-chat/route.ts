@@ -9,6 +9,7 @@ import { advancedRetrieve } from "@/lib/rag/pipeline";
 import type { RAGResult } from "@/lib/rag/pipeline";
 import { analyzeSourceCoverage } from "@/lib/rag/source-coverage";
 import type { CoverageReport } from "@/lib/rag/source-coverage";
+import { getDomainConfig } from "@/lib/search/domains";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
@@ -140,6 +141,8 @@ export async function POST(req: Request): Promise<Response> {
     }
 
     const { messages, paperIds, mode, ragConfig } = parsed.data;
+    const domainParam = new URL(req.url).searchParams.get("domain");
+    const domain = domainParam ? getDomainConfig(domainParam) : undefined;
 
     // Get the latest user message for retrieval
     const lastUserMsg = [...messages]
@@ -164,7 +167,7 @@ export async function POST(req: Request): Promise<Response> {
           useCompression: false,
           topK: 8,
           ...(ragConfig as Record<string, boolean | number> | undefined),
-        });
+        }, domain);
         contextChunks = retrievedChunks;
 
         // Fetch selected paper metadata so source coverage can name used and unused papers.
