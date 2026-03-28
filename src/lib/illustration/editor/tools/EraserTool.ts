@@ -1,12 +1,13 @@
 import type { FabricCanvas } from '@/lib/illustration/types';
 import type { Tool, ToolKeyEvent, ToolMouseEvent, Point } from './ToolRegistry';
+import type { Object as FabricObject } from 'fabric';
 
 export interface EraserToolOptions {
   initialSize?: number;
   minSize?: number;
   maxSize?: number;
   step?: number;
-  onObjectsErased?: (objects: any[]) => void;
+  onObjectsErased?: (objects: FabricObject[]) => void;
 }
 
 export interface RectBounds {
@@ -41,12 +42,14 @@ function getPointer(canvas: FabricCanvas | null, event: ToolMouseEvent): Point {
   return { x: event.e.clientX, y: event.e.clientY };
 }
 
-function isErasableObject(object: any): boolean {
-  if (!object || object.excludeFromExport || object.isGrid || object.get?.('isGrid')) {
+function isErasableObject(object: FabricObject | null | undefined): boolean {
+  if (!object) return false;
+  const obj = object as FabricObject & Record<string, unknown>;
+  if (obj.excludeFromExport || obj.isGrid || obj.get?.('isGrid')) {
     return false;
   }
 
-  const dataType = object.get?.('data-type');
+  const dataType = obj.get?.('data-type');
   return dataType !== 'grid';
 }
 
@@ -60,10 +63,10 @@ export class EraserTool implements Tool {
   private isActive = false;
   private isDragging = false;
   private lastPointer: Point | null = null;
-  private erasedInGesture: Set<any> = new Set();
+  private erasedInGesture: Set<FabricObject> = new Set();
 
   private options: Required<Omit<EraserToolOptions, 'onObjectsErased'>> & {
-    onObjectsErased?: (objects: any[]) => void;
+    onObjectsErased?: (objects: FabricObject[]) => void;
   };
 
   private size: number;
@@ -90,7 +93,7 @@ export class EraserTool implements Tool {
     canvas.defaultCursor = this.cursor;
     canvas.hoverCursor = this.cursor;
 
-    canvas.forEachObject((obj: any) => {
+    canvas.forEachObject((obj: FabricObject) => {
       obj.selectable = false;
       obj.evented = true;
     });
@@ -201,9 +204,9 @@ export class EraserTool implements Tool {
 
     const candidates = this.canvas
       .getObjects()
-      .filter((object: any) => isErasableObject(object));
+      .filter((object: FabricObject) => isErasableObject(object));
 
-    candidates.forEach((object: any) => {
+    candidates.forEach((object: FabricObject) => {
       const bounds = object.getBoundingRect?.();
       if (!bounds) return;
 
@@ -220,7 +223,7 @@ export class EraserTool implements Tool {
     });
   }
 
-  private eraseObject(object: any): void {
+  private eraseObject(object: FabricObject): void {
     if (!this.canvas || this.erasedInGesture.has(object)) return;
 
     this.erasedInGesture.add(object);

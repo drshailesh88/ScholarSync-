@@ -100,8 +100,12 @@ function getLinkHref(link: unknown): string | null {
 
 // ── RSS 2.0 parsing ─────────────────────────────────────────────────
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function parseRssItem(item: any): ParsedArticle | null {
+/** XML node type from fast-xml-parser - deeply nested and loosely structured.
+ *  Uses `Record` with permissive values since XML nodes are arbitrarily nested. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type XmlNode = Record<string, any>; // single centralized any for XML node access
+
+function parseRssItem(item: XmlNode): ParsedArticle | null {
   const rawTitle = extractText(item.title);
   const title = stripHtml(rawTitle).trim();
   if (!title) return null;
@@ -199,7 +203,7 @@ function parseRssItem(item: any): ParsedArticle | null {
   };
 }
 
-function parseRss(channel: any): ParsedFeed {
+function parseRss(channel: XmlNode): ParsedFeed {
   const items = channel.item ?? [];
   const itemList = Array.isArray(items) ? items : [items];
 
@@ -225,7 +229,7 @@ function parseRss(channel: any): ParsedFeed {
 
 // ── Atom parsing ────────────────────────────────────────────────────
 
-function parseAtomEntry(entry: any): ParsedArticle | null {
+function parseAtomEntry(entry: XmlNode): ParsedArticle | null {
   const rawTitle = extractText(entry.title);
   const title = stripHtml(rawTitle).trim();
   if (!title) return null;
@@ -234,7 +238,7 @@ function parseAtomEntry(entry: any): ParsedArticle | null {
   let link: string | null = null;
   const links = entry.link;
   if (Array.isArray(links)) {
-    const alt = links.find((l: any) => l["@_rel"] === "alternate");
+    const alt = links.find((l: XmlNode) => l["@_rel"] === "alternate");
     if (alt) {
       link = alt["@_href"] ?? null;
     } else {
@@ -269,7 +273,7 @@ function parseAtomEntry(entry: any): ParsedArticle | null {
   const authorArr = entry.author;
   if (Array.isArray(authorArr)) {
     const names = authorArr
-      .map((a: any) => extractText(a.name))
+      .map((a: XmlNode) => extractText(a.name))
       .filter(Boolean);
     authors = names.length > 0 ? names.join(", ") : null;
   } else if (authorArr) {
@@ -314,7 +318,7 @@ function parseAtomEntry(entry: any): ParsedArticle | null {
   };
 }
 
-function parseAtom(feed: any): ParsedFeed {
+function parseAtom(feed: XmlNode): ParsedFeed {
   const entries = feed.entry ?? [];
   const entryList = Array.isArray(entries) ? entries : [entries];
 
@@ -333,7 +337,7 @@ function parseAtom(feed: any): ParsedFeed {
   let siteUrl: string | null = null;
   const feedLinks = feed.link;
   if (Array.isArray(feedLinks)) {
-    const alt = feedLinks.find((l: any) => l["@_rel"] === "alternate");
+    const alt = feedLinks.find((l: XmlNode) => l["@_rel"] === "alternate");
     if (alt) siteUrl = alt["@_href"] ?? null;
     if (!siteUrl) siteUrl = feedLinks[0]?.["@_href"] ?? null;
   } else if (feedLinks) {
@@ -356,9 +360,9 @@ export function parseFeed(xml: string): ParsedFeed {
     throw new Error("Invalid feed: could not parse XML");
   }
 
-  let parsed: any;
+  let parsed: XmlNode;
   try {
-    parsed = parser.parse(xml);
+    parsed = parser.parse(xml) as XmlNode;
   } catch {
     throw new Error("Invalid feed: could not parse XML");
   }
@@ -398,4 +402,3 @@ export function parseFeed(xml: string): ParsedFeed {
 
   throw new Error("Invalid feed: no recognizable feed structure");
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */

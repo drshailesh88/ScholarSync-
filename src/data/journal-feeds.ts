@@ -752,6 +752,13 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     publisher: "MDPI",
     category: "Clinical Psychology",
   }),
+  buildJournalFeed({
+    title: "Frontiers in Cognition",
+    feedUrl: "https://www.frontiersin.org/journals/cognition/rss",
+    siteUrl: "https://www.frontiersin.org/journals/cognition",
+    publisher: "Frontiers",
+    category: "Cognitive Psychology",
+  }),
 
   // ═══════════════════════════════════════════════════════════════════
   // LAW
@@ -811,6 +818,20 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     siteUrl: "https://www.mdpi.com/journal/jcp",
     publisher: "MDPI",
     category: "Technology Law",
+  }),
+  buildJournalFeed({
+    title: "Journal of Criminal Law and Criminology",
+    feedUrl: "https://scholarlycommons.law.northwestern.edu/jclc/recent.rss",
+    siteUrl: "https://scholarlycommons.law.northwestern.edu/jclc/",
+    publisher: "Northwestern University School of Law",
+    category: "Criminal Law",
+  }),
+  buildJournalFeed({
+    title: "Criminal Justice Ethics",
+    feedUrl: "https://www.tandfonline.com/feed/rss/rcre20",
+    siteUrl: "https://www.tandfonline.com/journals/rcre20",
+    publisher: "Taylor & Francis",
+    category: "Criminal Law",
   }),
 
   // ═══════════════════════════════════════════════════════════════════
@@ -879,6 +900,13 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     publisher: "MDPI",
     category: "Art & Media Studies",
   }),
+  buildJournalFeed({
+    title: "Frontiers in Philosophy",
+    feedUrl: "https://www.frontiersin.org/journals/philosophy/rss",
+    siteUrl: "https://www.frontiersin.org/journals/philosophy",
+    publisher: "Frontiers",
+    category: "Philosophy",
+  }),
 
   // ═══════════════════════════════════════════════════════════════════
   // EDUCATION
@@ -931,6 +959,27 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     siteUrl: "https://learning-analytics.info/index.php/JLA",
     publisher: "Society for Learning Analytics Research",
     category: "Assessment & Evaluation",
+  }),
+  buildJournalFeed({
+    title: "Journal of Teacher Education",
+    feedUrl: "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=jtea&type=etoc&feed=rss",
+    siteUrl: "https://journals.sagepub.com/home/jte",
+    publisher: "SAGE Publications",
+    category: "Teacher Education",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Psychology (Educational Psychology)",
+    feedUrl: "https://www.frontiersin.org/journals/psychology/sections/educational-psychology/rss",
+    siteUrl: "https://www.frontiersin.org/journals/psychology/sections/educational-psychology",
+    publisher: "Frontiers",
+    category: "Educational Psychology",
+  }),
+  buildJournalFeed({
+    title: "Higher Education",
+    feedUrl: "https://link.springer.com/search.rss?facet-content-type=Article&facet-journal-id=10734",
+    siteUrl: "https://link.springer.com/journal/10734",
+    publisher: "Springer Nature",
+    category: "Higher Education",
   }),
 
   // ═══════════════════════════════════════════════════════════════════

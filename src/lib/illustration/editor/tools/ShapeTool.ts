@@ -13,6 +13,26 @@
 
 import type { FabricCanvas } from '@/lib/illustration/types';
 import type { Tool, ToolMouseEvent, ToolKeyEvent, Point } from './ToolRegistry';
+import type { Object as FabricObject } from 'fabric';
+
+/** Fabric.js object reference (dynamically created via window.fabric) */
+interface FabricShape extends FabricObject { [key: string]: unknown }
+
+/** Type-safe accessor for the global fabric namespace (loaded at runtime) */
+ 
+function getFabricLib(): Record<string, unknown> | undefined {
+  return (globalThis as unknown as Record<string, unknown>).fabric as Record<string, unknown> | undefined;
+}
+
+/** Create a Fabric.js object via its constructor by name */
+function fabricCreate(className: string, ...args: unknown[]): FabricShape | null {
+  const lib = getFabricLib();
+  if (!lib) return null;
+  const Ctor = lib[className];
+  if (typeof Ctor !== 'function') return null;
+   
+  return new (Ctor as new (...a: unknown[]) => FabricShape)(...args);
+}
 
 // ============================================================================
 // Types
@@ -44,7 +64,7 @@ export interface BoundingBox {
  */
 export interface ShapeCreatedEvent {
   type: string;
-  object: any;
+  object: unknown;
 }
 
 /**
@@ -79,11 +99,11 @@ export interface ShapeToolOptions {
  *   readonly name = 'rectangle';
  *   readonly icon = 'square';
  *
- *   protected createShape(start: Point): any {
+ *   protected createShape(start: Point): FabricShape | null {
  *     // Create Fabric.js Rect
  *   }
  *
- *   protected updateShape(shape: any, start: Point, current: Point): void {
+ *   protected updateShape(shape: FabricShape, start: Point, current: Point): void {
  *     // Update rect dimensions
  *   }
  * }
@@ -100,7 +120,7 @@ export abstract class ShapeTool implements Tool {
   protected canvas: FabricCanvas | null = null;
 
   /** Current shape being drawn */
-  protected currentShape: any = null;
+  protected currentShape: FabricShape | null = null;
 
   /** Whether the tool is active */
   protected isActive = false;
@@ -152,7 +172,7 @@ export abstract class ShapeTool implements Tool {
    * @param start - Starting point
    * @returns Fabric.js shape object
    */
-  protected abstract createShape(start: Point): any;
+  protected abstract createShape(start: Point): FabricShape | null;
 
   /**
    * Update the shape during drag
@@ -162,7 +182,7 @@ export abstract class ShapeTool implements Tool {
    * @param isConstrained - Whether shift is held for constraints
    */
   protected abstract updateShape(
-    shape: any,
+    shape: FabricShape,
     start: Point,
     current: Point,
     isConstrained: boolean
@@ -173,7 +193,7 @@ export abstract class ShapeTool implements Tool {
    * @param shape - Shape object to check
    * @returns true if shape is large enough to keep
    */
-  protected abstract isValidSize(shape: any): boolean;
+  protected abstract isValidSize(shape: FabricShape): boolean;
 
   // ==========================================================================
   // Lifecycle Methods
@@ -191,7 +211,7 @@ export abstract class ShapeTool implements Tool {
     canvas.selection = false;
 
     // Disable object interaction
-    canvas.forEachObject((obj: any) => {
+    canvas.forEachObject((obj: FabricObject) => {
       obj.selectable = false;
       obj.evented = false;
     });
@@ -480,11 +500,8 @@ export class RectangleTool extends ShapeTool {
   readonly icon = 'square';
   readonly shortcut = 'r';
 
-  protected createShape(start: Point): any {
-    const fabric = (window as any).fabric;
-    if (!fabric?.Rect) return null;
-
-    return new fabric.Rect({
+  protected createShape(start: Point): FabricShape | null {
+    return fabricCreate('Rect', {
       left: start.x,
       top: start.y,
       width: 0,
@@ -499,7 +516,7 @@ export class RectangleTool extends ShapeTool {
   }
 
   protected updateShape(
-    shape: any,
+    shape: FabricShape,
     start: Point,
     current: Point,
     isConstrained: boolean
@@ -516,8 +533,8 @@ export class RectangleTool extends ShapeTool {
     });
   }
 
-  protected isValidSize(shape: any): boolean {
-    return shape.width >= this.options.minSize || shape.height >= this.options.minSize;
+  protected isValidSize(shape: FabricShape): boolean {
+    return (shape.width ?? 0) >= this.options.minSize || (shape.height ?? 0) >= this.options.minSize;
   }
 
   /**
@@ -535,11 +552,10 @@ export class RectangleTool extends ShapeTool {
     width: number,
     height: number,
     options: Partial<ShapeStyle> = {}
-  ): any {
-    const fabric = (window as any).fabric;
-    if (!fabric?.Rect || !this.canvas) return null;
+  ): FabricShape | null {
+    if (!this.canvas) return null;
 
-    const rect = new fabric.Rect({
+    const rect = fabricCreate('Rect', {
       left: x,
       top: y,
       width,
@@ -550,6 +566,7 @@ export class RectangleTool extends ShapeTool {
       strokeUniform: true,
     });
 
+    if (!rect) return null;
     this.canvas.add(rect);
     this.canvas.requestRenderAll();
 
@@ -565,11 +582,8 @@ export class EllipseTool extends ShapeTool {
   readonly icon = 'circle';
   readonly shortcut = 'e';
 
-  protected createShape(start: Point): any {
-    const fabric = (window as any).fabric;
-    if (!fabric?.Ellipse) return null;
-
-    return new fabric.Ellipse({
+  protected createShape(start: Point): FabricShape | null {
+    return fabricCreate('Ellipse', {
       left: start.x,
       top: start.y,
       rx: 0,
@@ -584,7 +598,7 @@ export class EllipseTool extends ShapeTool {
   }
 
   protected updateShape(
-    shape: any,
+    shape: FabricShape,
     start: Point,
     current: Point,
     isConstrained: boolean
@@ -603,11 +617,11 @@ export class EllipseTool extends ShapeTool {
       top: start.y,
       rx,
       ry,
-    });
+    } as Partial<FabricShape>);
   }
 
-  protected isValidSize(shape: any): boolean {
-    return shape.rx >= this.options.minSize || shape.ry >= this.options.minSize;
+  protected isValidSize(shape: FabricShape): boolean {
+    return ((shape as unknown as { rx: number }).rx ?? 0) >= this.options.minSize || ((shape as unknown as { ry: number }).ry ?? 0) >= this.options.minSize;
   }
 
   /**
@@ -625,11 +639,10 @@ export class EllipseTool extends ShapeTool {
     rx: number,
     ry: number,
     options: Partial<ShapeStyle> = {}
-  ): any {
-    const fabric = (window as any).fabric;
-    if (!fabric?.Ellipse || !this.canvas) return null;
+  ): FabricShape | null {
+    if (!this.canvas) return null;
 
-    const ellipse = new fabric.Ellipse({
+    const ellipse = fabricCreate('Ellipse', {
       left: cx,
       top: cy,
       rx,
@@ -642,6 +655,7 @@ export class EllipseTool extends ShapeTool {
       originY: 'center',
     });
 
+    if (!ellipse) return null;
     this.canvas.add(ellipse);
     this.canvas.requestRenderAll();
 
@@ -661,7 +675,7 @@ export class EllipseTool extends ShapeTool {
     cy: number,
     radius: number,
     options: Partial<ShapeStyle> = {}
-  ): any {
+  ): FabricShape | null {
     return this.createEllipse(cx, cy, radius, radius, options);
   }
 }
@@ -674,11 +688,8 @@ export class LineTool extends ShapeTool {
   readonly icon = 'minus';
   readonly shortcut = 'l';
 
-  protected createShape(start: Point): any {
-    const fabric = (window as any).fabric;
-    if (!fabric?.Line) return null;
-
-    return new fabric.Line([start.x, start.y, start.x, start.y], {
+  protected createShape(start: Point): FabricShape | null {
+    return fabricCreate('Line', [start.x, start.y, start.x, start.y], {
       stroke: this.style.stroke,
       strokeWidth: this.style.strokeWidth,
       strokeUniform: this.style.strokeUniform,
@@ -688,7 +699,7 @@ export class LineTool extends ShapeTool {
   }
 
   protected updateShape(
-    shape: any,
+    shape: FabricShape,
     start: Point,
     current: Point,
     isConstrained: boolean
@@ -702,11 +713,12 @@ export class LineTool extends ShapeTool {
     shape.set({
       x2: endPoint.x,
       y2: endPoint.y,
-    });
+    } as Partial<FabricShape>);
   }
 
-  protected isValidSize(shape: any): boolean {
-    const length = Math.hypot(shape.x2 - shape.x1, shape.y2 - shape.y1);
+  protected isValidSize(shape: FabricShape): boolean {
+    const s = shape as unknown as { x1: number; y1: number; x2: number; y2: number };
+    const length = Math.hypot(s.x2 - s.x1, s.y2 - s.y1);
     return length >= this.options.minSize;
   }
 
@@ -746,16 +758,16 @@ export class LineTool extends ShapeTool {
     x2: number,
     y2: number,
     options: Partial<ShapeStyle> = {}
-  ): any {
-    const fabric = (window as any).fabric;
-    if (!fabric?.Line || !this.canvas) return null;
+  ): FabricShape | null {
+    if (!this.canvas) return null;
 
-    const line = new fabric.Line([x1, y1, x2, y2], {
+    const line = fabricCreate('Line', [x1, y1, x2, y2], {
       stroke: options.stroke ?? this.style.stroke,
       strokeWidth: options.strokeWidth ?? this.style.strokeWidth,
       strokeUniform: true,
     });
 
+    if (!line) return null;
     this.canvas.add(line);
     this.canvas.requestRenderAll();
 
@@ -777,12 +789,12 @@ export class ArrowTool extends ShapeTool {
   /** Whether arrow is double-headed */
   private doubleHeaded = false;
 
-  protected createShape(start: Point): any {
+  protected createShape(start: Point): FabricShape | null {
     return this.createArrowGroup(start, start);
   }
 
   protected updateShape(
-    shape: any,
+    shape: FabricShape,
     start: Point,
     current: Point,
     isConstrained: boolean
@@ -797,16 +809,18 @@ export class ArrowTool extends ShapeTool {
     if (this.canvas) {
       this.canvas.remove(shape);
       this.currentShape = this.createArrowGroup(start, endPoint);
-      this.currentShape.set({
-        selectable: false,
-        evented: false,
-      });
-      this.canvas.add(this.currentShape);
+      if (this.currentShape) {
+        this.currentShape.set({
+          selectable: false,
+          evented: false,
+        });
+        this.canvas.add(this.currentShape);
+      }
     }
   }
 
-  protected isValidSize(shape: any): boolean {
-    const data = shape.arrowData;
+  protected isValidSize(shape: FabricShape): boolean {
+    const data = shape.arrowData as { start: Point; end: Point } | undefined;
     if (!data) return false;
 
     const length = Math.hypot(data.end.x - data.start.x, data.end.y - data.start.y);
@@ -819,19 +833,16 @@ export class ArrowTool extends ShapeTool {
    * @param end - End point
    * @returns Fabric.js Group object
    */
-  private createArrowGroup(start: Point, end: Point): any {
-    const fabric = (window as any).fabric;
-    if (!fabric) return null;
-
-    const elements: any[] = [];
+  private createArrowGroup(start: Point, end: Point): FabricShape | null {
+    const elements: FabricShape[] = [];
 
     // Main line
-    const line = new fabric.Line([start.x, start.y, end.x, end.y], {
+    const line = fabricCreate('Line', [start.x, start.y, end.x, end.y], {
       stroke: this.style.stroke,
       strokeWidth: this.style.strokeWidth,
       strokeUniform: true,
     });
-    elements.push(line);
+    if (line) elements.push(line);
 
     // Calculate arrow direction
     const angle = Math.atan2(end.y - start.y, end.x - start.x);
@@ -847,10 +858,12 @@ export class ArrowTool extends ShapeTool {
     }
 
     // Create group
-    const group = new fabric.Group(elements, {
+    const group = fabricCreate('Group', elements, {
       selectable: false,
       evented: false,
     });
+
+    if (!group) return null;
 
     // Store arrow metadata for later use
     group.arrowData = {
@@ -869,10 +882,7 @@ export class ArrowTool extends ShapeTool {
    * @param angle - Direction angle in radians
    * @returns Fabric.js Polygon object
    */
-  private createArrowHead(tip: Point, angle: number): any {
-    const fabric = (window as any).fabric;
-    if (!fabric?.Polygon) return null;
-
+  private createArrowHead(tip: Point, angle: number): FabricShape | null {
     const size = this.arrowHeadSize;
     const headAngle = Math.PI / 6; // 30 degrees
 
@@ -888,7 +898,7 @@ export class ArrowTool extends ShapeTool {
       },
     ];
 
-    return new fabric.Polygon(points, {
+    return fabricCreate('Polygon', points, {
       fill: this.style.stroke,
       stroke: this.style.stroke,
       strokeWidth: 1,
@@ -942,7 +952,7 @@ export class ArrowTool extends ShapeTool {
     start: Point,
     end: Point,
     options: { doubleHeaded?: boolean; headSize?: number } = {}
-  ): any {
+  ): FabricShape | null {
     if (!this.canvas) return null;
 
     const prevDoubleHeaded = this.doubleHeaded;

@@ -465,6 +465,7 @@ export default function LandingPage() {
             Research workflows are broken.<br />The numbers prove it.
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {stats.length === 0 && <p className="text-center text-sm" style={{ color: inkMuted }}>No data</p>}
             {stats.map((s, i) => (
               <StatCard key={s.desc} stat={s} index={i} />
             ))}
@@ -490,7 +491,7 @@ export default function LandingPage() {
 
             {/* Desktop tabs */}
             <div className="hidden md:grid grid-cols-7 h-[70px] rounded-xl overflow-hidden border border-black/[0.12]">
-              {products.map((p, i) => (
+              {products.length > 0 && products.map((p, i) => (
                 <button
                   key={p.id}
                   className={`text-base font-normal px-4 py-3 flex items-center justify-center gap-2.5 whitespace-nowrap transition-all border-r border-black/[0.12] last:border-r-0 ${

@@ -1,7 +1,6 @@
 "use client";
 
 import type { Editor } from "@tiptap/react";
-import { cn } from "@/lib/utils";
 import { CommentSidebar } from "@/components/editor/CommentSidebar";
 import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { useWorkbenchStore, type WorkbenchReviewTab } from "@/stores/workbench-store";
@@ -35,7 +34,7 @@ export function WorkbenchReview({
   return (
     <div className="flex h-full flex-col">
       <div className="flex gap-1 px-3 py-1.5 shrink-0" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-        {subTabs.map((tab) => (
+        {!subTabs.length ? null : subTabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveReviewTab(tab.key)}

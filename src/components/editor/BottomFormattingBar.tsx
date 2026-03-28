@@ -54,7 +54,7 @@ export function BottomFormattingBar({ editor }: BottomFormattingBarProps) {
           </button>
           {showHeadings && (
             <div className="absolute bottom-full left-0 mb-2 w-28 rounded-xl bg-surface border border-border shadow-lg py-1.5 z-50">
-              {HEADING_OPTIONS.map((opt) => (
+              {!HEADING_OPTIONS.length ? null : HEADING_OPTIONS.map((opt) => (
                 <button
                   key={opt.level}
                   onClick={() => {

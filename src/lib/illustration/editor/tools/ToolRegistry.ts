@@ -26,7 +26,7 @@ export interface ToolMouseEvent {
   /** Original DOM event */
   e: MouseEvent;
   /** Target canvas object if any */
-  target?: any;
+  target?: import('fabric').Object;
   /** Transformed pointer coordinates */
   pointer?: Point;
   /** Absolute pointer coordinates */
@@ -161,14 +161,15 @@ export class ToolRegistry {
   private canvas: FabricCanvas | null = null;
 
   /** Event listeners */
+   
   private listeners: Map<string, Set<Function>> = new Map();
 
   /** Bound event handlers for canvas */
   private boundHandlers: {
-    mouseDown?: (e: any) => void;
-    mouseMove?: (e: any) => void;
-    mouseUp?: (e: any) => void;
-    mouseDblClick?: (e: any) => void;
+    mouseDown?: (e: unknown) => void;
+    mouseMove?: (e: unknown) => void;
+    mouseUp?: (e: unknown) => void;
+    mouseDblClick?: (e: unknown) => void;
   } = {};
 
   // ==========================================================================
@@ -404,20 +405,20 @@ export class ToolRegistry {
   private setupCanvasHandlers(): void {
     if (!this.canvas) return;
 
-    this.boundHandlers.mouseDown = (e: any) => {
-      this.activeTool?.onMouseDown?.(e);
+    this.boundHandlers.mouseDown = (e: unknown) => {
+      this.activeTool?.onMouseDown?.(e as ToolMouseEvent);
     };
 
-    this.boundHandlers.mouseMove = (e: any) => {
-      this.activeTool?.onMouseMove?.(e);
+    this.boundHandlers.mouseMove = (e: unknown) => {
+      this.activeTool?.onMouseMove?.(e as ToolMouseEvent);
     };
 
-    this.boundHandlers.mouseUp = (e: any) => {
-      this.activeTool?.onMouseUp?.(e);
+    this.boundHandlers.mouseUp = (e: unknown) => {
+      this.activeTool?.onMouseUp?.(e as ToolMouseEvent);
     };
 
-    this.boundHandlers.mouseDblClick = (e: any) => {
-      this.activeTool?.onDoubleClick?.(e);
+    this.boundHandlers.mouseDblClick = (e: unknown) => {
+      this.activeTool?.onDoubleClick?.(e as ToolMouseEvent);
     };
 
     this.canvas.on('mouse:down', this.boundHandlers.mouseDown);

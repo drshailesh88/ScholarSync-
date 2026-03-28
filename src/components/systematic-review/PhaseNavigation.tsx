@@ -153,6 +153,9 @@ export function PhaseNavigation({
 
   return (
     <nav className="flex flex-col gap-0.5" role="navigation" aria-label="Review phases">
+      {visiblePhases.length === 0 && (
+        <p className="text-xs text-ink-muted px-4 py-2">No results</p>
+      )}
       {visiblePhases.map((phase) => {
         const isActive = phase.key === activePhaseKey;
         const isExpanded = phase.key === expandedPhase;

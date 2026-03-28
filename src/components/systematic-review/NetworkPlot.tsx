@@ -215,7 +215,7 @@ export function NetworkPlot({
       <svg width={width} height={height} className="text-ink" style={{ fontFamily: "inherit" }}>
         <rect x={0} y={0} width={width} height={height} rx={12} fill="currentColor" opacity={0.02} />
 
-        {geoEdges.map((edge) => {
+        {!geoEdges.length ? null : geoEdges.map((edge) => {
           const source = positionMap.get(edge.source);
           const target = positionMap.get(edge.target);
           if (!source || !target) return null;
@@ -251,7 +251,7 @@ export function NetworkPlot({
           );
         })}
 
-        {nodePositions.map((position, index) => {
+        {!nodePositions.length ? null : nodePositions.map((position, index) => {
           const highlighted = isNodeHighlighted(position.id);
           const isSelected = selectedNode === position.id;
           const isHovered = hoveredNode === position.id;

@@ -14,6 +14,7 @@
 
 import type { FabricCanvas } from '@/lib/illustration/types';
 import type { Tool, ToolMouseEvent, ToolKeyEvent } from './ToolRegistry';
+import type { Object as FabricObject } from 'fabric';
 
 // ============================================================================
 // Types
@@ -23,8 +24,8 @@ import type { Tool, ToolMouseEvent, ToolKeyEvent } from './ToolRegistry';
  * Selection changed event data
  */
 export interface SelectionChangedEvent {
-  objects: any[];
-  previousObjects: any[];
+  objects: FabricObject[];
+  previousObjects: FabricObject[];
 }
 
 /**
@@ -72,7 +73,7 @@ export class SelectTool implements Tool {
   private canvas: FabricCanvas | null = null;
 
   /** Currently selected objects */
-  private selectedObjects: any[] = [];
+  private selectedObjects: FabricObject[] = [];
 
   /** Whether the tool is active */
   private isActive = false;
@@ -108,7 +109,7 @@ export class SelectTool implements Tool {
     canvas.selection = this.options.enableMarquee;
 
     // Make all objects selectable
-    canvas.forEachObject((obj: any) => {
+    canvas.forEachObject((obj: FabricObject) => {
       obj.selectable = true;
       obj.evented = true;
     });
@@ -290,7 +291,7 @@ export class SelectTool implements Tool {
    * Toggle an object's selection state
    * @param target - Object to toggle
    */
-  private toggleObjectSelection(target: any): void {
+  private toggleObjectSelection(target: FabricObject): void {
     const index = this.selectedObjects.indexOf(target);
 
     if (index === -1) {
@@ -316,9 +317,10 @@ export class SelectTool implements Tool {
       this.canvas.setActiveObject(this.selectedObjects[0]);
     } else {
       // Create active selection for multiple objects
-      const fabric = (window as any).fabric;
-      if (fabric?.ActiveSelection) {
-        const selection = new fabric.ActiveSelection(this.selectedObjects, {
+      const fabricLib = (globalThis as unknown as Record<string, unknown>).fabric as Record<string, unknown> | undefined;
+      const ActiveSel = fabricLib?.ActiveSelection;
+      if (typeof ActiveSel === 'function') {
+        const selection = new (ActiveSel as unknown as new (...args: unknown[]) => FabricObject)(this.selectedObjects, {
           canvas: this.canvas,
         });
         this.canvas.setActiveObject(selection);
@@ -344,9 +346,10 @@ export class SelectTool implements Tool {
     if (objects.length === 1) {
       this.canvas.setActiveObject(objects[0]);
     } else {
-      const fabric = (window as any).fabric;
-      if (fabric?.ActiveSelection) {
-        const selection = new fabric.ActiveSelection(objects, {
+      const fabricLib = (globalThis as unknown as Record<string, unknown>).fabric as Record<string, unknown> | undefined;
+      const ActiveSel = fabricLib?.ActiveSelection;
+      if (typeof ActiveSel === 'function') {
+        const selection = new (ActiveSel as unknown as new (...args: unknown[]) => FabricObject)(objects, {
           canvas: this.canvas,
         });
         this.canvas.setActiveObject(selection);
@@ -380,7 +383,7 @@ export class SelectTool implements Tool {
     if (activeObjects.length === 0) return;
 
     // Remove each object
-    activeObjects.forEach((obj: any) => {
+    activeObjects.forEach((obj: FabricObject) => {
       this.canvas!.remove(obj);
     });
 
@@ -394,7 +397,7 @@ export class SelectTool implements Tool {
    * Get the currently selected objects
    * @returns Array of selected objects
    */
-  getSelectedObjects(): any[] {
+  getSelectedObjects(): FabricObject[] {
     return [...this.selectedObjects];
   }
 
@@ -433,11 +436,11 @@ export class SelectTool implements Tool {
    * @param obj - Canvas object
    * @returns true if object is text in edit mode
    */
-  private isEditingText(obj: any): boolean {
+  private isEditingText(obj: FabricObject | null | undefined): boolean {
     if (!obj) return false;
     return (
       (obj.type === 'i-text' || obj.type === 'textbox') &&
-      obj.isEditing === true
+      (obj as unknown as { isEditing?: boolean }).isEditing === true
     );
   }
 
@@ -445,7 +448,7 @@ export class SelectTool implements Tool {
    * Emit selection change event
    * @param previousObjects - Previously selected objects
    */
-  private emitSelectionChange(previousObjects: any[]): void {
+  private emitSelectionChange(previousObjects: FabricObject[]): void {
     if (this.onSelectionChange) {
       this.onSelectionChange({
         objects: [...this.selectedObjects],
