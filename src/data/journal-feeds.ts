@@ -5,6 +5,1058 @@
 
 import type { JournalDirectoryEntry } from "@/types/feed";
 
+type AdditionalJournalFeed = Omit<JournalDirectoryEntry, "specialty"> & {
+  specialty?: JournalDirectoryEntry["specialty"];
+};
+
+function buildJournalFeed(feed: AdditionalJournalFeed): JournalDirectoryEntry {
+  return {
+    specialty: "Other",
+    ...feed,
+  };
+}
+
+const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
+  // TODO(issue-25): Verify select publisher feed endpoints during founder QA, especially MDPI, Frontiers, and student-edited law review feeds.
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MULTIDISCIPLINARY
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "PNAS",
+    feedUrl: "https://www.pnas.org/action/showFeed?type=etoc&feed=rss&jc=pnas",
+    siteUrl: "https://www.pnas.org",
+    publisher: "National Academy of Sciences",
+    category: "Multidisciplinary",
+    description: "Proceedings of the National Academy of Sciences.",
+  }),
+  buildJournalFeed({
+    title: "Nature Communications",
+    feedUrl: "https://www.nature.com/ncomms.rss",
+    siteUrl: "https://www.nature.com/ncomms/",
+    publisher: "Springer Nature",
+    category: "Multidisciplinary",
+  }),
+  buildJournalFeed({
+    title: "PLOS ONE",
+    feedUrl: "https://journals.plos.org/plosone/feed/atom",
+    siteUrl: "https://journals.plos.org/plosone/",
+    publisher: "PLOS",
+    category: "Multidisciplinary",
+  }),
+  buildJournalFeed({
+    title: "eLife",
+    feedUrl: "https://elifesciences.org/rss/current.xml",
+    siteUrl: "https://elifesciences.org/",
+    publisher: "eLife Sciences Publications",
+    category: "Multidisciplinary",
+  }),
+  buildJournalFeed({
+    title: "PeerJ",
+    feedUrl: "https://peerj.com/rss/",
+    siteUrl: "https://peerj.com/",
+    publisher: "PeerJ",
+    category: "Multidisciplinary",
+  }),
+  buildJournalFeed({
+    title: "Royal Society Open Science",
+    feedUrl: "https://royalsocietypublishing.org/action/showFeed?type=etoc&feed=rss&jc=rsos",
+    siteUrl: "https://royalsocietypublishing.org/journal/rsos",
+    publisher: "The Royal Society",
+    category: "Multidisciplinary",
+  }),
+  buildJournalFeed({
+    title: "iScience",
+    feedUrl: "https://www.cell.com/iscience/current.rss",
+    siteUrl: "https://www.cell.com/iscience/home",
+    publisher: "Cell Press",
+    category: "Multidisciplinary",
+  }),
+  buildJournalFeed({
+    title: "Science Advances",
+    feedUrl: "https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=sciadv",
+    siteUrl: "https://www.science.org/journal/sciadv",
+    publisher: "AAAS",
+    category: "Multidisciplinary",
+  }),
+  buildJournalFeed({
+    title: "Proceedings of the Royal Society A",
+    feedUrl: "https://royalsocietypublishing.org/action/showFeed?type=etoc&feed=rss&jc=rspa",
+    siteUrl: "https://royalsocietypublishing.org/journal/rspa",
+    publisher: "The Royal Society",
+    category: "Multidisciplinary",
+  }),
+  buildJournalFeed({
+    title: "Philosophical Transactions of the Royal Society A",
+    feedUrl: "https://royalsocietypublishing.org/action/showFeed?type=etoc&feed=rss&jc=rsta",
+    siteUrl: "https://royalsocietypublishing.org/journal/rsta",
+    publisher: "The Royal Society",
+    category: "Multidisciplinary",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // BIOLOGY
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Cell",
+    feedUrl: "https://www.cell.com/cell/current.rss",
+    siteUrl: "https://www.cell.com/cell/home",
+    publisher: "Cell Press",
+    category: "General Biology",
+  }),
+  buildJournalFeed({
+    title: "Nature Genetics",
+    feedUrl: "https://www.nature.com/ng.rss",
+    siteUrl: "https://www.nature.com/ng/",
+    publisher: "Springer Nature",
+    category: "Genetics",
+  }),
+  buildJournalFeed({
+    title: "PLOS Biology",
+    feedUrl: "https://journals.plos.org/plosbiology/feed/atom",
+    siteUrl: "https://journals.plos.org/plosbiology/",
+    publisher: "PLOS",
+    category: "General Biology",
+  }),
+  buildJournalFeed({
+    title: "BMC Biology",
+    feedUrl: "https://bmcbiol.biomedcentral.com/articles/most-recent/rss.xml",
+    siteUrl: "https://bmcbiol.biomedcentral.com/",
+    publisher: "Springer Nature",
+    category: "General Biology",
+  }),
+  buildJournalFeed({
+    title: "Genome Biology",
+    feedUrl: "https://genomebiology.biomedcentral.com/articles/most-recent/rss.xml",
+    siteUrl: "https://genomebiology.biomedcentral.com/",
+    publisher: "Springer Nature",
+    category: "Genetics",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Cell and Developmental Biology",
+    feedUrl: "https://www.frontiersin.org/journals/cell-and-developmental-biology/rss",
+    siteUrl: "https://www.frontiersin.org/journals/cell-and-developmental-biology",
+    publisher: "Frontiers",
+    category: "Cell Biology",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Genetics",
+    feedUrl: "https://www.frontiersin.org/journals/genetics/rss",
+    siteUrl: "https://www.frontiersin.org/journals/genetics",
+    publisher: "Frontiers",
+    category: "Genetics",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Ecology and Evolution",
+    feedUrl: "https://www.frontiersin.org/journals/ecology-and-evolution/rss",
+    siteUrl: "https://www.frontiersin.org/journals/ecology-and-evolution",
+    publisher: "Frontiers",
+    category: "Ecology",
+  }),
+  buildJournalFeed({
+    title: "BMC Genomics",
+    feedUrl: "https://bmcgenomics.biomedcentral.com/articles/most-recent/rss.xml",
+    siteUrl: "https://bmcgenomics.biomedcentral.com/",
+    publisher: "Springer Nature",
+    category: "Genetics",
+  }),
+  buildJournalFeed({
+    title: "Microbiome",
+    feedUrl: "https://microbiomejournal.biomedcentral.com/articles/most-recent/rss.xml",
+    siteUrl: "https://microbiomejournal.biomedcentral.com/",
+    publisher: "Springer Nature",
+    category: "Microbiology",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // PHYSICS
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Nature Physics",
+    feedUrl: "https://www.nature.com/nphys.rss",
+    siteUrl: "https://www.nature.com/nphys/",
+    publisher: "Springer Nature",
+    category: "General Physics",
+  }),
+  buildJournalFeed({
+    title: "Physical Review Letters",
+    feedUrl: "https://journals.aps.org/prl/recent.rss",
+    siteUrl: "https://journals.aps.org/prl/",
+    publisher: "APS",
+    category: "General Physics",
+  }),
+  buildJournalFeed({
+    title: "Physical Review X",
+    feedUrl: "https://journals.aps.org/prx/recent.rss",
+    siteUrl: "https://journals.aps.org/prx/",
+    publisher: "APS",
+    category: "General Physics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Condensed Matter",
+    feedUrl: "https://rss.arxiv.org/rss/cond-mat",
+    siteUrl: "https://arxiv.org/archive/cond-mat",
+    publisher: "arXiv",
+    category: "Condensed Matter",
+  }),
+  buildJournalFeed({
+    title: "arXiv High Energy Physics - Theory",
+    feedUrl: "https://rss.arxiv.org/rss/hep-th",
+    siteUrl: "https://arxiv.org/archive/hep-th",
+    publisher: "arXiv",
+    category: "High Energy Physics",
+  }),
+  buildJournalFeed({
+    title: "arXiv High Energy Physics - Phenomenology",
+    feedUrl: "https://rss.arxiv.org/rss/hep-ph",
+    siteUrl: "https://arxiv.org/archive/hep-ph",
+    publisher: "arXiv",
+    category: "High Energy Physics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Astrophysics",
+    feedUrl: "https://rss.arxiv.org/rss/astro-ph",
+    siteUrl: "https://arxiv.org/archive/astro-ph",
+    publisher: "arXiv",
+    category: "Astrophysics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Quantum Physics",
+    feedUrl: "https://rss.arxiv.org/rss/quant-ph",
+    siteUrl: "https://arxiv.org/archive/quant-ph",
+    publisher: "arXiv",
+    category: "Quantum Physics",
+  }),
+  buildJournalFeed({
+    title: "arXiv General Relativity and Quantum Cosmology",
+    feedUrl: "https://rss.arxiv.org/rss/gr-qc",
+    siteUrl: "https://arxiv.org/archive/gr-qc",
+    publisher: "arXiv",
+    category: "Astrophysics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Nuclear Theory",
+    feedUrl: "https://rss.arxiv.org/rss/nucl-th",
+    siteUrl: "https://arxiv.org/archive/nucl-th",
+    publisher: "arXiv",
+    category: "Nuclear Physics",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // CHEMISTRY
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Nature Chemistry",
+    feedUrl: "https://www.nature.com/nchem.rss",
+    siteUrl: "https://www.nature.com/nchem/",
+    publisher: "Springer Nature",
+    category: "General Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Chemistry",
+    feedUrl: "https://www.frontiersin.org/journals/chemistry/rss",
+    siteUrl: "https://www.frontiersin.org/journals/chemistry",
+    publisher: "Frontiers",
+    category: "General Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Molecules",
+    feedUrl: "https://www.mdpi.com/rss/journal/molecules",
+    siteUrl: "https://www.mdpi.com/journal/molecules",
+    publisher: "MDPI",
+    category: "Organic Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Chemistry",
+    feedUrl: "https://www.mdpi.com/rss/journal/chemistry",
+    siteUrl: "https://www.mdpi.com/journal/chemistry",
+    publisher: "MDPI",
+    category: "General Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Catalysts",
+    feedUrl: "https://www.mdpi.com/rss/journal/catalysts",
+    siteUrl: "https://www.mdpi.com/journal/catalysts",
+    publisher: "MDPI",
+    category: "Physical Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Polymers",
+    feedUrl: "https://www.mdpi.com/rss/journal/polymers",
+    siteUrl: "https://www.mdpi.com/journal/polymers",
+    publisher: "MDPI",
+    category: "Materials Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Nanomaterials",
+    feedUrl: "https://www.mdpi.com/rss/journal/nanomaterials",
+    siteUrl: "https://www.mdpi.com/journal/nanomaterials",
+    publisher: "MDPI",
+    category: "Materials Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Electrochem",
+    feedUrl: "https://www.mdpi.com/rss/journal/electrochem",
+    siteUrl: "https://www.mdpi.com/journal/electrochem",
+    publisher: "MDPI",
+    category: "Analytical Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Separations",
+    feedUrl: "https://www.mdpi.com/rss/journal/separations",
+    siteUrl: "https://www.mdpi.com/journal/separations",
+    publisher: "MDPI",
+    category: "Analytical Chemistry",
+  }),
+  buildJournalFeed({
+    title: "BioChem",
+    feedUrl: "https://www.mdpi.com/rss/journal/biochem",
+    siteUrl: "https://www.mdpi.com/journal/biochem",
+    publisher: "MDPI",
+    category: "Chemical Biology",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // COMPUTER SCIENCE
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "arXiv Artificial Intelligence",
+    feedUrl: "https://rss.arxiv.org/rss/cs.AI",
+    siteUrl: "https://arxiv.org/archive/cs.AI",
+    publisher: "arXiv",
+    category: "AI & Machine Learning",
+  }),
+  buildJournalFeed({
+    title: "arXiv Computation and Language",
+    feedUrl: "https://rss.arxiv.org/rss/cs.CL",
+    siteUrl: "https://arxiv.org/archive/cs.CL",
+    publisher: "arXiv",
+    category: "Natural Language Processing",
+  }),
+  buildJournalFeed({
+    title: "arXiv Computer Vision and Pattern Recognition",
+    feedUrl: "https://rss.arxiv.org/rss/cs.CV",
+    siteUrl: "https://arxiv.org/archive/cs.CV",
+    publisher: "arXiv",
+    category: "Computer Vision",
+  }),
+  buildJournalFeed({
+    title: "arXiv Cryptography and Security",
+    feedUrl: "https://rss.arxiv.org/rss/cs.CR",
+    siteUrl: "https://arxiv.org/archive/cs.CR",
+    publisher: "arXiv",
+    category: "Security",
+  }),
+  buildJournalFeed({
+    title: "arXiv Software Engineering",
+    feedUrl: "https://rss.arxiv.org/rss/cs.SE",
+    siteUrl: "https://arxiv.org/archive/cs.SE",
+    publisher: "arXiv",
+    category: "Software Engineering",
+  }),
+  buildJournalFeed({
+    title: "arXiv Human-Computer Interaction",
+    feedUrl: "https://rss.arxiv.org/rss/cs.HC",
+    siteUrl: "https://arxiv.org/archive/cs.HC",
+    publisher: "arXiv",
+    category: "Human-Computer Interaction",
+  }),
+  buildJournalFeed({
+    title: "arXiv Databases",
+    feedUrl: "https://rss.arxiv.org/rss/cs.DB",
+    siteUrl: "https://arxiv.org/archive/cs.DB",
+    publisher: "arXiv",
+    category: "Systems",
+  }),
+  buildJournalFeed({
+    title: "arXiv Robotics",
+    feedUrl: "https://rss.arxiv.org/rss/cs.RO",
+    siteUrl: "https://arxiv.org/archive/cs.RO",
+    publisher: "arXiv",
+    category: "Systems",
+  }),
+  buildJournalFeed({
+    title: "arXiv Distributed, Parallel, and Cluster Computing",
+    feedUrl: "https://rss.arxiv.org/rss/cs.DC",
+    siteUrl: "https://arxiv.org/archive/cs.DC",
+    publisher: "arXiv",
+    category: "Systems",
+  }),
+  buildJournalFeed({
+    title: "Journal of Machine Learning Research",
+    feedUrl: "https://www.jmlr.org/papers/rss.xml",
+    siteUrl: "https://www.jmlr.org/",
+    publisher: "Microtome Publishing",
+    category: "AI & Machine Learning",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // ENGINEERING
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Frontiers in Robotics and AI",
+    feedUrl: "https://www.frontiersin.org/journals/robotics-and-ai/rss",
+    siteUrl: "https://www.frontiersin.org/journals/robotics-and-ai",
+    publisher: "Frontiers",
+    category: "Robotics & Control",
+  }),
+  buildJournalFeed({
+    title: "Machines",
+    feedUrl: "https://www.mdpi.com/rss/journal/machines",
+    siteUrl: "https://www.mdpi.com/journal/machines",
+    publisher: "MDPI",
+    category: "Mechanical Engineering",
+  }),
+  buildJournalFeed({
+    title: "Electronics",
+    feedUrl: "https://www.mdpi.com/rss/journal/electronics",
+    siteUrl: "https://www.mdpi.com/journal/electronics",
+    publisher: "MDPI",
+    category: "Electrical Engineering",
+  }),
+  buildJournalFeed({
+    title: "Energies",
+    feedUrl: "https://www.mdpi.com/rss/journal/energies",
+    siteUrl: "https://www.mdpi.com/journal/energies",
+    publisher: "MDPI",
+    category: "Energy Engineering",
+  }),
+  buildJournalFeed({
+    title: "Buildings",
+    feedUrl: "https://www.mdpi.com/rss/journal/buildings",
+    siteUrl: "https://www.mdpi.com/journal/buildings",
+    publisher: "MDPI",
+    category: "Civil Engineering",
+  }),
+  buildJournalFeed({
+    title: "Infrastructures",
+    feedUrl: "https://www.mdpi.com/rss/journal/infrastructures",
+    siteUrl: "https://www.mdpi.com/journal/infrastructures",
+    publisher: "MDPI",
+    category: "Civil Engineering",
+  }),
+  buildJournalFeed({
+    title: "Materials",
+    feedUrl: "https://www.mdpi.com/rss/journal/materials",
+    siteUrl: "https://www.mdpi.com/journal/materials",
+    publisher: "MDPI",
+    category: "Materials Engineering",
+  }),
+  buildJournalFeed({
+    title: "Robotics",
+    feedUrl: "https://www.mdpi.com/rss/journal/robotics",
+    siteUrl: "https://www.mdpi.com/journal/robotics",
+    publisher: "MDPI",
+    category: "Robotics & Control",
+  }),
+  buildJournalFeed({
+    title: "CivilEng",
+    feedUrl: "https://www.mdpi.com/rss/journal/civileng",
+    siteUrl: "https://www.mdpi.com/journal/civileng",
+    publisher: "MDPI",
+    category: "Civil Engineering",
+  }),
+  buildJournalFeed({
+    title: "Engineering Proceedings",
+    feedUrl: "https://www.mdpi.com/rss/journal/engproc",
+    siteUrl: "https://www.mdpi.com/journal/engproc",
+    publisher: "MDPI",
+    category: "Electrical Engineering",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MATHEMATICS
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "arXiv Algebraic Geometry",
+    feedUrl: "https://rss.arxiv.org/rss/math.AG",
+    siteUrl: "https://arxiv.org/archive/math.AG",
+    publisher: "arXiv",
+    category: "Geometry & Topology",
+  }),
+  buildJournalFeed({
+    title: "arXiv Analysis of PDEs",
+    feedUrl: "https://rss.arxiv.org/rss/math.AP",
+    siteUrl: "https://arxiv.org/archive/math.AP",
+    publisher: "arXiv",
+    category: "Applied Mathematics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Combinatorics",
+    feedUrl: "https://rss.arxiv.org/rss/math.CO",
+    siteUrl: "https://arxiv.org/archive/math.CO",
+    publisher: "arXiv",
+    category: "Pure Mathematics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Probability",
+    feedUrl: "https://rss.arxiv.org/rss/math.PR",
+    siteUrl: "https://arxiv.org/archive/math.PR",
+    publisher: "arXiv",
+    category: "Probability & Statistics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Statistics Theory",
+    feedUrl: "https://rss.arxiv.org/rss/math.ST",
+    siteUrl: "https://arxiv.org/archive/math.ST",
+    publisher: "arXiv",
+    category: "Probability & Statistics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Numerical Analysis",
+    feedUrl: "https://rss.arxiv.org/rss/math.NA",
+    siteUrl: "https://arxiv.org/archive/math.NA",
+    publisher: "arXiv",
+    category: "Computational Mathematics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Optimization and Control",
+    feedUrl: "https://rss.arxiv.org/rss/math.OC",
+    siteUrl: "https://arxiv.org/archive/math.OC",
+    publisher: "arXiv",
+    category: "Applied Mathematics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Geometric Topology",
+    feedUrl: "https://rss.arxiv.org/rss/math.GT",
+    siteUrl: "https://arxiv.org/archive/math.GT",
+    publisher: "arXiv",
+    category: "Geometry & Topology",
+  }),
+  buildJournalFeed({
+    title: "arXiv Number Theory",
+    feedUrl: "https://rss.arxiv.org/rss/math.NT",
+    siteUrl: "https://arxiv.org/archive/math.NT",
+    publisher: "arXiv",
+    category: "Algebra & Number Theory",
+  }),
+  buildJournalFeed({
+    title: "Mathematics",
+    feedUrl: "https://www.mdpi.com/rss/journal/mathematics",
+    siteUrl: "https://www.mdpi.com/journal/mathematics",
+    publisher: "MDPI",
+    category: "Applied Mathematics",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // SOCIAL SCIENCES
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Frontiers in Sociology",
+    feedUrl: "https://www.frontiersin.org/journals/sociology/rss",
+    siteUrl: "https://www.frontiersin.org/journals/sociology",
+    publisher: "Frontiers",
+    category: "Sociology",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Political Science",
+    feedUrl: "https://www.frontiersin.org/journals/political-science/rss",
+    siteUrl: "https://www.frontiersin.org/journals/political-science",
+    publisher: "Frontiers",
+    category: "Political Science",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Communication",
+    feedUrl: "https://www.frontiersin.org/journals/communication/rss",
+    siteUrl: "https://www.frontiersin.org/journals/communication",
+    publisher: "Frontiers",
+    category: "Interdisciplinary Social Science",
+  }),
+  buildJournalFeed({
+    title: "Social Sciences",
+    feedUrl: "https://www.mdpi.com/rss/journal/socsci",
+    siteUrl: "https://www.mdpi.com/journal/socsci",
+    publisher: "MDPI",
+    category: "Interdisciplinary Social Science",
+  }),
+  buildJournalFeed({
+    title: "Societies",
+    feedUrl: "https://www.mdpi.com/rss/journal/societies",
+    siteUrl: "https://www.mdpi.com/journal/societies",
+    publisher: "MDPI",
+    category: "Sociology",
+  }),
+  buildJournalFeed({
+    title: "Administrative Sciences",
+    feedUrl: "https://www.mdpi.com/rss/journal/admsci",
+    siteUrl: "https://www.mdpi.com/journal/admsci",
+    publisher: "MDPI",
+    category: "Social Policy",
+  }),
+  buildJournalFeed({
+    title: "Behavioral Sciences",
+    feedUrl: "https://www.mdpi.com/rss/journal/behavsci",
+    siteUrl: "https://www.mdpi.com/journal/behavsci",
+    publisher: "MDPI",
+    category: "Interdisciplinary Social Science",
+  }),
+  buildJournalFeed({
+    title: "Youth",
+    feedUrl: "https://www.mdpi.com/rss/journal/youth",
+    siteUrl: "https://www.mdpi.com/journal/youth",
+    publisher: "MDPI",
+    category: "Demography",
+  }),
+  buildJournalFeed({
+    title: "Genealogy",
+    feedUrl: "https://www.mdpi.com/rss/journal/genealogy",
+    siteUrl: "https://www.mdpi.com/journal/genealogy",
+    publisher: "MDPI",
+    category: "Demography",
+  }),
+  buildJournalFeed({
+    title: "SN Social Sciences",
+    feedUrl: "https://link.springer.com/journal/43545/rss",
+    siteUrl: "https://link.springer.com/journal/43545",
+    publisher: "Springer Nature",
+    category: "Interdisciplinary Social Science",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // ECONOMICS
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Economies",
+    feedUrl: "https://www.mdpi.com/rss/journal/economies",
+    siteUrl: "https://www.mdpi.com/journal/economies",
+    publisher: "MDPI",
+    category: "General Economics",
+  }),
+  buildJournalFeed({
+    title: "Econometrics",
+    feedUrl: "https://www.mdpi.com/rss/journal/econometrics",
+    siteUrl: "https://www.mdpi.com/journal/econometrics",
+    publisher: "MDPI",
+    category: "Econometrics",
+  }),
+  buildJournalFeed({
+    title: "Journal of Risk and Financial Management",
+    feedUrl: "https://www.mdpi.com/rss/journal/jrfm",
+    siteUrl: "https://www.mdpi.com/journal/jrfm",
+    publisher: "MDPI",
+    category: "Financial Economics",
+  }),
+  buildJournalFeed({
+    title: "International Journal of Financial Studies",
+    feedUrl: "https://www.mdpi.com/rss/journal/ijfs",
+    siteUrl: "https://www.mdpi.com/journal/ijfs",
+    publisher: "MDPI",
+    category: "Financial Economics",
+  }),
+  buildJournalFeed({
+    title: "Risks",
+    feedUrl: "https://www.mdpi.com/rss/journal/risks",
+    siteUrl: "https://www.mdpi.com/journal/risks",
+    publisher: "MDPI",
+    category: "Financial Economics",
+  }),
+  buildJournalFeed({
+    title: "Businesses",
+    feedUrl: "https://www.mdpi.com/rss/journal/businesses",
+    siteUrl: "https://www.mdpi.com/journal/businesses",
+    publisher: "MDPI",
+    category: "Microeconomics",
+  }),
+  buildJournalFeed({
+    title: "FinTech",
+    feedUrl: "https://www.mdpi.com/rss/journal/fintech",
+    siteUrl: "https://www.mdpi.com/journal/fintech",
+    publisher: "MDPI",
+    category: "Financial Economics",
+  }),
+  buildJournalFeed({
+    title: "NBER Working Papers",
+    feedUrl: "https://www.nber.org/rss/new.xml",
+    siteUrl: "https://www.nber.org/papers",
+    publisher: "NBER",
+    category: "General Economics",
+  }),
+  buildJournalFeed({
+    title: "arXiv Economics",
+    feedUrl: "https://rss.arxiv.org/rss/q-fin.EC",
+    siteUrl: "https://arxiv.org/archive/q-fin.EC",
+    publisher: "arXiv",
+    category: "Econometrics",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Economics",
+    feedUrl: "https://www.frontiersin.org/journals/economics/rss",
+    siteUrl: "https://www.frontiersin.org/journals/economics",
+    publisher: "Frontiers",
+    category: "General Economics",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // PSYCHOLOGY
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Nature Human Behaviour",
+    feedUrl: "https://www.nature.com/nathumbehav.rss",
+    siteUrl: "https://www.nature.com/nathumbehav/",
+    publisher: "Springer Nature",
+    category: "General Psychology",
+  }),
+  buildJournalFeed({
+    title: "BMC Psychology",
+    feedUrl: "https://bmcpsychology.biomedcentral.com/articles/most-recent/rss.xml",
+    siteUrl: "https://bmcpsychology.biomedcentral.com/",
+    publisher: "Springer Nature",
+    category: "Clinical Psychology",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Psychology",
+    feedUrl: "https://www.frontiersin.org/journals/psychology/rss",
+    siteUrl: "https://www.frontiersin.org/journals/psychology",
+    publisher: "Frontiers",
+    category: "General Psychology",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Psychiatry",
+    feedUrl: "https://www.frontiersin.org/journals/psychiatry/rss",
+    siteUrl: "https://www.frontiersin.org/journals/psychiatry",
+    publisher: "Frontiers",
+    category: "Clinical Psychology",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Human Neuroscience",
+    feedUrl: "https://www.frontiersin.org/journals/human-neuroscience/rss",
+    siteUrl: "https://www.frontiersin.org/journals/human-neuroscience",
+    publisher: "Frontiers",
+    category: "Neuroscience & Behavior",
+  }),
+  buildJournalFeed({
+    title: "Behavioral Sciences",
+    feedUrl: "https://www.mdpi.com/rss/journal/behavsci-psychology",
+    siteUrl: "https://www.mdpi.com/journal/behavsci",
+    publisher: "MDPI",
+    category: "Social Psychology",
+  }),
+  buildJournalFeed({
+    title: "Psych",
+    feedUrl: "https://www.mdpi.com/rss/journal/psych",
+    siteUrl: "https://www.mdpi.com/journal/psych",
+    publisher: "MDPI",
+    category: "General Psychology",
+  }),
+  buildJournalFeed({
+    title: "Brain Sciences",
+    feedUrl: "https://www.mdpi.com/rss/journal/brainsci",
+    siteUrl: "https://www.mdpi.com/journal/brainsci",
+    publisher: "MDPI",
+    category: "Neuroscience & Behavior",
+  }),
+  buildJournalFeed({
+    title: "Adolescents",
+    feedUrl: "https://www.mdpi.com/rss/journal/adolescents",
+    siteUrl: "https://www.mdpi.com/journal/adolescents",
+    publisher: "MDPI",
+    category: "Developmental Psychology",
+  }),
+  buildJournalFeed({
+    title: "Psychiatry International",
+    feedUrl: "https://www.mdpi.com/rss/journal/psychiatryint",
+    siteUrl: "https://www.mdpi.com/journal/psychiatryint",
+    publisher: "MDPI",
+    category: "Clinical Psychology",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // LAW
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Harvard Law Review",
+    feedUrl: "https://harvardlawreview.org/feed/",
+    siteUrl: "https://harvardlawreview.org/",
+    publisher: "Harvard Law Review",
+    category: "Constitutional Law",
+  }),
+  buildJournalFeed({
+    title: "Yale Law Journal",
+    feedUrl: "https://www.yalelawjournal.org/feed",
+    siteUrl: "https://www.yalelawjournal.org/",
+    publisher: "Yale Law Journal",
+    category: "Legal Theory",
+  }),
+  buildJournalFeed({
+    title: "Stanford Law Review",
+    feedUrl: "https://stanfordlawreview.org/feed/",
+    siteUrl: "https://stanfordlawreview.org/",
+    publisher: "Stanford Law Review",
+    category: "Technology Law",
+  }),
+  buildJournalFeed({
+    title: "Columbia Law Review",
+    feedUrl: "https://columbialawreview.org/feed/",
+    siteUrl: "https://columbialawreview.org/",
+    publisher: "Columbia Law Review",
+    category: "Administrative Law",
+  }),
+  buildJournalFeed({
+    title: "Virginia Law Review",
+    feedUrl: "https://virginialawreview.org/feed/",
+    siteUrl: "https://virginialawreview.org/",
+    publisher: "Virginia Law Review",
+    category: "Constitutional Law",
+  }),
+  buildJournalFeed({
+    title: "Michigan Law Review",
+    feedUrl: "https://michiganlawreview.org/feed/",
+    siteUrl: "https://michiganlawreview.org/",
+    publisher: "Michigan Law Review",
+    category: "Legal Theory",
+  }),
+  buildJournalFeed({
+    title: "Georgetown Law Journal",
+    feedUrl: "https://www.law.georgetown.edu/georgetown-law-journal/feed/",
+    siteUrl: "https://www.law.georgetown.edu/georgetown-law-journal/",
+    publisher: "Georgetown University Law Center",
+    category: "International Law",
+  }),
+  buildJournalFeed({
+    title: "University of Pennsylvania Law Review",
+    feedUrl: "https://scholarship.law.upenn.edu/penn_law_review/recent.rss",
+    siteUrl: "https://scholarship.law.upenn.edu/penn_law_review/",
+    publisher: "University of Pennsylvania Carey Law School",
+    category: "Administrative Law",
+  }),
+  buildJournalFeed({
+    title: "Laws",
+    feedUrl: "https://www.mdpi.com/rss/journal/laws",
+    siteUrl: "https://www.mdpi.com/journal/laws",
+    publisher: "MDPI",
+    category: "International Law",
+  }),
+  buildJournalFeed({
+    title: "Journal of Cybersecurity and Privacy",
+    feedUrl: "https://www.mdpi.com/rss/journal/jcp",
+    siteUrl: "https://www.mdpi.com/journal/jcp",
+    publisher: "MDPI",
+    category: "Technology Law",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // HUMANITIES
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Humanities",
+    feedUrl: "https://www.mdpi.com/rss/journal/humanities",
+    siteUrl: "https://www.mdpi.com/journal/humanities",
+    publisher: "MDPI",
+    category: "Literature",
+  }),
+  buildJournalFeed({
+    title: "Philosophies",
+    feedUrl: "https://www.mdpi.com/rss/journal/philosophies",
+    siteUrl: "https://www.mdpi.com/journal/philosophies",
+    publisher: "MDPI",
+    category: "Philosophy",
+  }),
+  buildJournalFeed({
+    title: "Histories",
+    feedUrl: "https://www.mdpi.com/rss/journal/histories",
+    siteUrl: "https://www.mdpi.com/journal/histories",
+    publisher: "MDPI",
+    category: "History",
+  }),
+  buildJournalFeed({
+    title: "Religions",
+    feedUrl: "https://www.mdpi.com/rss/journal/religions",
+    siteUrl: "https://www.mdpi.com/journal/religions",
+    publisher: "MDPI",
+    category: "Religion",
+  }),
+  buildJournalFeed({
+    title: "Arts",
+    feedUrl: "https://www.mdpi.com/rss/journal/arts",
+    siteUrl: "https://www.mdpi.com/journal/arts",
+    publisher: "MDPI",
+    category: "Art & Media Studies",
+  }),
+  buildJournalFeed({
+    title: "Literature",
+    feedUrl: "https://www.mdpi.com/rss/journal/literature",
+    siteUrl: "https://www.mdpi.com/journal/literature",
+    publisher: "MDPI",
+    category: "Literature",
+  }),
+  buildJournalFeed({
+    title: "Heritage",
+    feedUrl: "https://www.mdpi.com/rss/journal/heritage",
+    siteUrl: "https://www.mdpi.com/journal/heritage",
+    publisher: "MDPI",
+    category: "History",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Digital Humanities",
+    feedUrl: "https://www.frontiersin.org/journals/digital-humanities/rss",
+    siteUrl: "https://www.frontiersin.org/journals/digital-humanities",
+    publisher: "Frontiers",
+    category: "Cultural Studies",
+  }),
+  buildJournalFeed({
+    title: "Journalism and Media",
+    feedUrl: "https://www.mdpi.com/rss/journal/journalmedia",
+    siteUrl: "https://www.mdpi.com/journal/journalmedia",
+    publisher: "MDPI",
+    category: "Art & Media Studies",
+  }),
+  buildJournalFeed({
+    title: "Genealogy",
+    feedUrl: "https://www.mdpi.com/rss/journal/genealogy-humanities",
+    siteUrl: "https://www.mdpi.com/journal/genealogy",
+    publisher: "MDPI",
+    category: "Cultural Studies",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // EDUCATION
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Frontiers in Education",
+    feedUrl: "https://www.frontiersin.org/journals/education/rss",
+    siteUrl: "https://www.frontiersin.org/journals/education",
+    publisher: "Frontiers",
+    category: "Learning Sciences",
+  }),
+  buildJournalFeed({
+    title: "Education Sciences",
+    feedUrl: "https://www.mdpi.com/rss/journal/education",
+    siteUrl: "https://www.mdpi.com/journal/education",
+    publisher: "MDPI",
+    category: "Higher Education",
+  }),
+  buildJournalFeed({
+    title: "Teaching",
+    feedUrl: "https://www.mdpi.com/rss/journal/teaching",
+    siteUrl: "https://www.mdpi.com/journal/teaching",
+    publisher: "MDPI",
+    category: "Teacher Education",
+  }),
+  buildJournalFeed({
+    title: "International Journal of STEM Education",
+    feedUrl: "https://stemeducationjournal.springeropen.com/articles/most-recent/rss.xml",
+    siteUrl: "https://stemeducationjournal.springeropen.com/",
+    publisher: "Springer Nature",
+    category: "Learning Sciences",
+  }),
+  buildJournalFeed({
+    title: "International Journal of Educational Technology in Higher Education",
+    feedUrl: "https://educationaltechnologyjournal.springeropen.com/articles/most-recent/rss.xml",
+    siteUrl: "https://educationaltechnologyjournal.springeropen.com/",
+    publisher: "Springer Nature",
+    category: "Educational Technology",
+  }),
+  buildJournalFeed({
+    title: "Smart Learning Environments",
+    feedUrl: "https://slejournal.springeropen.com/articles/most-recent/rss.xml",
+    siteUrl: "https://slejournal.springeropen.com/",
+    publisher: "Springer Nature",
+    category: "Educational Technology",
+  }),
+  buildJournalFeed({
+    title: "Language Testing in Asia",
+    feedUrl: "https://languagetestingasia.springeropen.com/articles/most-recent/rss.xml",
+    siteUrl: "https://languagetestingasia.springeropen.com/",
+    publisher: "Springer Nature",
+    category: "Assessment & Evaluation",
+  }),
+  buildJournalFeed({
+    title: "Education Research International",
+    feedUrl: "https://www.hindawi.com/journals/edri/rss.xml",
+    siteUrl: "https://www.hindawi.com/journals/edri/",
+    publisher: "Hindawi / Wiley",
+    category: "Higher Education",
+  }),
+  buildJournalFeed({
+    title: "Journal of Learning Analytics",
+    feedUrl: "https://learning-analytics.info/index.php/JLA/gateway/plugin/WebFeedGatewayPlugin/rss2",
+    siteUrl: "https://learning-analytics.info/index.php/JLA",
+    publisher: "Society for Learning Analytics Research",
+    category: "Assessment & Evaluation",
+  }),
+  buildJournalFeed({
+    title: "Journal of Educational Evaluation for Health Professions",
+    feedUrl: "https://jeehp.org/rss/current.xml",
+    siteUrl: "https://jeehp.org/",
+    publisher: "National Health Personnel Licensing Examination Board of Korea",
+    category: "Assessment & Evaluation",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // ENVIRONMENTAL SCIENCE
+  // ═══════════════════════════════════════════════════════════════════
+  buildJournalFeed({
+    title: "Nature Climate Change",
+    feedUrl: "https://www.nature.com/nclimate.rss",
+    siteUrl: "https://www.nature.com/nclimate/",
+    publisher: "Springer Nature",
+    category: "Climate Science",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Climate",
+    feedUrl: "https://www.frontiersin.org/journals/climate/rss",
+    siteUrl: "https://www.frontiersin.org/journals/climate",
+    publisher: "Frontiers",
+    category: "Climate Science",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Environmental Science",
+    feedUrl: "https://www.frontiersin.org/journals/environmental-science/rss",
+    siteUrl: "https://www.frontiersin.org/journals/environmental-science",
+    publisher: "Frontiers",
+    category: "Environmental Chemistry",
+  }),
+  buildJournalFeed({
+    title: "Frontiers in Earth Science",
+    feedUrl: "https://www.frontiersin.org/journals/earth-science/rss",
+    siteUrl: "https://www.frontiersin.org/journals/earth-science",
+    publisher: "Frontiers",
+    category: "Earth Systems",
+  }),
+  buildJournalFeed({
+    title: "Sustainability",
+    feedUrl: "https://www.mdpi.com/rss/journal/sustainability",
+    siteUrl: "https://www.mdpi.com/journal/sustainability",
+    publisher: "MDPI",
+    category: "Sustainability",
+  }),
+  buildJournalFeed({
+    title: "Climate",
+    feedUrl: "https://www.mdpi.com/rss/journal/climate",
+    siteUrl: "https://www.mdpi.com/journal/climate",
+    publisher: "MDPI",
+    category: "Climate Science",
+  }),
+  buildJournalFeed({
+    title: "Atmosphere",
+    feedUrl: "https://www.mdpi.com/rss/journal/atmosphere",
+    siteUrl: "https://www.mdpi.com/journal/atmosphere",
+    publisher: "MDPI",
+    category: "Climate Science",
+  }),
+  buildJournalFeed({
+    title: "Water",
+    feedUrl: "https://www.mdpi.com/rss/journal/water",
+    siteUrl: "https://www.mdpi.com/journal/water",
+    publisher: "MDPI",
+    category: "Earth Systems",
+  }),
+  buildJournalFeed({
+    title: "Remote Sensing",
+    feedUrl: "https://www.mdpi.com/rss/journal/remotesensing",
+    siteUrl: "https://www.mdpi.com/journal/remotesensing",
+    publisher: "MDPI",
+    category: "Earth Systems",
+  }),
+  buildJournalFeed({
+    title: "Environmental Sciences Europe",
+    feedUrl: "https://enveurope.springeropen.com/articles/most-recent/rss.xml",
+    siteUrl: "https://enveurope.springeropen.com/",
+    publisher: "Springer Nature",
+    category: "Environmental Chemistry",
+  }),
+];
+
 export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
 
   // ═══════════════════════════════════════════════════════════════════
@@ -797,6 +1849,7 @@ export const JOURNAL_FEEDS: JournalDirectoryEntry[] = [
     specialty: "Other",
     issn: "2045-2322",
   },
+  ...MULTI_DOMAIN_JOURNAL_FEEDS,
 ];
 
 // ═══════════════════════════════════════════════════════════════════════

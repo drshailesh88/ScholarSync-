@@ -10,6 +10,106 @@ export interface LatexTemplate {
   files: { path: string; content: string; isMain: boolean }[];
 }
 
+interface GeneratedSection {
+  title: string;
+  body: string;
+  starred?: boolean;
+}
+
+interface GeneratedTemplateOptions {
+  id: string;
+  label: string;
+  description: string;
+  compiler?: "pdflatex" | "xelatex" | "lualatex";
+  documentClass: string;
+  packages?: string[];
+  authorBlock: string;
+  abstract: string;
+  keywords?: string;
+  sections: GeneratedSection[];
+  bibliographyStyle?: string;
+  referencesBib?: string;
+  extraPreamble?: string;
+  appendix?: string;
+}
+
+const DEFAULT_GENERATED_PACKAGES = [
+  "\\usepackage[utf8]{inputenc}",
+  "\\usepackage[T1]{fontenc}",
+  "\\usepackage{amsmath,amssymb}",
+  "\\usepackage{graphicx}",
+  "\\usepackage[margin=1in]{geometry}",
+  "\\usepackage{hyperref}",
+  "\\usepackage{booktabs}",
+];
+
+const DEFAULT_REFERENCES_BIB = `@article{example2026,
+  author  = {Author, First and Collaborator, Second},
+  title   = {Representative Article for Template Bootstrapping},
+  journal = {Journal Name},
+  year    = {2026},
+  volume  = {12},
+  pages   = {1--12},
+  doi     = {10.0000/example-2026},
+}
+`;
+
+function buildLatexMainFile(options: GeneratedTemplateOptions): string {
+  const packages = options.packages ?? DEFAULT_GENERATED_PACKAGES;
+  const sectionBlocks = options.sections
+    .map((section) => `\\section${section.starred ? "*" : ""}{${section.title}}\n${section.body}`)
+    .join("\n\n");
+  const keywordsBlock = options.keywords
+    ? `\n\\noindent\\textbf{Keywords:} ${options.keywords}\n`
+    : "";
+  const appendixBlock = options.appendix
+    ? `\n\\appendix\n\\section{Supplementary Material}\n${options.appendix}\n`
+    : "";
+
+  return `${options.documentClass}
+${packages.join("\n")}
+${options.extraPreamble ? `${options.extraPreamble}\n` : ""}\\title{__TITLE__}
+\\author{${options.authorBlock}}
+\\date{}
+
+\\begin{document}
+
+\\maketitle
+
+\\begin{abstract}
+${options.abstract}
+\\end{abstract}
+${keywordsBlock}
+${sectionBlocks}
+
+\\bibliographystyle{${options.bibliographyStyle ?? "plain"}}
+\\bibliography{references}
+${appendixBlock}
+\\end{document}
+`;
+}
+
+function makeGeneratedTemplate(options: GeneratedTemplateOptions): LatexTemplate {
+  return {
+    id: options.id,
+    label: options.label,
+    description: options.description,
+    compiler: options.compiler ?? "pdflatex",
+    files: [
+      {
+        path: "main.tex",
+        isMain: true,
+        content: buildLatexMainFile(options),
+      },
+      {
+        path: "references.bib",
+        isMain: false,
+        content: options.referencesBib ?? DEFAULT_REFERENCES_BIB,
+      },
+    ],
+  };
+}
+
 export const LATEX_TEMPLATES: Record<string, LatexTemplate> = {
   blank: {
     id: "blank",
@@ -1818,6 +1918,478 @@ AND
       },
     ],
   },
+  physics_revtex: makeGeneratedTemplate({
+    id: "physics_revtex",
+    label: "APS REVTeX",
+    description: "American Physical Society manuscript using REVTeX style",
+    documentClass: "\\documentclass[aps,prl,reprint,superscriptaddress]{revtex4-2}",
+    packages: ["\\usepackage{graphicx}", "\\usepackage{dcolumn}", "\\usepackage{bm}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Physics, University Name\\\\Second Author\\\\Institute Name",
+    abstract: "Summarize the physical system, central method, principal quantitative result, and why it matters for theory or experiment.",
+    keywords: "physics, revtex, aps, experiment, theory",
+    sections: [
+      { title: "Introduction", body: "State the physics problem, its context in the literature, and the specific gap addressed." },
+      { title: "Model and Methods", body: "Define the Hamiltonian, apparatus, sample, detector, or numerical method with enough detail for expert readers." },
+      { title: "Results", body: "Present the primary measurement, calculation, or scaling result with units and uncertainty where relevant." },
+      { title: "Discussion", body: "Compare with prior theory or experiment, note limitations, and explain the broader significance." },
+      { title: "Data Availability", body: "State where analysis code, simulation inputs, or processed data can be accessed.", starred: true },
+    ],
+    bibliographyStyle: "apsrev4-2",
+  }),
+  physics_springer: makeGeneratedTemplate({
+    id: "physics_springer",
+    label: "Springer Physics",
+    description: "Springer-style article for applied, condensed matter, or interdisciplinary physics",
+    documentClass: "\\documentclass[smallextended]{svjour3}",
+    packages: ["\\smartqed", "\\usepackage{graphicx}", "\\usepackage{amsmath,amssymb}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author \\and Second Author",
+    abstract: "Describe the phenomenon, instrumentation or model, key result, and the physical implication in one concise paragraph.",
+    keywords: "physics, springer, condensed matter, modeling",
+    sections: [
+      { title: "Introduction", body: "Introduce the phenomenon and motivate the question in field-specific terms." },
+      { title: "Experimental or Computational Methods", body: "Report apparatus, simulation protocol, calibration, and uncertainty treatment." },
+      { title: "Results", body: "Organize results into the main physical findings with figures and tables." },
+      { title: "Conclusions", body: "State the strongest conclusion, boundary conditions, and next experiment or calculation." },
+    ],
+    bibliographyStyle: "spmpsci",
+  }),
+  biology_nature_cell: makeGeneratedTemplate({
+    id: "biology_nature_cell",
+    label: "Nature Biology",
+    description: "Nature-style life sciences manuscript with mechanism-focused sectioning",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage[utf8]{inputenc}", "\\usepackage[T1]{fontenc}", "\\usepackage{graphicx}", "\\usepackage[margin=1in]{geometry}", "\\usepackage{hyperref}", "\\usepackage{natbib}", "\\usepackage{setspace}", "\\usepackage{lineno}"],
+    authorBlock: "First Author\\\\Department of Biology, University Name\\\\Second Author\\\\Institute Name",
+    abstract: "State the biological system, perturbation or assay, central mechanistic result, and the translational or conceptual significance.",
+    keywords: "biology, mechanism, cell biology, genetics",
+    extraPreamble: "\\onehalfspacing\n\\linenumbers",
+    sections: [
+      { title: "Introduction", body: "Provide biological context, identify the mechanistic gap, and state the hypothesis." },
+      { title: "Results", body: "Present the main biological findings using subheadings for each experiment or analytical thread." },
+      { title: "Discussion", body: "Explain the mechanistic interpretation, limitations, and implications for the field." },
+      { title: "Methods", body: "Detail model system, perturbations, assays, sequencing or imaging pipeline, and statistics." },
+      { title: "Data Availability", body: "List accession numbers, repository links, and code locations.", starred: true },
+    ],
+    bibliographyStyle: "plainnat",
+  }),
+  biology_cell_press: makeGeneratedTemplate({
+    id: "biology_cell_press",
+    label: "Cell Press Research Article",
+    description: "Cell Press style life sciences article with STAR Methods placeholder",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage[utf8]{inputenc}", "\\usepackage[T1]{fontenc}", "\\usepackage{graphicx}", "\\usepackage[margin=1in]{geometry}", "\\usepackage{hyperref}", "\\usepackage{booktabs}"],
+    authorBlock: "First Author\\\\Department of Molecular Biology, University Name\\\\Second Author\\\\Institute Name",
+    abstract: "Summarize the biological question, experimental system, strongest result, and the model or mechanism supported by the data.",
+    keywords: "biology, cell press, molecular biology, star methods",
+    sections: [
+      { title: "Summary", body: "Condense the main finding into an accessible but precise summary paragraph." },
+      { title: "Introduction", body: "Set up the biological question and identify the unresolved mechanistic issue." },
+      { title: "Results", body: "Organize the major experiments into coherent subsections with direct takeaways." },
+      { title: "Discussion", body: "Connect the findings to broader biology and note the strongest limitations." },
+      { title: "STAR Methods", body: "Include experimental model details, resource availability, methods, and quantification.", starred: true },
+    ],
+    bibliographyStyle: "plain",
+  }),
+  chemistry_acs: makeGeneratedTemplate({
+    id: "chemistry_acs",
+    label: "ACS Article",
+    description: "American Chemical Society style article for synthesis or analytical chemistry",
+    documentClass: "\\documentclass[journal=ancac3,manuscript=article]{achemso}",
+    packages: ["\\usepackage[version=4]{mhchem}", "\\usepackage{graphicx}", "\\usepackage{amsmath}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Chemistry, University Name\\\\Second Author\\\\Institute Name",
+    abstract: "State the molecule, reaction, catalyst, or assay; quantify the main result; and explain why the chemistry matters.",
+    keywords: "chemistry, acs, synthesis, catalysis, spectroscopy",
+    sections: [
+      { title: "Introduction", body: "Define the synthetic, mechanistic, or analytical problem and the unmet need." },
+      { title: "Experimental Section", body: "Report reagents, conditions, instrumentation, and analytical workflow." },
+      { title: "Results and Discussion", body: "Integrate optimization, characterization, mechanistic insight, and application." },
+      { title: "Conclusions", body: "State the main contribution, scope limits, and next chemistry step." },
+      { title: "Supporting Information", body: "List spectra, experimental details, and supplementary tables.", starred: true },
+    ],
+    bibliographyStyle: "achemso",
+  }),
+  chemistry_elsarticle: makeGeneratedTemplate({
+    id: "chemistry_elsarticle",
+    label: "Elsevier Chemistry",
+    description: "Elsevier article skeleton for materials, catalysis, or physical chemistry submissions",
+    documentClass: "\\documentclass[preprint,12pt]{elsarticle}",
+    packages: ["\\usepackage{amsmath}", "\\usepackage{graphicx}", "\\usepackage[version=4]{mhchem}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Chemistry, University Name\\\\Second Author\\\\Research Center Name",
+    abstract: "Describe the material or reaction system, highlight the principal quantitative result, and note the practical implication.",
+    keywords: "chemistry, elsevier, materials, analysis",
+    sections: [
+      { title: "Introduction", body: "Frame the chemistry problem and summarize the most relevant prior approaches." },
+      { title: "Materials and Methods", body: "List synthesis conditions, instrumentation, software, and calculation details." },
+      { title: "Results", body: "Present the central figures, spectra, micrographs, and quantified performance data." },
+      { title: "Discussion", body: "Explain the mechanism or structure-property relationship and benchmark against prior work." },
+      { title: "Conclusions", body: "Distill the central result and next validation or scale-up step." },
+    ],
+    bibliographyStyle: "elsarticle-num",
+  }),
+  cs_acm: makeGeneratedTemplate({
+    id: "cs_acm",
+    label: "ACM acmart",
+    description: "ACM article template for computer science research papers",
+    documentClass: "\\documentclass[sigconf]{acmart}",
+    packages: ["\\usepackage{booktabs}", "\\usepackage{graphicx}", "\\usepackage{amsmath}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Computer Science\\\\University Name",
+    abstract: "Summarize the problem, method, evaluation setting, and strongest empirical or systems result.",
+    keywords: "computer science, acm, systems, ai, software engineering",
+    sections: [
+      { title: "Introduction", body: "Define the problem, state the challenge, and summarize the main contributions." },
+      { title: "Related Work", body: "Position the work against the strongest baselines and adjacent subfields." },
+      { title: "Method", body: "Describe the architecture, algorithm, or system with implementation-relevant detail." },
+      { title: "Evaluation", body: "Report datasets, benchmarks, baselines, ablations, and hardware or compute budget." },
+      { title: "Conclusion", body: "Summarize the contribution, limitations, and next technical milestone." },
+    ],
+    bibliographyStyle: "ACM-Reference-Format",
+  }),
+  cs_lncs: makeGeneratedTemplate({
+    id: "cs_lncs",
+    label: "Springer LNCS",
+    description: "Lecture Notes in Computer Science style paper for conferences and workshops",
+    documentClass: "\\documentclass[runningheads]{llncs}",
+    packages: ["\\usepackage{graphicx}", "\\usepackage{amsmath}", "\\usepackage{booktabs}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Affiliation Name\\\\email@example.com",
+    abstract: "State the task, the proposed method, the evaluation setting, and the most important result in one paragraph.",
+    keywords: "computer science, lncs, benchmark, algorithm",
+    sections: [
+      { title: "Introduction", body: "Explain the problem setup, stakes, and the key contributions." },
+      { title: "Methodology", body: "Describe the algorithm, architecture, or formal approach." },
+      { title: "Experiments", body: "Report datasets, metrics, baselines, and core results." },
+      { title: "Discussion", body: "Interpret the empirical results and explain remaining weaknesses." },
+      { title: "Conclusion", body: "State the strongest conclusion and the next direction." },
+    ],
+    bibliographyStyle: "splncs04",
+  }),
+  engineering_ieee_journal: makeGeneratedTemplate({
+    id: "engineering_ieee_journal",
+    label: "IEEE Journal",
+    description: "IEEE journal article format for engineering systems and signal processing",
+    documentClass: "\\documentclass[journal]{IEEEtran}",
+    packages: ["\\usepackage{cite}", "\\usepackage{amsmath,amssymb}", "\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author,~\\IEEEmembership{Member,~IEEE}, Second Author,~\\IEEEmembership{Senior Member,~IEEE}",
+    abstract: "Describe the engineered system, the method or design, quantitative validation, and the application-level implication.",
+    keywords: "engineering, ieee, systems, controls, energy",
+    sections: [
+      { title: "Introduction", body: "Define the engineering problem, operating environment, and main contribution." },
+      { title: "System Design", body: "Describe architecture, hardware, control strategy, or process design." },
+      { title: "Validation", body: "Detail experiments, simulations, standards, and metrics used for validation." },
+      { title: "Results and Discussion", body: "Present the strongest performance results, tradeoffs, and deployment considerations." },
+      { title: "Conclusion", body: "Summarize the engineering relevance and next validation stage." },
+    ],
+    bibliographyStyle: "IEEEtran",
+  }),
+  engineering_asme: makeGeneratedTemplate({
+    id: "engineering_asme",
+    label: "ASME Paper",
+    description: "ASME-style engineering manuscript for mechanical and applied systems work",
+    documentClass: "\\documentclass[11pt]{article}",
+    packages: ["\\usepackage{amsmath,amssymb}", "\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Mechanical Engineering, University Name\\\\Second Author\\\\Institute Name",
+    abstract: "Summarize the engineering design problem, model or prototype, key performance result, and why it matters in practice.",
+    keywords: "engineering, mechanical, prototype, asme",
+    sections: [
+      { title: "Introduction", body: "State the design context, constraints, and unmet need." },
+      { title: "Model and Prototype", body: "Describe governing equations, design variables, fabrication, and control logic." },
+      { title: "Experimental Procedure", body: "Detail the test rig, sensors, operating conditions, and calibration." },
+      { title: "Results", body: "Present efficiency, stress, control, or thermal performance with comparative baselines." },
+      { title: "Conclusions", body: "Distill the most defensible engineering claim and next scale-up or redesign step." },
+    ],
+    bibliographyStyle: "plain",
+  }),
+  math_amsart: makeGeneratedTemplate({
+    id: "math_amsart",
+    label: "AMS Article",
+    description: "AMS-style mathematics article using amsart class",
+    documentClass: "\\documentclass[11pt]{amsart}",
+    packages: ["\\usepackage{amsmath,amssymb,amsthm}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Mathematics, University Name",
+    abstract: "State the central theorem, the setting, the key proof idea, and the significance for the subfield.",
+    keywords: "mathematics, theorem, proof, amsart",
+    extraPreamble: "\\newtheorem{theorem}{Theorem}\n\\newtheorem{lemma}[theorem]{Lemma}\n\\newtheorem{proposition}[theorem]{Proposition}",
+    sections: [
+      { title: "Introduction", body: "State the problem, prior results, and the main theorem in precise terms." },
+      { title: "Preliminaries", body: "Define notation, hypotheses, and any foundational lemmas." },
+      { title: "Main Results", body: "Present theorem statements and proof sketches or full proofs as needed." },
+      { title: "Applications", body: "Explain corollaries, examples, or downstream consequences." },
+      { title: "Acknowledgments", body: "Thank collaborators, seminars, or funding support.", starred: true },
+    ],
+    bibliographyStyle: "amsplain",
+  }),
+  math_siam: makeGeneratedTemplate({
+    id: "math_siam",
+    label: "SIAM Applied Math",
+    description: "SIAM-style applied mathematics manuscript skeleton",
+    documentClass: "\\documentclass{siamart220329}",
+    packages: ["\\usepackage{amsmath,amssymb}", "\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Applied Mathematics, University Name",
+    abstract: "Describe the equation class or model, the analytical or numerical method, the main result, and the application significance.",
+    keywords: "mathematics, applied math, simulation, siam",
+    sections: [
+      { title: "Introduction", body: "Motivate the application area and formulate the mathematical question." },
+      { title: "Model Formulation", body: "Define variables, assumptions, equations, and admissible parameter ranges." },
+      { title: "Analysis or Numerical Scheme", body: "Present the approximation, convergence argument, or proof structure." },
+      { title: "Computational Results", body: "Report numerical experiments, sensitivity analysis, or comparative baselines." },
+      { title: "Conclusion", body: "State the main applied insight and next extension of the model." },
+    ],
+    bibliographyStyle: "siam",
+  }),
+  social_sciences_apa: makeGeneratedTemplate({
+    id: "social_sciences_apa",
+    label: "APA Social Sciences",
+    description: "APA-style empirical article for sociology, policy, and mixed-methods social research",
+    documentClass: "\\documentclass[man]{apa7}",
+    packages: ["\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}", "\\usepackage{csquotes}"],
+    authorBlock: "First Author\\\\Department of Sociology, University Name",
+    abstract: "State the population, setting, method, strongest empirical finding, and the main theoretical or policy implication.",
+    keywords: "social sciences, apa, survey, mixed methods, policy",
+    sections: [
+      { title: "Introduction", body: "Frame the theory, identify the empirical gap, and state the research question." },
+      { title: "Method", body: "Describe sample, context, measures, analytic approach, and ethics." },
+      { title: "Results", body: "Present the strongest quantitative and qualitative findings with direct interpretation." },
+      { title: "Discussion", body: "Connect findings to theory, institutions, and limitations." },
+      { title: "Open Science Statement", body: "State preregistration, data availability, and code sharing details.", starred: true },
+    ],
+    bibliographyStyle: "apacite",
+  }),
+  social_sciences_qualitative: makeGeneratedTemplate({
+    id: "social_sciences_qualitative",
+    label: "Qualitative Social Research",
+    description: "Template for qualitative and ethnographic social science manuscripts",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage[utf8]{inputenc}", "\\usepackage[T1]{fontenc}", "\\usepackage{setspace}", "\\usepackage[margin=1in]{geometry}", "\\usepackage{hyperref}", "\\usepackage{csquotes}"],
+    authorBlock: "First Author\\\\Department of Anthropology, University Name",
+    abstract: "Describe the field site or participant group, the qualitative approach, the strongest themes, and the interpretive contribution.",
+    keywords: "qualitative, ethnography, social science, interviews",
+    extraPreamble: "\\doublespacing",
+    sections: [
+      { title: "Introduction", body: "Set out the phenomenon, context, and interpretive question." },
+      { title: "Field Site and Data", body: "Describe participants, data collection, positionality, and ethics." },
+      { title: "Analytic Approach", body: "Explain coding, memoing, trustworthiness, and reflexive decisions." },
+      { title: "Findings", body: "Present the major themes using carefully selected excerpts." },
+      { title: "Discussion", body: "Connect the themes to theory, policy, or institutional implications." },
+    ],
+    bibliographyStyle: "plainnat",
+  }),
+  economics_aer: makeGeneratedTemplate({
+    id: "economics_aer",
+    label: "AER Style Manuscript",
+    description: "Economics article skeleton styled for top-journal empirical work",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage{amsmath,amssymb}", "\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}", "\\usepackage{natbib}"],
+    authorBlock: "First Author\\\\Department of Economics, University Name",
+    abstract: "State the economic question, data, identification strategy, main estimate, and the policy or market implication.",
+    keywords: "economics, empirical, identification, policy, finance",
+    sections: [
+      { title: "Introduction", body: "State the economic mechanism, question, and why the answer matters." },
+      { title: "Institutional Background", body: "Describe the market, policy, or institutional setting in enough detail to motivate identification." },
+      { title: "Data and Empirical Strategy", body: "Define variables, treatment, assumptions, and inference choices." },
+      { title: "Results", body: "Present baseline estimates, heterogeneity, and robustness checks." },
+      { title: "Conclusion", body: "Summarize the strongest economic takeaway and limitations for policy transfer." },
+    ],
+    bibliographyStyle: "aer",
+  }),
+  economics_nber: makeGeneratedTemplate({
+    id: "economics_nber",
+    label: "NBER Working Paper",
+    description: "Working paper format for economics and finance manuscripts",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage{amsmath,amssymb}", "\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}", "\\usepackage{natbib}"],
+    authorBlock: "First Author\\\\NBER and University Name",
+    abstract: "Summarize the question, identification or model, principal estimate, and the provisional implication for current debate.",
+    keywords: "economics, working paper, nber, econometrics",
+    sections: [
+      { title: "Introduction", body: "Explain the motivating puzzle or policy question and the paper's contribution." },
+      { title: "Conceptual Framework", body: "Present the mechanism or simple model guiding the empirical work." },
+      { title: "Data", body: "Describe sample construction, sources, variables, and cleaning decisions." },
+      { title: "Empirical Results", body: "Report main estimates, design checks, and supplemental analyses." },
+      { title: "Conclusion", body: "Explain what is defensible now and what still requires further evidence." },
+    ],
+    bibliographyStyle: "plainnat",
+  }),
+  psychology_apa: makeGeneratedTemplate({
+    id: "psychology_apa",
+    label: "APA Psychology Manuscript",
+    description: "APA 7 empirical manuscript for psychology and behavioral science",
+    documentClass: "\\documentclass[man]{apa7}",
+    packages: ["\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Psychology, University Name",
+    abstract: "Describe the population, intervention or paradigm, key effect, and what it means for psychological theory or practice.",
+    keywords: "psychology, apa, experiment, clinical, behavior",
+    sections: [
+      { title: "Introduction", body: "Review the psychological theory, prior evidence, and study aims." },
+      { title: "Method", body: "Describe participants, measures, procedure, and analysis plan." },
+      { title: "Results", body: "Report descriptive statistics, effect sizes, confidence intervals, and checks." },
+      { title: "Discussion", body: "Interpret the findings, address limitations, and note implications for future work." },
+      { title: "Transparency Statement", body: "State preregistration, open materials, and analytic code availability.", starred: true },
+    ],
+    bibliographyStyle: "apacite",
+  }),
+  psychology_registered_report: makeGeneratedTemplate({
+    id: "psychology_registered_report",
+    label: "Registered Report",
+    description: "Stage 1/2 friendly skeleton for preregistered psychology studies",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage{amsmath}", "\\usepackage{graphicx}", "\\usepackage[margin=1in]{geometry}", "\\usepackage{hyperref}", "\\usepackage{natbib}"],
+    authorBlock: "First Author\\\\Department of Psychology, University Name",
+    abstract: "Summarize the registered question, hypotheses, design, primary analysis, and the significance of a confirmatory test.",
+    keywords: "psychology, registered report, preregistration, reproducibility",
+    sections: [
+      { title: "Introduction", body: "State the theory, prior evidence, and preregistered hypotheses." },
+      { title: "Methods", body: "Describe participants, materials, manipulations, outcomes, exclusion rules, and power analysis." },
+      { title: "Proposed Analyses", body: "Define the primary models, confirmatory thresholds, and robustness checks." },
+      { title: "Results", body: "For Stage 2, report outcomes exactly as preregistered before exploratory analyses." },
+      { title: "Discussion", body: "Interpret confirmatory findings and explicitly separate exploratory observations." },
+    ],
+    bibliographyStyle: "plainnat",
+  }),
+  law_review: makeGeneratedTemplate({
+    id: "law_review",
+    label: "Law Review Article",
+    description: "Student-edited law review manuscript skeleton with doctrinal structure",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage[margin=1.1in]{geometry}", "\\usepackage{setspace}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Law School, University Name",
+    abstract: "State the legal question, the central doctrinal claim, the authorities analyzed, and the policy or institutional implication.",
+    keywords: "law review, doctrine, constitutional law, legal theory",
+    extraPreamble: "\\doublespacing",
+    sections: [
+      { title: "Introduction", body: "Present the legal problem, stakes, and the article's thesis." },
+      { title: "Doctrinal Background", body: "Map the governing doctrine, cases, statutes, and regulatory backdrop." },
+      { title: "Analysis", body: "Develop the core argument with attention to precedent, interpretation, and counterarguments." },
+      { title: "Implications", body: "Explain the consequences for courts, agencies, or law reform." },
+      { title: "Conclusion", body: "State the narrowest and strongest claim that follows from the analysis." },
+    ],
+    bibliographyStyle: "plain",
+  }),
+  law_case_note: makeGeneratedTemplate({
+    id: "law_case_note",
+    label: "Case Note",
+    description: "Short-form legal note focused on a single judgment or authority cluster",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage[margin=1in]{geometry}", "\\usepackage{setspace}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Law School, University Name",
+    abstract: "Summarize the case, the central holding, the interpretive issue, and the most important practical consequence.",
+    keywords: "case note, precedent, legal analysis",
+    extraPreamble: "\\doublespacing",
+    sections: [
+      { title: "The Decision", body: "Summarize the facts, procedural posture, issue, and holding." },
+      { title: "Reasoning", body: "Explain the court's interpretive path and strongest moves." },
+      { title: "Comment", body: "Offer a concise doctrinal critique and identify the next unresolved question." },
+      { title: "Conclusion", body: "State the case's most defensible significance." },
+    ],
+    bibliographyStyle: "plain",
+  }),
+  humanities_mla: makeGeneratedTemplate({
+    id: "humanities_mla",
+    label: "MLA Humanities Essay",
+    description: "Humanities article skeleton for literature and cultural studies writing",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage[margin=1in]{geometry}", "\\usepackage{setspace}", "\\usepackage{hyperref}", "\\usepackage{csquotes}"],
+    authorBlock: "First Author\\\\Department of English, University Name",
+    abstract: "State the text or archive, the interpretive intervention, the method, and the contribution to the scholarly conversation.",
+    keywords: "humanities, mla, literature, interpretation, archive",
+    extraPreamble: "\\doublespacing",
+    sections: [
+      { title: "Introduction", body: "Situate the text or corpus, identify the debate, and state the argumentative intervention." },
+      { title: "Critical Context", body: "Review the strongest prior interpretations and clarify where this essay departs." },
+      { title: "Analysis", body: "Develop close readings or archival interpretation with sustained textual evidence." },
+      { title: "Conclusion", body: "Explain what the reading changes for the field, canon, or method." },
+    ],
+    bibliographyStyle: "plain",
+  }),
+  humanities_chicago_history: makeGeneratedTemplate({
+    id: "humanities_chicago_history",
+    label: "Chicago History Article",
+    description: "History-oriented article skeleton for archival and historiographic work",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage[margin=1in]{geometry}", "\\usepackage{setspace}", "\\usepackage{hyperref}", "\\usepackage{booktabs}"],
+    authorBlock: "First Author\\\\Department of History, University Name",
+    abstract: "Describe the historical question, archive or source base, central historiographical claim, and significance.",
+    keywords: "history, chicago style, archive, historiography",
+    extraPreamble: "\\doublespacing",
+    sections: [
+      { title: "Introduction", body: "Present the historical problem and identify the historiographical intervention." },
+      { title: "Sources and Method", body: "Describe archives, source criticism, chronology, and interpretive method." },
+      { title: "Argument", body: "Develop the main historical claim using documentary evidence and chronology." },
+      { title: "Conclusion", body: "State how the argument reframes the broader historical narrative." },
+    ],
+    bibliographyStyle: "plain",
+  }),
+  education_aera: makeGeneratedTemplate({
+    id: "education_aera",
+    label: "AERA Education Research",
+    description: "Empirical education research manuscript with intervention and implementation structure",
+    documentClass: "\\documentclass[man]{apa7}",
+    packages: ["\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\School of Education, University Name",
+    abstract: "State the learner population, instructional approach, outcome measures, strongest result, and implication for teaching or policy.",
+    keywords: "education, aera, intervention, learning sciences",
+    sections: [
+      { title: "Introduction", body: "Set up the instructional problem, relevant theory, and study aims." },
+      { title: "Method", body: "Describe setting, participants, intervention, instruments, and analytic strategy." },
+      { title: "Results", body: "Report learning outcomes, implementation observations, and effect sizes." },
+      { title: "Discussion", body: "Interpret the results for educators and future research." },
+      { title: "Practical Materials", body: "List where rubrics, lessons, or instruments can be accessed.", starred: true },
+    ],
+    bibliographyStyle: "apacite",
+  }),
+  education_stem: makeGeneratedTemplate({
+    id: "education_stem",
+    label: "STEM Education Article",
+    description: "Template for STEM education interventions and classroom analytics",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage{amsmath}", "\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage[margin=1in]{geometry}", "\\usepackage{hyperref}", "\\usepackage{natbib}"],
+    authorBlock: "First Author\\\\Department of STEM Education, University Name",
+    abstract: "Describe the educational setting, instructional intervention, assessment strategy, and strongest measured learning effect.",
+    keywords: "education, STEM, assessment, classroom intervention",
+    sections: [
+      { title: "Introduction", body: "Define the STEM learning challenge and explain the pedagogical rationale." },
+      { title: "Instructional Design", body: "Describe materials, duration, fidelity supports, and implementation constraints." },
+      { title: "Assessment and Analysis", body: "Report instruments, scoring, validity, and analytic models." },
+      { title: "Results", body: "Present gains, subgroup effects, and implementation takeaways." },
+      { title: "Conclusion", body: "Explain the strongest classroom implication and what should be tested next." },
+    ],
+    bibliographyStyle: "plainnat",
+  }),
+  environmental_nature_climate: makeGeneratedTemplate({
+    id: "environmental_nature_climate",
+    label: "Nature Climate Change Style",
+    description: "Climate and environmental science manuscript with policy-facing summary structure",
+    documentClass: "\\documentclass[12pt]{article}",
+    packages: ["\\usepackage[utf8]{inputenc}", "\\usepackage[T1]{fontenc}", "\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage[margin=1in]{geometry}", "\\usepackage{hyperref}", "\\usepackage{natbib}", "\\usepackage{setspace}"],
+    authorBlock: "First Author\\\\Department of Environmental Science, University Name",
+    abstract: "State the environmental system, stressor or scenario, principal quantitative result, and the adaptation or mitigation implication.",
+    keywords: "environmental science, climate, sustainability, modeling",
+    extraPreamble: "\\onehalfspacing",
+    sections: [
+      { title: "Introduction", body: "Frame the environmental problem, scale, and policy relevance." },
+      { title: "Methods", body: "Describe datasets, monitoring or modeling workflow, and uncertainty treatment." },
+      { title: "Results", body: "Present the main environmental signal, trend, or projection with appropriate quantitative detail." },
+      { title: "Discussion", body: "Explain implications for mitigation, adaptation, conservation, or risk governance." },
+      { title: "Data and Code Availability", body: "List repositories, accession points, and computational environment.", starred: true },
+    ],
+    bibliographyStyle: "plainnat",
+  }),
+  environmental_esandt: makeGeneratedTemplate({
+    id: "environmental_esandt",
+    label: "Environmental Science & Technology",
+    description: "ES&T-style manuscript for environmental chemistry, monitoring, and exposure studies",
+    documentClass: "\\documentclass[journal=esthag,manuscript=article]{achemso}",
+    packages: ["\\usepackage[version=4]{mhchem}", "\\usepackage{graphicx}", "\\usepackage{booktabs}", "\\usepackage{hyperref}"],
+    authorBlock: "First Author\\\\Department of Environmental Engineering, University Name",
+    abstract: "Describe the environmental matrix or system, the analytical or field method, the strongest quantified result, and the implication for risk or management.",
+    keywords: "environmental science, est, monitoring, exposure, chemistry",
+    sections: [
+      { title: "Introduction", body: "State the pollutant, ecosystem, or climate driver and the gap in current evidence." },
+      { title: "Materials and Methods", body: "Describe sampling, analytical methods, QA/QC, and statistical analyses." },
+      { title: "Results and Discussion", body: "Present concentrations, trends, exposure estimates, or process findings with interpretation." },
+      { title: "Implications", body: "Explain what the findings mean for management, regulation, or next measurement priorities." },
+      { title: "Supporting Information", body: "List supplementary tables, maps, calibration curves, and scripts.", starred: true },
+    ],
+    bibliographyStyle: "achemso",
+  }),
 };
 
 export function getTemplate(id: string): LatexTemplate | null {
