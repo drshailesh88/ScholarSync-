@@ -2297,3 +2297,13 @@ These components exist in `src/components/systematic-review/` but are NOT import
 - [ ] Screening PDF viewer keeps the hard-coded `w-[70%]` / `w-[30%]` split at all breakpoints; there is no mobile-specific stacked layout
 - [ ] Activity feed open/close behavior has no explicit focus management or focus restoration logic around the drawer toggle button
 - [ ] Route error recovery delegates only to `ErrorDisplay`'s retry callback; it does not clear persisted systematic-review store state or navigate away from the workflow page
+
+## Multi-Domain Awareness (Added 2026-03-28)
+
+### Domain Selection
+- [ ] Systematic review module is hidden for domains outside medicine, biology, and psychology
+- [ ] Systematic review module is visible for medicine, biology, and psychology
+- [ ] Direct navigation to `/systematic-review` shows a gating message for non-medical domains
+
+### Domain-Specific Behavior
+- [ ] PICO extraction is hidden for non-medical domains

@@ -1627,3 +1627,14 @@
 - [ ] Accessibility coverage is still incomplete: `SourceSelector` source cards and `ReferenceImportPanel` tabs are button groups without `role="tablist"` / `role="tab"` or `aria-selected`, while `presenter-mode.tsx` does provide `aria-label`s on fullscreen, exit, timer, and jump controls
 - [ ] Mobile/responsive behavior is still lightly documented: `SourceSelector` changes from `grid-cols-2` to `md:grid-cols-3` to `xl:grid-cols-6`, `NewPresentationPage` uses `grid-cols-2 sm:grid-cols-3` for audience options, `ReferenceImportPanel` keeps a fixed two-column Zotero form, and `presentation/loading.tsx` shifts from 1 to 2 to 3 columns
 - [ ] Import-tree files still not covered by dedicated sections include `template-selector.tsx`, `speaker-notes-panel.tsx`, `recordings-panel.tsx`, `src/app/(app)/presentation/error.tsx`, `src/app/(app)/presentation/loading.tsx`, `src/app/presentation/audience/page.tsx`, `/api/presentations/preprocess`, and `/api/presentations/generate`
+
+## Multi-Domain Awareness (Added 2026-03-28)
+
+### Domain Selection
+- [ ] Audience types are filtered by the active domain config
+- [ ] Physics users see `Lab Meeting` as an audience option and do not see `Grand Rounds`
+- [ ] Medicine users still see all current audience types with no regression
+
+### Domain-Specific Behavior
+- [ ] Study design extraction uses domain-appropriate vocabulary
+- [ ] Callout type matches the active domain (for example: clinical, experimental, technical)

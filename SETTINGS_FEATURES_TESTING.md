@@ -880,3 +880,14 @@ The Codex audit section (lines 486–695) is accurate. All assertions were verif
 ### Codex Verification Note
 
 - `displayPlan` only controls plan-derived UI (`Free`/`Basic`/`Pro` pricing text and the plagiarism limit). Token quota and usage counters continue to render from `getUserUsageStats()`.
+
+## Multi-Domain Awareness (Added 2026-03-28)
+
+### Domain Selection
+- [ ] Settings page shows a `Research Field` section
+- [ ] Current domain is displayed correctly in settings
+- [ ] Domain can be changed via dropdown selection
+- [ ] Domain change persists after page reload
+
+### Domain-Specific Behavior
+- [ ] Changing the user's domain does NOT affect existing projects

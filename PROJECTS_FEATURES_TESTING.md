@@ -768,3 +768,13 @@ interface Project {
 - [ ] View toggle buttons are icon-only and expose no `aria-label` or `aria-pressed` state
 - [ ] Modal close button has no explicit accessible name (`aria-label` or `title`)
 - [ ] Search input and status filter have no explicit associated label in the current UI
+
+## Multi-Domain Awareness (Added 2026-03-28)
+
+### Domain Selection
+- [ ] New projects inherit the current user's domain by default
+- [ ] Project creation allows a domain override before save
+- [ ] Domain override persists to `projects.field`
+
+### Domain-Specific Behavior
+- [ ] Project domain is displayed in project settings or project details views
