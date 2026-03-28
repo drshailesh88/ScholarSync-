@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for studio/spec-011
  * Source: e2e/specs/studio/spec-011.md
- * Generated: 2026-03-15T16:14:59.327Z
+ * Generated: 2026-03-28T01:48:27.123Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -102,7 +102,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -152,7 +152,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -202,7 +202,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -252,7 +252,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -302,7 +302,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -352,7 +352,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -402,7 +402,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -452,7 +452,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -502,7 +502,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -552,7 +552,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -602,7 +602,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -652,7 +652,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -702,7 +702,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -752,7 +752,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -802,7 +802,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -852,7 +852,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -902,7 +902,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -952,7 +952,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1002,7 +1002,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1052,7 +1052,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1102,7 +1102,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1152,7 +1152,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1202,7 +1202,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1252,7 +1252,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1302,7 +1302,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1352,7 +1352,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1402,7 +1402,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1452,7 +1452,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1502,7 +1502,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1552,7 +1552,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1602,7 +1602,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1652,7 +1652,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1702,7 +1702,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');
@@ -1752,7 +1752,7 @@ test.describe('studio / spec-011', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-011');

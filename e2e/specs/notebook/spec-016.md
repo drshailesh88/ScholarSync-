@@ -1,9 +1,9 @@
 # notebook — Spec 016
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 33
+FAIL: 2
 BLOCKED: 0
 PAGE: http://localhost:3001/notebook
 MODULE: notebook
@@ -32,8 +32,8 @@ MODULE: notebook
 - [x] PASS: Audio Overview auto-generates once on first mount using `hasTriggeredRef`
 - [x] PASS: Audio Overview enters `error` state immediately when opened with no conversation id or no valid paper ids
 - [x] PASS: Audio Overview generation request body includes `conversationId`, normalized unique `paperIds`, `mode`, optional `customPrompt`, and optional non-default `length`
-- [x] PASS: Audio Overview displays a `Cached` badge only when the result is cached and controls are available
-- [x] PASS: Audio Overview speed button cycles through `1x`, `1.25x`, `1.5x`, and `2x`
+- [ ] FAIL: Audio Overview displays a `Cached` badge only when the result is cached and controls are available
+- [ ] FAIL: Audio Overview speed button cycles through `1x`, `1.25x`, `1.5x`, and `2x`
 - [x] PASS: Transcript is hidden by default after each successful generation
 - [x] PASS: Changing conversation id, selected paper ids, mode, custom prompt, or audio length resets the panel back to `idle`
 - [x] PASS: Audio Overview options panel is visible by default only in idle state and later via the `Options` link

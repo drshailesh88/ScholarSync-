@@ -1,9 +1,9 @@
 # studio — Spec 002
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 32
+FAIL: 3
 BLOCKED: 0
 PAGE: http://localhost:3001/studio
 MODULE: studio
@@ -31,9 +31,9 @@ MODULE: studio
 #### Text Formatting
 - [x] PASS: Bold, Italic, Underline, Strikethrough
 - [x] PASS: Heading levels 1–6
-- [x] PASS: Bullet list, Numbered list, Checklist
-- [x] PASS: Blockquote
-- [x] PASS: Code block
+- [ ] FAIL: Bullet list, Numbered list, Checklist
+- [ ] FAIL: Blockquote
+- [ ] FAIL: Code block
 - [x] PASS: Horizontal rule / divider
 #### Academic Content
 - [x] PASS: Table insertion (3×3 with header row)

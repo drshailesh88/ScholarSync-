@@ -1,9 +1,9 @@
 # notebook — Spec 015
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 30
+FAIL: 5
 BLOCKED: 0
 PAGE: http://localhost:3001/notebook
 MODULE: notebook
@@ -11,8 +11,8 @@ MODULE: notebook
 ---
 ### Quick Test Workflows
 #### Chat Send, Streaming, and Error Handling Details
-- [x] PASS: Stream read timeouts are handled separately from initial request failures using a per-read 30 second timeout race
-- [x] PASS: Stream timeouts append the assistant message `The response timed out. Please try again or ask a simpler question.`
+- [ ] FAIL: Stream read timeouts are handled separately from initial request failures using a per-read 30 second timeout race
+- [ ] FAIL: Stream timeouts append the assistant message `The response timed out. Please try again or ask a simpler question.`
 - [x] PASS: Non-timeout runtime failures append the assistant message `Something went wrong. Please try again.`
 - [x] PASS: Request cleanup always clears the outer timeout and flips `isLoading` false in `finally`
 #### RAG Headers, Coverage, and Follow-Up Suggestion Details
@@ -28,10 +28,10 @@ MODULE: notebook
 - [x] PASS: Follow-up suggestions are requested only when the assistant response has at least 100 trimmed characters
 - [x] PASS: Follow-up suggestion requests include `responseText`, `sourceTitles`, `userQuery`, and current notebook `mode`
 - [x] PASS: Stale follow-up suggestion responses are dropped by comparing `suggestionRequestIdRef`
-- [x] PASS: Follow-up suggestion chips render only for the latest assistant message whose id matches `suggestionsForMessageId`
-- [x] PASS: Learn-mode suggestion chips switch to amber-tinted styling while research-mode chips use neutral surface styling
+- [ ] FAIL: Follow-up suggestion chips render only for the latest assistant message whose id matches `suggestionsForMessageId`
+- [ ] FAIL: Learn-mode suggestion chips switch to amber-tinted styling while research-mode chips use neutral surface styling
 #### Message Rendering, Copy, and Feedback Details
-- [x] PASS: Chat log container uses both `role="log"` and `aria-live="polite"`
+- [ ] FAIL: Chat log container uses both `role="log"` and `aria-live="polite"`
 - [x] PASS: Assistant citations render only when the message role is `assistant` and the message has a non-empty `sources` array
 - [x] PASS: Citation chips show a `FilePdf` icon plus a shortened paper title and optional page label
 - [x] PASS: Clicking a citation chip stores its source index in `highlightedSource`

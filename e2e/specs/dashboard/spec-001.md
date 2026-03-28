@@ -1,9 +1,9 @@
 # dashboard — Spec 001
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/dashboard
 MODULE: dashboard
@@ -11,7 +11,7 @@ MODULE: dashboard
 ---
 ### Page Overview
 #### Layout
-- [ ] FAIL: Page renders with all sections visible
+- [x] PASS: Page renders with all sections visible
 - [x] PASS: `force-dynamic` — always fetches fresh data on load
 - [x] PASS: Content constrained to `max-w-5xl` width
 - [x] PASS: Responsive: stacks to single column on mobile

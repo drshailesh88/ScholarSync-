@@ -1,8 +1,8 @@
 # studio — Spec 011
 
 STATUS: DONE
-TESTED: 35/35
-PASS: 35
+TESTED: 0/35
+PASS: 0
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/studio

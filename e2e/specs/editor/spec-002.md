@@ -1,9 +1,9 @@
 # editor — Spec 002
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 31/35
-PASS: 31
-FAIL: 0
+PASS: 30
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/studio
 MODULE: editor
@@ -31,7 +31,7 @@ MODULE: editor
 #### Citation Insertion Flow (Studio page)
 - [x] PASS: Cursor position is saved before dialog opens
 - [x] PASS: After inserting, editor refocuses at saved position
-- [x] PASS: Citation notice appears briefly: "Citation inserted" or "N citations inserted" (2.5s auto-dismiss)
+- [ ] FAIL: Citation notice appears briefly: "Citation inserted" or "N citations inserted" (2.5s auto-dismiss)
 - [x] PASS: Bibliography node is auto-inserted at document end if not already present
 
 ### Reference Sidebar

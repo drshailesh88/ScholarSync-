@@ -1,9 +1,9 @@
 # research — Spec 016
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/research
 MODULE: research
@@ -50,4 +50,4 @@ MODULE: research
 #### Page Layout & CSS Behavior
 - [x] PASS: Page layout uses `h-[calc(100vh-7rem)]` as the overall container height constraint
 - [x] PASS: Main content area uses `overflow-y-auto pr-2` for scrolling within the fixed-height container
-- [x] PASS: Active filter chip styling: `bg-brand/10 text-brand border-brand/30`
+- [ ] FAIL: Active filter chip styling: `bg-brand/10 text-brand border-brand/30`

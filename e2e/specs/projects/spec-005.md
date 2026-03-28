@@ -1,9 +1,9 @@
 # projects — Spec 005
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/projects
 MODULE: projects
@@ -48,7 +48,7 @@ MODULE: projects
 - [x] PASS: `viewMode` defaults to `list`
 - [x] PASS: `showNewModal` defaults to `false`
 - [x] PASS: `showStatusModal` defaults to `false`
-- [x] PASS: Initial page fetch calls `getProjects()` through `fetchProjects()`
+- [ ] FAIL: Initial page fetch calls `getProjects()` through `fetchProjects()`
 - [x] PASS: Initial fetch failure logs `Failed to load projects:` to the console
 - [x] PASS: While `loading` is true, the page shows only a centered `SpinnerGap` icon
 - [x] PASS: Header count badge displays `projects.length`, not `filtered.length`

@@ -1,9 +1,9 @@
 # studio — Spec 004
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 33
+FAIL: 2
 BLOCKED: 0
 PAGE: http://localhost:3001/studio
 MODULE: studio
@@ -39,8 +39,8 @@ MODULE: studio
 - [x] PASS: Stats grid (2 columns):
 - [x] PASS: Flagged Paragraphs (top 5):
 - [x] PASS: Paragraph excerpt displayed
-- [x] PASS: AI probability percentage shown
-- [x] PASS: Flags listed as bullets
+- [ ] FAIL: AI probability percentage shown
+- [ ] FAIL: Flags listed as bullets
 - [x] PASS: Suggestion shown if available
 - [x] PASS: Available on free tier
 #### Section 2: Plagiarism

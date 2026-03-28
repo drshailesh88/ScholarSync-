@@ -1,9 +1,9 @@
 # projects — Spec 008
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 32
+FAIL: 3
 BLOCKED: 0
 PAGE: http://localhost:3001/projects
 MODULE: projects
@@ -37,9 +37,9 @@ MODULE: projects
 - [x] PASS: `creating` state resets to `false` in a `finally` block — the Create Project button re-enables even after a failed creation attempt
 - [x] PASS: Both "Create Project" and "Update Status" buttons use `disabled:opacity-50 disabled:cursor-not-allowed` when disabled
 #### DataTable Internals
-- [x] PASS: DataTable wraps the `<table>` in `overflow-x-auto rounded-xl border border-border`
-- [x] PASS: DataTable header row uses `bg-surface-raised/50` background with `font-medium text-ink-muted` column headers
-- [x] PASS: DataTable body rows use index-based keys (`key={idx}`), not project IDs
+- [ ] FAIL: DataTable wraps the `<table>` in `overflow-x-auto rounded-xl border border-border`
+- [ ] FAIL: DataTable header row uses `bg-surface-raised/50` background with `font-medium text-ink-muted` column headers
+- [ ] FAIL: DataTable body rows use index-based keys (`key={idx}`), not project IDs
 - [x] PASS: DataTable rows without `onRowClick` have no cursor or hover styles; rows with `onRowClick` get `cursor-pointer hover:bg-surface-raised/50`
 #### Server Action Internals
 - [x] PASS: `getProjects()` returns `[]` immediately if the initial query finds zero rows (skips paper/doc count queries)

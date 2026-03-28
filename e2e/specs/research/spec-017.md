@@ -1,9 +1,9 @@
 # research — Spec 017
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 31
+FAIL: 4
 BLOCKED: 0
 PAGE: http://localhost:3001/research
 MODULE: research
@@ -25,7 +25,7 @@ MODULE: research
 - [x] PASS: Copilot close button has no `aria-label` attribute
 - [x] PASS: Copilot chat input has no `aria-label` attribute
 - [x] PASS: Copilot send button has no `aria-label` attribute
-- [x] PASS: No `aria-live` region exists for search result count updates or loading/error state transitions
+- [ ] FAIL: No `aria-live` region exists for search result count updates or loading/error state transitions
 - [x] PASS: Pagination Previous/Next buttons have no `aria-label` attributes (e.g., "Go to previous page")
 - [x] PASS: Evidence level badges have no `title` or `aria-label` explaining the evidence level meaning
 #### Route-Level Loading & Error Verified
@@ -41,9 +41,9 @@ MODULE: research
 - [x] PASS: Section 7 line 173 claims a "PMID badge" is rendered — **WRONG**. PMID is not displayed anywhere on result cards. It is used internally for title link construction and save payload only.
 - [x] PASS: Section 7 line 174 claims a "DOI badge" is rendered — **WRONG**. DOI is rendered as a text link ("DOI") in the metadata row, not as a badge component.
 - [x] PASS: Section 17 line 345 claims "Temperature — 0.3 for consistent output" for synthesis generation — **MISLEADING**. Plan mode uses temperature 0.3, but the primary streaming synthesis (generate mode) uses temperature 0.4 (correctly documented at lines 788-789 from Pass 2).
-- [x] PASS: Section 20 (Verification System) claims "Per-paper verification — calls `/api/research/verify`" — **WRONG for this page**. The `/research` page never calls `/api/research/verify`. The verification endpoint and VerificationBadge exist in the codebase but are not imported or invoked by `page.tsx`.
-- [x] PASS: `ResearchPage` never aborts `abortRef.current` on component unmount, so an in-flight `/api/search/unified` request can continue after navigation away from `/research`
-- [x] PASS: `handleSearch(...)` has no stale-request guard beyond `AbortController`, so an older aborted search can still enter `catch` / `finally` and overwrite `error` or `loading` state for a newer search
+- [ ] FAIL: Section 20 (Verification System) claims "Per-paper verification — calls `/api/research/verify`" — **WRONG for this page**. The `/research` page never calls `/api/research/verify`. The verification endpoint and VerificationBadge exist in the codebase but are not imported or invoked by `page.tsx`.
+- [ ] FAIL: `ResearchPage` never aborts `abortRef.current` on component unmount, so an in-flight `/api/search/unified` request can continue after navigation away from `/research`
+- [ ] FAIL: `handleSearch(...)` has no stale-request guard beyond `AbortController`, so an older aborted search can still enter `catch` / `finally` and overwrite `error` or `loading` state for a newer search
 - [x] PASS: Failed searches do not clear the prior `results` array, so an error banner can render above stale results from the previous successful search
 - [x] PASS: `handleSearch(...)` sets `hasSearched` to `true` before the fetch resolves, so a failed first search skips the rich pre-search empty state on the next render
 - [x] PASS: Main search button remains enabled for whitespace-only input; the no-op happens inside `handleSearch()` because it returns early on `!query.trim()`

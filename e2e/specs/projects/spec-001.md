@@ -1,9 +1,9 @@
 # projects — Spec 001
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/projects
 MODULE: projects
@@ -56,5 +56,5 @@ MODULE: projects
 - [x] PASS: Selecting "All Statuses" removes the status filter
 - [x] PASS: Works in combination with active tab and search input
 #### Combined Filtering
-- [x] PASS: Tab + Search + Status all compound correctly
+- [ ] FAIL: Tab + Search + Status all compound correctly
 - [x] PASS: Example: "Articles" tab + search "crispr" + status "drafting" = only articles matching "crispr" with drafting status

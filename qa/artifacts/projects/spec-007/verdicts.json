@@ -6,15 +6,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-000.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1591
+      "duration_ms": 1375
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-001",
@@ -23,15 +23,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-001.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1549
+      "duration_ms": 1307
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-002",
@@ -40,32 +40,32 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-002.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1564
+      "duration_ms": 1323
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-003",
     "spec_id": "spec-007",
     "module": "projects",
-    "verdict": "PASS",
+    "verdict": "FAIL",
     "proof": {
-      "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-003.png",
       "trace_exists": false,
       "trace_path": "",
-      "error_message": null,
-      "duration_ms": 1638
+      "error_message": "Error: page.goto: net::ERR_CONNECTION_RESET at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  202 |\n  203 |     // Navigate to the page\n> 204 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n      |                ^\n  205 |     await page.waitForTimeout(1000);\n  206 |\n  207 |     // Take a screenshot as proof of page load\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:204:16; Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, open '/Users/shaileshsingh/ScholarSync/test-results/.playwright-artifacts-0/traces/34fdc21927c3172e1104-f57296fbafb84da45dc7-recording3.trace'; Error: ENOENT: no such file or directory, open '/Users/shaileshsingh/ScholarSync/test-results/.playwright-artifacts-0/521e2e65dbdc8ff7d6023fed1ae7c0ea.zip'; \u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+      "duration_ms": 246
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-004",
@@ -74,15 +74,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-004.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1589
+      "duration_ms": 1653
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-005",
@@ -91,15 +91,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-005.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1605
+      "duration_ms": 1276
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-006",
@@ -108,15 +108,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-006.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1606
+      "duration_ms": 1242
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-007",
@@ -125,15 +125,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-007.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1644
+      "duration_ms": 1276
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-008",
@@ -142,15 +142,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-008.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1588
+      "duration_ms": 1280
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-009",
@@ -159,15 +159,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-009.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1585
+      "duration_ms": 1277
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-010",
@@ -176,15 +176,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-010.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1535
+      "duration_ms": 1278
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-011",
@@ -193,15 +193,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-011.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1589
+      "duration_ms": 1245
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-012",
@@ -210,15 +210,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-012.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1626
+      "duration_ms": 1243
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-013",
@@ -227,15 +227,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-013.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1606
+      "duration_ms": 1275
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-014",
@@ -244,15 +244,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-014.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1578
+      "duration_ms": 1228
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-015",
@@ -261,15 +261,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-015.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1594
+      "duration_ms": 1245
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-016",
@@ -278,15 +278,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-016.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1603
+      "duration_ms": 1328
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-017",
@@ -295,15 +295,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-017.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1605
+      "duration_ms": 1234
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-018",
@@ -312,66 +312,66 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-018.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1575
+      "duration_ms": 1253
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-019",
     "spec_id": "spec-007",
     "module": "projects",
-    "verdict": "PASS",
+    "verdict": "FAIL",
     "proof": {
-      "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-019.png",
       "trace_exists": false,
       "trace_path": "",
-      "error_message": null,
-      "duration_ms": 1572
+      "error_message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1002 |\n  1003 |     // Navigate to the page\n> 1004 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1005 |     await page.waitForTimeout(1000);\n  1006 |\n  1007 |     // Take a screenshot as proof of page load\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1004:16",
+      "duration_ms": 101
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-020",
     "spec_id": "spec-007",
     "module": "projects",
-    "verdict": "PASS",
+    "verdict": "FAIL",
     "proof": {
-      "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-020.png",
       "trace_exists": false,
       "trace_path": "",
-      "error_message": null,
-      "duration_ms": 1573
+      "error_message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1052 |\n  1053 |     // Navigate to the page\n> 1054 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1055 |     await page.waitForTimeout(1000);\n  1056 |\n  1057 |     // Take a screenshot as proof of page load\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1054:16",
+      "duration_ms": 143
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-021",
     "spec_id": "spec-007",
     "module": "projects",
-    "verdict": "PASS",
+    "verdict": "FAIL",
     "proof": {
-      "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-021.png",
       "trace_exists": false,
       "trace_path": "",
-      "error_message": null,
-      "duration_ms": 1559
+      "error_message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1102 |\n  1103 |     // Navigate to the page\n> 1104 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1105 |     await page.waitForTimeout(1000);\n  1106 |\n  1107 |     // Take a screenshot as proof of page load\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1104:16",
+      "duration_ms": 139
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-022",
@@ -380,15 +380,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-022.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1609
+      "duration_ms": 3832
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-023",
@@ -397,15 +397,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-023.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1572
+      "duration_ms": 1311
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-024",
@@ -414,15 +414,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-024.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1576
+      "duration_ms": 1277
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-025",
@@ -431,15 +431,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-025.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1577
+      "duration_ms": 1308
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-026",
@@ -448,15 +448,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-026.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1573
+      "duration_ms": 1272
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-027",
@@ -465,15 +465,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-027.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1559
+      "duration_ms": 1281
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-028",
@@ -482,15 +482,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-028.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1550
+      "duration_ms": 1279
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-029",
@@ -499,15 +499,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-029.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1543
+      "duration_ms": 1277
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-030",
@@ -516,15 +516,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-030.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1556
+      "duration_ms": 1311
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-031",
@@ -533,15 +533,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-031.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1641
+      "duration_ms": 1245
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-032",
@@ -550,15 +550,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-032.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1591
+      "duration_ms": 1273
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.238Z"
   },
   {
     "checkpoint_id": "cp-033",
@@ -567,15 +567,15 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-033.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1578
+      "duration_ms": 1278
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.239Z"
   },
   {
     "checkpoint_id": "cp-034",
@@ -584,14 +584,14 @@
     "verdict": "PASS",
     "proof": {
       "playwright_status": "passed",
-      "playwright_exit_code": 0,
+      "playwright_exit_code": 1,
       "screenshot_exists": true,
       "screenshot_path": "qa/artifacts/projects/spec-007/cp-034.png",
       "trace_exists": false,
       "trace_path": "",
       "error_message": null,
-      "duration_ms": 1524
+      "duration_ms": 1247
     },
-    "timestamp": "2026-03-15T15:43:51.092Z"
+    "timestamp": "2026-03-28T02:19:49.239Z"
   }
 ]

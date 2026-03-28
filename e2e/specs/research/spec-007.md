@@ -1,9 +1,9 @@
 # research — Spec 007
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/research
 MODULE: research
@@ -47,4 +47,4 @@ MODULE: research
 - [x] PASS: `/api/search/unified` defaults `page` to `0` when the query param is absent
 - [x] PASS: `/api/search/unified` defaults `perPage` to `20` when the query param is absent
 - [x] PASS: `/api/search/unified` caps `perPage` at `100` even if a larger value is requested
-- [x] PASS: `/api/search/unified` defaults `sort` to `relevance` when the query param is absent
+- [ ] FAIL: `/api/search/unified` defaults `sort` to `relevance` when the query param is absent

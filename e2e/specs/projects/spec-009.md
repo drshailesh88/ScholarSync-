@@ -1,9 +1,9 @@
 # projects — Spec 009
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 25/25
-PASS: 25
-FAIL: 0
+PASS: 23
+FAIL: 2
 BLOCKED: 0
 PAGE: http://localhost:3001/projects
 MODULE: projects
@@ -37,5 +37,5 @@ MODULE: projects
 - [x] PASS: Grid card navigation is mouse-only because the card root is a clickable `<div>` with no keyboard focus semantics
 - [x] PASS: Grid card icon-only action buttons have no `title` or `aria-label` attributes
 - [x] PASS: View toggle buttons are icon-only and expose no `aria-label` or `aria-pressed` state
-- [x] PASS: Modal close button has no explicit accessible name (`aria-label` or `title`)
-- [x] PASS: Search input and status filter have no explicit associated label in the current UI
+- [ ] FAIL: Modal close button has no explicit accessible name (`aria-label` or `title`)
+- [ ] FAIL: Search input and status filter have no explicit associated label in the current UI

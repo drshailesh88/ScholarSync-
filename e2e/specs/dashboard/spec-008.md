@@ -1,9 +1,9 @@
 # dashboard — Spec 008
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 26
+FAIL: 9
 BLOCKED: 0
 PAGE: http://localhost:3001/dashboard
 MODULE: dashboard
@@ -12,18 +12,18 @@ MODULE: dashboard
 ### Quick Test Workflows
 #### Detailed QA Coverage
 - [x] PASS: Clicking any sidebar nav link calls `onClose` — automatically closes mobile sidebar on navigation
-- [x] PASS: `ClerkUserButton` is dynamically imported and shows `w-8 h-8 rounded-full bg-surface-raised` loading placeholder
+- [ ] FAIL: `ClerkUserButton` is dynamically imported and shows `w-8 h-8 rounded-full bg-surface-raised` loading placeholder
 - [x] PASS: `ClerkUserButton` receives `afterSignOutUrl="/"` prop
 - [x] PASS: Sidebar nav area has `overflow-y-auto` for scrollable navigation when items overflow
-- [x] PASS: Sidebar fallback placeholder (no Clerk) uses specific styling: `bg-brand/20 border border-brand/30`
+- [ ] FAIL: Sidebar fallback placeholder (no Clerk) uses specific styling: `bg-brand/20 border border-brand/30`
 - [x] PASS: Command palette is built on the `cmdk` library (`Command` from `"cmdk"`)
-- [x] PASS: Palette is positioned at `top-[20%]` of viewport, horizontally centered, with `max-w-lg` width
-- [x] PASS: When no commands match the search filter, empty state shows `"No results found."`
-- [x] PASS: Commands are organized under `"Navigation"` and `"Actions"` group headings
+- [ ] FAIL: Palette is positioned at `top-[20%]` of viewport, horizontally centered, with `max-w-lg` width
+- [ ] FAIL: When no commands match the search filter, empty state shows `"No results found."`
+- [ ] FAIL: Commands are organized under `"Navigation"` and `"Actions"` group headings
 - [x] PASS: Selected command item is highlighted via `data-[selected=true]:bg-surface-raised`
 - [x] PASS: Command palette does NOT include Deep Research, LaTeX Editor, Journal Feed, or Systematic Review (these are sidebar-only navigation items)
 - [x] PASS: Search input area shows a `MagnifyingGlass` icon at `size={18}` before the text input
-- [x] PASS: Command list has `max-h-72` max height with overflow scrolling
+- [ ] FAIL: Command list has `max-h-72` max height with overflow scrolling
 - [x] PASS: Toggle Theme action icon is contextual: shows `Sun` when current theme is dark, `Moon` when light
 - [x] PASS: New Project action uses `PenNib` icon
 - [x] PASS: Loading skeleton renders only 2 of 5 dashboard sections: action cards grid and manuscripts table — NO skeleton for stats overview, recent searches, or recent activity
@@ -43,6 +43,6 @@ MODULE: dashboard
 - [x] PASS: Logo background is a gradient: `bg-gradient-to-tr from-sky-500 to-indigo-500`
 - [x] PASS: Logo text reads `"ScholarSync"` with `font-semibold tracking-tight`
 - [x] PASS: AppShell root container uses `flex h-screen` layout
-- [x] PASS: Main content area has `p-6` padding and `overflow-y-auto` scrolling
-- [x] PASS: `CommandPalette` is rendered as a direct child of the root flex container, outside the content column
-- [x] PASS: Badge uses `rounded-full` shape (pill style, not rounded rectangle)
+- [ ] FAIL: Main content area has `p-6` padding and `overflow-y-auto` scrolling
+- [ ] FAIL: `CommandPalette` is rendered as a direct child of the root flex container, outside the content column
+- [ ] FAIL: Badge uses `rounded-full` shape (pill style, not rounded rectangle)

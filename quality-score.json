@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-03-27T14:58:23.194Z",
-  "composite": 99.41,
+  "timestamp": "2026-03-28T02:31:13.101Z",
+  "composite": 99.4,
   "temperature": "FROZEN",
   "currentPhase": 5,
   "phaseAverages": {
@@ -11,18 +11,18 @@
     "5": 100
   },
   "weakest": {
-    "dimension": "typescriptStrict",
-    "label": "TypeScript Strict",
-    "score": 96.63
+    "dimension": "emptyStates",
+    "label": "Empty/Boundary States",
+    "score": 96.35
   },
   "dimensions": {
     "typescriptStrict": {
-      "score": 96.63,
+      "score": 96.64,
       "details": {
         "errors": 0,
         "anyCount": 174,
         "strictEnabled": true,
-        "totalLines": 516371
+        "totalLines": 517929
       },
       "weight": 0.08,
       "phase": 1,
@@ -126,10 +126,10 @@
       "label": "Assertion Module Coverage"
     },
     "unitPassRate": {
-      "score": 99.64,
+      "score": 99.77,
       "details": {
-        "passed": 6029,
-        "failed": 20,
+        "passed": 6037,
+        "failed": 12,
         "total": 6051
       },
       "weight": 0.05,
@@ -150,22 +150,22 @@
       "label": "Network Resilience"
     },
     "emptyStates": {
-      "score": 96.68,
+      "score": 96.35,
       "details": {
-        "emptyStateComponents": 291,
+        "emptyStateComponents": 290,
         "dataDisplayPages": 301,
-        "pagesWithEmptyState": 291
+        "pagesWithEmptyState": 290
       },
       "weight": 0.03,
       "phase": 3,
       "label": "Empty/Boundary States"
     },
     "errorMessages": {
-      "score": 98.15,
+      "score": 98.17,
       "details": {
         "genericErrors": 10,
-        "specificErrors": 315,
-        "recoverableErrors": 217
+        "specificErrors": 318,
+        "recoverableErrors": 219
       },
       "weight": 0.03,
       "phase": 3,
@@ -222,7 +222,7 @@
       "details": {
         "missingAlt": 0,
         "missingLabels": 0,
-        "ariaUsage": 849,
+        "ariaUsage": 857,
         "jsxA11yPlugin": true,
         "axeTests": 2
       },

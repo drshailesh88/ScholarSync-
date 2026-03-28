@@ -1,9 +1,9 @@
 {
   "config": {
-    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
-    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "configFile": "/Users/shaileshsingh/ScholarSync/qa/playwright.config.ts",
+    "rootDir": "/Users/shaileshsingh/ScholarSync/qa/generated",
     "forbidOnly": true,
-    "fullyParallel": false,
+    "fullyParallel": true,
     "globalSetup": null,
     "globalTeardown": null,
     "globalTimeout": 0,
@@ -33,7 +33,7 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "/home/user/ScholarSync-/test-results",
+        "outputDir": "/Users/shaileshsingh/ScholarSync/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -41,12 +41,12 @@
         },
         "id": "qa-chromium",
         "name": "qa-chromium",
-        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testDir": "/Users/shaileshsingh/ScholarSync/qa/generated",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 60000
+        "timeout": 30000
       }
     ],
     "shard": null,
@@ -83,7 +83,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -93,18 +93,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1591,
+                      "duration": 1375,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:42:55.101Z",
+                      "startTime": "2026-03-28T02:18:33.412Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-6e694--trimmed-field-is-non-empty-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-6e694--trimmed-field-is-non-empty-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -123,7 +123,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -133,18 +133,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1549,
+                      "duration": 1307,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:42:56.770Z",
+                      "startTime": "2026-03-28T02:18:34.916Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-ecbb8-when-the-field-is-non-empty-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-ecbb8-when-the-field-is-non-empty-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -163,7 +163,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -173,18 +173,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1564,
+                      "duration": 1323,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:42:58.332Z",
+                      "startTime": "2026-03-28T02:18:36.231Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-e3a28-the-modal-before-navigating-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-e3a28-the-modal-before-navigating-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -199,11 +199,11 @@
             },
             {
               "title": "cp-003: Successful creation routes to editornewprojectcreatedid",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -212,24 +212,57 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1638,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 246,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_RESET at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_RESET at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:204:16",
+                        "location": {
+                          "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 204
+                        },
+                        "snippet": "  202 |\n  203 |     // Navigate to the page\n> 204 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n      |                ^\n  205 |     await page.waitForTimeout(1000);\n  206 |\n  207 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 204
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_RESET at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  202 |\n  203 |     // Navigate to the page\n> 204 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n      |                ^\n  205 |     await page.waitForTimeout(1000);\n  206 |\n  207 |     // Take a screenshot as proof of page load\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:204:16"
+                        },
+                        {
+                          "message": "Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, open '/Users/shaileshsingh/ScholarSync/test-results/.playwright-artifacts-0/traces/34fdc21927c3172e1104-f57296fbafb84da45dc7-recording3.trace'"
+                        },
+                        {
+                          "message": "Error: ENOENT: no such file or directory, open '/Users/shaileshsingh/ScholarSync/test-results/.playwright-artifacts-0/521e2e65dbdc8ff7d6023fed1ae7c0ea.zip'"
+                        },
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:42:59.913Z",
+                      "startTime": "2026-03-28T02:18:37.562Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-b6112-o-editornewprojectcreatedid-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-b6112-o-editornewprojectcreatedid-qa-chromium/test-failed-1.png"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 204
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "34fdc21927c3172e1104-f57296fbafb84da45dc7",
@@ -243,28 +276,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1589,
+                      "duration": 1653,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:01.563Z",
+                      "startTime": "2026-03-28T02:19:08.665Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-19e75-console-and-leaves-the-moda-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-19e75-console-and-leaves-the-moda-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -283,28 +316,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1605,
+                      "duration": 1276,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:03.164Z",
+                      "startTime": "2026-03-28T02:19:10.427Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-b7041-d-project-into-statusTarget-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-b7041-d-project-into-statusTarget-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -323,28 +356,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1606,
+                      "duration": 1242,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:04.778Z",
+                      "startTime": "2026-03-28T02:19:11.711Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-6c7e0-from-projectstatus-planning-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-6c7e0-from-projectstatus-planning-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -363,28 +396,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1644,
+                      "duration": 1276,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:06.393Z",
+                      "startTime": "2026-03-28T02:19:12.960Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-721a7-ge-status-for-project-title-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-721a7-ge-status-for-project-title-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -403,28 +436,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1588,
+                      "duration": 1280,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:08.047Z",
+                      "startTime": "2026-03-28T02:19:14.243Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-a8e00-iewing-and-completed-in-ord-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-a8e00-iewing-and-completed-in-ord-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -443,28 +476,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1585,
+                      "duration": 1277,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:09.653Z",
+                      "startTime": "2026-03-28T02:19:15.528Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-3455e-ate-section-under-a-divider-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-3455e-ate-section-under-a-divider-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -483,28 +516,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1535,
+                      "duration": 1278,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:11.252Z",
+                      "startTime": "2026-03-28T02:19:16.810Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-70981-s-a-trailing-Selected-label-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-70981-s-a-trailing-Selected-label-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -523,28 +556,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1589,
+                      "duration": 1245,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:12.797Z",
+                      "startTime": "2026-03-28T02:19:18.094Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-ea8cc--the-current-project-status-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-ea8cc--the-current-project-status-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -563,28 +596,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1626,
+                      "duration": 1243,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:14.395Z",
+                      "startTime": "2026-03-28T02:19:19.345Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-5f12f-hile-updatingStatus-is-true-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-5f12f-hile-updatingStatus-is-true-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -603,28 +636,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1606,
+                      "duration": 1275,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:16.030Z",
+                      "startTime": "2026-03-28T02:19:20.594Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-f0079--awaiting-the-server-action-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-f0079--awaiting-the-server-action-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -643,28 +676,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1578,
+                      "duration": 1228,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:17.645Z",
+                      "startTime": "2026-03-28T02:19:21.876Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-b99f0-oject-status-to-the-console-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-b99f0-oject-status-to-the-console-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -683,28 +716,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1594,
+                      "duration": 1245,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:19.232Z",
+                      "startTime": "2026-03-28T02:19:23.109Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-9c9c9-tore-canonical-server-state-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-9c9c9-tore-canonical-server-state-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -723,28 +756,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1603,
+                      "duration": 1328,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:20.834Z",
+                      "startTime": "2026-03-28T02:19:24.360Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-c3a28-re-deleteProjectid-resolves-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-c3a28-re-deleteProjectid-resolves-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -763,28 +796,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1605,
+                      "duration": 1234,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:22.447Z",
+                      "startTime": "2026-03-28T02:19:25.693Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-58f11-th-by-calling-fetchProjects-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-58f11-th-by-calling-fetchProjects-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -803,28 +836,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1575,
+                      "duration": 1253,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:24.062Z",
+                      "startTime": "2026-03-28T02:19:26.933Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-3cc54-e-archiveProjectid-resolves-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-3cc54-e-archiveProjectid-resolves-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -839,37 +872,61 @@
             },
             {
               "title": "cp-019: Failed archive restores server truth by calling fetchProjects",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1572,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 101,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1004:16",
+                        "location": {
+                          "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1004
+                        },
+                        "snippet": "  1002 |\n  1003 |     // Navigate to the page\n> 1004 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1005 |     await page.waitForTimeout(1000);\n  1006 |\n  1007 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1004
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1002 |\n  1003 |     // Navigate to the page\n> 1004 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1005 |     await page.waitForTimeout(1000);\n  1006 |\n  1007 |     // Take a screenshot as proof of page load\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1004:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:25.645Z",
+                      "startTime": "2026-03-28T02:19:28.193Z",
                       "annotations": [],
                       "attachments": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-a1405-th-by-calling-fetchProjects-qa-chromium/test-finished-1.png"
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-a1405-th-by-calling-fetchProjects-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1004
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "34fdc21927c3172e1104-ac88a89ee7a59aa00eed",
@@ -879,37 +936,66 @@
             },
             {
               "title": "cp-020: Status updates mutate the matching project in local state before updateProjectSt",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1573,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 143,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1054:16",
+                        "location": {
+                          "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1054
+                        },
+                        "snippet": "  1052 |\n  1053 |     // Navigate to the page\n> 1054 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1055 |     await page.waitForTimeout(1000);\n  1056 |\n  1057 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1054
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1052 |\n  1053 |     // Navigate to the page\n> 1054 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1055 |     await page.waitForTimeout(1000);\n  1056 |\n  1057 |     // Take a screenshot as proof of page load\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1054:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:27.228Z",
+                      "startTime": "2026-03-28T02:19:28.647Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-58fe3-tate-before-updateProjectSt-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-58fe3-tate-before-updateProjectSt-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-58fe3-tate-before-updateProjectSt-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1054
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "34fdc21927c3172e1104-a25b83df4840570bb283",
@@ -919,37 +1005,66 @@
             },
             {
               "title": "cp-021: Zero-state empty view renders only when projectslength 0 and loading false",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 3,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1559,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 139,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1104:16",
+                        "location": {
+                          "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1104
+                        },
+                        "snippet": "  1102 |\n  1103 |     // Navigate to the page\n> 1104 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1105 |     await page.waitForTimeout(1000);\n  1106 |\n  1107 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1104
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/projects\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/projects\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1102 |\n  1103 |     // Navigate to the page\n> 1104 |     await page.goto('/projects', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1105 |     await page.waitForTimeout(1000);\n  1106 |\n  1107 |     // Take a screenshot as proof of page load\n    at /Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts:1104:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:28.810Z",
+                      "startTime": "2026-03-28T02:19:29.236Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-e5ca0-slength-0-and-loading-false-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-e5ca0-slength-0-and-loading-false-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-e5ca0-slength-0-and-loading-false-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/shaileshsingh/ScholarSync/qa/generated/projects/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1104
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "34fdc21927c3172e1104-1ddecb14f01bf94c398b",
@@ -963,28 +1078,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1609,
+                      "duration": 3832,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:30.378Z",
+                      "startTime": "2026-03-28T02:19:29.811Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-9bcc7-tslength-0-filteredlength-0-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-9bcc7-tslength-0-filteredlength-0-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1003,28 +1118,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1572,
+                      "duration": 1311,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:31.996Z",
+                      "startTime": "2026-03-28T02:19:33.744Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-5a74a-button-in-the-current-imple-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-5a74a-button-in-the-current-imple-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1043,28 +1158,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1576,
+                      "duration": 1277,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:33.576Z",
+                      "startTime": "2026-03-28T02:19:35.060Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-0dd93-Datenull-returns-an-em-dash-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-0dd93-Datenull-returns-an-em-dash-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1083,28 +1198,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1577,
+                      "duration": 1308,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:35.161Z",
+                      "startTime": "2026-03-28T02:19:36.343Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-067db-ent-no-use-client-directive-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-067db-ent-no-use-client-directive-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1123,28 +1238,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1573,
+                      "duration": 1272,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:36.747Z",
+                      "startTime": "2026-03-28T02:19:37.661Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-707a2-ontent-in-max-w-5xl-mx-auto-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-707a2-ontent-in-max-w-5xl-mx-auto-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1163,28 +1278,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1559,
+                      "duration": 1281,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:38.331Z",
+                      "startTime": "2026-03-28T02:19:38.938Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-c0b9b-eton-with-h-8-w-40-and-a-bu-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-c0b9b-eton-with-h-8-w-40-and-a-bu-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1203,28 +1318,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1550,
+                      "duration": 1279,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:39.899Z",
+                      "startTime": "2026-03-28T02:19:40.225Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-e1e55-onTable-with-exactly-6-rows-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-e1e55-onTable-with-exactly-6-rows-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1243,28 +1358,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1543,
+                      "duration": 1277,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:41.458Z",
+                      "startTime": "2026-03-28T02:19:41.509Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-56603-ents-own-SpinnerGap-loading-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-56603-ents-own-SpinnerGap-loading-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1283,28 +1398,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1556,
+                      "duration": 1311,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:43.010Z",
+                      "startTime": "2026-03-28T02:19:42.792Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-c5c11-lder-h-10-w-10-rounded-lg-t-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-c5c11-lder-h-10-w-10-rounded-lg-t-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1323,28 +1438,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1641,
+                      "duration": 1245,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:44.574Z",
+                      "startTime": "2026-03-28T02:19:44.108Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-83c45-ponent-use-client-directive-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-83c45-ponent-use-client-directive-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1363,28 +1478,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1591,
+                      "duration": 1273,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:46.225Z",
+                      "startTime": "2026-03-28T02:19:45.360Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-097ba-available-and-messageWe-cou-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-097ba-available-and-messageWe-cou-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1403,28 +1518,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1578,
+                      "duration": 1278,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:47.824Z",
+                      "startTime": "2026-03-28T02:19:46.640Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-22341--as-onRetry-to-ErrorDisplay-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-22341--as-onRetry-to-ErrorDisplay-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1443,28 +1558,28 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1524,
+                      "duration": 1247,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T15:43:49.410Z",
+                      "startTime": "2026-03-28T02:19:47.922Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/projects-spec-007-projects-230aa--h-16-rounded-2xl-bg-red-50-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/projects-spec-007-projects-230aa--h-16-rounded-2xl-bg-red-50-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -1484,11 +1599,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-15T15:42:54.079Z",
-    "duration": 56969.588,
-    "expected": 35,
+    "startTime": "2026-03-28T02:18:32.780Z",
+    "duration": 76437.90400000001,
+    "expected": 31,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 4,
     "flaky": 0
   }
 }

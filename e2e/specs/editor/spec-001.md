@@ -1,9 +1,9 @@
 # editor — Spec 001
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 31
+FAIL: 4
 BLOCKED: 0
 PAGE: http://localhost:3001/editor
 MODULE: editor
@@ -16,8 +16,8 @@ MODULE: editor
 - [x] PASS: **Document type selector** — dropdown with 4 options:
 - [x] PASS: Pending citation notice — blue banner shows "Saved 'X' to your library. Open Citation Dialog to cite it." when scholarsync_pending_citation set in sessionStorage; auto-dismisses after 5s
 #### Studio Page (`/studio`)
-- [x] PASS: Editable document title — in the left sidebar header
-- [x] PASS: Project selector dropdown — appears with multiple projects, switches between them
+- [ ] FAIL: Editable document title — in the left sidebar header
+- [ ] FAIL: Project selector dropdown — appears with multiple projects, switches between them
 - [x] PASS: URL parameter support — ?projectId=X pre-selects project (fix: was /studio/${id} → /studio?projectId=${id}); ?mode=learn starts learn mode
 
 ### Editor Modes
@@ -27,7 +27,7 @@ MODULE: editor
 - [x] PASS: Mode toggle dropdown in TopBar shows icon + label + description for each mode
 #### Studio Page
 - [x] PASS: **Write mode** — AI drafting assistance, shows AI Intensity bar
-- [x] PASS: **Learn mode** — guided educational mode, AI teaches instead of writing for you
+- [ ] FAIL: **Learn mode** — guided educational mode, AI teaches instead of writing for you
 
 ### Structural Blocks (via Slash Commands)
 #### Slash Menu UX
@@ -64,5 +64,5 @@ MODULE: editor
 #### Citation Dialog
 - [x] PASS: **Opens via** `Cmd+Shift+C` keyboard shortcut
 - [x] PASS: **Opens via** slash command (if available)
-- [x] PASS: **Opens via** "+" button in Studio left sidebar references section
+- [ ] FAIL: **Opens via** "+" button in Studio left sidebar references section
 - [x] PASS: **Opens via** reference sidebar "Add" button

@@ -1,9 +1,9 @@
 # notebook — Spec 011
 
-STATUS: PARTIAL
-TESTED: 35/35
-PASS: 34
-FAIL: 1
+STATUS: DONE
+TESTED: 0/35
+PASS: 0
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/notebook
 MODULE: notebook

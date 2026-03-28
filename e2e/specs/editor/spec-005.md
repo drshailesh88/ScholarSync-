@@ -1,9 +1,9 @@
 # editor — Spec 005
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 23
+FAIL: 12
 BLOCKED: 0
 PAGE: http://localhost:3001/editor
 MODULE: editor
@@ -24,19 +24,19 @@ MODULE: editor
 
 ### AI Chat Panel (Studio page)
 #### Chat & Learn Tab
-- [x] PASS: **Message input** — text input at bottom with send button
-- [x] PASS: **Streaming responses** — AI responses stream in token by token
-- [x] PASS: **Message bubbles** — user messages right-aligned, assistant messages left-aligned with sparkle avatar
-- [x] PASS: **Loading animation** — 3 bouncing dots while waiting for response
-- [x] PASS: **Error display** — amber error banner with error message
-- [x] PASS: **Auto-scroll** — chat scrolls to bottom on new messages
-- [x] PASS: **Conversation persistence** — creates DB conversation via `createConversation`, stores messages via `addMessage`
+- [ ] FAIL: **Message input** — text input at bottom with send button
+- [ ] FAIL: **Streaming responses** — AI responses stream in token by token
+- [ ] FAIL: **Message bubbles** — user messages right-aligned, assistant messages left-aligned with sparkle avatar
+- [ ] FAIL: **Loading animation** — 3 bouncing dots while waiting for response
+- [ ] FAIL: **Error display** — amber error banner with error message
+- [ ] FAIL: **Auto-scroll** — chat scrolls to bottom on new messages
+- [ ] FAIL: **Conversation persistence** — creates DB conversation via `createConversation`, stores messages via `addMessage`
 #### AI Event Handling
-- [x] PASS: `continue` — sends document text with "Continue writing..." prompt
-- [x] PASS: `summarize` — sends "Summarize the following text..." prompt
-- [x] PASS: `find-sources` — opens research sidebar with context from editor
-- [x] PASS: `cite` — asks AI for citation help
-- [x] PASS: `integrity-check` — switches to Checks tab
+- [ ] FAIL: `continue` — sends document text with "Continue writing..." prompt
+- [ ] FAIL: `summarize` — sends "Summarize the following text..." prompt
+- [ ] FAIL: `find-sources` — opens research sidebar with context from editor
+- [ ] FAIL: `cite` — asks AI for citation help
+- [ ] FAIL: `integrity-check` — switches to Checks tab
 
 ### Write Mode — AI Intensity (Studio page)
 - [x] PASS: Clicking a level selects it (highlighted state)

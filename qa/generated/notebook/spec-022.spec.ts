@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for notebook/spec-022
  * Source: e2e/specs/notebook/spec-022.md
- * Generated: 2026-03-15T18:18:40.339Z
+ * Generated: 2026-03-28T02:25:58.741Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -102,7 +102,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -152,7 +152,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -202,7 +202,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -252,7 +252,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -302,7 +302,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -352,7 +352,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -402,7 +402,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -452,7 +452,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -502,7 +502,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -552,7 +552,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -602,7 +602,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -652,7 +652,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -702,7 +702,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -752,7 +752,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -802,7 +802,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -852,7 +852,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -902,7 +902,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -952,7 +952,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1002,7 +1002,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1052,7 +1052,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1102,7 +1102,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1152,7 +1152,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1202,7 +1202,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1252,7 +1252,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1302,7 +1302,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1352,7 +1352,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1402,7 +1402,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1452,7 +1452,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1502,7 +1502,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1552,7 +1552,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1602,7 +1602,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1652,7 +1652,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1702,7 +1702,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');
@@ -1752,7 +1752,7 @@ test.describe('notebook / spec-022', () => {
 
     // Navigate to the page
     await page.goto('/notebook', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/notebook/spec-022');

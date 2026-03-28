@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for dashboard/spec-009
  * Source: e2e/specs/dashboard/spec-009.md
- * Generated: 2026-03-15T15:23:19.171Z
+ * Generated: 2026-03-28T01:59:37.812Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('dashboard / spec-009', () => {
 
     // Navigate to the page
     await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/dashboard/spec-009');

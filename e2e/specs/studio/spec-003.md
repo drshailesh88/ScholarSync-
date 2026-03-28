@@ -1,9 +1,9 @@
 # studio — Spec 003
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 32
+FAIL: 3
 BLOCKED: 0
 PAGE: http://localhost:3001/studio
 MODULE: studio
@@ -31,9 +31,9 @@ MODULE: studio
 - [x] PASS: Loading spinner shows during response generation
 #### Chat Input
 - [x] PASS: Input field with contextual placeholder:
-- [x] PASS: Submit via Enter key
-- [x] PASS: Submit via Send button
-- [x] PASS: Empty input cannot be submitted
+- [ ] FAIL: Submit via Enter key
+- [ ] FAIL: Submit via Send button
+- [ ] FAIL: Empty input cannot be submitted
 - [x] PASS: Input clears after submission
 #### Chat Errors
 - [x] PASS: Error displays in amber warning box

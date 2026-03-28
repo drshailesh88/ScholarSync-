@@ -1,9 +1,9 @@
 # projects — Spec 006
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/projects
 MODULE: projects
@@ -16,7 +16,7 @@ MODULE: projects
 - [x] PASS: Status filter compares `p.status` directly to the selected filter value
 - [x] PASS: Search input and status filter remain unchanged when view mode changes
 - [x] PASS: Search input and status filter remain unchanged when tabs change
-- [x] PASS: Status filter select includes exactly six options: all, planning, drafting, reviewing, completed, archived
+- [ ] FAIL: Status filter select includes exactly six options: all, planning, drafting, reviewing, completed, archived
 - [x] PASS: List view renders through the shared `DataTable` component
 - [x] PASS: Table rows become clickable because `onRowClick` is provided
 - [x] PASS: Clicking a list row navigates to `/studio/{item.id}`

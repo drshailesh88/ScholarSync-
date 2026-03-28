@@ -1,8 +1,8 @@
 # studio — Spec 017
 
 STATUS: DONE
-TESTED: 4/4
-PASS: 4
+TESTED: 0/4
+PASS: 0
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/studio

@@ -54,24 +54,31 @@
     "updateSourceMethod": "patch",
     "version": "1.56.1",
     "workers": 1,
-    "webServer": null
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
   },
   "suites": [
     {
-      "title": "systematic-review/spec-031.spec.ts",
-      "file": "systematic-review/spec-031.spec.ts",
+      "title": "notebook/spec-025.spec.ts",
+      "file": "notebook/spec-025.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "systematic-review / spec-031",
-          "file": "systematic-review/spec-031.spec.ts",
+          "title": "notebook / spec-025",
+          "file": "notebook/spec-025.spec.ts",
           "line": 36,
           "column": 6,
           "specs": [
             {
-              "title": "cp-000: POST apisystematic-reviewpress validates search strategy using PRESS 2015 framew",
+              "title": "cp-000: addMessage updates the parent conversations updated_at timestamp after inserting",
               "ok": true,
               "tags": [],
               "tests": [
@@ -86,18 +93,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5370,
+                      "duration": 3274,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:35:50.726Z",
+                      "startTime": "2026-03-28T02:28:24.252Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-5788d-egy-using-PRESS-2015-framew-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-43c89-t-timestamp-after-inserting-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -105,13 +112,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-27320cc4674616b0fca1",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-2c063a56463bc89a46fd",
+              "file": "notebook/spec-025.spec.ts",
               "line": 49,
               "column": 3
             },
             {
-              "title": "cp-001: GET apisystematic-reviewprisma-flowprojectIdid returns PRISMA flow data in JSON ",
+              "title": "cp-001: submitMessageFeedback accepts an optional comment parameter in addition to the n",
               "ok": true,
               "tags": [],
               "tests": [
@@ -126,18 +133,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1489,
+                      "duration": 1292,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:35:56.496Z",
+                      "startTime": "2026-03-28T02:28:27.631Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-d0310-s-PRISMA-flow-data-in-JSON--qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-fc076-ameter-in-addition-to-the-n-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -145,13 +152,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-241edfc4c05ba02646d6",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-d09f8b8fd7311ce6e131",
+              "file": "notebook/spec-025.spec.ts",
               "line": 99,
               "column": 3
             },
             {
-              "title": "cp-002: POST apisystematic-reviewprisma-flow updates specific PRISMA flow stages",
+              "title": "cp-002: getConversations orders results by updated_at descending most recent first",
               "ok": true,
               "tags": [],
               "tests": [
@@ -166,18 +173,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1371,
+                      "duration": 1211,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:35:58.001Z",
+                      "startTime": "2026-03-28T02:28:28.932Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-c823a-specific-PRISMA-flow-stages-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-1b7f0-escending-most-recent-first-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -185,13 +192,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-2598495f7883f2ba4bb3",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-ef5d534ab711543002fc",
+              "file": "notebook/spec-025.spec.ts",
               "line": 149,
               "column": 3
             },
             {
-              "title": "cp-003: GET apisystematic-reviewprisma-checklist returns static checklist items",
+              "title": "cp-003: Loading skeleton sidebar width is w-72 narrower than the actual notebook page si",
               "ok": true,
               "tags": [],
               "tests": [
@@ -206,18 +213,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1659,
+                      "duration": 1209,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:35:59.382Z",
+                      "startTime": "2026-03-28T02:28:30.149Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-98901-urns-static-checklist-items-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-12bcd-the-actual-notebook-page-si-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -225,13 +232,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-4a5da6ac18a6be7855bf",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-4fae0a5bf60efba04c15",
+              "file": "notebook/spec-025.spec.ts",
               "line": 199,
               "column": 3
             },
             {
-              "title": "cp-004: POST apisystematic-reviewprisma-checklist verifies manuscript compliance against",
+              "title": "cp-004: Loading skeleton renders exactly 3 file placeholder rows each with p-3 rounded-l",
               "ok": true,
               "tags": [],
               "tests": [
@@ -246,18 +253,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1446,
+                      "duration": 1228,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:01.054Z",
+                      "startTime": "2026-03-28T02:28:31.364Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-e61d8-nuscript-compliance-against-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-7f525-ows-each-with-p-3-rounded-l-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -265,13 +272,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-cd4d34596dd086e8cbd6",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-d02c14db67ebe5d6900a",
+              "file": "notebook/spec-025.spec.ts",
               "line": 249,
               "column": 3
             },
             {
-              "title": "cp-005: POST apisystematic-reviewimport imports papers from search databases pubmed sema",
+              "title": "cp-005: Loading skeleton chat area uses SkeletonText component with lines6",
               "ok": true,
               "tags": [],
               "tests": [
@@ -286,18 +293,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1441,
+                      "duration": 1211,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:02.517Z",
+                      "startTime": "2026-03-28T02:28:32.597Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-44d3c-earch-databases-pubmed-sema-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-f2dc1-nText-component-with-lines6-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -305,13 +312,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-dfc913181f3e41fdb00f",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-d64495363af66a1d30b3",
+              "file": "notebook/spec-025.spec.ts",
               "line": 299,
               "column": 3
             },
             {
-              "title": "cp-006: GET apisystematic-reviewimportprojectIdid fetches papers with full details",
+              "title": "cp-006: Section 21 states password gate has a typepassword input confirmed correct Howev",
               "ok": true,
               "tags": [],
               "tests": [
@@ -326,18 +333,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1435,
+                      "duration": 1296,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:03.968Z",
+                      "startTime": "2026-03-28T02:28:33.813Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-076d7-es-papers-with-full-details-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-dc188-put-confirmed-correct-Howev-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -345,13 +352,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-9e60eaec9e8d8c734f6a",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-957458425ff3afeef658",
+              "file": "notebook/spec-025.spec.ts",
               "line": 349,
               "column": 3
             },
             {
-              "title": "cp-007: POST apisystematic-reviewscreen sets maxDuration 300 5-minute timeout for batch ",
+              "title": "cp-007: Existing check says the audio close button has titleClose audio overview but no ",
               "ok": true,
               "tags": [],
               "tests": [
@@ -366,18 +373,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1481,
+                      "duration": 1216,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:05.416Z",
+                      "startTime": "2026-03-28T02:28:35.114Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-c2986-5-minute-timeout-for-batch--qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-d0233-lose-audio-overview-but-no--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -385,13 +392,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-80b9b0cb2d83da753b62",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-cadc14910e421b2be01a",
+              "file": "notebook/spec-025.spec.ts",
               "line": 399,
               "column": 3
             },
             {
-              "title": "cp-008: Screen API is rate-limited via checkRateLimituserId systematic-review RATE_LIMIT",
+              "title": "cp-008: Section 12 describes coverage badge unused-paper truncation generically the actu",
               "ok": true,
               "tags": [],
               "tests": [
@@ -406,18 +413,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1507,
+                      "duration": 1239,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:06.915Z",
+                      "startTime": "2026-03-28T02:28:36.336Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-dad91-ystematic-review-RATE-LIMIT-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-5d31e-cation-generically-the-actu-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -425,13 +432,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-1c132d1fc52a61d85ffe",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-995055273e7882ab71b4",
+              "file": "notebook/spec-025.spec.ts",
               "line": 449,
               "column": 3
             },
             {
-              "title": "cp-009: Screen API returns 400 with message No screening criteria found Define inclusion",
+              "title": "cp-009: Section 9 states 3 dots 2x2 rounded-full brand40 color for loading this is corre",
               "ok": true,
               "tags": [],
               "tests": [
@@ -446,18 +453,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1359,
+                      "duration": 1210,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:08.432Z",
+                      "startTime": "2026-03-28T02:28:37.582Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-3e99e-eria-found-Define-inclusion-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-86623-r-for-loading-this-is-corre-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -465,13 +472,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-fd8b656993c01a7c3108",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-f573c5b33dcf696239a7",
+              "file": "notebook/spec-025.spec.ts",
               "line": 499,
               "column": 3
             },
             {
-              "title": "cp-010: Screen batch mode Zod validates papers array min 1 max 100 items",
+              "title": "cp-010: No change all srccomponentsnotebook files remain in active import chains",
               "ok": true,
               "tags": [],
               "tests": [
@@ -486,18 +493,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1399,
+                      "duration": 1229,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:09.802Z",
+                      "startTime": "2026-03-28T02:28:38.798Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-2bb93-s-array-min-1-max-100-items-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-c9f05-ain-in-active-import-chains-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -505,13 +512,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-c557bbe2824e0d0c360a",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-8607bd170bacae96b311",
+              "file": "notebook/spec-025.spec.ts",
               "line": 549,
               "column": 3
             },
             {
-              "title": "cp-011: Screen batch response includes summary object total included excluded conflicts",
+              "title": "cp-011: notebook route error boundary renders ErrorDisplay with title Notebook unavailab",
               "ok": true,
               "tags": [],
               "tests": [
@@ -526,18 +533,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1372,
+                      "duration": 1207,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:11.221Z",
+                      "startTime": "2026-03-28T02:28:40.035Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-766d8-included-excluded-conflicts-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-da5f3-th-title-Notebook-unavailab-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -545,13 +552,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-a14a43876ba367adbc65",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-601be5c1f96d07952284",
+              "file": "notebook/spec-025.spec.ts",
               "line": 599,
               "column": 3
             },
             {
-              "title": "cp-012: GET apisystematic-reviewscreenprojectIdid returns screening summary separate fro",
+              "title": "cp-012: sharenotebooktokennot-foundtsx renders a dedicated 404 view with heading 404 sub",
               "ok": true,
               "tags": [],
               "tests": [
@@ -566,18 +573,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1401,
+                      "duration": 1297,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:12.608Z",
+                      "startTime": "2026-03-28T02:28:41.247Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-0dbd4-eening-summary-separate-fro-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-f51d2-4-view-with-heading-404-sub-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -585,13 +592,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-d1a72dbd10021db6963b",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-02a3d75b5c98799e444f",
+              "file": "notebook/spec-025.spec.ts",
               "line": 649,
               "column": 3
             },
             {
-              "title": "cp-013: Extract API supports 4 discriminated modes single single-fulltext batch batch-fu",
+              "title": "cp-013: NotebookShareDialog is closed by Escape and backdrop click but the rendered over",
               "ok": true,
               "tags": [],
               "tests": [
@@ -606,18 +613,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1415,
+                      "duration": 1245,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:14.021Z",
+                      "startTime": "2026-03-28T02:28:42.548Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-98543-gle-fulltext-batch-batch-fu-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-b75df-click-but-the-rendered-over-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -625,13 +632,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-953c40427927b608eaea",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-55b79447364129e59796",
+              "file": "notebook/spec-025.spec.ts",
               "line": 699,
               "column": 3
             },
             {
-              "title": "cp-014: Extract schema allows max 50 fields per extraction",
+              "title": "cp-014: loadConversation only reapplies file selected state when convopaper_ids exists a",
               "ok": true,
               "tags": [],
               "tests": [
@@ -646,18 +653,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1346,
+                      "duration": 1210,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:15.447Z",
+                      "startTime": "2026-03-28T02:28:43.798Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-fc9f5-ax-50-fields-per-extraction-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-e138d-hen-convopaper-ids-exists-a-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -665,13 +672,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-4fdc57e7f0e32af18200",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-5e5084cbbca6e0d3973b",
+              "file": "notebook/spec-025.spec.ts",
               "line": 749,
               "column": 3
             },
             {
-              "title": "cp-015: single mode textContent Zod min 50 max 100000 characters",
+              "title": "cp-015: AudioOverviewPanel posts to apiaudio-overview without an AbortController closing",
               "ok": true,
               "tags": [],
               "tests": [
@@ -686,18 +693,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1351,
+                      "duration": 1295,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:16.805Z",
+                      "startTime": "2026-03-28T02:28:45.013Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-90029-in-50-max-100000-characters-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-9dd35--an-AbortController-closing-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -705,13 +712,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-e59364a77bde166bf2c8",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-c6b2fb8a07608b447b7c",
+              "file": "notebook/spec-025.spec.ts",
               "line": 799,
               "column": 3
             },
             {
-              "title": "cp-016: batch and batch-fulltext modes allow max 50 papers per request",
+              "title": "cp-016: AudioOverviewPanel reset effect clears audioscripterror state on conversationId ",
               "ok": true,
               "tags": [],
               "tests": [
@@ -726,18 +733,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1348,
+                      "duration": 1298,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:18.168Z",
+                      "startTime": "2026-03-28T02:28:46.315Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-6ea96-w-max-50-papers-per-request-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-ddaad-or-state-on-conversationId--qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -745,13 +752,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-b7636dfc80ecd02b239e",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-1d5e04b3109c53b7b8dd",
+              "file": "notebook/spec-025.spec.ts",
               "line": 849,
               "column": 3
             },
             {
-              "title": "cp-017: single-fulltext mode returns extractions chunks for source linking",
+              "title": "cp-017: Initial notebook mount suppresses library and history load failures with empty c",
               "ok": true,
               "tags": [],
               "tests": [
@@ -766,18 +773,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1365,
+                      "duration": 1224,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:19.530Z",
+                      "startTime": "2026-03-28T02:28:47.617Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-baf87-s-chunks-for-source-linking-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-78c4a--load-failures-with-empty-c-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -785,13 +792,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-d47e77b78713c2494feb",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-49837ec2762d629e0fa0",
+              "file": "notebook/spec-025.spec.ts",
               "line": 899,
               "column": 3
             },
             {
-              "title": "cp-018: GET apisystematic-reviewextractpaperIdid returns chunks for a specific paper",
+              "title": "cp-018: No WebSocket SSE subscription Yjs provider or other realtime collaboration clien",
               "ok": true,
               "tags": [],
               "tests": [
@@ -806,18 +813,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1572,
+                      "duration": 1229,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-27T14:36:20.910Z",
+                      "startTime": "2026-03-28T02:28:48.846Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-c4122-chunks-for-a-specific-paper-qa-chromium/test-finished-1.png"
+                          "path": "/Users/shaileshsingh/ScholarSync/test-results/notebook-spec-025-notebook-6db32-ealtime-collaboration-clien-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -825,649 +832,9 @@
                   "status": "expected"
                 }
               ],
-              "id": "5b68f8b30be8dc82fa75-d6b238dc8dd73770823e",
-              "file": "systematic-review/spec-031.spec.ts",
+              "id": "3ce25a1257928460c62d-1863d602470152f9dbde",
+              "file": "notebook/spec-025.spec.ts",
               "line": 949,
-              "column": 3
-            },
-            {
-              "title": "cp-019: GET apisystematic-reviewextractprojectIdid returns the full extraction table ret",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1760,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:22.500Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-57aee-e-full-extraction-table-ret-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-3edc926485bea5581133",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 999,
-              "column": 3
-            },
-            {
-              "title": "cp-020: Screening queue GET supports stage parameter title_abstract default or full_text",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1495,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:24.278Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-609fd-stract-default-or-full-text-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-f338e767a4107f64ac0b",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1049,
-              "column": 3
-            },
-            {
-              "title": "cp-021: Screening queue GET supports mode parameter conflicts or unblind",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1400,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:25.787Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-be66c-ameter-conflicts-or-unblind-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-8e6c25f46c458b3bb160",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1099,
-              "column": 3
-            },
-            {
-              "title": "cp-022: Screening queue verifies project access via verifyProjectAccessprojectId userId ",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1406,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:27.200Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-fca0c-jectAccessprojectId-userId--qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-3df215dcb7adae16fc6d",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1149,
-              "column": 3
-            },
-            {
-              "title": "cp-023: modeconflicts returns conflicts total from detectConflictsprojectId stage",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1453,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:28.618Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-d7a6a-ectConflictsprojectId-stage-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-a4f77c5decbb3a2f0340",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1199,
-              "column": 3
-            },
-            {
-              "title": "cp-024: modeunblind returns results with results summary total withBothDecisions agreeme",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1380,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:30.086Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-cc028-l-withBothDecisions-agreeme-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-043694b8708edf74f4d0",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1249,
-              "column": 3
-            },
-            {
-              "title": "cp-025: Standard queue GET returns queue progress agreement reviewerProgress from 4 para",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1339,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:31.482Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-45e64-eviewerProgress-from-4-para-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-b0140bd57af373aa5457",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1299,
-              "column": 3
-            },
-            {
-              "title": "cp-026: Queue POST discriminates actions via zunionresolveSchema decisionSchema",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1388,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:32.832Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-5b389-esolveSchema-decisionSchema-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-8919dec2b56fc27de023",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1349,
-              "column": 3
-            },
-            {
-              "title": "cp-027: Resolve action calls resolveConflictprojectId paperId stage resolution userId re",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1392,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:34.236Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-0d42c--stage-resolution-userId-re-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-69754c442ff269fe1034",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1399,
-              "column": 3
-            },
-            {
-              "title": "cp-028: Decision action calls recordHumanDecision with both userId and reviewerId set to",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1514,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:35.643Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-54684-serId-and-reviewerId-set-to-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-2d5467e650b46778e443",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1449,
-              "column": 3
-            },
-            {
-              "title": "cp-029: Queue PUT recomputes priorities via updateScreeningPrioritiesprojectId from acti",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1484,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:37.169Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-ef4d2-ioritiesprojectId-from-acti-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-daba8d7456c753ff9cb1",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1499,
-              "column": 3
-            },
-            {
-              "title": "cp-030: Liveblocks SR rooms use empty storage SRStorage Recordstring never all data pers",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1549,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:38.664Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-1ea45-dstring-never-all-data-pers-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-934be6899d30abddbc8e",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1549,
-              "column": 3
-            },
-            {
-              "title": "cp-031: Liveblocks auth endpoint is apiliveblocks-auth",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1327,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:40.228Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-339a3-point-is-apiliveblocks-auth-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-2eb533409a59a932cd43",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1599,
-              "column": 3
-            },
-            {
-              "title": "cp-032: SRUserMeta includes id string and info name avatar color",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1367,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:41.566Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-459a6--and-info-name-avatar-color-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-f12ecaee65b2cf311414",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1649,
-              "column": 3
-            },
-            {
-              "title": "cp-033: SRRoomEvent is a 5-variant discriminated union on type field",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1428,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:42.944Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-f8992-minated-union-on-type-field-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-b2e431b16a17b7766e27",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1699,
-              "column": 3
-            },
-            {
-              "title": "cp-034: useCollaborativeReview hook exposes 5 broadcast helpers broadcastDecision broadc",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1370,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-27T14:36:44.381Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/shaileshsingh/ScholarSync/test-results/systematic-review-spec-031-c3b38-rs-broadcastDecision-broadc-qa-chromium/test-finished-1.png"
-                        }
-                      ]
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "5b68f8b30be8dc82fa75-c971ecb8abec35ba066c",
-              "file": "systematic-review/spec-031.spec.ts",
-              "line": 1749,
               "column": 3
             }
           ]
@@ -1477,9 +844,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-27T14:35:49.057Z",
-    "duration": 86850.823,
-    "expected": 35,
+    "startTime": "2026-03-28T02:28:23.296Z",
+    "duration": 26879.833,
+    "expected": 19,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

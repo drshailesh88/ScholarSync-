@@ -1,9 +1,9 @@
 # studio — Spec 008
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 34
+FAIL: 1
 BLOCKED: 0
 PAGE: http://localhost:3001/studio
 MODULE: studio
@@ -13,7 +13,7 @@ MODULE: studio
 #### Detailed QA Coverage
 - [x] PASS: Without `?mode=learn`, the page defaults to Write mode
 - [x] PASS: Left sidebar title input initializes from `docTitle` returned by `useStudioDocument(...)`
-- [x] PASS: Title input has no placeholder in the current implementation
+- [ ] FAIL: Title input has no placeholder in the current implementation
 - [x] PASS: Typing in the title immediately updates local input state and sets save status to `unsaved`
 - [x] PASS: Title saves are debounced by 1 second in `useStudioDocument`
 - [x] PASS: Successful title saves set save status to `saved` and refresh `lastSavedAt`

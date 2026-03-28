@@ -2,8 +2,8 @@
 
 STATUS: PARTIAL
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 31
+FAIL: 4
 BLOCKED: 0
 PAGE: http://localhost:3001/dashboard
 MODULE: dashboard
@@ -27,9 +27,9 @@ MODULE: dashboard
 - [x] PASS: Each row shows project type (converted from snake_case to Title Case)
 - [x] PASS: Each row shows status badge with correct variant:
 - [x] PASS: Each row shows right-arrow icon
-- [x] PASS: Clicking a row navigates to `/studio/{project.id}`
-- [x] PASS: Hover: background color changes, text color changes
-- [x] PASS: Separator lines between rows (not after last row)
+- [ ] FAIL: Clicking a row navigates to `/studio/{project.id}`
+- [ ] FAIL: Hover: background color changes, text color changes
+- [ ] FAIL: Separator lines between rows (not after last row)
 #### Relative Time Formatting
 - [x] PASS: < 60 seconds → "Just now"
 - [x] PASS: < 60 minutes → "Nm ago" (e.g., "5m ago")

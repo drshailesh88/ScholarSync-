@@ -1,10 +1,10 @@
 # dashboard — Spec 005
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
-BLOCKED: 0
+PASS: 30
+FAIL: 4
+BLOCKED: 1
 PAGE: http://localhost:3001/dashboard
 MODULE: dashboard
 
@@ -18,7 +18,7 @@ MODULE: dashboard
 - [x] PASS: Each action card is a `Link`, not a button with imperative routing
 - [x] PASS: Each card icon container is `w-12 h-12 rounded-xl`
 - [x] PASS: Each card icon uses `size={24}`
-- [x] PASS: Each card has `border border-border` before hover styling is applied
+- [ ] BLOCKED: Each card has `border border-border` before hover styling is applied
 - [x] PASS: Card hover scale effect is applied to the icon through `group-hover:scale-110`
 - [x] PASS: `Literature Search` card href is `/research`
 - [x] PASS: `Write & Draft` card href is `/studio`
@@ -26,13 +26,13 @@ MODULE: dashboard
 - [x] PASS: `Final Checks` card href is `/compliance`
 - [x] PASS: Stats cards are hard-coded as four panels rather than mapped from a config array
 - [x] PASS: Each stats card uses `glass-panel rounded-2xl p-5 border border-border`
-- [x] PASS: Stats number text uses `text-2xl font-bold`
-- [x] PASS: Stats label text uses `text-xs text-ink-muted`
-- [x] PASS: `Projects` stat reads `stats.projectCount`
+- [ ] FAIL: Stats number text uses `text-2xl font-bold`
+- [ ] FAIL: Stats label text uses `text-xs text-ink-muted`
+- [ ] FAIL: `Projects` stat reads `stats.projectCount`
 - [x] PASS: `Papers Saved` stat reads `stats.paperCount`
 - [x] PASS: `Searches` stat reads `stats.searchCount`
 - [x] PASS: `Conversations` stat reads `stats.conversationCount`
-- [x] PASS: `Active Manuscripts` rows are rendered directly from `recentProjects`
+- [ ] FAIL: `Active Manuscripts` rows are rendered directly from `recentProjects`
 - [x] PASS: Each project row is an accessible `Link` to `/studio?projectId=${project.id}`
 - [x] PASS: Project icon container uses `w-10 h-10 rounded-lg bg-surface-raised`
 - [x] PASS: Project title hover changes to `text-brand`

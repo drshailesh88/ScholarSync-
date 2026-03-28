@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for studio/spec-017
  * Source: e2e/specs/studio/spec-017.md
- * Generated: 2026-03-15T16:23:15.288Z
+ * Generated: 2026-03-28T01:51:41.404Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('studio / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-017');
@@ -102,7 +102,7 @@ test.describe('studio / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-017');
@@ -152,7 +152,7 @@ test.describe('studio / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-017');
@@ -202,7 +202,7 @@ test.describe('studio / spec-017', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/studio/spec-017');

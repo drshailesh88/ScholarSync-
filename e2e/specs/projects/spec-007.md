@@ -1,9 +1,9 @@
 # projects — Spec 007
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 31
+FAIL: 4
 BLOCKED: 0
 PAGE: http://localhost:3001/projects
 MODULE: projects
@@ -14,7 +14,7 @@ MODULE: projects
 - [x] PASS: Create payload sends `target_journal` only when the trimmed field is non-empty
 - [x] PASS: Create payload sends `deadline` only when the field is non-empty
 - [x] PASS: Successful creation closes the modal before navigating
-- [x] PASS: Successful creation routes to `/editor/new?project={created.id}`
+- [ ] FAIL: Successful creation routes to `/editor/new?project={created.id}`
 - [x] PASS: Failed creation logs `Failed to create project:` to the console and leaves the modal open
 - [x] PASS: Opening the status modal copies the clicked project into `statusTarget`
 - [x] PASS: Opening the status modal initializes `pendingStatus` from `project.status ?? "planning"`
@@ -30,9 +30,9 @@ MODULE: projects
 - [x] PASS: Delete removes the project from local state before `deleteProject(id)` resolves
 - [x] PASS: Failed delete restores server truth by calling `fetchProjects()`
 - [x] PASS: Archive updates local `status` to `archived` before `archiveProject(id)` resolves
-- [x] PASS: Failed archive restores server truth by calling `fetchProjects()`
-- [x] PASS: Status updates mutate the matching project in local state before `updateProjectStatus()` resolves
-- [x] PASS: Zero-state empty view renders only when `projects.length === 0` and `loading === false`
+- [ ] FAIL: Failed archive restores server truth by calling `fetchProjects()`
+- [ ] FAIL: Status updates mutate the matching project in local state before `updateProjectStatus()` resolves
+- [ ] FAIL: Zero-state empty view renders only when `projects.length === 0` and `loading === false`
 - [x] PASS: Filtered-empty state renders only when `projects.length > 0 && filtered.length === 0`
 - [x] PASS: Filtered-empty state does not render a clear-filters button in the current implementation
 - [x] PASS: `formatDate(null)` returns an em dash (`—`)

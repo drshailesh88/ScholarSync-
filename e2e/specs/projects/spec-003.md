@@ -1,9 +1,9 @@
 # projects — Spec 003
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 32
+FAIL: 3
 BLOCKED: 0
 PAGE: http://localhost:3001/projects
 MODULE: projects
@@ -23,7 +23,7 @@ MODULE: projects
 - [x] PASS: Chicago
 - [x] PASS: Harvard
 - [x] PASS: IEEE
-- [x] PASS: MLA
+- [ ] FAIL: MLA
 #### Submit Behavior
 - [x] PASS: **"Create Project"** button spans full width
 - [x] PASS: Button disabled when Project Name is empty
@@ -45,8 +45,8 @@ MODULE: projects
 - [x] PASS: Project title matches the selected project
 #### Status Pipeline (4 primary buttons)
 - [x] PASS: **Archived** displayed separately from the pipeline row
-- [x] PASS: Currently active status shows brand border + background with **"Selected"** label
-- [x] PASS: Clicking a different status changes the selection
+- [ ] FAIL: Currently active status shows brand border + background with **"Selected"** label
+- [ ] FAIL: Clicking a different status changes the selection
 - [x] PASS: Clicking the already-selected status keeps it selected
 #### Submit Behavior
 - [x] PASS: **"Update Status"** button displayed

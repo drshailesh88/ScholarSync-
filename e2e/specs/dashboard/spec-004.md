@@ -1,9 +1,9 @@
 # dashboard — Spec 004
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 31
+FAIL: 4
 BLOCKED: 0
 PAGE: http://localhost:3001/dashboard
 MODULE: dashboard
@@ -30,7 +30,7 @@ MODULE: dashboard
 
 ### Document Migration
 - [x] PASS: `migrateLocalDocuments()` called on dashboard mount via `useEffect`
-- [x] PASS: Dashboard mount collects local docs and calls `migrateLocalDocuments(localDocs)`
+- [ ] FAIL: Dashboard mount collects local docs and calls `migrateLocalDocuments(localDocs)`
 - [x] PASS: Creates default "My Research" project if user has no projects
 - [x] PASS: Migrates each document to `synthesisDocuments` + `synthesisSections` tables
 - [x] PASS: Skips "new" template documents
@@ -40,9 +40,9 @@ MODULE: dashboard
 
 ### Authentication & Access Control
 - [x] PASS: Unauthenticated users redirected to `/sign-in`
-- [x] PASS: Authentication checked via `getCurrentUserId()` in layout
-- [x] PASS: Clerk session token verified from `__session` cookie
-- [x] PASS: All database queries scoped to authenticated user's ID
+- [ ] FAIL: Authentication checked via `getCurrentUserId()` in layout
+- [ ] FAIL: Clerk session token verified from `__session` cookie
+- [ ] FAIL: All database queries scoped to authenticated user's ID
 - [x] PASS: No data from other users visible
 
 ### Quick Test Workflows

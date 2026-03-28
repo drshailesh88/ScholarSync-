@@ -1,9 +1,9 @@
 # projects — Spec 002
 
-STATUS: DONE
+STATUS: PARTIAL
 TESTED: 35/35
-PASS: 35
-FAIL: 0
+PASS: 33
+FAIL: 2
 BLOCKED: 0
 PAGE: http://localhost:3001/projects
 MODULE: projects
@@ -31,8 +31,8 @@ MODULE: projects
 - [x] PASS: Projects displayed in a responsive grid of cards
 - [x] PASS: Each card has a fixed brand-colored bar at the top
 #### Card Content
-- [x] PASS: **Type icon** displayed on card
-- [x] PASS: **Status badge** displayed on card
+- [ ] FAIL: **Type icon** displayed on card
+- [ ] FAIL: **Status badge** displayed on card
 - [x] PASS: **Project title** prominent
 - [x] PASS: Subtitle line: `"{type} · {lastEdited}"` format
 - [x] PASS: Footer line uses `Files` and `FileText` icons with singular/plural counts (`paper/papers`, `doc/docs`)

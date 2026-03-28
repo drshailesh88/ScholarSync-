@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for editor/spec-024
  * Source: e2e/specs/editor/spec-024.md
- * Generated: 2026-03-15T16:53:54.880Z
+ * Generated: 2026-03-28T01:52:29.058Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -52,7 +52,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -102,7 +102,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -152,7 +152,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -202,7 +202,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -252,7 +252,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -302,7 +302,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -352,7 +352,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -402,7 +402,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -452,7 +452,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -502,7 +502,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -552,7 +552,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -602,7 +602,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -652,7 +652,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -702,7 +702,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -752,7 +752,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -802,7 +802,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -852,7 +852,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -902,7 +902,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -952,7 +952,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1002,7 +1002,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1052,7 +1052,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1102,7 +1102,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1152,7 +1152,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1202,7 +1202,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1252,7 +1252,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1302,7 +1302,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1352,7 +1352,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1402,7 +1402,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1452,7 +1452,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1502,7 +1502,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1552,7 +1552,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1602,7 +1602,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1652,7 +1652,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1702,7 +1702,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
@@ -1752,7 +1752,7 @@ test.describe('editor / spec-024', () => {
 
     // Navigate to the page
     await page.goto('/studio', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(1000);
 
     // Take a screenshot as proof of page load
     const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-024');
