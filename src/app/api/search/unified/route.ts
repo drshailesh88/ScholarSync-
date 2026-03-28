@@ -6,7 +6,8 @@ import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
-import { getEvidenceLevel } from "@/lib/search/evidence-level";
+import { getDomainEvidenceLevel } from "@/lib/search/evidence-level";
+import { getDomainConfig } from "@/lib/search/domains";
 import { augmentQuery } from "@/lib/ai/query-augment";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
@@ -69,6 +70,7 @@ export async function GET(req: Request) {
   const openAccessOnly = searchParams.get("openAccessOnly") === "true";
   const augment = searchParams.get("augment") !== "false";
   const sort = searchParams.get("sort") || "relevance";
+  const domain = getDomainConfig(searchParams.get("domain"));
 
   if (!q) {
     return NextResponse.json(
@@ -93,7 +95,7 @@ export async function GET(req: Request) {
 
     if (augment && q.length > 20) {
       try {
-        const augmented = await augmentQuery(q);
+        const augmented = await augmentQuery(q, domain);
         pubmedQuery = augmented.pubmedQuery;
         s2Query = augmented.semanticScholarQuery;
         oaQuery = augmented.openAlexQuery;
@@ -225,7 +227,7 @@ export async function GET(req: Request) {
     // Step 5: Apply evidence levels
     fused = fused.map((result) => {
       if (result.studyType && !result.evidenceLevel) {
-        const evidence = getEvidenceLevel(result.studyType);
+        const evidence = getDomainEvidenceLevel(result.studyType, domain);
         return { ...result, evidenceLevel: evidence.level };
       }
       return result;
