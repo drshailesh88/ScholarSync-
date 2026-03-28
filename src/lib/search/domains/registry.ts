@@ -1,11 +1,36 @@
 import type { DomainConfig, DomainId } from "./types";
+import { biologyDomain } from "./biology";
+import { chemistryDomain } from "./chemistry";
+import { computerScienceDomain } from "./computer-science";
+import { economicsDomain } from "./economics";
+import { educationDomain } from "./education";
+import { engineeringDomain } from "./engineering";
+import { environmentalDomain } from "./environmental";
+import { humanitiesDomain } from "./humanities";
+import { lawDomain } from "./law";
+import { mathematicsDomain } from "./mathematics";
 import { medicineDomain } from "./medicine";
 import { multidisciplinaryDomain } from "./multidisciplinary";
+import { physicsDomain } from "./physics";
+import { psychologyDomain } from "./psychology";
+import { socialSciencesDomain } from "./social-sciences";
 
 const domainRegistry: Record<string, DomainConfig> = {
   medicine: medicineDomain,
+  biology: biologyDomain,
+  physics: physicsDomain,
+  chemistry: chemistryDomain,
+  computer_science: computerScienceDomain,
+  engineering: engineeringDomain,
+  mathematics: mathematicsDomain,
+  social_sciences: socialSciencesDomain,
+  economics: economicsDomain,
+  psychology: psychologyDomain,
+  law: lawDomain,
+  humanities: humanitiesDomain,
+  education: educationDomain,
+  environmental: environmentalDomain,
   multidisciplinary: multidisciplinaryDomain,
-  // Additional domains will be added in Issue #25 (Content Curation)
 };
 
 /**
