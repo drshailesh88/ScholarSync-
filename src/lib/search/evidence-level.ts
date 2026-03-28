@@ -1,4 +1,5 @@
 import type { EvidenceLevel } from "@/types/search";
+import type { DomainConfig } from "@/lib/search/domains/types";
 
 interface EvidenceLevelInfo {
   level: EvidenceLevel;
@@ -22,6 +23,31 @@ export function getEvidenceLevel(studyType: string): EvidenceLevelInfo {
     default:
       return { level: "V", label: "Expert Opinion / Other", color: "slate" };
   }
+}
+
+/**
+ * Get evidence level from domain config hierarchy.
+ * Falls back to the hardcoded medical hierarchy if no config provided.
+ */
+export function getDomainEvidenceLevel(
+  studyType: string,
+  domain?: DomainConfig
+): EvidenceLevelInfo {
+  if (!domain) {
+    return getEvidenceLevel(studyType);
+  }
+
+  for (const entry of domain.evidenceHierarchy) {
+    if (entry.studyTypes.includes(studyType)) {
+      return { level: entry.level as EvidenceLevel, label: entry.label, color: entry.color };
+    }
+  }
+
+  // Fallback to lowest level in the domain's hierarchy
+  const lowest = domain.evidenceHierarchy[domain.evidenceHierarchy.length - 1];
+  return lowest
+    ? { level: lowest.level as EvidenceLevel, label: lowest.label, color: lowest.color }
+    : { level: "V", label: "Other", color: "slate" };
 }
 
 export function mapPubMedPublicationType(pubType: string): string {
