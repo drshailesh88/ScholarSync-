@@ -221,6 +221,7 @@ export async function restoreVersion(
       audienceType: snapshot.deck.audienceType as
         | "thesis_defense" | "conference" | "journal_club" | "classroom" | "general"
         | "grant_presentation" | "poster_session" | "systematic_review" | "patient_case" | "grand_rounds"
+        | "lab_meeting" | "departmental_seminar"
         | null,
       templateId: snapshot.deck.templateId,
       citationStyle: snapshot.deck.citationStyle ?? "apa",

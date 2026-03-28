@@ -1,8 +1,8 @@
 // Empty state: renders nothing when data.length === 0
 "use client";
 
-import { useState, Suspense } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -23,6 +23,7 @@ import {
 import { PRESET_THEMES } from "@/types/presentation";
 import type { PosterSize, PosterGridLayout } from "@/types/poster";
 import { POSTER_SIZES, POSTER_GRID_LAYOUTS, POSTER_TEMPLATES } from "@/types/poster";
+import { getDomainConfig } from "@/lib/search/domains";
 
 const STEPS = ["Source", "Size & Template", "Theme & Options", "Generate"];
 
@@ -36,6 +37,9 @@ export default function NewPosterPage() {
 
 function NewPosterContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const domainId = searchParams.get("domain");
+  const domain = domainId ? getDomainConfig(domainId) : undefined;
   const [step, setStep] = useState(0);
 
   // Step 0: Source
@@ -77,6 +81,19 @@ function NewPosterContent() {
   const canProceedStep2 = title.trim().length > 0;
 
   const selectedTemplate = templateId ? POSTER_TEMPLATES[templateId] : null;
+  const availableTemplateEntries = Object.entries(POSTER_TEMPLATES).filter(([key]) =>
+    !domain || domain.posterTemplates.includes(key)
+  );
+
+  useEffect(() => {
+    if (!templateId) {
+      return;
+    }
+
+    if (!availableTemplateEntries.some(([key]) => key === templateId)) {
+      setTemplateId(null);
+    }
+  }, [availableTemplateEntries, templateId]);
 
   async function handlePreprocess() {
     setPreprocessing(true);
@@ -368,7 +385,7 @@ function NewPosterContent() {
               <span className="text-ink-muted font-normal">(optional)</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {Object.entries(POSTER_TEMPLATES).map(([key, tpl]) => (
+              {availableTemplateEntries.map(([key, tpl]) => (
                 <button
                   key={key}
                   onClick={() => setTemplateId(templateId === key ? null : key)}

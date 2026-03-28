@@ -161,6 +161,10 @@ export function WorkbenchAssistant() {
       if (currentScope === "open") {
         // Open scope — use /api/chat as before
         const apiMode = mode === "learn" ? "learn" : "draft";
+        const domainId =
+          typeof window !== "undefined"
+            ? (new URLSearchParams(window.location.search).get("domain") ?? undefined)
+            : undefined;
         res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -172,10 +176,11 @@ export function WorkbenchAssistant() {
             mode: apiMode,
             ...(mode === "draft" ? { draftContext: { intensity } } : {}),
             ...(mode === "learn"
-              ? {
+                ? {
                   guideContext: {
                     documentType: "original_article",
                     stage: "writing",
+                    domainId,
                   },
                 }
               : {}),

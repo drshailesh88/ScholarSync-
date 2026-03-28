@@ -21,13 +21,15 @@ import { getSmallModel } from "@/lib/ai/models";
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
+import { searchArxiv } from "@/lib/search/sources/arxiv";
 import { batchLookupUnpaywall } from "@/lib/search/sources/unpaywall";
 import { deduplicateResults } from "@/lib/search/dedup";
 import { traverseCitationGraph, selectTopPapers } from "./citation-traversal";
 import { extractStructuredData } from "./data-extraction";
 import { extractFullTexts } from "./full-text-extractor";
-import { generatePerspectives } from "./perspectives";
+import { generateDomainPerspectives, generatePerspectives } from "./perspectives";
 import { synthesizeFindings } from "./synthesis";
+import type { DomainConfig, SourceId } from "@/lib/search/domains/types";
 import type { UnifiedSearchResult } from "@/types/search";
 import type {
   ResearchConfig,
@@ -105,41 +107,73 @@ export function buildExplorationTree(
 /**
  * Search across PubMed, Semantic Scholar, and OpenAlex in parallel.
  */
-async function searchAllSources(
+type SourceSearchExecutor = (
   query: string,
   config: ResearchConfig,
-  perSourceLimit?: number
-): Promise<UnifiedSearchResult[]> {
-  const limit = perSourceLimit || config.perSourceLimit;
+  limit: number
+) => Promise<{ results: UnifiedSearchResult[]; total: number }>;
 
-  const [pubmedResult, s2Result, oaResult] = await Promise.allSettled([
+const SOURCE_FUNCTIONS: Partial<Record<SourceId, SourceSearchExecutor>> = {
+  pubmed: (query, config, limit) =>
     searchPubMed(query, {
       maxResults: limit,
       yearStart: config.yearStart,
       yearEnd: config.yearEnd,
     }),
+  semantic_scholar: (query, config, limit) =>
     searchSemanticScholar(query, {
       limit,
       yearStart: config.yearStart,
       yearEnd: config.yearEnd,
     }),
+  openalex: (query, config, limit) =>
     searchOpenAlex(query, {
       limit,
       yearStart: config.yearStart,
       yearEnd: config.yearEnd,
     }),
-  ]);
+  arxiv: (query, config, limit) =>
+    searchArxiv(query, {
+      maxResults: limit,
+      yearStart: config.yearStart,
+      yearEnd: config.yearEnd,
+    }),
+};
+
+function getSourceExecutors(domain?: DomainConfig): SourceSearchExecutor[] {
+  const useProvenPath = !domain || domain.useProvenDeepResearch;
+
+  if (useProvenPath) {
+    return [
+      SOURCE_FUNCTIONS.pubmed!,
+      SOURCE_FUNCTIONS.semantic_scholar!,
+      SOURCE_FUNCTIONS.openalex!,
+    ];
+  }
+
+  return domain.sources
+    .map((sourceId) => SOURCE_FUNCTIONS[sourceId])
+    .filter((sourceFn): sourceFn is SourceSearchExecutor => Boolean(sourceFn));
+}
+
+async function searchAllSources(
+  query: string,
+  config: ResearchConfig,
+  perSourceLimit?: number,
+  domain?: DomainConfig
+): Promise<UnifiedSearchResult[]> {
+  const limit = perSourceLimit || config.perSourceLimit;
+  const sourceExecutors = getSourceExecutors(domain);
+  const settledResults = await Promise.allSettled(
+    sourceExecutors.map((executeSearch) => executeSearch(query, config, limit))
+  );
 
   const results: UnifiedSearchResult[] = [];
 
-  if (pubmedResult.status === "fulfilled") {
-    results.push(...pubmedResult.value.results);
-  }
-  if (s2Result.status === "fulfilled") {
-    results.push(...s2Result.value.results);
-  }
-  if (oaResult.status === "fulfilled") {
-    results.push(...oaResult.value.results);
+  for (const settledResult of settledResults) {
+    if (settledResult.status === "fulfilled") {
+      results.push(...settledResult.value.results);
+    }
   }
 
   return results;
@@ -154,11 +188,16 @@ async function searchAllSources(
 async function executeResearch(
   tree: ExplorationTree,
   config: ResearchConfig,
+  domain?: DomainConfig,
   onProgress?: ResearchProgressCallback
 ): Promise<void> {
   const pendingNodes = tree.root.children.filter((n) => n.status === "pending");
+  const sourceCount = getSourceExecutors(domain).length;
 
-  onProgress?.("searching", `Round 1: Searching ${pendingNodes.length} queries across 3 databases...`);
+  onProgress?.(
+    "searching",
+    `Round 1: Searching ${pendingNodes.length} queries across ${sourceCount} databases...`
+  );
 
   const batchSize = 3;
 
@@ -168,7 +207,7 @@ async function executeResearch(
     const batchPromises = batch.map(async (node) => {
       node.status = "searching";
       try {
-        node.results = await searchAllSources(node.query, config);
+        node.results = await searchAllSources(node.query, config, undefined, domain);
         node.status = "complete";
       } catch (error) {
         console.error(`[DeepResearch] Search failed for node ${node.id}:`, error);
@@ -254,6 +293,7 @@ async function executeFollowUpRound(
   existingResults: UnifiedSearchResult[],
   config: ResearchConfig,
   round: number,
+  domain?: DomainConfig,
   onProgress?: ResearchProgressCallback
 ): Promise<UnifiedSearchResult[]> {
   const stage = round === 2 ? "search-round-2" as const : "search-round-3" as const;
@@ -275,7 +315,7 @@ async function executeFollowUpRound(
     const batch = followUpQueries.slice(i, i + batchSize);
 
     const batchPromises = batch.map((query) =>
-      searchAllSources(query, config, Math.min(config.perSourceLimit, 10))
+      searchAllSources(query, config, Math.min(config.perSourceLimit, 10), domain)
     );
 
     const batchResults = await Promise.allSettled(batchPromises);
@@ -404,9 +444,11 @@ export async function runDeepResearch(
   modeOrConfig?: ResearchMode | Partial<ResearchConfig>,
   onProgress?: ResearchProgressCallback,
   onPerspectives?: (perspectives: Perspective[]) => void,
-  suppliedPerspectives?: Perspective[]
+  suppliedPerspectives?: Perspective[],
+  domain?: DomainConfig
 ): Promise<DeepResearchResult> {
   const startTime = Date.now();
+  const useProvenPath = !domain || domain.useProvenDeepResearch;
 
   // ── Step 1: Validate ──────────────────────────────────────────────
   onProgress?.("validating", "Validating research topic...");
@@ -431,7 +473,9 @@ export async function runDeepResearch(
     onProgress?.("generating-perspectives", `Using ${perspectives.length} user-confirmed perspectives`);
   } else {
     onProgress?.("generating-perspectives", "Generating research perspectives...");
-    perspectives = await generatePerspectives(topic, resolvedConfig);
+    perspectives = useProvenPath
+      ? await generatePerspectives(topic, resolvedConfig)
+      : generateDomainPerspectives(topic, domain);
     onProgress?.("generating-perspectives", `Generated ${perspectives.length} perspectives`);
   }
 
@@ -443,7 +487,7 @@ export async function runDeepResearch(
   const tree = buildExplorationTree(topic, perspectives);
 
   // ── Step 4: Round 1 search ────────────────────────────────────────
-  await executeResearch(tree, resolvedConfig, onProgress);
+  await executeResearch(tree, resolvedConfig, domain, onProgress);
 
   // Collect Round 1 results
   const allResults: UnifiedSearchResult[] = [];
@@ -481,6 +525,7 @@ export async function runDeepResearch(
       deduplicateResults(allResults),
       resolvedConfig,
       2,
+      domain,
       onProgress
     );
     allResults.push(...round2Results);
@@ -494,6 +539,7 @@ export async function runDeepResearch(
       deduplicateResults(allResults),
       resolvedConfig,
       3,
+      domain,
       onProgress
     );
     allResults.push(...round3Results);

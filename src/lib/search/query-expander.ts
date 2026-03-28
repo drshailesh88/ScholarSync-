@@ -13,6 +13,8 @@
  * 3. A function to generate supplementary queries for other sources
  */
 
+import type { DomainConfig } from "@/lib/search/domains/types";
+
 // ── Static synonym map ─────────────────────────────────────────────
 
 interface SynonymEntry {
@@ -149,4 +151,41 @@ function extractCoreTerms(query: string): string[] {
 
   // Return unique meaningful terms
   return [...new Set(words.map((w) => w.toLowerCase()))];
+}
+
+/**
+ * Expand query using domain-specific synonym map.
+ * Falls back to the hardcoded medical SYNONYM_MAP if no domain config provided.
+ */
+export function expandQueryForDomain(query: string, domain?: DomainConfig): QueryExpansion {
+  if (!domain) {
+    return expandQuery(query);
+  }
+
+  if (domain.synonymMap.length === 0) {
+    return { original: query, supplementary: null, expansions: [] };
+  }
+
+  const expansions: { term: string; synonyms: string[] }[] = [];
+
+  for (const entry of domain.synonymMap) {
+    const regex = new RegExp(entry.pattern, "i");
+    if (regex.test(query)) {
+      const termMatch = query.match(regex);
+      expansions.push({
+        term: termMatch ? termMatch[0] : "unknown",
+        synonyms: entry.synonyms,
+      });
+    }
+  }
+
+  if (expansions.length === 0) {
+    return { original: query, supplementary: null, expansions: [] };
+  }
+
+  const allSynonyms = expansions.flatMap((e) => e.synonyms);
+  const coreTerms = extractCoreTerms(query);
+  const supplementary = `(${allSynonyms.join(" OR ")}) AND (${coreTerms.join(" AND ")})`;
+
+  return { original: query, supplementary, expansions };
 }

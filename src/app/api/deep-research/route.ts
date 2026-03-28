@@ -17,6 +17,7 @@
 import { NextRequest } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { runDeepResearch } from "@/lib/deep-research/engine";
+import { getDomainConfig } from "@/lib/search/domains";
 import type { ResearchConfig, ResearchStage, Perspective } from "@/lib/deep-research/types";
 
 export const maxDuration = 300; // 5 minutes max for deep research
@@ -69,6 +70,8 @@ export async function POST(req: NextRequest) {
   }
 
   const { topic, mode, config } = body;
+  const domainParam = req.nextUrl.searchParams.get("domain");
+  const domain = domainParam ? getDomainConfig(domainParam) : undefined;
 
   if (!topic || typeof topic !== "string") {
     return new Response(JSON.stringify({ error: "topic is required" }), {
@@ -122,7 +125,9 @@ export async function POST(req: NextRequest) {
           topic,
           resolvedConfig,
           onProgress,
-          onPerspectives
+          onPerspectives,
+          undefined,
+          domain
         );
 
         // Send the full report — nested under `report` to match client expectation

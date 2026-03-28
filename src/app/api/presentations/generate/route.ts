@@ -17,6 +17,7 @@ import type {
   SlideLayout,
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
+import { getDomainConfig } from "@/lib/search/domains";
 
 const generateSchema = z.object({
   title: z.string().min(1).max(500),
@@ -24,6 +25,7 @@ const generateSchema = z.object({
   audienceType: z.enum([
     "thesis_defense", "conference", "journal_club", "classroom", "general",
     "grant_presentation", "poster_session", "systematic_review", "patient_case", "grand_rounds",
+    "lab_meeting", "departmental_seminar",
   ]),
   slideCount: z.number().int().positive().optional(),
   themeKey: z.string().optional(),
@@ -32,6 +34,7 @@ const generateSchema = z.object({
   additionalInstructions: z.string().optional(),
   templateId: z.string().optional(),
   citationStyle: z.enum(["apa", "mla", "chicago", "vancouver", "harvard"]).optional(),
+  domain: z.string().optional(),
 });
 
 export async function POST(req: Request) {
@@ -61,6 +64,7 @@ export async function POST(req: Request) {
     const body = parseResult.data;
 
     const themeKey = body.themeKey ?? "modern";
+    const domain = body.domain ? getDomainConfig(body.domain) : undefined;
 
     // Update generation status
     const deck = await createDeck({
@@ -83,6 +87,7 @@ export async function POST(req: Request) {
         slideCount: body.slideCount,
         themeKey,
         templateId: body.templateId,
+        domain,
       });
 
       let userPrompt = `Here is the preprocessed content to turn into slides:\n\n${body.preprocessedData}`;

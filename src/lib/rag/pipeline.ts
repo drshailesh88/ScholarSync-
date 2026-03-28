@@ -6,6 +6,7 @@ import { searchVector, searchKeyword } from "./search";
 import { reciprocalRankFusion } from "./fusion";
 import { rerankChunks } from "./reranker";
 import { compressChunks } from "./compressor";
+import type { DomainConfig } from "@/lib/search/domains/types";
 import type { RerankedChunk } from "./reranker";
 import type { CompressedChunk } from "./compressor";
 
@@ -26,7 +27,8 @@ export type RAGResult = CompressedChunk | RerankedChunk;
 export async function advancedRetrieve(
   query: string,
   paperIds: number[],
-  config: RAGConfig = {}
+  config: RAGConfig = {},
+  domain?: DomainConfig
 ): Promise<RAGResult[]> {
   const {
     useMultiQuery = true,
@@ -50,7 +52,7 @@ export async function advancedRetrieve(
           ...config,
           useDecomposition: false,
           topK: Math.ceil(topK / subQuestions.length),
-        });
+        }, domain);
         allResults.push(...subResults);
       }
       // Deduplicate by chunk ID
@@ -73,13 +75,13 @@ export async function advancedRetrieve(
   // Step 2: Generate query variations
   let queries = [query];
   if (useMultiQuery) {
-    queries = await generateMultiQueries(query);
+    queries = await generateMultiQueries(query, domain);
   }
 
   // Step 3: HyDE — also embed a hypothetical answer
   let embeddingTexts = queries;
   if (useHyDE) {
-    const hydeAnswer = await generateHypotheticalAnswer(query);
+    const hydeAnswer = await generateHypotheticalAnswer(query, domain);
     embeddingTexts = [...queries, hydeAnswer];
   }
 

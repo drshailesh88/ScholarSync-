@@ -17,8 +17,12 @@
 import { NextRequest } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { validateTopic } from "@/lib/deep-research/engine";
-import { generatePerspectives } from "@/lib/deep-research/perspectives";
+import {
+  generateDomainPerspectives,
+  generatePerspectives,
+} from "@/lib/deep-research/perspectives";
 import { buildConfig } from "@/lib/deep-research/types";
+import { getDomainConfig } from "@/lib/search/domains";
 import type { ResearchMode } from "@/lib/deep-research/types";
 
 export const maxDuration = 30; // Perspective generation is fast
@@ -52,6 +56,9 @@ export async function POST(req: NextRequest) {
   }
 
   const { topic, mode = "standard" } = body;
+  const domainParam = req.nextUrl.searchParams.get("domain");
+  const domain = domainParam ? getDomainConfig(domainParam) : undefined;
+  const useProvenPath = !domain || domain.useProvenDeepResearch;
 
   if (!topic || typeof topic !== "string") {
     return new Response(JSON.stringify({ error: "topic is required" }), {
@@ -89,7 +96,9 @@ export async function POST(req: NextRequest) {
 
         // Build config and generate perspectives
         const config = buildConfig(mode);
-        const perspectives = await generatePerspectives(topic, config);
+        const perspectives = useProvenPath
+          ? await generatePerspectives(topic, config)
+          : generateDomainPerspectives(topic, domain);
 
         sendEvent("progress", {
           stage: "generating-perspectives",

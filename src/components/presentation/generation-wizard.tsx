@@ -25,10 +25,11 @@ import { PRESET_THEMES, ACADEMIC_TEMPLATES } from "@/types/presentation";
 import type { AudienceType } from "@/types/presentation";
 import type { ParsedReference } from "@/lib/references/types";
 import { formatReferencesAsContent } from "@/lib/references/format";
+import type { DomainConfig } from "@/lib/search/domains/types";
 
 const STEPS = ["Select Source", "Template & Audience", "Configure", "Generate"];
 
-const AUDIENCE_OPTIONS: { key: AudienceType; label: string }[] = [
+export const AUDIENCE_OPTIONS_ALL: { key: AudienceType; label: string }[] = [
   { key: "general", label: "General" },
   { key: "thesis_defense", label: "Thesis Defense" },
   { key: "conference", label: "Conference" },
@@ -39,7 +40,21 @@ const AUDIENCE_OPTIONS: { key: AudienceType; label: string }[] = [
   { key: "systematic_review", label: "Systematic Review" },
   { key: "patient_case", label: "Patient Case" },
   { key: "grand_rounds", label: "Grand Rounds" },
+  { key: "lab_meeting", label: "Lab Meeting" },
+  { key: "departmental_seminar", label: "Departmental Seminar" },
 ];
+
+export function getAudienceOptionsForDomain(
+  domain?: DomainConfig
+): { key: AudienceType; label: string }[] {
+  if (!domain) {
+    return AUDIENCE_OPTIONS_ALL;
+  }
+
+  return AUDIENCE_OPTIONS_ALL.filter((option) =>
+    domain.features.presentationTypes.includes(option.key)
+  );
+}
 
 const CITATION_STYLES: { key: "apa" | "mla" | "chicago" | "vancouver" | "harvard"; label: string }[] = [
   { key: "apa", label: "APA" },
@@ -49,7 +64,7 @@ const CITATION_STYLES: { key: "apa" | "mla" | "chicago" | "vancouver" | "harvard
   { key: "harvard", label: "Harvard" },
 ];
 
-export function GenerationWizard() {
+export function GenerationWizard({ domain }: { domain?: DomainConfig }) {
   const router = useRouter();
   const [step, setStep] = useState(0);
 
@@ -98,6 +113,15 @@ export function GenerationWizard() {
   const canProceedStep2 = title.trim().length > 0;
 
   const selectedTemplate = templateId ? ACADEMIC_TEMPLATES[templateId] : null;
+  const audienceOptions = getAudienceOptionsForDomain(domain);
+
+  useEffect(() => {
+    if (audienceOptions.some((option) => option.key === audienceType)) {
+      return;
+    }
+
+    setAudienceType(audienceOptions[0]?.key ?? "general");
+  }, [audienceOptions, audienceType]);
 
   async function handlePreprocess() {
     setPreprocessing(true);
@@ -144,6 +168,7 @@ export function GenerationWizard() {
           documentId: effectiveSourceType === "document" ? documentId : undefined,
           rawText: effectiveSourceType === "text" ? (effectiveRawText ?? rawText) : undefined,
           deepResearchSessionId: effectiveSourceType === "deep_research" ? deepResearchSessionId : undefined,
+          domain: domain?.id,
         }),
       });
 
@@ -197,6 +222,7 @@ export function GenerationWizard() {
           additionalInstructions: instructions || undefined,
           templateId: templateId || undefined,
           citationStyle,
+          domain: domain?.id,
         }),
       });
 
@@ -382,7 +408,7 @@ export function GenerationWizard() {
           <div>
             <label className="text-sm font-medium text-ink block mb-2">Audience</label>
             <div className="flex flex-wrap gap-2">
-              {AUDIENCE_OPTIONS.map((opt) => (
+              {audienceOptions.map((opt) => (
                 <button
                   key={opt.key}
                   onClick={() => setAudienceType(opt.key)}

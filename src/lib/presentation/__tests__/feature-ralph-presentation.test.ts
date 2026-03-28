@@ -234,6 +234,7 @@ describe("API: /api/presentations/generate", () => {
       const audienceTypes: AudienceType[] = [
         "thesis_defense", "conference", "journal_club", "classroom", "general",
         "grant_presentation", "poster_session", "systematic_review", "patient_case", "grand_rounds",
+        "lab_meeting", "departmental_seminar",
       ];
       for (const audienceType of audienceTypes) {
         const req = createMockRequest({

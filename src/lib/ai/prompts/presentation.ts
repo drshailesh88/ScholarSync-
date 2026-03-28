@@ -1,5 +1,6 @@
 import type { AudienceType, AcademicTemplate } from "@/types/presentation";
 import { ACADEMIC_TEMPLATES } from "@/types/presentation";
+import type { DomainConfig } from "@/lib/search/domains/types";
 
 // =============================================================================
 // ScholarSync Presentation Engine V2 — AI Prompt Library
@@ -9,7 +10,14 @@ import { ACADEMIC_TEMPLATES } from "@/types/presentation";
 // 1. Pre-Processor: Extract structure, citations, and methodology from sources
 // ---------------------------------------------------------------------------
 
-export function getPreProcessorSystemPrompt(sourceType: string) {
+export function getPreProcessorSystemPrompt(
+  sourceType: string,
+  domain?: DomainConfig
+) {
+  const studyDesigns =
+    domain?.presentationStudyDesigns
+      ?? "RCT|cohort|cross-sectional|case-control|systematic review|meta-analysis|qualitative|mixed-methods|other";
+
   return `You are an expert academic content analyzer for presentation generation.
 Your task is to perform a DEEP structural extraction from the provided ${sourceType} content.
 The input may be up to 50,000 characters. Process ALL of it thoroughly.
@@ -56,7 +64,7 @@ Extract and return a JSON object with this exact structure:
     }
   ],
   "methodology": {
-    "studyDesign": "RCT|cohort|cross-sectional|case-control|systematic review|meta-analysis|qualitative|mixed-methods|other",
+    "studyDesign": "${studyDesigns}",
     "population": "Description of study population, N, inclusion/exclusion criteria",
     "setting": "Where the study was conducted",
     "interventions": ["intervention 1", "intervention 2"],
@@ -93,12 +101,16 @@ export function getSlideGeneratorSystemPrompt(config: {
   slideCount?: number;
   themeKey?: string;
   templateId?: string;
+  domain?: DomainConfig;
 }) {
   const audienceGuidance = getAudienceGuidance(config.audienceType);
   const targetSlides = config.slideCount ?? 12;
   const templateGuidance = config.templateId
     ? getTemplateGuidance(ACADEMIC_TEMPLATES[config.templateId])
     : "";
+  const calloutTypes = config.domain
+    ? `info|warning|success|finding|limitation|methodology|${config.domain.calloutType.id}`
+    : "info|warning|success|finding|limitation|methodology|clinical";
 
   return `You are an expert presentation designer for academic audiences.
 Generate a slide deck from the preprocessed content provided.
@@ -122,7 +134,7 @@ Generate approximately ${targetSlides} slides as a JSON array. Each slide must h
     { "type": "math", "data": { "expression": "E = mc^2", "displayMode": true, "caption": "Optional caption" } },
     { "type": "diagram", "data": { "syntax": "graph TD; A-->B;", "diagramType": "flowchart", "caption": "Optional caption" } },
     { "type": "code", "data": { "language": "python|r|sql|...", "code": "...", "caption": "Optional" } },
-    { "type": "callout", "data": { "type": "info|warning|success|finding|limitation|methodology|clinical", "title": "Optional", "text": "..." } },
+    { "type": "callout", "data": { "type": "${calloutTypes}", "title": "Optional", "text": "..." } },
     { "type": "stat_result", "data": { "label": "...", "value": "...", "ci": "95% CI [x, y]", "pValue": "p < 0.001", "interpretation": "Brief interpretation" } },
     { "type": "bibliography", "data": { "entries": [{ "id": 1, "formatted": "APA-style reference", "doi": "10.xxxx/xxxxx" }], "style": "apa|mla|chicago|vancouver|harvard" } },
     { "type": "timeline", "data": { "entries": [{ "label": "...", "date": "...", "description": "...", "status": "completed|in_progress|upcoming" }], "title": "Optional title" } },

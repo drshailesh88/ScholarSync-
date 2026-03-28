@@ -8,6 +8,7 @@ import { getGuideSystemPrompt, getDefaultGuidePrompt } from "@/lib/ai/prompts/gu
 import { getDraftSystemPrompt, getDefaultDraftPrompt } from "@/lib/ai/prompts/draft";
 import type { GuideContext } from "@/types/guide";
 import type { DraftContext } from "@/types/draft";
+import { getDomainConfig } from "@/lib/search/domains";
 
 const chatRequestSchema = z.object({
   messages: z
@@ -76,19 +77,24 @@ export async function POST(req: Request) {
     let systemPrompt: string;
 
     if (mode === "learn") {
+      const domain = typeof guideContext?.domainId === "string"
+        ? getDomainConfig(guideContext.domainId)
+        : undefined;
+
       // Guided Mode — Socratic academic writing tutor
       if (guideContext?.documentType && guideContext?.stage) {
         const ctx: GuideContext = {
           documentType: guideContext.documentType as GuideContext["documentType"],
           stage: guideContext.stage as GuideContext["stage"],
+          domainId: guideContext.domainId as string | undefined,
           targetJournal: guideContext.targetJournal as string | undefined,
           studyType: guideContext.studyType as string | undefined,
           projectTitle: guideContext.projectTitle as string | undefined,
           completedChecklist: guideContext.completedChecklist as string[] | undefined,
         };
-        systemPrompt = getGuideSystemPrompt(ctx);
+        systemPrompt = getGuideSystemPrompt(ctx, domain);
       } else {
-        systemPrompt = getDefaultGuidePrompt();
+        systemPrompt = getDefaultGuidePrompt(domain);
       }
     } else if (mode === "draft") {
       // Draft Mode — intensity-based writing co-pilot

@@ -10,6 +10,7 @@ import { createDeck, createSlide } from "@/lib/actions/presentations";
 import { PRESET_THEMES } from "@/types/presentation";
 import type { AudienceType } from "@/types/presentation";
 import { GenerationWizard } from "@/components/presentation/generation-wizard";
+import { getDomainConfig } from "@/lib/search/domains";
 
 const AUDIENCE_OPTIONS: { key: AudienceType; label: string; description: string }[] = [
   { key: "general", label: "General", description: "Standard academic presentation" },
@@ -31,6 +32,8 @@ function NewPresentationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isAiMode = searchParams.get("mode") === "ai";
+  const domainId = searchParams.get("domain");
+  const domain = domainId ? getDomainConfig(domainId) : undefined;
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -81,7 +84,7 @@ function NewPresentationContent() {
       </div>
 
       {isAiMode ? (
-        <GenerationWizard />
+        <GenerationWizard domain={domain} />
       ) : (
         <div className="space-y-6">
           <div>

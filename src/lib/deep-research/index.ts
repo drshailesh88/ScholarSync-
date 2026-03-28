@@ -3,7 +3,7 @@
  */
 
 export { runDeepResearch, validateTopic, buildExplorationTree } from "./engine";
-export { generatePerspectives } from "./perspectives";
+export { generatePerspectives, generateDomainPerspectives } from "./perspectives";
 export { synthesizeFindings } from "./synthesis";
 export { traverseCitationGraph, selectTopPapers } from "./citation-traversal";
 export { extractStructuredData } from "./data-extraction";

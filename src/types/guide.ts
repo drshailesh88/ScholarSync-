@@ -67,6 +67,7 @@ export const REPORTING_GUIDELINES: Record<GuideDocumentType, string[]> = {
 export interface GuideContext {
   documentType: GuideDocumentType;
   stage: GuideStage;
+  domainId?: string;
   targetJournal?: string;
   studyType?: string;
   projectTitle?: string;

@@ -38,6 +38,8 @@ const generateSchema = z.object({
       "systematic_review",
       "patient_case",
       "grand_rounds",
+      "lab_meeting",
+      "departmental_seminar",
     ])
     .optional(),
   themeKey: z.string().optional(),
