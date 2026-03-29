@@ -12,6 +12,9 @@ const mockSearchClinicalTrials = vi.hoisted(() => vi.fn());
 const mockReciprocalRankFusion = vi.hoisted(() => vi.fn());
 const mockRerankResults = vi.hoisted(() => vi.fn());
 const mockAugmentQuery = vi.hoisted(() => vi.fn());
+const mockEnrichStudyTypes = vi.hoisted(() => vi.fn());
+const mockQualityRank = vi.hoisted(() => vi.fn());
+const mockExpandQueryForDomain = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/auth", () => ({
   getCurrentUserId: mockGetCurrentUserId,
@@ -77,6 +80,18 @@ vi.mock("@/lib/search/journal-quality", () => ({
   lookupJournalQuality: vi.fn().mockReturnValue(null),
 }));
 
+vi.mock("@/lib/search/study-type-detector", () => ({
+  enrichStudyTypes: mockEnrichStudyTypes,
+}));
+
+vi.mock("@/lib/search/quality-ranker", () => ({
+  qualityRank: mockQualityRank,
+}));
+
+vi.mock("@/lib/search/query-expander", () => ({
+  expandQueryForDomain: mockExpandQueryForDomain,
+}));
+
 import { GET } from "../route";
 
 function makeRequest(params: Record<string, string> = {}): Request {
@@ -112,6 +127,17 @@ describe("GET /api/search/unified", () => {
       pubmedQuery: "augmented pubmed",
       semanticScholarQuery: "augmented s2",
       openAlexQuery: "augmented oa",
+    });
+
+    // New module defaults
+    mockEnrichStudyTypes.mockReturnValue(0);
+    mockQualityRank.mockImplementation(
+      (results: unknown[]) => results,
+    );
+    mockExpandQueryForDomain.mockReturnValue({
+      original: "test",
+      supplementary: null,
+      expansions: [],
     });
   });
 
@@ -149,5 +175,91 @@ describe("GET /api/search/unified", () => {
     mockGetCurrentUserId.mockRejectedValue(new Error("Not authenticated"));
     const res = await GET(makeRequest({ q: "test" }));
     expect(res.status).toBe(401);
+  });
+
+  // ── Slice 1: enrichStudyTypes() ──────────────────────────────────
+
+  it("calls enrichStudyTypes on fused results before evidence assignment", async () => {
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    expect(res.status).toBe(200);
+    expect(mockEnrichStudyTypes).toHaveBeenCalledTimes(1);
+    // Should be called with the fused results array
+    expect(mockEnrichStudyTypes).toHaveBeenCalledWith(expect.any(Array));
+  });
+
+  it("degrades gracefully when enrichStudyTypes throws", async () => {
+    mockEnrichStudyTypes.mockImplementation(() => {
+      throw new Error("detector crash");
+    });
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.results).toBeDefined();
+  });
+
+  // ── Slice 2: qualityRank() ───────────────────────────────────────
+
+  it("calls qualityRank with fused results and query string", async () => {
+    const query = "diabetes treatment review";
+    const res = await GET(makeRequest({ q: query }));
+    expect(res.status).toBe(200);
+    expect(mockQualityRank).toHaveBeenCalledTimes(1);
+    expect(mockQualityRank).toHaveBeenCalledWith(expect.any(Array), query);
+  });
+
+  it("degrades gracefully when qualityRank throws", async () => {
+    mockQualityRank.mockImplementation(() => {
+      throw new Error("ranker crash");
+    });
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.results).toBeDefined();
+  });
+
+  // ── Slice 3: expandQueryForDomain() ──────────────────────────────
+
+  it("calls expandQueryForDomain with query and domain config", async () => {
+    const res = await GET(makeRequest({ q: "SGLT2 inhibitors heart failure" }));
+    expect(res.status).toBe(200);
+    expect(mockExpandQueryForDomain).toHaveBeenCalledTimes(1);
+    expect(mockExpandQueryForDomain).toHaveBeenCalledWith(
+      "SGLT2 inhibitors heart failure",
+      expect.objectContaining({ sources: expect.any(Array) }),
+    );
+  });
+
+  it("fires supplementary PubMed search when expansion returns supplementary query", async () => {
+    mockExpandQueryForDomain.mockReturnValue({
+      original: "SGLT2 inhibitors heart failure",
+      supplementary: "(empagliflozin OR dapagliflozin) AND (sglt2 heart failure)",
+      expansions: [{ term: "SGLT2 inhibitors", synonyms: ["empagliflozin", "dapagliflozin"] }],
+    });
+    const res = await GET(makeRequest({ q: "SGLT2 inhibitors heart failure" }));
+    expect(res.status).toBe(200);
+    // PubMed should have been called twice: once for original, once for supplementary
+    expect(mockSearchPubMed).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not fire supplementary search when expansion returns null", async () => {
+    mockExpandQueryForDomain.mockReturnValue({
+      original: "test query",
+      supplementary: null,
+      expansions: [],
+    });
+    const res = await GET(makeRequest({ q: "some generic query without drugs" }));
+    expect(res.status).toBe(200);
+    // PubMed should only be called once (original query)
+    expect(mockSearchPubMed).toHaveBeenCalledTimes(1);
+  });
+
+  it("degrades gracefully when expandQueryForDomain throws", async () => {
+    mockExpandQueryForDomain.mockImplementation(() => {
+      throw new Error("expander crash");
+    });
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.results).toBeDefined();
   });
 });

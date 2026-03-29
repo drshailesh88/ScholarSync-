@@ -16,6 +16,9 @@ import { logger } from "@/lib/logger";
 import { lookupJournalQuality } from "@/lib/search/journal-quality";
 import { getDevelopmentFallbackResults } from "@/lib/search/dev-fallback";
 import { getCurrentUserDomainConfig } from "@/lib/search/domains/user-domain";
+import { enrichStudyTypes } from "@/lib/search/study-type-detector";
+import { qualityRank } from "@/lib/search/quality-ranker";
+import { expandQueryForDomain } from "@/lib/search/query-expander";
 import type { SourceId } from "@/lib/search/domains";
 import type { UnifiedSearchResult } from "@/types/search";
 
@@ -127,6 +130,15 @@ export async function GET(req: Request) {
       }
     }
 
+    // Step 1b: Regex-based synonym expansion (supplementary PubMed search)
+    let supplementaryPubmedQuery: string | null = null;
+    try {
+      const expansion = expandQueryForDomain(q, domain);
+      supplementaryPubmedQuery = expansion.supplementary;
+    } catch {
+      log.warn("Query expansion failed, continuing without synonyms");
+    }
+
     // Step 2: Fan out to all sources in parallel
     // Fetch enough results from each source to fill the requested page.
     // We need (page+1)*perPage results after fusion to serve the slice,
@@ -140,6 +152,21 @@ export async function GET(req: Request) {
         label: "PubMed",
         run: () =>
           searchPubMed(pubmedQuery, {
+            maxResults: neededPerSource,
+            page: 0,
+            yearStart,
+            yearEnd,
+          }),
+      });
+    }
+
+    if (supplementaryPubmedQuery && domain.sources.includes("pubmed")) {
+      const expandedQuery = supplementaryPubmedQuery;
+      sourceDefinitions.push({
+        sourceId: "pubmed" as SourceId,
+        label: "PubMed (expanded)",
+        run: () =>
+          searchPubMed(expandedQuery, {
             maxResults: neededPerSource,
             page: 0,
             yearStart,
@@ -274,6 +301,13 @@ export async function GET(req: Request) {
     // Step 4: Rerank (if Cohere key available)
     fused = await rerankResults(q, fused);
 
+    // Step 4b: Detect study types from title/abstract text
+    try {
+      enrichStudyTypes(fused);
+    } catch {
+      log.warn("Study type enrichment failed, continuing");
+    }
+
     // Step 5: Apply evidence levels
     fused = fused.map((result) => {
       if (result.studyType && !result.evidenceLevel) {
@@ -297,6 +331,13 @@ export async function GET(req: Request) {
       }
       return result;
     });
+
+    // Step 5c: Quality-weighted composite ranking
+    try {
+      fused = qualityRank(fused, q);
+    } catch {
+      log.warn("Quality ranking failed, continuing with rerank order");
+    }
 
     // Step 6: Apply study type filter
     let filtered = fused;
