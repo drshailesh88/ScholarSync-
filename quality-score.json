@@ -1,19 +1,15 @@
 {
-  "timestamp": "2026-03-28T19:24:01.950Z",
-  "composite": 99.71,
+  "timestamp": "2026-03-29T03:59:27.598Z",
+  "composite": 99.35,
   "temperature": "FROZEN",
-  "currentPhase": 5,
+  "currentPhase": 2,
   "phaseAverages": {
-    "1": 99,
-    "2": 100,
-    "3": 100,
-    "4": 100,
-    "5": 100
+    "1": 99
   },
   "weakest": {
-    "dimension": "errorMessages",
-    "label": "Error Message Quality",
-    "score": 98.19
+    "dimension": "apiHardening",
+    "label": "API Route Hardening",
+    "score": 98.73
   },
   "dimensions": {
     "typescriptStrict": {
@@ -22,7 +18,7 @@
         "errors": 0,
         "anyCount": 48,
         "strictEnabled": true,
-        "totalLines": 523055
+        "totalLines": 523095
       },
       "weight": 0.08,
       "phase": 1,
@@ -61,174 +57,6 @@
       "weight": 0.07,
       "phase": 1,
       "label": "API Route Hardening"
-    },
-    "specPassRate": {
-      "score": 100,
-      "details": {
-        "totalSpecs": 376,
-        "passingSpecs": 376
-      },
-      "weight": 0.12,
-      "phase": 2,
-      "label": "Spec Pass Rate"
-    },
-    "checkpointPassRate": {
-      "score": 99.59,
-      "details": {
-        "totalCheckpoints": 12804,
-        "passingCheckpoints": 12752
-      },
-      "weight": 0.1,
-      "phase": 2,
-      "label": "Checkpoint Pass Rate"
-    },
-    "moduleCoverage": {
-      "score": 100,
-      "details": {
-        "totalModules": 20,
-        "coveredModules": 20,
-        "modules": [
-          "dashboard",
-          "onboarding",
-          "settings",
-          "projects",
-          "library",
-          "studio",
-          "editor",
-          "research",
-          "latex",
-          "notebook",
-          "compliance",
-          "analysis",
-          "deep-research",
-          "feeds",
-          "slides",
-          "slides-ai",
-          "poster",
-          "presentation",
-          "illustrate",
-          "systematic-review"
-        ]
-      },
-      "weight": 0.08,
-      "phase": 2,
-      "label": "Module Coverage"
-    },
-    "assertionModuleCoverage": {
-      "score": 100,
-      "details": {
-        "totalModules": 20,
-        "assertionFiles": 20,
-        "coveredAssertionFiles": 20
-      },
-      "weight": 0.05,
-      "phase": 2,
-      "label": "Assertion Module Coverage"
-    },
-    "unitPassRate": {
-      "score": 99.8,
-      "details": {
-        "passed": 6114,
-        "failed": 10,
-        "total": 6126
-      },
-      "weight": 0.05,
-      "phase": 2,
-      "label": "Unit Pass Rate"
-    },
-    "networkResilience": {
-      "score": 100,
-      "details": {
-        "retryLogic": 76,
-        "timeoutHandling": 529,
-        "offlineHandling": 5,
-        "errorStates": 94,
-        "resilienceTests": 1
-      },
-      "weight": 0.05,
-      "phase": 3,
-      "label": "Network Resilience"
-    },
-    "emptyStates": {
-      "score": 100,
-      "details": {
-        "emptyStateComponents": 301,
-        "dataDisplayPages": 301,
-        "pagesWithEmptyState": 301
-      },
-      "weight": 0.03,
-      "phase": 3,
-      "label": "Empty/Boundary States"
-    },
-    "errorMessages": {
-      "score": 98.19,
-      "details": {
-        "genericErrors": 10,
-        "specificErrors": 321,
-        "recoverableErrors": 220
-      },
-      "weight": 0.03,
-      "phase": 3,
-      "label": "Error Message Quality"
-    },
-    "stateConsistency": {
-      "score": 100,
-      "details": {
-        "urlState": 57,
-        "loadingStates": 562,
-        "optimisticUpdates": 1
-      },
-      "weight": 0.04,
-      "phase": 3,
-      "label": "State Consistency"
-    },
-    "authSecurity": {
-      "score": 100,
-      "details": {
-        "protectedRoutes": 12,
-        "withMiddleware": true,
-        "withCsrf": true,
-        "properCookies": false
-      },
-      "weight": 0.06,
-      "phase": 4,
-      "label": "Auth Security"
-    },
-    "inputValidation": {
-      "score": 99.56,
-      "details": {
-        "zodUsage": 1739,
-        "manualValidation": 300,
-        "rawBodyUsage": 9
-      },
-      "weight": 0.05,
-      "phase": 4,
-      "label": "Input Validation"
-    },
-    "depSecurity": {
-      "score": 100,
-      "details": {
-        "critical": 0,
-        "high": 0,
-        "moderate": 0,
-        "low": 0
-      },
-      "weight": 0.04,
-      "phase": 4,
-      "label": "Dependency Security"
-    },
-    "accessibility": {
-      "score": 100,
-      "details": {
-        "missingAlt": 0,
-        "missingLabels": 0,
-        "ariaUsage": 858,
-        "jsxA11yPlugin": true,
-        "axeTests": 2
-      },
-      "weight": 0.05,
-      "phase": 5,
-      "label": "Accessibility"
     }
   }
 }
