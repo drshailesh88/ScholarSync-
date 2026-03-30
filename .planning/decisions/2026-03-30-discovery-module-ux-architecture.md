@@ -126,3 +126,32 @@ ScholarSync has a strong academic search pipeline (PubMed + Semantic Scholar + O
 - Stanford STORM — multi-perspective research synthesis
 
 **Claude Scientific Skills repo analysis (K-Dense-AI/claude-scientific-skills):** Cannot use directly (Python CLI scripts for Claude Code, not Vercel AI SDK tools). Three integration paths: (1) Port Python logic to TypeScript tools (recommended), (2) Use MCP servers directly (for BGPT), (3) Use SKILL.md files as agent system prompts (free value). Priority: enhance system prompt with discipline-aware instructions → port arXiv source → port bioRxiv → add BGPT MCP → add scientific-critical-thinking evaluation.
+
+---
+
+## Addendum: The "Why" Behind Explore (Founder Thought Dump, 2026-03-30)
+
+### The Core Thesis
+
+Everyone is producing AI-generated content. Nobody is writing for humans anymore. People are prompting AI and publishing the output without any real sources, real data, or real reporting behind it. ScholarSync's Explore module exists for the people who refuse to do that.
+
+### Who This Serves
+
+Not just academics. Writers of all kinds who want their work backed by substance:
+- A blogger writing a well-researched article
+- A journalist publishing a newspaper piece
+- A social media creator who wants their post backed by real evidence
+- A finance writer who needs real data, not AI-generated analysis
+- Anyone who wants to write pieces that actually matter
+
+### What "Explore" Actually Is
+
+It's NOT "web search because Perplexity has it." It's a quality source discovery layer for evidence-based writing. The output isn't an answer — it's curated raw material: a newspaper article from FT, a government report from WHO, a Reddit thread with practitioner experience, an academic paper with hard data.
+
+### The Anti-SEO Positioning
+
+The whole point is surfacing "what matters" not "what ranks on Google." If the Explore module shows the same SEO-gamed results Google shows, we've failed. Source quality indicators aren't a nice-to-have — they're the entire product thesis. Every result must tell the user WHY it's trustworthy (government source, peer-reviewed, major journalism, primary data).
+
+### The Workflow
+
+User finds quality sources in Explore → saves them to a project → switches to the editor → writes their piece backed by real evidence → cites properly. One platform, one workflow. The sources ARE the product. The writing tools amplify them.
