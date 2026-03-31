@@ -167,7 +167,9 @@ async function fetchNonAcademicResults(
     category,
     limit,
   });
-  let rankedResults = applyDomainPreferences(response.results, preferences);
+  // Rerank web results with Cohere (same quality treatment as academic results)
+  let rerankedResults = await rerankResults(query, response.results);
+  let rankedResults = applyDomainPreferences(rerankedResults, preferences);
 
   while (!response.degraded) {
     const fetchCeiling = Math.min(response.total, MAX_NON_ACADEMIC_RESULTS);
@@ -192,7 +194,8 @@ async function fetchNonAcademicResults(
       category,
       limit,
     });
-    rankedResults = applyDomainPreferences(response.results, preferences);
+    rerankedResults = await rerankResults(query, response.results);
+    rankedResults = applyDomainPreferences(rerankedResults, preferences);
   }
 
   const start = page * perPage;

@@ -17,7 +17,7 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 ### Trust & Quality
 - [x] Trust Tier classifier assigns Government/Major Journalism/Community/Other to every web result
 - [x] Trust Indicator (3px colored left border) visible on every result card
-- [ ] Cohere rerank applied to web results (same as academic results)
+- [x] Cohere rerank applied to web results (same as academic results)
 - [x] Domain preferences (Mute/Lower/Neutral/Higher/Prefer) filter and boost results
 - [ ] Source Info panel shows domain details and preference controls on shield icon click
 
