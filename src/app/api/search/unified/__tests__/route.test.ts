@@ -222,6 +222,40 @@ describe("GET /api/search/unified", () => {
     expect(body.searxngUnavailable).toBe(false);
   });
 
+  it("requests enough SearXNG results to paginate page 2 and slices in the route", async () => {
+    mockSearchSearXNG.mockResolvedValueOnce({
+      results: Array.from({ length: 40 }, (_, index) => ({
+        title: `Result ${index + 1}`,
+        authors: [],
+        journal: "Example",
+        year: 2025,
+        abstract: `Snippet ${index + 1}`,
+        citationCount: 0,
+        publicationTypes: ["web"],
+        isOpenAccess: false,
+        sources: ["web"],
+      })),
+      total: 57,
+      degraded: false,
+    });
+
+    const res = await GET(
+      makeRequest({ q: "climate change", tab: "web", page: "1", perPage: "20" })
+    );
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(mockSearchSearXNG).toHaveBeenCalledWith("climate change", {
+      category: "general",
+      limit: 40,
+    });
+    expect(body.results).toHaveLength(20);
+    expect(body.results[0].title).toBe("Result 21");
+    expect(body.total).toBe(57);
+    expect(body.hasMore).toBe(true);
+    expect(body.sourceCounts).toEqual({ web: 57 });
+  });
+
   it("routes the discussions tab through SearXNG social-media search", async () => {
     const res = await GET(
       makeRequest({ q: "climate change", tab: "discussions" })

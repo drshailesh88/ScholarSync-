@@ -140,11 +140,12 @@ export async function searchSearXNG(
     const results = options.limit
       ? normalizedResults.slice(0, options.limit)
       : normalizedResults;
+    const total = data.number_of_results ?? normalizedResults.length;
 
     breaker.onSuccess();
     return {
       results,
-      total: results.length,
+      total,
       degraded: false,
     };
   } catch (error) {

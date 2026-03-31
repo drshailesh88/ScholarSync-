@@ -134,6 +134,36 @@ describe("searchSearXNG", () => {
     expect(response.total).toBe(0);
   });
 
+  it("returns degraded when SEARXNG_URL is missing", async () => {
+    delete process.env.SEARXNG_URL;
+
+    const response = await searchSearXNG("climate change", {
+      category: "general",
+    });
+
+    expect(response).toEqual({
+      results: [],
+      total: 0,
+      degraded: true,
+    });
+    expect(mockResilientFetch).not.toHaveBeenCalled();
+  });
+
+  it("returns degraded when the circuit breaker is open", async () => {
+    mockBreaker.canRequest.mockReturnValue(false);
+
+    const response = await searchSearXNG("climate change", {
+      category: "general",
+    });
+
+    expect(response).toEqual({
+      results: [],
+      total: 0,
+      degraded: true,
+    });
+    expect(mockResilientFetch).not.toHaveBeenCalled();
+  });
+
   it("maps categories correctly", async () => {
     mockJsonResponse({
       number_of_results: 1,
@@ -163,5 +193,25 @@ describe("searchSearXNG", () => {
     expect(mockResilientFetch.mock.calls[2]?.[0]).toContain(
       "categories=social+media"
     );
+  });
+
+  it("preserves the upstream total after limiting the returned result set", async () => {
+    mockJsonResponse({
+      number_of_results: 57,
+      results: Array.from({ length: 50 }, (_, index) => ({
+        url: `https://example.com/${index}`,
+        title: `Result ${index}`,
+        content: `Snippet ${index}`,
+        category: "general",
+      })),
+    });
+
+    const response = await searchSearXNG("climate change", {
+      category: "general",
+      limit: 40,
+    });
+
+    expect(response.results).toHaveLength(40);
+    expect(response.total).toBe(57);
   });
 });

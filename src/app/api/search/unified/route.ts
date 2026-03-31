@@ -135,9 +135,10 @@ export async function GET(req: Request) {
   try {
     if (tabParam !== "academic") {
       const category = SEARXNG_CATEGORY_BY_TAB[tabParam];
+      const neededResults = Math.min((page + 1) * perPage, 100);
       const { results, total, degraded } = await searchSearXNG(q, {
         category,
-        limit: perPage,
+        limit: neededResults,
       });
       const start = page * perPage;
       const paged = results.slice(start, start + perPage);
