@@ -59,10 +59,19 @@ function getDomainLabel(url: string): string {
   }
 }
 
-function parseSourceLabel(result: SearXNGResult): string {
+function parseSourceLabel(
+  result: SearXNGResult,
+  source: SearXNGSource
+): string {
   const metadata = collapseWhitespace(result.metadata ?? "");
+  const parts = parseMetadataParts(result);
+
+  if (source === "discussions") {
+    const platform = parts.find((part) => !looksLikeRelativeTime(part));
+    if (platform) return platform;
+  }
+
   if (metadata.includes("|")) {
-    const parts = metadata.split("|").map((part) => collapseWhitespace(part));
     const lastPart = parts[parts.length - 1];
     if (lastPart) return lastPart;
   }
@@ -127,12 +136,12 @@ function mapResult(
   return {
     title,
     authors: [],
-    journal: parseSourceLabel(result),
+    journal: parseSourceLabel(result, mappedSource),
     url: result.url,
     domain: getDomainLabel(result.url),
     year: parseYear(result),
     publishedAt,
-    sourceLabel: parseSourceLabel(result),
+    sourceLabel: parseSourceLabel(result, mappedSource),
     platform: discussionMetadata.platform,
     community: discussionMetadata.community,
     engagement: discussionMetadata.engagement,

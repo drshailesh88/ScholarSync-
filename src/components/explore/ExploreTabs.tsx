@@ -23,13 +23,13 @@ export function ExploreTabs({ activeTab, onTabChange }: ExploreTabsProps) {
       aria-label="Explore tabs"
       className="overflow-x-auto"
     >
-      <div className="flex min-w-max items-center gap-4">
+      <div className="flex min-w-max items-center gap-4" role="tablist">
         {(Object.keys(TAB_LABELS) as ExploreTab[]).map((tab) => {
           const isActive = tab === activeTab;
 
           return (
             <button
-              aria-current={isActive ? "page" : undefined}
+              aria-selected={isActive}
               className={cn(
                 "border-b-2 px-0 py-2 text-[14px] leading-none transition-colors",
                 isActive
@@ -38,6 +38,7 @@ export function ExploreTabs({ activeTab, onTabChange }: ExploreTabsProps) {
               )}
               key={tab}
               onClick={() => onTabChange(tab)}
+              role="tab"
               type="button"
             >
               {TAB_LABELS[tab]}

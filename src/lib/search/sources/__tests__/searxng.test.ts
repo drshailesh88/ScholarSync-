@@ -243,7 +243,7 @@ describe("searchSearXNG", () => {
     });
 
     expect(response.results[0]).toMatchObject({
-      sourceLabel: "234 comments",
+      sourceLabel: "Reddit",
       platform: "Reddit",
       community: "r/science",
       engagement: "▲ 847 · 234 comments",

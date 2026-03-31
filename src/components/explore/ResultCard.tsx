@@ -1,24 +1,24 @@
 "use client";
 
-import { DotsThree, Plus } from "@phosphor-icons/react";
+import { DotsThreeVertical, Plus } from "@phosphor-icons/react";
 import type { UnifiedSearchResult } from "@/types/search";
 import type { ExploreTab } from "./ExploreTabs";
 
 type SupportedTab = Exclude<ExploreTab, "more">;
 
 const TRUST_BORDER_COLORS = {
-  government: "#16A34A",
-  major_journalism: "#2563EB",
-  community: "#D97706",
-  other: "rgba(55,53,47,0.2)",
+  government: "var(--trust-government)",
+  major_journalism: "var(--trust-journalism)",
+  community: "var(--trust-community)",
+  other: "var(--trust-other)",
 } as const;
 
 const EVIDENCE_BORDER_COLORS = {
-  I: "#16A34A",
-  II: "#2563EB",
-  III: "#D97706",
+  I: "var(--trust-government)",
+  II: "var(--trust-journalism)",
+  III: "var(--trust-community)",
   IV: "#EA580C",
-  V: "rgba(55,53,47,0.2)",
+  V: "var(--trust-other)",
 } as const;
 
 function buildResultHref(result: UnifiedSearchResult): string | null {
@@ -187,7 +187,7 @@ export function ResultCard({
             className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-black/[0.04] hover:text-ink"
             type="button"
           >
-            <DotsThree size={18} weight="bold" />
+            <DotsThreeVertical size={18} weight="bold" />
           </button>
         </div>
       </div>
@@ -202,7 +202,7 @@ export function ResultCard({
             {metadata}
           </p>
           {date ? (
-            <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-ink-muted">
+            <p className="text-[10px] font-medium text-ink-muted">
               {date}
             </p>
           ) : null}

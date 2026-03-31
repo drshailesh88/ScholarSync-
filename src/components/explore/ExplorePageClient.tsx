@@ -234,6 +234,7 @@ export function ExplorePageClient() {
     <div className="mx-auto w-full max-w-[1200px] px-4 py-8 md:py-10">
       <div className="mx-auto flex w-full max-w-[780px] flex-col gap-5">
         <ExploreSearchBar
+          className="max-w-[560px]"
           isLoading={isSearching}
           onChange={setQueryInput}
           onSubmit={() => {
