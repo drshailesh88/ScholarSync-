@@ -653,6 +653,55 @@ What we DON'T borrow from Readwise:
 
 ---
 
+---
+
+## CORRECTIONS FROM LIVE CHROME TEARDOWN (2026-03-31)
+
+Cross-referenced with firsthand Kagi screenshots captured via `claude --chrome`.
+
+### New details discovered:
+
+1. **Heart/Save icon per result** — Kagi shows a heart (♡) icon on EVERY result card, alongside the "..." menu. Not hover-only — always visible. **Adaptation:** Use a bookmark icon (🔖) always visible on each result for quick-save. This is our "Save to Library" primary action.
+
+2. **Date in rounded pill badge** — Dates appear as small grey rounded pills (e.g., "Mar 24, 2026"), not inline text. More scannable than plain text dates. **Adaptation:** Use same pill treatment for dates on result cards.
+
+3. **Stats line with timing** — "18 relevant results in 1.22s. All results from external indexes." + "71% unique Kagi results". **Adaptation:** Show "23 results in 0.8s — via PubMed, SearXNG, OpenAlex" to communicate multi-source quality.
+
+4. **Grouped/indented results** — Same-domain results appear indented under primary result, without repeating favicon/domain. Toggleable in settings. **Adaptation:** Group papers from same journal; group news from same outlet. Toggleable.
+
+5. **Lens active indicator** — Green toggle circle appears inside the Scope pill when a lens/scope is active. Green checkmark next to active lens in dropdown. **Adaptation:** Use `--brand` purple indicator when a custom Scope is active.
+
+6. **Control Center** — Hamburger menu opens slide-in panel from right edge. Contains: Settings, Support, Theme toggle (Default/Light/Dark segmented), Safe Search toggle, Session info, Status (green dot + "All Services Operational"), Sign Out. **Adaptation:** Our existing sidebar handles most of this; consider a light "quick settings" slide-in for Explore-specific toggles.
+
+7. **Lens management page** — "Active Lenses (8/20)" counter with max limit. Drag handles (6-dot grip) for reorder. Purple on/off toggles. Pencil edit icon. "Create New" button top-right. **Adaptation:** Scope management at `/settings/scopes` with identical pattern.
+
+8. **Academic lens metadata** — When Academic lens is active, results show: "by [Author] · [Year] · Cited by [N]" inline. **Adaptation:** Our Academic tab already does this — confirmed correct approach.
+
+9. **Quick Answer "Show More"** — After the AI summary, there's a "Show More" expandable chevron for extended content. **Adaptation:** Our synthesis block should have the same collapse/expand behavior.
+
+10. **Share icon** — Arrow icon in the tab bar for sharing search results via link. **Adaptation:** Add "Share this search" to our "..." overflow or as a subtle icon.
+
+### Updated Result Card Anatomy (post-Chrome teardown):
+
+```
+[●] Title of the Result (purple/link color)              [♡] [···]
+    [🌐] domain.com > breadcrumb > path
+    [Mar 2026] Snippet text showing relevant excerpt with
+    search terms in bold weight...
+```
+
+Elements left-to-right, top-to-bottom:
+- Trust dot (●) — colored by source quality tier
+- Title — clickable link, 17px, weight 500
+- Save icon (♡/🔖) — always visible, right side
+- "..." menu — always visible, right side
+- Favicon (🌐) — 16px, inline with URL
+- URL breadcrumb — 13px, --brand color
+- Date pill — grey rounded badge, right-aligned on snippet line
+- Snippet — 14px, --ink-muted, 2-3 lines, bold search terms
+
+---
+
 ## NEXT STEPS
 
 1. Build Figma wireframes from this spec (use `figma-generate-design` skill)
