@@ -11,11 +11,11 @@ Each phase is a vertical tracer bullet — cuts through all layers (schema → A
 **Why first:** Proves the entire new infrastructure works. If SearXNG deployment fails, everything else is blocked.
 
 - [x] Deploy SearXNG to GCP using `infra/searxng/deploy.sh`
-- [ ] Create `src/lib/search/sources/searxng.ts` — source adapter that calls SearXNG JSON API
-- [ ] Normalize SearXNG results to `UnifiedSearchResult` format
-- [ ] Add SEARXNG_URL to environment variables
-- [ ] Add SearXNG to unified search route (behind a `tab` query parameter)
-- [ ] Write tests: SearXNG adapter returns normalized results, handles timeout, handles empty results, handles SearXNG down
+- [x] Create `src/lib/search/sources/searxng.ts` — source adapter that calls SearXNG JSON API
+- [x] Normalize SearXNG results to `UnifiedSearchResult` format
+- [x] Add SEARXNG_URL to environment variables
+- [x] Add SearXNG to unified search route (behind a `tab` query parameter)
+- [x] Write tests: SearXNG adapter returns normalized results, handles timeout, handles empty results, handles SearXNG down
 - [ ] Verify: `curl /api/search/unified?q=climate+change&tab=web` returns SearXNG results
 
 Risk: **MEDIUM** — GCP deployment is new territory, but deploy.sh automates it. SearXNG is well-documented.

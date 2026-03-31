@@ -29,6 +29,6 @@ Phase 1: SearXNG Deployment + Source Adapter — Status: IN PROGRESS
 - Phase 5: Implementation → STARTING NOW
 
 ## Quick Reference
-- Next action: Continue Phase 1 by building the SearXNG source adapter
+- Next action: Verify the live unified route against the SearXNG adapter, then continue Phase 1 only if app-level curl passes
 - SearXNG deployed: `http://34.14.206.241:8080` in GCP project `metal-node-486118-t7`, zone `asia-south1-b`
-- To continue: build `src/lib/search/sources/searxng.ts`, add `SEARXNG_URL`, then wire `tab=web|news|discussions` into `/api/search/unified`
+- Remaining Phase 1 check: `curl /api/search/unified?q=climate+change&tab=web` should return SearXNG-backed results

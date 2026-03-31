@@ -71,6 +71,7 @@ export interface SearchResponse {
   perPage: number;
   hasMore: boolean;
   sourceCounts: Record<string, number>;
+  searxngUnavailable?: boolean;
   augmentedQueries?: {
     pubmed: string;
     semanticScholar: string;

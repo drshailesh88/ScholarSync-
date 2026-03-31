@@ -7,12 +7,12 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 
 ### Search Infrastructure
 - [x] SearXNG deployed on GCP and returning JSON results for web, news, and social media queries
-- [ ] SearXNG source adapter normalizes results into the existing UnifiedSearchResult format
-- [ ] Unified search route fans out to SearXNG alongside existing academic sources
-- [ ] Web/News/Discussions tabs search via SearXNG categories (general, news, social media)
+- [x] SearXNG source adapter normalizes results into the existing UnifiedSearchResult format
+- [x] Unified search route fans out to SearXNG alongside existing academic sources
+- [x] Web/News/Discussions tabs search via SearXNG categories (general, news, social media)
 - [ ] Academic tab continues using existing 5-source pipeline (PubMed, S2, OpenAlex, arXiv, ClinicalTrials) — zero regression
 - [ ] Results appear in under 2 seconds
-- [ ] Graceful degradation: if SearXNG is down, Academic tab works normally; other tabs show "temporarily unavailable"
+- [x] Graceful degradation: if SearXNG is down, Academic tab works normally; other tabs show "temporarily unavailable"
 
 ### Trust & Quality
 - [ ] Trust Tier classifier assigns Government/Major Journalism/Community/Other to every web result
