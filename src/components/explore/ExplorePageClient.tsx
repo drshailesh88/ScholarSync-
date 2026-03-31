@@ -14,6 +14,8 @@ import {
   type ExploreFilters,
 } from "./FilterPills";
 import { getUserScopes, type ScopeRecord } from "@/lib/actions/scopes";
+import { saveWebSource, getSavedUrls } from "@/lib/actions/web-sources";
+import { SaveToast } from "./SaveToast";
 
 type SearchableExploreTab = Exclude<ExploreTab, "more">;
 
@@ -163,6 +165,8 @@ export function ExplorePageClient() {
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<ExploreFilters>(DEFAULT_FILTERS);
   const [userScopes, setUserScopes] = useState<ScopeRecord[]>([]);
+  const [savedUrls, setSavedUrls] = useState<Set<string>>(new Set());
+  const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
 
   // Load user scopes on mount
   useEffect(() => {
@@ -244,6 +248,17 @@ export function ExplorePageClient() {
       setError("Explore search failed. Try again.");
     }
     setIsSearching(false);
+
+    // Fetch which URLs are already saved for badge display
+    const allUrls = Object.values(nextTabState)
+      .flatMap((s) => Object.values(s.pages).flat())
+      .map((r) => r.url)
+      .filter((u): u is string => !!u);
+    if (allUrls.length > 0) {
+      getSavedUrls(allUrls)
+        .then((saved) => setSavedUrls(new Set(saved)))
+        .catch(() => {});
+    }
   }, [queryInput, filters]);
 
   const ensurePageLoaded = useCallback(async (tab: SearchableExploreTab, page: number) => {
@@ -339,6 +354,32 @@ export function ExplorePageClient() {
     [searchQuery]
   );
 
+  const handleSaveResult = useCallback(
+    async (result: UnifiedSearchResult) => {
+      if (!activeSearchTab) return;
+      try {
+        const { alreadySaved } = await saveWebSource({
+          result,
+          tab: activeSearchTab,
+          searchQuery: searchQuery || undefined,
+        });
+
+        if (alreadySaved) {
+          setToast({ message: "Already in your Library", type: "info" });
+        } else {
+          setToast({ message: "Saved to Library", type: "success" });
+          if (result.url) {
+            setSavedUrls((prev) => new Set(prev).add(result.url!));
+          }
+        }
+      } catch {
+        setToast({ message: "Failed to save", type: "error" });
+        throw new Error("Save failed");
+      }
+    },
+    [activeSearchTab, searchQuery]
+  );
+
   const showLanding = !hasSearched && !searchQuery;
 
   if (showLanding) {
@@ -424,6 +465,8 @@ export function ExplorePageClient() {
             {activeResults.map((result, index) => (
               <ResultCard
                 key={`${activeTab}-${activePage}-${result.url ?? result.doi ?? result.pmid ?? result.title}-${index}`}
+                isSaved={!!result.url && savedUrls.has(result.url)}
+                onSave={handleSaveResult}
                 result={result}
                 tab={activeTab}
               />
@@ -478,6 +521,14 @@ export function ExplorePageClient() {
           </nav>
         ) : null}
       </div>
+
+      {toast && (
+        <SaveToast
+          message={toast.message}
+          onDismiss={() => setToast(null)}
+          type={toast.type}
+        />
+      )}
     </div>
   );
 }

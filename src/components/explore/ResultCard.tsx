@@ -1,6 +1,7 @@
 "use client";
 
-import { DotsThreeVertical, Plus } from "@phosphor-icons/react";
+import { useState } from "react";
+import { Check, DotsThreeVertical, Plus, CircleNotch } from "@phosphor-icons/react";
 import type { UnifiedSearchResult } from "@/types/search";
 import type { ExploreTab } from "./ExploreTabs";
 
@@ -143,15 +144,35 @@ function getBorderColor(result: UnifiedSearchResult, tab: SupportedTab): string 
 export function ResultCard({
   result,
   tab,
+  isSaved = false,
+  onSave,
 }: {
   result: UnifiedSearchResult;
   tab: SupportedTab;
+  isSaved?: boolean;
+  onSave?: (result: UnifiedSearchResult) => Promise<void>;
 }) {
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(isSaved);
+
   const href = buildResultHref(result);
   const metadata = buildMetadata(result, tab);
   const date = formatDateLabel(result);
   const breadcrumb = formatBreadcrumb(result, tab);
   const snippet = result.abstract || result.tldr || "";
+
+  const handleSave = async () => {
+    if (saved || saving || !onSave) return;
+    setSaving(true);
+    try {
+      await onSave(result);
+      setSaved(true);
+    } catch {
+      // Error is handled by the parent
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <article
@@ -176,11 +197,23 @@ export function ResultCard({
 
         <div className="flex shrink-0 items-center gap-1">
           <button
-            aria-label="Save result"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-black/[0.04] hover:text-brand"
+            aria-label={saved ? "Saved to Library" : "Save result"}
+            className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+              saved
+                ? "text-brand"
+                : "text-ink-muted hover:bg-black/[0.04] hover:text-brand"
+            }`}
+            disabled={saving || saved}
+            onClick={handleSave}
             type="button"
           >
-            <Plus size={16} weight="bold" />
+            {saving ? (
+              <CircleNotch className="animate-spin" size={16} weight="bold" />
+            ) : saved ? (
+              <Check size={16} weight="bold" />
+            ) : (
+              <Plus size={16} weight="bold" />
+            )}
           </button>
           <button
             aria-label="More actions"
