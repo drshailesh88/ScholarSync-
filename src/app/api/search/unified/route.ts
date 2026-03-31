@@ -203,7 +203,7 @@ export async function GET(req: Request) {
 
   try {
     if (tabParam !== "academic") {
-      const userDomainPreferences = await getDomainPreferences(userId);
+      const userDomainPreferences = await getDomainPreferences();
       const hasDomainPreferences = userDomainPreferences.length > 0;
       const category = SEARXNG_CATEGORY_BY_TAB[tabParam];
       const neededResults = hasDomainPreferences
@@ -216,7 +216,7 @@ export async function GET(req: Request) {
       const rankedResults = applyDomainPreferences(results, userDomainPreferences);
       const start = page * perPage;
       const paged = rankedResults.slice(start, start + perPage);
-      const visibleTotal = hasDomainPreferences ? rankedResults.length : total;
+      const visibleTotal = total;
 
       return NextResponse.json({
         results: paged,

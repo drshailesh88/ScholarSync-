@@ -363,7 +363,8 @@ describe("GET /api/search/unified", () => {
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(body.total).toBe(1);
+    expect(body.total).toBe(2);
+    expect(body.hasMore).toBe(false);
     expect(body.results).toHaveLength(1);
     expect(body.results[0].domain).toBe("reuters.com");
   });

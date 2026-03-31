@@ -1,7 +1,8 @@
 "use server";
 
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 
+import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { domainPreferences } from "@/lib/db/schema";
 import { normalizeDomain } from "@/lib/search/domain-utils";
@@ -25,12 +26,33 @@ function normalizePreferenceDomain(domain: string): string {
 }
 
 export async function setDomainPreference(
-  userId: string,
   domain: string,
   level: DomainPreferenceLevel
 ): Promise<DomainPreferenceRecord> {
+  const userId = await getCurrentUserId();
   const normalizedDomain = normalizePreferenceDomain(domain);
   const now = new Date();
+  const [existingPreference] = await db
+    .select({ id: domainPreferences.id })
+    .from(domainPreferences)
+    .where(
+      and(
+        eq(domainPreferences.user_id, userId),
+        eq(domainPreferences.domain, normalizedDomain)
+      )
+    );
+
+  if (!existingPreference) {
+    const [countRow] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(domainPreferences)
+      .where(eq(domainPreferences.user_id, userId));
+
+    const count = Number(countRow?.count ?? 0);
+    if (count >= 1000) {
+      throw new Error("Domain preference limit reached");
+    }
+  }
 
   const [record] = await db
     .insert(domainPreferences)
@@ -58,8 +80,9 @@ export async function setDomainPreference(
 }
 
 export async function getDomainPreferences(
-  userId: string
 ): Promise<DomainPreferenceRecord[]> {
+  const userId = await getCurrentUserId();
+
   return db
     .select({
       domain: domainPreferences.domain,
@@ -73,9 +96,9 @@ export async function getDomainPreferences(
 }
 
 export async function removeDomainPreference(
-  userId: string,
   domain: string
 ): Promise<{ success: true; domain: string }> {
+  const userId = await getCurrentUserId();
   const normalizedDomain = normalizePreferenceDomain(domain);
 
   await db

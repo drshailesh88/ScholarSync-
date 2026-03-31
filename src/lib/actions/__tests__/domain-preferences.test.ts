@@ -37,6 +37,12 @@ vi.mock("@/lib/db", () => ({
   db: mockDb,
 }));
 
+const mockGetCurrentUserId = vi.hoisted(() => vi.fn());
+
+vi.mock("@/lib/auth", () => ({
+  getCurrentUserId: mockGetCurrentUserId,
+}));
+
 import {
   getDomainPreferences,
   removeDomainPreference,
@@ -46,9 +52,13 @@ import {
 describe("domain preference actions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockGetCurrentUserId.mockResolvedValue("user_123");
   });
 
   it("upserts a normalized domain preference", async () => {
+    mockDb.select
+      .mockReturnValueOnce(createQueryBuilder([]))
+      .mockReturnValueOnce(createQueryBuilder([{ count: 5 }]));
     const insertBuilder = createQueryBuilder([
       {
         domain: "bbc.co.uk",
@@ -60,7 +70,6 @@ describe("domain preference actions", () => {
     mockDb.insert.mockReturnValue(insertBuilder);
 
     const result = await setDomainPreference(
-      "user_123",
       "https://news.bbc.co.uk/world",
       "prefer"
     );
@@ -76,6 +85,36 @@ describe("domain preference actions", () => {
     expect(result).toMatchObject({
       domain: "bbc.co.uk",
       level: "prefer",
+    });
+  });
+
+  it("rejects inserts after 1000 saved domain preferences", async () => {
+    mockDb.select
+      .mockReturnValueOnce(createQueryBuilder([]))
+      .mockReturnValueOnce(createQueryBuilder([{ count: 1000 }]));
+
+    await expect(
+      setDomainPreference("https://news.bbc.co.uk/world", "prefer")
+    ).rejects.toThrow(/limit/i);
+  });
+
+  it("allows updating an existing preference even at the limit", async () => {
+    mockDb.select.mockReturnValueOnce(createQueryBuilder([{ id: 1 }]));
+    const insertBuilder = createQueryBuilder([
+      {
+        domain: "bbc.co.uk",
+        level: "higher",
+        createdAt: new Date("2026-03-31T00:00:00Z"),
+        updatedAt: new Date("2026-03-31T00:00:00Z"),
+      },
+    ]);
+    mockDb.insert.mockReturnValue(insertBuilder);
+
+    const result = await setDomainPreference("https://news.bbc.co.uk/world", "higher");
+
+    expect(result).toMatchObject({
+      domain: "bbc.co.uk",
+      level: "higher",
     });
   });
 
@@ -96,7 +135,7 @@ describe("domain preference actions", () => {
     ]);
     mockDb.select.mockReturnValue(selectBuilder);
 
-    const result = await getDomainPreferences("user_123");
+    const result = await getDomainPreferences();
 
     expect(selectBuilder.where).toHaveBeenCalled();
     expect(selectBuilder.orderBy).toHaveBeenCalled();
@@ -110,10 +149,7 @@ describe("domain preference actions", () => {
     const deleteBuilder = createQueryBuilder([]);
     mockDb.delete.mockReturnValue(deleteBuilder);
 
-    const result = await removeDomainPreference(
-      "user_123",
-      "https://www.reddit.com/r/science"
-    );
+    const result = await removeDomainPreference("https://www.reddit.com/r/science");
 
     expect(deleteBuilder.where).toHaveBeenCalled();
     expect(result).toEqual({
@@ -124,7 +160,7 @@ describe("domain preference actions", () => {
 
   it("rejects invalid domain input", async () => {
     await expect(
-      setDomainPreference("user_123", "definitely not a domain", "higher")
+      setDomainPreference("definitely not a domain", "higher")
     ).rejects.toThrow(/domain/i);
   });
 });
