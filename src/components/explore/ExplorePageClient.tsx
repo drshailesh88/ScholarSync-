@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, CircleNotch } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, CircleNotch, Sparkle } from "@phosphor-icons/react";
 import type { SearchResponse, UnifiedSearchResult } from "@/types/search";
 import { cn } from "@/lib/utils";
 import { ExploreSearchBar } from "./ExploreSearchBar";
 import { ExploreTabs, type ExploreTab } from "./ExploreTabs";
 import { ResultCard } from "./ResultCard";
+import { SynthesisBlock } from "./SynthesisBlock";
 import {
   FilterPills,
   DEFAULT_FILTERS,
@@ -167,6 +168,7 @@ export function ExplorePageClient() {
   const [userScopes, setUserScopes] = useState<ScopeRecord[]>([]);
   const [savedUrls, setSavedUrls] = useState<Set<string>>(new Set());
   const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
+  const [synthesisOpen, setSynthesisOpen] = useState(false);
 
   // Load user scopes on mount
   useEffect(() => {
@@ -186,6 +188,29 @@ export function ExplorePageClient() {
   const totalPages = activeState
     ? Math.max(1, Math.ceil(activeState.total / RESULTS_PER_PAGE))
     : 1;
+
+  // Q keyboard shortcut to toggle synthesis
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = document.activeElement;
+      if (
+        el &&
+        (el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.tagName === "SELECT" ||
+          (el as HTMLElement).isContentEditable)
+      )
+        return;
+
+      if ((e.key === "q" || e.key === "Q") && hasSearched && activeResults.length > 0) {
+        e.preventDefault();
+        setSynthesisOpen((prev) => !prev);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [hasSearched, activeResults.length]);
 
   const statsLine = useMemo(() => {
     if (!activeState || searchDurationMs === null || activeTab === "more") {
@@ -458,6 +483,30 @@ export function ExplorePageClient() {
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-5 text-[14px] text-ink-muted">
             No {activeTab} results for &quot;{searchQuery}&quot;.
           </div>
+        ) : null}
+
+        {/* Synthesize button + Synthesis block */}
+        {!isSearching && activeTab !== "more" && activeResults.length > 0 && !synthesisOpen ? (
+          <button
+            className="inline-flex items-center gap-2 self-start rounded-full border border-brand/20 bg-brand/5 px-3 py-1.5 text-[13px] font-medium text-brand hover:bg-brand/10 transition-colors"
+            data-testid="synthesize-button"
+            onClick={() => setSynthesisOpen(true)}
+            type="button"
+          >
+            <Sparkle size={14} weight="fill" />
+            Synthesize
+            <kbd className="ml-1 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-mono text-brand/70">Q</kbd>
+          </button>
+        ) : null}
+
+        {activeSearchTab && activeResults.length > 0 ? (
+          <SynthesisBlock
+            isOpen={synthesisOpen}
+            onClose={() => setSynthesisOpen(false)}
+            query={searchQuery}
+            results={activeResults}
+            tab={activeSearchTab}
+          />
         ) : null}
 
         {!isSearching && activeTab !== "more" && activeResults.length > 0 ? (
