@@ -158,6 +158,37 @@ export const subscriptionStatusEnum = pgEnum("subscription_status", ["active", "
 export const annotationColorEnum = pgEnum("annotation_color", ["yellow", "green", "red", "blue", "purple"]);
 
 // ---------------------------------------------------------------------------
+// Explore Module — Web Sources
+// ---------------------------------------------------------------------------
+export const webSourceTypeEnum = pgEnum("web_source_type", [
+  "news_article",
+  "blog_post",
+  "discussion_post",
+  "government_report",
+  "wiki",
+  "video",
+  "other",
+]);
+export const trustTierEnum = pgEnum("trust_tier", [
+  "government",
+  "major_journalism",
+  "community",
+  "other",
+]);
+export const webSourceStatusEnum = pgEnum("web_source_status", ["saved", "archived"]);
+export const exploreTabEnum = pgEnum("explore_tab", ["academic", "web", "news", "discussions"]);
+
+// ---------------------------------------------------------------------------
+// Explore Module — Domain Preferences
+// ---------------------------------------------------------------------------
+export const domainPreferenceLevelEnum = pgEnum("domain_preference_level", [
+  "mute",
+  "lower",
+  "higher",
+  "prefer",
+]);
+
+// ---------------------------------------------------------------------------
 // Screening Criteria
 // ---------------------------------------------------------------------------
 export const criterionTypeEnum = pgEnum("criterion_type", ["inclusion", "exclusion"]);

@@ -111,3 +111,15 @@
 **Recommendation:** Apply for GCP startup credits. Use Cloud Run (Mumbai) for Docling PDF microservice, Vertex AI for SPECTER2 embeddings. Don't replace Vercel or managed database with GCP services.
 **Full details:** `docs/RESEARCH-gcp-analysis.md`
 **Status:** Research complete. Awaiting founder decision.
+
+## 2026-03-31 - SearXNG Deployed on GCP for Explore Phase 1
+
+**Decision:** Deployed SearXNG to GCP Compute Engine in project `metal-node-486118-t7`, instance `scholarsync-searxng`, zone `asia-south1-b`, serving JSON at `http://34.14.206.241:8080`.
+**Context:** The original Phase 1 deployment attempt to `asia-south1-a` failed with `ZONE_RESOURCE_POOL_EXHAUSTED` for `e2-small`, and the initial startup path on Container-Optimized OS falsely reported success because `docker compose` was unavailable and the remote shell did not use `pipefail`.
+**What changed:**
+- Hardened `infra/searxng/deploy.sh` to try multiple Mumbai zones (`asia-south1-a/b/c`) and machine types (`e2-small`, `e2-medium`) instead of aborting on the first capacity error.
+- Added strict remote startup semantics (`set -euo pipefail`) and a Docker Compose container fallback so deployment works on COS images without a native compose plugin.
+- Added a real health-check loop that waits for `/search?q=test&format=json` to return JSON before reporting success.
+- Updated `infra/searxng/docker-compose.yml` to an older Compose file version (`3.3`) compatible with the remote compose runtime.
+- Added automated coverage for the deploy fallback path in `src/lib/search/__tests__/searxng-deploy.test.ts`.
+**Status:** Complete for the first Phase 1 requirement. Next step is the SearXNG source adapter and `tab` routing in `/api/search/unified`.

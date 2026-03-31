@@ -1,0 +1,99 @@
+# SearXNG settings for ScholarSync Explore module
+# This configures SearXNG as a JSON API for ScholarSync's web/news/discussions search.
+# No public-facing UI needed — only JSON API responses.
+
+use_default_settings: true
+
+general:
+  instance_name: "ScholarSync Search"
+  debug: false
+  privacypolicy_url: false
+  contact_url: false
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "en"
+  formats:
+    - html
+    - json
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "CHANGE_THIS_TO_A_RANDOM_STRING"
+  limiter: false  # Rate limiting handled by Upstash in ScholarSync
+  public_instance: false
+  image_proxy: false
+
+ui:
+  static_use_hash: true
+
+# Enable engines needed for Explore tabs
+engines:
+  # ── Web tab engines ──────────────────────────────────────
+  - name: google
+    engine: google
+    shortcut: g
+    disabled: false
+
+  - name: bing
+    engine: bing
+    shortcut: b
+    disabled: false
+
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    disabled: false
+
+  - name: brave
+    engine: brave
+    shortcut: br
+    disabled: false
+
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: wp
+    disabled: false
+
+  # ── News tab engines ─────────────────────────────────────
+  - name: google news
+    engine: google_news
+    shortcut: gn
+    disabled: false
+    categories: news
+
+  - name: bing news
+    engine: bing_news
+    shortcut: bn
+    disabled: false
+    categories: news
+
+  - name: duckduckgo news
+    engine: duckduckgo
+    shortcut: ddgn
+    disabled: false
+    categories: news
+
+  # ── Discussions tab engines ──────────────────────────────
+  - name: reddit
+    engine: reddit
+    shortcut: re
+    disabled: false
+    categories: social media
+
+  # ── Disable engines we don't need ────────────────────────
+  - name: dailymotion
+    disabled: true
+  - name: soundcloud
+    disabled: true
+  - name: bandcamp
+    disabled: true
+  - name: mixcloud
+    disabled: true
+
+outgoing:
+  request_timeout: 4.0  # Match ScholarSync's 4.5s per-source timeout
+  max_request_timeout: 8.0
+  useragent_suffix: "ScholarSync"

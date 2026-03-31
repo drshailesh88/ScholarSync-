@@ -1342,3 +1342,62 @@ export const userArticleStatusRelations = relations(
     }),
   })
 );
+
+// ============================================================
+// EXPLORE MODULE RELATIONS
+// ============================================================
+import {
+  webSources,
+  webSourceHighlights,
+  projectWebSources,
+  scopes,
+  exploreSearchHistory,
+} from "./explore";
+
+// 80. web_sources
+export const webSourcesRelations = relations(webSources, ({ many }) => ({
+  highlights: many(webSourceHighlights),
+  projectLinks: many(projectWebSources),
+}));
+
+// 81. web_source_highlights
+export const webSourceHighlightsRelations = relations(
+  webSourceHighlights,
+  ({ one }) => ({
+    webSource: one(webSources, {
+      fields: [webSourceHighlights.web_source_id],
+      references: [webSources.id],
+    }),
+  })
+);
+
+// 82. project_web_sources
+export const projectWebSourcesRelations = relations(
+  projectWebSources,
+  ({ one }) => ({
+    project: one(projects, {
+      fields: [projectWebSources.project_id],
+      references: [projects.id],
+    }),
+    webSource: one(webSources, {
+      fields: [projectWebSources.web_source_id],
+      references: [webSources.id],
+    }),
+  })
+);
+
+// 83. scopes
+export const scopesRelations = relations(scopes, ({ many }) => ({
+  searchHistory: many(exploreSearchHistory),
+}));
+
+// 84. explore_search_history
+export const exploreSearchHistoryRelations = relations(
+  exploreSearchHistory,
+  ({ one }) => ({
+    scope: one(scopes, {
+      fields: [exploreSearchHistory.scope_id],
+      references: [scopes.id],
+    }),
+  })
+);
