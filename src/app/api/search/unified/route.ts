@@ -20,6 +20,9 @@ import { getCurrentUserDomainConfig } from "@/lib/search/domains/user-domain";
 import { enrichStudyTypes } from "@/lib/search/study-type-detector";
 import { qualityRank } from "@/lib/search/quality-ranker";
 import { expandQueryForDomain } from "@/lib/search/query-expander";
+import { getDomainPreferences } from "@/lib/actions/domain-preferences";
+import { getTrustTier } from "@/lib/search/trust-tier";
+import { normalizeDomain } from "@/lib/search/domain-utils";
 import type { SourceId } from "@/lib/search/domains";
 import type { UnifiedSearchResult } from "@/types/search";
 
@@ -27,6 +30,10 @@ type SourceSearchResponse = {
   results: UnifiedSearchResult[];
   total: number;
 };
+
+type ResultDomainPreferenceLevel = NonNullable<
+  UnifiedSearchResult["domainPreferenceLevel"]
+>;
 
 type SearchTab = "academic" | "web" | "news" | "discussions";
 
@@ -44,6 +51,15 @@ const SEARXNG_CATEGORY_BY_TAB: Record<
   news: "news",
   discussions: "social media",
 };
+
+const DOMAIN_PREFERENCE_WEIGHT: Record<ResultDomainPreferenceLevel, number> = {
+  mute: -99,
+  lower: -1,
+  neutral: 0,
+  higher: 1,
+  prefer: 2,
+};
+const MAX_NON_ACADEMIC_RESULTS = 100;
 
 function isSearchTab(tab: string): tab is SearchTab {
   return (
@@ -73,6 +89,124 @@ async function withSourceTimeout<T>(
   } finally {
     if (timeoutId) clearTimeout(timeoutId);
   }
+}
+
+function addTrustTier(result: UnifiedSearchResult): UnifiedSearchResult {
+  const normalizedDomain =
+    result.domain ?? (result.url ? normalizeDomain(result.url) : null) ?? undefined;
+
+  return {
+    ...result,
+    domain: normalizedDomain,
+    trustTier: result.trustTier ?? getTrustTier(normalizedDomain ?? result.url),
+  };
+}
+
+function applyDomainPreferences(
+  results: UnifiedSearchResult[],
+  preferences: Awaited<ReturnType<typeof getDomainPreferences>>
+): UnifiedSearchResult[] {
+  if (preferences.length === 0) {
+    return results.map((result) => ({
+      ...addTrustTier(result),
+      domainPreferenceLevel: "neutral",
+    }));
+  }
+
+  const preferenceMap = new Map(
+    preferences.map((preference) => [preference.domain, preference.level])
+  );
+
+  return results
+    .map((result, index) => {
+      const enrichedResult = addTrustTier(result);
+      const level: ResultDomainPreferenceLevel = enrichedResult.domain
+        ? (preferenceMap.get(enrichedResult.domain) ?? "neutral")
+        : "neutral";
+
+      return {
+        result: {
+          ...enrichedResult,
+          domainPreferenceLevel: level,
+        },
+        index,
+        level,
+      };
+    })
+    .filter(({ level }) => level !== "mute")
+    .sort((left, right) => {
+      const weightDelta =
+        DOMAIN_PREFERENCE_WEIGHT[right.level] -
+        DOMAIN_PREFERENCE_WEIGHT[left.level];
+
+      if (weightDelta !== 0) return weightDelta;
+      return left.index - right.index;
+    })
+    .map(({ result }) => result);
+}
+
+async function fetchNonAcademicResults(
+  query: string,
+  category: SearXNGCategory,
+  page: number,
+  perPage: number,
+  preferences: Awaited<ReturnType<typeof getDomainPreferences>>
+): Promise<{
+  results: UnifiedSearchResult[];
+  total: number;
+  hasMore: boolean;
+  degraded: boolean;
+}> {
+  const requestedVisibleCount = (page + 1) * perPage;
+  let limit =
+    preferences.length > 0
+      ? Math.min(Math.max(requestedVisibleCount * 3, perPage), MAX_NON_ACADEMIC_RESULTS)
+      : Math.min(requestedVisibleCount, MAX_NON_ACADEMIC_RESULTS);
+
+  let response = await searchSearXNG(query, {
+    category,
+    limit,
+  });
+  let rankedResults = applyDomainPreferences(response.results, preferences);
+
+  while (!response.degraded) {
+    const fetchCeiling = Math.min(response.total, MAX_NON_ACADEMIC_RESULTS);
+    const hasEnoughVisibleResults = rankedResults.length >= requestedVisibleCount;
+    const canFetchMore = limit < fetchCeiling;
+
+    if (hasEnoughVisibleResults || !canFetchMore) {
+      break;
+    }
+
+    const nextLimit = Math.min(
+      fetchCeiling,
+      Math.max(limit + perPage * 3, requestedVisibleCount + perPage)
+    );
+
+    if (nextLimit <= limit) {
+      break;
+    }
+
+    limit = nextLimit;
+    response = await searchSearXNG(query, {
+      category,
+      limit,
+    });
+    rankedResults = applyDomainPreferences(response.results, preferences);
+  }
+
+  const start = page * perPage;
+  const paged = rankedResults.slice(start, start + perPage);
+  const fetchCeiling = Math.min(response.total, MAX_NON_ACADEMIC_RESULTS);
+  const canFetchMore = !response.degraded && limit < fetchCeiling;
+  const hasMore = rankedResults.length > start + perPage || canFetchMore;
+
+  return {
+    results: paged,
+    total: response.total,
+    hasMore,
+    degraded: response.degraded,
+  };
 }
 
 export async function GET(req: Request) {
@@ -134,22 +268,28 @@ export async function GET(req: Request) {
 
   try {
     if (tabParam !== "academic") {
+      const userDomainPreferences = await getDomainPreferences();
       const category = SEARXNG_CATEGORY_BY_TAB[tabParam];
-      const neededResults = Math.min((page + 1) * perPage, 100);
-      const { results, total, degraded } = await searchSearXNG(q, {
+      const {
+        results: paged,
+        total: visibleTotal,
+        hasMore,
+        degraded,
+      } = await fetchNonAcademicResults(
+        q,
         category,
-        limit: neededResults,
-      });
-      const start = page * perPage;
-      const paged = results.slice(start, start + perPage);
+        page,
+        perPage,
+        userDomainPreferences
+      );
 
       return NextResponse.json({
         results: paged,
-        total,
+        total: visibleTotal,
         page,
         perPage,
-        hasMore: start + perPage < total,
-        sourceCounts: { [tabParam]: total },
+        hasMore,
+        sourceCounts: { [tabParam]: visibleTotal },
         searxngUnavailable: degraded,
       } satisfies SearchResponse);
     }
@@ -436,7 +576,7 @@ export async function GET(req: Request) {
     const hasMore = start + perPage < total;
 
     const response: SearchResponse = {
-      results: paged,
+      results: paged.map(addTrustTier),
       total,
       page,
       perPage,

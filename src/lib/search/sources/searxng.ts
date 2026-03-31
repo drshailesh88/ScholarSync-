@@ -1,5 +1,6 @@
 import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
 import { resilientFetch } from "@/lib/http/resilient-fetch";
+import { normalizeDomain } from "@/lib/search/domain-utils";
 import type { UnifiedSearchResult } from "@/types/search";
 
 const breaker = createCircuitBreaker({
@@ -52,7 +53,7 @@ function stripHtml(text: string): string {
 
 function getDomainLabel(url: string): string {
   try {
-    return new URL(url).hostname.replace(/^www\./, "");
+    return normalizeDomain(url) ?? new URL(url).hostname.replace(/^www\./, "");
   } catch {
     return "";
   }
@@ -96,6 +97,8 @@ function mapResult(
     title,
     authors: [],
     journal: parseSourceLabel(result),
+    url: result.url,
+    domain: getDomainLabel(result.url),
     year: parseYear(result),
     abstract: abstract || undefined,
     citationCount: 0,

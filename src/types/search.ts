@@ -7,6 +7,8 @@ export interface UnifiedSearchResult {
   s2Id?: string;
   openalexId?: string;
   arxivId?: string;
+  url?: string;
+  domain?: string;
 
   // Core metadata
   title: string;
@@ -46,6 +48,8 @@ export interface UnifiedSearchResult {
   sources: string[];
   rrfScore?: number;
   rerankScore?: number;
+  trustTier?: "government" | "major_journalism" | "community" | "other";
+  domainPreferenceLevel?: "mute" | "lower" | "neutral" | "higher" | "prefer";
 
   // PICO (if extracted)
   pico?: {

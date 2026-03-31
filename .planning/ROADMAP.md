@@ -25,13 +25,13 @@ Risk: **MEDIUM** — GCP deployment is new territory, but deploy.sh automates it
 ### Phase 2: Trust Tier + Domain Preferences (Quality Layer)
 **Deliverable:** Web results have colored trust indicators. User can Mute/Prefer domains and see the effect on next search.
 
-- [ ] Create `src/lib/search/trust-tier.ts` — static domain → tier classifier
-- [ ] Create curated domain list (top 200 government, 100 journalism, 50 community domains)
-- [ ] Apply trust tier to every result in unified search route
+- [x] Create `src/lib/search/trust-tier.ts` — static domain → tier classifier
+- [x] Create curated domain list (top 200 government, 100 journalism, 50 community domains)
+- [x] Apply trust tier to every result in unified search route
 - [ ] Run database migration for `domain_preferences` table
-- [ ] Create server actions: setDomainPreference, getDomainPreferences, removeDomainPreference
-- [ ] Apply domain preferences in unified search route (filter Muted, boost Preferred)
-- [ ] Write tests: trust classifier, domain preference CRUD, Muted domains filtered, Preferred boosted
+- [x] Create server actions: setDomainPreference, getDomainPreferences, removeDomainPreference
+- [x] Apply domain preferences in unified search route (filter Muted, boost Preferred)
+- [x] Write tests: trust classifier, domain preference CRUD, Muted domains filtered, Preferred boosted
 
 Risk: **LOW** — straightforward data layer + classifier. No external dependencies.
 
