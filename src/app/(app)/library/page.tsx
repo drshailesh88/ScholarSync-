@@ -35,6 +35,12 @@ import {
 import type { LibraryFilters } from "@/lib/actions/papers";
 import { getAllCitationFormats } from "@/lib/actions/citations";
 import type { PaperData, CitationStyle } from "@/lib/citations";
+import {
+  getWebSources,
+  deleteWebSource as deleteWebSourceAction,
+  archiveWebSource as archiveWebSourceAction,
+  type WebSourceRecord,
+} from "@/lib/actions/web-sources";
 
 type Paper = {
   id: number;
@@ -97,9 +103,14 @@ type CitationFormats = {
 
 type SortOption = "date_added" | "title" | "citation_count" | "year";
 
+type LibraryView = "papers" | "web-sources";
+
 export default function LibraryPage() {
   const router = useRouter();
+  const [libraryView, setLibraryView] = useState<LibraryView>("papers");
   const [papers, setPapers] = useState<Paper[]>([]);
+  const [webSourcesList, setWebSourcesList] = useState<WebSourceRecord[]>([]);
+  const [webSourcesLoading, setWebSourcesLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeCollection, setActiveCollection] = useState<string | null>(null);
@@ -171,6 +182,29 @@ export default function LibraryPage() {
   useEffect(() => {
     fetchPapers();
   }, [fetchPapers]);
+
+  const fetchWebSources = useCallback(async () => {
+    setWebSourcesLoading(true);
+    try {
+      const data = await getWebSources({
+        search: debouncedSearch || undefined,
+        projectId: filterProjectId,
+        sortBy: sortBy === "date_added" ? "date_added" : sortBy === "title" ? "title" : "date_added",
+        sortDir: sortBy === "title" ? "asc" : "desc",
+      });
+      setWebSourcesList(data);
+    } catch (err) {
+      console.error("Failed to fetch web sources:", err);
+    } finally {
+      setWebSourcesLoading(false);
+    }
+  }, [debouncedSearch, filterProjectId, sortBy]);
+
+  useEffect(() => {
+    if (libraryView === "web-sources") {
+      fetchWebSources();
+    }
+  }, [libraryView, fetchWebSources]);
 
   // Refresh filter metadata after mutations (add/remove)
   const refreshMetadata = useCallback(async () => {
@@ -245,6 +279,28 @@ export default function LibraryPage() {
       console.error("Failed to remove paper:", err);
       // Revert on error
       setPapers(previous);
+    }
+  };
+
+  const handleDeleteWebSource = async (sourceId: number) => {
+    const previous = webSourcesList;
+    setWebSourcesList((prev) => prev.filter((s) => s.id !== sourceId));
+    try {
+      await deleteWebSourceAction(sourceId);
+    } catch (err) {
+      console.error("Failed to delete web source:", err);
+      setWebSourcesList(previous);
+    }
+  };
+
+  const handleArchiveWebSource = async (sourceId: number) => {
+    const previous = webSourcesList;
+    setWebSourcesList((prev) => prev.filter((s) => s.id !== sourceId));
+    try {
+      await archiveWebSourceAction(sourceId);
+    } catch (err) {
+      console.error("Failed to archive web source:", err);
+      setWebSourcesList(previous);
     }
   };
 
@@ -330,8 +386,34 @@ export default function LibraryPage() {
     <div className="flex gap-6 h-[calc(100vh-7rem)]">
       {/* Collections Sidebar */}
       <aside className="w-64 shrink-0 glass-panel rounded-2xl p-4 flex flex-col">
+        {/* View toggle */}
+        <div className="flex rounded-lg bg-surface-raised p-0.5 mb-4">
+          <button
+            onClick={() => setLibraryView("papers")}
+            className={cn(
+              "flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors",
+              libraryView === "papers"
+                ? "bg-brand text-white"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            Papers
+          </button>
+          <button
+            onClick={() => setLibraryView("web-sources")}
+            className={cn(
+              "flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors",
+              libraryView === "web-sources"
+                ? "bg-brand text-white"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            Web Sources
+          </button>
+        </div>
+
         <h2 className="text-xs font-medium text-ink-muted uppercase tracking-widest mb-3 px-2">
-          Collections
+          {libraryView === "papers" ? "Collections" : "Sources"}
         </h2>
         <nav className="space-y-0.5 flex-1">
           <button
@@ -405,14 +487,14 @@ export default function LibraryPage() {
         </div>
       </aside>
 
-      {/* Papers List */}
+      {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         {/* Search + Sort Row */}
         <div className="flex items-center gap-4 mb-3">
           <SearchInput
             value={search}
             onChange={setSearch}
-            placeholder="Search papers..."
+            placeholder={libraryView === "papers" ? "Search papers..." : "Search web sources..."}
             className="flex-1"
           />
           <select aria-label="Select option"
@@ -511,11 +593,115 @@ export default function LibraryPage() {
           )}
         </div>
 
-        {loading ? (
+        {/* Web Sources View */}
+        {libraryView === "web-sources" && (
+          <>
+            {webSourcesLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <p className="text-sm text-ink-muted">Loading web sources...</p>
+              </div>
+            ) : webSourcesList.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <GlobeSimple size={40} className="text-ink-muted mb-3" />
+                <p className="text-sm text-ink-muted">
+                  {debouncedSearch
+                    ? "No web sources match your search."
+                    : "No saved web sources yet. Save sources from Explore."}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {webSourcesList.map((source) => (
+                  <div
+                    key={source.id}
+                    className="glass-panel rounded-xl p-4 hover:bg-surface-raised/30 transition-all"
+                    style={{
+                      borderLeft: `3px solid ${
+                        source.trust_tier === "government"
+                          ? "var(--trust-government)"
+                          : source.trust_tier === "major_journalism"
+                          ? "var(--trust-journalism)"
+                          : source.trust_tier === "community"
+                          ? "var(--trust-community)"
+                          : "var(--trust-other)"
+                      }`,
+                    }}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-surface-raised flex items-center justify-center text-ink-muted shrink-0 mt-0.5">
+                        <GlobeSimple size={20} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-ink text-sm leading-snug mb-1 hover:text-brand hover:underline underline-offset-4"
+                        >
+                          {source.title}
+                        </a>
+                        <p className="text-xs text-brand mt-0.5">
+                          {source.domain}
+                        </p>
+                        {source.snippet && (
+                          <p className="text-xs text-ink-muted mt-1 line-clamp-2">
+                            {source.snippet}
+                          </p>
+                        )}
+                        <p className="text-xs text-ink-muted mt-1">
+                          {source.source_type?.replace(/_/g, " ")}
+                          {source.trust_tier && source.trust_tier !== "other" && (
+                            <span> · {source.trust_tier.replace(/_/g, " ")}</span>
+                          )}
+                          {source.created_at && (
+                            <span>
+                              {" · saved "}
+                              {new Intl.DateTimeFormat("en", {
+                                month: "short",
+                                day: "numeric",
+                              }).format(new Date(source.created_at))}
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mt-3 ml-14">
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted bg-surface-raised hover:bg-surface-raised/80 transition-colors"
+                      >
+                        <GlobeSimple size={14} />
+                        Open
+                      </a>
+                      <button
+                        onClick={() => handleArchiveWebSource(source.id)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted bg-surface-raised hover:bg-surface-raised/80 transition-colors"
+                      >
+                        <FolderSimple size={14} />
+                        Archive
+                      </button>
+                      <button
+                        onClick={() => handleDeleteWebSource(source.id)}
+                        className="p-1.5 rounded-lg text-ink-muted hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                      >
+                        <Trash size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Papers View */}
+        {libraryView === "papers" && loading ? (
           <div className="flex items-center justify-center py-20">
             <p className="text-sm text-ink-muted">Loading papers...</p>
           </div>
-        ) : filtered.length === 0 ? (
+        ) : libraryView === "papers" && filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20">
             <BookOpen size={40} className="text-ink-muted mb-3" />
             <p className="text-sm text-ink-muted">
@@ -524,7 +710,7 @@ export default function LibraryPage() {
                 : "Your library is empty. Add papers from Discover."}
             </p>
           </div>
-        ) : (
+        ) : libraryView === "papers" ? (
           <div className="space-y-3">
             {filtered.map((paper) => (
               <div
@@ -623,7 +809,7 @@ export default function LibraryPage() {
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Citation Modal */}
