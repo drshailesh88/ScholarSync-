@@ -128,16 +128,16 @@ Risk: **LOW** — UI polish, no new infrastructure.
 ### Phase 8: Keyboard Navigation + Search History (Power User Features)
 **Deliverable:** User navigates entirely by keyboard. Search history accessible via clock icon.
 
-- [ ] Implement j/k result navigation with visible highlight
-- [ ] Implement / for search focus, 1-4 for tabs, ]/[ for tab cycling
-- [ ] Implement S/O/C/Q/I/B action shortcuts
-- [ ] Implement X for selection, Shift+arrows for range
-- [ ] Build KeyboardShortcutsOverlay (? trigger, two-column layout)
-- [ ] Run database migration for `explore_search_history` table
-- [ ] Create server actions: addSearchHistory, getSearchHistory, deleteSearchHistory, clearAllHistory
-- [ ] Build SearchHistoryDropdown (clock icon, recent queries with tab/scope context)
-- [ ] Implement FIFO at 100 entries
-- [ ] Write tests: keyboard nav, history CRUD, FIFO enforcement
+- [x] Implement j/k result navigation with visible highlight
+- [x] Implement / for search focus, 1-4 for tabs, ]/[ for tab cycling
+- [x] Implement S/O/C/Q/I/B action shortcuts
+- [x] Implement X for selection, Shift+arrows for range
+- [x] Build KeyboardShortcutsOverlay (? trigger, two-column layout)
+- [x] Run database migration for `explore_search_history` table
+- [x] Create server actions: addSearchHistory, getSearchHistory, deleteSearchHistory, clearAllHistory
+- [x] Build SearchHistoryDropdown (clock icon, recent queries with tab/scope context)
+- [x] Implement FIFO at 100 entries
+- [x] Write tests: keyboard nav, history CRUD, FIFO enforcement
 
 Risk: **LOW** — keyboard handling is well-understood. History is simple CRUD.
 

@@ -86,18 +86,18 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [x] Only fires when user explicitly requests (not automatic)
 
 ### Keyboard Navigation
-- [ ] j/k or arrows to navigate results
-- [ ] / to focus search bar
-- [ ] 1/2/3/4 to switch tabs
-- [ ] S to save, O to open, C to cite, Q to synthesize, I for info, B to block
-- [ ] X to select, Shift+arrows to extend selection
-- [ ] ? to show keyboard shortcuts overlay
+- [x] j/k or arrows to navigate results
+- [x] / to focus search bar
+- [x] 1/2/3/4 to switch tabs
+- [x] S to save, O to open, C to cite, Q to synthesize, I for info, B to block
+- [x] X to select, Shift+arrows to extend selection
+- [x] ? to show keyboard shortcuts overlay
 
 ### Search History
-- [ ] Clock icon next to search bar
-- [ ] Shows recent searches (last 100, FIFO)
-- [ ] Each entry shows query, tab, scope
-- [ ] Delete individual or clear all
+- [x] Clock icon next to search bar
+- [x] Shows recent searches (last 100, FIFO)
+- [x] Each entry shows query, tab, scope
+- [x] Delete individual or clear all
 
 ### Soft Delete
 - [ ] Deleted web sources go to Trash for 30 days
