@@ -17,6 +17,7 @@ const mockEnrichStudyTypes = vi.hoisted(() => vi.fn());
 const mockQualityRank = vi.hoisted(() => vi.fn());
 const mockExpandQueryForDomain = vi.hoisted(() => vi.fn());
 const mockGetDomainPreferences = vi.hoisted(() => vi.fn());
+const mockGetUserScopes = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/auth", () => ({
   getCurrentUserId: mockGetCurrentUserId,
@@ -102,6 +103,10 @@ vi.mock("@/lib/actions/domain-preferences", () => ({
   getDomainPreferences: mockGetDomainPreferences,
 }));
 
+vi.mock("@/lib/actions/scopes", () => ({
+  getUserScopes: mockGetUserScopes,
+}));
+
 import { GET } from "../route";
 
 function makeRequest(params: Record<string, string> = {}): Request {
@@ -167,6 +172,7 @@ describe("GET /api/search/unified", () => {
       expansions: [],
     });
     mockGetDomainPreferences.mockResolvedValue([]);
+    mockGetUserScopes.mockResolvedValue([]);
   });
 
   it("returns results for a valid query", async () => {
@@ -595,5 +601,114 @@ describe("GET /api/search/unified", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.results).toBeDefined();
+  });
+
+  // ── Phase 4: Filter pills + Scope constraints ────────────────────
+
+  it("passes timeRange to SearXNG for non-academic tabs", async () => {
+    const res = await GET(
+      makeRequest({ q: "climate news", tab: "news", timeRange: "week" })
+    );
+    expect(res.status).toBe(200);
+    expect(mockSearchSearXNG).toHaveBeenCalledWith("climate news", {
+      category: "news",
+      limit: expect.any(Number),
+      timeRange: "week",
+    });
+  });
+
+  it("wraps query in quotes when exactMatch is true", async () => {
+    const res = await GET(
+      makeRequest({ q: "climate policy", tab: "web", exactMatch: "true" })
+    );
+    expect(res.status).toBe(200);
+    expect(mockSearchSearXNG).toHaveBeenCalledWith(
+      '"climate policy"',
+      expect.objectContaining({ category: "general" })
+    );
+  });
+
+  it("skips domain preferences when usePreferences is false", async () => {
+    mockGetDomainPreferences.mockResolvedValueOnce([
+      { domain: "reddit.com", level: "mute", createdAt: null, updatedAt: null },
+    ]);
+    const res = await GET(
+      makeRequest({ q: "test query", tab: "web", usePreferences: "false" })
+    );
+    expect(res.status).toBe(200);
+    // getDomainPreferences should NOT have been called since preferences are disabled
+    expect(mockGetDomainPreferences).not.toHaveBeenCalled();
+  });
+
+  it("applies scope domain filter on academic results", async () => {
+    mockGetUserScopes.mockResolvedValueOnce([
+      {
+        id: 42,
+        name: "Gov Only",
+        includedDomains: ["nih.gov"],
+        excludedDomains: [],
+        includedKeywords: [],
+        excludedKeywords: [],
+        dateFrom: null,
+        dateTo: null,
+        region: null,
+        isActive: true,
+        sortOrder: 0,
+        createdAt: null,
+        updatedAt: null,
+      },
+    ]);
+
+    mockReciprocalRankFusion.mockReturnValueOnce([
+      { title: "NIH paper", domain: "nih.gov", sources: ["pubmed"] },
+      { title: "Harvard paper", domain: "harvard.edu", sources: ["openalex"] },
+    ]);
+
+    const res = await GET(
+      makeRequest({ q: "heart disease", scopeId: "42" })
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    // Only the NIH result should survive the scope filter
+    expect(body.results).toHaveLength(1);
+    expect(body.results[0].title).toBe("NIH paper");
+  });
+
+  it("sorts by trust tier when sort=trust", async () => {
+    mockReciprocalRankFusion.mockReturnValueOnce([
+      { title: "Community post", domain: "reddit.com", trustTier: "community", sources: ["openalex"] },
+      { title: "Government report", domain: "nih.gov", trustTier: "government", sources: ["pubmed"] },
+      { title: "News article", domain: "reuters.com", trustTier: "major_journalism", sources: ["openalex"] },
+    ]);
+
+    const res = await GET(
+      makeRequest({ q: "climate change", sort: "trust" })
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.results[0].title).toBe("Government report");
+    expect(body.results[1].title).toBe("News article");
+    expect(body.results[2].title).toBe("Community post");
+  });
+
+  it("rejects invalid timeRange values", async () => {
+    const res = await GET(
+      makeRequest({ q: "test", tab: "web", timeRange: "invalid" })
+    );
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toMatch(/timeRange/i);
+  });
+
+  it("strips double quotes from query when exactMatch is true", async () => {
+    const res = await GET(
+      makeRequest({ q: 'injection "attack" test', tab: "web", exactMatch: "true" })
+    );
+    expect(res.status).toBe(200);
+    // Should wrap sanitized query (no inner quotes) in double quotes
+    expect(mockSearchSearXNG).toHaveBeenCalledWith(
+      '"injection attack test"',
+      expect.objectContaining({ category: "general" })
+    );
   });
 });

@@ -26,7 +26,7 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [ ] Landing page shows only search bar and tabs — no feed, no trending, no recommendations
 - [x] Horizontal tabs: Academic | Web | News | Discussions | More
 - [x] Tab switching is instant (client-side filter on already-fetched results)
-- [ ] Filter pills below tabs: Scope | Order By | Time | Options | Advanced
+- [x] Filter pills below tabs: Scope | Order By | Time | Options | Advanced
 - [x] Single-column results layout, 780px max-width, 5-6 results per screen
 - [x] Traditional pagination (not infinite scroll)
 - [x] Stats line showing result count and timing

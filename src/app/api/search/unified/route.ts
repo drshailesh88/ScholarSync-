@@ -21,6 +21,7 @@ import { enrichStudyTypes } from "@/lib/search/study-type-detector";
 import { qualityRank } from "@/lib/search/quality-ranker";
 import { expandQueryForDomain } from "@/lib/search/query-expander";
 import { getDomainPreferences } from "@/lib/actions/domain-preferences";
+import { getUserScopes, type ScopeRecord } from "@/lib/actions/scopes";
 import { getTrustTier } from "@/lib/search/trust-tier";
 import { normalizeDomain } from "@/lib/search/domain-utils";
 import type { SourceId } from "@/lib/search/domains";
@@ -102,6 +103,51 @@ function addTrustTier(result: UnifiedSearchResult): UnifiedSearchResult {
   };
 }
 
+function applyScopeFilter(
+  results: UnifiedSearchResult[],
+  scope: ScopeRecord
+): UnifiedSearchResult[] {
+  return results.filter((result) => {
+    const resultDomain = result.domain ?? "";
+
+    // Include filter: result domain must match one of the included domains
+    if (scope.includedDomains.length > 0) {
+      const matches = scope.includedDomains.some(
+        (d) => resultDomain === d || resultDomain.endsWith(`.${d}`)
+      );
+      if (!matches) return false;
+    }
+
+    // Exclude filter: result domain must NOT match any excluded domain
+    if (scope.excludedDomains.length > 0) {
+      const excluded = scope.excludedDomains.some(
+        (d) => resultDomain === d || resultDomain.endsWith(`.${d}`)
+      );
+      if (excluded) return false;
+    }
+
+    // Keyword include: title or abstract must contain at least one keyword
+    if (scope.includedKeywords.length > 0) {
+      const text = `${result.title} ${result.abstract ?? ""} ${result.tldr ?? ""}`.toLowerCase();
+      const matches = scope.includedKeywords.some((kw) =>
+        text.includes(kw.toLowerCase())
+      );
+      if (!matches) return false;
+    }
+
+    // Keyword exclude: title or abstract must NOT contain any excluded keyword
+    if (scope.excludedKeywords.length > 0) {
+      const text = `${result.title} ${result.abstract ?? ""} ${result.tldr ?? ""}`.toLowerCase();
+      const excluded = scope.excludedKeywords.some((kw) =>
+        text.includes(kw.toLowerCase())
+      );
+      if (excluded) return false;
+    }
+
+    return true;
+  });
+}
+
 function applyDomainPreferences(
   results: UnifiedSearchResult[],
   preferences: Awaited<ReturnType<typeof getDomainPreferences>>
@@ -150,7 +196,8 @@ async function fetchNonAcademicResults(
   category: SearXNGCategory,
   page: number,
   perPage: number,
-  preferences: Awaited<ReturnType<typeof getDomainPreferences>>
+  preferences: Awaited<ReturnType<typeof getDomainPreferences>>,
+  timeRange?: "24h" | "week" | "month" | "year"
 ): Promise<{
   results: UnifiedSearchResult[];
   total: number;
@@ -166,6 +213,7 @@ async function fetchNonAcademicResults(
   let response = await searchSearXNG(query, {
     category,
     limit,
+    timeRange,
   });
   // Rerank web results with Cohere (same quality treatment as academic results)
   let rerankedResults = await rerankResults(query, response.results);
@@ -247,6 +295,20 @@ export async function GET(req: Request) {
   const augment = searchParams.get("augment") !== "false";
   const sort = searchParams.get("sort") || "relevance";
   const tabParam = searchParams.get("tab") || "academic";
+  const VALID_TIME_RANGES = ["24h", "week", "month", "year"] as const;
+  const timeRangeRaw = searchParams.get("timeRange");
+  if (timeRangeRaw && !VALID_TIME_RANGES.includes(timeRangeRaw as (typeof VALID_TIME_RANGES)[number])) {
+    return NextResponse.json(
+      { error: "Invalid timeRange. Must be one of: 24h, week, month, year" },
+      { status: 400 }
+    );
+  }
+  const timeRange = (timeRangeRaw as (typeof VALID_TIME_RANGES)[number]) ?? undefined;
+  const exactMatch = searchParams.get("exactMatch") === "true";
+  const usePreferences = searchParams.get("usePreferences") !== "false"; // default true
+  const scopeId = searchParams.get("scopeId")
+    ? parseInt(searchParams.get("scopeId")!, 10)
+    : null;
 
   if (!q) {
     return NextResponse.json(
@@ -271,23 +333,56 @@ export async function GET(req: Request) {
 
   try {
     if (tabParam !== "academic") {
-      const userDomainPreferences = await getDomainPreferences();
+      const userDomainPreferences = usePreferences
+        ? await getDomainPreferences()
+        : [];
       const category = SEARXNG_CATEGORY_BY_TAB[tabParam];
+      // Wrap query in quotes for exact match (strip existing quotes to prevent injection)
+      const sanitized = q.replace(/"/g, "");
+      const effectiveQuery = exactMatch ? `"${sanitized}"` : q;
       const {
         results: paged,
         total: visibleTotal,
         hasMore,
         degraded,
       } = await fetchNonAcademicResults(
-        q,
+        effectiveQuery,
         category,
         page,
         perPage,
-        userDomainPreferences
+        userDomainPreferences,
+        timeRange as "24h" | "week" | "month" | "year" | undefined
       );
 
+      // Apply scope domain constraints if a custom scope is active
+      let scopeFilteredResults = paged;
+      if (scopeId && scopeId > 0) {
+        const allScopes = await getUserScopes();
+        const scope = allScopes.find((s) => s.id === scopeId);
+        if (scope) {
+          scopeFilteredResults = applyScopeFilter(paged, scope);
+        }
+      }
+
+      // Apply trust sort for non-academic results
+      if (sort === "trust") {
+        const trustOrder: Record<string, number> = {
+          government: 0,
+          major_journalism: 1,
+          community: 2,
+          other: 3,
+        };
+        scopeFilteredResults.sort(
+          (a, b) =>
+            (trustOrder[a.trustTier ?? "other"] ?? 3) -
+            (trustOrder[b.trustTier ?? "other"] ?? 3)
+        );
+      } else if (sort === "year") {
+        scopeFilteredResults.sort((a, b) => (b.year || 0) - (a.year || 0));
+      }
+
       return NextResponse.json({
-        results: paged,
+        results: scopeFilteredResults,
         total: visibleTotal,
         page,
         perPage,
@@ -546,6 +641,15 @@ export async function GET(req: Request) {
       filtered = filtered.filter((r) => r.isOpenAccess);
     }
 
+    // Step 7b: Apply scope constraints
+    if (scopeId && scopeId > 0) {
+      const allScopes = await getUserScopes();
+      const scope = allScopes.find((s) => s.id === scopeId);
+      if (scope) {
+        filtered = applyScopeFilter(filtered, scope);
+      }
+    }
+
     // Step 8: Sort
     if (sort === "citations") {
       filtered.sort((a, b) => (b.citationCount || 0) - (a.citationCount || 0));
@@ -568,6 +672,18 @@ export async function GET(req: Request) {
       filtered.sort(
         (a, b) =>
           (b.journalImpactProxy ?? -1) - (a.journalImpactProxy ?? -1),
+      );
+    } else if (sort === "trust") {
+      const trustOrder: Record<string, number> = {
+        government: 0,
+        major_journalism: 1,
+        community: 2,
+        other: 3,
+      };
+      filtered.sort(
+        (a, b) =>
+          (trustOrder[a.trustTier ?? "other"] ?? 3) -
+          (trustOrder[b.trustTier ?? "other"] ?? 3)
       );
     }
     // "relevance" keeps RRF/rerank order (default)
