@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, CircleNotch, Sparkle } from "@phosphor-icons/react";
 import type { SearchResponse, UnifiedSearchResult } from "@/types/search";
@@ -9,6 +9,8 @@ import { ExploreSearchBar } from "./ExploreSearchBar";
 import { ExploreTabs, type ExploreTab } from "./ExploreTabs";
 import { ResultCard } from "./ResultCard";
 import { SynthesisBlock } from "./SynthesisBlock";
+import { ExploreShortcutsOverlay } from "./ExploreShortcutsOverlay";
+import { useExploreKeyboard } from "./useExploreKeyboard";
 import {
   FilterPills,
   DEFAULT_FILTERS,
@@ -146,6 +148,7 @@ async function fetchSearchPage(
 
 export function ExplorePageClient() {
   const router = useRouter();
+  const searchBarRef = useRef<HTMLInputElement>(null);
   const [queryInput, setQueryInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<ExploreTab>("academic");
@@ -182,35 +185,13 @@ export function ExplorePageClient() {
   const activeSearchTab = activeTab === "more" ? null : activeTab;
   const activePage = currentPageByTab[activeTab];
   const activeState = activeSearchTab ? tabState[activeSearchTab] : null;
-  const activeResults = activeSearchTab
-    ? (activeState?.pages[activePage] ?? [])
-    : [];
+  const activeResults = useMemo(
+    () => (activeSearchTab ? (activeState?.pages[activePage] ?? []) : []),
+    [activeSearchTab, activeState?.pages, activePage]
+  );
   const totalPages = activeState
     ? Math.max(1, Math.ceil(activeState.total / RESULTS_PER_PAGE))
     : 1;
-
-  // Q keyboard shortcut to toggle synthesis
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const el = document.activeElement;
-      if (
-        el &&
-        (el.tagName === "INPUT" ||
-          el.tagName === "TEXTAREA" ||
-          el.tagName === "SELECT" ||
-          (el as HTMLElement).isContentEditable)
-      )
-        return;
-
-      if ((e.key === "q" || e.key === "Q") && hasSearched && activeResults.length > 0) {
-        e.preventDefault();
-        setSynthesisOpen((prev) => !prev);
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [hasSearched, activeResults.length]);
 
   const statsLine = useMemo(() => {
     if (!activeState || searchDurationMs === null || activeTab === "more") {
@@ -405,6 +386,42 @@ export function ExplorePageClient() {
     [activeSearchTab, searchQuery]
   );
 
+  // ── Keyboard navigation ──────────────────────────────────
+   
+  const keyboardActions = useMemo(
+    () => ({
+      onTabChange: handleTabChange,
+      onSearch: () => void runSearch(),
+      focusSearchBar: () => searchBarRef.current?.focus(),
+      onSave: (index: number) => {
+        const result = activeResults[index];
+        if (result) void handleSaveResult(result);
+      },
+      onOpen: (index: number) => {
+        const result = activeResults[index];
+        const href =
+          result?.url ||
+          (result?.doi ? `https://doi.org/${result.doi}` : null) ||
+          (result?.pmid ? `https://pubmed.ncbi.nlm.nih.gov/${result.pmid}/` : null);
+        if (href) window.open(href, "_blank", "noopener");
+      },
+      onSynthesize: () => setSynthesisOpen((prev) => !prev),
+    }),
+    [handleTabChange, runSearch, activeResults, handleSaveResult]
+  );
+
+  const {
+    highlightedIndex,
+    selectedIndices,
+    shortcutsOverlayOpen,
+    setShortcutsOverlayOpen,
+  } = useExploreKeyboard(
+    activeResults.length,
+    activeTab,
+    hasSearched,
+    keyboardActions
+  );
+
   const showLanding = !hasSearched && !searchQuery;
 
   if (showLanding) {
@@ -412,6 +429,7 @@ export function ExplorePageClient() {
       <div className="flex min-h-[calc(100vh-7rem)] items-center justify-center px-4">
         <div className="w-full max-w-[640px]">
           <ExploreSearchBar
+            ref={searchBarRef}
             autoFocus
             isLoading={isSearching}
             onChange={setQueryInput}
@@ -429,6 +447,7 @@ export function ExplorePageClient() {
     <div className="mx-auto w-full max-w-[1200px] px-4 py-8 md:py-10">
       <div className="mx-auto flex w-full max-w-[780px] flex-col gap-5">
         <ExploreSearchBar
+          ref={searchBarRef}
           className="max-w-[560px]"
           isLoading={isSearching}
           onChange={setQueryInput}
@@ -514,7 +533,10 @@ export function ExplorePageClient() {
             {activeResults.map((result, index) => (
               <ResultCard
                 key={`${activeTab}-${activePage}-${result.url ?? result.doi ?? result.pmid ?? result.title}-${index}`}
+                id={`explore-result-${index}`}
+                isHighlighted={highlightedIndex === index}
                 isSaved={!!result.url && savedUrls.has(result.url)}
+                isSelected={selectedIndices.has(index)}
                 onSave={handleSaveResult}
                 result={result}
                 tab={activeTab}
@@ -578,6 +600,11 @@ export function ExplorePageClient() {
           type={toast.type}
         />
       )}
+
+      <ExploreShortcutsOverlay
+        isOpen={shortcutsOverlayOpen}
+        onClose={() => setShortcutsOverlayOpen(false)}
+      />
     </div>
   );
 }

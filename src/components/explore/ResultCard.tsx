@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, DotsThreeVertical, Plus, CircleNotch } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 import type { UnifiedSearchResult } from "@/types/search";
 import type { ExploreTab } from "./ExploreTabs";
 
@@ -142,16 +143,30 @@ function getBorderColor(result: UnifiedSearchResult, tab: SupportedTab): string 
 }
 
 export function ResultCard({
+  id,
   result,
   tab,
   isSaved = false,
+  isHighlighted = false,
+  isSelected = false,
   onSave,
 }: {
+  id?: string;
   result: UnifiedSearchResult;
   tab: SupportedTab;
   isSaved?: boolean;
+  isHighlighted?: boolean;
+  isSelected?: boolean;
   onSave?: (result: UnifiedSearchResult) => Promise<void>;
 }) {
+  const articleRef = useRef<HTMLElement>(null);
+
+  // Scroll highlighted card into view
+  useEffect(() => {
+    if (isHighlighted && articleRef.current) {
+      articleRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }, [isHighlighted]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(isSaved);
 
@@ -176,7 +191,17 @@ export function ResultCard({
 
   return (
     <article
-      className="rounded-2xl bg-transparent p-4 transition-colors duration-150 hover:bg-surface-raised hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+      id={id}
+      ref={articleRef}
+      className={cn(
+        "rounded-2xl p-4 transition-colors duration-150",
+        isHighlighted
+          ? "bg-[var(--surface-raised)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] ring-2 ring-[var(--brand)]/30"
+          : "bg-transparent hover:bg-surface-raised hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+        isSelected && "ring-2 ring-[var(--brand)]"
+      )}
+      data-highlighted={isHighlighted || undefined}
+      data-selected={isSelected || undefined}
       style={{ borderLeft: `3px solid ${getBorderColor(result, tab)}` }}
     >
       <div className="flex items-start justify-between gap-4">

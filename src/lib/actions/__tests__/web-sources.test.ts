@@ -317,12 +317,24 @@ describe("web-sources actions", () => {
   });
 
   describe("unlinkWebSourceFromProject", () => {
-    it("removes the link", async () => {
+    it("removes the link after verifying ownership", async () => {
+      // Verify source ownership
+      mockDb.select.mockReturnValueOnce(createQueryBuilder([{ id: 1 }]));
+      // Delete link
       mockDb.delete.mockReturnValueOnce(createQueryBuilder());
 
       await unlinkWebSourceFromProject(1, 5);
 
+      expect(mockDb.select).toHaveBeenCalled();
       expect(mockDb.delete).toHaveBeenCalled();
+    });
+
+    it("throws if source not found (IDOR prevention)", async () => {
+      mockDb.select.mockReturnValueOnce(createQueryBuilder([]));
+
+      await expect(unlinkWebSourceFromProject(999, 5)).rejects.toThrow(
+        "Web source not found"
+      );
     });
   });
 });

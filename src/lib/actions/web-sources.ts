@@ -368,6 +368,20 @@ export async function unlinkWebSourceFromProject(
   sourceId: number,
   projectId: number
 ): Promise<void> {
+  const userId = await getCurrentUserId();
+
+  // Verify the source belongs to the user
+  const [source] = await db
+    .select({ id: webSources.id })
+    .from(webSources)
+    .where(
+      and(
+        eq(webSources.id, sourceId),
+        eq(webSources.user_id, userId)
+      )
+    );
+  if (!source) throw new Error("Web source not found");
+
   await db
     .delete(projectWebSources)
     .where(
@@ -385,10 +399,19 @@ export async function unlinkWebSourceFromProject(
 export async function getWebSourceProjects(
   sourceId: number
 ): Promise<number[]> {
+  const userId = await getCurrentUserId();
+
+  // Join through web_sources to verify ownership
   const rows = await db
     .select({ projectId: projectWebSources.project_id })
     .from(projectWebSources)
-    .where(eq(projectWebSources.web_source_id, sourceId));
+    .innerJoin(webSources, eq(projectWebSources.web_source_id, webSources.id))
+    .where(
+      and(
+        eq(projectWebSources.web_source_id, sourceId),
+        eq(webSources.user_id, userId)
+      )
+    );
   return rows.map((r) => r.projectId);
 }
 

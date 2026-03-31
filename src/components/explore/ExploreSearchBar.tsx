@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef } from "react";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +14,7 @@ interface ExploreSearchBarProps {
   className?: string;
 }
 
-export function ExploreSearchBar({
+export const ExploreSearchBar = forwardRef<HTMLInputElement, ExploreSearchBarProps>(function ExploreSearchBar({
   value,
   onChange,
   onSubmit,
@@ -21,7 +22,7 @@ export function ExploreSearchBar({
   autoFocus = false,
   placeholder = "Explore...",
   className,
-}: ExploreSearchBarProps) {
+}, ref) {
   return (
     <form
       className={cn(
@@ -35,6 +36,7 @@ export function ExploreSearchBar({
       }}
     >
       <input
+        ref={ref}
         autoFocus={autoFocus}
         className="min-w-0 flex-1 bg-transparent text-[16px] font-normal text-ink outline-none placeholder:text-ink-muted"
         onChange={(event) => onChange(event.target.value)}
@@ -70,4 +72,4 @@ export function ExploreSearchBar({
       </button>
     </form>
   );
-}
+});
