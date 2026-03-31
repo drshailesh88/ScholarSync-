@@ -9,6 +9,7 @@ const mockSearchPubMed = vi.hoisted(() => vi.fn());
 const mockSearchSemanticScholar = vi.hoisted(() => vi.fn());
 const mockSearchOpenAlex = vi.hoisted(() => vi.fn());
 const mockSearchClinicalTrials = vi.hoisted(() => vi.fn());
+const mockSearchSearXNG = vi.hoisted(() => vi.fn());
 const mockReciprocalRankFusion = vi.hoisted(() => vi.fn());
 const mockRerankResults = vi.hoisted(() => vi.fn());
 const mockAugmentQuery = vi.hoisted(() => vi.fn());
@@ -58,6 +59,10 @@ vi.mock("@/lib/search/sources/openalex", () => ({
 
 vi.mock("@/lib/search/sources/clinical-trials", () => ({
   searchClinicalTrials: mockSearchClinicalTrials,
+}));
+
+vi.mock("@/lib/search/sources/searxng", () => ({
+  searchSearXNG: mockSearchSearXNG,
 }));
 
 vi.mock("@/lib/search/rank-fusion", () => ({
@@ -120,6 +125,23 @@ describe("GET /api/search/unified", () => {
     mockSearchSemanticScholar.mockResolvedValue({ results: [], total: 0 });
     mockSearchOpenAlex.mockResolvedValue({ results: [], total: 0 });
     mockSearchClinicalTrials.mockResolvedValue({ results: [], total: 0 });
+    mockSearchSearXNG.mockResolvedValue({
+      results: [
+        {
+          title: "Climate change",
+          authors: [],
+          journal: "NOAA",
+          year: 2025,
+          abstract: "Example result",
+          citationCount: 0,
+          publicationTypes: ["web"],
+          isOpenAccess: false,
+          sources: ["web"],
+        },
+      ],
+      total: 1,
+      degraded: false,
+    });
 
     mockReciprocalRankFusion.mockReturnValue([sampleResult]);
     mockRerankResults.mockImplementation((_q: string, r: unknown[]) => r);
@@ -175,6 +197,58 @@ describe("GET /api/search/unified", () => {
     mockGetCurrentUserId.mockRejectedValue(new Error("Not authenticated"));
     const res = await GET(makeRequest({ q: "test" }));
     expect(res.status).toBe(401);
+  });
+
+  it("keeps academic search as the default tab", async () => {
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+
+    expect(res.status).toBe(200);
+    expect(mockSearchSearXNG).not.toHaveBeenCalled();
+    expect(mockSearchPubMed).toHaveBeenCalled();
+  });
+
+  it("routes the web tab through SearXNG general search", async () => {
+    const res = await GET(makeRequest({ q: "climate change", tab: "web" }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(mockSearchSearXNG).toHaveBeenCalledWith("climate change", {
+      category: "general",
+      limit: 20,
+    });
+    expect(mockSearchPubMed).not.toHaveBeenCalled();
+    expect(body.results).toHaveLength(1);
+    expect(body.sourceCounts).toEqual({ web: 1 });
+    expect(body.searxngUnavailable).toBe(false);
+  });
+
+  it("routes the discussions tab through SearXNG social-media search", async () => {
+    const res = await GET(
+      makeRequest({ q: "climate change", tab: "discussions" })
+    );
+
+    expect(res.status).toBe(200);
+    expect(mockSearchSearXNG).toHaveBeenCalledWith("climate change", {
+      category: "social media",
+      limit: 20,
+    });
+  });
+
+  it("returns empty results with a degradation flag when SearXNG is unavailable", async () => {
+    mockSearchSearXNG.mockResolvedValueOnce({
+      results: [],
+      total: 0,
+      degraded: true,
+    });
+
+    const res = await GET(makeRequest({ q: "climate change", tab: "news" }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.results).toEqual([]);
+    expect(body.total).toBe(0);
+    expect(body.searxngUnavailable).toBe(true);
+    expect(body.sourceCounts).toEqual({ news: 0 });
   });
 
   // ── Slice 1: enrichStudyTypes() ──────────────────────────────────

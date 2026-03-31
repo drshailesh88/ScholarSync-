@@ -5,6 +5,7 @@ import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchArxiv } from "@/lib/search/sources/arxiv";
+import { searchSearXNG, type SearXNGCategory } from "@/lib/search/sources/searxng";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
 import { getDomainEvidenceLevel } from "@/lib/search/evidence-level";
@@ -27,11 +28,31 @@ type SourceSearchResponse = {
   total: number;
 };
 
+type SearchTab = "academic" | "web" | "news" | "discussions";
+
 type SourceDefinition = {
   sourceId: SourceId;
   label: string;
   run: () => Promise<SourceSearchResponse>;
 };
+
+const SEARXNG_CATEGORY_BY_TAB: Record<
+  Exclude<SearchTab, "academic">,
+  SearXNGCategory
+> = {
+  web: "general",
+  news: "news",
+  discussions: "social media",
+};
+
+function isSearchTab(tab: string): tab is SearchTab {
+  return (
+    tab === "academic" ||
+    tab === "web" ||
+    tab === "news" ||
+    tab === "discussions"
+  );
+}
 
 async function withSourceTimeout<T>(
   label: string,
@@ -88,10 +109,7 @@ export async function GET(req: Request) {
   const openAccessOnly = searchParams.get("openAccessOnly") === "true";
   const augment = searchParams.get("augment") !== "false";
   const sort = searchParams.get("sort") || "relevance";
-  const requestedDomainId = searchParams.get("domain");
-  const domain = requestedDomainId
-    ? getDomainConfig(requestedDomainId)
-    : await getCurrentUserDomainConfig(userId);
+  const tabParam = searchParams.get("tab") || "academic";
 
   if (!q) {
     return NextResponse.json(
@@ -107,7 +125,39 @@ export async function GET(req: Request) {
     );
   }
 
+  if (!isSearchTab(tabParam)) {
+    return NextResponse.json(
+      { error: "Query parameter 'tab' must be academic, web, news, or discussions" },
+      { status: 400 }
+    );
+  }
+
   try {
+    if (tabParam !== "academic") {
+      const category = SEARXNG_CATEGORY_BY_TAB[tabParam];
+      const { results, total, degraded } = await searchSearXNG(q, {
+        category,
+        limit: perPage,
+      });
+      const start = page * perPage;
+      const paged = results.slice(start, start + perPage);
+
+      return NextResponse.json({
+        results: paged,
+        total,
+        page,
+        perPage,
+        hasMore: start + perPage < total,
+        sourceCounts: { [tabParam]: total },
+        searxngUnavailable: degraded,
+      } satisfies SearchResponse);
+    }
+
+    const requestedDomainId = searchParams.get("domain");
+    const domain = requestedDomainId
+      ? getDomainConfig(requestedDomainId)
+      : await getCurrentUserDomainConfig(userId);
+
     // Step 1: Query augmentation (if enabled and query is long enough)
     let pubmedQuery = q;
     let s2Query = q;
