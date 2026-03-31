@@ -1,0 +1,38 @@
+# SearXNG deployment for ScholarSync Explore module
+# Deploy to GCP Compute Engine (e2-small or e2-medium)
+#
+# Quick start:
+#   1. SSH into GCP instance
+#   2. Install Docker + Docker Compose
+#   3. Copy this directory to the instance
+#   4. Run: docker compose up -d
+#   5. SearXNG is available at http://localhost:8080
+#
+# ScholarSync calls this at: http://<GCP_INSTANCE_IP>:8080/search?q=...&format=json
+
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: scholarsync-searxng
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./settings.yml:/etc/searxng/settings.yml:ro
+      - searxng-data:/etc/searxng
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  searxng-data:
