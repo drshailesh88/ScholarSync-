@@ -40,21 +40,8 @@ export const DEFAULT_FILTERS: ExploreFilters = {
   openAccessOnly: false,
 };
 
-// ── Built-in scopes ──────────────────────────────────────────────────────────
-
-interface BuiltInScope {
-  id: string;
-  name: string;
-  tabs: ExploreTab[];
-}
-
-const BUILT_IN_SCOPES: BuiltInScope[] = [
-  { id: "all", name: "All Sources", tabs: ["academic", "web", "news", "discussions"] },
-  { id: "academic", name: "Academic Papers", tabs: ["academic"] },
-  { id: "web", name: "Web & Reports", tabs: ["web"] },
-  { id: "news", name: "News", tabs: ["news"] },
-  { id: "discussions", name: "Discussions", tabs: ["discussions"] },
-];
+// Built-in scopes removed — tabs already handle source-type filtering.
+// The Scope dropdown only shows "All Sources" (default) + user custom scopes.
 
 // ── Order By options ─────────────────────────────────────────────────────────
 
@@ -236,26 +223,16 @@ function ScopeDropdown({
       />
       {open && (
         <DropdownMenu>
-          {BUILT_IN_SCOPES.map((scope) => (
-            <DropdownItem
-              key={scope.id}
-              label={scope.name}
-              onClick={() => {
-                onFiltersChange({
-                  ...filters,
-                  scopeId: scope.id === "all" ? null : -(BUILT_IN_SCOPES.indexOf(scope) + 1),
-                });
-                setOpen(false);
-              }}
-              selected={
-                scope.id === "all"
-                  ? filters.scopeId === null
-                  : filters.scopeId === -(BUILT_IN_SCOPES.indexOf(scope) + 1)
-              }
-            />
-          ))}
+          <DropdownItem
+            label="All Sources"
+            onClick={() => {
+              onFiltersChange({ ...filters, scopeId: null });
+              setOpen(false);
+            }}
+            selected={filters.scopeId === null}
+          />
 
-          {userScopes.length > 0 && <DropdownDivider />}
+          {userScopes.filter((s) => s.isActive).length > 0 && <DropdownDivider />}
 
           {userScopes
             .filter((s) => s.isActive)

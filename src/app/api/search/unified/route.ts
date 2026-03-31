@@ -295,7 +295,15 @@ export async function GET(req: Request) {
   const augment = searchParams.get("augment") !== "false";
   const sort = searchParams.get("sort") || "relevance";
   const tabParam = searchParams.get("tab") || "academic";
-  const timeRange = searchParams.get("timeRange") ?? undefined; // "24h" | "week" | "month"
+  const VALID_TIME_RANGES = ["24h", "week", "month", "year"] as const;
+  const timeRangeRaw = searchParams.get("timeRange");
+  if (timeRangeRaw && !VALID_TIME_RANGES.includes(timeRangeRaw as (typeof VALID_TIME_RANGES)[number])) {
+    return NextResponse.json(
+      { error: "Invalid timeRange. Must be one of: 24h, week, month, year" },
+      { status: 400 }
+    );
+  }
+  const timeRange = (timeRangeRaw as (typeof VALID_TIME_RANGES)[number]) ?? undefined;
   const exactMatch = searchParams.get("exactMatch") === "true";
   const usePreferences = searchParams.get("usePreferences") !== "false"; // default true
   const scopeId = searchParams.get("scopeId")
@@ -329,8 +337,9 @@ export async function GET(req: Request) {
         ? await getDomainPreferences()
         : [];
       const category = SEARXNG_CATEGORY_BY_TAB[tabParam];
-      // Wrap query in quotes for exact match
-      const effectiveQuery = exactMatch ? `"${q}"` : q;
+      // Wrap query in quotes for exact match (strip existing quotes to prevent injection)
+      const sanitized = q.replace(/"/g, "");
+      const effectiveQuery = exactMatch ? `"${sanitized}"` : q;
       const {
         results: paged,
         total: visibleTotal,

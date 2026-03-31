@@ -690,4 +690,25 @@ describe("GET /api/search/unified", () => {
     expect(body.results[1].title).toBe("News article");
     expect(body.results[2].title).toBe("Community post");
   });
+
+  it("rejects invalid timeRange values", async () => {
+    const res = await GET(
+      makeRequest({ q: "test", tab: "web", timeRange: "invalid" })
+    );
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toMatch(/timeRange/i);
+  });
+
+  it("strips double quotes from query when exactMatch is true", async () => {
+    const res = await GET(
+      makeRequest({ q: 'injection "attack" test', tab: "web", exactMatch: "true" })
+    );
+    expect(res.status).toBe(200);
+    // Should wrap sanitized query (no inner quotes) in double quotes
+    expect(mockSearchSearXNG).toHaveBeenCalledWith(
+      '"injection attack test"',
+      expect.objectContaining({ category: "general" })
+    );
+  });
 });
