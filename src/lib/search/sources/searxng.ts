@@ -71,6 +71,34 @@ function parseSourceLabel(result: SearXNGResult): string {
   return getDomainLabel(result.url);
 }
 
+function parseMetadataParts(result: SearXNGResult): string[] {
+  return collapseWhitespace(result.metadata ?? "")
+    .split("|")
+    .map((part) => collapseWhitespace(part))
+    .filter(Boolean);
+}
+
+function looksLikeRelativeTime(value: string): boolean {
+  return /(\d+\s+(minute|hour|day|week|month|year)s?\s+ago|yesterday|today)/i.test(
+    value
+  );
+}
+
+function extractDiscussionMetadata(result: SearXNGResult): {
+  platform?: string;
+  community?: string;
+  engagement?: string;
+} {
+  const parts = parseMetadataParts(result);
+  const contentParts = parts.filter((part) => !looksLikeRelativeTime(part));
+
+  return {
+    platform: contentParts[0] || undefined,
+    community: contentParts[1] || undefined,
+    engagement: contentParts.slice(2).join(" · ") || undefined,
+  };
+}
+
 function parseYear(result: SearXNGResult): number {
   const rawDate = result.publishedDate || result.pubdate || "";
   const yearMatch = rawDate.match(/(\d{4})/);
@@ -92,6 +120,9 @@ function mapResult(
 
   const mappedSource = CATEGORY_TO_SOURCE[normalizeCategory(requestedCategory)];
   const abstract = collapseWhitespace(stripHtml(result.content ?? ""));
+  const publishedAt = result.publishedDate || result.pubdate || undefined;
+  const discussionMetadata =
+    mappedSource === "discussions" ? extractDiscussionMetadata(result) : {};
 
   return {
     title,
@@ -100,6 +131,11 @@ function mapResult(
     url: result.url,
     domain: getDomainLabel(result.url),
     year: parseYear(result),
+    publishedAt,
+    sourceLabel: parseSourceLabel(result),
+    platform: discussionMetadata.platform,
+    community: discussionMetadata.community,
+    engagement: discussionMetadata.engagement,
     abstract: abstract || undefined,
     citationCount: 0,
     publicationTypes: [mappedSource],

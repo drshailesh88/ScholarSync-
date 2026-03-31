@@ -86,6 +86,8 @@ describe("searchSearXNG", () => {
       journal: "Fox Business",
       domain: "foxbusiness.com",
       year: 2026,
+      publishedAt: "2026-03-31T08:47:00",
+      sourceLabel: "Fox Business",
       sources: ["web"],
     });
   });
@@ -190,6 +192,9 @@ describe("searchSearXNG", () => {
     expect(web.results[0]?.sources).toEqual(["web"]);
     expect(news.results[0]?.sources).toEqual(["news"]);
     expect(discussions.results[0]?.sources).toEqual(["discussions"]);
+    expect(discussions.results[0]).toMatchObject({
+      publishedAt: "2024-01-02T00:00:00",
+    });
 
     expect(mockResilientFetch.mock.calls[0]?.[0]).toContain("categories=general");
     expect(mockResilientFetch.mock.calls[1]?.[0]).toContain("categories=news");
@@ -216,5 +221,32 @@ describe("searchSearXNG", () => {
 
     expect(response.results).toHaveLength(40);
     expect(response.total).toBe(57);
+  });
+
+  it("extracts discussion metadata for result cards", async () => {
+    mockJsonResponse({
+      number_of_results: 1,
+      results: [
+        {
+          url: "https://www.reddit.com/r/science/comments/abc123/example/",
+          title: "Example thread",
+          content: "Discussion snippet",
+          metadata: "2 hours ago | Reddit | r/science | ▲ 847 | 234 comments",
+          category: "social media",
+          publishedDate: "2026-03-31T10:00:00",
+        },
+      ],
+    });
+
+    const response = await searchSearXNG("example", {
+      category: "social media",
+    });
+
+    expect(response.results[0]).toMatchObject({
+      sourceLabel: "234 comments",
+      platform: "Reddit",
+      community: "r/science",
+      engagement: "▲ 847 · 234 comments",
+    });
   });
 });

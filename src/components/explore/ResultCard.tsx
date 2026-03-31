@@ -1,0 +1,227 @@
+"use client";
+
+import { DotsThree, Plus } from "@phosphor-icons/react";
+import type { UnifiedSearchResult } from "@/types/search";
+import type { ExploreTab } from "./ExploreTabs";
+
+type SupportedTab = Exclude<ExploreTab, "more">;
+
+const TRUST_BORDER_COLORS = {
+  government: "#16A34A",
+  major_journalism: "#2563EB",
+  community: "#D97706",
+  other: "rgba(55,53,47,0.2)",
+} as const;
+
+const EVIDENCE_BORDER_COLORS = {
+  I: "#16A34A",
+  II: "#2563EB",
+  III: "#D97706",
+  IV: "#EA580C",
+  V: "rgba(55,53,47,0.2)",
+} as const;
+
+function buildResultHref(result: UnifiedSearchResult): string | null {
+  if (result.url) return result.url;
+  if (result.doi) return `https://doi.org/${result.doi}`;
+  if (result.pmid) return `https://pubmed.ncbi.nlm.nih.gov/${result.pmid}/`;
+  if (result.arxivId) return `https://arxiv.org/abs/${result.arxivId}`;
+  if (result.openAccessPdfUrl) return result.openAccessPdfUrl;
+  return null;
+}
+
+function formatAuthors(result: UnifiedSearchResult): string | null {
+  if (!result.authors.length) return null;
+  if (result.authors.length === 1) return result.authors[0];
+  if (result.authors.length === 2) return `${result.authors[0]} and ${result.authors[1]}`;
+  return `${result.authors[0]}, ${result.authors[1]}, et al.`;
+}
+
+function formatBreadcrumb(result: UnifiedSearchResult, tab: SupportedTab): string {
+  if (tab === "academic") {
+    return result.journal || result.domain || "Academic source";
+  }
+
+  if (!result.url) {
+    return result.domain || result.sourceLabel || result.journal || "Source";
+  }
+
+  try {
+    const url = new URL(result.url);
+    const domain = result.domain || url.hostname.replace(/^www\./, "");
+    const segments = url.pathname
+      .split("/")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((segment) => decodeURIComponent(segment).replace(/[-_]/g, " "));
+
+    return segments.length ? `${domain} > ${segments.join(" > ")}` : domain;
+  } catch {
+    return result.domain || result.sourceLabel || result.journal || "Source";
+  }
+}
+
+function formatRelativeTime(value?: string): string | null {
+  if (!value) return null;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const deltaMs = date.getTime() - Date.now();
+  const deltaHours = Math.round(deltaMs / (1000 * 60 * 60));
+  const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+  if (Math.abs(deltaHours) < 24) {
+    return formatter.format(deltaHours, "hour");
+  }
+
+  const deltaDays = Math.round(deltaHours / 24);
+  if (Math.abs(deltaDays) < 30) {
+    return formatter.format(deltaDays, "day");
+  }
+
+  const deltaMonths = Math.round(deltaDays / 30);
+  if (Math.abs(deltaMonths) < 12) {
+    return formatter.format(deltaMonths, "month");
+  }
+
+  const deltaYears = Math.round(deltaMonths / 12);
+  return formatter.format(deltaYears, "year");
+}
+
+function formatDateLabel(result: UnifiedSearchResult): string | null {
+  if (result.publishedAt) {
+    const date = new Date(result.publishedAt);
+    if (!Number.isNaN(date.getTime())) {
+      return new Intl.DateTimeFormat("en", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }).format(date);
+    }
+  }
+
+  if (result.year > 0) {
+    return String(result.year);
+  }
+
+  return null;
+}
+
+function buildMetadata(result: UnifiedSearchResult, tab: SupportedTab): string | null {
+  if (tab === "academic") {
+    const authors = formatAuthors(result);
+    const evidence = result.evidenceLevel ? `Evidence ${result.evidenceLevel}` : null;
+    return [authors, evidence].filter(Boolean).join(" · ") || null;
+  }
+
+  if (tab === "news") {
+    const outlet = result.sourceLabel || result.journal || result.domain;
+    const relativeTime = formatRelativeTime(result.publishedAt);
+    return [outlet, relativeTime].filter(Boolean).join(" · ") || null;
+  }
+
+  if (tab === "discussions") {
+    return [
+      result.platform,
+      result.community,
+      result.engagement,
+    ].filter(Boolean).join(" · ") || null;
+  }
+
+  return formatAuthors(result) || result.sourceLabel || result.journal || null;
+}
+
+function getBorderColor(result: UnifiedSearchResult, tab: SupportedTab): string {
+  if (tab === "academic" && result.evidenceLevel) {
+    return EVIDENCE_BORDER_COLORS[result.evidenceLevel];
+  }
+
+  return TRUST_BORDER_COLORS[result.trustTier || "other"];
+}
+
+export function ResultCard({
+  result,
+  tab,
+}: {
+  result: UnifiedSearchResult;
+  tab: SupportedTab;
+}) {
+  const href = buildResultHref(result);
+  const metadata = buildMetadata(result, tab);
+  const date = formatDateLabel(result);
+  const breadcrumb = formatBreadcrumb(result, tab);
+  const snippet = result.abstract || result.tldr || "";
+
+  return (
+    <article
+      className="rounded-2xl bg-transparent p-4 transition-colors duration-150 hover:bg-surface-raised hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+      style={{ borderLeft: `3px solid ${getBorderColor(result, tab)}` }}
+    >
+      <div className="flex items-start justify-between gap-4">
+        {href ? (
+          <a
+            className="text-[17px] font-medium leading-[1.3] text-ink underline-offset-4 hover:text-brand hover:underline"
+            href={href}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {result.title}
+          </a>
+        ) : (
+          <h2 className="text-[17px] font-medium leading-[1.3] text-ink">
+            {result.title}
+          </h2>
+        )}
+
+        <div className="flex shrink-0 items-center gap-1">
+          <button
+            aria-label="Save result"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-black/[0.04] hover:text-brand"
+            type="button"
+          >
+            <Plus size={16} weight="bold" />
+          </button>
+          <button
+            aria-label="More actions"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-black/[0.04] hover:text-ink"
+            type="button"
+          >
+            <DotsThree size={18} weight="bold" />
+          </button>
+        </div>
+      </div>
+
+      <p className="mt-2 text-[13px] font-normal text-brand">
+        {breadcrumb}
+      </p>
+
+      {(metadata || date) ? (
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-[13px] font-normal text-ink-muted">
+            {metadata}
+          </p>
+          {date ? (
+            <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-ink-muted">
+              {date}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
+      {snippet ? (
+        <p
+          className="mt-3 text-[14px] leading-[1.5] text-ink-muted"
+          style={{
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 3,
+            overflow: "hidden",
+          }}
+        >
+          {snippet}
+        </p>
+      ) : null}
+    </article>
+  );
+}
