@@ -59,6 +59,7 @@ const DOMAIN_PREFERENCE_WEIGHT: Record<ResultDomainPreferenceLevel, number> = {
   higher: 1,
   prefer: 2,
 };
+const MAX_NON_ACADEMIC_RESULTS = 100;
 
 function isSearchTab(tab: string): tab is SearchTab {
   return (
@@ -144,6 +145,70 @@ function applyDomainPreferences(
     .map(({ result }) => result);
 }
 
+async function fetchNonAcademicResults(
+  query: string,
+  category: SearXNGCategory,
+  page: number,
+  perPage: number,
+  preferences: Awaited<ReturnType<typeof getDomainPreferences>>
+): Promise<{
+  results: UnifiedSearchResult[];
+  total: number;
+  hasMore: boolean;
+  degraded: boolean;
+}> {
+  const requestedVisibleCount = (page + 1) * perPage;
+  let limit =
+    preferences.length > 0
+      ? Math.min(Math.max(requestedVisibleCount * 3, perPage), MAX_NON_ACADEMIC_RESULTS)
+      : Math.min(requestedVisibleCount, MAX_NON_ACADEMIC_RESULTS);
+
+  let response = await searchSearXNG(query, {
+    category,
+    limit,
+  });
+  let rankedResults = applyDomainPreferences(response.results, preferences);
+
+  while (!response.degraded) {
+    const fetchCeiling = Math.min(response.total, MAX_NON_ACADEMIC_RESULTS);
+    const hasEnoughVisibleResults = rankedResults.length >= requestedVisibleCount;
+    const canFetchMore = limit < fetchCeiling;
+
+    if (hasEnoughVisibleResults || !canFetchMore) {
+      break;
+    }
+
+    const nextLimit = Math.min(
+      fetchCeiling,
+      Math.max(limit + perPage * 3, requestedVisibleCount + perPage)
+    );
+
+    if (nextLimit <= limit) {
+      break;
+    }
+
+    limit = nextLimit;
+    response = await searchSearXNG(query, {
+      category,
+      limit,
+    });
+    rankedResults = applyDomainPreferences(response.results, preferences);
+  }
+
+  const start = page * perPage;
+  const paged = rankedResults.slice(start, start + perPage);
+  const fetchCeiling = Math.min(response.total, MAX_NON_ACADEMIC_RESULTS);
+  const canFetchMore = !response.degraded && limit < fetchCeiling;
+  const hasMore = rankedResults.length > start + perPage || canFetchMore;
+
+  return {
+    results: paged,
+    total: response.total,
+    hasMore,
+    degraded: response.degraded,
+  };
+}
+
 export async function GET(req: Request) {
   const log = logger.withRequestId();
 
@@ -204,26 +269,26 @@ export async function GET(req: Request) {
   try {
     if (tabParam !== "academic") {
       const userDomainPreferences = await getDomainPreferences();
-      const hasDomainPreferences = userDomainPreferences.length > 0;
       const category = SEARXNG_CATEGORY_BY_TAB[tabParam];
-      const neededResults = hasDomainPreferences
-        ? Math.min(Math.max((page + 1) * perPage * 3, perPage), 100)
-        : Math.min((page + 1) * perPage, 100);
-      const { results, total, degraded } = await searchSearXNG(q, {
+      const {
+        results: paged,
+        total: visibleTotal,
+        hasMore,
+        degraded,
+      } = await fetchNonAcademicResults(
+        q,
         category,
-        limit: neededResults,
-      });
-      const rankedResults = applyDomainPreferences(results, userDomainPreferences);
-      const start = page * perPage;
-      const paged = rankedResults.slice(start, start + perPage);
-      const visibleTotal = total;
+        page,
+        perPage,
+        userDomainPreferences
+      );
 
       return NextResponse.json({
         results: paged,
         total: visibleTotal,
         page,
         perPage,
-        hasMore: start + perPage < visibleTotal,
+        hasMore,
         sourceCounts: { [tabParam]: visibleTotal },
         searxngUnavailable: degraded,
       } satisfies SearchResponse);
