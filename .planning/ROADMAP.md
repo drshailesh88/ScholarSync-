@@ -146,13 +146,13 @@ Risk: **LOW** — keyboard handling is well-understood. History is simple CRUD.
 ### Phase 9: On-Demand Synthesis (AI Layer)
 **Deliverable:** User presses Q → AI synthesis streams above results with colored citation markers.
 
-- [ ] Build SynthesisBlock component (collapsible, streaming, citation markers)
-- [ ] Create synthesis API endpoint (or extend existing /api/research/synthesize)
-- [ ] Synthesis draws from top results across current tab
-- [ ] Citation markers colored by trust tier of cited source
-- [ ] Keyboard shortcut Q toggles synthesis
-- [ ] Synthesis collapsible via button or Q again
-- [ ] Write tests: synthesis generates, citations link to results, streaming works, collapse works
+- [x] Build SynthesisBlock component (collapsible, streaming, citation markers)
+- [x] Create synthesis API endpoint (or extend existing /api/research/synthesize)
+- [x] Synthesis draws from top results across current tab
+- [x] Citation markers colored by trust tier of cited source
+- [x] Keyboard shortcut Q toggles synthesis
+- [x] Synthesis collapsible via button or Q again
+- [x] Write tests: synthesis generates, citations link to results, streaming works, collapse works
 
 Risk: **LOW** — existing synthesis infrastructure exists (AISynthesisPanel, /api/research/synthesize). This extends it for web sources.
 

@@ -78,12 +78,12 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [x] Preferred domains appear near top
 
 ### On-Demand Synthesis
-- [ ] Click button or press Q to generate synthesis
-- [ ] Synthesis appears above results with inline citation markers
-- [ ] Citation markers colored by Trust Tier
-- [ ] Synthesis streams word-by-word
-- [ ] Synthesis is collapsible
-- [ ] Only fires when user explicitly requests (not automatic)
+- [x] Click button or press Q to generate synthesis
+- [x] Synthesis appears above results with inline citation markers
+- [x] Citation markers colored by Trust Tier
+- [x] Synthesis streams word-by-word
+- [x] Synthesis is collapsible
+- [x] Only fires when user explicitly requests (not automatic)
 
 ### Keyboard Navigation
 - [ ] j/k or arrows to navigate results

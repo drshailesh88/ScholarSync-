@@ -1,14 +1,14 @@
 # Sprint Log
 ## Session started: 2026-03-31
 ## Phase: 9 — On-Demand Synthesis (AI Layer)
-## Current requirement: 7. Write tests
-## Status: TESTING
+## Current requirement: COMPLETE
+## Status: COMPLETE
 ## Attempt: 1/5
 ## Session: new
-## Files changed: [SynthesisBlock.tsx, route.ts, ExplorePageClient.tsx, ResultCard.tsx]
-## Last test result: N/A
+## Files changed: [SynthesisBlock.tsx, route.ts, ExplorePageClient.tsx, ResultCard.tsx, SynthesisBlock.test.tsx, route.test.ts]
+## Last test result: 16 passing, 0 failing (10 component + 6 API)
 ## Failing test: N/A
-## Notes: Requirements 1-6 all implemented and committed. Now writing tests.
+## Notes: All 7 requirements implemented and tested in single session.
 
 ## Requirements checklist:
 - [x] 1. Build SynthesisBlock component (collapsible, streaming, citation markers)
@@ -17,4 +17,4 @@
 - [x] 4. Citation markers colored by trust tier of cited source
 - [x] 5. Keyboard shortcut Q toggles synthesis
 - [x] 6. Synthesis collapsible via button or Q again
-- [ ] 7. Write tests: synthesis generates, citations link to results, streaming works, collapse works
+- [x] 7. Write tests: synthesis generates, citations link to results, streaming works, collapse works

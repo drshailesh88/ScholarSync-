@@ -4,7 +4,7 @@
 **Explore Module V1** — Created 2026-03-31
 
 ## Current Phase
-Phase 5: Save + Web Sources Database — Status: COMPLETE ✅
+Phase 9: On-Demand Synthesis — Status: COMPLETE ✅
 
 ## Completed Phases
 - Phase 1: SearXNG Deployment + Source Adapter ✅ (PRs #52, #53)
@@ -12,6 +12,7 @@ Phase 5: Save + Web Sources Database — Status: COMPLETE ✅
 - Phase 3: Explore Page Shell ✅ (PR #55)
 - Phase 4: Filter Pills + Scopes ✅ (committed to main)
 - Phase 5: Save + Web Sources Database ✅
+- Phase 9: On-Demand Synthesis ✅
 
 ## Source Documents
 - PRD: GitHub Issue #51
@@ -30,9 +31,9 @@ Phase 5: Save + Web Sources Database — Status: COMPLETE ✅
 - Phase 2: Grill & Interview ✅
 - Phase 3: Language & PRD ✅
 - Phase 4: Technical Architecture ✅
-- Phase 5: Implementation → IN PROGRESS (Phase 5 complete, Phase 6 next)
+- Phase 5: Implementation → IN PROGRESS (Phases 1-5, 9 complete)
 
 ## Quick Reference
 - SearXNG deployed: http://34.14.206.241:8080
-- Next: Phase 6 — Content Extraction + Annotation (Reading & Highlighting)
-- Unchecked requirements: ~16 items across Phases 6-10
+- Remaining: Phases 6, 7, 8, 10
+- Unchecked requirements: ~28 items across Phases 6-8, 10
