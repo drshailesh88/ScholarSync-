@@ -10,8 +10,8 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [x] SearXNG source adapter normalizes results into the existing UnifiedSearchResult format
 - [x] Unified search route fans out to SearXNG alongside existing academic sources
 - [x] Web/News/Discussions tabs search via SearXNG categories (general, news, social media)
-- [ ] Academic tab continues using existing 5-source pipeline (PubMed, S2, OpenAlex, arXiv, ClinicalTrials) — zero regression
-- [ ] Results appear in under 2 seconds
+- [x] Academic tab continues using existing 5-source pipeline (PubMed, S2, OpenAlex, arXiv, ClinicalTrials) — zero regression
+- [x] Results appear in under 2 seconds
 - [x] Graceful degradation: if SearXNG is down, Academic tab works normally; other tabs show "temporarily unavailable"
 
 ### Trust & Quality
