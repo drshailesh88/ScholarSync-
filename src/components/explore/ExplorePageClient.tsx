@@ -1,12 +1,19 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, CircleNotch } from "@phosphor-icons/react";
 import type { SearchResponse, UnifiedSearchResult } from "@/types/search";
 import { cn } from "@/lib/utils";
 import { ExploreSearchBar } from "./ExploreSearchBar";
 import { ExploreTabs, type ExploreTab } from "./ExploreTabs";
 import { ResultCard } from "./ResultCard";
+import {
+  FilterPills,
+  DEFAULT_FILTERS,
+  type ExploreFilters,
+} from "./FilterPills";
+import { getUserScopes, type ScopeRecord } from "@/lib/actions/scopes";
 
 type SearchableExploreTab = Exclude<ExploreTab, "more">;
 
@@ -45,16 +52,77 @@ function buildInitialTabState(): Record<SearchableExploreTab, TabState> {
   };
 }
 
+function filtersToSearchParams(filters: ExploreFilters): Record<string, string> {
+  const params: Record<string, string> = {};
+
+  // Order By → sort param
+  const sortMap: Record<ExploreFilters["orderBy"], string> = {
+    quality: "relevance",
+    recency: "year",
+    citations: "citations",
+    trust: "trust",
+  };
+  if (filters.orderBy !== "quality") {
+    params.sort = sortMap[filters.orderBy];
+  }
+
+  // Time filter → yearStart/yearEnd
+  if (filters.timeFilter !== "any") {
+    const now = new Date();
+    if (filters.timeFilter === "custom") {
+      if (filters.customDateFrom) {
+        params.yearStart = String(new Date(filters.customDateFrom).getFullYear());
+      }
+      if (filters.customDateTo) {
+        params.yearEnd = String(new Date(filters.customDateTo).getFullYear());
+      }
+    } else {
+      const offsets: Record<string, number> = {
+        "24h": 0,
+        week: 0,
+        month: 0,
+        year: 1,
+      };
+      params.yearStart = String(now.getFullYear() - (offsets[filters.timeFilter] ?? 0));
+      params.yearEnd = String(now.getFullYear());
+      // For sub-year granularity, pass time param for SearXNG
+      if (filters.timeFilter !== "year") {
+        params.timeRange = filters.timeFilter;
+      }
+    }
+  }
+
+  // Options
+  if (filters.openAccessOnly) {
+    params.openAccessOnly = "true";
+  }
+  if (filters.exactMatch) {
+    params.exactMatch = "true";
+  }
+  if (!filters.usePreferences) {
+    params.usePreferences = "false";
+  }
+
+  // Scope
+  if (filters.scopeId !== null && filters.scopeId > 0) {
+    params.scopeId = String(filters.scopeId);
+  }
+
+  return params;
+}
+
 async function fetchSearchPage(
   query: string,
   tab: SearchableExploreTab,
-  page: number
+  page: number,
+  filters?: ExploreFilters
 ): Promise<SearchResponse> {
   const params = new URLSearchParams({
     q: query,
     tab,
     page: String(page),
     perPage: String(RESULTS_PER_PAGE),
+    ...(filters ? filtersToSearchParams(filters) : {}),
   });
 
   const response = await fetch(`/api/search/unified?${params.toString()}`, {
@@ -74,6 +142,7 @@ async function fetchSearchPage(
 }
 
 export function ExplorePageClient() {
+  const router = useRouter();
   const [queryInput, setQueryInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<ExploreTab>("academic");
@@ -92,6 +161,17 @@ export function ExplorePageClient() {
   const [isPaginating, setIsPaginating] = useState(false);
   const [searchDurationMs, setSearchDurationMs] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<ExploreFilters>(DEFAULT_FILTERS);
+  const [userScopes, setUserScopes] = useState<ScopeRecord[]>([]);
+
+  // Load user scopes on mount
+  useEffect(() => {
+    getUserScopes()
+      .then(setUserScopes)
+      .catch(() => {
+        // Scopes table may not exist yet — ignore
+      });
+  }, []);
 
   const activeSearchTab = activeTab === "more" ? null : activeTab;
   const activePage = currentPageByTab[activeTab];
@@ -129,7 +209,7 @@ export function ExplorePageClient() {
 
     const startedAt = performance.now();
     const settled = await Promise.allSettled(
-      SEARCHABLE_TABS.map(async (tab) => [tab, await fetchSearchPage(trimmedQuery, tab, 0)] as const)
+      SEARCHABLE_TABS.map(async (tab) => [tab, await fetchSearchPage(trimmedQuery, tab, 0, filters)] as const)
     );
 
     const nextTabState = buildInitialTabState();
@@ -164,7 +244,7 @@ export function ExplorePageClient() {
       setError("Explore search failed. Try again.");
     }
     setIsSearching(false);
-  }, [queryInput]);
+  }, [queryInput, filters]);
 
   const ensurePageLoaded = useCallback(async (tab: SearchableExploreTab, page: number) => {
     if (!searchQuery) return;
@@ -177,7 +257,7 @@ export function ExplorePageClient() {
     setError(null);
 
     try {
-      const response = await fetchSearchPage(searchQuery, tab, page);
+      const response = await fetchSearchPage(searchQuery, tab, page, filters);
       setTabState((current) => ({
         ...current,
         [tab]: {
@@ -199,7 +279,7 @@ export function ExplorePageClient() {
     } finally {
       setIsPaginating(false);
     }
-  }, [searchQuery, tabState]);
+  }, [searchQuery, tabState, filters]);
 
   const handleTabChange = useCallback((tab: ExploreTab) => {
     setActiveTab(tab);
@@ -209,6 +289,55 @@ export function ExplorePageClient() {
       void ensurePageLoaded(tab, 0);
     }
   }, [ensurePageLoaded, searchQuery, tabState]);
+
+  const handleFiltersChange = useCallback(
+    (newFilters: ExploreFilters) => {
+      setFilters(newFilters);
+      // Re-search with new filters if we already have a query
+      if (searchQuery) {
+        setCurrentPageByTab({
+          academic: 0,
+          web: 0,
+          news: 0,
+          discussions: 0,
+          more: 0,
+        });
+        setIsSearching(true);
+        setError(null);
+
+        const startedAt = performance.now();
+        Promise.allSettled(
+          SEARCHABLE_TABS.map(async (tab) =>
+            [tab, await fetchSearchPage(searchQuery, tab, 0, newFilters)] as const
+          )
+        ).then((settled) => {
+          const nextTabState = buildInitialTabState();
+          settled.forEach((entry, index) => {
+            const tab = SEARCHABLE_TABS[index];
+            if (entry.status === "fulfilled") {
+              const [, response] = entry.value;
+              nextTabState[tab] = {
+                pages: { 0: response.results },
+                total: response.total,
+                hasMore: response.hasMore,
+                sourceCounts: response.sourceCounts,
+                unavailable: Boolean(response.searxngUnavailable),
+              };
+            } else {
+              nextTabState[tab] = {
+                ...createEmptyTabState(),
+                unavailable: tab !== "academic",
+              };
+            }
+          });
+          setTabState(nextTabState);
+          setSearchDurationMs(performance.now() - startedAt);
+          setIsSearching(false);
+        });
+      }
+    },
+    [searchQuery]
+  );
 
   const showLanding = !hasSearched && !searchQuery;
 
@@ -244,6 +373,14 @@ export function ExplorePageClient() {
         />
 
         <ExploreTabs activeTab={activeTab} onTabChange={handleTabChange} />
+
+        <FilterPills
+          activeTab={activeTab}
+          filters={filters}
+          onEditScopes={() => router.push("/explore/scopes")}
+          onFiltersChange={handleFiltersChange}
+          userScopes={userScopes}
+        />
 
         {statsLine ? (
           <p className="text-[13px] font-normal text-ink-muted">

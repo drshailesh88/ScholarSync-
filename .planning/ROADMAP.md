@@ -59,17 +59,17 @@ Risk: **LOW** — UI work, well-specified by UX/UI briefs and Kagi reverse-engin
 ### Phase 4: Filter Pills + Scopes (Search Refinement)
 **Deliverable:** User can filter by time, sort by trust, and create/use custom Scopes.
 
-- [ ] Build FilterPills component (Scope, Order By, Time, Options)
-- [ ] Build ScopeDropdown with built-in options + user custom scopes
-- [ ] Run database migration for `scopes` table
-- [ ] Create server actions: createScope, updateScope, deleteScope, getUserScopes, reorderScopes
-- [ ] Build Scope management settings page
-- [ ] Implement Order By: Quality, Recency, Citation Count, Source Trust
-- [ ] Implement Time filter: 24h, week, month, year, custom range
-- [ ] Implement Options: Exact match, Use my preferences, Open access only
-- [ ] Apply Scope constraints in unified search route
-- [ ] Active filter pill styling (purple tint)
-- [ ] Write tests: Scope CRUD, max 20 enforced, filters applied to results
+- [x] Build FilterPills component (Scope, Order By, Time, Options)
+- [x] Build ScopeDropdown with built-in options + user custom scopes
+- [x] Run database migration for `scopes` table
+- [x] Create server actions: createScope, updateScope, deleteScope, getUserScopes, reorderScopes
+- [x] Build Scope management settings page
+- [x] Implement Order By: Quality, Recency, Citation Count, Source Trust
+- [x] Implement Time filter: 24h, week, month, year, custom range
+- [x] Implement Options: Exact match, Use my preferences, Open access only
+- [x] Apply Scope constraints in unified search route
+- [x] Active filter pill styling (purple tint)
+- [x] Write tests: Scope CRUD, max 20 enforced, filters applied to results
 
 Risk: **LOW** — data layer + UI. Scopes are simple domain/keyword filters.
 

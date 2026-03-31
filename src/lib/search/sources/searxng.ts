@@ -14,6 +14,7 @@ type SearXNGSource = "web" | "news" | "discussions";
 interface SearXNGSearchOptions {
   category: SearXNGCategory;
   limit?: number;
+  timeRange?: "24h" | "week" | "month" | "year";
 }
 
 interface SearXNGResult {
@@ -172,6 +173,16 @@ export async function searchSearXNG(
   url.searchParams.set("q", query);
   url.searchParams.set("format", "json");
   url.searchParams.set("categories", options.category);
+  if (options.timeRange) {
+    // SearXNG time_range param: "day", "week", "month", "year"
+    const timeRangeMap: Record<string, string> = {
+      "24h": "day",
+      week: "week",
+      month: "month",
+      year: "year",
+    };
+    url.searchParams.set("time_range", timeRangeMap[options.timeRange] ?? "");
+  }
 
   try {
     const res = await resilientFetch(url.toString(), undefined, {

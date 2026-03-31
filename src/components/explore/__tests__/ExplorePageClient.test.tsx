@@ -3,6 +3,15 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+vi.mock("@/lib/actions/scopes", () => ({
+  getUserScopes: vi.fn().mockResolvedValue([]),
+}));
+
 import { ExplorePageClient } from "../ExplorePageClient";
 
 function flushPromises() {
