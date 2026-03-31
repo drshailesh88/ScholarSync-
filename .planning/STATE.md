@@ -4,7 +4,7 @@
 **Explore Module V1** — Created 2026-03-31
 
 ## Current Phase
-Phase 1: SearXNG Deployment + Source Adapter — Status: NOT STARTED
+Phase 1: SearXNG Deployment + Source Adapter — Status: IN PROGRESS
 
 ## Source Documents
 - PRD: GitHub Issue #51
@@ -29,5 +29,6 @@ Phase 1: SearXNG Deployment + Source Adapter — Status: NOT STARTED
 - Phase 5: Implementation → STARTING NOW
 
 ## Quick Reference
-- Next action: Start Phase 1 — deploy SearXNG and build source adapter
-- To begin: `cd infra/searxng && ./deploy.sh` then build src/lib/search/sources/searxng.ts
+- Next action: Continue Phase 1 by building the SearXNG source adapter
+- SearXNG deployed: `http://34.14.206.241:8080` in GCP project `metal-node-486118-t7`, zone `asia-south1-b`
+- To continue: build `src/lib/search/sources/searxng.ts`, add `SEARXNG_URL`, then wire `tab=web|news|discussions` into `/api/search/unified`

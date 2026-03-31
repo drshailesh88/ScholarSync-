@@ -6,7 +6,7 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 ## Must Have (v1)
 
 ### Search Infrastructure
-- [ ] SearXNG deployed on GCP and returning JSON results for web, news, and social media queries
+- [x] SearXNG deployed on GCP and returning JSON results for web, news, and social media queries
 - [ ] SearXNG source adapter normalizes results into the existing UnifiedSearchResult format
 - [ ] Unified search route fans out to SearXNG alongside existing academic sources
 - [ ] Web/News/Discussions tabs search via SearXNG categories (general, news, social media)

@@ -10,7 +10,7 @@ Each phase is a vertical tracer bullet — cuts through all layers (schema → A
 **Deliverable:** Search "climate change" → get web results from SearXNG → displayed in terminal/API response
 **Why first:** Proves the entire new infrastructure works. If SearXNG deployment fails, everything else is blocked.
 
-- [ ] Deploy SearXNG to GCP using `infra/searxng/deploy.sh`
+- [x] Deploy SearXNG to GCP using `infra/searxng/deploy.sh`
 - [ ] Create `src/lib/search/sources/searxng.ts` — source adapter that calls SearXNG JSON API
 - [ ] Normalize SearXNG results to `UnifiedSearchResult` format
 - [ ] Add SEARXNG_URL to environment variables
