@@ -15,10 +15,10 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [x] Graceful degradation: if SearXNG is down, Academic tab works normally; other tabs show "temporarily unavailable"
 
 ### Trust & Quality
-- [ ] Trust Tier classifier assigns Government/Major Journalism/Community/Other to every web result
+- [x] Trust Tier classifier assigns Government/Major Journalism/Community/Other to every web result
 - [ ] Trust Indicator (3px colored left border) visible on every result card
 - [ ] Cohere rerank applied to web results (same as academic results)
-- [ ] Domain preferences (Mute/Lower/Neutral/Higher/Prefer) filter and boost results
+- [x] Domain preferences (Mute/Lower/Neutral/Higher/Prefer) filter and boost results
 - [ ] Source Info panel shows domain details and preference controls on shield icon click
 
 ### Explore Page UX
@@ -70,12 +70,12 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [ ] "Edit Scopes..." link opens settings page
 
 ### Domain Preferences
-- [ ] 5-level system: Mute / Lower / Neutral / Higher / Prefer
+- [x] 5-level system: Mute / Lower / Neutral / Higher / Prefer
 - [ ] Shield icon on each result opens Source Info panel with preference controls
 - [ ] "My Sources" settings page to manage all domain preferences
 - [ ] Max 1000 domain preferences, free for all plans
-- [ ] Muted domains never appear in results
-- [ ] Preferred domains appear near top
+- [x] Muted domains never appear in results
+- [x] Preferred domains appear near top
 
 ### On-Demand Synthesis
 - [ ] Click button or press Q to generate synthesis

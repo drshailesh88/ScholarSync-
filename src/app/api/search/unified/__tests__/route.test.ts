@@ -16,6 +16,7 @@ const mockAugmentQuery = vi.hoisted(() => vi.fn());
 const mockEnrichStudyTypes = vi.hoisted(() => vi.fn());
 const mockQualityRank = vi.hoisted(() => vi.fn());
 const mockExpandQueryForDomain = vi.hoisted(() => vi.fn());
+const mockGetDomainPreferences = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/auth", () => ({
   getCurrentUserId: mockGetCurrentUserId,
@@ -97,6 +98,10 @@ vi.mock("@/lib/search/query-expander", () => ({
   expandQueryForDomain: mockExpandQueryForDomain,
 }));
 
+vi.mock("@/lib/actions/domain-preferences", () => ({
+  getDomainPreferences: mockGetDomainPreferences,
+}));
+
 import { GET } from "../route";
 
 function makeRequest(params: Record<string, string> = {}): Request {
@@ -161,6 +166,7 @@ describe("GET /api/search/unified", () => {
       supplementary: null,
       expansions: [],
     });
+    mockGetDomainPreferences.mockResolvedValue([]);
   });
 
   it("returns results for a valid query", async () => {
@@ -283,6 +289,131 @@ describe("GET /api/search/unified", () => {
     expect(body.total).toBe(0);
     expect(body.searxngUnavailable).toBe(true);
     expect(body.sourceCounts).toEqual({ news: 0 });
+  });
+
+  it("adds trust tiers to web results", async () => {
+    mockSearchSearXNG.mockResolvedValueOnce({
+      results: [
+        {
+          title: "Reuters climate report",
+          authors: [],
+          journal: "Reuters",
+          year: 2026,
+          abstract: "Climate coverage",
+          citationCount: 0,
+          publicationTypes: ["news"],
+          isOpenAccess: false,
+          sources: ["news"],
+          url: "https://www.reuters.com/world/climate",
+          domain: "reuters.com",
+        },
+      ],
+      total: 1,
+      degraded: false,
+    });
+
+    const res = await GET(makeRequest({ q: "climate change", tab: "news" }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.results[0].trustTier).toBe("major_journalism");
+  });
+
+  it("filters muted domains from non-academic search results", async () => {
+    mockGetDomainPreferences.mockResolvedValueOnce([
+      {
+        domain: "reddit.com",
+        level: "mute",
+      },
+    ]);
+    mockSearchSearXNG.mockResolvedValueOnce({
+      results: [
+        {
+          title: "Keep me",
+          authors: [],
+          journal: "Reuters",
+          year: 2026,
+          abstract: "Visible result",
+          citationCount: 0,
+          publicationTypes: ["news"],
+          isOpenAccess: false,
+          sources: ["news"],
+          url: "https://www.reuters.com/world/climate",
+          domain: "reuters.com",
+        },
+        {
+          title: "Hide me",
+          authors: [],
+          journal: "Reddit",
+          year: 2026,
+          abstract: "Muted result",
+          citationCount: 0,
+          publicationTypes: ["news"],
+          isOpenAccess: false,
+          sources: ["news"],
+          url: "https://www.reddit.com/r/science/comments/1",
+          domain: "reddit.com",
+        },
+      ],
+      total: 2,
+      degraded: false,
+    });
+
+    const res = await GET(makeRequest({ q: "climate change", tab: "news" }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.total).toBe(1);
+    expect(body.results).toHaveLength(1);
+    expect(body.results[0].domain).toBe("reuters.com");
+  });
+
+  it("boosts preferred domains ahead of neutral results", async () => {
+    mockGetDomainPreferences.mockResolvedValueOnce([
+      {
+        domain: "reuters.com",
+        level: "prefer",
+      },
+    ]);
+    mockSearchSearXNG.mockResolvedValueOnce({
+      results: [
+        {
+          title: "Neutral result",
+          authors: [],
+          journal: "Example",
+          year: 2026,
+          abstract: "Neutral",
+          citationCount: 0,
+          publicationTypes: ["news"],
+          isOpenAccess: false,
+          sources: ["news"],
+          url: "https://example.com/story",
+          domain: "example.com",
+        },
+        {
+          title: "Preferred result",
+          authors: [],
+          journal: "Reuters",
+          year: 2026,
+          abstract: "Preferred",
+          citationCount: 0,
+          publicationTypes: ["news"],
+          isOpenAccess: false,
+          sources: ["news"],
+          url: "https://www.reuters.com/world/climate",
+          domain: "reuters.com",
+        },
+      ],
+      total: 2,
+      degraded: false,
+    });
+
+    const res = await GET(makeRequest({ q: "climate change", tab: "news" }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.results[0].domain).toBe("reuters.com");
+    expect(body.results[1].domain).toBe("example.com");
   });
 
   // ── Slice 1: enrichStudyTypes() ──────────────────────────────────

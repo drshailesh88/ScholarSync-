@@ -71,6 +71,8 @@ describe("searchSearXNG", () => {
       title: "Climate Change",
       authors: [],
       journal: "NOAA",
+      url: "https://www.noaa.gov/climate",
+      domain: "noaa.gov",
       year: 2025,
       abstract: "NOAA explains the latest climate science.",
       publicationTypes: ["web"],
@@ -82,6 +84,7 @@ describe("searchSearXNG", () => {
     expect(response.results[1]).toMatchObject({
       title: "Climate change",
       journal: "Fox Business",
+      domain: "foxbusiness.com",
       year: 2026,
       sources: ["web"],
     });
