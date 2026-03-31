@@ -40,17 +40,17 @@ Risk: **LOW** — straightforward data layer + classifier. No external dependenc
 ### Phase 3: Explore Page Shell (UI Foundation)
 **Deliverable:** User navigates to /explore, sees search bar, types a query, sees results with trust indicators and tabs.
 
-- [ ] Create `/explore` route with Kagi-style layout
-- [ ] Build ExploreSearchBar component (glass-morphism pill, 48px, DM Sans)
-- [ ] Build ExploreTabs component (Academic | Web | News | Discussions | More)
-- [ ] Build ResultCard component (trust left-border, title, URL, snippet, date, save icon, "..." menu)
-- [ ] Build per-tab card variations (Academic: journal+authors, News: outlet+time, Discussions: platform+engagement)
-- [ ] Wire to unified search API with tab parameter
-- [ ] Implement client-side tab switching (instant, no re-fetch)
-- [ ] Add pagination
-- [ ] Add stats line
-- [ ] Update sidebar: rename "Discover" → "Explore"
-- [ ] Write E2E tests: search renders results, tabs switch, pagination works
+- [x] Create `/explore` route with Kagi-style layout
+- [x] Build ExploreSearchBar component (glass-morphism pill, 48px, DM Sans)
+- [x] Build ExploreTabs component (Academic | Web | News | Discussions | More)
+- [x] Build ResultCard component (trust left-border, title, URL, snippet, date, save icon, "..." menu)
+- [x] Build per-tab card variations (Academic: journal+authors, News: outlet+time, Discussions: platform+engagement)
+- [x] Wire to unified search API with tab parameter
+- [x] Implement client-side tab switching (instant, no re-fetch)
+- [x] Add pagination
+- [x] Add stats line
+- [x] Update sidebar: rename "Discover" → "Explore"
+- [x] Write E2E or integration tests: search renders results, tabs switch, pagination works
 
 Risk: **LOW** — UI work, well-specified by UX/UI briefs and Kagi reverse-engineering.
 

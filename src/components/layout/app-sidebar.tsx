@@ -100,7 +100,7 @@ const navSections: NavSection[] = [
     label: "Research",
     category: "research",
     items: [
-      { label: "Discover", href: "/research", icon: { type: "svg", element: svgIcons.discover } },
+      { label: "Explore", href: "/explore", icon: { type: "svg", element: svgIcons.discover } },
       { label: "Reading Room", href: "/notebook", icon: { type: "png", src: "/sidebar-icons/reading-room.png" } },
       { label: "Journal Feed", href: "/feeds", icon: { type: "svg", element: <Rss size={16} weight="bold" /> } },
       { label: "Deep Research", href: "/deep-research", icon: { type: "png", src: "/sidebar-icons/creativity.png", size: 20 } },

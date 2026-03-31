@@ -59,16 +59,53 @@ function getDomainLabel(url: string): string {
   }
 }
 
-function parseSourceLabel(result: SearXNGResult): string {
+function parseSourceLabel(
+  result: SearXNGResult,
+  source: SearXNGSource
+): string {
   const metadata = collapseWhitespace(result.metadata ?? "");
+  const parts = parseMetadataParts(result);
+
+  if (source === "discussions") {
+    const platform = parts.find((part) => !looksLikeRelativeTime(part));
+    if (platform) return platform;
+  }
+
   if (metadata.includes("|")) {
-    const parts = metadata.split("|").map((part) => collapseWhitespace(part));
     const lastPart = parts[parts.length - 1];
     if (lastPart) return lastPart;
   }
 
   if (metadata) return metadata;
   return getDomainLabel(result.url);
+}
+
+function parseMetadataParts(result: SearXNGResult): string[] {
+  return collapseWhitespace(result.metadata ?? "")
+    .split("|")
+    .map((part) => collapseWhitespace(part))
+    .filter(Boolean);
+}
+
+function looksLikeRelativeTime(value: string): boolean {
+  return /(\d+\s+(minute|hour|day|week|month|year)s?\s+ago|yesterday|today)/i.test(
+    value
+  );
+}
+
+function extractDiscussionMetadata(result: SearXNGResult): {
+  platform?: string;
+  community?: string;
+  engagement?: string;
+} {
+  const parts = parseMetadataParts(result);
+  const contentParts = parts.filter((part) => !looksLikeRelativeTime(part));
+
+  return {
+    platform: contentParts[0] || undefined,
+    community: contentParts[1] || undefined,
+    engagement: contentParts.slice(2).join(" · ") || undefined,
+  };
 }
 
 function parseYear(result: SearXNGResult): number {
@@ -92,14 +129,22 @@ function mapResult(
 
   const mappedSource = CATEGORY_TO_SOURCE[normalizeCategory(requestedCategory)];
   const abstract = collapseWhitespace(stripHtml(result.content ?? ""));
+  const publishedAt = result.publishedDate || result.pubdate || undefined;
+  const discussionMetadata =
+    mappedSource === "discussions" ? extractDiscussionMetadata(result) : {};
 
   return {
     title,
     authors: [],
-    journal: parseSourceLabel(result),
+    journal: parseSourceLabel(result, mappedSource),
     url: result.url,
     domain: getDomainLabel(result.url),
     year: parseYear(result),
+    publishedAt,
+    sourceLabel: parseSourceLabel(result, mappedSource),
+    platform: discussionMetadata.platform,
+    community: discussionMetadata.community,
+    engagement: discussionMetadata.engagement,
     abstract: abstract || undefined,
     citationCount: 0,
     publicationTypes: [mappedSource],

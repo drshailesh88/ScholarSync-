@@ -16,26 +16,26 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 
 ### Trust & Quality
 - [x] Trust Tier classifier assigns Government/Major Journalism/Community/Other to every web result
-- [ ] Trust Indicator (3px colored left border) visible on every result card
+- [x] Trust Indicator (3px colored left border) visible on every result card
 - [ ] Cohere rerank applied to web results (same as academic results)
 - [x] Domain preferences (Mute/Lower/Neutral/Higher/Prefer) filter and boost results
 - [ ] Source Info panel shows domain details and preference controls on shield icon click
 
 ### Explore Page UX
-- [ ] Explore page with Kagi-style centered search bar (glass-morphism pill)
+- [x] Explore page with Kagi-style centered search bar (glass-morphism pill)
 - [ ] Landing page shows only search bar and tabs — no feed, no trending, no recommendations
-- [ ] Horizontal tabs: Academic | Web | News | Discussions | More
-- [ ] Tab switching is instant (client-side filter on already-fetched results)
+- [x] Horizontal tabs: Academic | Web | News | Discussions | More
+- [x] Tab switching is instant (client-side filter on already-fetched results)
 - [ ] Filter pills below tabs: Scope | Order By | Time | Options | Advanced
-- [ ] Single-column results layout, 780px max-width, 5-6 results per screen
-- [ ] Traditional pagination (not infinite scroll)
-- [ ] Stats line showing result count and timing
+- [x] Single-column results layout, 780px max-width, 5-6 results per screen
+- [x] Traditional pagination (not infinite scroll)
+- [x] Stats line showing result count and timing
 
 ### Result Cards
-- [ ] Card anatomy: trust indicator + title + URL breadcrumb + author/source + snippet + date + save icon + actions menu
-- [ ] Academic tab cards show journal name, authors, evidence level
-- [ ] News tab cards show publication name and relative time
-- [ ] Discussions tab cards show platform, community, engagement
+- [x] Card anatomy: trust indicator + title + URL breadcrumb + author/source + snippet + date + save icon + actions menu
+- [x] Academic tab cards show journal name, authors, evidence level
+- [x] News tab cards show publication name and relative time
+- [x] Discussions tab cards show platform, community, engagement
 - [ ] Hover: subtle background change, action buttons appear
 - [ ] Mobile: save icon and actions menu always visible (no hover)
 
@@ -105,8 +105,8 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [ ] Recovery within 30 days restores everything
 
 ### Navigation
-- [ ] Sidebar renamed from "Discover" to "Explore"
-- [ ] Route updated accordingly
+- [x] Sidebar renamed from "Discover" to "Explore"
+- [x] Route updated accordingly
 
 ## Should Have (v1.1)
 

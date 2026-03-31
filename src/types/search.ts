@@ -9,6 +9,11 @@ export interface UnifiedSearchResult {
   arxivId?: string;
   url?: string;
   domain?: string;
+  publishedAt?: string;
+  sourceLabel?: string;
+  platform?: string;
+  community?: string;
+  engagement?: string;
 
   // Core metadata
   title: string;
