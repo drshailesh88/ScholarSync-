@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, DotsThreeVertical, Plus, CircleNotch } from "@phosphor-icons/react";
+import { Check, Plus, CircleNotch, ShieldCheck } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { UnifiedSearchResult } from "@/types/search";
 import type { ExploreTab } from "./ExploreTabs";
+import { ActionsMenu, type ActionsMenuCallbacks } from "./ActionsMenu";
+import { SourceInfoPanel } from "./SourceInfoPanel";
+import type { DomainPreferenceLevel } from "@/lib/actions/domain-preferences";
 
 type SupportedTab = Exclude<ExploreTab, "more">;
 
@@ -149,7 +152,13 @@ export function ResultCard({
   isSaved = false,
   isHighlighted = false,
   isSelected = false,
+  showInfoPanel = false,
   onSave,
+  onToggleInfo,
+  onBlock,
+  onMoreFromSource,
+  onCite,
+  onCopyLink,
 }: {
   id?: string;
   result: UnifiedSearchResult;
@@ -157,7 +166,13 @@ export function ResultCard({
   isSaved?: boolean;
   isHighlighted?: boolean;
   isSelected?: boolean;
+  showInfoPanel?: boolean;
   onSave?: (result: UnifiedSearchResult) => Promise<void>;
+  onToggleInfo?: () => void;
+  onBlock?: (domain: string) => void;
+  onMoreFromSource?: (domain: string) => void;
+  onCite?: () => void;
+  onCopyLink?: (url: string) => void;
 }) {
   const articleRef = useRef<HTMLElement>(null);
 
@@ -169,12 +184,18 @@ export function ResultCard({
   }, [isHighlighted]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(isSaved);
+  const [domainPref, setDomainPref] = useState<DomainPreferenceLevel | "neutral">(
+    result.domainPreferenceLevel === "neutral" || !result.domainPreferenceLevel
+      ? "neutral"
+      : result.domainPreferenceLevel
+  );
 
   const href = buildResultHref(result);
   const metadata = buildMetadata(result, tab);
   const date = formatDateLabel(result);
   const breadcrumb = formatBreadcrumb(result, tab);
   const snippet = result.abstract || result.tldr || "";
+  const domain = result.domain || "";
 
   const handleSave = async () => {
     if (saved || saving || !onSave) return;
@@ -187,6 +208,27 @@ export function ResultCard({
     } finally {
       setSaving(false);
     }
+  };
+
+  const actionsCallbacks: ActionsMenuCallbacks = {
+    onSave: handleSave,
+    onOpenOriginal: () => {
+      if (href) window.open(href, "_blank", "noopener");
+    },
+    onCite: onCite,
+    onBlock: () => {
+      if (domain) onBlock?.(domain);
+    },
+    onMoreFromSource: () => {
+      if (domain) onMoreFromSource?.(domain);
+    },
+    onCopyLink: () => {
+      const url = href || result.url;
+      if (url) {
+        navigator.clipboard.writeText(url).catch(() => {});
+        onCopyLink?.(url);
+      }
+    },
   };
 
   return (
@@ -221,6 +263,23 @@ export function ResultCard({
         )}
 
         <div className="flex shrink-0 items-center gap-1">
+          {/* Shield icon for source info */}
+          <button
+            aria-label="Source info"
+            className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
+              showInfoPanel
+                ? "bg-brand/10 text-brand"
+                : "text-ink-muted hover:bg-black/[0.04] hover:text-ink"
+            )}
+            data-testid="source-info-trigger"
+            onClick={onToggleInfo}
+            type="button"
+          >
+            <ShieldCheck size={16} weight={showInfoPanel ? "fill" : "regular"} />
+          </button>
+
+          {/* Save button */}
           <button
             aria-label={saved ? "Saved to Library" : "Save result"}
             className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
@@ -240,13 +299,12 @@ export function ResultCard({
               <Plus size={16} weight="bold" />
             )}
           </button>
-          <button
-            aria-label="More actions"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-black/[0.04] hover:text-ink"
-            type="button"
-          >
-            <DotsThreeVertical size={18} weight="bold" />
-          </button>
+
+          {/* Actions menu */}
+          <ActionsMenu
+            callbacks={actionsCallbacks}
+            isSaved={saved}
+          />
         </div>
       </div>
 
@@ -280,6 +338,16 @@ export function ResultCard({
           {snippet}
         </p>
       ) : null}
+
+      {/* Source Info Panel — inline expansion */}
+      {showInfoPanel && (
+        <SourceInfoPanel
+          currentPreference={domainPref}
+          onClose={() => onToggleInfo?.()}
+          onSetPreference={setDomainPref}
+          result={result}
+        />
+      )}
     </article>
   );
 }

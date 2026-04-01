@@ -95,16 +95,16 @@ Risk: **LOW** — follows existing project_papers pattern exactly. Schema alread
 ### Phase 6: Content Extraction + Annotation (Reading & Highlighting)
 **Deliverable:** User opens a saved web source → reads clean content → highlights passages with colors → adds notes.
 
-- [ ] Create `src/lib/web/content-extractor.ts` using Mozilla Readability
-- [ ] Background extraction job: triggered on save, extracts content, updates `content_html` + `content_plain`
-- [ ] Build Web Source Reader view (clean rendered HTML from snapshot)
-- [ ] Run database migration for `web_source_highlights` table
-- [ ] Implement highlighting on web content (text selection → color picker → save)
-- [ ] Implement notes on highlights
-- [ ] Implement general notes on web source
-- [ ] Reuse existing annotation color enum (yellow, green, red, blue, purple)
-- [ ] Make highlights citable in editor drafts
-- [ ] Write tests: content extraction, highlight CRUD, notes, citation integration
+- [x] Create `src/lib/web/content-extractor.ts` using Jina Reader (existing pattern)
+- [x] Background extraction job: triggered on save, extracts content, updates `content_html` + `content_plain`
+- [x] Build Web Source Reader view (clean rendered HTML from snapshot)
+- [x] Run database migration for `web_source_highlights` table
+- [x] Implement highlighting on web content (text selection → color picker → save)
+- [x] Implement notes on highlights
+- [x] Implement general notes on web source
+- [x] Reuse existing annotation color enum (yellow, green, red, blue, purple)
+- [x] Make highlights citable in editor drafts
+- [x] Write tests: content extraction, highlight CRUD, notes, citation integration
 
 Risk: **MEDIUM** — content extraction from arbitrary web pages can be unpredictable. Readability handles 90% of cases. Edge cases will appear.
 
@@ -113,13 +113,13 @@ Risk: **MEDIUM** — content extraction from arbitrary web pages can be unpredic
 ### Phase 7: Source Info Panel + Actions Menu (Interaction Polish)
 **Deliverable:** User clicks shield → sees domain details + preference controls. Full actions menu with keyboard shortcuts.
 
-- [ ] Build SourceInfoPanel (inline expansion with domain name, trust tier, type, tracker info, preference controls)
-- [ ] Build ActionsMenu ("..." dropdown with Save, Save to Project, Cite, Open Original, Summarize, Ask About, More from source, Block, Copy Link)
-- [ ] Add keyboard shortcut labels to every menu item
-- [ ] Wire "Block this source" to domain preferences (sets to Mute)
-- [ ] Wire "More from this source" to re-search scoped to domain
-- [ ] Build "My Sources" settings page (manage all domain preferences)
-- [ ] Write tests: source info panel renders, actions execute correctly
+- [x] Build SourceInfoPanel (inline expansion with domain name, trust tier, type, tracker info, preference controls)
+- [x] Build ActionsMenu ("..." dropdown with Save, Save to Project, Cite, Open Original, Summarize, Ask About, More from source, Block, Copy Link)
+- [x] Add keyboard shortcut labels to every menu item
+- [x] Wire "Block this source" to domain preferences (sets to Mute)
+- [x] Wire "More from this source" to re-search scoped to domain
+- [x] Build "My Sources" settings page (manage all domain preferences)
+- [x] Write tests: source info panel renders, actions execute correctly
 
 Risk: **LOW** — UI polish, no new infrastructure.
 
