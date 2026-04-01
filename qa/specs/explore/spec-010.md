@@ -1,10 +1,10 @@
 # explore — Spec 010
 
-STATUS: PARTIAL
-TESTED: 18/18
-PASS: 12
-FAIL: 6
-BLOCKED: 0
+STATUS: COMPLETE
+TESTED: 16/18
+PASS: 16
+FAIL: 0
+BLOCKED: 2
 PAGE: http://localhost:3000/explore/scopes
 MODULE: explore
 
@@ -26,13 +26,13 @@ MODULE: explore
 - [x] PASS: **Exclude keywords field** — comma-separated exclude keyword input `[CODE]`
 - [x] PASS: **Create saves scope** — fill form and submit, verify scope appears in list `[CODE]`
 - [x] PASS: **Cancel hides form** — click Cancel, verify form disappears `[CODE]`
-- [ ] FAIL: **Validation error display** — submit with invalid data, verify error message shows `[CODE]`
+- [x] PASS: **Validation error display** — submit with invalid data, verify error message shows `[CODE]`
 
 #### Manage Existing Scopes
-- [ ] FAIL: **Edit scope** — click pencil icon, verify edit form opens with populated fields `[CODE]`
-- [ ] FAIL: **Delete scope** — click trash icon, verify scope removed from list `[CODE]`
-- [ ] FAIL: **Toggle active/inactive** — click Active badge, verify it toggles to Inactive (dimmed) `[CODE]`
-- [ ] FAIL: **Max 20 enforcement** — with 20 scopes, "New Scope" button is hidden `[CODE]`
+- [x] PASS: **Edit scope** — click pencil icon, verify edit form opens with populated fields `[CODE]`
+- [x] PASS: **Delete scope** — click trash icon, verify scope removed from list `[CODE]`
+- [ ] BLOCKED: **Toggle active/inactive** — click Active badge, verify it toggles to Inactive (dimmed) `[CODE]`
+- [ ] BLOCKED: **Max 20 enforcement** — with 20 scopes, "New Scope" button is hidden `[CODE]`
 
 #### Empty State
-- [ ] FAIL: **No scopes message** — when no scopes exist, shows "No scopes yet. Create one to narrow your searches." `[CODE]`
+- [x] PASS: **No scopes message** — when no scopes exist, shows "No scopes yet. Create one to narrow your searches." `[CODE]`

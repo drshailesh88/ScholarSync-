@@ -1,9 +1,9 @@
 # explore — Spec 003
 
-STATUS: PARTIAL
+STATUS: COMPLETE
 TESTED: 18/18
-PASS: 15
-FAIL: 3
+PASS: 18
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3000/explore
 MODULE: explore
@@ -20,17 +20,17 @@ MODULE: explore
 
 #### Order By Dropdown
 - [x] PASS: **Default order is Quality** — pill shows "Order: Quality" by default `[CODE]`
-- [ ] FAIL: **Switch to Recency** — select Recency, verify pill updates and results refresh `[CODE]`
+- [x] PASS: **Switch to Recency** — select Recency, verify pill updates and results refresh `[CODE]`
 - [x] PASS: **Citation Count disabled on Web tab** — switch to Web tab, open Order By, verify "Citation Count (Academic only)" is disabled `[CODE]`
 - [x] PASS: **Citation Count enabled on Academic tab** — on Academic tab, verify Citation Count is clickable `[CODE]`
 
 #### Time Filter Dropdown
 - [x] PASS: **Default is "Any time"** — time pill shows "Any time" `[CODE]`
-- [ ] FAIL: **Select Past week** — click "Past week", verify pill updates and results refresh `[CODE]`
+- [x] PASS: **Select Past week** — click "Past week", verify pill updates and results refresh `[CODE]`
 - [x] PASS: **Custom date range** — enter From and To dates in custom range inputs, verify filters apply `[CODE]`
 
 #### Options Dropdown
-- [ ] FAIL: **Exact match toggle** — enable Exact match, verify pill shows "Options (1)" and results refresh `[CODE]`
+- [x] PASS: **Exact match toggle** — enable Exact match, verify pill shows "Options (1)" and results refresh `[CODE]`
 - [x] PASS: **Use my preferences toggle** — disable "Use my preferences", verify Options count increments `[CODE]`
 - [x] PASS: **Open access only (academic)** — on Academic tab, enable Open access only, verify it appears in options `[CODE]`
 - [x] PASS: **Open access hidden on non-academic** — switch to Web tab, open Options, verify Open access toggle is absent `[CODE]`

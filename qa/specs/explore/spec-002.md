@@ -1,9 +1,9 @@
 # explore — Spec 002
 
-STATUS: PARTIAL
+STATUS: COMPLETE
 TESTED: 16/16
-PASS: 12
-FAIL: 4
+PASS: 16
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3000/explore
 MODULE: explore
@@ -21,10 +21,10 @@ MODULE: explore
 
 #### Tab Keyboard Shortcuts
 - [x] PASS: **Key 1 switches to Academic** — press 1, verify Academic tab activates `[CODE]`
-- [ ] FAIL: **Key 2 switches to Web** — press 2, verify Web tab activates `[CODE]`
-- [ ] FAIL: **Key 3 switches to News** — press 3, verify News tab activates `[CODE]`
-- [ ] FAIL: **Key 4 switches to Discussions** — press 4, verify Discussions tab activates `[CODE]`
-- [ ] FAIL: **] cycles tab forward** — press ], verify next tab activates `[CODE]`
+- [x] PASS: **Key 2 switches to Web** — press 2, verify Web tab activates `[CODE]`
+- [x] PASS: **Key 3 switches to News** — press 3, verify News tab activates `[CODE]`
+- [x] PASS: **Key 4 switches to Discussions** — press 4, verify Discussions tab activates `[CODE]`
+- [x] PASS: **] cycles tab forward** — press ], verify next tab activates `[CODE]`
 - [x] PASS: **[ cycles tab backward** — press [, verify previous tab activates `[CODE]`
 - [x] PASS: **Tab cycling wraps around** — on last tab press ], verify it wraps to first tab `[CODE]`
 

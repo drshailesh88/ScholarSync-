@@ -2,9 +2,10 @@
 
 STATUS: PARTIAL
 TESTED: 18/18
-PASS: 15
-FAIL: 3
+PASS: 16
+FAIL: 0
 BLOCKED: 0
+STUCK: 2
 PAGE: http://localhost:3000/explore
 MODULE: explore
 
@@ -30,13 +31,13 @@ MODULE: explore
 - [x] PASS: **"More from this source" search** — click "More from this source" in actions menu, verify search bar updates to "site:domain.com query" `[CODE]`
 
 #### Search History Integration
-- [ ] FAIL: **Search saved to history** — perform a search, open history dropdown, verify the query appears `[CODE]`
-- [ ] FAIL: **Search from history** — open history dropdown, click an entry, verify that query runs and results appear `[CODE]`
+- [ ] STUCK: **Search saved to history** — perform a search, open history dropdown, verify the query appears `[CODE]` — history integration not wired
+- [ ] STUCK: **Search from history** — open history dropdown, click an entry, verify that query runs and results appear `[CODE]` — history integration not wired
 
 #### Saved URL Detection
 - [x] PASS: **Saved badge on results** — save a result, re-search same query, verify saved result shows check icon instead of plus `[CODE]`
 
 #### Error Handling
 - [x] PASS: **Error banner on failure** — when search fails, red error banner displays with "Explore search failed. Try again." `[CODE]`
-- [ ] FAIL: **Retry button works** — click "Try again" in error banner, verify search re-executes `[CODE]`
+- [x] PASS: **Retry button works** — click "Try again" in error banner, verify search re-executes `[CODE]`
 - [x] PASS: **Loading skeletons** — during search, 5 pulsing skeleton cards display `[CODE]`

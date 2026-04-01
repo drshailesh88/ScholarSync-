@@ -1,9 +1,9 @@
 # explore — Spec 005
 
-STATUS: PARTIAL
+STATUS: COMPLETE
 TESTED: 13/17
-PASS: 11
-FAIL: 2
+PASS: 13
+FAIL: 0
 BLOCKED: 4
 PAGE: http://localhost:3000/explore
 MODULE: explore
@@ -32,6 +32,6 @@ MODULE: explore
 - [ ] BLOCKED: **Ask About Page** — click item, verify no crash (callback not wired) `[CODE-ONLY]`
 
 #### Menu Separators
-- [ ] FAIL: **Separator before Open Original** — visual divider appears above "Open Original" group `[CODE]`
-- [ ] FAIL: **Separator before Block** — visual divider appears above "Block this source" `[CODE]`
+- [x] PASS: **Separator before Open Original** — visual divider appears above "Open Original" group `[CODE]`
+- [x] PASS: **Separator before Block** — visual divider appears above "Block this source" `[CODE]`
 - [x] PASS: **Shortcut badges** — S, C, O, B shortcuts display as kbd badges in menu items `[CODE]`

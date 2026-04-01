@@ -1,9 +1,9 @@
 # explore — Spec 006
 
-STATUS: PARTIAL
+STATUS: COMPLETE
 TESTED: 17/17
-PASS: 16
-FAIL: 1
+PASS: 17
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3000/explore
 MODULE: explore
@@ -15,7 +15,7 @@ MODULE: explore
 - [x] PASS: **Synthesize button visible** — after search with results, "Synthesize" button with sparkle icon appears `[CODE]`
 - [x] PASS: **Q keyboard hint on button** — synthesize button shows Q key badge `[CODE]`
 - [x] PASS: **Click opens synthesis** — click Synthesize button, verify synthesis block appears `[CODE]`
-- [ ] FAIL: **Q key toggles synthesis** — press Q, verify synthesis opens; press Q again, verify it closes `[CODE]`
+- [x] PASS: **Q key toggles synthesis** — press Q, verify synthesis opens; press Q again, verify it closes `[CODE]`
 - [x] PASS: **Button hidden when open** — while synthesis is open, the Synthesize button disappears `[CODE]`
 
 #### Streaming
