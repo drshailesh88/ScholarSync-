@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Check, DotsThreeVertical, Plus, CircleNotch } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { UnifiedSearchResult } from "@/types/search";
@@ -142,7 +142,7 @@ function getBorderColor(result: UnifiedSearchResult, tab: SupportedTab): string 
   return TRUST_BORDER_COLORS[result.trustTier || "other"];
 }
 
-export function ResultCard({
+export const ResultCard = memo(function ResultCard({
   id,
   result,
   tab,
@@ -288,4 +288,4 @@ export function ResultCard({
       ) : null}
     </article>
   );
-}
+});
