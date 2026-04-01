@@ -36,7 +36,6 @@ const RIGHT_COLUMN: { label: string; shortcuts: Shortcut[] }[] = [
     shortcuts: [
       { action: "Save to Library", keys: ["S"] },
       { action: "Open original", keys: ["O"] },
-      { action: "Cite in draft", keys: ["C"] },
       { action: "Synthesize", keys: ["Q"] },
       { action: "Source info", keys: ["I"] },
       { action: "Block source", keys: ["B"] },
