@@ -1,5 +1,7 @@
 "use server";
 
+import DOMPurify from "isomorphic-dompurify";
+
 const JINA_READER_BASE = "https://r.jina.ai/";
 const MAX_CONTENT_LENGTH = 200_000;
 const MIN_CONTENT_LENGTH = 50;
@@ -43,7 +45,7 @@ async function fetchFromJina(
 
   try {
     const response = await fetch(
-      `${JINA_READER_BASE}${encodeURIComponent(url)}`,
+      `${JINA_READER_BASE}${url}`,
       {
         headers: {
           Accept: accept,
@@ -90,34 +92,23 @@ async function fetchFromJina(
 }
 
 /**
- * Clean Jina Reader HTML output:
- * - Remove scripts, styles, iframes
- * - Remove Jina metadata headers
- * - Keep semantic HTML structure for highlighting
+ * Clean Jina Reader HTML output using DOMPurify for XSS safety.
+ * Keeps semantic HTML structure for highlighting.
  */
 function sanitizeHtml(html: string): string {
-  let clean = html;
-
-  // Remove script/style/iframe tags and their content
-  clean = clean.replace(
-    /<(script|style|iframe|noscript)[^>]*>[\s\S]*?<\/\1>/gi,
-    ""
-  );
-
-  // Remove inline event handlers
-  clean = clean.replace(/\s+on\w+="[^"]*"/gi, "");
-  clean = clean.replace(/\s+on\w+='[^']*'/gi, "");
+  const clean = DOMPurify.sanitize(html, {
+    FORBID_TAGS: ["script", "style", "iframe", "object", "embed", "noscript"],
+    FORBID_ATTR: ["onerror", "onclick", "onload", "onmouseover", "onfocus", "onblur"],
+  });
 
   // Remove Jina metadata lines at the top
-  clean = clean.replace(
-    /^(Title:|URL Source:|Published Time:|Markdown Content:).*$/gm,
-    ""
-  );
-
-  // Collapse excessive whitespace
-  clean = clean.replace(/\n{3,}/g, "\n\n").trim();
-
-  return clean;
+  return clean
+    .replace(
+      /^(Title:|URL Source:|Published Time:|Markdown Content:).*$/gm,
+      ""
+    )
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 /**
