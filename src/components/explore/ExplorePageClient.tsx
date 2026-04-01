@@ -18,7 +18,9 @@ import {
 } from "./FilterPills";
 import { getUserScopes, type ScopeRecord } from "@/lib/actions/scopes";
 import { saveWebSource, getSavedUrls } from "@/lib/actions/web-sources";
+import { addExploreSearchHistory } from "@/lib/actions/explore-search-history";
 import { SaveToast } from "./SaveToast";
+import { SearchHistoryDropdown } from "./SearchHistoryDropdown";
 
 type SearchableExploreTab = Exclude<ExploreTab, "more">;
 
@@ -265,6 +267,15 @@ export function ExplorePageClient() {
         .then((saved) => setSavedUrls(new Set(saved)))
         .catch(() => {});
     }
+
+    // Save to search history (fire and forget)
+    if (successCount > 0) {
+      addExploreSearchHistory({
+        query: trimmedQuery,
+        activeTab: "academic",
+        scopeId: filters.scopeId ?? null,
+      }).catch(() => {});
+    }
   }, [queryInput, filters]);
 
   const ensurePageLoaded = useCallback(async (tab: SearchableExploreTab, page: number) => {
@@ -422,22 +433,69 @@ export function ExplorePageClient() {
     keyboardActions
   );
 
+  const handleSelectHistory = useCallback(
+    (query: string, tab?: string) => {
+      setQueryInput(query);
+      setSearchQuery(query);
+      if (tab && tab !== "more") {
+        setActiveTab(tab as ExploreTab);
+      }
+      // Trigger search with the selected query
+      setHasSearched(true);
+      setIsSearching(true);
+      setError(null);
+      setCurrentPageByTab({ academic: 0, web: 0, news: 0, discussions: 0, more: 0 });
+
+      const startedAt = performance.now();
+      Promise.allSettled(
+        SEARCHABLE_TABS.map(async (t) =>
+          [t, await fetchSearchPage(query, t, 0, filters)] as const
+        )
+      ).then((settled) => {
+        const nextTabState = buildInitialTabState();
+        settled.forEach((entry, index) => {
+          const t = SEARCHABLE_TABS[index];
+          if (entry.status === "fulfilled") {
+            const [, response] = entry.value;
+            nextTabState[t] = {
+              pages: { 0: response.results },
+              total: response.total,
+              hasMore: response.hasMore,
+              sourceCounts: response.sourceCounts,
+              unavailable: Boolean(response.searxngUnavailable),
+            };
+          } else {
+            nextTabState[t] = { ...createEmptyTabState(), unavailable: t !== "academic" };
+          }
+        });
+        setTabState(nextTabState);
+        setSearchDurationMs(performance.now() - startedAt);
+        setIsSearching(false);
+      });
+    },
+    [filters]
+  );
+
   const showLanding = !hasSearched && !searchQuery;
 
   if (showLanding) {
     return (
       <div className="flex min-h-[calc(100vh-7rem)] items-center justify-center px-4">
         <div className="w-full max-w-[640px]">
-          <ExploreSearchBar
-            ref={searchBarRef}
-            autoFocus
-            isLoading={isSearching}
-            onChange={setQueryInput}
-            onSubmit={() => {
-              void runSearch();
-            }}
-            value={queryInput}
-          />
+          <div className="flex items-center gap-2">
+            <ExploreSearchBar
+              ref={searchBarRef}
+              autoFocus
+              className="flex-1"
+              isLoading={isSearching}
+              onChange={setQueryInput}
+              onSubmit={() => {
+                void runSearch();
+              }}
+              value={queryInput}
+            />
+            <SearchHistoryDropdown onSelectQuery={handleSelectHistory} />
+          </div>
         </div>
       </div>
     );
@@ -446,16 +504,19 @@ export function ExplorePageClient() {
   return (
     <div className="mx-auto w-full max-w-[1200px] px-4 py-8 md:py-10">
       <div className="mx-auto flex w-full max-w-[780px] flex-col gap-5">
-        <ExploreSearchBar
-          ref={searchBarRef}
-          className="max-w-[560px]"
-          isLoading={isSearching}
-          onChange={setQueryInput}
-          onSubmit={() => {
-            void runSearch();
-          }}
-          value={queryInput}
-        />
+        <div className="flex items-center gap-2">
+          <ExploreSearchBar
+            ref={searchBarRef}
+            className="max-w-[560px] flex-1"
+            isLoading={isSearching}
+            onChange={setQueryInput}
+            onSubmit={() => {
+              void runSearch();
+            }}
+            value={queryInput}
+          />
+          <SearchHistoryDropdown onSelectQuery={handleSelectHistory} />
+        </div>
 
         <ExploreTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
