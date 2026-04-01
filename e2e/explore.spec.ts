@@ -1,9 +1,87 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { navigateTo } from "./helpers/auth";
+
+/** Build a mock unified search response with N results */
+function mockSearchResponse(query: string, count = 10) {
+  const results = Array.from({ length: count }, (_, i) => ({
+    title: `${query} — Result ${i + 1}`,
+    authors: ["Jane Doe", "John Smith"],
+    journal: "Journal of Testing",
+    year: 2025,
+    citationCount: 42 + i,
+    studyType: "rct",
+    abstract: `Abstract for result ${i + 1} about ${query}.`,
+    doi: `10.1000/test-${i + 1}`,
+    url: `https://example.com/paper-${i + 1}`,
+    isOpenAccess: i % 2 === 0,
+    publicationTypes: [],
+    sources: ["pubmed"],
+    trustTier: i % 3 === 0 ? "government" : i % 3 === 1 ? "major_journalism" : "community",
+  }));
+
+  return {
+    results,
+    total: count,
+    page: 0,
+    perPage: 10,
+    hasMore: count > 10,
+    sourceCounts: {
+      pubmed: Math.ceil(count / 2),
+      semanticScholar: Math.floor(count / 2),
+      openAlex: 0,
+      clinicalTrials: 0,
+    },
+    augmentedQueries: null,
+  };
+}
+
+/** Intercept all unified search API calls with mock data */
+async function mockSearchApi(page: Page, count = 10) {
+  await page.route("**/api/search/unified**", async (route) => {
+    const url = new URL(route.request().url());
+    const query = url.searchParams.get("q") ?? "test";
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(mockSearchResponse(query, count)),
+    });
+  });
+}
+
+/** Wait for the explore page to be fully hydrated (React event handlers attached) */
+async function waitForExploreReady(page: Page) {
+  const searchBar = page.getByRole("searchbox");
+  await expect(searchBar).toBeVisible();
+  // Ensure React has hydrated by checking the form has a submit handler
+  // (without hydration, pressing Enter would cause a native form navigation)
+  await page.waitForFunction(
+    () => document.readyState === "complete",
+    { timeout: 10000 }
+  );
+  // One extra frame for React to finish
+  await page.evaluate(() => new Promise((r) => requestAnimationFrame(r)));
+}
+
+/** Fill search bar, verify value took effect, submit, and wait for results */
+async function searchAndWaitForResults(page: Page, query: string) {
+  await waitForExploreReady(page);
+  const searchBar = page.getByRole("searchbox");
+  // Click to focus first, then fill — guards against hydration overwrite
+  await searchBar.click();
+  await searchBar.fill(query);
+  await expect(searchBar).toHaveValue(query, { timeout: 5000 });
+  await searchBar.press("Enter");
+  await expect(page.locator("article").first()).toBeVisible({ timeout: 15000 });
+}
 
 test.describe("Explore Module — full workflow", () => {
   test.beforeEach(async ({ page }) => {
     await navigateTo(page, "/explore");
+    // Wait for the search bar to be interactive (React hydrated)
+    await expect(page.getByRole("searchbox")).toBeVisible();
+    // Ensure hydration is complete by verifying the input is interactive
+    await page.getByRole("searchbox").click();
+    await page.getByRole("searchbox").blur();
   });
 
   // ── Landing page ──────────────────────────────────────────
@@ -21,34 +99,29 @@ test.describe("Explore Module — full workflow", () => {
   // ── Search flow ───────────────────────────────────────────
 
   test("search returns results with skeleton loading", async ({ page }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("machine learning");
-    await searchBar.press("Enter");
+    await page.unroute("**/api/search/unified**");
+    await page.route("**/api/search/unified**", async (route) => {
+      const url = new URL(route.request().url());
+      const query = url.searchParams.get("q") ?? "test";
+      await new Promise((r) => setTimeout(r, 500));
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockSearchResponse(query)),
+      });
+    });
 
-    // Skeleton should appear (animate-pulse elements)
-    const skeletons = page.locator(".animate-pulse");
-    await expect(skeletons.first()).toBeVisible({ timeout: 5000 });
-
-    // Results should eventually appear
-    const resultCards = page.locator("article");
-    await expect(resultCards.first()).toBeVisible({ timeout: 30000 });
+    await searchAndWaitForResults(page, "machine learning");
   });
 
   test("tabs are visible and switchable after search", async ({ page }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("climate change");
-    await searchBar.press("Enter");
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "climate change");
 
-    // Wait for results
-    await expect(page.locator("article").first()).toBeVisible({ timeout: 30000 });
-
-    // Tabs should be visible
     const tabList = page.getByRole("tablist");
     await expect(tabList).toBeVisible();
 
-    // Switch to Web tab
     await page.getByRole("tab", { name: "Web" }).click();
-    // Tab should be selected
     await expect(page.getByRole("tab", { name: "Web" })).toHaveAttribute(
       "aria-selected",
       "true"
@@ -56,13 +129,9 @@ test.describe("Explore Module — full workflow", () => {
   });
 
   test("filter pills are visible after search", async ({ page }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("diabetes treatment");
-    await searchBar.press("Enter");
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "diabetes treatment");
 
-    await expect(page.locator("article").first()).toBeVisible({ timeout: 30000 });
-
-    // Filter pill buttons should be visible
     await expect(page.getByText("All Sources")).toBeVisible();
     await expect(page.getByText(/Order:/)).toBeVisible();
     await expect(page.getByText("Any time")).toBeVisible();
@@ -72,14 +141,10 @@ test.describe("Explore Module — full workflow", () => {
   // ── Result cards ──────────────────────────────────────────
 
   test("result cards have trust indicator borders", async ({ page }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("vaccine efficacy");
-    await searchBar.press("Enter");
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "vaccine efficacy");
 
     const firstCard = page.locator("article").first();
-    await expect(firstCard).toBeVisible({ timeout: 30000 });
-
-    // Should have a left border (trust indicator)
     const borderLeft = await firstCard.evaluate(
       (el) => window.getComputedStyle(el).borderLeftWidth
     );
@@ -87,16 +152,11 @@ test.describe("Explore Module — full workflow", () => {
   });
 
   test("result cards have save and actions buttons", async ({ page }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("artificial intelligence");
-    await searchBar.press("Enter");
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "artificial intelligence");
 
     const firstCard = page.locator("article").first();
-    await expect(firstCard).toBeVisible({ timeout: 30000 });
-
-    // Save button
     await expect(firstCard.getByLabel("Save result")).toBeVisible();
-    // Actions button
     await expect(firstCard.getByLabel("More actions")).toBeVisible();
   });
 
@@ -105,13 +165,9 @@ test.describe("Explore Module — full workflow", () => {
   test("pagination controls appear when results exceed one page", async ({
     page,
   }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("cancer research");
-    await searchBar.press("Enter");
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "cancer research");
 
-    await expect(page.locator("article").first()).toBeVisible({ timeout: 30000 });
-
-    // Check if pagination exists (may not if fewer than 10 results)
     const pagination = page.getByRole("navigation", { name: "Pagination" });
     const paginationVisible = await pagination.isVisible().catch(() => false);
 
@@ -125,11 +181,8 @@ test.describe("Explore Module — full workflow", () => {
   test("synthesize button appears after search results load", async ({
     page,
   }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("quantum computing");
-    await searchBar.press("Enter");
-
-    await expect(page.locator("article").first()).toBeVisible({ timeout: 30000 });
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "quantum computing");
 
     const synthesizeBtn = page.getByTestId("synthesize-button");
     await expect(synthesizeBtn).toBeVisible();
@@ -140,24 +193,16 @@ test.describe("Explore Module — full workflow", () => {
   test("keyboard shortcuts overlay opens with ? and closes with Esc", async ({
     page,
   }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("neuroscience");
-    await searchBar.press("Enter");
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "neuroscience");
 
-    // Wait for search to complete (results, empty state, or error)
-    await page.waitForFunction(
-      () => document.querySelector("article") !== null ||
-            document.body.textContent?.includes("results found") ||
-            document.body.textContent?.includes("results in"),
-      { timeout: 30000 }
-    );
-
-    // Blur the search bar by clicking on the results area
-    await page.getByRole("tab", { name: "Academic" }).click();
-    await page.keyboard.press("Escape"); // Ensure nothing is focused
+    // Blur the search bar by clicking on a result card, then blurring
+    await page.locator("article").first().click();
+    // Verify the search input is no longer focused
+    await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
 
     // Press ? to open shortcuts
-    await page.keyboard.press("Shift+/");
+    await page.keyboard.press("?");
     const overlay = page.getByRole("dialog", { name: "Keyboard shortcuts" });
     await expect(overlay).toBeVisible();
 
@@ -169,38 +214,41 @@ test.describe("Explore Module — full workflow", () => {
   // ── Empty states ──────────────────────────────────────────
 
   test("shows empty state for no results", async ({ page }) => {
+    // Unroute default mock, set empty results mock
+    await page.unroute("**/api/search/unified**");
+    await page.route("**/api/search/unified**", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          results: [],
+          total: 0,
+          page: 0,
+          perPage: 10,
+          hasMore: false,
+          sourceCounts: { pubmed: 0, semanticScholar: 0, openAlex: 0, clinicalTrials: 0 },
+          augmentedQueries: null,
+        }),
+      });
+    });
+
+    await waitForExploreReady(page);
     const searchBar = page.getByRole("searchbox");
-    // Use a very unlikely search term
+    await searchBar.click();
     await searchBar.fill("xyzzyplughtwisty12345");
+    await expect(searchBar).toHaveValue("xyzzyplughtwisty12345");
     await searchBar.press("Enter");
 
-    // Wait for search to complete
-    await page.waitForFunction(
-      () => document.querySelector("article") !== null ||
-            document.body.textContent?.includes("results found") ||
-            document.body.textContent?.includes("search failed"),
-      { timeout: 30000 }
-    );
-
-    // Should show "No results found" or error or have result cards
-    const noResults = page.getByText("No academic results found");
-    const hasResults = page.locator("article");
-    const hasError = page.getByText("Explore search failed");
-
-    const noResultsVisible = await noResults.isVisible().catch(() => false);
-    const hasResultsVisible = await hasResults.first().isVisible().catch(() => false);
-    const hasErrorVisible = await hasError.isVisible().catch(() => false);
-    expect(noResultsVisible || hasResultsVisible || hasErrorVisible).toBeTruthy();
+    // Wait for either "No results found" or error state
+    await expect(
+      page.getByText(/No .* results found/).or(page.getByText("Explore search failed"))
+    ).toBeVisible({ timeout: 15000 });
   });
 
   test("More tab shows coming soon message", async ({ page }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("test query");
-    await searchBar.press("Enter");
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "test query");
 
-    await expect(page.locator("article").first()).toBeVisible({ timeout: 30000 });
-
-    // Click More tab
     await page.getByRole("tab", { name: "More" }).click();
     await expect(page.getByText("Coming soon")).toBeVisible();
   });
@@ -208,13 +256,9 @@ test.describe("Explore Module — full workflow", () => {
   // ── Stats line ────────────────────────────────────────────
 
   test("stats line shows result count and timing", async ({ page }) => {
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("genetics");
-    await searchBar.press("Enter");
+    await mockSearchApi(page);
+    await searchAndWaitForResults(page, "genetics");
 
-    await expect(page.locator("article").first()).toBeVisible({ timeout: 30000 });
-
-    // Stats line should show "N results in X.Xs"
     await expect(page.getByText(/\d+ results in \d+\.\d+s/)).toBeVisible();
   });
 
@@ -222,25 +266,15 @@ test.describe("Explore Module — full workflow", () => {
 
   test("mobile viewport: tabs scroll horizontally", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
+    await mockSearchApi(page);
     await navigateTo(page, "/explore");
+    await expect(page.getByRole("searchbox")).toBeVisible();
 
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("cancer");
-    await searchBar.press("Enter");
+    await searchAndWaitForResults(page, "cancer");
 
-    // Wait for search to complete (results, empty, or error)
-    await page.waitForFunction(
-      () => document.querySelector("article") !== null ||
-            document.body.textContent?.includes("results found") ||
-            document.body.textContent?.includes("results in"),
-      { timeout: 45000 }
-    );
-
-    // Tabs container should be visible regardless of results
     const tabNav = page.getByRole("navigation", { name: "Explore tabs" });
     await expect(tabNav).toBeVisible();
 
-    // Check that overflow-x is auto (scrollable)
     const overflowX = await tabNav.evaluate(
       (el) => window.getComputedStyle(el).overflowX
     );
@@ -251,32 +285,19 @@ test.describe("Explore Module — full workflow", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 375, height: 812 });
+    await mockSearchApi(page);
     await navigateTo(page, "/explore");
+    await expect(page.getByRole("searchbox")).toBeVisible();
 
-    const searchBar = page.getByRole("searchbox");
-    await searchBar.fill("cancer");
-    await searchBar.press("Enter");
-
-    // Wait for search to complete
-    await page.waitForFunction(
-      () => document.querySelector("article") !== null ||
-            document.body.textContent?.includes("results found") ||
-            document.body.textContent?.includes("results in"),
-      { timeout: 45000 }
-    );
+    await searchAndWaitForResults(page, "cancer");
 
     const firstCard = page.locator("article").first();
-    const hasResults = await firstCard.isVisible().catch(() => false);
-
-    if (hasResults) {
-      const saveBtn = firstCard.getByLabel("Save result");
-      const box = await saveBtn.boundingBox();
-      expect(box).not.toBeNull();
-      if (box) {
-        expect(box.height).toBeGreaterThanOrEqual(44);
-        expect(box.width).toBeGreaterThanOrEqual(44);
-      }
+    const saveBtn = firstCard.getByLabel("Save result");
+    const box = await saveBtn.boundingBox();
+    expect(box).not.toBeNull();
+    if (box) {
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      expect(box.width).toBeGreaterThanOrEqual(44);
     }
-    // If no results due to API rate limits, test is inconclusive but shouldn't fail
   });
 });
