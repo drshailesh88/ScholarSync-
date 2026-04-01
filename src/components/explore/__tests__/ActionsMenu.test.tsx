@@ -8,14 +8,10 @@ import { ActionsMenu } from "../ActionsMenu";
 function makeCallbacks() {
   return {
     onSave: vi.fn(),
-    onSaveToProject: vi.fn(),
-    onCite: vi.fn(),
     onOpenOriginal: vi.fn(),
-    onSummarize: vi.fn(),
-    onAskAbout: vi.fn(),
     onMoreFromSource: vi.fn(),
-    onBlock: vi.fn(),
     onCopyLink: vi.fn(),
+    onBlock: vi.fn(),
   };
 }
 
@@ -79,18 +75,19 @@ describe("ActionsMenu", () => {
     const text = dropdown.textContent!;
 
     expect(text).toContain("Save to Library");
-    expect(text).toContain("Save to Project");
-    expect(text).toContain("Cite in Draft");
     expect(text).toContain("Open Original");
-    expect(text).toContain("Summarize Page");
-    expect(text).toContain("Ask About Page");
     expect(text).toContain("More from this source");
-    expect(text).toContain("Block this source");
     expect(text).toContain("Copy Link");
+    expect(text).toContain("Block this source");
+
+    // Removed stubs should not appear
+    expect(text).not.toContain("Save to Project");
+    expect(text).not.toContain("Cite in Draft");
+    expect(text).not.toContain("Summarize Page");
+    expect(text).not.toContain("Ask About Page");
 
     // Keyboard shortcut labels
     expect(text).toContain("S");
-    expect(text).toContain("C");
     expect(text).toContain("O");
     expect(text).toContain("B");
   });

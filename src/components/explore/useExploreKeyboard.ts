@@ -14,7 +14,6 @@ export interface ExploreKeyboardState {
 export interface ExploreKeyboardActions {
   onSave?: (index: number) => void;
   onOpen?: (index: number) => void;
-  onCite?: (index: number) => void;
   onSynthesize?: () => void;
   onInfo?: (index: number) => void;
   onBlock?: (index: number) => void;
@@ -182,14 +181,6 @@ export function useExploreKeyboard(
           if (highlightedIndex >= 0) {
             e.preventDefault();
             actions.onOpen?.(highlightedIndex);
-          }
-          break;
-        }
-        case "c":
-        case "C": {
-          if (highlightedIndex >= 0) {
-            e.preventDefault();
-            actions.onCite?.(highlightedIndex);
           }
           break;
         }

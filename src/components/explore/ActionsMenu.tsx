@@ -3,11 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   FloppyDisk,
-  FolderPlus,
-  Quotes,
   ArrowSquareOut,
-  Lightning,
-  ChatCircle,
   MagnifyingGlass,
   ProhibitInset,
   Link as LinkIcon,
@@ -15,14 +11,10 @@ import {
 } from "@phosphor-icons/react";
 export interface ActionsMenuCallbacks {
   onSave?: () => void;
-  onSaveToProject?: () => void;
-  onCite?: () => void;
   onOpenOriginal?: () => void;
-  onSummarize?: () => void;
-  onAskAbout?: () => void;
   onMoreFromSource?: () => void;
-  onBlock?: () => void;
   onCopyLink?: () => void;
+  onBlock?: () => void;
 }
 
 interface MenuItem {
@@ -41,34 +33,10 @@ const MENU_ITEMS: MenuItem[] = [
     action: "onSave",
   },
   {
-    label: "Save to Project",
-    shortcut: null,
-    icon: <FolderPlus size={16} />,
-    action: "onSaveToProject",
-  },
-  {
-    label: "Cite in Draft",
-    shortcut: "C",
-    icon: <Quotes size={16} />,
-    action: "onCite",
-  },
-  {
     label: "Open Original",
     shortcut: "O",
     icon: <ArrowSquareOut size={16} />,
     action: "onOpenOriginal",
-  },
-  {
-    label: "Summarize Page",
-    shortcut: null,
-    icon: <Lightning size={16} />,
-    action: "onSummarize",
-  },
-  {
-    label: "Ask About Page",
-    shortcut: null,
-    icon: <ChatCircle size={16} />,
-    action: "onAskAbout",
   },
   {
     label: "More from this source",
@@ -77,17 +45,17 @@ const MENU_ITEMS: MenuItem[] = [
     action: "onMoreFromSource",
   },
   {
+    label: "Copy Link",
+    shortcut: null,
+    icon: <LinkIcon size={16} />,
+    action: "onCopyLink",
+  },
+  {
     label: "Block this source",
     shortcut: "B",
     icon: <ProhibitInset size={16} />,
     action: "onBlock",
     danger: true,
-  },
-  {
-    label: "Copy Link",
-    shortcut: null,
-    icon: <LinkIcon size={16} />,
-    action: "onCopyLink",
   },
 ];
 
@@ -166,11 +134,9 @@ export function ActionsMenu({
           data-testid="actions-menu-dropdown"
           role="menu"
         >
-          {items.map((item, index) => {
-            // Add separator before "Block this source"
-            const showSeparator =
-              item.action === "onBlock" ||
-              (item.action === "onOpenOriginal" && index > 0);
+          {items.map((item) => {
+            // Add separator before dangerous actions
+            const showSeparator = item.action === "onBlock";
 
             return (
               <div key={item.action}>

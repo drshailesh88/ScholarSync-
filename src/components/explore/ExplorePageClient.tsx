@@ -712,6 +712,7 @@ export function ExplorePageClient() {
                 onToggleInfo={() => handleToggleInfo(index)}
                 onBlock={(domain) => void handleBlock(domain)}
                 onMoreFromSource={handleMoreFromSource}
+                onCopyLink={() => setToast({ message: "Link copied", type: "success" })}
                 result={result}
                 tab={activeTab}
               />

@@ -157,7 +157,6 @@ export const ResultCard = memo(function ResultCard({
   onToggleInfo,
   onBlock,
   onMoreFromSource,
-  onCite,
   onCopyLink,
 }: {
   id?: string;
@@ -171,7 +170,6 @@ export const ResultCard = memo(function ResultCard({
   onToggleInfo?: () => void;
   onBlock?: (domain: string) => void;
   onMoreFromSource?: (domain: string) => void;
-  onCite?: () => void;
   onCopyLink?: (url: string) => void;
 }) {
   const articleRef = useRef<HTMLElement>(null);
@@ -215,7 +213,6 @@ export const ResultCard = memo(function ResultCard({
     onOpenOriginal: () => {
       if (href) window.open(href, "_blank", "noopener");
     },
-    onCite: onCite,
     onBlock: () => {
       if (domain) onBlock?.(domain);
     },
