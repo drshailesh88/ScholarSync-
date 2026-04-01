@@ -113,13 +113,13 @@ Risk: **MEDIUM** — content extraction from arbitrary web pages can be unpredic
 ### Phase 7: Source Info Panel + Actions Menu (Interaction Polish)
 **Deliverable:** User clicks shield → sees domain details + preference controls. Full actions menu with keyboard shortcuts.
 
-- [ ] Build SourceInfoPanel (inline expansion with domain name, trust tier, type, tracker info, preference controls)
-- [ ] Build ActionsMenu ("..." dropdown with Save, Save to Project, Cite, Open Original, Summarize, Ask About, More from source, Block, Copy Link)
-- [ ] Add keyboard shortcut labels to every menu item
-- [ ] Wire "Block this source" to domain preferences (sets to Mute)
-- [ ] Wire "More from this source" to re-search scoped to domain
-- [ ] Build "My Sources" settings page (manage all domain preferences)
-- [ ] Write tests: source info panel renders, actions execute correctly
+- [x] Build SourceInfoPanel (inline expansion with domain name, trust tier, type, tracker info, preference controls)
+- [x] Build ActionsMenu ("..." dropdown with Save, Save to Project, Cite, Open Original, Summarize, Ask About, More from source, Block, Copy Link)
+- [x] Add keyboard shortcut labels to every menu item
+- [x] Wire "Block this source" to domain preferences (sets to Mute)
+- [x] Wire "More from this source" to re-search scoped to domain
+- [x] Build "My Sources" settings page (manage all domain preferences)
+- [x] Write tests: source info panel renders, actions execute correctly
 
 Risk: **LOW** — UI polish, no new infrastructure.
 
