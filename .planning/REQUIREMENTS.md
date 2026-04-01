@@ -23,7 +23,7 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 
 ### Explore Page UX
 - [x] Explore page with Kagi-style centered search bar (glass-morphism pill)
-- [ ] Landing page shows only search bar and tabs — no feed, no trending, no recommendations
+- [x] Landing page shows only search bar and tabs — no feed, no trending, no recommendations
 - [x] Horizontal tabs: Academic | Web | News | Discussions | More
 - [x] Tab switching is instant (client-side filter on already-fetched results)
 - [x] Filter pills below tabs: Scope | Order By | Time | Options | Advanced
@@ -36,8 +36,8 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [x] Academic tab cards show journal name, authors, evidence level
 - [x] News tab cards show publication name and relative time
 - [x] Discussions tab cards show platform, community, engagement
-- [ ] Hover: subtle background change, action buttons appear
-- [ ] Mobile: save icon and actions menu always visible (no hover)
+- [x] Hover: subtle background change, action buttons appear
+- [x] Mobile: save icon and actions menu always visible (no hover)
 
 ### Actions Menu
 - [ ] "..." menu on each result with: Save to Library, Save to Project, Cite in Draft, Open Original, Summarize Page, Ask About Page, More from this source, Block this source, Copy Link

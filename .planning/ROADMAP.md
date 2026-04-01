@@ -161,17 +161,17 @@ Risk: **LOW** — existing synthesis infrastructure exists (AISynthesisPanel, /a
 ### Phase 10: Mobile + Responsive + Polish
 **Deliverable:** Explore works beautifully on mobile. All edge cases handled. Ready for users.
 
-- [ ] Responsive layout: tabs/pills horizontal scroll on mobile
-- [ ] Save icon and actions menu always visible on mobile (no hover)
-- [ ] Source Info panel as bottom sheet on mobile
-- [ ] Hover states: shadow lift on desktop result cards
-- [ ] Loading states for search and content extraction
-- [ ] Error states for failed searches, failed extraction
-- [ ] Empty states for no results, no history
-- [ ] Final visual polish against UI Brief specs
-- [ ] Cross-browser testing
-- [ ] Performance audit (< 2 second results, instant tab switching)
-- [ ] E2E test suite for full Explore workflow
+- [x] Responsive layout: tabs/pills horizontal scroll on mobile
+- [x] Save icon and actions menu always visible on mobile (no hover) + 44px touch targets
+- [ ] Source Info panel as bottom sheet on mobile — BLOCKED (Phase 7 not built)
+- [x] Hover states: shadow lift on desktop result cards (100ms ease, dark mode shadow)
+- [x] Loading states for search (skeleton shimmer) — content extraction blocked by Phase 6
+- [x] Error states for failed searches (with retry) — extraction blocked by Phase 6
+- [x] Empty states for no results, no history, coming soon, unavailable
+- [x] Final visual polish against UI Brief specs (toast, shadows, responsive dropdowns, font weights)
+- [ ] Cross-browser testing — manual audit required
+- [x] Performance audit (React.memo on ResultCard, memoized callbacks, instant tab switching)
+- [x] E2E test suite for full Explore workflow (16 tests)
 
 Risk: **LOW** — polish and responsive design. No new architecture.
 
