@@ -194,10 +194,10 @@ export function ResultCard({
       id={id}
       ref={articleRef}
       className={cn(
-        "rounded-2xl p-4 transition-colors duration-150",
+        "rounded-2xl p-4 transition-all duration-100 ease-[ease]",
         isHighlighted
           ? "bg-[var(--surface-raised)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] ring-2 ring-[var(--brand)]/30"
-          : "bg-transparent hover:bg-surface-raised hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+          : "bg-transparent hover:bg-[var(--surface-raised)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] active:bg-[var(--surface-raised)] dark:hover:shadow-[0_2px_8px_rgba(0,0,0,0.2)]",
         isSelected && "ring-2 ring-[var(--brand)]"
       )}
       data-highlighted={isHighlighted || undefined}
@@ -223,11 +223,13 @@ export function ResultCard({
         <div className="flex shrink-0 items-center gap-1">
           <button
             aria-label={saved ? "Saved to Library" : "Save result"}
-            className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+            className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-full transition-colors md:h-8 md:w-8",
+              "min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0",
               saved
                 ? "text-brand"
-                : "text-ink-muted hover:bg-black/[0.04] hover:text-brand"
-            }`}
+                : "text-ink-muted hover:bg-black/[0.04] hover:text-brand active:bg-black/[0.06] active:text-brand"
+            )}
             disabled={saving || saved}
             onClick={handleSave}
             type="button"
@@ -242,7 +244,11 @@ export function ResultCard({
           </button>
           <button
             aria-label="More actions"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-black/[0.04] hover:text-ink"
+            className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors md:h-8 md:w-8",
+              "min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0",
+              "hover:bg-black/[0.04] hover:text-ink active:bg-black/[0.06] active:text-ink"
+            )}
             type="button"
           >
             <DotsThreeVertical size={18} weight="bold" />

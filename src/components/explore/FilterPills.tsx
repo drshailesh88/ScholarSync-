@@ -128,7 +128,7 @@ function PillButton({
         "inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[13px] font-normal transition-colors",
         "border border-[var(--border)]",
         active
-          ? "bg-[rgba(109,40,217,0.06)] text-[var(--brand)] dark:bg-[rgba(139,123,244,0.1)]"
+          ? "bg-[rgba(109,40,217,0.06)] font-medium text-[var(--brand)] dark:bg-[rgba(139,123,244,0.1)]"
           : "bg-[var(--surface-raised)] text-ink hover:bg-[var(--surface-raised)]/80",
         open && "ring-1 ring-[var(--brand)]/30"
       )}
@@ -149,7 +149,7 @@ function PillButton({
 
 function DropdownMenu({ children }: { children: React.ReactNode }) {
   return (
-    <div className="absolute left-0 top-full z-50 mt-1 min-w-[200px] rounded-xl border border-[var(--border)] bg-[var(--background)] p-1 shadow-lg">
+    <div className="absolute left-0 top-full z-50 mt-1 min-w-[200px] max-w-[calc(100vw-2rem)] rounded-xl border border-[var(--border)] bg-[var(--background)] p-1 shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
       {children}
     </div>
   );

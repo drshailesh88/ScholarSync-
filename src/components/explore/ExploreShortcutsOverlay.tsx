@@ -123,10 +123,10 @@ export function ExploreShortcutsOverlay({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black/30 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-[500] flex items-end justify-center overflow-y-auto bg-black/30 backdrop-blur-[2px] md:items-center">
       <div
         ref={panelRef}
-        className="w-full max-w-[560px] rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl"
+        className="w-full max-w-[560px] rounded-t-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_8px_32px_rgba(0,0,0,0.2)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] md:rounded-2xl"
         role="dialog"
         aria-label="Keyboard shortcuts"
       >
@@ -144,7 +144,7 @@ export function ExploreShortcutsOverlay({
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             {LEFT_COLUMN.map((group) => (
               <ShortcutGroup

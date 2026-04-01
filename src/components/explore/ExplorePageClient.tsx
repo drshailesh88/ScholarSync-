@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, CircleNotch, Sparkle } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, Sparkle } from "@phosphor-icons/react";
 import type { SearchResponse, UnifiedSearchResult } from "@/types/search";
 import { cn } from "@/lib/utils";
 import { ExploreSearchBar } from "./ExploreSearchBar";
@@ -496,6 +496,9 @@ export function ExplorePageClient() {
             />
             <SearchHistoryDropdown onSelectQuery={handleSelectHistory} />
           </div>
+          <p className="mt-4 text-center text-[14px] text-ink-muted">
+            Search for sources to get started.
+          </p>
         </div>
       </div>
     );
@@ -535,33 +538,71 @@ export function ExplorePageClient() {
         ) : null}
 
         {error ? (
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-[14px] text-ink">
-            {error}
+          <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-800 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
+            <span className="shrink-0 text-[16px]" aria-hidden="true">!</span>
+            <div>
+              <p className="font-medium">{error}</p>
+              <button
+                className="mt-1 text-[13px] font-medium text-red-600 underline-offset-2 hover:underline dark:text-red-400"
+                onClick={() => void runSearch()}
+                type="button"
+              >
+                Try again
+              </button>
+            </div>
           </div>
         ) : null}
 
         {isSearching ? (
-          <div className="flex items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-4 text-[14px] text-ink-muted">
-            <CircleNotch className="animate-spin" size={16} weight="bold" />
-            Searching Explore...
+          <div className="flex flex-col gap-6">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="animate-pulse rounded-2xl p-4"
+                style={{ borderLeft: "3px solid var(--border)" }}
+              >
+                <div className="h-5 w-3/4 rounded bg-[var(--surface-raised)]" />
+                <div className="mt-2 h-3 w-1/3 rounded bg-[var(--surface-raised)]" />
+                <div className="mt-2 h-3 w-1/2 rounded bg-[var(--surface-raised)]" />
+                <div className="mt-3 space-y-2">
+                  <div className="h-3.5 w-full rounded bg-[var(--surface-raised)]" />
+                  <div className="h-3.5 w-5/6 rounded bg-[var(--surface-raised)]" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : null}
 
         {!isSearching && activeTab === "more" ? (
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-5 text-[14px] text-ink-muted">
-            More tabs are reserved for future source types like images, videos, and podcasts.
+          <div className="flex flex-col items-center gap-2 py-12 text-center">
+            <p className="text-[15px] font-medium text-ink">
+              Coming soon
+            </p>
+            <p className="max-w-sm text-[14px] text-ink-muted">
+              Images, videos, and podcasts will be available here in a future update.
+            </p>
           </div>
         ) : null}
 
         {!isSearching && activeState?.unavailable && activeTab !== "academic" ? (
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-5 text-[14px] text-ink-muted">
-            This source type is temporarily unavailable.
+          <div className="flex flex-col items-center gap-2 py-12 text-center">
+            <p className="text-[15px] font-medium text-ink">
+              Temporarily unavailable
+            </p>
+            <p className="max-w-sm text-[14px] text-ink-muted">
+              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} search is experiencing issues. Academic search is unaffected.
+            </p>
           </div>
         ) : null}
 
         {!isSearching && activeTab !== "more" && !activeState?.unavailable && activeResults.length === 0 ? (
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-5 text-[14px] text-ink-muted">
-            No {activeTab} results for &quot;{searchQuery}&quot;.
+          <div className="flex flex-col items-center gap-2 py-12 text-center">
+            <p className="text-[15px] font-medium text-ink">
+              No {activeTab} results found
+            </p>
+            <p className="max-w-sm text-[14px] text-ink-muted">
+              No results for &quot;{searchQuery}&quot; in {activeTab}. Try a different query or switch tabs.
+            </p>
           </div>
         ) : null}
 
@@ -613,10 +654,10 @@ export function ExplorePageClient() {
           >
             <button
               className={cn(
-                "inline-flex items-center gap-2 rounded-full border px-3 py-2 text-[13px] transition-colors",
+                "inline-flex min-h-[44px] items-center gap-2 rounded-full border px-4 py-2 text-[13px] transition-colors",
                 activePage === 0
                   ? "cursor-not-allowed border-[var(--border)] text-ink-muted/60"
-                  : "border-[var(--border)] text-ink hover:bg-[var(--surface-raised)]"
+                  : "border-[var(--border)] text-ink hover:bg-[var(--surface-raised)] active:bg-[var(--surface-raised)]"
               )}
               disabled={activePage === 0 || isPaginating}
               onClick={() => {
@@ -635,10 +676,10 @@ export function ExplorePageClient() {
 
             <button
               className={cn(
-                "inline-flex items-center gap-2 rounded-full border px-3 py-2 text-[13px] transition-colors",
+                "inline-flex min-h-[44px] items-center gap-2 rounded-full border px-4 py-2 text-[13px] transition-colors",
                 activePage + 1 >= totalPages
                   ? "cursor-not-allowed border-[var(--border)] text-ink-muted/60"
-                  : "border-[var(--border)] text-ink hover:bg-[var(--surface-raised)]"
+                  : "border-[var(--border)] text-ink hover:bg-[var(--surface-raised)] active:bg-[var(--surface-raised)]"
               )}
               disabled={activePage + 1 >= totalPages || isPaginating}
               onClick={() => {

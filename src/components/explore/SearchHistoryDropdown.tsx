@@ -111,7 +111,7 @@ export function SearchHistoryDropdown({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[340px] rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-xl">
+        <div className="absolute right-0 top-full z-50 mt-2 w-[calc(100vw-2rem)] rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] md:w-[340px]">
           <div className="flex items-center justify-between border-b border-[var(--border)] px-3 py-2">
             <span className="text-[13px] font-medium text-ink">
               Recent Searches
