@@ -19,7 +19,7 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [x] Trust Indicator (3px colored left border) visible on every result card
 - [x] Cohere rerank applied to web results (same as academic results)
 - [x] Domain preferences (Mute/Lower/Neutral/Higher/Prefer) filter and boost results
-- [ ] Source Info panel shows domain details and preference controls on shield icon click
+- [x] Source Info panel shows domain details and preference controls on shield icon click
 
 ### Explore Page UX
 - [x] Explore page with Kagi-style centered search bar (glass-morphism pill)
@@ -40,8 +40,8 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [x] Mobile: save icon and actions menu always visible (no hover)
 
 ### Actions Menu
-- [ ] "..." menu on each result with: Save to Library, Save to Project, Cite in Draft, Open Original, Summarize Page, Ask About Page, More from this source, Block this source, Copy Link
-- [ ] Keyboard shortcuts shown inline in menu
+- [x] "..." menu on each result with: Save to Library, Save to Project, Cite in Draft, Open Original, Summarize Page, Ask About Page, More from this source, Block this source, Copy Link
+- [x] Keyboard shortcuts shown inline in menu
 
 ### Saving & Library
 - [x] One-click save (+) to Library on every result
@@ -71,9 +71,9 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 
 ### Domain Preferences
 - [x] 5-level system: Mute / Lower / Neutral / Higher / Prefer
-- [ ] Shield icon on each result opens Source Info panel with preference controls
-- [ ] "My Sources" settings page to manage all domain preferences
-- [ ] Max 1000 domain preferences, free for all plans
+- [x] Shield icon on each result opens Source Info panel with preference controls
+- [x] "My Sources" settings page to manage all domain preferences
+- [x] Max 1000 domain preferences, free for all plans
 - [x] Muted domains never appear in results
 - [x] Preferred domains appear near top
 

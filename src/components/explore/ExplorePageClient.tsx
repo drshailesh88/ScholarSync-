@@ -19,6 +19,7 @@ import {
 import { getUserScopes, type ScopeRecord } from "@/lib/actions/scopes";
 import { saveWebSource, getSavedUrls } from "@/lib/actions/web-sources";
 import { addExploreSearchHistory } from "@/lib/actions/explore-search-history";
+import { setDomainPreference } from "@/lib/actions/domain-preferences";
 import { SaveToast } from "./SaveToast";
 import { SearchHistoryDropdown } from "./SearchHistoryDropdown";
 
@@ -174,6 +175,7 @@ export function ExplorePageClient() {
   const [savedUrls, setSavedUrls] = useState<Set<string>>(new Set());
   const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
   const [synthesisOpen, setSynthesisOpen] = useState(false);
+  const [infoPanelIndex, setInfoPanelIndex] = useState<number | null>(null);
 
   // Load user scopes on mount
   useEffect(() => {
@@ -397,6 +399,67 @@ export function ExplorePageClient() {
     [activeSearchTab, searchQuery]
   );
 
+  const handleBlock = useCallback(
+    async (domain: string) => {
+      try {
+        await setDomainPreference(domain, "mute");
+        setToast({ message: `Blocked ${domain}`, type: "success" });
+      } catch {
+        setToast({ message: "Failed to block source", type: "error" });
+      }
+    },
+    []
+  );
+
+  const handleMoreFromSource = useCallback(
+    (domain: string) => {
+      setQueryInput(`site:${domain} ${searchQuery}`);
+      // Trigger search with domain constraint
+      const newQuery = `site:${domain} ${searchQuery}`;
+      setQueryInput(newQuery);
+      setSearchQuery(newQuery);
+      setHasSearched(true);
+      setIsSearching(true);
+      setError(null);
+      setCurrentPageByTab({ academic: 0, web: 0, news: 0, discussions: 0, more: 0 });
+
+      const startedAt = performance.now();
+      Promise.allSettled(
+        SEARCHABLE_TABS.map(async (t) =>
+          [t, await fetchSearchPage(newQuery, t, 0, filters)] as const
+        )
+      ).then((settled) => {
+        const nextTabState = buildInitialTabState();
+        settled.forEach((entry, index) => {
+          const t = SEARCHABLE_TABS[index];
+          if (entry.status === "fulfilled") {
+            const [, response] = entry.value;
+            nextTabState[t] = {
+              pages: { 0: response.results },
+              total: response.total,
+              hasMore: response.hasMore,
+              sourceCounts: response.sourceCounts,
+              unavailable: Boolean(response.searxngUnavailable),
+            };
+          } else {
+            nextTabState[t] = { ...createEmptyTabState(), unavailable: t !== "academic" };
+          }
+        });
+        setTabState(nextTabState);
+        setSearchDurationMs(performance.now() - startedAt);
+        setIsSearching(false);
+      });
+    },
+    [searchQuery, filters]
+  );
+
+  const handleToggleInfo = useCallback(
+    (index: number) => {
+      setInfoPanelIndex((prev) => (prev === index ? null : index));
+    },
+    []
+  );
+
   // ── Keyboard navigation ──────────────────────────────────
    
   const keyboardActions = useMemo(
@@ -417,8 +480,13 @@ export function ExplorePageClient() {
         if (href) window.open(href, "_blank", "noopener");
       },
       onSynthesize: () => setSynthesisOpen((prev) => !prev),
+      onInfo: (index: number) => handleToggleInfo(index),
+      onBlock: (index: number) => {
+        const result = activeResults[index];
+        if (result?.domain) void handleBlock(result.domain);
+      },
     }),
-    [handleTabChange, runSearch, activeResults, handleSaveResult]
+    [handleTabChange, runSearch, activeResults, handleSaveResult, handleToggleInfo, handleBlock]
   );
 
   const {
@@ -639,7 +707,11 @@ export function ExplorePageClient() {
                 isHighlighted={highlightedIndex === index}
                 isSaved={!!result.url && savedUrls.has(result.url)}
                 isSelected={selectedIndices.has(index)}
+                showInfoPanel={infoPanelIndex === index}
                 onSave={handleSaveResult}
+                onToggleInfo={() => handleToggleInfo(index)}
+                onBlock={(domain) => void handleBlock(domain)}
+                onMoreFromSource={handleMoreFromSource}
                 result={result}
                 tab={activeTab}
               />
