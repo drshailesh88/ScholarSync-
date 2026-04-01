@@ -1,6 +1,8 @@
 "use client";
 
-import { DotsThreeVertical, Plus } from "@phosphor-icons/react";
+import { useEffect, useRef, useState } from "react";
+import { Check, DotsThreeVertical, Plus, CircleNotch } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 import type { UnifiedSearchResult } from "@/types/search";
 import type { ExploreTab } from "./ExploreTabs";
 
@@ -141,21 +143,65 @@ function getBorderColor(result: UnifiedSearchResult, tab: SupportedTab): string 
 }
 
 export function ResultCard({
+  id,
   result,
   tab,
+  isSaved = false,
+  isHighlighted = false,
+  isSelected = false,
+  onSave,
 }: {
+  id?: string;
   result: UnifiedSearchResult;
   tab: SupportedTab;
+  isSaved?: boolean;
+  isHighlighted?: boolean;
+  isSelected?: boolean;
+  onSave?: (result: UnifiedSearchResult) => Promise<void>;
 }) {
+  const articleRef = useRef<HTMLElement>(null);
+
+  // Scroll highlighted card into view
+  useEffect(() => {
+    if (isHighlighted && articleRef.current) {
+      articleRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }, [isHighlighted]);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(isSaved);
+
   const href = buildResultHref(result);
   const metadata = buildMetadata(result, tab);
   const date = formatDateLabel(result);
   const breadcrumb = formatBreadcrumb(result, tab);
   const snippet = result.abstract || result.tldr || "";
 
+  const handleSave = async () => {
+    if (saved || saving || !onSave) return;
+    setSaving(true);
+    try {
+      await onSave(result);
+      setSaved(true);
+    } catch {
+      // Error is handled by the parent
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <article
-      className="rounded-2xl bg-transparent p-4 transition-colors duration-150 hover:bg-surface-raised hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+      id={id}
+      ref={articleRef}
+      className={cn(
+        "rounded-2xl p-4 transition-colors duration-150",
+        isHighlighted
+          ? "bg-[var(--surface-raised)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] ring-2 ring-[var(--brand)]/30"
+          : "bg-transparent hover:bg-surface-raised hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+        isSelected && "ring-2 ring-[var(--brand)]"
+      )}
+      data-highlighted={isHighlighted || undefined}
+      data-selected={isSelected || undefined}
       style={{ borderLeft: `3px solid ${getBorderColor(result, tab)}` }}
     >
       <div className="flex items-start justify-between gap-4">
@@ -176,11 +222,23 @@ export function ResultCard({
 
         <div className="flex shrink-0 items-center gap-1">
           <button
-            aria-label="Save result"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-black/[0.04] hover:text-brand"
+            aria-label={saved ? "Saved to Library" : "Save result"}
+            className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+              saved
+                ? "text-brand"
+                : "text-ink-muted hover:bg-black/[0.04] hover:text-brand"
+            }`}
+            disabled={saving || saved}
+            onClick={handleSave}
             type="button"
           >
-            <Plus size={16} weight="bold" />
+            {saving ? (
+              <CircleNotch className="animate-spin" size={16} weight="bold" />
+            ) : saved ? (
+              <Check size={16} weight="bold" />
+            ) : (
+              <Plus size={16} weight="bold" />
+            )}
           </button>
           <button
             aria-label="More actions"

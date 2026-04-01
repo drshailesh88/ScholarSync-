@@ -4,13 +4,14 @@
 **Explore Module V1** — Created 2026-03-31
 
 ## Current Phase
-Phase 4: Filter Pills + Scopes — Status: COMPLETE ✅
+Phase 5: Save + Web Sources Database — Status: COMPLETE ✅
 
 ## Completed Phases
 - Phase 1: SearXNG Deployment + Source Adapter ✅ (PRs #52, #53)
 - Phase 2: Trust Tier + Domain Preferences ✅ (PR #54)
 - Phase 3: Explore Page Shell ✅ (PR #55)
 - Phase 4: Filter Pills + Scopes ✅ (committed to main)
+- Phase 5: Save + Web Sources Database ✅
 
 ## Source Documents
 - PRD: GitHub Issue #51
@@ -29,9 +30,9 @@ Phase 4: Filter Pills + Scopes — Status: COMPLETE ✅
 - Phase 2: Grill & Interview ✅
 - Phase 3: Language & PRD ✅
 - Phase 4: Technical Architecture ✅
-- Phase 5: Implementation → IN PROGRESS (Phase 4 complete, Phase 5 next)
+- Phase 5: Implementation → IN PROGRESS (Phase 5 complete, Phase 6 next)
 
 ## Quick Reference
 - SearXNG deployed: http://34.14.206.241:8080
-- Next: Phase 5 — Save + Web Sources Database (Library Integration)
-- Unchecked requirements: ~24 items across Phases 5-10
+- Next: Phase 6 — Content Extraction + Annotation (Reading & Highlighting)
+- Unchecked requirements: ~16 items across Phases 6-10

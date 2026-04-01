@@ -44,13 +44,13 @@ v1 — Multi-Source Discovery with Web/News/Discussions Tabs
 - [ ] Keyboard shortcuts shown inline in menu
 
 ### Saving & Library
-- [ ] One-click save (+) to Library on every result
-- [ ] Save icon transforms from (+) to checkmark when saved
-- [ ] Subtle toast "Saved to Library" auto-dismisses in 2 seconds
-- [ ] Duplicate prevention (same URL, same user)
-- [ ] All metadata auto-captured at save time (title, URL, domain, author, date, snippet, source type, trust tier, tab, search query, thumbnail)
-- [ ] Web sources stored in new `web_sources` table (papers table NOT touched)
-- [ ] Saved sources linkable to multiple projects via `project_web_sources`
+- [x] One-click save (+) to Library on every result
+- [x] Save icon transforms from (+) to checkmark when saved
+- [x] Subtle toast "Saved to Library" auto-dismisses in 2 seconds
+- [x] Duplicate prevention (same URL, same user)
+- [x] All metadata auto-captured at save time (title, URL, domain, author, date, snippet, source type, trust tier, tab, search query, thumbnail)
+- [x] Web sources stored in new `web_sources` table (papers table NOT touched)
+- [x] Saved sources linkable to multiple projects via `project_web_sources`
 - [ ] Plan-dependent save limits enforced
 
 ### Content Extraction & Annotation

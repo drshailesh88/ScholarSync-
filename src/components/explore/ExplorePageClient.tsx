@@ -1,19 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, CircleNotch } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, CircleNotch, Sparkle } from "@phosphor-icons/react";
 import type { SearchResponse, UnifiedSearchResult } from "@/types/search";
 import { cn } from "@/lib/utils";
 import { ExploreSearchBar } from "./ExploreSearchBar";
 import { ExploreTabs, type ExploreTab } from "./ExploreTabs";
 import { ResultCard } from "./ResultCard";
+import { SynthesisBlock } from "./SynthesisBlock";
+import { ExploreShortcutsOverlay } from "./ExploreShortcutsOverlay";
+import { useExploreKeyboard } from "./useExploreKeyboard";
 import {
   FilterPills,
   DEFAULT_FILTERS,
   type ExploreFilters,
 } from "./FilterPills";
 import { getUserScopes, type ScopeRecord } from "@/lib/actions/scopes";
+import { saveWebSource, getSavedUrls } from "@/lib/actions/web-sources";
+import { SaveToast } from "./SaveToast";
 
 type SearchableExploreTab = Exclude<ExploreTab, "more">;
 
@@ -143,6 +148,7 @@ async function fetchSearchPage(
 
 export function ExplorePageClient() {
   const router = useRouter();
+  const searchBarRef = useRef<HTMLInputElement>(null);
   const [queryInput, setQueryInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<ExploreTab>("academic");
@@ -163,6 +169,9 @@ export function ExplorePageClient() {
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<ExploreFilters>(DEFAULT_FILTERS);
   const [userScopes, setUserScopes] = useState<ScopeRecord[]>([]);
+  const [savedUrls, setSavedUrls] = useState<Set<string>>(new Set());
+  const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
+  const [synthesisOpen, setSynthesisOpen] = useState(false);
 
   // Load user scopes on mount
   useEffect(() => {
@@ -176,9 +185,10 @@ export function ExplorePageClient() {
   const activeSearchTab = activeTab === "more" ? null : activeTab;
   const activePage = currentPageByTab[activeTab];
   const activeState = activeSearchTab ? tabState[activeSearchTab] : null;
-  const activeResults = activeSearchTab
-    ? (activeState?.pages[activePage] ?? [])
-    : [];
+  const activeResults = useMemo(
+    () => (activeSearchTab ? (activeState?.pages[activePage] ?? []) : []),
+    [activeSearchTab, activeState?.pages, activePage]
+  );
   const totalPages = activeState
     ? Math.max(1, Math.ceil(activeState.total / RESULTS_PER_PAGE))
     : 1;
@@ -244,6 +254,17 @@ export function ExplorePageClient() {
       setError("Explore search failed. Try again.");
     }
     setIsSearching(false);
+
+    // Fetch which URLs are already saved for badge display
+    const allUrls = Object.values(nextTabState)
+      .flatMap((s) => Object.values(s.pages).flat())
+      .map((r) => r.url)
+      .filter((u): u is string => !!u);
+    if (allUrls.length > 0) {
+      getSavedUrls(allUrls)
+        .then((saved) => setSavedUrls(new Set(saved)))
+        .catch(() => {});
+    }
   }, [queryInput, filters]);
 
   const ensurePageLoaded = useCallback(async (tab: SearchableExploreTab, page: number) => {
@@ -339,6 +360,68 @@ export function ExplorePageClient() {
     [searchQuery]
   );
 
+  const handleSaveResult = useCallback(
+    async (result: UnifiedSearchResult) => {
+      if (!activeSearchTab) return;
+      try {
+        const { alreadySaved } = await saveWebSource({
+          result,
+          tab: activeSearchTab,
+          searchQuery: searchQuery || undefined,
+        });
+
+        if (alreadySaved) {
+          setToast({ message: "Already in your Library", type: "info" });
+        } else {
+          setToast({ message: "Saved to Library", type: "success" });
+          if (result.url) {
+            setSavedUrls((prev) => new Set(prev).add(result.url!));
+          }
+        }
+      } catch {
+        setToast({ message: "Failed to save", type: "error" });
+        throw new Error("Save failed");
+      }
+    },
+    [activeSearchTab, searchQuery]
+  );
+
+  // ── Keyboard navigation ──────────────────────────────────
+   
+  const keyboardActions = useMemo(
+    () => ({
+      onTabChange: handleTabChange,
+      onSearch: () => void runSearch(),
+      focusSearchBar: () => searchBarRef.current?.focus(),
+      onSave: (index: number) => {
+        const result = activeResults[index];
+        if (result) void handleSaveResult(result);
+      },
+      onOpen: (index: number) => {
+        const result = activeResults[index];
+        const href =
+          result?.url ||
+          (result?.doi ? `https://doi.org/${result.doi}` : null) ||
+          (result?.pmid ? `https://pubmed.ncbi.nlm.nih.gov/${result.pmid}/` : null);
+        if (href) window.open(href, "_blank", "noopener");
+      },
+      onSynthesize: () => setSynthesisOpen((prev) => !prev),
+    }),
+    [handleTabChange, runSearch, activeResults, handleSaveResult]
+  );
+
+  const {
+    highlightedIndex,
+    selectedIndices,
+    shortcutsOverlayOpen,
+    setShortcutsOverlayOpen,
+  } = useExploreKeyboard(
+    activeResults.length,
+    activeTab,
+    hasSearched,
+    keyboardActions
+  );
+
   const showLanding = !hasSearched && !searchQuery;
 
   if (showLanding) {
@@ -346,6 +429,7 @@ export function ExplorePageClient() {
       <div className="flex min-h-[calc(100vh-7rem)] items-center justify-center px-4">
         <div className="w-full max-w-[640px]">
           <ExploreSearchBar
+            ref={searchBarRef}
             autoFocus
             isLoading={isSearching}
             onChange={setQueryInput}
@@ -363,6 +447,7 @@ export function ExplorePageClient() {
     <div className="mx-auto w-full max-w-[1200px] px-4 py-8 md:py-10">
       <div className="mx-auto flex w-full max-w-[780px] flex-col gap-5">
         <ExploreSearchBar
+          ref={searchBarRef}
           className="max-w-[560px]"
           isLoading={isSearching}
           onChange={setQueryInput}
@@ -419,11 +504,40 @@ export function ExplorePageClient() {
           </div>
         ) : null}
 
+        {/* Synthesize button + Synthesis block */}
+        {!isSearching && activeTab !== "more" && activeResults.length > 0 && !synthesisOpen ? (
+          <button
+            className="inline-flex items-center gap-2 self-start rounded-full border border-brand/20 bg-brand/5 px-3 py-1.5 text-[13px] font-medium text-brand hover:bg-brand/10 transition-colors"
+            data-testid="synthesize-button"
+            onClick={() => setSynthesisOpen(true)}
+            type="button"
+          >
+            <Sparkle size={14} weight="fill" />
+            Synthesize
+            <kbd className="ml-1 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-mono text-brand/70">Q</kbd>
+          </button>
+        ) : null}
+
+        {activeSearchTab && activeResults.length > 0 ? (
+          <SynthesisBlock
+            isOpen={synthesisOpen}
+            onClose={() => setSynthesisOpen(false)}
+            query={searchQuery}
+            results={activeResults}
+            tab={activeSearchTab}
+          />
+        ) : null}
+
         {!isSearching && activeTab !== "more" && activeResults.length > 0 ? (
           <div className="flex flex-col gap-6">
             {activeResults.map((result, index) => (
               <ResultCard
                 key={`${activeTab}-${activePage}-${result.url ?? result.doi ?? result.pmid ?? result.title}-${index}`}
+                id={`explore-result-${index}`}
+                isHighlighted={highlightedIndex === index}
+                isSaved={!!result.url && savedUrls.has(result.url)}
+                isSelected={selectedIndices.has(index)}
+                onSave={handleSaveResult}
                 result={result}
                 tab={activeTab}
               />
@@ -478,6 +592,19 @@ export function ExplorePageClient() {
           </nav>
         ) : null}
       </div>
+
+      {toast && (
+        <SaveToast
+          message={toast.message}
+          onDismiss={() => setToast(null)}
+          type={toast.type}
+        />
+      )}
+
+      <ExploreShortcutsOverlay
+        isOpen={shortcutsOverlayOpen}
+        onClose={() => setShortcutsOverlayOpen(false)}
+      />
     </div>
   );
 }

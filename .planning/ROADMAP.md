@@ -78,15 +78,15 @@ Risk: **LOW** — data layer + UI. Scopes are simple domain/keyword filters.
 ### Phase 5: Save + Web Sources Database (Library Integration)
 **Deliverable:** User clicks (+) on a result → saved to Library → visible in Library page → linkable to Projects.
 
-- [ ] Run database migration for `web_sources` and `project_web_sources` tables
-- [ ] Create server actions: saveWebSource, getWebSources, archiveWebSource, deleteWebSource, linkToProject
-- [ ] Implement duplicate prevention (unique user_id + url)
+- [x] Run database migration for `web_sources` and `project_web_sources` tables
+- [x] Create server actions: saveWebSource, getWebSources, archiveWebSource, deleteWebSource, linkToProject
+- [x] Implement duplicate prevention (unique user_id + url)
 - [ ] Implement plan-based save limits
-- [ ] Build save interaction on ResultCard (+ icon → checkmark, toast notification)
-- [ ] Build "Save to Project..." picker in actions menu
-- [ ] Update Library page to show Web Sources alongside Papers
-- [ ] Implement soft delete with 30-day recovery
-- [ ] Write tests: save CRUD, duplicate prevention, plan limits, soft delete, cascade, multi-project linking
+- [x] Build save interaction on ResultCard (+ icon → checkmark, toast notification)
+- [x] Build "Save to Project..." picker in actions menu
+- [x] Update Library page to show Web Sources alongside Papers
+- [x] Implement soft delete with 30-day recovery
+- [x] Write tests: save CRUD, duplicate prevention, plan limits, soft delete, cascade, multi-project linking
 
 Risk: **LOW** — follows existing project_papers pattern exactly. Schema already built.
 
