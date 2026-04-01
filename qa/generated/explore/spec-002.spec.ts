@@ -54,7 +54,7 @@ async function mockSearchApiWithTabControl(page: Page, opts: { emptyTabs?: strin
   await page.route('**/api/search/unified**', async (route) => {
     const url = new URL(route.request().url());
     const query = url.searchParams.get('q') ?? 'test';
-    const _tab = url.searchParams.get('tab') ?? 'academic';
+    const tab = url.searchParams.get('tab') ?? 'academic';
 
     if (unavailableTabs.includes(tab)) {
       await route.fulfill({
@@ -187,30 +187,34 @@ test.describe('Spec 002: Tab Navigation', () => {
 
   test('Key 2 switches to Web — press 2 activates Web tab', async ({ page }) => {
     await searchAndWait(page, 'shortcut test');
+    await page.getByRole('searchbox').blur();
     await page.keyboard.press('2');
-    await expect(page.getByRole('tab', { name: 'Web' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: 'Web' })).toHaveAttribute('aria-selected', 'true', { timeout: 5000 });
     await screenshot(page, 'key-2-web');
   });
 
   test('Key 3 switches to News — press 3 activates News tab', async ({ page }) => {
     await searchAndWait(page, 'shortcut test');
+    await page.getByRole('searchbox').blur();
     await page.keyboard.press('3');
-    await expect(page.getByRole('tab', { name: 'News' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: 'News' })).toHaveAttribute('aria-selected', 'true', { timeout: 5000 });
     await screenshot(page, 'key-3-news');
   });
 
   test('Key 4 switches to Discussions — press 4 activates Discussions tab', async ({ page }) => {
     await searchAndWait(page, 'shortcut test');
+    await page.getByRole('searchbox').blur();
     await page.keyboard.press('4');
-    await expect(page.getByRole('tab', { name: 'Discussions' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: 'Discussions' })).toHaveAttribute('aria-selected', 'true', { timeout: 5000 });
     await screenshot(page, 'key-4-discussions');
   });
 
   test('] cycles tab forward — next tab activates', async ({ page }) => {
     await searchAndWait(page, 'cycle test');
+    await page.getByRole('searchbox').blur();
     // Start on Academic (tab 0), press ] to go to Web (tab 1)
     await page.keyboard.press(']');
-    await expect(page.getByRole('tab', { name: 'Web' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: 'Web' })).toHaveAttribute('aria-selected', 'true', { timeout: 5000 });
     await screenshot(page, 'bracket-right-forward');
   });
 

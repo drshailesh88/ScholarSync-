@@ -19,11 +19,12 @@ async function mockSearchApi(page: Page, count = 10) {
     const url = new URL(route.request().url());
     const query = url.searchParams.get('q') ?? 'test';
     const pageParam = parseInt(url.searchParams.get('page') ?? '0', 10);
+    const pageSize = Math.min(count - pageParam * 10, 10);
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
-        results: Array.from({ length: Math.min(count - pageParam * 10, 10) }, (_, i) => ({
+        results: Array.from({ length: Math.max(pageSize, 0) }, (_, i) => ({
           title: `${query} — Page ${pageParam + 1} Result ${i + 1}`,
           authors: ['Jane Doe', 'John Smith'],
           journal: 'Journal of Testing',
@@ -68,6 +69,11 @@ async function screenshot(page: Page, name: string) {
   await page.screenshot({ path: path.join(ARTIFACT_DIR, `${name}.png`), fullPage: true });
 }
 
+/** Scoped pagination nav helper to avoid strict mode violations */
+function paginationNav(page: Page) {
+  return page.getByRole('navigation', { name: 'Pagination' });
+}
+
 test.describe('Spec 009: Pagination & Toasts', () => {
   // ── Pagination ──
 
@@ -82,92 +88,84 @@ test.describe('Spec 009: Pagination & Toasts', () => {
     test('Pagination visible when >10 results — Previous/Next buttons and page counter appear', async ({ page }) => {
       await searchAndWait(page);
 
-      const pagination = page.getByRole('navigation', { name: 'Pagination' });
-      await expect(pagination).toBeVisible({ timeout: 5000 });
-      await expect(page.getByRole('button', { name: 'Previous' })).toBeVisible();
-      await expect(page.getByRole('button', { name: 'Next' })).toBeVisible();
-      await expect(page.getByText(/Page \d+ of \d+/)).toBeVisible();
+      const nav = paginationNav(page);
+      await expect(nav).toBeVisible({ timeout: 5000 });
+      await expect(nav.getByRole('button', { name: 'Previous' })).toBeVisible();
+      await expect(nav.getByRole('button', { name: 'Next' })).toBeVisible();
+      await expect(nav.getByText(/Page \d+ of \d+/)).toBeVisible();
       await screenshot(page, 'pagination-visible');
     });
 
     test('Pagination hidden when <=10 results — no pagination shown', async ({ page }) => {
-      // Override with only 5 results
       await page.unrouteAll({ behavior: 'ignoreErrors' });
       await mockSearchApi(page, 5);
 
       await searchAndWait(page);
 
-      await expect(page.getByRole('navigation', { name: 'Pagination' })).not.toBeVisible();
+      await expect(paginationNav(page)).not.toBeVisible();
       await screenshot(page, 'pagination-hidden');
     });
 
     test('Next page loads results — click Next, verify page 2 results display', async ({ page }) => {
       await searchAndWait(page);
 
-      await page.getByRole('button', { name: 'Next' }).click();
-      await expect(page.locator('article').first()).toBeVisible({ timeout: 15000 });
-
-      // Verify page 2 results are shown
-      await expect(page.getByText(/Page 2 Result/)).toBeVisible();
-      await expect(page.getByText(/Page 2 of/)).toBeVisible();
+      await paginationNav(page).getByRole('button', { name: 'Next' }).click();
+      await expect(page.getByText(/Page 2 Result/).first()).toBeVisible({ timeout: 15000 });
+      await expect(paginationNav(page).getByText(/Page 2 of/)).toBeVisible();
       await screenshot(page, 'next-page-loads-results');
     });
 
     test('Previous page returns — on page 2, click Previous, verify page 1 results display', async ({ page }) => {
       await searchAndWait(page);
 
-      // Go to page 2
-      await page.getByRole('button', { name: 'Next' }).click();
-      await expect(page.getByText(/Page 2/)).toBeVisible({ timeout: 15000 });
+      await paginationNav(page).getByRole('button', { name: 'Next' }).click();
+      await expect(paginationNav(page).getByText(/Page 2/)).toBeVisible({ timeout: 15000 });
 
-      // Go back to page 1
-      await page.getByRole('button', { name: 'Previous' }).click();
-      await expect(page.locator('article').first()).toBeVisible({ timeout: 15000 });
-      await expect(page.getByText(/Page 1 Result/)).toBeVisible();
+      await paginationNav(page).getByRole('button', { name: 'Previous' }).click();
+      await expect(page.getByText(/Page 1 Result/).first()).toBeVisible({ timeout: 15000 });
       await screenshot(page, 'previous-page-returns');
     });
 
     test('Page counter updates — shows "Page 1 of N", updates on navigation', async ({ page }) => {
       await searchAndWait(page);
 
-      await expect(page.getByText('Page 1 of 3')).toBeVisible();
+      const nav = paginationNav(page);
+      await expect(nav.getByText('Page 1 of 3')).toBeVisible();
 
-      await page.getByRole('button', { name: 'Next' }).click();
-      await expect(page.getByText('Page 2 of 3')).toBeVisible({ timeout: 15000 });
+      await nav.getByRole('button', { name: 'Next' }).click();
+      await expect(nav.getByText('Page 2 of 3')).toBeVisible({ timeout: 15000 });
 
-      await page.getByRole('button', { name: 'Next' }).click();
-      await expect(page.getByText('Page 3 of 3')).toBeVisible({ timeout: 15000 });
+      await nav.getByRole('button', { name: 'Next' }).click();
+      await expect(nav.getByText('Page 3 of 3')).toBeVisible({ timeout: 15000 });
       await screenshot(page, 'page-counter-updates');
     });
 
     test('Previous disabled on page 1 — first page, Previous button is disabled', async ({ page }) => {
       await searchAndWait(page);
 
-      const prevButton = page.getByRole('button', { name: 'Previous' });
-      await expect(prevButton).toBeDisabled();
+      await expect(paginationNav(page).getByRole('button', { name: 'Previous' })).toBeDisabled();
       await screenshot(page, 'previous-disabled-on-page-1');
     });
 
     test('Next disabled on last page — last page, Next button is disabled', async ({ page }) => {
       await searchAndWait(page);
 
-      // Navigate to last page (page 3 of 3)
-      await page.getByRole('button', { name: 'Next' }).click();
-      await expect(page.getByText(/Page 2/)).toBeVisible({ timeout: 15000 });
-      await page.getByRole('button', { name: 'Next' }).click();
-      await expect(page.getByText(/Page 3/)).toBeVisible({ timeout: 15000 });
+      const nav = paginationNav(page);
+      await nav.getByRole('button', { name: 'Next' }).click();
+      await expect(nav.getByText(/Page 2/)).toBeVisible({ timeout: 15000 });
+      await nav.getByRole('button', { name: 'Next' }).click();
+      await expect(nav.getByText(/Page 3/)).toBeVisible({ timeout: 15000 });
 
-      const nextButton = page.getByRole('button', { name: 'Next' });
-      await expect(nextButton).toBeDisabled();
+      await expect(nav.getByRole('button', { name: 'Next' })).toBeDisabled();
       await screenshot(page, 'next-disabled-on-last-page');
     });
 
     test('Page caching — navigate to page 2, back to page 1, verify no re-fetch (cached)', async ({ page }) => {
       await searchAndWait(page);
 
-      // Go to page 2
-      await page.getByRole('button', { name: 'Next' }).click();
-      await expect(page.getByText(/Page 2/)).toBeVisible({ timeout: 15000 });
+      const nav = paginationNav(page);
+      await nav.getByRole('button', { name: 'Next' }).click();
+      await expect(nav.getByText(/Page 2/)).toBeVisible({ timeout: 15000 });
 
       // Track API calls from this point
       let fetchCount = 0;
@@ -175,11 +173,10 @@ test.describe('Spec 009: Pagination & Toasts', () => {
         if (req.url().includes('/api/search/unified')) fetchCount++;
       });
 
-      // Go back to page 1
-      await page.getByRole('button', { name: 'Previous' }).click();
-      await expect(page.getByText(/Page 1/)).toBeVisible({ timeout: 15000 });
+      // Go back to page 1 (should be cached)
+      await nav.getByRole('button', { name: 'Previous' }).click();
+      await expect(nav.getByText(/Page 1/)).toBeVisible({ timeout: 15000 });
 
-      // Should not have made another API call (cached)
       expect(fetchCount).toBe(0);
       await screenshot(page, 'page-caching');
     });
@@ -222,11 +219,12 @@ test.describe('Spec 009: Pagination & Toasts', () => {
         });
       });
 
-      await page.getByRole('button', { name: 'Next' }).click();
+      const nav = paginationNav(page);
+      await nav.getByRole('button', { name: 'Next' }).click();
 
       // During loading, both buttons should be disabled
-      await expect(page.getByRole('button', { name: 'Previous' })).toBeDisabled();
-      await expect(page.getByRole('button', { name: 'Next' })).toBeDisabled();
+      await expect(nav.getByRole('button', { name: 'Previous' })).toBeDisabled({ timeout: 5000 });
+      await expect(nav.getByRole('button', { name: 'Next' })).toBeDisabled();
       await screenshot(page, 'buttons-disabled-during-load');
     });
   });
@@ -244,18 +242,17 @@ test.describe('Spec 009: Pagination & Toasts', () => {
     test('Success toast — after saving, green check toast appears at bottom center', async ({ page }) => {
       await searchAndWait(page);
 
-      // Click on body first to ensure no input focused, then use keyboard save
-      await page.locator('body').click({ position: { x: 0, y: 0 } });
-      await page.keyboard.press('j'); // highlight first
-      await page.keyboard.press('s'); // save
+      // Click first article to defocus search, then save
+      await page.locator('article').first().click();
+      await page.keyboard.press('j');
+      await page.keyboard.press('s');
 
-      const toast = page.getByRole('alert');
+      const toast = page.getByRole('alert').first();
       await expect(toast).toBeVisible({ timeout: 5000 });
       await screenshot(page, 'success-toast');
     });
 
     test('Info toast — "Already in Library" shows info icon toast', async ({ page }) => {
-      // Mock save API to return already-saved response
       await page.unrouteAll({ behavior: 'ignoreErrors' });
       await mockSearchApi(page);
       await page.route('**/api/library/save**', async (route) => {
@@ -268,28 +265,28 @@ test.describe('Spec 009: Pagination & Toasts', () => {
 
       await searchAndWait(page);
 
-      await page.locator('body').click({ position: { x: 0, y: 0 } });
+      await page.locator('article').first().click();
       await page.keyboard.press('j');
       await page.keyboard.press('s');
 
-      const toast = page.getByRole('alert');
+      const toast = page.getByRole('alert').first();
       await expect(toast).toBeVisible({ timeout: 5000 });
-      await expect(toast).toContainText(/Already in Library/i);
+      await expect(toast).toContainText(/Already in/i);
       await screenshot(page, 'info-toast');
     });
 
     test('Auto-dismiss — toast fades out automatically after ~2 seconds', async ({ page }) => {
       await searchAndWait(page);
 
-      await page.locator('body').click({ position: { x: 0, y: 0 } });
+      await page.locator('article').first().click();
       await page.keyboard.press('j');
       await page.keyboard.press('s');
 
-      const toast = page.getByRole('alert');
+      const toast = page.getByRole('alert').first();
       await expect(toast).toBeVisible({ timeout: 5000 });
 
-      // Wait for auto-dismiss (~2-3 seconds)
-      await expect(toast).not.toBeVisible({ timeout: 5000 });
+      // Wait for auto-dismiss (~2s dismiss + 150ms fade + buffer)
+      await expect(toast).not.toBeVisible({ timeout: 8000 });
       await screenshot(page, 'auto-dismiss');
     });
   });

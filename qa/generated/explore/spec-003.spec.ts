@@ -136,8 +136,11 @@ test.describe('Spec 003: Filter System (FilterPills)', () => {
 
   test('Switch to Recency — pill updates and results refresh', async ({ page }) => {
     await searchAndWait(page, 'recency test');
-    await page.getByRole('button', { name: /Order/ }).click();
-    await page.getByText('Recency').click();
+    const orderPill = page.getByRole('button', { name: /Order/ });
+    await orderPill.click();
+    const recencyOption = page.getByText('Recency').first();
+    await expect(recencyOption).toBeVisible({ timeout: 5000 });
+    await recencyOption.click();
     await expect(page.getByRole('button', { name: /Order.*Recency/ })).toBeVisible();
     await expect(page.locator('article').first()).toBeVisible({ timeout: 15000 });
     await screenshot(page, 'switch-to-recency');
@@ -176,8 +179,11 @@ test.describe('Spec 003: Filter System (FilterPills)', () => {
 
   test('Select Past week — pill updates and results refresh', async ({ page }) => {
     await searchAndWait(page, 'past week test');
-    await page.getByRole('button', { name: /Any time/ }).click();
-    await page.getByText('Past week').click();
+    const timePill = page.getByRole('button', { name: /Any time/ });
+    await timePill.click();
+    const pastWeekOption = page.getByText('Past week').first();
+    await expect(pastWeekOption).toBeVisible({ timeout: 5000 });
+    await pastWeekOption.click();
     await expect(page.getByRole('button', { name: /Past week/ })).toBeVisible();
     await expect(page.locator('article').first()).toBeVisible({ timeout: 15000 });
     await screenshot(page, 'select-past-week');
@@ -213,8 +219,11 @@ test.describe('Spec 003: Filter System (FilterPills)', () => {
 
   test('Exact match toggle — enable Exact match, pill shows Options (1)', async ({ page }) => {
     await searchAndWait(page, 'exact match test');
-    await page.getByRole('button', { name: /Options/ }).click();
-    await page.getByText('Exact match').click();
+    const optionsPill = page.getByRole('button', { name: /Options/ });
+    await optionsPill.click();
+    const exactMatchOption = page.getByText('Exact match').first();
+    await expect(exactMatchOption).toBeVisible({ timeout: 5000 });
+    await exactMatchOption.click();
     await expect(page.getByRole('button', { name: /Options \(1\)/ })).toBeVisible();
     await expect(page.locator('article').first()).toBeVisible({ timeout: 15000 });
     await screenshot(page, 'exact-match-toggle');
@@ -278,12 +287,16 @@ test.describe('Spec 003: Filter System (FilterPills)', () => {
 
     // Set a non-default order
     await page.getByRole('button', { name: /Order/ }).click();
-    await page.getByText('Recency').click();
+    const recencyOpt = page.getByText('Recency');
+    await expect(recencyOpt).toBeVisible({ timeout: 5000 });
+    await recencyOpt.click();
     await expect(page.getByRole('button', { name: /Order.*Recency/ })).toBeVisible();
 
     // Set a non-default time filter
     await page.getByRole('button', { name: /Any time/ }).click();
-    await page.getByText('Past week').click();
+    const pastWeekOpt = page.getByText('Past week');
+    await expect(pastWeekOpt).toBeVisible({ timeout: 5000 });
+    await pastWeekOpt.click();
     await expect(page.getByRole('button', { name: /Past week/ })).toBeVisible();
 
     // Click Clear all

@@ -17,7 +17,7 @@ import {
   type ExploreFilters,
 } from "./FilterPills";
 import { getUserScopes, type ScopeRecord } from "@/lib/actions/scopes";
-import { saveWebSource, getSavedUrls } from "@/lib/actions/web-sources";
+import { getSavedUrls } from "@/lib/actions/web-sources";
 import { addExploreSearchHistory } from "@/lib/actions/explore-search-history";
 import { setDomainPreference } from "@/lib/actions/domain-preferences";
 import { SaveToast } from "./SaveToast";
@@ -377,11 +377,19 @@ export function ExplorePageClient() {
     async (result: UnifiedSearchResult) => {
       if (!activeSearchTab) return;
       try {
-        const { alreadySaved } = await saveWebSource({
-          result,
-          tab: activeSearchTab,
-          searchQuery: searchQuery || undefined,
+        const res = await fetch("/api/library/save", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            result,
+            tab: activeSearchTab,
+            searchQuery: searchQuery || undefined,
+          }),
         });
+
+        if (!res.ok) throw new Error("Save failed");
+        const { alreadySaved } = await res.json();
 
         if (alreadySaved) {
           setToast({ message: "Already in your Library", type: "info" });

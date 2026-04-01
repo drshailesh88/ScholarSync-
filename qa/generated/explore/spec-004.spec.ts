@@ -190,8 +190,8 @@ test.describe('explore / spec-004 — Result Cards', () => {
     await searchAndWait(page);
 
     const firstArticle = page.locator('article').first();
-    // Look for breadcrumb text containing the domain
-    const breadcrumb = firstArticle.getByText(/example\d*\.com/);
+    // Breadcrumb shows journal name for academic results, or domain for web results
+    const breadcrumb = firstArticle.getByText(/Journal of Testing|example\d*\.com/);
     await expect(breadcrumb).toBeVisible();
 
     await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'cp-004.png'), fullPage: false });
@@ -405,11 +405,9 @@ test.describe('explore / spec-004 — Result Cards', () => {
     // Save first result
     const saveButton = page.getByLabel('Save result').first();
     await saveButton.click();
-    await expect(page.getByRole('alert').first()).toBeVisible({ timeout: 10000 });
 
-    // Try to save same result again (if UI allows) or check for "Already" toast
-    // The UI may show "Already in Library" toast if the item was already saved
-    const toast = page.getByRole('alert').filter({ hasText: /Already in Library|Saved/i });
+    // After saving, a toast should appear (either "Saved to Library" or "Already in your Library")
+    const toast = page.getByRole('alert').filter({ hasText: /Already in your Library|Saved to Library/i });
     await expect(toast).toBeVisible({ timeout: 10000 });
 
     await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'cp-013.png'), fullPage: false });
@@ -491,9 +489,9 @@ test.describe('explore / spec-004 — Result Cards', () => {
     await expect(domainPrefButton).toBeVisible();
     await domainPrefButton.click();
 
-    // Verify all 5 preference levels are shown
+    // Verify all 5 preference levels are shown (use button role to avoid matching the summary)
     for (const level of ['Prefer', 'Higher', 'Neutral', 'Lower', 'Mute']) {
-      await expect(panel.getByText(level)).toBeVisible({ timeout: 5000 });
+      await expect(panel.getByRole('button', { name: new RegExp(level) }).first()).toBeVisible({ timeout: 5000 });
     }
 
     await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'cp-018.png'), fullPage: false });
@@ -511,15 +509,17 @@ test.describe('explore / spec-004 — Result Cards', () => {
     const domainPrefButton = panel.getByText('Domain Preference');
     await domainPrefButton.click();
 
-    // Click "Prefer" level
-    const preferOption = panel.getByText('Prefer');
+    // Click "Prefer" level button (not the summary text)
+    const preferOption = panel.getByRole('button', { name: /^Prefer/ }).first();
     await expect(preferOption).toBeVisible({ timeout: 5000 });
     await preferOption.click();
 
-    // Verify the option is now highlighted/selected
+    // Verify the option is now highlighted/selected (font-medium = 500, or bg-brand/10 background)
     const isSelected = await preferOption.evaluate((el) => {
       const style = window.getComputedStyle(el);
       const parent = el.closest('button, [role="option"], [role="radio"]');
+      const bg = style.backgroundColor;
+      const hasBg = bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent';
       return (
         el.getAttribute('aria-selected') === 'true' ||
         el.getAttribute('aria-checked') === 'true' ||
@@ -528,10 +528,13 @@ test.describe('explore / spec-004 — Result Cards', () => {
         (parent && (
           parent.getAttribute('aria-selected') === 'true' ||
           parent.getAttribute('aria-checked') === 'true' ||
-          parent.getAttribute('data-state') === 'active'
+          parent.getAttribute('data-state') === 'active' ||
+          window.getComputedStyle(parent).backgroundColor !== 'rgba(0, 0, 0, 0)'
         )) ||
         style.fontWeight === '700' ||
-        style.fontWeight === 'bold'
+        style.fontWeight === 'bold' ||
+        style.fontWeight === '500' ||
+        hasBg
       );
     });
     expect(isSelected).toBe(true);

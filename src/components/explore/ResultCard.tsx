@@ -239,8 +239,8 @@ export const ResultCard = memo(function ResultCard({
           : "bg-transparent hover:bg-[var(--surface-raised)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] active:bg-[var(--surface-raised)] dark:hover:shadow-[0_2px_8px_rgba(0,0,0,0.2)]",
         isSelected && "ring-2 ring-[var(--brand)]"
       )}
-      data-highlighted={isHighlighted || undefined}
-      data-selected={isSelected || undefined}
+      data-highlighted={isHighlighted ? "true" : undefined}
+      data-selected={isSelected ? "true" : undefined}
       style={{ borderLeft: `3px solid ${getBorderColor(result, tab)}` }}
     >
       <div className="flex items-start justify-between gap-4">

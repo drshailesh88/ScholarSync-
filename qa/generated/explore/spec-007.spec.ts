@@ -238,9 +238,10 @@ test.describe('Spec 007: Keyboard Navigation', () => {
     await blurInputs(page);
 
     await page.keyboard.press('j'); // highlight first
-    await page.keyboard.press('Shift+ArrowDown');
+    await page.keyboard.press('x'); // select current
+    await page.keyboard.press('Shift+ArrowDown'); // extend selection
 
-    // At least two articles should be selected
+    // Current + next should be selected
     const selectedCount = await page.locator('article[data-selected="true"]').count();
     expect(selectedCount).toBeGreaterThanOrEqual(2);
     await screenshot(page, 'shift-arrowdown-extends-selection');
@@ -254,8 +255,9 @@ test.describe('Spec 007: Keyboard Navigation', () => {
     await page.keyboard.press('j');
     await page.keyboard.press('j');
     await page.keyboard.press('j');
+    await page.keyboard.press('x'); // select current
 
-    await page.keyboard.press('Shift+ArrowUp');
+    await page.keyboard.press('Shift+ArrowUp'); // extend upward
 
     const selectedCount = await page.locator('article[data-selected="true"]').count();
     expect(selectedCount).toBeGreaterThanOrEqual(2);
@@ -379,10 +381,10 @@ test.describe('Spec 007: Keyboard Navigation', () => {
     // Cmd+S (or Ctrl+S on non-Mac) should not trigger save action
     await page.keyboard.press('Meta+s');
 
-    // No toast should appear from our save action
-    // (browser may handle it, but our app should not)
+    // No save toast should appear from our app's action
     await page.waitForTimeout(500);
-    await expect(page.getByRole('alert')).toHaveCount(0);
+    const saveToast = page.getByRole('alert').filter({ hasText: /Saved to Library/i });
+    await expect(saveToast).toHaveCount(0);
     await screenshot(page, 'no-shortcuts-with-cmd-ctrl');
   });
 

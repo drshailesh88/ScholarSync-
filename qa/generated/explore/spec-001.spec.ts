@@ -188,18 +188,24 @@ test.describe('Spec 001: Search & Landing', () => {
 
   test('Search saved to history — query appears in history dropdown', async ({ page }) => {
     await searchAndWait(page, 'cardiology');
+    await page.waitForTimeout(1000);
     await page.getByLabel('Search history').click();
-    await expect(page.getByText('cardiology')).toBeVisible();
+    const dropdown = page.getByText('Recent Searches').locator('..');
+    // History entry should contain the query text
+    await expect(dropdown.getByText('cardiology', { exact: true })).toBeVisible({ timeout: 10000 });
     await screenshot(page, 'search-saved-to-history');
   });
 
   test('Search from history — clicking history entry runs that query', async ({ page }) => {
     await searchAndWait(page, 'oncology');
+    await page.waitForTimeout(1000);
 
-    // Clear and open history
+    // Clear search and open history
     await page.getByLabel('Clear search').click();
     await page.getByLabel('Search history').click();
-    await page.getByText('oncology').click();
+    const dropdown = page.getByText('Recent Searches').locator('..');
+    await expect(dropdown.getByText('oncology', { exact: true })).toBeVisible({ timeout: 10000 });
+    await dropdown.getByText('oncology', { exact: true }).click();
 
     await expect(page.locator('article').first()).toBeVisible({ timeout: 15000 });
     await screenshot(page, 'search-from-history');
@@ -251,7 +257,8 @@ test.describe('Spec 001: Search & Landing', () => {
     await page.unrouteAll({ behavior: 'ignoreErrors' });
     await mockSearchApi(page);
 
-    await page.getByText('Try again').click();
+    // Click the "Try again" button (not the error message text which also contains "Try again.")
+    await page.locator('button', { hasText: 'Try again' }).click();
     await expect(page.locator('article').first()).toBeVisible({ timeout: 15000 });
     await screenshot(page, 'retry-button-works');
   });

@@ -48,15 +48,15 @@ async function mockSearchApi(page: Page, count = 10) {
   });
 }
 
-async function mockHistoryApi(page: Page, entries: Array<{id: string, query: string, activeTab: string, createdAt: string}> = []) {
+async function mockHistoryApi(page: Page, entries: Array<{id: number, query: string, activeTab: string, createdAt: string, scopeId?: number | null}> = []) {
   await page.route('**/api/explore/history**', async (route) => {
     if (route.request().method() === 'GET') {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify(entries.length > 0 ? entries : [
-          { id: '1', query: 'previous search', activeTab: 'academic', createdAt: new Date(Date.now() - 300000).toISOString() },
-          { id: '2', query: 'another search', activeTab: 'web', createdAt: new Date(Date.now() - 3600000).toISOString() },
+          { id: 1, query: 'previous search', activeTab: 'academic', scopeId: null, createdAt: new Date(Date.now() - 300000).toISOString() },
+          { id: 2, query: 'another search', activeTab: 'web', scopeId: null, createdAt: new Date(Date.now() - 3600000).toISOString() },
         ]),
       });
     } else {
@@ -78,9 +78,9 @@ async function screenshot(page: Page, name: string) {
   await page.screenshot({ path: path.join(ARTIFACT_DIR, `${name}.png`), fullPage: true });
 }
 
-/** Click on body to ensure no input is focused before pressing keys */
+/** Click on first result to ensure no input is focused before pressing keys */
 async function blurInputs(page: Page) {
-  await page.locator('body').click({ position: { x: 0, y: 0 } });
+  await page.locator('article').first().click();
 }
 
 test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
@@ -114,9 +114,10 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
     await page.unrouteAll({ behavior: 'ignoreErrors' });
     await mockSearchApi(page);
     const manyEntries = Array.from({ length: 20 }, (_, i) => ({
-      id: String(i + 1),
+      id: i + 1,
       query: `search query ${i + 1}`,
       activeTab: 'academic',
+      scopeId: null,
       createdAt: new Date(Date.now() - i * 60000).toISOString(),
     }));
     await mockHistoryApi(page, manyEntries);
@@ -125,8 +126,8 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
     await expect(page.getByText('Recent Searches')).toBeVisible({ timeout: 5000 });
 
     // Verify entries are shown (at least some of them)
-    await expect(page.getByText('search query 1')).toBeVisible();
-    await expect(page.getByText('search query 20')).toBeVisible();
+    await expect(page.getByText('search query 1', { exact: true })).toBeVisible();
+    await expect(page.getByText('search query 20', { exact: true })).toBeVisible();
     await screenshot(page, 'load-last-20-entries');
   });
 
@@ -143,9 +144,9 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
     await page.getByLabel('Search history').click();
     await expect(page.getByText('Recent Searches')).toBeVisible({ timeout: 5000 });
 
-    // Check for tab label and relative time (e.g., "Academic . 5m ago")
-    await expect(page.getByText(/Academic/)).toBeVisible();
-    await expect(page.getByText(/ago/)).toBeVisible();
+    // Check for tab label and relative time (e.g., "Academic · 5m ago")
+    await expect(page.getByText(/Academic/).first()).toBeVisible();
+    await expect(page.getByText(/ago/).first()).toBeVisible();
     await screenshot(page, 'entry-shows-tab-and-time');
   });
 
@@ -189,10 +190,19 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
   });
 
   test('Empty state — with no history, shows "No recent searches"', async ({ page }) => {
-    // Override with empty history
+    // Mock empty history before page load (must intercept the first fetch)
     await page.unrouteAll({ behavior: 'ignoreErrors' });
     await mockSearchApi(page);
-    await mockHistoryApi(page, []);
+    await page.route('**/api/explore/history**', async (route) => {
+      if (route.request().method() === 'GET') {
+        await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
+      } else {
+        await route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' });
+      }
+    });
+    // Navigate fresh to ensure no cached history
+    await page.goto(`${baseUrl}/explore`);
+    await expect(page.getByRole('searchbox')).toBeVisible({ timeout: 10000 });
 
     await page.getByLabel('Search history').click();
     await expect(page.getByText('No recent searches')).toBeVisible({ timeout: 5000 });
@@ -210,7 +220,7 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify([
-            { id: '1', query: 'delayed search', activeTab: 'academic', createdAt: new Date().toISOString() },
+            { id: 1, query: 'delayed search', activeTab: 'academic', scopeId: null, createdAt: new Date().toISOString() },
           ]),
         });
       } else {
@@ -229,7 +239,7 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
     await searchAndWait(page);
     await blurInputs(page);
 
-    await page.keyboard.press('Shift+/'); // ? = Shift+/
+    await page.keyboard.press('?');
     await expect(page.getByRole('dialog', { name: 'Keyboard shortcuts' })).toBeVisible({ timeout: 5000 });
     await screenshot(page, 'question-mark-opens-overlay');
   });
@@ -238,7 +248,7 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
     await searchAndWait(page);
     await blurInputs(page);
 
-    await page.keyboard.press('Shift+/');
+    await page.keyboard.press('?');
     const dialog = page.getByRole('dialog', { name: 'Keyboard shortcuts' });
     await expect(dialog).toBeVisible({ timeout: 5000 });
 
@@ -254,7 +264,7 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
     await searchAndWait(page);
     await blurInputs(page);
 
-    await page.keyboard.press('Shift+/');
+    await page.keyboard.press('?');
     await expect(page.getByRole('dialog', { name: 'Keyboard shortcuts' })).toBeVisible({ timeout: 5000 });
 
     await page.keyboard.press('Escape');
@@ -266,10 +276,10 @@ test.describe('Spec 008: Search History & Shortcuts Overlay', () => {
     await searchAndWait(page);
     await blurInputs(page);
 
-    await page.keyboard.press('Shift+/');
+    await page.keyboard.press('?');
     await expect(page.getByRole('dialog', { name: 'Keyboard shortcuts' })).toBeVisible({ timeout: 5000 });
 
-    await page.keyboard.press('Shift+/');
+    await page.keyboard.press('?');
     await expect(page.getByRole('dialog', { name: 'Keyboard shortcuts' })).not.toBeVisible();
     await screenshot(page, 'close-overlay-with-question-mark');
   });

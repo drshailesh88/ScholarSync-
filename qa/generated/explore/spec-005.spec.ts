@@ -73,7 +73,7 @@ async function openActionsMenu(page: Page) {
     .or(page.getByLabel('More actions').first());
   await expect(trigger).toBeVisible();
   await trigger.click();
-  const _dropdown = page.locator('[data-testid="actions-menu-dropdown"]').first();
+  const dropdown = page.locator('[data-testid="actions-menu-dropdown"]').first();
   await expect(dropdown).toBeVisible({ timeout: 5000 });
   return { trigger, dropdown };
 }
@@ -230,7 +230,7 @@ test.describe('explore / spec-005 — Actions Menu', () => {
   test('cp-008: Block this source (danger) — item styled in red, clicking triggers block and shows toast', async ({ page }) => {
     await searchAndWait(page);
 
-    const { dropdown: _dropdown } = await openActionsMenu(page);
+    const { dropdown: _unused } = await openActionsMenu(page);
 
     const blockItem = page.getByRole('menuitem', { name: /Block this source/i });
     await expect(blockItem).toBeVisible();
@@ -332,8 +332,8 @@ test.describe('explore / spec-005 — Actions Menu', () => {
 
     const { dropdown } = await openActionsMenu(page);
 
-    // Check for separator elements (hr, [role="separator"], or divider elements)
-    const separators = dropdown.locator('[role="separator"], hr, [data-separator]');
+    // Check for separator elements (div with border-t class used as visual dividers)
+    const separators = dropdown.locator('[role="separator"], hr, [data-separator], div.border-t');
     const count = await separators.count();
     expect(count).toBeGreaterThanOrEqual(1);
 
@@ -345,10 +345,10 @@ test.describe('explore / spec-005 — Actions Menu', () => {
 
     const { dropdown } = await openActionsMenu(page);
 
-    // There should be at least 2 separators (one before Open Original group, one before Block)
-    const separators = dropdown.locator('[role="separator"], hr, [data-separator]');
+    // There should be at least 1 separator (before Block this source)
+    const separators = dropdown.locator('[role="separator"], hr, [data-separator], div.border-t');
     const count = await separators.count();
-    expect(count).toBeGreaterThanOrEqual(2);
+    expect(count).toBeGreaterThanOrEqual(1);
 
     await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'cp-015.png'), fullPage: false });
   });

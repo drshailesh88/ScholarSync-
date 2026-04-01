@@ -150,6 +150,10 @@ test.describe('explore / spec-006 — AI Synthesis', () => {
   test('cp-003: Q key toggles synthesis — press Q, verify synthesis opens; press Q again, verify it closes', async ({ page }) => {
     await searchAndWait(page);
 
+    // Blur the search input so the Q shortcut is not captured as text input
+    await page.getByRole('searchbox').blur();
+    await page.locator('body').click({ position: { x: 10, y: 10 } });
+
     // Press Q to open
     await page.keyboard.press('q');
 
