@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { webSources, projectWebSources } from "@/lib/db/schema";
+import { webSources, projectWebSources, webSourceHighlights } from "@/lib/db/schema";
 import {
   eq,
   and,
@@ -137,7 +137,57 @@ export async function saveWebSource(input: SaveWebSourceInput): Promise<{
   revalidatePath("/library");
   revalidatePath("/explore");
 
+  // Fire-and-forget content extraction (non-blocking)
+  extractWebSourceContent(newSource.id).catch((err) => {
+    console.error(`Content extraction failed for source ${newSource.id}:`, err);
+  });
+
   return { id: newSource.id, alreadySaved: false };
+}
+
+// ── Content Extraction ──────────────────────────────────────────
+
+/**
+ * Extract content from a web source's URL and store the result.
+ * Called automatically after save, or manually from the Reader view.
+ */
+export async function extractWebSourceContent(
+  sourceId: number
+): Promise<{ wordCount: number }> {
+  const userId = await getCurrentUserId();
+
+  const [source] = await db
+    .select({
+      id: webSources.id,
+      url: webSources.url,
+      content_extracted: webSources.content_extracted,
+    })
+    .from(webSources)
+    .where(
+      and(
+        eq(webSources.id, sourceId),
+        eq(webSources.user_id, userId)
+      )
+    );
+
+  if (!source) throw new Error("Web source not found");
+  if (source.content_extracted) return { wordCount: 0 };
+
+  const { extractContent } = await import("@/lib/web/content-extractor");
+  const extracted = await extractContent(source.url);
+
+  await db
+    .update(webSources)
+    .set({
+      content_html: extracted.contentHtml,
+      content_plain: extracted.contentPlain,
+      content_extracted: true,
+      updated_at: new Date(),
+    })
+    .where(eq(webSources.id, sourceId));
+
+  revalidatePath("/library");
+  return { wordCount: extracted.wordCount };
 }
 
 // ── Get ──────────────────────────────────────────────────────────
@@ -413,6 +463,119 @@ export async function getWebSourceProjects(
       )
     );
   return rows.map((r) => r.projectId);
+}
+
+// ── Highlights ──────────────────────────────────────────────────
+
+export type AnnotationColor = "yellow" | "green" | "red" | "blue" | "purple";
+
+export interface CreateHighlightInput {
+  webSourceId: number;
+  selectedText: string;
+  startOffset: number;
+  endOffset: number;
+  color?: AnnotationColor;
+  note?: string;
+}
+
+export type WebSourceHighlightRecord =
+  typeof webSourceHighlights.$inferSelect;
+
+export async function createHighlight(
+  input: CreateHighlightInput
+): Promise<WebSourceHighlightRecord> {
+  const userId = await getCurrentUserId();
+
+  // Verify ownership
+  const [source] = await db
+    .select({ id: webSources.id })
+    .from(webSources)
+    .where(
+      and(eq(webSources.id, input.webSourceId), eq(webSources.user_id, userId))
+    );
+  if (!source) throw new Error("Web source not found");
+
+  const [highlight] = await db
+    .insert(webSourceHighlights)
+    .values({
+      web_source_id: input.webSourceId,
+      user_id: userId,
+      selected_text: input.selectedText,
+      start_offset: input.startOffset,
+      end_offset: input.endOffset,
+      color: input.color || "yellow",
+      note: input.note || null,
+    })
+    .returning();
+
+  revalidatePath("/library");
+  return highlight;
+}
+
+export async function getHighlights(
+  webSourceId: number
+): Promise<WebSourceHighlightRecord[]> {
+  const userId = await getCurrentUserId();
+
+  return db
+    .select()
+    .from(webSourceHighlights)
+    .where(
+      and(
+        eq(webSourceHighlights.web_source_id, webSourceId),
+        eq(webSourceHighlights.user_id, userId)
+      )
+    )
+    .orderBy(webSourceHighlights.start_offset);
+}
+
+export async function updateHighlight(
+  highlightId: number,
+  updates: { color?: AnnotationColor; note?: string | null }
+): Promise<void> {
+  const userId = await getCurrentUserId();
+
+  await db
+    .update(webSourceHighlights)
+    .set({ ...updates, updated_at: new Date() })
+    .where(
+      and(
+        eq(webSourceHighlights.id, highlightId),
+        eq(webSourceHighlights.user_id, userId)
+      )
+    );
+  revalidatePath("/library");
+}
+
+export async function deleteHighlight(highlightId: number): Promise<void> {
+  const userId = await getCurrentUserId();
+
+  await db
+    .delete(webSourceHighlights)
+    .where(
+      and(
+        eq(webSourceHighlights.id, highlightId),
+        eq(webSourceHighlights.user_id, userId)
+      )
+    );
+  revalidatePath("/library");
+}
+
+// ── Notes (general, on web source) ──────────────────────────────
+
+export async function updateWebSourceNotes(
+  sourceId: number,
+  notes: string | null
+): Promise<void> {
+  const userId = await getCurrentUserId();
+
+  await db
+    .update(webSources)
+    .set({ notes, updated_at: new Date() })
+    .where(
+      and(eq(webSources.id, sourceId), eq(webSources.user_id, userId))
+    );
+  revalidatePath("/library");
 }
 
 // ── Helpers ──────────────────────────────────────────────────────

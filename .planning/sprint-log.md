@@ -1,20 +1,23 @@
 # Sprint Log
-## Session started: 2026-03-31
-## Phase: 9 — On-Demand Synthesis (AI Layer)
-## Current requirement: COMPLETE
-## Status: COMPLETE
+## Session started: 2026-04-01
+## Phase: 6 — Content Extraction + Annotation (Reading & Highlighting)
+## Current requirement: 1-4. Content extractor + extraction trigger + migration + highlight actions
+## Status: BUILDING
 ## Attempt: 1/5
 ## Session: new
-## Files changed: [SynthesisBlock.tsx, route.ts, ExplorePageClient.tsx, ResultCard.tsx, SynthesisBlock.test.tsx, route.test.ts]
-## Last test result: 16 passing, 0 failing (10 component + 6 API)
+## Files changed: []
+## Last test result: N/A
 ## Failing test: N/A
-## Notes: All 7 requirements implemented and tested in single session.
+## Notes: Starting Phase 6. Building data layer first (reqs 1,2,4,7,8), then UI (3,5,6), then citations (9), then tests (10).
 
 ## Requirements checklist:
-- [x] 1. Build SynthesisBlock component (collapsible, streaming, citation markers)
-- [x] 2. Create synthesis API endpoint for Explore (or extend existing)
-- [x] 3. Synthesis draws from top results across current tab
-- [x] 4. Citation markers colored by trust tier of cited source
-- [x] 5. Keyboard shortcut Q toggles synthesis
-- [x] 6. Synthesis collapsible via button or Q again
-- [x] 7. Write tests: synthesis generates, citations link to results, streaming works, collapse works
+- [ ] 1. Create `src/lib/web/content-extractor.ts` using Jina Reader
+- [ ] 2. Background extraction job: triggered on save, extracts content, updates `content_html` + `content_plain`
+- [ ] 3. Build Web Source Reader view (clean rendered HTML from snapshot)
+- [ ] 4. Run database migration for `web_source_highlights` table
+- [ ] 5. Implement highlighting on web content (text selection → color picker → save)
+- [ ] 6. Implement notes on highlights
+- [ ] 7. Implement general notes on web source
+- [ ] 8. Reuse existing annotation color enum (yellow, green, red, blue, purple)
+- [ ] 9. Make highlights citable in editor drafts
+- [ ] 10. Write tests: content extraction, highlight CRUD, notes, citation integration
