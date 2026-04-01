@@ -3,12 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Clock, X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import {
-  getExploreSearchHistory,
-  deleteExploreSearchHistory,
-  clearAllExploreSearchHistory,
-  type ExploreHistoryRecord,
-} from "@/lib/actions/explore-search-history";
+import type { ExploreHistoryRecord } from "@/lib/actions/explore-search-history";
 
 const TAB_LABELS: Record<string, string> = {
   academic: "Academic",
@@ -48,7 +43,14 @@ export function SearchHistoryDropdown({
   const loadHistory = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getExploreSearchHistory(20);
+      const res = await fetch("/api/explore/history?limit=20", { credentials: "same-origin" });
+      if (!res.ok) throw new Error("Failed to load history");
+      const data: ExploreHistoryRecord[] = (await res.json()).map(
+        (e: ExploreHistoryRecord & { createdAt: string | Date | null }) => ({
+          ...e,
+          createdAt: e.createdAt ? new Date(e.createdAt) : null,
+        })
+      );
       setEntries(data);
     } catch {
       // Table may not exist yet
@@ -83,14 +85,24 @@ export function SearchHistoryDropdown({
   const handleDelete = useCallback(
     async (id: number, e: React.MouseEvent) => {
       e.stopPropagation();
-      await deleteExploreSearchHistory(id);
+      await fetch("/api/explore/history", {
+        method: "DELETE",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
       setEntries((prev) => prev.filter((entry) => entry.id !== id));
     },
     []
   );
 
   const handleClearAll = useCallback(async () => {
-    await clearAllExploreSearchHistory();
+    await fetch("/api/explore/history", {
+      method: "DELETE",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clearAll: true }),
+    });
     setEntries([]);
   }, []);
 
