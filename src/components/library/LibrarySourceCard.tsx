@@ -21,12 +21,18 @@ interface LibrarySourceCardProps {
   source: LibrarySource;
   onMoveState?: (libraryId: string, newState: WorkflowState) => void;
   showStateBadge?: boolean;
+  selected?: boolean;
+  onToggleSelect?: (libraryId: string) => void;
+  isCited?: boolean;
 }
 
 export function LibrarySourceCard({
   source,
   onMoveState,
   showStateBadge = true,
+  selected,
+  onToggleSelect,
+  isCited,
 }: LibrarySourceCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -59,10 +65,33 @@ export function LibrarySourceCard({
       className={cn(
         "group relative rounded-md border p-3.5 transition-colors",
         "border-[var(--border)] hover:bg-[var(--surface-raised)]",
-        source.readStatus === "unread" && "border-l-[3px] border-l-[var(--library-accent)]"
+        source.readStatus === "unread" && "border-l-[3px] border-l-[var(--library-accent)]",
+        selected && "border-[var(--brand)] bg-[var(--brand)]/5"
       )}
     >
       <div className="flex items-start gap-3">
+        {/* Selection checkbox */}
+        {onToggleSelect && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onToggleSelect(source.libraryId);
+            }}
+            className={cn(
+              "w-4 h-4 rounded border shrink-0 mt-1.5 flex items-center justify-center transition-colors",
+              selected
+                ? "border-[var(--brand)] bg-[var(--brand)] text-white"
+                : "border-[var(--border)] opacity-0 group-hover:opacity-100"
+            )}
+            aria-label={selected ? "Deselect source" : "Select source"}
+          >
+            {selected && (
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+          </button>
+        )}
         {/* Icon */}
         <div className="w-8 h-8 rounded-md bg-[var(--surface-raised)] flex items-center justify-center text-ink-muted shrink-0 mt-0.5">
           {source.sourceType === "paper" && source.pdfStoragePath ? (
@@ -84,9 +113,16 @@ export function LibrarySourceCard({
             >
               {source.title}
             </Link>
-            {showStateBadge && (
-              <WorkflowBadge state={source.workflowState} className="shrink-0 mt-0.5" />
-            )}
+            <div className="flex items-center gap-2 shrink-0 mt-0.5">
+              {isCited && (
+                <span className="inline-flex items-center rounded-full bg-[var(--brand)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--brand)]">
+                  Cited
+                </span>
+              )}
+              {showStateBadge && (
+                <WorkflowBadge state={source.workflowState} />
+              )}
+            </div>
           </div>
 
           {/* Metadata row */}

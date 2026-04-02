@@ -24,3 +24,14 @@ export {
   getLibraryProjects,
 } from "./project-context";
 export type { LibraryProject } from "./project-context";
+
+export {
+  createEditorHandoff,
+  createEditorHandoffFromIds,
+  getEditorHandoff,
+  getPendingHandoff,
+  consumeEditorHandoff,
+  cancelEditorHandoff,
+  getCitedLibraryIds,
+} from "./editor-handoff";
+export type { HandoffSourcePayload, EditorHandoff } from "./editor-handoff";
