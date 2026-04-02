@@ -69,14 +69,14 @@ Risk: **MEDIUM** — aggregator query performance across two source tables. Card
 **Deliverable:** User highlights passages in the internal reader, adds notes, annotations are persisted and retrievable.
 **Why fourth:** Annotations make the reader page sticky — they're the reason users stay inside the app instead of opening sources externally.
 
-- [ ] Build inline highlighting on web source reader (text selection -> style picker -> save)
-- [ ] Build inline highlighting on paper reader (abstract text)
-- [ ] Implement two highlight styles: default (yellow) and important (library accent blue)
-- [ ] Implement notes on highlights (linked in workbench panel)
-- [ ] Implement general notes on sources
-- [ ] Build Highlights tab in workbench: list of highlights with notes, click jumps to source position
-- [ ] Wire annotations to library_annotations table with anchor_type and anchor_payload
-- [ ] Write tests: highlight CRUD, notes CRUD, anchor persistence, cross-source-type consistency
+- [x] Build inline highlighting on web source reader (text selection -> style picker -> save)
+- [x] Build inline highlighting on paper reader (abstract text)
+- [x] Implement two highlight styles: default (yellow) and important (library accent blue)
+- [x] Implement notes on highlights (linked in workbench panel)
+- [x] Implement general notes on sources
+- [x] Build Highlights tab in workbench: list of highlights with notes, click jumps to source position
+- [x] Wire annotations to library_annotations table with anchor_type and anchor_payload
+- [x] Write tests: highlight CRUD, notes CRUD, anchor persistence, cross-source-type consistency
 
 Risk: **MEDIUM** — text selection and anchor persistence across different content formats (clean HTML vs. PDF) is tricky. Highlight restoration on re-render requires stable anchors.
 
@@ -102,13 +102,13 @@ Risk: **LOW** — extends existing cmdk infrastructure. Project switching is URL
 **Deliverable:** User selects sources in Library, sends citations to Editor in one action. Editor confirms import. Sources marked "Cited."
 **Why sixth:** Citation handoff closes the Library -> Editor loop, making Library the starting point for writing.
 
-- [ ] Build createEditorHandoff() server action with normalized payload
-- [ ] Implement single-source citation flow from detail page
-- [ ] Implement bulk citation flow from list view (multi-select -> "Send to Editor")
-- [ ] Build Editor consumption: fetch handoff by ID, import citations, show confirmation panel
-- [ ] Auto-mark sources with "Cited" badge after Editor consumption
-- [ ] Mark handoff status as consumed after Editor import
-- [ ] Write tests: handoff create/consume lifecycle, single + bulk, status transitions, Cited badge appears
+- [x] Build createEditorHandoff() server action with normalized payload
+- [x] Implement single-source citation flow from detail page
+- [x] Implement bulk citation flow from list view (multi-select -> "Send to Editor")
+- [x] Build Editor consumption: fetch handoff by ID, import citations, show confirmation panel
+- [x] Auto-mark sources with "Cited" badge after Editor consumption
+- [x] Mark handoff status as consumed after Editor import
+- [x] Write tests: handoff create/consume lifecycle, single + bulk, status transitions, Cited badge appears
 
 Risk: **LOW** — editor_handoffs table already migrated in Phase 11. Editor already has citation infrastructure.
 

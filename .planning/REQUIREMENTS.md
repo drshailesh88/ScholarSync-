@@ -57,10 +57,10 @@ v1 — Explore Module (Phases 1-10, complete)
 - [x] Sidebar shows Inbox, Core, Background, Archived, All Sources, Projects, Trash with counts
 
 ### Annotation
-- [ ] Unified library_annotations table supports highlights and notes across both source types
-- [ ] Users can highlight passages in the internal reader
-- [ ] Users can add notes to highlights
-- [ ] Two highlight styles: default (yellow) and important (library accent blue tint)
+- [x] Unified library_annotations table supports highlights and notes across both source types
+- [x] Users can highlight passages in the internal reader
+- [x] Users can add notes to highlights
+- [x] Two highlight styles: default (yellow) and important (library accent blue tint)
 - [ ] Annotations are searchable via command palette
 
 ### Command Palette
@@ -75,11 +75,11 @@ v1 — Explore Module (Phases 1-10, complete)
 - [x] Library remembers last active project on return
 
 ### Citation Handoff
-- [ ] Server-backed editor_handoffs table replaces sessionStorage bridge
-- [ ] Normalized payload for all source types, single + bulk
-- [ ] Flow: Library -> createEditorHandoff() -> navigate to Editor with handoff ID -> Editor fetches, imports, marks consumed
-- [ ] Sources auto-marked "Cited" badge after Editor consumption
-- [ ] Editor shows confirmation panel when receiving citations
+- [x] Server-backed editor_handoffs table replaces sessionStorage bridge
+- [x] Normalized payload for all source types, single + bulk
+- [x] Flow: Library -> createEditorHandoff() -> navigate to Editor with handoff ID -> Editor fetches, imports, marks consumed
+- [x] Sources auto-marked "Cited" badge after Editor consumption
+- [x] Editor shows confirmation panel when receiving citations
 
 ### Explore Integration
 - [ ] "From your library" block at top of Explore results when saved sources match query
