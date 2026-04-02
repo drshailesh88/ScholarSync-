@@ -8,7 +8,7 @@ const SRC = resolve(__dirname, "..", "..", "..");
 
 // ── Test fixtures ──────────────────────────────────────────────
 
-const basePaperSource: LibrarySource = {
+const _basePaperSource: LibrarySource = {
   libraryId: "paper_42",
   sourceType: "paper",
   title: "Efficacy of Treatment X",
@@ -44,7 +44,7 @@ const basePaperSource: LibrarySource = {
   projectIds: [1, 3],
 };
 
-const baseWebSource: LibrarySource = {
+const _baseWebSource: LibrarySource = {
   libraryId: "web_187",
   sourceType: "web",
   title: "Understanding mRNA Vaccine Technology",
@@ -631,5 +631,45 @@ describe("Phase 14: Backward compatibility", () => {
     expect(content).toContain("ExtractionStateSurface");
     expect(content).toContain("isPending");
     expect(content).toContain("handleRetryExtraction");
+  });
+});
+
+// ── Codex adversarial review fixes ────────────────────────────
+
+describe("Phase 14: Codex adversarial review fixes", () => {
+  it("DELETE route rejects non-numeric ids (e.g. '12abc')", () => {
+    const content = readFileSync(resolve(SRC, "app/api/library/annotations/route.ts"), "utf-8");
+    // Must validate with strict numeric regex before using parseInt
+    expect(content).toContain("/^\\d+$/");
+  });
+
+  it("DELETE route maps 'not found' errors to 404 status", () => {
+    const content = readFileSync(resolve(SRC, "app/api/library/annotations/route.ts"), "utf-8");
+    // The DELETE handler must check for not-found and return 404
+    expect(content).toContain("isNotFound");
+    expect(content).toContain("404");
+  });
+
+  it("GET route maps invalid libraryId errors to 400 status", () => {
+    const content = readFileSync(resolve(SRC, "app/api/library/annotations/route.ts"), "utf-8");
+    // The GET handler should catch invalid libraryId and return 400
+    expect(content).toContain("isInvalidLibraryId");
+    const getSection = content.split("export async function GET")[1]?.split("export async function")[0] ?? "";
+    expect(getSection).toContain("400");
+  });
+
+  it("PATCH route validates that id field exists and is a number", () => {
+    const content = readFileSync(resolve(SRC, "app/api/library/annotations/route.ts"), "utf-8");
+    const patchSection = content.split("export async function PATCH")[1]?.split("export async function")[0] ?? "";
+    // Must validate body.id before calling updateAnnotation
+    expect(patchSection).toContain("body.id");
+    expect(patchSection).toContain("400");
+  });
+
+  it("PATCH route maps 'not found' errors to 404 status", () => {
+    const content = readFileSync(resolve(SRC, "app/api/library/annotations/route.ts"), "utf-8");
+    const patchSection = content.split("export async function PATCH")[1]?.split("export async function")[0] ?? "";
+    expect(patchSection).toContain("isNotFound");
+    expect(patchSection).toContain("404");
   });
 });
