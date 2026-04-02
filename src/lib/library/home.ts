@@ -123,7 +123,8 @@ export async function getLibraryCounts(): Promise<LibraryCounts> {
 
 /** Get total count of sources matching filters (without fetching all rows) */
 export async function getLibrarySourceCount(
-  workflowState?: "inbox" | "core" | "background" | "archived"
+  workflowState?: "inbox" | "core" | "background" | "archived",
+  projectId?: number
 ): Promise<number> {
   const userId = await getCurrentUserId();
 
@@ -139,6 +140,51 @@ export async function getLibrarySourceCount(
   if (workflowState) {
     paperConditions.push(eq(userReferences.workflowState, workflowState));
     webConditions.push(eq(webSources.workflow_state, workflowState));
+  }
+
+  // Project-scoped counts: filter to sources linked to the project
+  if (projectId) {
+    const { projectPapers, projectWebSources } = await import("@/lib/db/schema");
+
+    const ppRows = await db
+      .select({ paperId: projectPapers.paper_id })
+      .from(projectPapers)
+      .where(eq(projectPapers.project_id, projectId));
+    const paperIds = ppRows.map((r) => r.paperId);
+
+    const pwsRows = await db
+      .select({ webSourceId: projectWebSources.web_source_id })
+      .from(projectWebSources)
+      .where(eq(projectWebSources.project_id, projectId));
+    const webIds = pwsRows.map((r) => r.webSourceId);
+
+    if (paperIds.length === 0 && webIds.length === 0) return 0;
+
+    const { inArray } = await import("drizzle-orm");
+    if (paperIds.length > 0) {
+      paperConditions.push(inArray(userReferences.paperId, paperIds));
+    }
+    if (webIds.length > 0) {
+      webConditions.push(inArray(webSources.id, webIds));
+    }
+
+    // Only count tables that have matching IDs
+    let total = 0;
+    if (paperIds.length > 0) {
+      const [paperCount] = await db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(userReferences)
+        .where(and(...paperConditions));
+      total += paperCount?.count ?? 0;
+    }
+    if (webIds.length > 0) {
+      const [webCount] = await db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(webSources)
+        .where(and(...webConditions));
+      total += webCount?.count ?? 0;
+    }
+    return total;
   }
 
   const [paperCount] = await db

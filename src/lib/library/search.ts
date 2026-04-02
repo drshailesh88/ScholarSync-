@@ -12,11 +12,10 @@ import {
   webSources,
   libraryAnnotations,
 } from "@/lib/db/schema";
-import { eq, and, desc, isNull, ilike, or, sql } from "drizzle-orm";
+import { eq, and, desc, isNull, ilike, or } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { adaptPaper, adaptWebSource } from "./adapter";
 import type { PaperRow, WebSourceRow } from "./adapter";
-import type { LibrarySource } from "./types";
 
 export interface LibrarySearchResult {
   libraryId: string;
@@ -63,7 +62,7 @@ export async function searchLibrarySources(
         )
       )
     )
-    .orderBy(desc(userReferences.savedAt))
+    .orderBy(desc(userReferences.createdAt))
     .limit(limit);
 
   // Search web sources
@@ -80,7 +79,7 @@ export async function searchLibrarySources(
         )
       )
     )
-    .orderBy(desc(webSources.saved_at))
+    .orderBy(desc(webSources.created_at))
     .limit(limit);
 
   const results: LibrarySearchResult[] = [];

@@ -12,7 +12,6 @@ import {
   Trash,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import type { WorkflowState } from "@/lib/library";
 
 export interface LibraryCounts {
   inbox: number;
@@ -60,15 +59,8 @@ export function LibrarySidebar({
 
   const isActive = (item: SidebarItem) => {
     if (item.matchExact) return pathname === item.href;
-    // Match both project-scoped and non-project-scoped paths
     if (pathname === item.href) return true;
     if (pathname.startsWith(item.href + "/")) return true;
-    // Also match if the state part matches across project/non-project
-    const stateMatch = item.href.match(/\/(inbox|core|background|archived)$/);
-    if (stateMatch) {
-      const state = stateMatch[1];
-      return pathname.endsWith(`/${state}`);
-    }
     return false;
   };
 

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { isNewLibraryEnabled } from "@/lib/feature-flags";
 import { getProject } from "@/lib/actions/projects";
 import { getLibrarySources } from "@/lib/library/service";
+import { getLibrarySourceCount } from "@/lib/library/home";
 import { StateViewClient } from "../../../[state]/StateViewClient";
 import type { WorkflowState, LibrarySourceFilters } from "@/lib/library";
 
@@ -47,13 +48,16 @@ export default async function ProjectStateView({
     offset: 0,
   };
 
-  const sources = await getLibrarySources(filters);
+  const [sources, totalCount] = await Promise.all([
+    getLibrarySources(filters),
+    getLibrarySourceCount(validState, projectId),
+  ]);
 
   return (
     <StateViewClient
       title={`${project.title} — ${STATE_TITLES[validState]}`}
       initialSources={sources}
-      totalCount={sources.length < PAGE_SIZE ? sources.length : PAGE_SIZE * 2}
+      totalCount={totalCount}
       filters={filters}
       showStateBadge={false}
     />

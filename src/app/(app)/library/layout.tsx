@@ -16,11 +16,17 @@ export default async function LibraryLayout({
     return <>{children}</>;
   }
 
-  const [counts, projects, activeProjectId] = await Promise.all([
+  const [counts, projects, rawActiveProjectId] = await Promise.all([
     getLibraryCounts(),
     getLibraryProjects(),
     getLastActiveProjectId(),
   ]);
+
+  // Clear stale/deleted project ID — only pass if the project still exists
+  const activeProjectId =
+    rawActiveProjectId && projects.some((p) => p.id === rawActiveProjectId)
+      ? rawActiveProjectId
+      : null;
 
   return (
     <LibraryShell

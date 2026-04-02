@@ -31,13 +31,16 @@ export default async function ProjectLibraryPage({
     offset: 0,
   };
 
-  const sources = await getLibrarySources(filters);
+  const [sources, totalCount] = await Promise.all([
+    getLibrarySources(filters),
+    getLibrarySourceCount(undefined, projectId),
+  ]);
 
   return (
     <StateViewClient
       title={project.title}
       initialSources={sources}
-      totalCount={sources.length < PAGE_SIZE ? sources.length : PAGE_SIZE * 2}
+      totalCount={totalCount}
       filters={filters}
       showStateBadge={true}
     />

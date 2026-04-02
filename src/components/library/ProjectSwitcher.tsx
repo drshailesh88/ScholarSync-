@@ -72,15 +72,15 @@ export function ProjectSwitcher({ projects, activeProjectId }: ProjectSwitcherPr
     router.refresh();
   }
 
-  if (projects.length === 0) return null;
-
   return (
     <div className="relative" ref={ref}>
       <button
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => projects.length > 0 ? setOpen((prev) => !prev) : undefined}
         className={cn(
           "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors",
-          "border border-[var(--border-subtle)] hover:bg-[var(--surface-raised)]",
+          "border border-[var(--border-subtle)]",
+          projects.length > 0 && "hover:bg-[var(--surface-raised)] cursor-pointer",
+          projects.length === 0 && "cursor-default",
           activeProject
             ? "text-ink font-medium"
             : "text-ink-muted"
@@ -97,13 +97,15 @@ export function ProjectSwitcher({ projects, activeProjectId }: ProjectSwitcherPr
             <span>All Library</span>
           </>
         )}
-        <CaretDown
-          size={14}
-          className={cn(
-            "text-ink-muted transition-transform",
-            open && "rotate-180"
-          )}
-        />
+        {projects.length > 0 && (
+          <CaretDown
+            size={14}
+            className={cn(
+              "text-ink-muted transition-transform",
+              open && "rotate-180"
+            )}
+          />
+        )}
       </button>
 
       {open && (
