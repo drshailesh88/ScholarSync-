@@ -1,57 +1,27 @@
-# library — Spec 003
+# library — Spec 003: Workflow States & Undo
 
-STATUS: DONE
-TESTED: 35/35
-PASS: 35
+STATUS: PENDING
+TESTED: 0/13
+PASS: 0
 FAIL: 0
 BLOCKED: 0
-PAGE: http://localhost:3001/library
+PAGE: http://localhost:3000/library/inbox
 MODULE: library
 
 ---
-### PDF Viewer
-- [x] PASS: Full-screen modal with black backdrop and blur
-- [x] PASS: Dynamically loaded component (react-pdf)
-#### Toolbar
-- [x] PASS: **Previous page** button (disabled if page ≤ 1)
-- [x] PASS: **Page counter**: "X / Y" (shows "..." while loading page count)
-- [x] PASS: **Next page** button (disabled if page ≥ numPages)
-- [x] PASS: **Zoom out** button (min 0.5×, step 0.25)
-- [x] PASS: **Zoom percentage** display (e.g., "100%")
-- [x] PASS: **Zoom in** button (max 3.0×, step 0.25)
-- [x] PASS: **Fit width** button (resets to 1.0×)
-- [x] PASS: No document title is shown in Library usage because `/library` does not pass a `title` prop
-- [x] PASS: **Close** button (or press Escape)
-#### PDF Rendering
-- [x] PASS: Spinner while PDF loads
-- [x] PASS: Spinner while individual page renders
-- [x] PASS: Centered page with shadow
-- [x] PASS: Responsive layout
-#### Error Handling
-- [x] PASS: Red icon + error message on PDF load failure
-- [x] PASS: 404 message: "The original PDF is not available for this paper. It may have been imported from search without a PDF upload."
-#### Keyboard
-- [x] PASS: Escape closes viewer
-- [x] PASS: Arrow-key page navigation is not implemented in the current `PDFViewer`
+### Workflow State Transitions
+- [ ] **Move source between states** — use card menu to move from Inbox to Core, source appears in Core view `[CONFIRMED]`
+- [ ] **Sidebar counts update optimistically** — after moving source, sidebar count decrements/increments immediately `[CONFIRMED]`
+- [ ] **Undo toast appears** — after moving a source, toast with "Moved to [state]" and Undo link appears `[CONFIRMED]`
+- [ ] **Countdown progress bar** — undo toast shows a shrinking progress bar over 5-8 seconds `[CONFIRMED]`
+- [ ] **Click undo reverts move** — click "Undo" on toast, source returns to previous state `[CONFIRMED]`
+- [ ] **Toast auto-dismisses** — after countdown expires, toast disappears automatically `[CONFIRMED]`
+- [ ] **Bulk send to editor** — select multiple cards, click "Send to Editor" in toolbar `[CONFIRMED]`
+- [ ] **Clear selection** — click X in bulk toolbar, all selections cleared `[CONFIRMED]`
 
-### PDF Upload
-- [x] PASS: "Upload PDF" button in sidebar
-- [x] PASS: Hidden `<input type="file" accept=".pdf">` triggered on click
-- [x] PASS: Button text changes to "Uploading..." during upload
-- [x] PASS: Button disabled during upload
-#### Upload Process (3 Steps)
-- [x] PASS: Extracts PDF text plus title/author metadata when available
-- [x] PASS: Triggers background text extraction and embedding
-- [x] PASS: Sets `full_text_available = true`
-#### After Upload
-- [x] PASS: Paper appears in library list
-- [x] PASS: PDF icon shown (source = "user_upload")
-- [x] PASS: "View PDF" button available on the paper card
-- [x] PASS: Error handling if any step fails
-
-### Cite in Editor Integration
-- [x] PASS: "Cite in Editor" button on each paper card
-- [x] PASS: Stores pending citation in `sessionStorage`
-- [x] PASS: Navigates to `/editor/new`
-- [x] PASS: Editor retrieves citation from sessionStorage on load
-- [x] PASS: Editor shows a pending-citation notice after consuming sessionStorage; citation is not auto-inserted
+### Trash & Deletion
+- [ ] **Delete sends to trash** — delete a source, it disappears from list and appears in /library/trash `[CONFIRMED]`
+- [ ] **Restore from trash** — click Restore button on a trashed item, it returns to inbox `[CONFIRMED]`
+- [ ] **Permanent delete confirmation** — click delete on trash item, confirmation dialog appears `[CONFIRMED]`
+- [ ] **Confirm permanent delete** — click confirm in dialog, source is permanently removed `[CONFIRMED]`
+- [ ] **Cancel permanent delete** — click cancel in confirmation dialog, source remains in trash `[CONFIRMED]`

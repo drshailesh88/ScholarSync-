@@ -1,62 +1,31 @@
-# library — Spec 002
+# library — Spec 002: Home Screen & Source Cards
 
-STATUS: DONE
-TESTED: 0/35
+STATUS: PENDING
+TESTED: 0/15
 PASS: 0
 FAIL: 0
 BLOCKED: 0
-PAGE: http://localhost:3001/library
+PAGE: http://localhost:3000/library
 MODULE: library
 
 ---
-### Filters
-#### Clear Filters Button
-- [x] PASS: Translucent red background/hover when filters are active
-- [x] PASS: Clicking resets non-search filters to defaults
-- [x] PASS: Hidden when no non-search filters are active
-#### Filter Behavior
-- [x] PASS: All filters are AND'd together (combined filtering)
-- [x] PASS: Filters trigger server-side re-fetch
-- [x] PASS: Filter state persists while the page remains mounted
+### Home Screen Sections
+- [ ] **Continue Reading section** — items with reading_progress > 0 appear in Continue Reading `[CONFIRMED]`
+- [ ] **Active Project section** — when a project is active, shows project-scoped items `[CONFIRMED]`
+- [ ] **Needs Review section** — unread items with high signal appear in Needs Review `[CONFIRMED]`
+- [ ] **Recently Saved section** — most recently saved items appear in Recently Saved `[CONFIRMED]`
 
-### Paper Cards
-#### Card Layout
-- [x] PASS: Glass-panel background with `rounded-xl` border
-- [x] PASS: Left icon: PDF icon (if `source === "user_upload"`) or Globe icon
-#### Card Content
-- [x] PASS: **Title** — `font-medium`, wraps naturally (no truncation class)
-- [x] PASS: **Authors** — comma-separated, truncated
-- [x] PASS: **Metadata row** — "Journal · Year · Citation Count · Study Type"
-- [x] PASS: Missing metadata fields show fallback text (e.g., "Unknown journal" for missing journal — no raw "null" shown)
-#### Empty States
-- [x] PASS: Loading: "Loading papers..." text-only state
-- [x] PASS: No results (with filters/search): "No papers match your search or filters."
-- [x] PASS: Empty library: BookOpen icon + "Your library is empty. Add papers from Discover."
+### Source Cards
+- [ ] **Card click navigates** — click a source card, navigates to /library/item/[libraryId] `[CONFIRMED]`
+- [ ] **Workflow state badge renders** — each card shows colored badge with state name (Inbox/Core/etc.) `[CONFIRMED]`
+- [ ] **Trust tier dot shows** — cards display small colored dot for trust/evidence tier `[CONFIRMED]`
+- [ ] **3-dot menu opens** — click dots icon on card, action menu dropdown appears `[CONFIRMED]`
+- [ ] **Move to Core from menu** — click "Move to Core" in action menu, card state updates `[CONFIRMED]`
+- [ ] **Delete from menu** — click "Delete" in action menu, source moves to trash `[CONFIRMED]`
+- [ ] **Menu closes on outside click** — click outside the open action menu, menu closes `[CONFIRMED]`
 
-### Favorites
-- [x] PASS: Star icon on each paper card toggles favorite
-- [x] PASS: Filled star (amber-500) = favorited
-- [x] PASS: Empty star = not favorited
-- [x] PASS: Toggle calls `toggleFavorite(refId)` server action
-- [x] PASS: Optimistic UI update (immediate visual toggle)
-- [x] PASS: Reverts on error
-- [x] PASS: Favorites collection in sidebar shows correct count
-- [x] PASS: Clicking "Favorites" in sidebar filters to favorited papers only
-
-### Citation Modal
-- [x] PASS: Opens when "Cite" button clicked on a paper card
-- [x] PASS: Modal title: "Cite Source"
-- [x] PASS: Modal with backdrop blur
-#### Citation Style Tabs
-- [x] PASS: Selecting a tab shows formatted citation for that style
-- [x] PASS: Loading state: "Formatting citations..." with pulse animation
-- [x] PASS: Citation text displayed in monospace area (min-h-80px)
-#### Copy Buttons
-- [x] PASS: **Copy Citation** (primary/brand) — copies full bibliography entry
-- [x] PASS: **Copy In-Text** (secondary/bordered) — copies parenthetical citation
-- [x] PASS: Hidden for BibTeX style (only full copy available)
-- [x] PASS: Copy feedback: text changes to "Copied!" for 2 seconds
-- [x] PASS: Clipboard write succeeds
-
-### PDF Viewer
-- [x] PASS: Opens when "View PDF" clicked on a paper card
+### Source List & Pagination
+- [ ] **Show more loads items** — click "Show more" button, additional sources appear below `[CONFIRMED]`
+- [ ] **Loading indicator during fetch** — while loading more, a spinner/skeleton shows `[CONFIRMED]`
+- [ ] **Multi-select checkbox** — click checkbox on card, card enters selected state `[CONFIRMED]`
+- [ ] **Bulk toolbar appears** — with 1+ cards selected, bulk action toolbar appears at top `[CONFIRMED]`

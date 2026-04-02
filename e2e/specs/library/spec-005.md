@@ -1,48 +1,42 @@
-# library — Spec 005
+# library — Spec 005: Annotations, Projects & Ingestion
 
-STATUS: DONE
-TESTED: 35/35
-PASS: 35
+STATUS: PENDING
+TESTED: 0/22
+PASS: 0
 FAIL: 0
 BLOCKED: 0
-PAGE: http://localhost:3001/library
+PAGE: http://localhost:3000/library
 MODULE: library
 
 ---
-### Quick Test Workflows
-#### Detailed QA Coverage
-- [x] PASS: `Favorites` row always uses a filled amber star icon, not a toggled icon state
-- [x] PASS: Custom collection rows render only for truthy `paper.collection` values present in the current `papers` array
-- [x] PASS: Papers with `collection = null` or empty string do not create a custom collection row
-- [x] PASS: Custom collection counts are recalculated from the currently fetched paper list after search or filter changes
-- [x] PASS: Clicking `All Papers` resets only the collection selection and does not clear search text, sort order, or active server-side filters
-- [x] PASS: Clicking `Favorites` applies a client-side `isFavorite` filter on top of the current fetched papers
-- [x] PASS: Clicking a custom collection applies a client-side exact-string match against `paper.collection`
-- [x] PASS: `New Collection` button is visible but has no click handler, modal, or navigation in the current implementation
-- [x] PASS: Hidden upload input uses `type="file"` with `accept=".pdf"`
-- [x] PASS: Clicking `Upload PDF` forwards the click to the hidden file input via `fileInputRef.current?.click()`
-- [x] PASS: Search control placeholder reads `Search papers...`
-- [x] PASS: Typing updates local search state immediately, but paper refetch is delayed by a 300 ms debounce
-- [x] PASS: Empty search input is sent to `getFilteredUserPapers(...)` as `search: undefined`
-- [x] PASS: Server-side search matches paper `title` with `ILIKE`
-- [x] PASS: Server-side search matches paper `journal` with `ILIKE`
-- [x] PASS: Server-side search matches serialized `authors` JSON with `::text ILIKE`
-- [x] PASS: Sort dropdown contains exactly four options: `Recently Added`, `Title A-Z`, `Citation Count`, and `Year`
-- [x] PASS: Default selected sort option is `Recently Added`
-- [x] PASS: Choosing `Title A-Z` sends `sortBy = "title"` with `sortDir = "asc"`
-- [x] PASS: Choosing any non-title sort sends `sortDir = "desc"`
-- [x] PASS: Project filter select is rendered only when `getLibraryProjects()` returns at least one project
-- [x] PASS: Project filter default option label is `All Projects`
-- [x] PASS: Selecting a project casts the selected option value to a number before storing it in state
-- [x] PASS: Clearing the project filter resets `filterProjectId` back to `undefined`
-- [x] PASS: Study Type filter select is rendered only when `getLibraryStudyTypes()` returns at least one non-empty value
-- [x] PASS: Study Type filter default option label is `All Study Types`
-- [x] PASS: Clearing the Study Type filter resets `filterStudyType` back to `undefined`
-- [x] PASS: Year range inputs render only when both `yearRange.min` and `yearRange.max` are non-null
-- [x] PASS: From-year input placeholder reads `From {minYear}`
-- [x] PASS: To-year input placeholder reads `To {maxYear}`
-- [x] PASS: Year inputs expose `min` and `max` attributes using the fetched year range bounds
-- [x] PASS: Clearing either year input resets that filter back to `undefined`
-- [x] PASS: `Clear Filters` button appears only when project, study-type, or year filters are active
-- [x] PASS: Search text alone does not make `Clear Filters` appear
-- [x] PASS: Clicking `Clear Filters` resets project, study-type, and both year inputs but preserves the current search text
+### Annotations — Highlights
+- [ ] **Text selection shows popover** — select text in reader, highlight color popover appears `[CONFIRMED]`
+- [ ] **Choose highlight color** — click a color dot in popover, highlight applies with chosen color `[CONFIRMED]`
+- [ ] **Default highlight is yellow** — create highlight without changing color, it renders yellow `[CONFIRMED]`
+- [ ] **Add note to highlight** — click "Add note" in popover, note textarea appears `[CONFIRMED]`
+- [ ] **Submit note with Cmd+Enter** — type note text, press Cmd+Enter, note saves `[CONFIRMED]`
+- [ ] **Cancel highlight popover** — press Escape in popover, popover closes without saving `[CONFIRMED]`
+
+### Annotations — Notes
+- [ ] **Create general note** — in workbench Notes tab, type note and click submit `[CONFIRMED]`
+- [ ] **Edit note inline** — click edit icon on existing note, text becomes editable `[CONFIRMED]`
+- [ ] **Save edited note** — edit note text and click save/Cmd+Enter, note updates `[CONFIRMED]`
+- [ ] **Delete annotation** — click delete icon on note/highlight, it is removed `[CONFIRMED]`
+- [ ] **Click highlight jumps** — in workbench Highlights tab, click a highlight, reader scrolls to its position `[CONFIRMED]`
+
+### Project Switching
+- [ ] **Project dropdown opens** — click project switcher in header, dropdown with project list appears `[CONFIRMED]`
+- [ ] **Select project re-scopes** — click a project, URL updates to /library/project/[id], sources filter `[CONFIRMED]`
+- [ ] **All Library option** — click "All Library" in dropdown, exits project scope, shows all sources `[CONFIRMED]`
+- [ ] **Last active project persists** — select a project, navigate away, return to /library, same project active `[CONFIRMED]`
+- [ ] **Escape closes dropdown** — with dropdown open, press Escape, dropdown closes `[CONFIRMED]`
+
+### Ingestion — URL Paste
+- [ ] **Add Source button visible** — "Add Source" button visible in library header `[CONFIRMED]`
+- [ ] **Add Source dialog opens** — click "Add Source", dialog with URL/PDF tabs appears `[CONFIRMED]`
+- [ ] **Paste URL and save** — paste a URL, click "Save to Library", success message shows `[CONFIRMED]`
+- [ ] **Enter submits URL** — type URL and press Enter, form submits `[CONFIRMED]`
+- [ ] **Escape closes dialog** — press Escape, dialog closes and state resets `[CONFIRMED]`
+
+### Ingestion — PDF Upload
+- [ ] **PDF upload tab** — click "Upload PDF" tab, file picker area appears `[CONFIRMED]`

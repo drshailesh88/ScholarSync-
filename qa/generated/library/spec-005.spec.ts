@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for library/spec-005
  * Source: e2e/specs/library/spec-005.md
- * Generated: 2026-03-28T02:14:23.705Z
+ * Generated: 2026-04-02T13:28:49.325Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -46,9 +46,9 @@ test.describe('library / spec-005', () => {
     }]);
   });
 
-  test('cp-000: Favorites row always uses a filled amber star icon not a toggled icon state', async ({ page }) => {
-    // Checkpoint 0: `Favorites` row always uses a filled amber star icon, not a toggled icon state
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-000: Text selection shows popover select text in reader highlight color popover appea', async ({ page }) => {
+    // Checkpoint 0: Text selection shows popover — select text in reader, highlight color popover appears `[CONFIRMED]`
+    // Section: Annotations — Highlights
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -67,9 +67,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "`Favorites` row always uses a filled amber star icon, not a toggled icon state",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Text selection shows popover — select text in reader, highlight color popover appears `[CONFIRMED]`",
+      section: "Annotations — Highlights",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -81,11 +81,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-000 ' + "`Favorites` row always uses a filled amber star icon, not a toggled icon state");
+      throw new Error('Unhandled library checkpoint: cp-000 ' + "Text selection shows popover — select text in reader, highlight color popover appears `[CONFIRMED]`");
     }
 
 
-    // This test validates: `Favorites` row always uses a filled amber star icon, not a toggled icon state
+    // This test validates: Text selection shows popover — select text in reader, highlight color popover appears `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -96,9 +96,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-001: Custom collection rows render only for truthy papercollection values present in ', async ({ page }) => {
-    // Checkpoint 1: Custom collection rows render only for truthy `paper.collection` values present in the current `papers` array
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-001: Choose highlight color click a color dot in popover highlight applies with chose', async ({ page }) => {
+    // Checkpoint 1: Choose highlight color — click a color dot in popover, highlight applies with chosen color `[CONFIRMED]`
+    // Section: Annotations — Highlights
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -117,9 +117,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Custom collection rows render only for truthy `paper.collection` values present in the current `papers` array",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Choose highlight color — click a color dot in popover, highlight applies with chosen color `[CONFIRMED]`",
+      section: "Annotations — Highlights",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -131,11 +131,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-001 ' + "Custom collection rows render only for truthy `paper.collection` values present in the current `papers` array");
+      throw new Error('Unhandled library checkpoint: cp-001 ' + "Choose highlight color — click a color dot in popover, highlight applies with chosen color `[CONFIRMED]`");
     }
 
 
-    // This test validates: Custom collection rows render only for truthy `paper.collection` values present in the current `papers` array
+    // This test validates: Choose highlight color — click a color dot in popover, highlight applies with chosen color `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -146,9 +146,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-002: Papers with collection null or empty string do not create a custom collection ro', async ({ page }) => {
-    // Checkpoint 2: Papers with `collection = null` or empty string do not create a custom collection row
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-002: Default highlight is yellow create highlight without changing color it renders y', async ({ page }) => {
+    // Checkpoint 2: Default highlight is yellow — create highlight without changing color, it renders yellow `[CONFIRMED]`
+    // Section: Annotations — Highlights
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -167,9 +167,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Papers with `collection = null` or empty string do not create a custom collection row",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Default highlight is yellow — create highlight without changing color, it renders yellow `[CONFIRMED]`",
+      section: "Annotations — Highlights",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -181,11 +181,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-002 ' + "Papers with `collection = null` or empty string do not create a custom collection row");
+      throw new Error('Unhandled library checkpoint: cp-002 ' + "Default highlight is yellow — create highlight without changing color, it renders yellow `[CONFIRMED]`");
     }
 
 
-    // This test validates: Papers with `collection = null` or empty string do not create a custom collection row
+    // This test validates: Default highlight is yellow — create highlight without changing color, it renders yellow `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -196,9 +196,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-003: Custom collection counts are recalculated from the currently fetched paper list ', async ({ page }) => {
-    // Checkpoint 3: Custom collection counts are recalculated from the currently fetched paper list after search or filter changes
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-003: Add note to highlight click Add note in popover note textarea appears CONFIRMED', async ({ page }) => {
+    // Checkpoint 3: Add note to highlight — click "Add note" in popover, note textarea appears `[CONFIRMED]`
+    // Section: Annotations — Highlights
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -217,9 +217,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Custom collection counts are recalculated from the currently fetched paper list after search or filter changes",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Add note to highlight — click \"Add note\" in popover, note textarea appears `[CONFIRMED]`",
+      section: "Annotations — Highlights",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -231,11 +231,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-003 ' + "Custom collection counts are recalculated from the currently fetched paper list after search or filter changes");
+      throw new Error('Unhandled library checkpoint: cp-003 ' + "Add note to highlight — click \"Add note\" in popover, note textarea appears `[CONFIRMED]`");
     }
 
 
-    // This test validates: Custom collection counts are recalculated from the currently fetched paper list after search or filter changes
+    // This test validates: Add note to highlight — click "Add note" in popover, note textarea appears `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -246,9 +246,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-004: Clicking All Papers resets only the collection selection and does not clear sear', async ({ page }) => {
-    // Checkpoint 4: Clicking `All Papers` resets only the collection selection and does not clear search text, sort order, or active server-side filters
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-004: Submit note with CmdEnter type note text press CmdEnter note saves CONFIRMED', async ({ page }) => {
+    // Checkpoint 4: Submit note with Cmd+Enter — type note text, press Cmd+Enter, note saves `[CONFIRMED]`
+    // Section: Annotations — Highlights
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -267,9 +267,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Clicking `All Papers` resets only the collection selection and does not clear search text, sort order, or active server-side filters",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Submit note with Cmd+Enter — type note text, press Cmd+Enter, note saves `[CONFIRMED]`",
+      section: "Annotations — Highlights",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -281,11 +281,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-004 ' + "Clicking `All Papers` resets only the collection selection and does not clear search text, sort order, or active server-side filters");
+      throw new Error('Unhandled library checkpoint: cp-004 ' + "Submit note with Cmd+Enter — type note text, press Cmd+Enter, note saves `[CONFIRMED]`");
     }
 
 
-    // This test validates: Clicking `All Papers` resets only the collection selection and does not clear search text, sort order, or active server-side filters
+    // This test validates: Submit note with Cmd+Enter — type note text, press Cmd+Enter, note saves `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -296,9 +296,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-005: Clicking Favorites applies a client-side isFavorite filter on top of the current', async ({ page }) => {
-    // Checkpoint 5: Clicking `Favorites` applies a client-side `isFavorite` filter on top of the current fetched papers
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-005: Cancel highlight popover press Escape in popover popover closes without saving C', async ({ page }) => {
+    // Checkpoint 5: Cancel highlight popover — press Escape in popover, popover closes without saving `[CONFIRMED]`
+    // Section: Annotations — Highlights
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -317,9 +317,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Clicking `Favorites` applies a client-side `isFavorite` filter on top of the current fetched papers",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Cancel highlight popover — press Escape in popover, popover closes without saving `[CONFIRMED]`",
+      section: "Annotations — Highlights",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -331,11 +331,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-005 ' + "Clicking `Favorites` applies a client-side `isFavorite` filter on top of the current fetched papers");
+      throw new Error('Unhandled library checkpoint: cp-005 ' + "Cancel highlight popover — press Escape in popover, popover closes without saving `[CONFIRMED]`");
     }
 
 
-    // This test validates: Clicking `Favorites` applies a client-side `isFavorite` filter on top of the current fetched papers
+    // This test validates: Cancel highlight popover — press Escape in popover, popover closes without saving `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -346,9 +346,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-006: Clicking a custom collection applies a client-side exact-string match against pa', async ({ page }) => {
-    // Checkpoint 6: Clicking a custom collection applies a client-side exact-string match against `paper.collection`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-006: Create general note in workbench Notes tab type note and click submit CONFIRMED', async ({ page }) => {
+    // Checkpoint 6: Create general note — in workbench Notes tab, type note and click submit `[CONFIRMED]`
+    // Section: Annotations — Notes
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -367,9 +367,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Clicking a custom collection applies a client-side exact-string match against `paper.collection`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Create general note — in workbench Notes tab, type note and click submit `[CONFIRMED]`",
+      section: "Annotations — Notes",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -381,11 +381,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-006 ' + "Clicking a custom collection applies a client-side exact-string match against `paper.collection`");
+      throw new Error('Unhandled library checkpoint: cp-006 ' + "Create general note — in workbench Notes tab, type note and click submit `[CONFIRMED]`");
     }
 
 
-    // This test validates: Clicking a custom collection applies a client-side exact-string match against `paper.collection`
+    // This test validates: Create general note — in workbench Notes tab, type note and click submit `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -396,9 +396,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-007: New Collection button is visible but has no click handler modal or navigation in', async ({ page }) => {
-    // Checkpoint 7: `New Collection` button is visible but has no click handler, modal, or navigation in the current implementation
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-007: Edit note inline click edit icon on existing note text becomes editable CONFIRME', async ({ page }) => {
+    // Checkpoint 7: Edit note inline — click edit icon on existing note, text becomes editable `[CONFIRMED]`
+    // Section: Annotations — Notes
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -417,9 +417,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "`New Collection` button is visible but has no click handler, modal, or navigation in the current implementation",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Edit note inline — click edit icon on existing note, text becomes editable `[CONFIRMED]`",
+      section: "Annotations — Notes",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -431,11 +431,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-007 ' + "`New Collection` button is visible but has no click handler, modal, or navigation in the current implementation");
+      throw new Error('Unhandled library checkpoint: cp-007 ' + "Edit note inline — click edit icon on existing note, text becomes editable `[CONFIRMED]`");
     }
 
 
-    // This test validates: `New Collection` button is visible but has no click handler, modal, or navigation in the current implementation
+    // This test validates: Edit note inline — click edit icon on existing note, text becomes editable `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -446,9 +446,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-008: Hidden upload input uses typefile with acceptpdf', async ({ page }) => {
-    // Checkpoint 8: Hidden upload input uses `type="file"` with `accept=".pdf"`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-008: Save edited note edit note text and click saveCmdEnter note updates CONFIRMED', async ({ page }) => {
+    // Checkpoint 8: Save edited note — edit note text and click save/Cmd+Enter, note updates `[CONFIRMED]`
+    // Section: Annotations — Notes
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -467,9 +467,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Hidden upload input uses `type=\"file\"` with `accept=\".pdf\"`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Save edited note — edit note text and click save/Cmd+Enter, note updates `[CONFIRMED]`",
+      section: "Annotations — Notes",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -481,11 +481,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-008 ' + "Hidden upload input uses `type=\"file\"` with `accept=\".pdf\"`");
+      throw new Error('Unhandled library checkpoint: cp-008 ' + "Save edited note — edit note text and click save/Cmd+Enter, note updates `[CONFIRMED]`");
     }
 
 
-    // This test validates: Hidden upload input uses `type="file"` with `accept=".pdf"`
+    // This test validates: Save edited note — edit note text and click save/Cmd+Enter, note updates `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -496,9 +496,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-009: Clicking Upload PDF forwards the click to the hidden file input via fileInputRef', async ({ page }) => {
-    // Checkpoint 9: Clicking `Upload PDF` forwards the click to the hidden file input via `fileInputRef.current?.click()`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-009: Delete annotation click delete icon on notehighlight it is removed CONFIRMED', async ({ page }) => {
+    // Checkpoint 9: Delete annotation — click delete icon on note/highlight, it is removed `[CONFIRMED]`
+    // Section: Annotations — Notes
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -517,9 +517,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Clicking `Upload PDF` forwards the click to the hidden file input via `fileInputRef.current?.click()`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Delete annotation — click delete icon on note/highlight, it is removed `[CONFIRMED]`",
+      section: "Annotations — Notes",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -531,11 +531,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-009 ' + "Clicking `Upload PDF` forwards the click to the hidden file input via `fileInputRef.current?.click()`");
+      throw new Error('Unhandled library checkpoint: cp-009 ' + "Delete annotation — click delete icon on note/highlight, it is removed `[CONFIRMED]`");
     }
 
 
-    // This test validates: Clicking `Upload PDF` forwards the click to the hidden file input via `fileInputRef.current?.click()`
+    // This test validates: Delete annotation — click delete icon on note/highlight, it is removed `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -546,9 +546,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-010: Search control placeholder reads Search papers', async ({ page }) => {
-    // Checkpoint 10: Search control placeholder reads `Search papers...`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-010: Click highlight jumps in workbench Highlights tab click a highlight reader scrol', async ({ page }) => {
+    // Checkpoint 10: Click highlight jumps — in workbench Highlights tab, click a highlight, reader scrolls to its position `[CONFIRMED]`
+    // Section: Annotations — Notes
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -567,9 +567,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Search control placeholder reads `Search papers...`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Click highlight jumps — in workbench Highlights tab, click a highlight, reader scrolls to its position `[CONFIRMED]`",
+      section: "Annotations — Notes",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -581,11 +581,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-010 ' + "Search control placeholder reads `Search papers...`");
+      throw new Error('Unhandled library checkpoint: cp-010 ' + "Click highlight jumps — in workbench Highlights tab, click a highlight, reader scrolls to its position `[CONFIRMED]`");
     }
 
 
-    // This test validates: Search control placeholder reads `Search papers...`
+    // This test validates: Click highlight jumps — in workbench Highlights tab, click a highlight, reader scrolls to its position `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -596,9 +596,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-011: Typing updates local search state immediately but paper refetch is delayed by a ', async ({ page }) => {
-    // Checkpoint 11: Typing updates local search state immediately, but paper refetch is delayed by a 300 ms debounce
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-011: Project dropdown opens click project switcher in header dropdown with project li', async ({ page }) => {
+    // Checkpoint 11: Project dropdown opens — click project switcher in header, dropdown with project list appears `[CONFIRMED]`
+    // Section: Project Switching
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -617,9 +617,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Typing updates local search state immediately, but paper refetch is delayed by a 300 ms debounce",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Project dropdown opens — click project switcher in header, dropdown with project list appears `[CONFIRMED]`",
+      section: "Project Switching",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -631,11 +631,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-011 ' + "Typing updates local search state immediately, but paper refetch is delayed by a 300 ms debounce");
+      throw new Error('Unhandled library checkpoint: cp-011 ' + "Project dropdown opens — click project switcher in header, dropdown with project list appears `[CONFIRMED]`");
     }
 
 
-    // This test validates: Typing updates local search state immediately, but paper refetch is delayed by a 300 ms debounce
+    // This test validates: Project dropdown opens — click project switcher in header, dropdown with project list appears `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -646,9 +646,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-012: Empty search input is sent to getFilteredUserPapers as search undefined', async ({ page }) => {
-    // Checkpoint 12: Empty search input is sent to `getFilteredUserPapers(...)` as `search: undefined`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-012: Select project re-scopes click a project URL updates to libraryprojectid sources', async ({ page }) => {
+    // Checkpoint 12: Select project re-scopes — click a project, URL updates to /library/project/[id], sources filter `[CONFIRMED]`
+    // Section: Project Switching
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -667,9 +667,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Empty search input is sent to `getFilteredUserPapers(...)` as `search: undefined`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Select project re-scopes — click a project, URL updates to /library/project/[id], sources filter `[CONFIRMED]`",
+      section: "Project Switching",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -681,11 +681,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-012 ' + "Empty search input is sent to `getFilteredUserPapers(...)` as `search: undefined`");
+      throw new Error('Unhandled library checkpoint: cp-012 ' + "Select project re-scopes — click a project, URL updates to /library/project/[id], sources filter `[CONFIRMED]`");
     }
 
 
-    // This test validates: Empty search input is sent to `getFilteredUserPapers(...)` as `search: undefined`
+    // This test validates: Select project re-scopes — click a project, URL updates to /library/project/[id], sources filter `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -696,9 +696,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-013: Server-side search matches paper title with ILIKE', async ({ page }) => {
-    // Checkpoint 13: Server-side search matches paper `title` with `ILIKE`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-013: All Library option click All Library in dropdown exits project scope shows all s', async ({ page }) => {
+    // Checkpoint 13: All Library option — click "All Library" in dropdown, exits project scope, shows all sources `[CONFIRMED]`
+    // Section: Project Switching
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -717,9 +717,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Server-side search matches paper `title` with `ILIKE`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "All Library option — click \"All Library\" in dropdown, exits project scope, shows all sources `[CONFIRMED]`",
+      section: "Project Switching",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -731,11 +731,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-013 ' + "Server-side search matches paper `title` with `ILIKE`");
+      throw new Error('Unhandled library checkpoint: cp-013 ' + "All Library option — click \"All Library\" in dropdown, exits project scope, shows all sources `[CONFIRMED]`");
     }
 
 
-    // This test validates: Server-side search matches paper `title` with `ILIKE`
+    // This test validates: All Library option — click "All Library" in dropdown, exits project scope, shows all sources `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -746,9 +746,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-014: Server-side search matches paper journal with ILIKE', async ({ page }) => {
-    // Checkpoint 14: Server-side search matches paper `journal` with `ILIKE`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-014: Last active project persists select a project navigate away return to library sa', async ({ page }) => {
+    // Checkpoint 14: Last active project persists — select a project, navigate away, return to /library, same project active `[CONFIRMED]`
+    // Section: Project Switching
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -767,9 +767,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Server-side search matches paper `journal` with `ILIKE`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Last active project persists — select a project, navigate away, return to /library, same project active `[CONFIRMED]`",
+      section: "Project Switching",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -781,11 +781,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-014 ' + "Server-side search matches paper `journal` with `ILIKE`");
+      throw new Error('Unhandled library checkpoint: cp-014 ' + "Last active project persists — select a project, navigate away, return to /library, same project active `[CONFIRMED]`");
     }
 
 
-    // This test validates: Server-side search matches paper `journal` with `ILIKE`
+    // This test validates: Last active project persists — select a project, navigate away, return to /library, same project active `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -796,9 +796,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-015: Server-side search matches serialized authors JSON with text ILIKE', async ({ page }) => {
-    // Checkpoint 15: Server-side search matches serialized `authors` JSON with `::text ILIKE`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-015: Escape closes dropdown with dropdown open press Escape dropdown closes CONFIRMED', async ({ page }) => {
+    // Checkpoint 15: Escape closes dropdown — with dropdown open, press Escape, dropdown closes `[CONFIRMED]`
+    // Section: Project Switching
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -817,9 +817,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Server-side search matches serialized `authors` JSON with `::text ILIKE`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Escape closes dropdown — with dropdown open, press Escape, dropdown closes `[CONFIRMED]`",
+      section: "Project Switching",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -831,11 +831,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-015 ' + "Server-side search matches serialized `authors` JSON with `::text ILIKE`");
+      throw new Error('Unhandled library checkpoint: cp-015 ' + "Escape closes dropdown — with dropdown open, press Escape, dropdown closes `[CONFIRMED]`");
     }
 
 
-    // This test validates: Server-side search matches serialized `authors` JSON with `::text ILIKE`
+    // This test validates: Escape closes dropdown — with dropdown open, press Escape, dropdown closes `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -846,9 +846,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-016: Sort dropdown contains exactly four options Recently Added Title A-Z Citation Co', async ({ page }) => {
-    // Checkpoint 16: Sort dropdown contains exactly four options: `Recently Added`, `Title A-Z`, `Citation Count`, and `Year`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-016: Add Source button visible Add Source button visible in library header CONFIRMED', async ({ page }) => {
+    // Checkpoint 16: Add Source button visible — "Add Source" button visible in library header `[CONFIRMED]`
+    // Section: Ingestion — URL Paste
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -867,9 +867,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Sort dropdown contains exactly four options: `Recently Added`, `Title A-Z`, `Citation Count`, and `Year`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Add Source button visible — \"Add Source\" button visible in library header `[CONFIRMED]`",
+      section: "Ingestion — URL Paste",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -881,11 +881,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-016 ' + "Sort dropdown contains exactly four options: `Recently Added`, `Title A-Z`, `Citation Count`, and `Year`");
+      throw new Error('Unhandled library checkpoint: cp-016 ' + "Add Source button visible — \"Add Source\" button visible in library header `[CONFIRMED]`");
     }
 
 
-    // This test validates: Sort dropdown contains exactly four options: `Recently Added`, `Title A-Z`, `Citation Count`, and `Year`
+    // This test validates: Add Source button visible — "Add Source" button visible in library header `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -896,9 +896,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-017: Default selected sort option is Recently Added', async ({ page }) => {
-    // Checkpoint 17: Default selected sort option is `Recently Added`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-017: Add Source dialog opens click Add Source dialog with URLPDF tabs appears CONFIRM', async ({ page }) => {
+    // Checkpoint 17: Add Source dialog opens — click "Add Source", dialog with URL/PDF tabs appears `[CONFIRMED]`
+    // Section: Ingestion — URL Paste
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -917,9 +917,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Default selected sort option is `Recently Added`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Add Source dialog opens — click \"Add Source\", dialog with URL/PDF tabs appears `[CONFIRMED]`",
+      section: "Ingestion — URL Paste",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -931,11 +931,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-017 ' + "Default selected sort option is `Recently Added`");
+      throw new Error('Unhandled library checkpoint: cp-017 ' + "Add Source dialog opens — click \"Add Source\", dialog with URL/PDF tabs appears `[CONFIRMED]`");
     }
 
 
-    // This test validates: Default selected sort option is `Recently Added`
+    // This test validates: Add Source dialog opens — click "Add Source", dialog with URL/PDF tabs appears `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -946,9 +946,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-018: Choosing Title A-Z sends sortBy title with sortDir asc', async ({ page }) => {
-    // Checkpoint 18: Choosing `Title A-Z` sends `sortBy = "title"` with `sortDir = "asc"`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-018: Paste URL and save paste a URL click Save to Library success message shows CONFI', async ({ page }) => {
+    // Checkpoint 18: Paste URL and save — paste a URL, click "Save to Library", success message shows `[CONFIRMED]`
+    // Section: Ingestion — URL Paste
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -967,9 +967,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Choosing `Title A-Z` sends `sortBy = \"title\"` with `sortDir = \"asc\"`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Paste URL and save — paste a URL, click \"Save to Library\", success message shows `[CONFIRMED]`",
+      section: "Ingestion — URL Paste",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -981,11 +981,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-018 ' + "Choosing `Title A-Z` sends `sortBy = \"title\"` with `sortDir = \"asc\"`");
+      throw new Error('Unhandled library checkpoint: cp-018 ' + "Paste URL and save — paste a URL, click \"Save to Library\", success message shows `[CONFIRMED]`");
     }
 
 
-    // This test validates: Choosing `Title A-Z` sends `sortBy = "title"` with `sortDir = "asc"`
+    // This test validates: Paste URL and save — paste a URL, click "Save to Library", success message shows `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -996,9 +996,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-019: Choosing any non-title sort sends sortDir desc', async ({ page }) => {
-    // Checkpoint 19: Choosing any non-title sort sends `sortDir = "desc"`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-019: Enter submits URL type URL and press Enter form submits CONFIRMED', async ({ page }) => {
+    // Checkpoint 19: Enter submits URL — type URL and press Enter, form submits `[CONFIRMED]`
+    // Section: Ingestion — URL Paste
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -1017,9 +1017,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Choosing any non-title sort sends `sortDir = \"desc\"`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Enter submits URL — type URL and press Enter, form submits `[CONFIRMED]`",
+      section: "Ingestion — URL Paste",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -1031,11 +1031,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-019 ' + "Choosing any non-title sort sends `sortDir = \"desc\"`");
+      throw new Error('Unhandled library checkpoint: cp-019 ' + "Enter submits URL — type URL and press Enter, form submits `[CONFIRMED]`");
     }
 
 
-    // This test validates: Choosing any non-title sort sends `sortDir = "desc"`
+    // This test validates: Enter submits URL — type URL and press Enter, form submits `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1046,9 +1046,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-020: Project filter select is rendered only when getLibraryProjects returns at least ', async ({ page }) => {
-    // Checkpoint 20: Project filter select is rendered only when `getLibraryProjects()` returns at least one project
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-020: Escape closes dialog press Escape dialog closes and state resets CONFIRMED', async ({ page }) => {
+    // Checkpoint 20: Escape closes dialog — press Escape, dialog closes and state resets `[CONFIRMED]`
+    // Section: Ingestion — URL Paste
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -1067,9 +1067,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Project filter select is rendered only when `getLibraryProjects()` returns at least one project",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "Escape closes dialog — press Escape, dialog closes and state resets `[CONFIRMED]`",
+      section: "Ingestion — URL Paste",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -1081,11 +1081,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-020 ' + "Project filter select is rendered only when `getLibraryProjects()` returns at least one project");
+      throw new Error('Unhandled library checkpoint: cp-020 ' + "Escape closes dialog — press Escape, dialog closes and state resets `[CONFIRMED]`");
     }
 
 
-    // This test validates: Project filter select is rendered only when `getLibraryProjects()` returns at least one project
+    // This test validates: Escape closes dialog — press Escape, dialog closes and state resets `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1096,9 +1096,9 @@ test.describe('library / spec-005', () => {
     }
   });
 
-  test('cp-021: Project filter default option label is All Projects', async ({ page }) => {
-    // Checkpoint 21: Project filter default option label is `All Projects`
-    // Section: Quick Test Workflows > Detailed QA Coverage
+  test('cp-021: PDF upload tab click Upload PDF tab file picker area appears CONFIRMED', async ({ page }) => {
+    // Checkpoint 21: PDF upload tab — click "Upload PDF" tab, file picker area appears `[CONFIRMED]`
+    // Section: Ingestion — PDF Upload
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -1117,9 +1117,9 @@ test.describe('library / spec-005', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Project filter default option label is `All Projects`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
+      description: "PDF upload tab — click \"Upload PDF\" tab, file picker area appears `[CONFIRMED]`",
+      section: "Ingestion — PDF Upload",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -1131,661 +1131,11 @@ test.describe('library / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-021 ' + "Project filter default option label is `All Projects`");
+      throw new Error('Unhandled library checkpoint: cp-021 ' + "PDF upload tab — click \"Upload PDF\" tab, file picker area appears `[CONFIRMED]`");
     }
 
 
-    // This test validates: Project filter default option label is `All Projects`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-022: Selecting a project casts the selected option value to a number before storing i', async ({ page }) => {
-    // Checkpoint 22: Selecting a project casts the selected option value to a number before storing it in state
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Selecting a project casts the selected option value to a number before storing it in state",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-022.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-022 ' + "Selecting a project casts the selected option value to a number before storing it in state");
-    }
-
-
-    // This test validates: Selecting a project casts the selected option value to a number before storing it in state
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-023: Clearing the project filter resets filterProjectId back to undefined', async ({ page }) => {
-    // Checkpoint 23: Clearing the project filter resets `filterProjectId` back to `undefined`
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Clearing the project filter resets `filterProjectId` back to `undefined`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-023.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-023 ' + "Clearing the project filter resets `filterProjectId` back to `undefined`");
-    }
-
-
-    // This test validates: Clearing the project filter resets `filterProjectId` back to `undefined`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-024: Study Type filter select is rendered only when getLibraryStudyTypes returns at l', async ({ page }) => {
-    // Checkpoint 24: Study Type filter select is rendered only when `getLibraryStudyTypes()` returns at least one non-empty value
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Study Type filter select is rendered only when `getLibraryStudyTypes()` returns at least one non-empty value",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-024.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-024 ' + "Study Type filter select is rendered only when `getLibraryStudyTypes()` returns at least one non-empty value");
-    }
-
-
-    // This test validates: Study Type filter select is rendered only when `getLibraryStudyTypes()` returns at least one non-empty value
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-025: Study Type filter default option label is All Study Types', async ({ page }) => {
-    // Checkpoint 25: Study Type filter default option label is `All Study Types`
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Study Type filter default option label is `All Study Types`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-025.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-025 ' + "Study Type filter default option label is `All Study Types`");
-    }
-
-
-    // This test validates: Study Type filter default option label is `All Study Types`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-026: Clearing the Study Type filter resets filterStudyType back to undefined', async ({ page }) => {
-    // Checkpoint 26: Clearing the Study Type filter resets `filterStudyType` back to `undefined`
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Clearing the Study Type filter resets `filterStudyType` back to `undefined`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-026.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-026 ' + "Clearing the Study Type filter resets `filterStudyType` back to `undefined`");
-    }
-
-
-    // This test validates: Clearing the Study Type filter resets `filterStudyType` back to `undefined`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-027: Year range inputs render only when both yearRangemin and yearRangemax are non-nu', async ({ page }) => {
-    // Checkpoint 27: Year range inputs render only when both `yearRange.min` and `yearRange.max` are non-null
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Year range inputs render only when both `yearRange.min` and `yearRange.max` are non-null",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-027.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-027 ' + "Year range inputs render only when both `yearRange.min` and `yearRange.max` are non-null");
-    }
-
-
-    // This test validates: Year range inputs render only when both `yearRange.min` and `yearRange.max` are non-null
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-028: From-year input placeholder reads From minYear', async ({ page }) => {
-    // Checkpoint 28: From-year input placeholder reads `From {minYear}`
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "From-year input placeholder reads `From {minYear}`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-028.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-028 ' + "From-year input placeholder reads `From {minYear}`");
-    }
-
-
-    // This test validates: From-year input placeholder reads `From {minYear}`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-029: To-year input placeholder reads To maxYear', async ({ page }) => {
-    // Checkpoint 29: To-year input placeholder reads `To {maxYear}`
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "To-year input placeholder reads `To {maxYear}`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-029.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-029 ' + "To-year input placeholder reads `To {maxYear}`");
-    }
-
-
-    // This test validates: To-year input placeholder reads `To {maxYear}`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-030: Year inputs expose min and max attributes using the fetched year range bounds', async ({ page }) => {
-    // Checkpoint 30: Year inputs expose `min` and `max` attributes using the fetched year range bounds
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Year inputs expose `min` and `max` attributes using the fetched year range bounds",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-030.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-030 ' + "Year inputs expose `min` and `max` attributes using the fetched year range bounds");
-    }
-
-
-    // This test validates: Year inputs expose `min` and `max` attributes using the fetched year range bounds
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-031: Clearing either year input resets that filter back to undefined', async ({ page }) => {
-    // Checkpoint 31: Clearing either year input resets that filter back to `undefined`
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Clearing either year input resets that filter back to `undefined`",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-031.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-031 ' + "Clearing either year input resets that filter back to `undefined`");
-    }
-
-
-    // This test validates: Clearing either year input resets that filter back to `undefined`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-032: Clear Filters button appears only when project study-type or year filters are ac', async ({ page }) => {
-    // Checkpoint 32: `Clear Filters` button appears only when project, study-type, or year filters are active
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "`Clear Filters` button appears only when project, study-type, or year filters are active",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-032.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-032 ' + "`Clear Filters` button appears only when project, study-type, or year filters are active");
-    }
-
-
-    // This test validates: `Clear Filters` button appears only when project, study-type, or year filters are active
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-033: Search text alone does not make Clear Filters appear', async ({ page }) => {
-    // Checkpoint 33: Search text alone does not make `Clear Filters` appear
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Search text alone does not make `Clear Filters` appear",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-033.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-033 ' + "Search text alone does not make `Clear Filters` appear");
-    }
-
-
-    // This test validates: Search text alone does not make `Clear Filters` appear
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-034: Clicking Clear Filters resets project study-type and both year inputs but preser', async ({ page }) => {
-    // Checkpoint 34: Clicking `Clear Filters` resets project, study-type, and both year inputs but preserves the current search text
-    // Section: Quick Test Workflows > Detailed QA Coverage
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-005');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Clicking `Clear Filters` resets project, study-type, and both year inputs but preserves the current search text",
-      section: "Quick Test Workflows",
-      subsection: "Detailed QA Coverage",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-034.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-034 ' + "Clicking `Clear Filters` resets project, study-type, and both year inputs but preserves the current search text");
-    }
-
-
-    // This test validates: Clicking `Clear Filters` resets project, study-type, and both year inputs but preserves the current search text
+    // This test validates: PDF upload tab — click "Upload PDF" tab, file picker area appears `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash

@@ -1,59 +1,34 @@
-# library — Spec 004
+# library — Spec 004: Reader & Extraction States
 
-STATUS: DONE
-TESTED: 35/35
-PASS: 35
+STATUS: PENDING
+TESTED: 0/16
+PASS: 0
 FAIL: 0
 BLOCKED: 0
-PAGE: http://localhost:3001/library
+PAGE: http://localhost:3000/library/item/web_1
 MODULE: library
 
 ---
-### Paper Deletion
-- [x] PASS: Trash icon button on each paper card
-- [x] PASS: Red hover state on the button
-- [x] PASS: Calls `removePaper(refId)` — soft delete (`deletedAt = new Date()`)
-- [x] PASS: Optimistic removal from UI
-- [x] PASS: Reverts on error
-- [x] PASS: Revalidates `/library` path
-- [x] PASS: Triggers metadata refresh (counts, filters update)
-- [x] PASS: No confirmation dialog (soft delete is reversible server-side)
+### Web Source Reader
+- [ ] **Web content renders** — navigate to a web source with extraction_state=ready, extracted HTML displays `[CONFIRMED]`
+- [ ] **Sanitized HTML** — extracted content renders without script tags or unsafe elements `[EMERGENT: isomorphic-dompurify]`
+- [ ] **Reader typography** — content renders in Source Serif 4 at 17px within 720px max-width column `[CONFIRMED]`
 
-### Data Fetching & Server Actions
-#### `getFilteredUserPapers(filters)`
-- [x] PASS: Joins `userReferences` → `papers`
-- [x] PASS: Filters by: userId, deletedAt IS NULL
-- [x] PASS: Search: ILIKE on title, journal, authors (JSONB cast)
-- [x] PASS: Project filter: inArray on paperIds from `projectPapers`
-- [x] PASS: Year range: gte/lte operators
-- [x] PASS: Study type: exact match
-- [x] PASS: Returns: paper data + refId, isFavorite, collection, notes, tags, addedAt
-#### `getLibraryProjects()`
-- [x] PASS: Returns `{ id, title }[]` for user's non-deleted projects
-- [x] PASS: Ordered by `updated_at DESC`
-#### `getLibraryStudyTypes()`
-- [x] PASS: Returns `string[]` of distinct non-null study types
-#### `getLibraryYearRange()`
-- [x] PASS: Returns `{ min, max }` year values from user's papers
-#### `toggleFavorite(refId)`
-- [x] PASS: Flips `isFavorite` boolean
-- [x] PASS: Revalidates `/library`
-#### `removePaper(refId)`
-- [x] PASS: Sets `deletedAt = new Date()` (soft delete)
-- [x] PASS: Revalidates `/library`
-#### `savePaper(data)`
-- [x] PASS: Deduplication: checks DOI → PMID → S2 ID → normalized title+year
-- [x] PASS: If found: enriches existing paper with new metadata
-- [x] PASS: If not found: creates new paper record
-- [x] PASS: Creates `userReference` link
-- [x] PASS: Conditionally auto-triggers abstract chunking/embedding and DOI/open-access PDF processing in background
+### Paper Reader
+- [ ] **Abstract view renders** — navigate to a paper source, abstract and metadata display `[CONFIRMED]`
+- [ ] **PDF view toggle** — click "Full Text" tab, switches from abstract to PDF/full-text view `[CONFIRMED]`
+- [ ] **Back to abstract** — click "Abstract" tab, switches back to abstract view `[CONFIRMED]`
 
-### Quick Test Workflows
-#### Detailed QA Coverage
-- [x] PASS: Initial page state sets `loading = true`, `search = ""`, `sortBy = "date_added"`, `activeCollection = null`, and both overlays closed
-- [x] PASS: Initial load requests papers plus filter metadata, with projects/study-types/year-range fetched together via `Promise.all(...)`
-- [x] PASS: Main layout is one fixed-width sidebar plus one scrollable results column inside `h-[calc(100vh-7rem)]`
-- [x] PASS: Sidebar heading text renders as `Collections`
-- [x] PASS: `All Papers` is the default active collection on first render
-- [x] PASS: `All Papers` count renders the current `papers.length` returned by the server-side query
-- [x] PASS: `Favorites` row is always visible even when the favorite count is `0`
+### Extraction States
+- [ ] **Pending shows skeleton** — source with extraction_state=pending shows loading skeleton `[CONFIRMED]`
+- [ ] **Ready shows content** — source with extraction_state=ready shows extracted HTML `[CONFIRMED]`
+- [ ] **Partial shows warning** — source with extraction_state=partial shows content + warning banner `[CONFIRMED]`
+- [ ] **Failed shows retry** — source with extraction_state=failed shows "Open original" + retry button `[CONFIRMED]`
+- [ ] **Retry extraction** — click retry on failed source, extraction re-triggers `[CONFIRMED]`
+
+### Reader Controls
+- [ ] **Reading progress bar** — scroll through content, progress bar at top updates proportionally `[CONFIRMED]`
+- [ ] **Workbench panel toggle** — click "Workbench" button, right panel opens/closes `[CONFIRMED]`
+- [ ] **Escape closes panel** — with panel open, press Escape, panel closes `[CONFIRMED]`
+- [ ] **Open original link** — click "Open original", original URL opens in new tab `[CONFIRMED]`
+- [ ] **Send to editor** — click send-to-editor button, creates editor handoff `[CONFIRMED]`

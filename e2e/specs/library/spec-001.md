@@ -1,63 +1,30 @@
-# library — Spec 001
+# library — Spec 001: Navigation & Layout
 
-STATUS: DONE
-TESTED: 35/35
-PASS: 35
+STATUS: PENDING
+TESTED: 0/16
+PASS: 0
 FAIL: 0
 BLOCKED: 0
-PAGE: http://localhost:3001/library
+PAGE: http://localhost:3000/library
 MODULE: library
 
 ---
-### Page Overview & Layout
-#### Layout
-- [x] PASS: Two-column layout: Collections sidebar (w-64) + main content (flex-1)
-- [x] PASS: Height: `h-[calc(100vh-7rem)]`
-- [x] PASS: Client-side page with server actions for data
-- [x] PASS: Glass-panel styling throughout
+### Route Structure
+- [ ] **Home page loads** — navigate to /library, verify page renders without error `[CONFIRMED]`
+- [ ] **Inbox view loads** — navigate to /library/inbox, verify source list renders `[CONFIRMED]`
+- [ ] **Core view loads** — navigate to /library/core, verify source list renders `[CONFIRMED]`
+- [ ] **Background view loads** — navigate to /library/background, verify source list renders `[CONFIRMED]`
+- [ ] **Archived view loads** — navigate to /library/archived, verify source list renders `[CONFIRMED]`
+- [ ] **Trash view loads** — navigate to /library/trash, verify trash list renders `[CONFIRMED]`
+- [ ] **Project scoped view loads** — navigate to /library/project/[id], verify project-scoped content `[CONFIRMED]`
+- [ ] **Feature flag defaults to new Library** — with no env var, /library shows new Library UI `[CONFIRMED]`
 
-### Collections Sidebar
-#### Header
-- [x] PASS: Header text renders `Collections` with CSS `uppercase` styling (tracking-widest, muted text)
-#### Navigation Items
-- [x] PASS: **All Papers** button — shows total paper count
-- [x] PASS: Active state highlighted when selected
-- [x] PASS: **Favorites** button — Star icon (amber-500 when filled), shows favorite count
-- [x] PASS: Active state highlighted when selected
-- [x] PASS: Divider line between standard and custom collections
-#### Custom Collections
-- [x] PASS: Dynamically derived from distinct `collection` values in papers
-- [x] PASS: Each shows: Folder icon + collection name + paper count
-- [x] PASS: Clicking filters papers to that collection
-- [x] PASS: Active collection highlighted
-#### Action Buttons (Bottom)
-- [x] PASS: **Upload PDF** button — triggers file picker
-- [x] PASS: **New Collection** button — placeholder for future feature
-
-### Search & Sort
-#### Search Input
-- [x] PASS: Placeholder: "Search papers..."
-- [x] PASS: Debounced at 300ms
-- [x] PASS: Searches across: title, journal, authors (case-insensitive)
-- [x] PASS: Results update as user types (after debounce)
-- [x] PASS: Clearing input restores full list
-#### Sort Dropdown
-- [x] PASS: Selecting a sort option re-fetches and reorders papers
-- [x] PASS: Current sort option visually indicated
-
-### Filters
-#### Project Filter
-- [x] PASS: Dropdown populated from `getLibraryProjects()`
-- [x] PASS: Default: "All Projects"
-- [x] PASS: Shows project titles from user's projects
-- [x] PASS: Selecting a project filters to papers associated with that project
-#### Study Type Filter
-- [x] PASS: Dropdown populated from `getLibraryStudyTypes()`
-- [x] PASS: Default: "All Study Types"
-- [x] PASS: Shows distinct study types from user's papers
-- [x] PASS: Selecting a type filters papers by exact match
-#### Year Range Filters
-- [x] PASS: "From" number input — placeholder shows `From {yearRange.min}`
-- [x] PASS: "To" number input — placeholder shows `To {yearRange.max}`
-- [x] PASS: Separator text: "to" between inputs
-- [x] PASS: Entering values filters papers within range (inclusive)
+### Sidebar Navigation
+- [ ] **Sidebar visible on desktop** — at 1024px+ width, sidebar is visible with 224px width `[CONFIRMED]`
+- [ ] **Sidebar hidden on mobile** — at <768px width, sidebar is hidden by default `[CONFIRMED]`
+- [ ] **Mobile hamburger opens sidebar** — click hamburger icon, sidebar slides in as overlay `[CONFIRMED]`
+- [ ] **Mobile backdrop closes sidebar** — click dark backdrop behind sidebar, sidebar closes `[CONFIRMED]`
+- [ ] **Sidebar counts show** — each workflow state link shows item count badge `[CONFIRMED]`
+- [ ] **Active state highlighted** — current route's sidebar link has accent border and tinted background `[CONFIRMED]`
+- [ ] **Sidebar links navigate** — click "Inbox" in sidebar, URL changes to /library/inbox `[CONFIRMED]`
+- [ ] **Home link works** — click "Home" in sidebar, navigates to /library `[CONFIRMED]`

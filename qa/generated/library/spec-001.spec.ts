@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for library/spec-001
  * Source: e2e/specs/library/spec-001.md
- * Generated: 2026-03-28T02:11:50.563Z
+ * Generated: 2026-04-02T13:28:46.234Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -46,9 +46,9 @@ test.describe('library / spec-001', () => {
     }]);
   });
 
-  test('cp-000: Two-column layout Collections sidebar w-64 main content flex-1', async ({ page }) => {
-    // Checkpoint 0: Two-column layout: Collections sidebar (w-64) + main content (flex-1)
-    // Section: Page Overview & Layout > Layout
+  test('cp-000: Home page loads navigate to library verify page renders without error CONFIRMED', async ({ page }) => {
+    // Checkpoint 0: Home page loads — navigate to /library, verify page renders without error `[CONFIRMED]`
+    // Section: Route Structure
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -67,9 +67,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Two-column layout: Collections sidebar (w-64) + main content (flex-1)",
-      section: "Page Overview & Layout",
-      subsection: "Layout",
+      description: "Home page loads — navigate to /library, verify page renders without error `[CONFIRMED]`",
+      section: "Route Structure",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -81,11 +81,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-000 ' + "Two-column layout: Collections sidebar (w-64) + main content (flex-1)");
+      throw new Error('Unhandled library checkpoint: cp-000 ' + "Home page loads — navigate to /library, verify page renders without error `[CONFIRMED]`");
     }
 
 
-    // This test validates: Two-column layout: Collections sidebar (w-64) + main content (flex-1)
+    // This test validates: Home page loads — navigate to /library, verify page renders without error `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -96,9 +96,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-001: Height h-calc100vh-7rem', async ({ page }) => {
-    // Checkpoint 1: Height: `h-[calc(100vh-7rem)]`
-    // Section: Page Overview & Layout > Layout
+  test('cp-001: Inbox view loads navigate to libraryinbox verify source list renders CONFIRMED', async ({ page }) => {
+    // Checkpoint 1: Inbox view loads — navigate to /library/inbox, verify source list renders `[CONFIRMED]`
+    // Section: Route Structure
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -117,9 +117,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Height: `h-[calc(100vh-7rem)]`",
-      section: "Page Overview & Layout",
-      subsection: "Layout",
+      description: "Inbox view loads — navigate to /library/inbox, verify source list renders `[CONFIRMED]`",
+      section: "Route Structure",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -131,11 +131,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-001 ' + "Height: `h-[calc(100vh-7rem)]`");
+      throw new Error('Unhandled library checkpoint: cp-001 ' + "Inbox view loads — navigate to /library/inbox, verify source list renders `[CONFIRMED]`");
     }
 
 
-    // This test validates: Height: `h-[calc(100vh-7rem)]`
+    // This test validates: Inbox view loads — navigate to /library/inbox, verify source list renders `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -146,9 +146,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-002: Client-side page with server actions for data', async ({ page }) => {
-    // Checkpoint 2: Client-side page with server actions for data
-    // Section: Page Overview & Layout > Layout
+  test('cp-002: Core view loads navigate to librarycore verify source list renders CONFIRMED', async ({ page }) => {
+    // Checkpoint 2: Core view loads — navigate to /library/core, verify source list renders `[CONFIRMED]`
+    // Section: Route Structure
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -167,9 +167,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Client-side page with server actions for data",
-      section: "Page Overview & Layout",
-      subsection: "Layout",
+      description: "Core view loads — navigate to /library/core, verify source list renders `[CONFIRMED]`",
+      section: "Route Structure",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -181,11 +181,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-002 ' + "Client-side page with server actions for data");
+      throw new Error('Unhandled library checkpoint: cp-002 ' + "Core view loads — navigate to /library/core, verify source list renders `[CONFIRMED]`");
     }
 
 
-    // This test validates: Client-side page with server actions for data
+    // This test validates: Core view loads — navigate to /library/core, verify source list renders `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -196,9 +196,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-003: Glass-panel styling throughout', async ({ page }) => {
-    // Checkpoint 3: Glass-panel styling throughout
-    // Section: Page Overview & Layout > Layout
+  test('cp-003: Background view loads navigate to librarybackground verify source list renders C', async ({ page }) => {
+    // Checkpoint 3: Background view loads — navigate to /library/background, verify source list renders `[CONFIRMED]`
+    // Section: Route Structure
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -217,9 +217,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Glass-panel styling throughout",
-      section: "Page Overview & Layout",
-      subsection: "Layout",
+      description: "Background view loads — navigate to /library/background, verify source list renders `[CONFIRMED]`",
+      section: "Route Structure",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -231,11 +231,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-003 ' + "Glass-panel styling throughout");
+      throw new Error('Unhandled library checkpoint: cp-003 ' + "Background view loads — navigate to /library/background, verify source list renders `[CONFIRMED]`");
     }
 
 
-    // This test validates: Glass-panel styling throughout
+    // This test validates: Background view loads — navigate to /library/background, verify source list renders `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -246,9 +246,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-004: Header text renders Collections with CSS uppercase styling tracking-widest muted', async ({ page }) => {
-    // Checkpoint 4: Header text renders `Collections` with CSS `uppercase` styling (tracking-widest, muted text)
-    // Section: Collections Sidebar > Header
+  test('cp-004: Archived view loads navigate to libraryarchived verify source list renders CONFI', async ({ page }) => {
+    // Checkpoint 4: Archived view loads — navigate to /library/archived, verify source list renders `[CONFIRMED]`
+    // Section: Route Structure
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -267,9 +267,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Header text renders `Collections` with CSS `uppercase` styling (tracking-widest, muted text)",
-      section: "Collections Sidebar",
-      subsection: "Header",
+      description: "Archived view loads — navigate to /library/archived, verify source list renders `[CONFIRMED]`",
+      section: "Route Structure",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -281,11 +281,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-004 ' + "Header text renders `Collections` with CSS `uppercase` styling (tracking-widest, muted text)");
+      throw new Error('Unhandled library checkpoint: cp-004 ' + "Archived view loads — navigate to /library/archived, verify source list renders `[CONFIRMED]`");
     }
 
 
-    // This test validates: Header text renders `Collections` with CSS `uppercase` styling (tracking-widest, muted text)
+    // This test validates: Archived view loads — navigate to /library/archived, verify source list renders `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -296,9 +296,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-005: All Papers button shows total paper count', async ({ page }) => {
-    // Checkpoint 5: **All Papers** button — shows total paper count
-    // Section: Collections Sidebar > Navigation Items
+  test('cp-005: Trash view loads navigate to librarytrash verify trash list renders CONFIRMED', async ({ page }) => {
+    // Checkpoint 5: Trash view loads — navigate to /library/trash, verify trash list renders `[CONFIRMED]`
+    // Section: Route Structure
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -317,9 +317,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "**All Papers** button — shows total paper count",
-      section: "Collections Sidebar",
-      subsection: "Navigation Items",
+      description: "Trash view loads — navigate to /library/trash, verify trash list renders `[CONFIRMED]`",
+      section: "Route Structure",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -331,11 +331,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-005 ' + "**All Papers** button — shows total paper count");
+      throw new Error('Unhandled library checkpoint: cp-005 ' + "Trash view loads — navigate to /library/trash, verify trash list renders `[CONFIRMED]`");
     }
 
 
-    // This test validates: **All Papers** button — shows total paper count
+    // This test validates: Trash view loads — navigate to /library/trash, verify trash list renders `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -346,9 +346,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-006: Active state highlighted when selected', async ({ page }) => {
-    // Checkpoint 6: Active state highlighted when selected
-    // Section: Collections Sidebar > Navigation Items
+  test('cp-006: Project scoped view loads navigate to libraryprojectid verify project-scoped con', async ({ page }) => {
+    // Checkpoint 6: Project scoped view loads — navigate to /library/project/[id], verify project-scoped content `[CONFIRMED]`
+    // Section: Route Structure
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -367,9 +367,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Active state highlighted when selected",
-      section: "Collections Sidebar",
-      subsection: "Navigation Items",
+      description: "Project scoped view loads — navigate to /library/project/[id], verify project-scoped content `[CONFIRMED]`",
+      section: "Route Structure",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -381,11 +381,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-006 ' + "Active state highlighted when selected");
+      throw new Error('Unhandled library checkpoint: cp-006 ' + "Project scoped view loads — navigate to /library/project/[id], verify project-scoped content `[CONFIRMED]`");
     }
 
 
-    // This test validates: Active state highlighted when selected
+    // This test validates: Project scoped view loads — navigate to /library/project/[id], verify project-scoped content `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -396,9 +396,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-007: Favorites button Star icon amber-500 when filled shows favorite count', async ({ page }) => {
-    // Checkpoint 7: **Favorites** button — Star icon (amber-500 when filled), shows favorite count
-    // Section: Collections Sidebar > Navigation Items
+  test('cp-007: Feature flag defaults to new Library with no env var library shows new Library U', async ({ page }) => {
+    // Checkpoint 7: Feature flag defaults to new Library — with no env var, /library shows new Library UI `[CONFIRMED]`
+    // Section: Route Structure
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -417,9 +417,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "**Favorites** button — Star icon (amber-500 when filled), shows favorite count",
-      section: "Collections Sidebar",
-      subsection: "Navigation Items",
+      description: "Feature flag defaults to new Library — with no env var, /library shows new Library UI `[CONFIRMED]`",
+      section: "Route Structure",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -431,11 +431,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-007 ' + "**Favorites** button — Star icon (amber-500 when filled), shows favorite count");
+      throw new Error('Unhandled library checkpoint: cp-007 ' + "Feature flag defaults to new Library — with no env var, /library shows new Library UI `[CONFIRMED]`");
     }
 
 
-    // This test validates: **Favorites** button — Star icon (amber-500 when filled), shows favorite count
+    // This test validates: Feature flag defaults to new Library — with no env var, /library shows new Library UI `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -446,9 +446,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-008: Active state highlighted when selected', async ({ page }) => {
-    // Checkpoint 8: Active state highlighted when selected
-    // Section: Collections Sidebar > Navigation Items
+  test('cp-008: Sidebar visible on desktop at 1024px width sidebar is visible with 224px width C', async ({ page }) => {
+    // Checkpoint 8: Sidebar visible on desktop — at 1024px+ width, sidebar is visible with 224px width `[CONFIRMED]`
+    // Section: Sidebar Navigation
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -467,9 +467,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Active state highlighted when selected",
-      section: "Collections Sidebar",
-      subsection: "Navigation Items",
+      description: "Sidebar visible on desktop — at 1024px+ width, sidebar is visible with 224px width `[CONFIRMED]`",
+      section: "Sidebar Navigation",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -481,11 +481,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-008 ' + "Active state highlighted when selected");
+      throw new Error('Unhandled library checkpoint: cp-008 ' + "Sidebar visible on desktop — at 1024px+ width, sidebar is visible with 224px width `[CONFIRMED]`");
     }
 
 
-    // This test validates: Active state highlighted when selected
+    // This test validates: Sidebar visible on desktop — at 1024px+ width, sidebar is visible with 224px width `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -496,9 +496,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-009: Divider line between standard and custom collections', async ({ page }) => {
-    // Checkpoint 9: Divider line between standard and custom collections
-    // Section: Collections Sidebar > Navigation Items
+  test('cp-009: Sidebar hidden on mobile at 768px width sidebar is hidden by default CONFIRMED', async ({ page }) => {
+    // Checkpoint 9: Sidebar hidden on mobile — at <768px width, sidebar is hidden by default `[CONFIRMED]`
+    // Section: Sidebar Navigation
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -517,9 +517,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Divider line between standard and custom collections",
-      section: "Collections Sidebar",
-      subsection: "Navigation Items",
+      description: "Sidebar hidden on mobile — at <768px width, sidebar is hidden by default `[CONFIRMED]`",
+      section: "Sidebar Navigation",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -531,11 +531,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-009 ' + "Divider line between standard and custom collections");
+      throw new Error('Unhandled library checkpoint: cp-009 ' + "Sidebar hidden on mobile — at <768px width, sidebar is hidden by default `[CONFIRMED]`");
     }
 
 
-    // This test validates: Divider line between standard and custom collections
+    // This test validates: Sidebar hidden on mobile — at <768px width, sidebar is hidden by default `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -546,9 +546,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-010: Dynamically derived from distinct collection values in papers', async ({ page }) => {
-    // Checkpoint 10: Dynamically derived from distinct `collection` values in papers
-    // Section: Collections Sidebar > Custom Collections
+  test('cp-010: Mobile hamburger opens sidebar click hamburger icon sidebar slides in as overlay', async ({ page }) => {
+    // Checkpoint 10: Mobile hamburger opens sidebar — click hamburger icon, sidebar slides in as overlay `[CONFIRMED]`
+    // Section: Sidebar Navigation
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -567,9 +567,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Dynamically derived from distinct `collection` values in papers",
-      section: "Collections Sidebar",
-      subsection: "Custom Collections",
+      description: "Mobile hamburger opens sidebar — click hamburger icon, sidebar slides in as overlay `[CONFIRMED]`",
+      section: "Sidebar Navigation",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -581,11 +581,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-010 ' + "Dynamically derived from distinct `collection` values in papers");
+      throw new Error('Unhandled library checkpoint: cp-010 ' + "Mobile hamburger opens sidebar — click hamburger icon, sidebar slides in as overlay `[CONFIRMED]`");
     }
 
 
-    // This test validates: Dynamically derived from distinct `collection` values in papers
+    // This test validates: Mobile hamburger opens sidebar — click hamburger icon, sidebar slides in as overlay `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -596,9 +596,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-011: Each shows Folder icon collection name paper count', async ({ page }) => {
-    // Checkpoint 11: Each shows: Folder icon + collection name + paper count
-    // Section: Collections Sidebar > Custom Collections
+  test('cp-011: Mobile backdrop closes sidebar click dark backdrop behind sidebar sidebar closes', async ({ page }) => {
+    // Checkpoint 11: Mobile backdrop closes sidebar — click dark backdrop behind sidebar, sidebar closes `[CONFIRMED]`
+    // Section: Sidebar Navigation
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -617,9 +617,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Each shows: Folder icon + collection name + paper count",
-      section: "Collections Sidebar",
-      subsection: "Custom Collections",
+      description: "Mobile backdrop closes sidebar — click dark backdrop behind sidebar, sidebar closes `[CONFIRMED]`",
+      section: "Sidebar Navigation",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -631,11 +631,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-011 ' + "Each shows: Folder icon + collection name + paper count");
+      throw new Error('Unhandled library checkpoint: cp-011 ' + "Mobile backdrop closes sidebar — click dark backdrop behind sidebar, sidebar closes `[CONFIRMED]`");
     }
 
 
-    // This test validates: Each shows: Folder icon + collection name + paper count
+    // This test validates: Mobile backdrop closes sidebar — click dark backdrop behind sidebar, sidebar closes `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -646,9 +646,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-012: Clicking filters papers to that collection', async ({ page }) => {
-    // Checkpoint 12: Clicking filters papers to that collection
-    // Section: Collections Sidebar > Custom Collections
+  test('cp-012: Sidebar counts show each workflow state link shows item count badge CONFIRMED', async ({ page }) => {
+    // Checkpoint 12: Sidebar counts show — each workflow state link shows item count badge `[CONFIRMED]`
+    // Section: Sidebar Navigation
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -667,9 +667,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Clicking filters papers to that collection",
-      section: "Collections Sidebar",
-      subsection: "Custom Collections",
+      description: "Sidebar counts show — each workflow state link shows item count badge `[CONFIRMED]`",
+      section: "Sidebar Navigation",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -681,11 +681,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-012 ' + "Clicking filters papers to that collection");
+      throw new Error('Unhandled library checkpoint: cp-012 ' + "Sidebar counts show — each workflow state link shows item count badge `[CONFIRMED]`");
     }
 
 
-    // This test validates: Clicking filters papers to that collection
+    // This test validates: Sidebar counts show — each workflow state link shows item count badge `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -696,9 +696,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-013: Active collection highlighted', async ({ page }) => {
-    // Checkpoint 13: Active collection highlighted
-    // Section: Collections Sidebar > Custom Collections
+  test('cp-013: Active state highlighted current routes sidebar link has accent border and tinte', async ({ page }) => {
+    // Checkpoint 13: Active state highlighted — current route's sidebar link has accent border and tinted background `[CONFIRMED]`
+    // Section: Sidebar Navigation
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -717,9 +717,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "Active collection highlighted",
-      section: "Collections Sidebar",
-      subsection: "Custom Collections",
+      description: "Active state highlighted — current route's sidebar link has accent border and tinted background `[CONFIRMED]`",
+      section: "Sidebar Navigation",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -731,11 +731,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-013 ' + "Active collection highlighted");
+      throw new Error('Unhandled library checkpoint: cp-013 ' + "Active state highlighted — current route's sidebar link has accent border and tinted background `[CONFIRMED]`");
     }
 
 
-    // This test validates: Active collection highlighted
+    // This test validates: Active state highlighted — current route's sidebar link has accent border and tinted background `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -746,9 +746,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-014: Upload PDF button triggers file picker', async ({ page }) => {
-    // Checkpoint 14: **Upload PDF** button — triggers file picker
-    // Section: Collections Sidebar > Action Buttons (Bottom)
+  test('cp-014: Sidebar links navigate click Inbox in sidebar URL changes to libraryinbox CONFIR', async ({ page }) => {
+    // Checkpoint 14: Sidebar links navigate — click "Inbox" in sidebar, URL changes to /library/inbox `[CONFIRMED]`
+    // Section: Sidebar Navigation
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -767,9 +767,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "**Upload PDF** button — triggers file picker",
-      section: "Collections Sidebar",
-      subsection: "Action Buttons (Bottom)",
+      description: "Sidebar links navigate — click \"Inbox\" in sidebar, URL changes to /library/inbox `[CONFIRMED]`",
+      section: "Sidebar Navigation",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -781,11 +781,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-014 ' + "**Upload PDF** button — triggers file picker");
+      throw new Error('Unhandled library checkpoint: cp-014 ' + "Sidebar links navigate — click \"Inbox\" in sidebar, URL changes to /library/inbox `[CONFIRMED]`");
     }
 
 
-    // This test validates: **Upload PDF** button — triggers file picker
+    // This test validates: Sidebar links navigate — click "Inbox" in sidebar, URL changes to /library/inbox `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -796,9 +796,9 @@ test.describe('library / spec-001', () => {
     }
   });
 
-  test('cp-015: New Collection button placeholder for future feature', async ({ page }) => {
-    // Checkpoint 15: **New Collection** button — placeholder for future feature
-    // Section: Collections Sidebar > Action Buttons (Bottom)
+  test('cp-015: Home link works click Home in sidebar navigates to library CONFIRMED', async ({ page }) => {
+    // Checkpoint 15: Home link works — click "Home" in sidebar, navigates to /library `[CONFIRMED]`
+    // Section: Sidebar Navigation
 
     // Navigate to the page
     await page.goto('/library', { waitUntil: 'domcontentloaded' });
@@ -817,9 +817,9 @@ test.describe('library / spec-001', () => {
 
     const handled = await assertLibraryCheckpoint({
       page,
-      description: "**New Collection** button — placeholder for future feature",
-      section: "Collections Sidebar",
-      subsection: "Action Buttons (Bottom)",
+      description: "Home link works — click \"Home\" in sidebar, navigates to /library `[CONFIRMED]`",
+      section: "Sidebar Navigation",
+      subsection: "",
       rootDir: process.cwd(),
     });
 
@@ -831,961 +831,11 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-015 ' + "**New Collection** button — placeholder for future feature");
+      throw new Error('Unhandled library checkpoint: cp-015 ' + "Home link works — click \"Home\" in sidebar, navigates to /library `[CONFIRMED]`");
     }
 
 
-    // This test validates: **New Collection** button — placeholder for future feature
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-016: Placeholder Search papers', async ({ page }) => {
-    // Checkpoint 16: Placeholder: "Search papers..."
-    // Section: Search & Sort > Search Input
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Placeholder: \"Search papers...\"",
-      section: "Search & Sort",
-      subsection: "Search Input",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-016.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-016 ' + "Placeholder: \"Search papers...\"");
-    }
-
-
-    // This test validates: Placeholder: "Search papers..."
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-017: Debounced at 300ms', async ({ page }) => {
-    // Checkpoint 17: Debounced at 300ms
-    // Section: Search & Sort > Search Input
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Debounced at 300ms",
-      section: "Search & Sort",
-      subsection: "Search Input",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-017.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-017 ' + "Debounced at 300ms");
-    }
-
-
-    // This test validates: Debounced at 300ms
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-018: Searches across title journal authors case-insensitive', async ({ page }) => {
-    // Checkpoint 18: Searches across: title, journal, authors (case-insensitive)
-    // Section: Search & Sort > Search Input
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Searches across: title, journal, authors (case-insensitive)",
-      section: "Search & Sort",
-      subsection: "Search Input",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-018.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-018 ' + "Searches across: title, journal, authors (case-insensitive)");
-    }
-
-
-    // This test validates: Searches across: title, journal, authors (case-insensitive)
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-019: Results update as user types after debounce', async ({ page }) => {
-    // Checkpoint 19: Results update as user types (after debounce)
-    // Section: Search & Sort > Search Input
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Results update as user types (after debounce)",
-      section: "Search & Sort",
-      subsection: "Search Input",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-019.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-019 ' + "Results update as user types (after debounce)");
-    }
-
-
-    // This test validates: Results update as user types (after debounce)
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-020: Clearing input restores full list', async ({ page }) => {
-    // Checkpoint 20: Clearing input restores full list
-    // Section: Search & Sort > Search Input
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Clearing input restores full list",
-      section: "Search & Sort",
-      subsection: "Search Input",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-020.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-020 ' + "Clearing input restores full list");
-    }
-
-
-    // This test validates: Clearing input restores full list
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-021: Selecting a sort option re-fetches and reorders papers', async ({ page }) => {
-    // Checkpoint 21: Selecting a sort option re-fetches and reorders papers
-    // Section: Search & Sort > Sort Dropdown
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Selecting a sort option re-fetches and reorders papers",
-      section: "Search & Sort",
-      subsection: "Sort Dropdown",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-021.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-021 ' + "Selecting a sort option re-fetches and reorders papers");
-    }
-
-
-    // This test validates: Selecting a sort option re-fetches and reorders papers
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-022: Current sort option visually indicated', async ({ page }) => {
-    // Checkpoint 22: Current sort option visually indicated
-    // Section: Search & Sort > Sort Dropdown
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Current sort option visually indicated",
-      section: "Search & Sort",
-      subsection: "Sort Dropdown",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-022.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-022 ' + "Current sort option visually indicated");
-    }
-
-
-    // This test validates: Current sort option visually indicated
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-023: Dropdown populated from getLibraryProjects', async ({ page }) => {
-    // Checkpoint 23: Dropdown populated from `getLibraryProjects()`
-    // Section: Filters > Project Filter
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Dropdown populated from `getLibraryProjects()`",
-      section: "Filters",
-      subsection: "Project Filter",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-023.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-023 ' + "Dropdown populated from `getLibraryProjects()`");
-    }
-
-
-    // This test validates: Dropdown populated from `getLibraryProjects()`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-024: Default All Projects', async ({ page }) => {
-    // Checkpoint 24: Default: "All Projects"
-    // Section: Filters > Project Filter
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Default: \"All Projects\"",
-      section: "Filters",
-      subsection: "Project Filter",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-024.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-024 ' + "Default: \"All Projects\"");
-    }
-
-
-    // This test validates: Default: "All Projects"
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-025: Shows project titles from users projects', async ({ page }) => {
-    // Checkpoint 25: Shows project titles from user's projects
-    // Section: Filters > Project Filter
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Shows project titles from user's projects",
-      section: "Filters",
-      subsection: "Project Filter",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-025.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-025 ' + "Shows project titles from user's projects");
-    }
-
-
-    // This test validates: Shows project titles from user's projects
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-026: Selecting a project filters to papers associated with that project', async ({ page }) => {
-    // Checkpoint 26: Selecting a project filters to papers associated with that project
-    // Section: Filters > Project Filter
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Selecting a project filters to papers associated with that project",
-      section: "Filters",
-      subsection: "Project Filter",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-026.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-026 ' + "Selecting a project filters to papers associated with that project");
-    }
-
-
-    // This test validates: Selecting a project filters to papers associated with that project
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-027: Dropdown populated from getLibraryStudyTypes', async ({ page }) => {
-    // Checkpoint 27: Dropdown populated from `getLibraryStudyTypes()`
-    // Section: Filters > Study Type Filter
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Dropdown populated from `getLibraryStudyTypes()`",
-      section: "Filters",
-      subsection: "Study Type Filter",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-027.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-027 ' + "Dropdown populated from `getLibraryStudyTypes()`");
-    }
-
-
-    // This test validates: Dropdown populated from `getLibraryStudyTypes()`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-028: Default All Study Types', async ({ page }) => {
-    // Checkpoint 28: Default: "All Study Types"
-    // Section: Filters > Study Type Filter
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Default: \"All Study Types\"",
-      section: "Filters",
-      subsection: "Study Type Filter",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-028.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-028 ' + "Default: \"All Study Types\"");
-    }
-
-
-    // This test validates: Default: "All Study Types"
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-029: Shows distinct study types from users papers', async ({ page }) => {
-    // Checkpoint 29: Shows distinct study types from user's papers
-    // Section: Filters > Study Type Filter
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Shows distinct study types from user's papers",
-      section: "Filters",
-      subsection: "Study Type Filter",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-029.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-029 ' + "Shows distinct study types from user's papers");
-    }
-
-
-    // This test validates: Shows distinct study types from user's papers
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-030: Selecting a type filters papers by exact match', async ({ page }) => {
-    // Checkpoint 30: Selecting a type filters papers by exact match
-    // Section: Filters > Study Type Filter
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Selecting a type filters papers by exact match",
-      section: "Filters",
-      subsection: "Study Type Filter",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-030.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-030 ' + "Selecting a type filters papers by exact match");
-    }
-
-
-    // This test validates: Selecting a type filters papers by exact match
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-031: From number input placeholder shows From yearRangemin', async ({ page }) => {
-    // Checkpoint 31: "From" number input — placeholder shows `From {yearRange.min}`
-    // Section: Filters > Year Range Filters
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "\"From\" number input — placeholder shows `From {yearRange.min}`",
-      section: "Filters",
-      subsection: "Year Range Filters",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-031.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-031 ' + "\"From\" number input — placeholder shows `From {yearRange.min}`");
-    }
-
-
-    // This test validates: "From" number input — placeholder shows `From {yearRange.min}`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-032: To number input placeholder shows To yearRangemax', async ({ page }) => {
-    // Checkpoint 32: "To" number input — placeholder shows `To {yearRange.max}`
-    // Section: Filters > Year Range Filters
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "\"To\" number input — placeholder shows `To {yearRange.max}`",
-      section: "Filters",
-      subsection: "Year Range Filters",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-032.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-032 ' + "\"To\" number input — placeholder shows `To {yearRange.max}`");
-    }
-
-
-    // This test validates: "To" number input — placeholder shows `To {yearRange.max}`
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-033: Separator text to between inputs', async ({ page }) => {
-    // Checkpoint 33: Separator text: "to" between inputs
-    // Section: Filters > Year Range Filters
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Separator text: \"to\" between inputs",
-      section: "Filters",
-      subsection: "Year Range Filters",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-033.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-033 ' + "Separator text: \"to\" between inputs");
-    }
-
-
-    // This test validates: Separator text: "to" between inputs
-    // The controller will parse results from Playwright JSON output.
-    // A PASS here means:
-    //   1. Page loaded without crash
-    //   2. Screenshot captured (proof of browser execution)
-    //   3. No uncaught page errors
-    if (errors.length > 0) {
-      throw new Error(`Page errors detected: ${errors.join('; ')}`);
-    }
-  });
-
-  test('cp-034: Entering values filters papers within range inclusive', async ({ page }) => {
-    // Checkpoint 34: Entering values filters papers within range (inclusive)
-    // Section: Filters > Year Range Filters
-
-    // Navigate to the page
-    await page.goto('/library', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1000);
-
-    // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/library/spec-001');
-    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-
-    // Verify the page loaded without critical errors
-    const errors: string[] = [];
-    page.on('pageerror', (err) => errors.push(err.message));
-
-    // Wait for main content to be visible
-    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
-
-    const handled = await assertLibraryCheckpoint({
-      page,
-      description: "Entering values filters papers within range (inclusive)",
-      section: "Filters",
-      subsection: "Year Range Filters",
-      rootDir: process.cwd(),
-    });
-
-
-    // Screenshot as proof this test actually ran in a browser
-    await page.screenshot({
-      path: path.join(screenshotDir, 'cp-034.png'),
-      fullPage: false,
-    });
-
-    if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-034 ' + "Entering values filters papers within range (inclusive)");
-    }
-
-
-    // This test validates: Entering values filters papers within range (inclusive)
+    // This test validates: Home link works — click "Home" in sidebar, navigates to /library `[CONFIRMED]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
