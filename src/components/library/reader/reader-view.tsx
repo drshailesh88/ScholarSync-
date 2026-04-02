@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   ArrowLeft,
   SidebarSimple,
@@ -24,9 +24,24 @@ interface ReaderViewProps {
 
 export function ReaderView({ source }: ReaderViewProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<ReaderMode>("focus");
   const panelOpen = mode === "working" || mode === "synthesis";
+
+  // Poll for pending extraction (refresh every 10s)
+  const isPending = source.sourceType === "web" && source.extractionState === "pending";
+  useEffect(() => {
+    if (!isPending) return;
+    const interval = setInterval(() => {
+      router.refresh();
+    }, 10_000);
+    return () => clearInterval(interval);
+  }, [isPending, router]);
+
+  const handleRetryExtraction = useCallback(() => {
+    router.refresh();
+  }, [router]);
 
   const { progress } = useReadingProgress({
     libraryId: source.libraryId,
@@ -116,7 +131,7 @@ export function ReaderView({ source }: ReaderViewProps) {
               source.extractionState === "partial" ? (
                 <WebSourceReader source={source} />
               ) : (
-                <ExtractionStateSurface source={source} />
+                <ExtractionStateSurface source={source} onRetry={handleRetryExtraction} />
               )
             ) : (
               <PaperReader source={source} />

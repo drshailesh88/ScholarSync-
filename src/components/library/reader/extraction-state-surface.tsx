@@ -54,7 +54,7 @@ export function ExtractionStateSurface({
               Extracting content...
             </p>
             <p className="mt-1 text-xs text-[var(--ink-muted)]">
-              This may take a moment. The page will update when ready.
+              This may take a moment. This page refreshes automatically.
             </p>
           </div>
           {/* Skeleton lines */}

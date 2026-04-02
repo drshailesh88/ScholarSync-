@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import DOMPurify from "isomorphic-dompurify";
 import type { LibrarySource } from "@/lib/library/types";
 
 interface WebSourceReaderProps {
@@ -7,6 +9,11 @@ interface WebSourceReaderProps {
 }
 
 export function WebSourceReader({ source }: WebSourceReaderProps) {
+  const sanitizedHtml = useMemo(
+    () => source.contentHtml ? DOMPurify.sanitize(source.contentHtml) : "",
+    [source.contentHtml]
+  );
+
   return (
     <article>
       {/* Title */}
@@ -44,7 +51,7 @@ export function WebSourceReader({ source }: WebSourceReaderProps) {
       {source.contentHtml ? (
         <div
           className="prose-library font-serif text-[17px] leading-[1.78] tracking-[0.005em] text-[var(--ink)]"
-          dangerouslySetInnerHTML={{ __html: source.contentHtml }}
+          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       ) : source.contentPlain ? (
         <div className="font-serif text-[17px] leading-[1.78] tracking-[0.005em] text-[var(--ink)] whitespace-pre-wrap">

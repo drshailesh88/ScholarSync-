@@ -349,3 +349,69 @@ describe("Phase 12: Component content verification", () => {
     expect(content).toContain('"unread"');
   });
 });
+
+// ── Adversarial review fixes (Codex-identified bugs) ───────────
+
+describe("Phase 12: Codex adversarial review fixes", () => {
+  it("web-source-reader sanitizes HTML with DOMPurify", () => {
+    const content = readFileSync(
+      resolve(SRC, "components/library/reader/web-source-reader.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("DOMPurify");
+    expect(content).toContain("sanitize");
+    // Must NOT use raw source.contentHtml in dangerouslySetInnerHTML
+    expect(content).not.toMatch(/dangerouslySetInnerHTML.*source\.contentHtml/);
+  });
+
+  it("reader-view wires onRetry to ExtractionStateSurface", () => {
+    const content = readFileSync(
+      resolve(SRC, "components/library/reader/reader-view.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("onRetry={handleRetryExtraction}");
+    expect(content).toContain("handleRetryExtraction");
+  });
+
+  it("reader-view polls for pending extraction", () => {
+    const content = readFileSync(
+      resolve(SRC, "components/library/reader/reader-view.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("isPending");
+    expect(content).toContain("router.refresh()");
+    expect(content).toContain("setInterval");
+  });
+
+  it("error boundary does NOT expose raw error messages", () => {
+    const content = readFileSync(
+      resolve(SRC, "app/(app)/library/item/[libraryId]/error.tsx"),
+      "utf-8"
+    );
+    // Should not render error.message directly
+    expect(content).not.toContain("error.message");
+  });
+
+  it("updateReadingProgress rejects NaN/Infinity", () => {
+    const content = readFileSync(resolve(SRC, "lib/library/service.ts"), "utf-8");
+    expect(content).toContain("Number.isFinite(progress)");
+  });
+
+  it("paper-reader PDF toggle requires pdfStoragePath, not just any URL", () => {
+    const content = readFileSync(
+      resolve(SRC, "components/library/reader/paper-reader.tsx"),
+      "utf-8"
+    );
+    // Should check pdfStoragePath specifically, not source.url
+    expect(content).toContain("source.pdfStoragePath");
+    expect(content).not.toMatch(/hasPdf.*source\.url/);
+  });
+
+  it("pending extraction text mentions auto-refresh", () => {
+    const content = readFileSync(
+      resolve(SRC, "components/library/reader/extraction-state-surface.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("refreshes automatically");
+  });
+});

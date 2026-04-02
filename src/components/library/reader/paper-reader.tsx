@@ -22,7 +22,7 @@ interface PaperReaderProps {
 }
 
 export function PaperReader({ source }: PaperReaderProps) {
-  const hasPdf = !!source.pdfStoragePath || !!source.url;
+  const hasPdf = !!source.pdfStoragePath;
   const [viewMode, setViewMode] = useState<ViewMode>("abstract");
 
   return (

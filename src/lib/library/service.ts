@@ -176,6 +176,7 @@ export async function updateReadingProgress(
   libraryId: string,
   progress: number
 ): Promise<void> {
+  if (!Number.isFinite(progress)) return;
   const userId = await getCurrentUserId();
   const { type, id } = parseLibraryId(libraryId);
   const clamped = Math.max(0, Math.min(100, Math.round(progress)));

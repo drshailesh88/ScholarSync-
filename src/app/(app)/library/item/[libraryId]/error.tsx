@@ -18,7 +18,7 @@ export default function LibraryItemError({
           Source not found
         </h2>
         <p className="text-sm text-[var(--ink-muted)]">
-          {error.message || "The requested library source could not be loaded."}
+          The requested library source could not be loaded.
         </p>
         <div className="flex gap-3">
           <button
