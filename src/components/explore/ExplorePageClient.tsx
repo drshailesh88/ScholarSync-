@@ -18,10 +18,13 @@ import {
 } from "./FilterPills";
 import { getUserScopes, type ScopeRecord } from "@/lib/actions/scopes";
 import { getSavedUrls } from "@/lib/actions/web-sources";
+import { getLibraryMatchesForUrls } from "@/lib/library";
 import { addExploreSearchHistory } from "@/lib/actions/explore-search-history";
 import { setDomainPreference } from "@/lib/actions/domain-preferences";
 import { SaveToast } from "./SaveToast";
+import { FromYourLibrary } from "./FromYourLibrary";
 import { SearchHistoryDropdown } from "./SearchHistoryDropdown";
+import type { LibrarySource } from "@/lib/library";
 
 type SearchableExploreTab = Exclude<ExploreTab, "more">;
 
@@ -173,6 +176,7 @@ export function ExplorePageClient() {
   const [filters, setFilters] = useState<ExploreFilters>(DEFAULT_FILTERS);
   const [userScopes, setUserScopes] = useState<ScopeRecord[]>([]);
   const [savedUrls, setSavedUrls] = useState<Set<string>>(new Set());
+  const [libraryMatches, setLibraryMatches] = useState<LibrarySource[]>([]);
   const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
   const [synthesisOpen, setSynthesisOpen] = useState(false);
   const [infoPanelIndex, setInfoPanelIndex] = useState<number | null>(null);
@@ -259,7 +263,7 @@ export function ExplorePageClient() {
     }
     setIsSearching(false);
 
-    // Fetch which URLs are already saved for badge display
+    // Fetch which URLs are already saved for badge display + library matches
     const allUrls = Object.values(nextTabState)
       .flatMap((s) => Object.values(s.pages).flat())
       .map((r) => r.url)
@@ -268,6 +272,11 @@ export function ExplorePageClient() {
       getSavedUrls(allUrls)
         .then((saved) => setSavedUrls(new Set(saved)))
         .catch(() => {});
+      getLibraryMatchesForUrls(allUrls)
+        .then((matches) => setLibraryMatches(matches))
+        .catch(() => setLibraryMatches([]));
+    } else {
+      setLibraryMatches([]);
     }
 
     // Save to search history (fire and forget)
@@ -681,6 +690,11 @@ export function ExplorePageClient() {
             </p>
           </div>
         ) : null}
+
+        {/* "From your library" block — saved sources matching the search */}
+        {!isSearching && libraryMatches.length > 0 && (
+          <FromYourLibrary sources={libraryMatches} />
+        )}
 
         {/* Synthesize button + Synthesis block */}
         {!isSearching && activeTab !== "more" && activeResults.length > 0 && !synthesisOpen ? (

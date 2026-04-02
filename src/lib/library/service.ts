@@ -350,6 +350,52 @@ function perTableLimit(filters: LibrarySourceFilters): number {
   return (filters.offset ?? 0) + (filters.limit ?? 50);
 }
 
+// ── getLibraryMatchesForUrls ───────────────────────────────────
+
+/**
+ * Find saved library sources that match any of the given URLs.
+ * Used by Explore to show "From your library" block.
+ * Checks both webSources (by URL) and papers (by open_access_url or DOI URL).
+ */
+export async function getLibraryMatchesForUrls(
+  urls: string[]
+): Promise<LibrarySource[]> {
+  if (urls.length === 0) return [];
+  const userId = await getCurrentUserId();
+
+  // Check web sources
+  const webRows = await db
+    .select()
+    .from(webSources)
+    .where(
+      and(
+        eq(webSources.user_id, userId),
+        sql`${webSources.url} = ANY(${urls})`,
+        isNull(webSources.deleted_at)
+      )
+    );
+
+  // Check papers by open_access_url
+  const paperRows = await db
+    .select({ ref: userReferences, paper: papers })
+    .from(userReferences)
+    .innerJoin(papers, eq(userReferences.paperId, papers.id))
+    .where(
+      and(
+        eq(userReferences.userId, userId),
+        isNull(userReferences.deletedAt),
+        sql`${papers.open_access_url} = ANY(${urls})`
+      )
+    );
+
+  const results: LibrarySource[] = [
+    ...webRows.map((row) => adaptWebSource(row as WebSourceRow)),
+    ...paperRows.map((row) => adaptPaper(row as PaperRow)),
+  ];
+
+  return results;
+}
+
 function sortResults(
   results: LibrarySource[],
   sortBy: string,
