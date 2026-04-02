@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import {
   FilePdf,
@@ -9,6 +9,9 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { LibrarySource } from "@/lib/library/types";
+import type { Annotation, AnnotationColor } from "@/lib/library/annotations";
+import { useTextHighlighter } from "@/hooks/useTextHighlighter";
+import { HighlightPopover } from "./highlight-popover";
 
 const PDFViewer = dynamic(
   () => import("@/components/ui/pdf-viewer").then((mod) => mod.PDFViewer),
@@ -19,11 +22,44 @@ type ViewMode = "abstract" | "pdf";
 
 interface PaperReaderProps {
   source: LibrarySource;
+  highlights?: Annotation[];
+  onCreateHighlight?: (
+    selectedText: string,
+    startOffset: number,
+    endOffset: number,
+    color: AnnotationColor,
+    note?: string
+  ) => void;
+  onHighlightClick?: (annotation: Annotation) => void;
 }
 
-export function PaperReader({ source }: PaperReaderProps) {
+export function PaperReader({
+  source,
+  highlights = [],
+  onCreateHighlight,
+  onHighlightClick,
+}: PaperReaderProps) {
   const hasPdf = !!source.pdfStoragePath;
   const [viewMode, setViewMode] = useState<ViewMode>("abstract");
+  const abstractRef = useRef<HTMLDivElement>(null);
+
+  const { selection, clearSelection } = useTextHighlighter({
+    containerRef: abstractRef,
+    highlights,
+    onHighlightClick,
+  });
+
+  const handleHighlight = (color: AnnotationColor, note?: string) => {
+    if (!selection || !onCreateHighlight) return;
+    onCreateHighlight(
+      selection.text,
+      selection.anchorPayload.startOffset!,
+      selection.anchorPayload.endOffset!,
+      color,
+      note
+    );
+    clearSelection();
+  };
 
   return (
     <article>
@@ -84,7 +120,10 @@ export function PaperReader({ source }: PaperReaderProps) {
       {viewMode === "abstract" ? (
         <div>
           {source.abstract ? (
-            <div className="font-serif text-[17px] leading-[1.78] tracking-[0.005em] text-[var(--ink)]">
+            <div
+              ref={abstractRef}
+              className="font-serif text-[17px] leading-[1.78] tracking-[0.005em] text-[var(--ink)]"
+            >
               {source.abstract}
             </div>
           ) : (
@@ -130,6 +169,18 @@ export function PaperReader({ source }: PaperReaderProps) {
             title={source.title}
           />
         </div>
+      )}
+
+      {/* Highlight popover on text selection (abstract view only) */}
+      {viewMode === "abstract" && selection && onCreateHighlight && (
+        <HighlightPopover
+          position={{
+            top: selection.rect.top - 8,
+            left: selection.rect.left + selection.rect.width / 2,
+          }}
+          onHighlight={handleHighlight}
+          onClose={clearSelection}
+        />
       )}
     </article>
   );
