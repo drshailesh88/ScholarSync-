@@ -178,7 +178,11 @@ export function ExplorePageClient() {
   const [userScopes, setUserScopes] = useState<ScopeRecord[]>([]);
   const [savedUrls, setSavedUrls] = useState<Set<string>>(new Set());
   const [libraryMatches, setLibraryMatches] = useState<LibrarySource[]>([]);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "info" | "error";
+    action?: { label: string; onClick: () => void };
+  } | null>(null);
   const [synthesisOpen, setSynthesisOpen] = useState(false);
   const [infoPanelIndex, setInfoPanelIndex] = useState<number | null>(null);
 
@@ -409,12 +413,21 @@ export function ExplorePageClient() {
         });
 
         if (!res.ok) throw new Error("Save failed");
-        const { alreadySaved } = await res.json();
+        const { alreadySaved, id: savedId } = await res.json();
 
         if (alreadySaved) {
           setToast({ message: "Already in your Library", type: "info" });
         } else {
-          setToast({ message: "Saved to Library", type: "success" });
+          setToast({
+            message: "Saved to Library",
+            type: "success",
+            action: savedId
+              ? {
+                  label: "Add to Project",
+                  onClick: () => router.push(`/library/item/web_${savedId}`),
+                }
+              : undefined,
+          });
           if (result.url) {
             setSavedUrls((prev) => new Set(prev).add(result.url!));
           }
@@ -806,6 +819,7 @@ export function ExplorePageClient() {
           message={toast.message}
           onDismiss={() => setToast(null)}
           type={toast.type}
+          action={toast.action}
         />
       )}
 

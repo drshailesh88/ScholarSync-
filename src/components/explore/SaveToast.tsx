@@ -13,11 +13,13 @@ export function SaveToast({
   message,
   type,
   onDismiss,
-  duration = 2000,
+  action,
+  duration = 3000,
 }: {
   message: string;
   type: "success" | "info" | "error";
   onDismiss: () => void;
+  action?: { label: string; onClick: () => void };
   duration?: number;
 }) {
   const [visible, setVisible] = useState(false);
@@ -46,6 +48,14 @@ export function SaveToast({
       >
         {ICONS[type]}
         {message}
+        {action && (
+          <button
+            onClick={action.onClick}
+            className="ml-1 text-[var(--library-accent,#4A7AB5)] hover:underline underline-offset-2"
+          >
+            {action.label}
+          </button>
+        )}
       </div>
     </div>
   );
