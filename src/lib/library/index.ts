@@ -14,3 +14,14 @@ export type { PaperRow, WebSourceRow } from "./adapter";
 
 export { getLibraryHome, getLibraryCounts, getLibrarySourceCount } from "./home";
 export type { LibraryHomeData } from "./home";
+
+export {
+  createEditorHandoff,
+  createEditorHandoffFromIds,
+  getEditorHandoff,
+  getPendingHandoff,
+  consumeEditorHandoff,
+  cancelEditorHandoff,
+  getCitedLibraryIds,
+} from "./editor-handoff";
+export type { HandoffSourcePayload, EditorHandoff } from "./editor-handoff";

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { isNewLibraryEnabled } from "@/lib/feature-flags";
 import { getLibrarySources } from "@/lib/library/service";
 import { getLibrarySourceCount } from "@/lib/library/home";
+import { getCitedLibraryIds } from "@/lib/library/editor-handoff";
 import { StateViewClient } from "./StateViewClient";
 import type { WorkflowState, LibrarySourceFilters } from "@/lib/library";
 
@@ -42,9 +43,10 @@ export default async function LibraryStateView({
     offset: 0,
   };
 
-  const [sources, totalCount] = await Promise.all([
+  const [sources, totalCount, citedIds] = await Promise.all([
     getLibrarySources(filters),
     getLibrarySourceCount(validState === "all" ? undefined : validState),
+    getCitedLibraryIds(),
   ]);
 
   return (
@@ -54,6 +56,7 @@ export default async function LibraryStateView({
       totalCount={totalCount}
       filters={filters}
       showStateBadge={validState === "all"}
+      citedIds={Array.from(citedIds)}
     />
   );
 }

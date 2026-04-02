@@ -10,6 +10,7 @@ import { ExportDialog } from "@/components/export/ExportDialog";
 import { VersionHistory } from "@/components/editor/VersionHistory";
 import { CitationDialog } from "@/components/citations/citation-dialog";
 import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
+import { HandoffConsumptionPanel } from "@/components/editor/HandoffConsumptionPanel";
 import { useEditorStore } from "@/stores/editor-store";
 import { useReferenceStore } from "@/stores/reference-store";
 import { generateTemplateContent } from "@/lib/editor/section-templates";
@@ -21,6 +22,8 @@ import {
   cloneReference,
   extractReferencesFromContent,
 } from "@/lib/citations/document-reference-hydration";
+import { handoffSourceToReference } from "@/lib/library/handoff-to-reference";
+import type { HandoffSourcePayload } from "@/lib/library/editor-handoff";
 import {
   ArrowLeft,
   DownloadSimple,
@@ -85,6 +88,7 @@ export default function EditorPage() {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [restoredContent, setRestoredContent] = useState<JSONContent | null>(null);
   const [contentKey, setContentKey] = useState(0);
+  const [editorReady, setEditorReady] = useState(false);
   const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
   const titleSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -141,6 +145,52 @@ export default function EditorPage() {
   const handleToggleReferenceSidebar = useCallback(() => {
     handleSetReferenceSidebarOpen(!sidebarOpen);
   }, [handleSetReferenceSidebarOpen, sidebarOpen]);
+
+  const handleImportHandoffCitations = useCallback(
+    (sources: HandoffSourcePayload[]) => {
+      const docId = String(dbDocumentId || urlDocumentId);
+      const refs = sources.map((s) => handoffSourceToReference(s, docId));
+      addReferences(refs);
+
+      // Auto-insert each as a citation if the editor is ready
+      const editor = editorRef.current;
+      if (editor && !editor.isDestroyed) {
+        const refIds = refs.map((r) => r.id);
+        const referenceStore = useReferenceStore.getState();
+        const snapshots = refIds
+          .map((id) => referenceStore.references.get(id))
+          .filter((r): r is NonNullable<typeof r> => Boolean(r))
+          .map((r) => cloneReference(r));
+
+        editor
+          .chain()
+          .focus()
+          .insertContent({
+            type: "citation",
+            attrs: { referenceIds: refIds, referenceSnapshots: snapshots },
+          })
+          .run();
+
+        // Ensure bibliography block exists
+        let hasBibliography = false;
+        editor.state.doc.descendants((node) => {
+          if (node.type.name === "bibliography") {
+            hasBibliography = true;
+            return false;
+          }
+        });
+        if (!hasBibliography) {
+          editor.commands.insertContentAt(editor.state.doc.content.size, {
+            type: "bibliography",
+          });
+        }
+      }
+
+      // Open reference sidebar to show the imported citations
+      handleSetReferenceSidebarOpen(true);
+    },
+    [addReferences, dbDocumentId, urlDocumentId, handleSetReferenceSidebarOpen]
+  );
 
   const syncPendingCitationNotice = useCallback(() => {
     const notice = consumePendingCitationNotice();
@@ -452,6 +502,11 @@ export default function EditorPage() {
         </div>
       )}
 
+      <HandoffConsumptionPanel
+        onImportCitations={handleImportHandoffCitations}
+        editorReady={editorReady}
+      />
+
       {/* Loading state */}
       {isLoading && (
         <div className="flex-1 flex items-center justify-center bg-surface">
@@ -474,6 +529,7 @@ export default function EditorPage() {
               onUpdate={handleEditorUpdate}
               onEditorReady={(editor) => {
                 editorRef.current = editor;
+                setEditorReady(true);
               }}
               onOpenCitationDialog={openCitationDialog}
               onToggleReferenceSidebar={handleToggleReferenceSidebar}

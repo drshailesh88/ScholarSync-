@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { SourceList } from "@/components/library/SourceList";
 import { getLibrarySources } from "@/lib/library/service";
@@ -13,6 +13,7 @@ interface StateViewClientProps {
   totalCount: number;
   filters: LibrarySourceFilters;
   showStateBadge: boolean;
+  citedIds?: string[];
 }
 
 export function StateViewClient({
@@ -21,6 +22,7 @@ export function StateViewClient({
   totalCount,
   filters,
   showStateBadge,
+  citedIds,
 }: StateViewClientProps) {
   const router = useRouter();
 
@@ -30,6 +32,11 @@ export function StateViewClient({
       router.refresh();
     },
     [router]
+  );
+
+  const citedIdSet = useMemo(
+    () => (citedIds ? new Set(citedIds) : undefined),
+    [citedIds]
   );
 
   const handleLoadMore = useCallback(
@@ -49,6 +56,7 @@ export function StateViewClient({
         onMoveState={handleMoveState}
         onLoadMore={handleLoadMore}
         showStateBadge={showStateBadge}
+        citedIds={citedIdSet}
       />
     </div>
   );

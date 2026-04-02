@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import type { LibrarySource, WorkflowState, LibrarySourceFilters } from "@/lib/library";
 import { LibrarySourceCard } from "./LibrarySourceCard";
+import { BulkSelectionToolbar } from "./BulkSelectionToolbar";
 
 const PAGE_SIZE = 25;
 
@@ -13,6 +14,7 @@ interface SourceListProps {
   onMoveState: (libraryId: string, newState: WorkflowState) => void;
   onLoadMore: (filters: LibrarySourceFilters) => Promise<LibrarySource[]>;
   showStateBadge?: boolean;
+  citedIds?: Set<string>;
 }
 
 export function SourceList({
@@ -22,9 +24,11 @@ export function SourceList({
   onMoveState,
   onLoadMore,
   showStateBadge = false,
+  citedIds,
 }: SourceListProps) {
   const [sources, setSources] = useState(initialSources);
   const [loading, setLoading] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const remaining = totalCount - sources.length;
   const hasMore = remaining > 0;
@@ -47,10 +51,31 @@ export function SourceList({
   const handleMoveState = useCallback(
     (libraryId: string, newState: WorkflowState) => {
       setSources((prev) => prev.filter((s) => s.libraryId !== libraryId));
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(libraryId);
+        return next;
+      });
       onMoveState(libraryId, newState);
     },
     [onMoveState]
   );
+
+  const handleToggleSelect = useCallback((libraryId: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(libraryId)) {
+        next.delete(libraryId);
+      } else {
+        next.add(libraryId);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleClearSelection = useCallback(() => {
+    setSelectedIds(new Set());
+  }, []);
 
   if (sources.length === 0) {
     return (
@@ -62,6 +87,10 @@ export function SourceList({
 
   return (
     <div>
+      <BulkSelectionToolbar
+        selectedIds={Array.from(selectedIds)}
+        onClearSelection={handleClearSelection}
+      />
       <div className="space-y-2">
         {sources.map((source) => (
           <LibrarySourceCard
@@ -69,6 +98,9 @@ export function SourceList({
             source={source}
             onMoveState={handleMoveState}
             showStateBadge={showStateBadge}
+            selected={selectedIds.has(source.libraryId)}
+            onToggleSelect={handleToggleSelect}
+            isCited={citedIds?.has(source.libraryId)}
           />
         ))}
       </div>

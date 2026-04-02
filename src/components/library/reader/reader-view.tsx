@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   SidebarSimple,
@@ -14,6 +14,7 @@ import { WebSourceReader } from "./web-source-reader";
 import { PaperReader } from "./paper-reader";
 import { ExtractionStateSurface } from "./extraction-state-surface";
 import { WorkbenchPanel } from "./workbench-panel";
+import { SendToEditorButton } from "./send-to-editor-button";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 
 export type ReaderMode = "focus" | "working" | "synthesis";
@@ -24,7 +25,6 @@ interface ReaderViewProps {
 
 export function ReaderView({ source }: ReaderViewProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<ReaderMode>("focus");
   const panelOpen = mode === "working" || mode === "synthesis";
@@ -84,6 +84,7 @@ export function ReaderView({ source }: ReaderViewProps) {
             </span>
           </nav>
           <div className="flex items-center gap-2">
+            <SendToEditorButton libraryId={source.libraryId} />
             {source.url && (
               <a
                 href={source.url}
