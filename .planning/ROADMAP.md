@@ -13,15 +13,15 @@ Each phase is a vertical tracer bullet — cuts through all layers (schema -> AP
 **Deliverable:** API returns unified LibrarySource objects for both papers and web sources. Data migration complete.
 **Why first:** Proves the unified domain model works. Every subsequent phase depends on this adapter layer.
 
-- [ ] Run database migration: add workflow_state, reading_progress, read_status, last_read_at to userReferences
-- [ ] Run database migration: add same fields + extraction_state to webSources
-- [ ] Run database migration: create library_annotations table
-- [ ] Run database migration: create editor_handoffs table
-- [ ] Run database migration: add last_active_project_id to user profile
-- [ ] Run data migration: existing saved items -> workflow_state=inbox, archived web sources -> workflow_state=archived
-- [ ] Build LibrarySource TypeScript adapter with composite libraryId (paper_42, web_187)
-- [ ] Build unified service functions: getLibrarySources(), getLibrarySourceById(), moveLibrarySourceState()
-- [ ] Write tests: adapter normalizes both types correctly, migration maps data correctly, service functions dispatch to correct table
+- [x] Run database migration: add workflow_state, reading_progress, read_status, last_read_at to userReferences
+- [x] Run database migration: add same fields + extraction_state to webSources
+- [x] Run database migration: create library_annotations table
+- [x] Run database migration: create editor_handoffs table
+- [x] Run database migration: add last_active_project_id to user profile
+- [x] Run data migration: existing saved items -> workflow_state=inbox, archived web sources -> workflow_state=archived
+- [x] Build LibrarySource TypeScript adapter with composite libraryId (paper_42, web_187)
+- [x] Build unified service functions: getLibrarySources(), getLibrarySourceById(), moveLibrarySourceState()
+- [x] Write tests: adapter normalizes both types correctly, migration maps data correctly, service functions dispatch to correct table
 
 Risk: **LOW** — schema additions are non-breaking. Adapter is a thin normalization layer over existing tables.
 

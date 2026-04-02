@@ -25,6 +25,15 @@ set -uo pipefail
 # Note: NOT using set -e because codex exec may return non-zero
 # exit codes even on successful completion. We handle errors manually.
 
+# Portable in-place sed (works on macOS and Linux)
+portable_sed_i() {
+  if [ "$(uname)" = "Darwin" ]; then
+    sed -i '' "$@"
+  else
+    sed -i "$@"
+  fi
+}
+
 ITERATIONS=${1:-20}
 BRANCH="codex/$(date +%Y-%m-%d)"
 MAX_HEAL_ATTEMPTS=3
@@ -72,10 +81,14 @@ capture_score() {
 
   total=$((pass_count + fail_count))
 
-  # If we couldn't parse anything, check npm test exit code
+  # FAIL CLOSED: if we couldn't parse anything, use test command exit code
   if [ "$total" -eq 0 ]; then
     if npm test 2>/dev/null; then
       pass_count=1
+      total=1
+    else
+      # Tests failed but we can't parse output — fail closed
+      fail_count=1
       total=1
     fi
   fi
@@ -193,9 +206,20 @@ for ((i=1; i<=$ITERATIONS; i++)); do
 
   # ─── Deduplication: detect stuck loop ───────────────────────────────────
   if [ "$REQ_TEXT" = "$LAST_REQ" ]; then
-    echo -e "${RED}STUCK: Same requirement as last iteration. Checkbox update failed. STOPPING.${NC}"
-    echo "STUCK: Same requirement repeated — checkbox update likely failed" >> "$PROGRESS_FILE"
-    break
+    # Check if this is legitimate partial work (not a stuck loop)
+    if grep -q "<!-- PARTIAL.*$(echo "$REQ_TEXT" | head -c 30)" .planning/REQUIREMENTS.md 2>/dev/null; then
+      echo -e "${YELLOW}Requirement has PARTIAL annotation — continuing work from previous iteration.${NC}"
+    elif grep -q "<!-- BLOCKED.*$(echo "$REQ_TEXT" | head -c 30)" .planning/REQUIREMENTS.md 2>/dev/null; then
+      echo -e "${YELLOW}Requirement is BLOCKED — skipping to next.${NC}"
+      # Find and skip to next non-blocked requirement
+      # For now, just continue and let the builder handle it
+      LAST_REQ=""
+      continue
+    else
+      echo -e "${RED}STUCK: Same requirement as last iteration with no PARTIAL/BLOCKED annotation. STOPPING.${NC}"
+      echo "STUCK: Same requirement repeated — checkbox update likely failed" >> "$PROGRESS_FILE"
+      break
+    fi
   fi
   LAST_REQ="$REQ_TEXT"
 
@@ -236,12 +260,12 @@ If the requirement is too big, build the smallest meaningful slice." \
 
   echo "[BUILDER] Finished building: $REQ_TEXT" >> "$PROGRESS_FILE"
 
-  # ─── Check if Codex actually produced changes (Bug 3: detect errors/rate limits)
-  if [ -z "$(git diff --name-only 2>/dev/null)" ]; then
-    echo -e "${RED}[BUILDER] No code changes detected. Codex may have errored. Skipping.${NC}"
+  # ─── Check if Codex actually produced changes (tracked diffs OR new files)
+  ITER_NEW_FILES=$(git ls-files --others --exclude-standard 2>/dev/null | sort | comm -13 <(echo "$ITER_START_UNTRACKED") - 2>/dev/null)
+  if [ -z "$(git diff --name-only 2>/dev/null)" ] && [ -z "$ITER_NEW_FILES" ]; then
+    echo -e "${RED}[BUILDER] No code changes detected (no tracked diffs, no new files). Codex may have errored. Skipping.${NC}"
     echo "[$i] SKIPPED: No code changes from builder" >> "$PROGRESS_FILE"
 
-    # Check if this is 3rd consecutive skip — if so, likely rate limited
     CONSECUTIVE_SKIPS=$((CONSECUTIVE_SKIPS + 1))
     if [ "$CONSECUTIVE_SKIPS" -ge 3 ]; then
       echo -e "${RED}3 consecutive empty iterations. Codex likely rate-limited. STOPPING.${NC}"
@@ -280,8 +304,14 @@ Run: npx tsc --noEmit" \
     if ! npx tsc --noEmit 2>/dev/null; then
       echo -e "${RED}[TYPECHECK] Still failing after fix attempt. REVERTING.${NC}"
       CHANGED_FILES=$(git diff --name-only 2>/dev/null)
-      echo "$CHANGED_FILES" | xargs git checkout -- 2>/dev/null || true
-      git clean -fd -- $(echo "$CHANGED_FILES" | head -20) 2>/dev/null || true
+      if [ -n "$CHANGED_FILES" ]; then
+        echo "$CHANGED_FILES" | xargs git checkout -- 2>/dev/null || true
+      fi
+      # Remove new untracked files created this iteration
+      ITER_NEW_FILES=$(git ls-files --others --exclude-standard 2>/dev/null | sort | comm -13 <(echo "$ITER_START_UNTRACKED") - 2>/dev/null)
+      if [ -n "$ITER_NEW_FILES" ]; then
+        echo "$ITER_NEW_FILES" | xargs rm -f 2>/dev/null || true
+      fi
       echo "[$i] REVERTED: $REQ_TEXT — TypeScript compilation failed" >> "$PROGRESS_FILE"
       log_score "$i" "$CURRENT_PHASE" "$REQ_TEXT" "$AFTER_BUILD_PASS" "$AFTER_BUILD_FAIL" "REVERTED_TYPECHECK"
       continue
@@ -336,8 +366,11 @@ Fix ONLY what's broken. Do NOT add new features. Do NOT refactor." \
       CHANGED_FILES=$(git diff --name-only 2>/dev/null)
       if [ -n "$CHANGED_FILES" ]; then
         echo "$CHANGED_FILES" | xargs git checkout -- 2>/dev/null || true
-        # Also remove any new untracked files from this iteration
-        git clean -fd -- $(echo "$CHANGED_FILES" | head -20) 2>/dev/null || true
+      fi
+      # Remove new untracked files created this iteration
+      ITER_NEW_FILES=$(git ls-files --others --exclude-standard 2>/dev/null | sort | comm -13 <(echo "$ITER_START_UNTRACKED") - 2>/dev/null)
+      if [ -n "$ITER_NEW_FILES" ]; then
+        echo "$ITER_NEW_FILES" | xargs rm -f 2>/dev/null || true
       fi
       echo "[$i] REVERTED: $REQ_TEXT — score dropped and could not heal" >> "$PROGRESS_FILE"
       log_score "$i" "$CURRENT_PHASE" "$REQ_TEXT" "$BEFORE_PASS" "0" "REVERTED"
@@ -472,28 +505,37 @@ Fix the bugs. Do not delete or modify the adversary's tests." \
   echo -e "${GREEN}[COMMIT] Score held or improved. Committing.${NC}"
 
   # Check the requirement box by line number (avoids regex issues with special chars)
-  sed -i '' "${REQ_LINE_NUM}s/- \[ \]/- [x]/" .planning/REQUIREMENTS.md
+  portable_sed_i "${REQ_LINE_NUM}s/- \[ \]/- [x]/" .planning/REQUIREMENTS.md
 
-  # Only stage files changed/created in THIS iteration (not pre-existing untracked files)
+  # Stage only changed + new files from this iteration
   CHANGED_FILES=$(git diff --name-only 2>/dev/null)
-  NEW_FILES=$(git ls-files --others --exclude-standard 2>/dev/null | sort | comm -13 <(echo "$ITER_START_UNTRACKED") - 2>/dev/null)
+  ITER_NEW_FILES=$(git ls-files --others --exclude-standard 2>/dev/null | sort | comm -13 <(echo "$ITER_START_UNTRACKED") - 2>/dev/null)
   if [ -n "$CHANGED_FILES" ]; then
     echo "$CHANGED_FILES" | xargs git add 2>/dev/null || true
   fi
-  if [ -n "$NEW_FILES" ]; then
-    echo "$NEW_FILES" | xargs git add 2>/dev/null || true
+  if [ -n "$ITER_NEW_FILES" ]; then
+    echo "$ITER_NEW_FILES" | xargs git add 2>/dev/null || true
   fi
   git add .planning/REQUIREMENTS.md .planning/build-scores.jsonl progress.txt 2>/dev/null || true
-  git commit -m "feat: $(echo "$REQ_TEXT" | head -c 60) (Phase $CURRENT_PHASE)
+
+  # Commit — check exit code, don't swallow failure
+  COMMIT_MSG="feat: $(echo "$REQ_TEXT" | head -c 60) (Phase $CURRENT_PHASE)
 
 Ralph iteration $i. Score: $FINAL_PASS passing ($((FINAL_PASS - BEFORE_PASS)) net).
-Builder → Tests → Adversary ($MAX_ADVERSARY_ROUNDS rounds) → Verified." \
-    2>/dev/null || true
+Builder → Tests → Adversary ($MAX_ADVERSARY_ROUNDS rounds) → Verified."
 
-  echo "[$i] COMMITTED: $REQ_TEXT | Score: $BEFORE_PASS → $FINAL_PASS" >> "$PROGRESS_FILE"
-  log_score "$i" "$CURRENT_PHASE" "$REQ_TEXT" "$FINAL_PASS" "$FINAL_FAIL" "COMMITTED"
-
-  echo -e "${GREEN}Done. Score: $BEFORE_PASS → $FINAL_PASS (+$((FINAL_PASS - BEFORE_PASS)))${NC}"
+  if git commit -m "$COMMIT_MSG" 2>/dev/null; then
+    echo "[$i] COMMITTED: $REQ_TEXT | Score: $BEFORE_PASS → $FINAL_PASS" >> "$PROGRESS_FILE"
+    log_score "$i" "$CURRENT_PHASE" "$REQ_TEXT" "$FINAL_PASS" "$FINAL_FAIL" "COMMITTED"
+    echo -e "${GREEN}Done. Score: $BEFORE_PASS → $FINAL_PASS (+$((FINAL_PASS - BEFORE_PASS)))${NC}"
+  else
+    echo -e "${RED}[COMMIT] git commit failed. Undoing checkbox and aborting iteration.${NC}"
+    # Undo the checkbox
+    portable_sed_i "${REQ_LINE_NUM}s/- \[x\]/- [ ]/" .planning/REQUIREMENTS.md
+    git reset HEAD 2>/dev/null || true
+    echo "[$i] COMMIT FAILED: $REQ_TEXT — git commit returned non-zero" >> "$PROGRESS_FILE"
+    log_score "$i" "$CURRENT_PHASE" "$REQ_TEXT" "$FINAL_PASS" "$FINAL_FAIL" "COMMIT_FAILED"
+  fi
   echo ""
 done
 

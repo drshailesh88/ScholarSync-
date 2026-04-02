@@ -9,18 +9,18 @@ v1 — Explore Module (Phases 1-10, complete)
 ## Must Have (v2)
 
 ### Unified Domain Layer
-- [ ] LibrarySource TypeScript adapter normalizes papers and web sources into one frontend model
-- [ ] Composite libraryId format (paper_42, web_187) encodes source type
-- [ ] Unified service functions (getLibrarySources, getLibrarySourceById, moveLibrarySourceState) dispatch to correct underlying table
-- [ ] Papers and web sources remain in separate database tables — no physical unification
+- [x] LibrarySource TypeScript adapter normalizes papers and web sources into one frontend model
+- [x] Composite libraryId format (paper_42, web_187) encodes source type
+- [x] Unified service functions (getLibrarySources, getLibrarySourceById, moveLibrarySourceState) dispatch to correct underlying table
+- [x] Papers and web sources remain in separate database tables — no physical unification
 
 ### Schema Changes
-- [ ] userReferences table gains: workflow_state (inbox|core|background|archived, default inbox), reading_progress (int 0-100), read_status (unread|in_progress|read, default unread), last_read_at (timestamp)
-- [ ] webSources table gains: same fields + extraction_state replaces content_extracted boolean (pending|ready|partial|failed)
-- [ ] New library_annotations table: unified highlights/notes across source types with anchor_type and anchor_payload
-- [ ] New editor_handoffs table: server-backed citation transport with status lifecycle (pending|consumed|cancelled)
-- [ ] User profile gains last_active_project_id
-- [ ] Data migration: existing saved items get workflow_state=inbox, archived web sources get workflow_state=archived
+- [x] userReferences table gains: workflow_state (inbox|core|background|archived, default inbox), reading_progress (int 0-100), read_status (unread|in_progress|read, default unread), last_read_at (timestamp)
+- [x] webSources table gains: same fields + extraction_state replaces content_extracted boolean (pending|ready|partial|failed)
+- [x] New library_annotations table: unified highlights/notes across source types with anchor_type and anchor_payload
+- [x] New editor_handoffs table: server-backed citation transport with status lifecycle (pending|consumed|cancelled)
+- [x] User profile gains last_active_project_id
+- [x] Data migration: existing saved items get workflow_state=inbox, archived web sources get workflow_state=archived
 
 ### Route Structure
 - [ ] /library shows momentum-oriented home screen
