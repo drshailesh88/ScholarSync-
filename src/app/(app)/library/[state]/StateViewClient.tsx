@@ -3,8 +3,12 @@
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { SourceList } from "@/components/library/SourceList";
-import { getLibrarySources } from "@/lib/library/service";
-import { moveLibrarySourceState } from "@/lib/library/service";
+import {
+  getLibrarySources,
+  moveLibrarySourceState,
+  softDeleteLibrarySource,
+  restoreLibrarySource,
+} from "@/lib/library/service";
 import type { LibrarySource, LibrarySourceFilters, WorkflowState } from "@/lib/library";
 
 interface StateViewClientProps {
@@ -39,6 +43,22 @@ export function StateViewClient({
     [citedIds]
   );
 
+  const handleDelete = useCallback(
+    async (libraryId: string) => {
+      await softDeleteLibrarySource(libraryId);
+      router.refresh();
+    },
+    [router]
+  );
+
+  const handleRestoreDeleted = useCallback(
+    async (libraryId: string) => {
+      await restoreLibrarySource(libraryId);
+      router.refresh();
+    },
+    [router]
+  );
+
   const handleLoadMore = useCallback(
     async (loadFilters: LibrarySourceFilters): Promise<LibrarySource[]> => {
       return getLibrarySources(loadFilters);
@@ -54,6 +74,8 @@ export function StateViewClient({
         totalCount={totalCount}
         filters={filters}
         onMoveState={handleMoveState}
+        onDelete={handleDelete}
+        onRestoreDeleted={handleRestoreDeleted}
         onLoadMore={handleLoadMore}
         showStateBadge={showStateBadge}
         citedIds={citedIdSet}

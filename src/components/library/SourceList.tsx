@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import type { LibrarySource, WorkflowState, LibrarySourceFilters } from "@/lib/library";
 import { LibrarySourceCard } from "./LibrarySourceCard";
 import { BulkSelectionToolbar } from "./BulkSelectionToolbar";
+import { UndoToast } from "./UndoToast";
 
 const PAGE_SIZE = 25;
 
@@ -12,6 +13,8 @@ interface SourceListProps {
   totalCount: number;
   filters: LibrarySourceFilters;
   onMoveState: (libraryId: string, newState: WorkflowState) => void;
+  onDelete?: (libraryId: string) => Promise<void>;
+  onRestoreDeleted?: (libraryId: string) => Promise<void>;
   onLoadMore: (filters: LibrarySourceFilters) => Promise<LibrarySource[]>;
   showStateBadge?: boolean;
   citedIds?: Set<string>;
@@ -22,6 +25,8 @@ export function SourceList({
   totalCount,
   filters,
   onMoveState,
+  onDelete,
+  onRestoreDeleted,
   onLoadMore,
   showStateBadge = false,
   citedIds,
@@ -29,6 +34,7 @@ export function SourceList({
   const [sources, setSources] = useState(initialSources);
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deletedUndo, setDeletedUndo] = useState<{ libraryId: string; title: string } | null>(null);
 
   const remaining = totalCount - sources.length;
   const hasMore = remaining > 0;
@@ -73,6 +79,28 @@ export function SourceList({
     });
   }, []);
 
+  const handleDelete = useCallback(
+    (libraryId: string) => {
+      if (!onDelete) return;
+      const source = sources.find((s) => s.libraryId === libraryId);
+      setSources((prev) => prev.filter((s) => s.libraryId !== libraryId));
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(libraryId);
+        return next;
+      });
+      setDeletedUndo(source ? { libraryId, title: source.title } : null);
+      onDelete(libraryId);
+    },
+    [onDelete, sources]
+  );
+
+  const handleUndoDelete = useCallback(async () => {
+    if (!deletedUndo || !onRestoreDeleted) return;
+    await onRestoreDeleted(deletedUndo.libraryId);
+    setDeletedUndo(null);
+  }, [deletedUndo, onRestoreDeleted]);
+
   const handleClearSelection = useCallback(() => {
     setSelectedIds(new Set());
   }, []);
@@ -97,6 +125,7 @@ export function SourceList({
             key={source.libraryId}
             source={source}
             onMoveState={handleMoveState}
+            onDelete={onDelete ? handleDelete : undefined}
             showStateBadge={showStateBadge}
             selected={selectedIds.has(source.libraryId)}
             onToggleSelect={handleToggleSelect}
@@ -115,6 +144,14 @@ export function SourceList({
             {loading ? "Loading..." : `Show ${Math.min(PAGE_SIZE, remaining)} more (${remaining} remaining)`}
           </button>
         </div>
+      )}
+
+      {deletedUndo && (
+        <UndoToast
+          message={`"${deletedUndo.title}" moved to Trash`}
+          onUndo={handleUndoDelete}
+          onDismiss={() => setDeletedUndo(null)}
+        />
       )}
     </div>
   );

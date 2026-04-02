@@ -6,6 +6,7 @@ import {
   FilePdf,
   GlobeSimple,
   DotsThree,
+  Trash,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { LibrarySource, WorkflowState } from "@/lib/library";
@@ -20,6 +21,7 @@ const TRUST_DOT_COLORS: Record<string, string> = {
 interface LibrarySourceCardProps {
   source: LibrarySource;
   onMoveState?: (libraryId: string, newState: WorkflowState) => void;
+  onDelete?: (libraryId: string) => void;
   showStateBadge?: boolean;
   selected?: boolean;
   onToggleSelect?: (libraryId: string) => void;
@@ -29,6 +31,7 @@ interface LibrarySourceCardProps {
 export function LibrarySourceCard({
   source,
   onMoveState,
+  onDelete,
   showStateBadge = true,
   selected,
   onToggleSelect,
@@ -174,6 +177,21 @@ export function LibrarySourceCard({
                       {state}
                     </button>
                   ))}
+                  {onDelete && (
+                    <>
+                      <div className="my-1 border-t border-[var(--border)]" />
+                      <button
+                        onClick={() => {
+                          onDelete(source.libraryId);
+                          setMenuOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors flex items-center gap-2"
+                      >
+                        <Trash size={14} />
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </div>
               </>
             )}
