@@ -82,8 +82,8 @@ v1 — Explore Module (Phases 1-10, complete)
 - [x] Editor shows confirmation panel when receiving citations
 
 ### Explore Integration
-- [ ] "From your library" block at top of Explore results when saved sources match query
-- [ ] V1: promote existing URL overlap check to visible block
+- [x] "From your library" block at top of Explore results when saved sources match query
+- [x] V1: promote existing URL overlap check to visible block
 - [ ] Fast follow: async title + notes/highlights search against Library corpus
 
 ### Cards and Lists
@@ -93,15 +93,15 @@ v1 — Explore Module (Phases 1-10, complete)
 - [x] List loads 20-30 items with "Show more" button and counter
 
 ### Saving and Ingestion
-- [ ] Sources saved from Explore arrive in Library as Inbox items
-- [ ] Paste URL directly into Library triggers extraction and storage
-- [ ] PDF upload into Library supported
-- [ ] Save feedback: animated button + toast with "Add to Project" action
+- [x] Sources saved from Explore arrive in Library as Inbox items
+- [x] Paste URL directly into Library triggers extraction and storage
+- [x] PDF upload into Library supported
+- [x] Save feedback: animated button + toast with "Add to Project" action
 
 ### Deletion and Safety
-- [ ] Deletion moves sources to Trash with undo toast (5-8 seconds)
-- [ ] Trash retains sources for 30 days with restore capability
-- [ ] Permanent deletion only available from Trash with confirmation dialog
+- [x] Deletion moves sources to Trash with undo toast (5-8 seconds)
+- [x] Trash retains sources for 30 days with restore capability
+- [x] Permanent deletion only available from Trash with confirmation dialog
 
 ### Visual Language
 - [x] Inherited Editor palette (#FAFAF8 cream, warm charcoal ink, #6D28D9 purple brand)

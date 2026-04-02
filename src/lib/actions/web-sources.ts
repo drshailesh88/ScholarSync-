@@ -578,6 +578,174 @@ export async function updateWebSourceNotes(
   revalidatePath("/library");
 }
 
+// ── Paste URL ──────────────────────────────────────────────────
+
+/**
+ * Save a web source directly from a URL (pasted into Library).
+ * Creates a minimal web source record, then triggers content extraction.
+ * Returns { id, alreadySaved, title }.
+ */
+export async function saveWebSourceFromUrl(url: string): Promise<{
+  id: number;
+  alreadySaved: boolean;
+  title: string;
+}> {
+  const userId = await getCurrentUserId();
+
+  // Basic URL validation
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    throw new Error("Invalid URL. Please enter a valid web address.");
+  }
+
+  if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+    throw new Error("Only HTTP and HTTPS URLs are supported.");
+  }
+
+  const domain = parsedUrl.hostname.replace(/^www\./, "");
+
+  // Duplicate check
+  const [existing] = await db
+    .select({ id: webSources.id, title: webSources.title })
+    .from(webSources)
+    .where(
+      and(
+        eq(webSources.user_id, userId),
+        eq(webSources.url, url),
+        isNull(webSources.deleted_at)
+      )
+    );
+
+  if (existing) {
+    return { id: existing.id, alreadySaved: true, title: existing.title || url };
+  }
+
+  // Check for soft-deleted version and restore
+  const [softDeleted] = await db
+    .select({ id: webSources.id, title: webSources.title })
+    .from(webSources)
+    .where(
+      and(
+        eq(webSources.user_id, userId),
+        eq(webSources.url, url)
+      )
+    );
+
+  if (softDeleted) {
+    await db
+      .update(webSources)
+      .set({
+        deleted_at: null,
+        status: "saved",
+        workflow_state: "inbox",
+        updated_at: new Date(),
+      })
+      .where(eq(webSources.id, softDeleted.id));
+
+    revalidatePath("/library");
+    return { id: softDeleted.id, alreadySaved: false, title: softDeleted.title || url };
+  }
+
+  // Infer source type from domain
+  const sourceType = mapSourceTypeFromDomain(domain);
+
+  // Create with title = domain initially; extraction will update it
+  const title = domain;
+
+  const [newSource] = await db
+    .insert(webSources)
+    .values({
+      user_id: userId,
+      url,
+      domain,
+      title,
+      snippet: null,
+      author: null,
+      publish_date: null,
+      source_type: sourceType,
+      trust_tier: "other",
+      tab_found_on: "web",
+      search_query: null,
+      thumbnail_url: null,
+      metadata: { addedVia: "url_paste" },
+    })
+    .returning();
+
+  revalidatePath("/library");
+
+  // Fire-and-forget content extraction (updates title, content, etc.)
+  extractAndEnrichFromUrl(newSource.id).catch((err) => {
+    console.error(`Content extraction failed for pasted URL ${newSource.id}:`, err);
+  });
+
+  return { id: newSource.id, alreadySaved: false, title };
+}
+
+/**
+ * Extract content and enrich a web source that was added via URL paste.
+ * Updates the source with extracted title, content, and metadata.
+ */
+async function extractAndEnrichFromUrl(sourceId: number): Promise<void> {
+  const userId = await getCurrentUserId();
+
+  const [source] = await db
+    .select({ id: webSources.id, url: webSources.url })
+    .from(webSources)
+    .where(
+      and(eq(webSources.id, sourceId), eq(webSources.user_id, userId))
+    );
+
+  if (!source) return;
+
+  try {
+    const { extractContent } = await import("@/lib/web/content-extractor");
+    const extracted = await extractContent(source.url);
+
+    // Extract title from the HTML content (first h1 or first meaningful text)
+    const titleMatch = extracted.contentHtml.match(/<h1[^>]*>([^<]+)<\/h1>/i);
+    const extractedTitle = titleMatch?.[1]?.trim();
+
+    // Use first ~300 chars of plain text as snippet
+    const snippet = extracted.contentPlain?.slice(0, 300)?.replace(/\s+/g, " ").trim();
+
+    await db
+      .update(webSources)
+      .set({
+        ...(extractedTitle ? { title: extractedTitle } : {}),
+        ...(snippet ? { snippet } : {}),
+        content_html: extracted.contentHtml,
+        content_plain: extracted.contentPlain,
+        content_extracted: true,
+        extraction_state: "ready",
+        updated_at: new Date(),
+      })
+      .where(eq(webSources.id, sourceId));
+  } catch {
+    await db
+      .update(webSources)
+      .set({
+        extraction_state: "failed",
+        updated_at: new Date(),
+      })
+      .where(eq(webSources.id, sourceId));
+  }
+
+  revalidatePath("/library");
+}
+
+function mapSourceTypeFromDomain(
+  domain: string
+): "news_article" | "blog_post" | "discussion_post" | "government_report" | "wiki" | "video" | "other" {
+  if (domain.endsWith(".gov") || domain.endsWith(".gov.uk")) return "government_report";
+  if (domain.includes("wikipedia.org") || domain.includes("wiki")) return "wiki";
+  if (domain.includes("youtube.com") || domain.includes("vimeo.com")) return "video";
+  if (domain.includes("reddit.com") || domain.includes("news.ycombinator.com")) return "discussion_post";
+  if (domain.includes("medium.com") || domain.includes("substack.com")) return "blog_post";
+  return "other";
+}
+
 // ── Helpers ──────────────────────────────────────────────────────
 
 function mapSourceType(

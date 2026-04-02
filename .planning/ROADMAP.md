@@ -118,17 +118,17 @@ Risk: **LOW** — editor_handoffs table already migrated in Phase 11. Editor alr
 **Deliverable:** "From your library" block in Explore. URL paste and PDF upload in Library. Trash with 30-day retention. Feature flag flipped to new Library.
 **Why last:** Integration and polish phase. Everything needs to work before connecting modules and opening to users.
 
-- [ ] Build "From your library" block at top of Explore results (URL overlap check promoted to visible block)
-- [ ] Implement paste URL into Library: extraction + storage
-- [ ] Implement PDF upload into Library
-- [ ] Implement save feedback from Explore: animated button + toast with "Add to Project" action
-- [ ] Build Trash view with 30-day retention and restore capability
-- [ ] Implement permanent deletion from Trash with confirmation dialog
-- [ ] Implement deletion undo toast (5-8 seconds)
-- [ ] Apply visual language: library accent colors, flat bordered cards, workflow state dots, trust tier dots
-- [ ] Final responsive/mobile pass (pages must load on mobile)
-- [ ] Flip feature flag: new Library becomes default
-- [ ] Write tests: Explore integration shows library matches, URL paste works, PDF upload works, trash/restore lifecycle, deletion undo
+- [x] Build "From your library" block at top of Explore results (URL overlap check promoted to visible block)
+- [x] Implement paste URL into Library: extraction + storage
+- [x] Implement PDF upload into Library
+- [x] Implement save feedback from Explore: animated button + toast with "Add to Project" action
+- [x] Build Trash view with 30-day retention and restore capability
+- [x] Implement permanent deletion from Trash with confirmation dialog
+- [x] Implement deletion undo toast (5-8 seconds)
+- [x] Apply visual language: library accent colors, flat bordered cards, workflow state dots, trust tier dots
+- [x] Final responsive/mobile pass (pages must load on mobile)
+- [x] Flip feature flag: new Library becomes default
+- [x] Write tests: Explore integration shows library matches, URL paste works, PDF upload works, trash/restore lifecycle, deletion undo
 
 Risk: **LOW** — integration and polish. No new architecture. Largest risk is Explore query performance with library matching.
 

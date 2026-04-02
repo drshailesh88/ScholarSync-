@@ -58,12 +58,12 @@ describe("Phase 13: Feature flag", () => {
     expect(typeof result).toBe("boolean");
   });
 
-  it("defaults to false when env var is not set", async () => {
+  it("defaults to true when env var is not set (Phase 17 flag flip)", async () => {
     const original = process.env.NEXT_PUBLIC_NEW_LIBRARY;
     delete process.env.NEXT_PUBLIC_NEW_LIBRARY;
     // Re-import to pick up env change
     const { isNewLibraryEnabled } = await import("@/lib/feature-flags");
-    expect(isNewLibraryEnabled()).toBe(false);
+    expect(isNewLibraryEnabled()).toBe(true);
     // Restore
     if (original !== undefined) process.env.NEXT_PUBLIC_NEW_LIBRARY = original;
   });

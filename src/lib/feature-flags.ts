@@ -6,8 +6,9 @@
 /**
  * Whether the new Library UI (Phase 13+) is enabled.
  * Controlled by NEXT_PUBLIC_NEW_LIBRARY env var.
- * Defaults to false (old Library) for safety.
+ * Defaults to true (new Library) — Phase 17 complete.
+ * Set NEXT_PUBLIC_NEW_LIBRARY=false to revert to old Library.
  */
 export function isNewLibraryEnabled(): boolean {
-  return process.env.NEXT_PUBLIC_NEW_LIBRARY === "true";
+  return process.env.NEXT_PUBLIC_NEW_LIBRARY !== "false";
 }

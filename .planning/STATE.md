@@ -4,7 +4,7 @@
 **Library Module Redesign** — Created 2026-04-02
 
 ## Current Phase
-Phase 16: Citation Handoff + Editor Integration — Status: COMPLETE (2026-04-02)
+Phase 17: Explore Integration + Ingestion + Polish — Status: COMPLETE (2026-04-02)
 
 ## Previous Milestone
 **Explore Module V1** — Phases 1-10 COMPLETE (PRs #52-55 + committed to main)
@@ -28,7 +28,8 @@ Phase 16: Citation Handoff + Editor Integration — Status: COMPLETE (2026-04-02
 - Phase 5: Implementation -> NOT STARTED (Phase 11 next)
 
 ## Quick Reference
-- Next action: Start Phase 17 (Explore Integration + Ingestion + Polish) — final phase
+- Next action: Library Module Redesign COMPLETE — all 7 phases delivered
+- Phase 17 COMPLETE: URL paste, PDF upload, responsive, feature flag flipped, 16 new tests
 - Phase 16 COMPLETE: 24 tests passing, Codex review approved, 10 bugs fixed
 - Phase 15 COMPLETE: 19 tests passing, 2 bugs fixed (Promise.allSettled, project ownership verification)
 - Phase 14 COMPLETE: 64 tests passing, Codex review approved, 4 bugs fixed

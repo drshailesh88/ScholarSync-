@@ -70,7 +70,7 @@ export function LibrarySidebar({
   const homeActive = pathname === "/library" || pathname === homeHref;
 
   return (
-    <aside className="w-56 shrink-0 flex flex-col h-full border-r border-[var(--border-subtle)] py-4">
+    <aside className="w-56 shrink-0 flex flex-col h-full border-r border-[var(--border-subtle)] bg-[var(--surface)] py-4">
       {/* Home link */}
       <div className="px-3 mb-2">
         <Link
