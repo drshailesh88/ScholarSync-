@@ -4,7 +4,7 @@
 **Library Module Redesign** — Created 2026-04-02
 
 ## Current Phase
-Phase 11: Schema + LibrarySource Adapter — Status: COMPLETE (2026-04-02)
+Phase 12: Detail/Reader Page — Status: COMPLETE (2026-04-02)
 
 ## Previous Milestone
 **Explore Module V1** — Phases 1-10 COMPLETE (PRs #52-55 + committed to main)
@@ -28,7 +28,8 @@ Phase 11: Schema + LibrarySource Adapter — Status: COMPLETE (2026-04-02)
 - Phase 5: Implementation -> NOT STARTED (Phase 11 next)
 
 ## Quick Reference
-- Next action: Start Phase 12 (Detail/Reader Page) or Phase 13 (Home Screen + Workflow States) — can run in parallel
+- Next action: Start Phase 13 (Home Screen + Workflow States) or Phase 14 (Annotation) — 13 can run next, 14 depends on 12
+- Phase 12 COMPLETE: 40 tests passing, Codex review approved, 6 bugs fixed (XSS, info disclosure, retry, polling, NaN, PDF detection)
 - Phase 11 COMPLETE: 36 tests passing, Codex review approved, 6 bugs fixed
 - Feature flag protects existing Library throughout build
 - Readiness score: 9.2/10

@@ -27,19 +27,19 @@ v1 — Explore Module (Phases 1-10, complete)
 - [ ] /library/inbox, /library/core, /library/background, /library/archived show workflow state views
 - [ ] /library/project/[projectId] shows project-scoped library
 - [ ] /library/project/[projectId]/inbox etc. shows project + state
-- [ ] /library/item/[libraryId] shows canonical detail/reader page
+- [x] /library/item/[libraryId] shows canonical detail/reader page
 - [ ] All navigation state is URL-backed (survives refresh, supports back button)
 
 ### Detail/Reader Page
-- [ ] Single-column layout (720px) with collapsible right workbench panel
-- [ ] Web sources display cleaned extracted content with inline highlighting support
-- [ ] Papers display abstract + metadata + PDF/full-text toggle
-- [ ] Same page shell for both source types — differences only in content rendering
-- [ ] Three modes: Focus (default, panel hidden), Working (panel open), Synthesis handoff
-- [ ] Four extraction states (pending, ready, partial, failed) each have designed surfaces
-- [ ] Graceful fallback when extraction fails: metadata and actions still work, prominent "Open original" button
-- [ ] Retry extraction available when initial result is poor
-- [ ] Reading progress tracked: scroll-based for articles, page-based for PDFs, debounced writes (10-15s + blur/route change)
+- [x] Single-column layout (720px) with collapsible right workbench panel
+- [x] Web sources display cleaned extracted content with inline highlighting support
+- [x] Papers display abstract + metadata + PDF/full-text toggle
+- [x] Same page shell for both source types — differences only in content rendering
+- [x] Three modes: Focus (default, panel hidden), Working (panel open), Synthesis handoff
+- [x] Four extraction states (pending, ready, partial, failed) each have designed surfaces
+- [x] Graceful fallback when extraction fails: metadata and actions still work, prominent "Open original" button
+- [x] Retry extraction available when initial result is poor
+- [x] Reading progress tracked: scroll-based for articles, page-based for PDFs, debounced writes (10-15s + blur/route change)
 
 ### Home Screen
 - [ ] Home screen answers "what should I resume, what matters for my project, what deserves attention next"

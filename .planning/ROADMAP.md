@@ -31,16 +31,16 @@ Risk: **LOW** — schema additions are non-breaking. Adapter is a thin normaliza
 **Deliverable:** User navigates to /library/item/paper_42 or /library/item/web_187, reads in clean internal reader with focus mode.
 **Why second:** The reader page is the highest-value new surface. It unlocks "internal-first" reading and proves the route structure.
 
-- [ ] Create route structure: /library/item/[libraryId]
-- [ ] Build reader page shell: single-column (720px) + collapsible right workbench
-- [ ] Implement web source reader: cleaned extracted content with Source Serif 4 typography
-- [ ] Implement paper reader: abstract + metadata + PDF/full-text toggle
-- [ ] Implement three modes: Focus (default), Working (panel open), Synthesis handoff
-- [ ] Build extraction state surfaces: pending (skeleton + progress), ready (content), partial (content + warning), failed (metadata + "Open original" + retry)
-- [ ] Implement reading progress tracking (scroll-based, debounced writes)
-- [ ] Build right workbench panel: Notes tab, Metadata tab, Highlights tab
-- [ ] Implement breadcrumb navigation: Library / Project / Source
-- [ ] Write tests: renders for both source types, handles all 4 extraction states, reading progress tracks and resumes, workbench toggles correctly
+- [x] Create route structure: /library/item/[libraryId]
+- [x] Build reader page shell: single-column (720px) + collapsible right workbench
+- [x] Implement web source reader: cleaned extracted content with Source Serif 4 typography
+- [x] Implement paper reader: abstract + metadata + PDF/full-text toggle
+- [x] Implement three modes: Focus (default), Working (panel open), Synthesis handoff
+- [x] Build extraction state surfaces: pending (skeleton + progress), ready (content), partial (content + warning), failed (metadata + "Open original" + retry)
+- [x] Implement reading progress tracking (scroll-based, debounced writes)
+- [x] Build right workbench panel: Notes tab, Metadata tab, Highlights tab
+- [x] Implement breadcrumb navigation: Library / Project / Source
+- [x] Write tests: renders for both source types, handles all 4 extraction states, reading progress tracks and resumes, workbench toggles correctly
 
 Risk: **MEDIUM** — new route structure and reader rendering for arbitrary web content. Extraction edge cases will surface.
 
