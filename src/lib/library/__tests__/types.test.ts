@@ -13,6 +13,22 @@ describe("toLibraryId", () => {
   it("handles id of 0", () => {
     expect(toLibraryId("paper", 0)).toBe("paper_0");
   });
+
+  it("throws on NaN", () => {
+    expect(() => toLibraryId("paper", NaN)).toThrow("Invalid id");
+  });
+
+  it("throws on negative id", () => {
+    expect(() => toLibraryId("paper", -1)).toThrow("Invalid id");
+  });
+
+  it("throws on non-integer id", () => {
+    expect(() => toLibraryId("web", 1.5)).toThrow("Invalid id");
+  });
+
+  it("throws on Infinity", () => {
+    expect(() => toLibraryId("paper", Infinity)).toThrow("Invalid id");
+  });
 });
 
 describe("parseLibraryId", () => {

@@ -14,6 +14,7 @@ import {
   webSources,
   projectPapers,
   projectWebSources,
+  projects,
 } from "@/lib/db/schema";
 import {
   eq,
@@ -64,8 +65,11 @@ export async function getLibrarySources(
     results.push(...webResults);
   }
 
-  // Sort the combined results
-  return sortResults(results, filters.sortBy ?? "date_added", filters.sortDir ?? "desc");
+  // Sort the combined results, then apply offset + limit
+  const sorted = sortResults(results, filters.sortBy ?? "date_added", filters.sortDir ?? "desc");
+  const start = filters.offset ?? 0;
+  const end = start + (filters.limit ?? 50);
+  return sorted.slice(start, end);
 }
 
 // ── getLibrarySourceById ────────────────────────────────────────
@@ -117,7 +121,7 @@ export async function getLibrarySourceById(
       throw new Error(`Library source not found: ${libraryId}`);
     }
 
-    const projectIds = await getProjectIdsForWebSource(id);
+    const projectIds = await getProjectIdsForWebSource(id, userId);
     return adaptWebSource({ ...rows[0], projectIds } as WebSourceRow);
   }
 }
@@ -205,7 +209,7 @@ async function fetchPapers(
     .from(userReferences)
     .innerJoin(papers, eq(userReferences.paperId, papers.id))
     .where(and(...conditions))
-    .limit(filters.limit ?? 50);
+    .limit(perTableLimit(filters));
 
   return rows.map((row) => adaptPaper(row as PaperRow));
 }
@@ -250,7 +254,7 @@ async function fetchWebSources(
     .select()
     .from(webSources)
     .where(and(...conditions))
-    .limit(filters.limit ?? 50);
+    .limit(perTableLimit(filters));
 
   return rows.map((row) => adaptWebSource(row as WebSourceRow));
 }
@@ -259,23 +263,41 @@ async function fetchWebSources(
 
 async function getProjectIdsForPaper(
   paperId: number,
-  _userId: string
+  userId: string
 ): Promise<number[]> {
   const rows = await db
     .select({ projectId: projectPapers.project_id })
     .from(projectPapers)
-    .where(eq(projectPapers.paper_id, paperId));
+    .innerJoin(projects, eq(projectPapers.project_id, projects.id))
+    .where(
+      and(
+        eq(projectPapers.paper_id, paperId),
+        eq(projects.userId, userId)
+      )
+    );
   return rows.map((r) => r.projectId);
 }
 
 async function getProjectIdsForWebSource(
-  webSourceId: number
+  webSourceId: number,
+  userId: string
 ): Promise<number[]> {
   const rows = await db
     .select({ projectId: projectWebSources.project_id })
     .from(projectWebSources)
-    .where(eq(projectWebSources.web_source_id, webSourceId));
+    .innerJoin(projects, eq(projectWebSources.project_id, projects.id))
+    .where(
+      and(
+        eq(projectWebSources.web_source_id, webSourceId),
+        eq(projects.userId, userId)
+      )
+    );
   return rows.map((r) => r.projectId);
+}
+
+/** Per-table fetch limit: offset + limit to ensure enough rows for merge + slice */
+function perTableLimit(filters: LibrarySourceFilters): number {
+  return (filters.offset ?? 0) + (filters.limit ?? 50);
 }
 
 function sortResults(

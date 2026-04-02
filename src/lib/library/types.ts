@@ -21,6 +21,9 @@ export interface ParsedLibraryId {
  * @example toLibraryId("paper", 42) → "paper_42"
  */
 export function toLibraryId(type: SourceType, id: number): string {
+  if (!Number.isInteger(id) || id < 0) {
+    throw new Error(`Invalid id for libraryId: ${id}. Must be a non-negative integer.`);
+  }
   return `${type}_${id}`;
 }
 

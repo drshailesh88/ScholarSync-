@@ -16,11 +16,11 @@ import { userReferences, webSources } from "@/lib/db/schema";
 import { isNull, eq, sql } from "drizzle-orm";
 
 export async function seedWorkflowStates(): Promise<{
-  papersUpdated: number;
-  webSourcesUpdated: number;
+  papersProcessed: number;
+  webSourcesProcessed: number;
 }> {
   // 1. Set all userReferences to workflow_state='inbox' where null
-  const paperResult = await db
+  await db
     .update(userReferences)
     .set({ workflowState: "inbox" })
     .where(isNull(userReferences.workflowState));
@@ -48,16 +48,18 @@ export async function seedWorkflowStates(): Promise<{
     WHERE extraction_state IS NULL OR extraction_state = 'pending'
   `);
 
-  // Count what we updated
+  // Count rows that now have workflow_state set (total processed, not "changed this run")
   const paperCount = await db
     .select({ count: sql<number>`count(*)` })
-    .from(userReferences);
+    .from(userReferences)
+    .where(sql`${userReferences.workflowState} IS NOT NULL`);
   const webCount = await db
     .select({ count: sql<number>`count(*)` })
-    .from(webSources);
+    .from(webSources)
+    .where(sql`${webSources.workflow_state} IS NOT NULL`);
 
   return {
-    papersUpdated: Number(paperCount[0]?.count ?? 0),
-    webSourcesUpdated: Number(webCount[0]?.count ?? 0),
+    papersProcessed: Number(paperCount[0]?.count ?? 0),
+    webSourcesProcessed: Number(webCount[0]?.count ?? 0),
   };
 }

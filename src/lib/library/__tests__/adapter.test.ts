@@ -92,6 +92,22 @@ describe("adaptPaper", () => {
     expect(adaptPaper(row).workflowState).toBe("inbox");
   });
 
+  it("clamps readingProgress above 100 to 100", () => {
+    const row: PaperRow = {
+      ...basePaperRow,
+      ref: { ...basePaperRow.ref, readingProgress: 150 },
+    };
+    expect(adaptPaper(row).readingProgress).toBe(100);
+  });
+
+  it("clamps negative readingProgress to 0", () => {
+    const row: PaperRow = {
+      ...basePaperRow,
+      ref: { ...basePaperRow.ref, readingProgress: -5 },
+    };
+    expect(adaptPaper(row).readingProgress).toBe(0);
+  });
+
   it("parses authors that are plain strings", () => {
     const row: PaperRow = {
       ...basePaperRow,
@@ -179,6 +195,16 @@ describe("adaptWebSource", () => {
   it("defaults workflow_state to inbox when null", () => {
     const row: WebSourceRow = { ...baseWebRow, workflow_state: null };
     expect(adaptWebSource(row).workflowState).toBe("inbox");
+  });
+
+  it("clamps readingProgress above 100 to 100", () => {
+    const row: WebSourceRow = { ...baseWebRow, reading_progress: 200 };
+    expect(adaptWebSource(row).readingProgress).toBe(100);
+  });
+
+  it("clamps negative readingProgress to 0", () => {
+    const row: WebSourceRow = { ...baseWebRow, reading_progress: -10 };
+    expect(adaptWebSource(row).readingProgress).toBe(0);
   });
 
   it("derives extraction_state from content_extracted boolean", () => {

@@ -112,7 +112,7 @@ export function adaptPaper(row: PaperRow): LibrarySource {
 
     // Library metadata
     workflowState: ref.workflowState ?? "inbox",
-    readingProgress: ref.readingProgress ?? 0,
+    readingProgress: clampProgress(ref.readingProgress),
     readStatus: ref.readStatus ?? "unread",
     lastReadAt: ref.lastReadAt?.toISOString() ?? null,
     isFavorite: ref.isFavorite ?? false,
@@ -161,7 +161,7 @@ export function adaptWebSource(row: WebSourceRow): LibrarySource {
 
     // Library metadata
     workflowState: row.workflow_state ?? "inbox",
-    readingProgress: row.reading_progress ?? 0,
+    readingProgress: clampProgress(row.reading_progress),
     readStatus: row.read_status ?? "unread",
     lastReadAt: row.last_read_at?.toISOString() ?? null,
     isFavorite: false, // web sources don't have favorites yet
@@ -190,6 +190,12 @@ function parseAuthors(raw: unknown): string[] {
 function parseTags(raw: unknown): string[] {
   if (Array.isArray(raw)) return raw.filter((t): t is string => typeof t === "string");
   return [];
+}
+
+/** Clamp reading progress to [0, 100] range */
+function clampProgress(value: number | null | undefined): number {
+  if (value == null) return 0;
+  return Math.max(0, Math.min(100, value));
 }
 
 /** Derive extraction_state from legacy content_extracted boolean */
