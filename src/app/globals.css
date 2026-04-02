@@ -130,6 +130,25 @@ body {
 .prose-library th, .prose-library td { padding: 0.5em 0.75em; border: 1px solid var(--border); text-align: left; font-size: 0.9em; }
 .prose-library th { background: var(--surface-raised); font-weight: 600; }
 
+/* ── Library Highlight Styles ──────────────────────────────────── */
+mark.library-highlight {
+  border-radius: 2px;
+  padding: 0 1px;
+  transition: background-color 0.15s ease;
+}
+mark.library-highlight--default {
+  background-color: rgba(253, 224, 71, 0.45); /* yellow-300/45% */
+}
+mark.library-highlight--default:hover {
+  background-color: rgba(253, 224, 71, 0.7);
+}
+mark.library-highlight--important {
+  background-color: var(--library-accent-tint);
+}
+mark.library-highlight--important:hover {
+  background-color: color-mix(in srgb, var(--library-accent) 30%, transparent);
+}
+
 :root .glass-panel {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);

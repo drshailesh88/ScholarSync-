@@ -10,11 +10,13 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { LibrarySource } from "@/lib/library/types";
+import type { AnnotationColor } from "@/lib/library/annotations";
 import { WebSourceReader } from "./web-source-reader";
 import { PaperReader } from "./paper-reader";
 import { ExtractionStateSurface } from "./extraction-state-surface";
 import { WorkbenchPanel } from "./workbench-panel";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
+import { useAnnotations } from "@/hooks/useAnnotations";
 
 export type ReaderMode = "focus" | "working" | "synthesis";
 
@@ -48,6 +50,45 @@ export function ReaderView({ source }: ReaderViewProps) {
     scrollRef,
     initialProgress: source.readingProgress,
   });
+
+  // ── Annotations ──────────────────────────────────────────────
+
+  const {
+    annotations,
+    highlights,
+    createHighlight,
+    createNote,
+    updateAnnotation,
+    deleteAnnotation,
+  } = useAnnotations({ libraryId: source.libraryId });
+
+  const handleCreateHighlight = useCallback(
+    async (
+      selectedText: string,
+      startOffset: number,
+      endOffset: number,
+      color: AnnotationColor,
+      note?: string
+    ) => {
+      await createHighlight({
+        selectedText,
+        anchorType: "text_offset",
+        anchorPayload: { startOffset, endOffset },
+        color,
+        note,
+      });
+    },
+    [createHighlight]
+  );
+
+  const handleCreateNote = useCallback(
+    async (note: string) => {
+      await createNote(note);
+    },
+    [createNote]
+  );
+
+  // ── Panel toggle ─────────────────────────────────────────────
 
   const togglePanel = useCallback(() => {
     setMode((prev) => (prev === "focus" ? "working" : "focus"));
@@ -129,12 +170,27 @@ export function ReaderView({ source }: ReaderViewProps) {
             {source.sourceType === "web" ? (
               source.extractionState === "ready" ||
               source.extractionState === "partial" ? (
-                <WebSourceReader source={source} />
+                <WebSourceReader
+                  source={source}
+                  highlights={highlights}
+                  onCreateHighlight={handleCreateHighlight}
+                  onHighlightClick={(h) => {
+                    // Open panel to highlights tab when clicking
+                    setMode("working");
+                  }}
+                />
               ) : (
                 <ExtractionStateSurface source={source} onRetry={handleRetryExtraction} />
               )
             ) : (
-              <PaperReader source={source} />
+              <PaperReader
+                source={source}
+                highlights={highlights}
+                onCreateHighlight={handleCreateHighlight}
+                onHighlightClick={(h) => {
+                  setMode("working");
+                }}
+              />
             )}
           </div>
         </div>
@@ -143,7 +199,15 @@ export function ReaderView({ source }: ReaderViewProps) {
       {/* Right workbench panel */}
       {panelOpen && (
         <aside className="w-[340px] shrink-0 border-l border-[var(--border)] bg-[var(--surface)] overflow-y-auto">
-          <WorkbenchPanel source={source} mode={mode} onModeChange={setMode} />
+          <WorkbenchPanel
+            source={source}
+            mode={mode}
+            onModeChange={setMode}
+            annotations={annotations}
+            onCreateNote={handleCreateNote}
+            onUpdateAnnotation={updateAnnotation}
+            onDeleteAnnotation={deleteAnnotation}
+          />
         </aside>
       )}
     </div>

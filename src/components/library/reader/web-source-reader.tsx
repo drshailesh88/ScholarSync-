@@ -1,18 +1,54 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import type { LibrarySource } from "@/lib/library/types";
+import type { Annotation, AnnotationColor } from "@/lib/library/annotations";
+import { useTextHighlighter } from "@/hooks/useTextHighlighter";
+import { HighlightPopover } from "./highlight-popover";
 
 interface WebSourceReaderProps {
   source: LibrarySource;
+  highlights?: Annotation[];
+  onCreateHighlight?: (
+    selectedText: string,
+    startOffset: number,
+    endOffset: number,
+    color: AnnotationColor,
+    note?: string
+  ) => void;
+  onHighlightClick?: (annotation: Annotation) => void;
 }
 
-export function WebSourceReader({ source }: WebSourceReaderProps) {
+export function WebSourceReader({
+  source,
+  highlights = [],
+  onCreateHighlight,
+  onHighlightClick,
+}: WebSourceReaderProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
   const sanitizedHtml = useMemo(
     () => source.contentHtml ? DOMPurify.sanitize(source.contentHtml) : "",
     [source.contentHtml]
   );
+
+  const { selection, clearSelection } = useTextHighlighter({
+    containerRef: contentRef,
+    highlights,
+    onHighlightClick,
+  });
+
+  const handleHighlight = (color: AnnotationColor, note?: string) => {
+    if (!selection || !onCreateHighlight) return;
+    onCreateHighlight(
+      selection.text,
+      selection.anchorPayload.startOffset!,
+      selection.anchorPayload.endOffset!,
+      color,
+      note
+    );
+    clearSelection();
+  };
 
   return (
     <article>
@@ -47,20 +83,36 @@ export function WebSourceReader({ source }: WebSourceReaderProps) {
         </div>
       )}
 
-      {/* Rendered HTML content */}
+      {/* Rendered HTML content with highlighting support */}
       {source.contentHtml ? (
         <div
+          ref={contentRef}
           className="prose-library font-serif text-[17px] leading-[1.78] tracking-[0.005em] text-[var(--ink)]"
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       ) : source.contentPlain ? (
-        <div className="font-serif text-[17px] leading-[1.78] tracking-[0.005em] text-[var(--ink)] whitespace-pre-wrap">
+        <div
+          ref={contentRef}
+          className="font-serif text-[17px] leading-[1.78] tracking-[0.005em] text-[var(--ink)] whitespace-pre-wrap"
+        >
           {source.contentPlain}
         </div>
       ) : (
         <p className="text-[var(--ink-muted)] text-sm italic">
           No extracted content available.
         </p>
+      )}
+
+      {/* Highlight popover on text selection */}
+      {selection && onCreateHighlight && (
+        <HighlightPopover
+          position={{
+            top: selection.rect.top - 8,
+            left: selection.rect.left + selection.rect.width / 2,
+          }}
+          onHighlight={handleHighlight}
+          onClose={clearSelection}
+        />
       )}
     </article>
   );
