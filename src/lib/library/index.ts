@@ -15,6 +15,13 @@ export type { PaperRow, WebSourceRow } from "./adapter";
 export { getLibraryHome, getLibraryCounts, getLibrarySourceCount } from "./home";
 export type { LibraryHomeData } from "./home";
 
+export {
+  getTrashSources,
+  softDeleteLibrarySource,
+  restoreLibrarySource,
+  permanentlyDeleteLibrarySource,
+} from "./service";
+
 export { searchLibrarySources, searchAnnotations } from "./search";
 export type { LibrarySearchResult, AnnotationSearchResult } from "./search";
 
