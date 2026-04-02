@@ -18,7 +18,13 @@ import {
   exploreTabEnum,
   domainPreferenceLevelEnum,
   annotationColorEnum,
+  workflowStateEnum,
+  readStatusEnum,
+  extractionStateEnum,
+  anchorTypeEnum,
 } from "./enums";
+
+import { users } from "./core";
 
 // ============================================================
 // 1. web_sources — Non-academic content saved from Explore
@@ -55,6 +61,13 @@ export const webSources = pgTable(
     notes: text("notes"),
     tags: jsonb("tags").default([]).$type<string[]>(),
     status: webSourceStatusEnum("status").default("saved"),
+
+    // ── Library Module: workflow + reading tracking ───────────
+    workflow_state: workflowStateEnum("workflow_state").default("inbox"),
+    reading_progress: integer("reading_progress").default(0),
+    read_status: readStatusEnum("read_status").default("unread"),
+    last_read_at: timestamp("last_read_at"),
+    extraction_state: extractionStateEnum("extraction_state").default("pending"),
 
     // ── Extra metadata captured at save time ──────────────────
     metadata: jsonb("metadata").default({}),
@@ -244,5 +257,50 @@ export const exploreSearchHistory = pgTable(
   (table) => [
     index("idx_explore_history_user").on(table.user_id),
     index("idx_explore_history_created").on(table.created_at),
+  ]
+);
+
+// ============================================================
+// 7. library_annotations — Unified highlights/notes across source types
+//    Supports both papers (userReferences) and web sources.
+//    anchor_type + anchor_payload encode position differently per source type.
+// ============================================================
+export const libraryAnnotations = pgTable(
+  "library_annotations",
+  {
+    id: serial("id").primaryKey(),
+    user_id: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+
+    // ── Source identity (composite libraryId decoded) ─────────
+    source_type: text("source_type").notNull(), // "paper" | "web"
+    source_id: integer("source_id").notNull(), // paper_id or web_source_id
+
+    // ── Annotation content ───────────────────────────────────
+    selected_text: text("selected_text"),
+    note: text("note"),
+    color: annotationColorEnum("color").default("yellow"),
+
+    // ── Anchor position (varies by source type) ──────────────
+    anchor_type: anchorTypeEnum("anchor_type").notNull(),
+    anchor_payload: jsonb("anchor_payload").notNull().$type<{
+      startOffset?: number;
+      endOffset?: number;
+      cssSelector?: string;
+      pageNumber?: number;
+      rectX?: number;
+      rectY?: number;
+      rectWidth?: number;
+      rectHeight?: number;
+    }>(),
+
+    // ── Timestamps ────────────────────────────────────────────
+    created_at: timestamp("created_at").defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow(),
+  },
+  (table) => [
+    index("idx_lib_annotations_user").on(table.user_id),
+    index("idx_lib_annotations_source").on(table.source_type, table.source_id),
   ]
 );

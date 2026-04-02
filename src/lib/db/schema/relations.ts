@@ -43,6 +43,7 @@ import {
   activityLog,
   learningModules,
   userLearningProgress,
+  editorHandoffs,
 } from "./editor";
 
 // Billing tables (37-41, 52)
@@ -1352,6 +1353,7 @@ import {
   projectWebSources,
   scopes,
   exploreSearchHistory,
+  libraryAnnotations,
 } from "./explore";
 
 // 80. web_sources
@@ -1398,6 +1400,32 @@ export const exploreSearchHistoryRelations = relations(
     scope: one(scopes, {
       fields: [exploreSearchHistory.scope_id],
       references: [scopes.id],
+    }),
+  })
+);
+
+// 85. library_annotations
+export const libraryAnnotationsRelations = relations(
+  libraryAnnotations,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [libraryAnnotations.user_id],
+      references: [users.id],
+    }),
+  })
+);
+
+// 86. editor_handoffs
+export const editorHandoffsRelations = relations(
+  editorHandoffs,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [editorHandoffs.userId],
+      references: [users.id],
+    }),
+    document: one(synthesisDocuments, {
+      fields: [editorHandoffs.documentId],
+      references: [synthesisDocuments.id],
     }),
   })
 );
