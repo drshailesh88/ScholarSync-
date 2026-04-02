@@ -309,6 +309,179 @@ async function fetchWebSources(
   return rows.map((row) => adaptWebSource(row as WebSourceRow));
 }
 
+// ── Trash / Deletion ──────────────────────────────────────────
+
+/**
+ * Fetch soft-deleted sources (trash). Returns both papers and web sources
+ * that have a deletedAt timestamp. Sorted by deletion date (newest first).
+ */
+export async function getTrashSources(
+  limit = 50,
+  offset = 0
+): Promise<{ sources: LibrarySource[]; deletedAtMap: Record<string, string> }> {
+  const userId = await getCurrentUserId();
+
+  // Deleted papers
+  const deletedPapers = await db
+    .select({ ref: userReferences, paper: papers })
+    .from(userReferences)
+    .innerJoin(papers, eq(userReferences.paperId, papers.id))
+    .where(
+      and(
+        eq(userReferences.userId, userId),
+        sql`${userReferences.deletedAt} IS NOT NULL`
+      )
+    )
+    .orderBy(desc(userReferences.deletedAt));
+
+  // Deleted web sources
+  const deletedWeb = await db
+    .select()
+    .from(webSources)
+    .where(
+      and(
+        eq(webSources.user_id, userId),
+        sql`${webSources.deleted_at} IS NOT NULL`
+      )
+    )
+    .orderBy(desc(webSources.deleted_at));
+
+  const results: LibrarySource[] = [];
+  const deletedAtMap: Record<string, string> = {};
+
+  for (const row of deletedPapers) {
+    const source = adaptPaper(row as PaperRow);
+    results.push(source);
+    const delAt = (row.ref as unknown as { deletedAt: Date }).deletedAt;
+    if (delAt) deletedAtMap[source.libraryId] = delAt.toISOString();
+  }
+
+  for (const row of deletedWeb) {
+    const source = adaptWebSource(row as WebSourceRow);
+    results.push(source);
+    if (row.deleted_at) deletedAtMap[source.libraryId] = row.deleted_at.toISOString();
+  }
+
+  // Sort by deleted date descending
+  results.sort((a, b) => {
+    const aDate = deletedAtMap[a.libraryId] ?? "";
+    const bDate = deletedAtMap[b.libraryId] ?? "";
+    return bDate.localeCompare(aDate);
+  });
+
+  return {
+    sources: results.slice(offset, offset + limit),
+    deletedAtMap,
+  };
+}
+
+/**
+ * Soft-delete a library source (move to trash).
+ * Works for both papers and web sources.
+ */
+export async function softDeleteLibrarySource(
+  libraryId: string
+): Promise<void> {
+  const userId = await getCurrentUserId();
+  const { type, id } = parseLibraryId(libraryId);
+
+  if (type === "paper") {
+    await db
+      .update(userReferences)
+      .set({ deletedAt: new Date() })
+      .where(
+        and(
+          eq(userReferences.paperId, id),
+          eq(userReferences.userId, userId),
+          isNull(userReferences.deletedAt)
+        )
+      );
+  } else {
+    await db
+      .update(webSources)
+      .set({ deleted_at: new Date(), updated_at: new Date() })
+      .where(
+        and(
+          eq(webSources.id, id),
+          eq(webSources.user_id, userId),
+          isNull(webSources.deleted_at)
+        )
+      );
+  }
+
+  revalidatePath("/library");
+}
+
+/**
+ * Restore a soft-deleted source from trash.
+ */
+export async function restoreLibrarySource(
+  libraryId: string
+): Promise<void> {
+  const userId = await getCurrentUserId();
+  const { type, id } = parseLibraryId(libraryId);
+
+  if (type === "paper") {
+    await db
+      .update(userReferences)
+      .set({ deletedAt: null, workflowState: "inbox" })
+      .where(
+        and(
+          eq(userReferences.paperId, id),
+          eq(userReferences.userId, userId)
+        )
+      );
+  } else {
+    await db
+      .update(webSources)
+      .set({ deleted_at: null, status: "saved", workflow_state: "inbox", updated_at: new Date() })
+      .where(
+        and(
+          eq(webSources.id, id),
+          eq(webSources.user_id, userId)
+        )
+      );
+  }
+
+  revalidatePath("/library");
+}
+
+/**
+ * Permanently delete a source from trash. Cannot be undone.
+ * Only works on already-soft-deleted sources.
+ */
+export async function permanentlyDeleteLibrarySource(
+  libraryId: string
+): Promise<void> {
+  const userId = await getCurrentUserId();
+  const { type, id } = parseLibraryId(libraryId);
+
+  if (type === "paper") {
+    // Delete the user reference (not the paper itself — it may be shared)
+    await db
+      .delete(userReferences)
+      .where(
+        and(
+          eq(userReferences.paperId, id),
+          eq(userReferences.userId, userId),
+          sql`${userReferences.deletedAt} IS NOT NULL`
+        )
+      );
+  } else {
+    await db
+      .delete(webSources)
+      .where(
+        and(
+          eq(webSources.id, id),
+          eq(webSources.user_id, userId),
+          sql`${webSources.deleted_at} IS NOT NULL`
+        )
+      );
+  }
+
+  revalidatePath("/library");
+}
+
 // ── Helpers ─────────────────────────────────────────────────────
 
 async function getProjectIdsForPaper(
