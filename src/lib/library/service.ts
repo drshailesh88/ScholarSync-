@@ -533,7 +533,9 @@ function perTableLimit(filters: LibrarySourceFilters): number {
 export async function getLibraryMatchesForUrls(
   urls: string[]
 ): Promise<LibrarySource[]> {
-  if (urls.length === 0) return [];
+  // Sanitize: filter out empty/null/undefined values
+  const cleanUrls = urls.filter((u) => typeof u === "string" && u.length > 0);
+  if (cleanUrls.length === 0) return [];
   const userId = await getCurrentUserId();
 
   // Check web sources
@@ -543,7 +545,7 @@ export async function getLibraryMatchesForUrls(
     .where(
       and(
         eq(webSources.user_id, userId),
-        sql`${webSources.url} = ANY(${urls})`,
+        sql`${webSources.url} = ANY(${cleanUrls})`,
         isNull(webSources.deleted_at)
       )
     );
@@ -557,7 +559,7 @@ export async function getLibraryMatchesForUrls(
       and(
         eq(userReferences.userId, userId),
         isNull(userReferences.deletedAt),
-        sql`${papers.open_access_url} = ANY(${urls})`
+        sql`${papers.open_access_url} = ANY(${cleanUrls})`
       )
     );
 
@@ -566,7 +568,14 @@ export async function getLibraryMatchesForUrls(
     ...paperRows.map((row) => adaptPaper(row as PaperRow)),
   ];
 
-  return results;
+  // Deduplicate by URL (same URL may exist as both web source and paper)
+  const seen = new Set<string>();
+  return results.filter((source) => {
+    const key = source.url ?? source.libraryId;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function sortResults(

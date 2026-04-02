@@ -155,6 +155,7 @@ async function fetchSearchPage(
 export function ExplorePageClient() {
   const router = useRouter();
   const searchBarRef = useRef<HTMLInputElement>(null);
+  const searchCounterRef = useRef(0);
   const [queryInput, setQueryInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<ExploreTab>("academic");
@@ -213,6 +214,9 @@ export function ExplorePageClient() {
     const trimmedQuery = queryInput.trim();
     if (!trimmedQuery) return;
 
+    // Increment search counter to guard against stale async results
+    const thisSearch = ++searchCounterRef.current;
+
     setIsSearching(true);
     setError(null);
     setHasSearched(true);
@@ -264,17 +268,24 @@ export function ExplorePageClient() {
     setIsSearching(false);
 
     // Fetch which URLs are already saved for badge display + library matches
+    // Guard against stale results from previous searches
     const allUrls = Object.values(nextTabState)
       .flatMap((s) => Object.values(s.pages).flat())
       .map((r) => r.url)
       .filter((u): u is string => !!u);
     if (allUrls.length > 0) {
       getSavedUrls(allUrls)
-        .then((saved) => setSavedUrls(new Set(saved)))
+        .then((saved) => {
+          if (searchCounterRef.current === thisSearch) setSavedUrls(new Set(saved));
+        })
         .catch(() => {});
       getLibraryMatchesForUrls(allUrls)
-        .then((matches) => setLibraryMatches(matches))
-        .catch(() => setLibraryMatches([]));
+        .then((matches) => {
+          if (searchCounterRef.current === thisSearch) setLibraryMatches(matches);
+        })
+        .catch(() => {
+          if (searchCounterRef.current === thisSearch) setLibraryMatches([]);
+        });
     } else {
       setLibraryMatches([]);
     }
