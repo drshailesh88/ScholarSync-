@@ -1,42 +1,34 @@
 # Project State
 
 ## Current Milestone
-**Explore Module V1** — Created 2026-03-31
+**Library Module Redesign** — Created 2026-04-02
 
 ## Current Phase
-Phase 7: Source Info Panel + Actions Menu — Status: COMPLETE ✅
+Phase 11: Schema + LibrarySource Adapter — Status: NOT STARTED
 
-## Completed Phases
-- Phase 1: SearXNG Deployment + Source Adapter ✅ (PRs #52, #53)
-- Phase 2: Trust Tier + Domain Preferences ✅ (PR #54)
-- Phase 3: Explore Page Shell ✅ (PR #55)
-- Phase 4: Filter Pills + Scopes ✅ (committed to main)
-- Phase 5: Save + Web Sources Database ✅
-- Phase 6: Content Extraction + Annotation ✅
-- Phase 7: Source Info Panel + Actions Menu ✅
-- Phase 8: Keyboard Navigation + Search History ✅
-- Phase 9: On-Demand Synthesis ✅
+## Previous Milestone
+**Explore Module V1** — Phases 1-10 COMPLETE (PRs #52-55 + committed to main)
 
 ## Source Documents
-- PRD: GitHub Issue #51
+- PRD: GitHub Issue #65
 - Requirements: .planning/REQUIREMENTS.md
 - Roadmap: .planning/ROADMAP.md
-- UX Brief: .planning/ux-brief.md
-- UI Brief: .planning/ui-brief.md
-- Data Requirements: .planning/data-requirements.md
-- Infra Requirements: .planning/infra-requirements.md
-- Schema: src/lib/db/schema/explore.ts
-- Kagi Reverse Engineering: .planning/kagi-reverse-engineering.md
+- UX Brief: .planning/ux-brief-library.md
+- UI Brief: .planning/ui-brief-library.md
+- Architecture Decisions: .planning/decisions/2026-04-01-library-module-redesign.md
+- Quality Gaps: .planning/quality-gaps/grill-decisions-library.md
+- Competition Research: .planning/competition-research-library.md
 - Ubiquitous Language: UBIQUITOUS_LANGUAGE.md
 
 ## Playbook Progress
-- Phase 1: Capture & Research ✅
-- Phase 2: Grill & Interview ✅
-- Phase 3: Language & PRD ✅
-- Phase 4: Technical Architecture ✅
-- Phase 5: Implementation → IN PROGRESS (Phases 1-9 complete)
+- Phase 1: Capture & Research (competition-research-library.md)
+- Phase 2: Grill & Interview (decisions/2026-04-01-library-module-redesign.md, grill-decisions-library.md)
+- Phase 3: Language & PRD (UBIQUITOUS_LANGUAGE.md, GitHub Issue #65)
+- Phase 4: UX & UI Design (ux-brief-library.md, ui-brief-library.md)
+- Phase 5: Implementation -> NOT STARTED (Phase 11 next)
 
 ## Quick Reference
-- SearXNG deployed: http://34.14.206.241:8080
-- Remaining: Phase 10
-- Unchecked requirements: ~11 items in Phase 10
+- Next action: Start Phase 11 (schema migrations + LibrarySource adapter)
+- Phases 12+13 can run in parallel after Phase 11
+- Feature flag protects existing Library throughout build
+- Readiness score: 9.2/10

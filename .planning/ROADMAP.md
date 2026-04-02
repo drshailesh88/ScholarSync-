@@ -1,179 +1,136 @@
-# Roadmap — Explore Module V1
+# Roadmap — Library Module Redesign
 
-## Phases
+## Previous Milestone: Explore Module V1 (Complete)
+Phases 1-10 delivered SearXNG, trust tiers, Explore page, filters, save pipeline, content extraction, source info panel, keyboard nav, synthesis, and mobile polish.
 
-Each phase is a vertical tracer bullet — cuts through all layers (schema → API → UI → tests) and produces a demoable deliverable.
+## Current Milestone: Library Module Redesign
 
----
-
-### Phase 1: SearXNG Deployment + Source Adapter (Tracer Bullet)
-**Deliverable:** Search "climate change" → get web results from SearXNG → displayed in terminal/API response
-**Why first:** Proves the entire new infrastructure works. If SearXNG deployment fails, everything else is blocked.
-
-- [x] Deploy SearXNG to GCP using `infra/searxng/deploy.sh`
-- [x] Create `src/lib/search/sources/searxng.ts` — source adapter that calls SearXNG JSON API
-- [x] Normalize SearXNG results to `UnifiedSearchResult` format
-- [x] Add SEARXNG_URL to environment variables
-- [x] Add SearXNG to unified search route (behind a `tab` query parameter)
-- [x] Write tests: SearXNG adapter returns normalized results, handles timeout, handles empty results, handles SearXNG down
-- [ ] Verify: `curl /api/search/unified?q=climate+change&tab=web` returns SearXNG results
-
-Risk: **MEDIUM** — GCP deployment is new territory, but deploy.sh automates it. SearXNG is well-documented.
+Each phase is a vertical tracer bullet — cuts through all layers (schema -> API -> UI -> tests) and produces a demoable deliverable. Feature flag protects existing Library throughout.
 
 ---
 
-### Phase 2: Trust Tier + Domain Preferences (Quality Layer)
-**Deliverable:** Web results have colored trust indicators. User can Mute/Prefer domains and see the effect on next search.
+### Phase 11: Schema + LibrarySource Adapter (Tracer Bullet)
+**Deliverable:** API returns unified LibrarySource objects for both papers and web sources. Data migration complete.
+**Why first:** Proves the unified domain model works. Every subsequent phase depends on this adapter layer.
 
-- [x] Create `src/lib/search/trust-tier.ts` — static domain → tier classifier
-- [x] Create curated domain list (top 200 government, 100 journalism, 50 community domains)
-- [x] Apply trust tier to every result in unified search route
-- [ ] Run database migration for `domain_preferences` table
-- [x] Create server actions: setDomainPreference, getDomainPreferences, removeDomainPreference
-- [x] Apply domain preferences in unified search route (filter Muted, boost Preferred)
-- [x] Write tests: trust classifier, domain preference CRUD, Muted domains filtered, Preferred boosted
+- [ ] Run database migration: add workflow_state, reading_progress, read_status, last_read_at to userReferences
+- [ ] Run database migration: add same fields + extraction_state to webSources
+- [ ] Run database migration: create library_annotations table
+- [ ] Run database migration: create editor_handoffs table
+- [ ] Run database migration: add last_active_project_id to user profile
+- [ ] Run data migration: existing saved items -> workflow_state=inbox, archived web sources -> workflow_state=archived
+- [ ] Build LibrarySource TypeScript adapter with composite libraryId (paper_42, web_187)
+- [ ] Build unified service functions: getLibrarySources(), getLibrarySourceById(), moveLibrarySourceState()
+- [ ] Write tests: adapter normalizes both types correctly, migration maps data correctly, service functions dispatch to correct table
 
-Risk: **LOW** — straightforward data layer + classifier. No external dependencies.
-
----
-
-### Phase 3: Explore Page Shell (UI Foundation)
-**Deliverable:** User navigates to /explore, sees search bar, types a query, sees results with trust indicators and tabs.
-
-- [x] Create `/explore` route with Kagi-style layout
-- [x] Build ExploreSearchBar component (glass-morphism pill, 48px, DM Sans)
-- [x] Build ExploreTabs component (Academic | Web | News | Discussions | More)
-- [x] Build ResultCard component (trust left-border, title, URL, snippet, date, save icon, "..." menu)
-- [x] Build per-tab card variations (Academic: journal+authors, News: outlet+time, Discussions: platform+engagement)
-- [x] Wire to unified search API with tab parameter
-- [x] Implement client-side tab switching (instant, no re-fetch)
-- [x] Add pagination
-- [x] Add stats line
-- [x] Update sidebar: rename "Discover" → "Explore"
-- [x] Write E2E or integration tests: search renders results, tabs switch, pagination works
-
-Risk: **LOW** — UI work, well-specified by UX/UI briefs and Kagi reverse-engineering.
+Risk: **LOW** — schema additions are non-breaking. Adapter is a thin normalization layer over existing tables.
 
 ---
 
-### Phase 4: Filter Pills + Scopes (Search Refinement)
-**Deliverable:** User can filter by time, sort by trust, and create/use custom Scopes.
+### Phase 12: Detail/Reader Page
+**Deliverable:** User navigates to /library/item/paper_42 or /library/item/web_187, reads in clean internal reader with focus mode.
+**Why second:** The reader page is the highest-value new surface. It unlocks "internal-first" reading and proves the route structure.
 
-- [x] Build FilterPills component (Scope, Order By, Time, Options)
-- [x] Build ScopeDropdown with built-in options + user custom scopes
-- [x] Run database migration for `scopes` table
-- [x] Create server actions: createScope, updateScope, deleteScope, getUserScopes, reorderScopes
-- [x] Build Scope management settings page
-- [x] Implement Order By: Quality, Recency, Citation Count, Source Trust
-- [x] Implement Time filter: 24h, week, month, year, custom range
-- [x] Implement Options: Exact match, Use my preferences, Open access only
-- [x] Apply Scope constraints in unified search route
-- [x] Active filter pill styling (purple tint)
-- [x] Write tests: Scope CRUD, max 20 enforced, filters applied to results
+- [ ] Create route structure: /library/item/[libraryId]
+- [ ] Build reader page shell: single-column (720px) + collapsible right workbench
+- [ ] Implement web source reader: cleaned extracted content with Source Serif 4 typography
+- [ ] Implement paper reader: abstract + metadata + PDF/full-text toggle
+- [ ] Implement three modes: Focus (default), Working (panel open), Synthesis handoff
+- [ ] Build extraction state surfaces: pending (skeleton + progress), ready (content), partial (content + warning), failed (metadata + "Open original" + retry)
+- [ ] Implement reading progress tracking (scroll-based, debounced writes)
+- [ ] Build right workbench panel: Notes tab, Metadata tab, Highlights tab
+- [ ] Implement breadcrumb navigation: Library / Project / Source
+- [ ] Write tests: renders for both source types, handles all 4 extraction states, reading progress tracks and resumes, workbench toggles correctly
 
-Risk: **LOW** — data layer + UI. Scopes are simple domain/keyword filters.
-
----
-
-### Phase 5: Save + Web Sources Database (Library Integration)
-**Deliverable:** User clicks (+) on a result → saved to Library → visible in Library page → linkable to Projects.
-
-- [x] Run database migration for `web_sources` and `project_web_sources` tables
-- [x] Create server actions: saveWebSource, getWebSources, archiveWebSource, deleteWebSource, linkToProject
-- [x] Implement duplicate prevention (unique user_id + url)
-- [ ] Implement plan-based save limits
-- [x] Build save interaction on ResultCard (+ icon → checkmark, toast notification)
-- [x] Build "Save to Project..." picker in actions menu
-- [x] Update Library page to show Web Sources alongside Papers
-- [x] Implement soft delete with 30-day recovery
-- [x] Write tests: save CRUD, duplicate prevention, plan limits, soft delete, cascade, multi-project linking
-
-Risk: **LOW** — follows existing project_papers pattern exactly. Schema already built.
+Risk: **MEDIUM** — new route structure and reader rendering for arbitrary web content. Extraction edge cases will surface.
 
 ---
 
-### Phase 6: Content Extraction + Annotation (Reading & Highlighting)
-**Deliverable:** User opens a saved web source → reads clean content → highlights passages with colors → adds notes.
+### Phase 13: Home Screen + Workflow State Navigation
+**Deliverable:** Library home shows momentum-oriented sections. Sidebar navigation with workflow states works. User triages items between states.
+**Why third:** Home screen + sidebar + workflow states form the navigational spine of the new Library.
 
-- [x] Create `src/lib/web/content-extractor.ts` using Jina Reader (existing pattern)
-- [x] Background extraction job: triggered on save, extracts content, updates `content_html` + `content_plain`
-- [x] Build Web Source Reader view (clean rendered HTML from snapshot)
-- [x] Run database migration for `web_source_highlights` table
-- [x] Implement highlighting on web content (text selection → color picker → save)
-- [x] Implement notes on highlights
-- [x] Implement general notes on web source
-- [x] Reuse existing annotation color enum (yellow, green, red, blue, purple)
-- [x] Make highlights citable in editor drafts
-- [x] Write tests: content extraction, highlight CRUD, notes, citation integration
+- [ ] Create route structure: /library (home), /library/inbox, /library/core, /library/background, /library/archived
+- [ ] Build Library sidebar: workflow states with counts (Inbox, Core, Background, Archived, All Sources, Projects, Trash)
+- [ ] Build getLibraryHome() aggregator: Continue Reading, Active Project, Needs Review, Recently Saved
+- [ ] Build secondary sections (earned, behavior-gated): Ready to Cite, Recently Highlighted, Sent to Notebook
+- [ ] Build source cards: unified treatment for papers and web sources (title, state badge, source/journal, read status, project, trust dot)
+- [ ] Implement workflow state transitions with card animation + undo toast
+- [ ] Implement "Show more" pagination (20-30 items, then "Show 20 more" with counter)
+- [ ] Wire URL-backed state for all views (survives refresh, back button works)
+- [ ] Build feature flag to toggle between old and new Library
+- [ ] Write tests: home sections render with correct data, state transitions work with undo, URL state persists
 
-Risk: **MEDIUM** — content extraction from arbitrary web pages can be unpredictable. Readability handles 90% of cases. Edge cases will appear.
-
----
-
-### Phase 7: Source Info Panel + Actions Menu (Interaction Polish)
-**Deliverable:** User clicks shield → sees domain details + preference controls. Full actions menu with keyboard shortcuts.
-
-- [x] Build SourceInfoPanel (inline expansion with domain name, trust tier, type, tracker info, preference controls)
-- [x] Build ActionsMenu ("..." dropdown with Save, Save to Project, Cite, Open Original, Summarize, Ask About, More from source, Block, Copy Link)
-- [x] Add keyboard shortcut labels to every menu item
-- [x] Wire "Block this source" to domain preferences (sets to Mute)
-- [x] Wire "More from this source" to re-search scoped to domain
-- [x] Build "My Sources" settings page (manage all domain preferences)
-- [x] Write tests: source info panel renders, actions execute correctly
-
-Risk: **LOW** — UI polish, no new infrastructure.
+Risk: **MEDIUM** — aggregator query performance across two source tables. Card animation choreography for state transitions.
 
 ---
 
-### Phase 8: Keyboard Navigation + Search History (Power User Features)
-**Deliverable:** User navigates entirely by keyboard. Search history accessible via clock icon.
+### Phase 14: Annotation System
+**Deliverable:** User highlights passages in the internal reader, adds notes, annotations are persisted and retrievable.
+**Why fourth:** Annotations make the reader page sticky — they're the reason users stay inside the app instead of opening sources externally.
 
-- [x] Implement j/k result navigation with visible highlight
-- [x] Implement / for search focus, 1-4 for tabs, ]/[ for tab cycling
-- [x] Implement S/O/C/Q/I/B action shortcuts
-- [x] Implement X for selection, Shift+arrows for range
-- [x] Build KeyboardShortcutsOverlay (? trigger, two-column layout)
-- [x] Run database migration for `explore_search_history` table
-- [x] Create server actions: addSearchHistory, getSearchHistory, deleteSearchHistory, clearAllHistory
-- [x] Build SearchHistoryDropdown (clock icon, recent queries with tab/scope context)
-- [x] Implement FIFO at 100 entries
-- [x] Write tests: keyboard nav, history CRUD, FIFO enforcement
+- [ ] Build inline highlighting on web source reader (text selection -> style picker -> save)
+- [ ] Build inline highlighting on paper reader (abstract text)
+- [ ] Implement two highlight styles: default (yellow) and important (library accent blue)
+- [ ] Implement notes on highlights (linked in workbench panel)
+- [ ] Implement general notes on sources
+- [ ] Build Highlights tab in workbench: list of highlights with notes, click jumps to source position
+- [ ] Wire annotations to library_annotations table with anchor_type and anchor_payload
+- [ ] Write tests: highlight CRUD, notes CRUD, anchor persistence, cross-source-type consistency
 
-Risk: **LOW** — keyboard handling is well-understood. History is simple CRUD.
-
----
-
-### Phase 9: On-Demand Synthesis (AI Layer)
-**Deliverable:** User presses Q → AI synthesis streams above results with colored citation markers.
-
-- [x] Build SynthesisBlock component (collapsible, streaming, citation markers)
-- [x] Create synthesis API endpoint (or extend existing /api/research/synthesize)
-- [x] Synthesis draws from top results across current tab
-- [x] Citation markers colored by trust tier of cited source
-- [x] Keyboard shortcut Q toggles synthesis
-- [x] Synthesis collapsible via button or Q again
-- [x] Write tests: synthesis generates, citations link to results, streaming works, collapse works
-
-Risk: **LOW** — existing synthesis infrastructure exists (AISynthesisPanel, /api/research/synthesize). This extends it for web sources.
+Risk: **MEDIUM** — text selection and anchor persistence across different content formats (clean HTML vs. PDF) is tricky. Highlight restoration on re-render requires stable anchors.
 
 ---
 
-### Phase 10: Mobile + Responsive + Polish
-**Deliverable:** Explore works beautifully on mobile. All edge cases handled. Ready for users.
+### Phase 15: Command Palette + Project Switching
+**Deliverable:** Cmd+K searches sources, highlights, notes, and projects. Project switching re-scopes the entire Library.
+**Why fifth:** Command palette is the #1 re-entry mechanism. Project switching is the organizing spine.
 
-- [x] Responsive layout: tabs/pills horizontal scroll on mobile
-- [x] Save icon and actions menu always visible on mobile (no hover) + 44px touch targets
-- [ ] Source Info panel as bottom sheet on mobile — BLOCKED (Phase 7 not built)
-- [x] Hover states: shadow lift on desktop result cards (100ms ease, dark mode shadow)
-- [x] Loading states for search (skeleton shimmer) — content extraction blocked by Phase 6
-- [x] Error states for failed searches (with retry) — extraction blocked by Phase 6
-- [x] Empty states for no results, no history, coming soon, unavailable
-- [x] Final visual polish against UI Brief specs (toast, shadows, responsive dropdowns, font weights)
-- [ ] Cross-browser testing — manual audit required
-- [x] Performance audit (React.memo on ResultCard, memoized callbacks, instant tab switching)
-- [x] E2E test suite for full Explore workflow (16 tests)
+- [ ] Extend existing command-palette.tsx with route-aware Library groups
+- [ ] Implement grouped results: Sources (by title), Highlights & Notes (by text), Projects, Commands, Search in Explore (fallback)
+- [ ] Build project context switcher in Library header
+- [ ] Implement project switching: URL changes, page title changes, search placeholder changes, source list re-scopes
+- [ ] Store last_active_project_id server-side, restore on Library return
+- [ ] Ensure "All Library" option always visible
+- [ ] Write tests: Cmd+K returns correct grouped results, project switching updates URL and content, last active project persists
 
-Risk: **LOW** — polish and responsive design. No new architecture.
+Risk: **LOW** — extends existing cmdk infrastructure. Project switching is URL + query parameter changes.
+
+---
+
+### Phase 16: Citation Handoff + Editor Integration
+**Deliverable:** User selects sources in Library, sends citations to Editor in one action. Editor confirms import. Sources marked "Cited."
+**Why sixth:** Citation handoff closes the Library -> Editor loop, making Library the starting point for writing.
+
+- [ ] Build createEditorHandoff() server action with normalized payload
+- [ ] Implement single-source citation flow from detail page
+- [ ] Implement bulk citation flow from list view (multi-select -> "Send to Editor")
+- [ ] Build Editor consumption: fetch handoff by ID, import citations, show confirmation panel
+- [ ] Auto-mark sources with "Cited" badge after Editor consumption
+- [ ] Mark handoff status as consumed after Editor import
+- [ ] Write tests: handoff create/consume lifecycle, single + bulk, status transitions, Cited badge appears
+
+Risk: **LOW** — editor_handoffs table already migrated in Phase 11. Editor already has citation infrastructure.
+
+---
+
+### Phase 17: Explore Integration + Ingestion + Polish
+**Deliverable:** "From your library" block in Explore. URL paste and PDF upload in Library. Trash with 30-day retention. Feature flag flipped to new Library.
+**Why last:** Integration and polish phase. Everything needs to work before connecting modules and opening to users.
+
+- [ ] Build "From your library" block at top of Explore results (URL overlap check promoted to visible block)
+- [ ] Implement paste URL into Library: extraction + storage
+- [ ] Implement PDF upload into Library
+- [ ] Implement save feedback from Explore: animated button + toast with "Add to Project" action
+- [ ] Build Trash view with 30-day retention and restore capability
+- [ ] Implement permanent deletion from Trash with confirmation dialog
+- [ ] Implement deletion undo toast (5-8 seconds)
+- [ ] Apply visual language: library accent colors, flat bordered cards, workflow state dots, trust tier dots
+- [ ] Final responsive/mobile pass (pages must load on mobile)
+- [ ] Flip feature flag: new Library becomes default
+- [ ] Write tests: Explore integration shows library matches, URL paste works, PDF upload works, trash/restore lifecycle, deletion undo
+
+Risk: **LOW** — integration and polish. No new architecture. Largest risk is Explore query performance with library matching.
 
 ---
 
@@ -181,17 +138,16 @@ Risk: **LOW** — polish and responsive design. No new architecture.
 
 | Phase | Deliverable | Risk | Dependencies |
 |---|---|---|---|
-| 1 | SearXNG deployed + adapter working | MEDIUM | GCP account |
-| 2 | Trust tiers + domain preferences | LOW | Phase 1 |
-| 3 | Explore page with results + tabs | LOW | Phase 1 |
-| 4 | Filter pills + Scopes | LOW | Phase 3 |
-| 5 | Save to Library + web sources DB | LOW | Phase 3 |
-| 6 | Content extraction + annotation | MEDIUM | Phase 5 |
-| 7 | Source Info panel + actions menu | LOW | Phase 2, 5 |
-| 8 | Keyboard nav + search history | LOW | Phase 3 |
-| 9 | On-demand synthesis | LOW | Phase 3 |
-| 10 | Mobile + responsive + polish | LOW | All above |
+| 11 | Unified adapter + schema migrations | LOW | None (Explore complete) |
+| 12 | Detail/reader page with focus mode | MEDIUM | Phase 11 |
+| 13 | Home screen + workflow states + sidebar | MEDIUM | Phase 11 |
+| 14 | Annotation system (highlights + notes) | MEDIUM | Phase 12 |
+| 15 | Command palette + project switching | LOW | Phase 13 |
+| 16 | Citation handoff + editor integration | LOW | Phase 11 |
+| 17 | Explore integration + ingestion + polish | LOW | All above |
 
-**Phases 2-5 can run in parallel** after Phase 1. Phase 6 depends on Phase 5. Phases 7-9 can run in parallel after their dependencies. Phase 10 is the final pass.
+**Phases 12 and 13 can run in parallel** after Phase 11. Phase 14 depends on Phase 12. Phases 15 and 16 can run in parallel after their dependencies. Phase 17 is the final integration pass.
 
-**Estimated total:** 10 phases. Each phase is independently demoable and shippable.
+**Total: 7 phases.** Each phase is independently demoable. Feature flag protects existing Library throughout Phases 11-16. Flag flips in Phase 17.
+
+**Migration strategy:** Strangler fig pattern. New Library builds alongside old Library behind feature flag. Old Library code removed after Phase 17 stabilizes.

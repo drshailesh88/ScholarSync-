@@ -1,147 +1,143 @@
-# Requirements — Explore Module V1
+# Requirements — Library Module Redesign
 
 ## Version
-v1 — Multi-Source Discovery with Web/News/Discussions Tabs
+v2 — Library Module Redesign: From Utility Page to Research Source System
 
-## Must Have (v1)
+## Previous Milestone
+v1 — Explore Module (Phases 1-10, complete)
 
-### Search Infrastructure
-- [x] SearXNG deployed on GCP and returning JSON results for web, news, and social media queries
-- [x] SearXNG source adapter normalizes results into the existing UnifiedSearchResult format
-- [x] Unified search route fans out to SearXNG alongside existing academic sources
-- [x] Web/News/Discussions tabs search via SearXNG categories (general, news, social media)
-- [x] Academic tab continues using existing 5-source pipeline (PubMed, S2, OpenAlex, arXiv, ClinicalTrials) — zero regression
-- [x] Results appear in under 2 seconds
-- [x] Graceful degradation: if SearXNG is down, Academic tab works normally; other tabs show "temporarily unavailable"
+## Must Have (v2)
 
-### Trust & Quality
-- [x] Trust Tier classifier assigns Government/Major Journalism/Community/Other to every web result
-- [x] Trust Indicator (3px colored left border) visible on every result card
-- [x] Cohere rerank applied to web results (same as academic results)
-- [x] Domain preferences (Mute/Lower/Neutral/Higher/Prefer) filter and boost results
-- [x] Source Info panel shows domain details and preference controls on shield icon click
+### Unified Domain Layer
+- [ ] LibrarySource TypeScript adapter normalizes papers and web sources into one frontend model
+- [ ] Composite libraryId format (paper_42, web_187) encodes source type
+- [ ] Unified service functions (getLibrarySources, getLibrarySourceById, moveLibrarySourceState) dispatch to correct underlying table
+- [ ] Papers and web sources remain in separate database tables — no physical unification
 
-### Explore Page UX
-- [x] Explore page with Kagi-style centered search bar (glass-morphism pill)
-- [x] Landing page shows only search bar and tabs — no feed, no trending, no recommendations
-- [x] Horizontal tabs: Academic | Web | News | Discussions | More
-- [x] Tab switching is instant (client-side filter on already-fetched results)
-- [x] Filter pills below tabs: Scope | Order By | Time | Options | Advanced
-- [x] Single-column results layout, 780px max-width, 5-6 results per screen
-- [x] Traditional pagination (not infinite scroll)
-- [x] Stats line showing result count and timing
+### Schema Changes
+- [ ] userReferences table gains: workflow_state (inbox|core|background|archived, default inbox), reading_progress (int 0-100), read_status (unread|in_progress|read, default unread), last_read_at (timestamp)
+- [ ] webSources table gains: same fields + extraction_state replaces content_extracted boolean (pending|ready|partial|failed)
+- [ ] New library_annotations table: unified highlights/notes across source types with anchor_type and anchor_payload
+- [ ] New editor_handoffs table: server-backed citation transport with status lifecycle (pending|consumed|cancelled)
+- [ ] User profile gains last_active_project_id
+- [ ] Data migration: existing saved items get workflow_state=inbox, archived web sources get workflow_state=archived
 
-### Result Cards
-- [x] Card anatomy: trust indicator + title + URL breadcrumb + author/source + snippet + date + save icon + actions menu
-- [x] Academic tab cards show journal name, authors, evidence level
-- [x] News tab cards show publication name and relative time
-- [x] Discussions tab cards show platform, community, engagement
-- [x] Hover: subtle background change, action buttons appear
-- [x] Mobile: save icon and actions menu always visible (no hover)
+### Route Structure
+- [ ] /library shows momentum-oriented home screen
+- [ ] /library/inbox, /library/core, /library/background, /library/archived show workflow state views
+- [ ] /library/project/[projectId] shows project-scoped library
+- [ ] /library/project/[projectId]/inbox etc. shows project + state
+- [ ] /library/item/[libraryId] shows canonical detail/reader page
+- [ ] All navigation state is URL-backed (survives refresh, supports back button)
 
-### Actions Menu
-- [x] "..." menu on each result with: Save to Library, Save to Project, Cite in Draft, Open Original, Summarize Page, Ask About Page, More from this source, Block this source, Copy Link
-- [x] Keyboard shortcuts shown inline in menu
+### Detail/Reader Page
+- [ ] Single-column layout (720px) with collapsible right workbench panel
+- [ ] Web sources display cleaned extracted content with inline highlighting support
+- [ ] Papers display abstract + metadata + PDF/full-text toggle
+- [ ] Same page shell for both source types — differences only in content rendering
+- [ ] Three modes: Focus (default, panel hidden), Working (panel open), Synthesis handoff
+- [ ] Four extraction states (pending, ready, partial, failed) each have designed surfaces
+- [ ] Graceful fallback when extraction fails: metadata and actions still work, prominent "Open original" button
+- [ ] Retry extraction available when initial result is poor
+- [ ] Reading progress tracked: scroll-based for articles, page-based for PDFs, debounced writes (10-15s + blur/route change)
 
-### Saving & Library
-- [x] One-click save (+) to Library on every result
-- [x] Save icon transforms from (+) to checkmark when saved
-- [x] Subtle toast "Saved to Library" auto-dismisses in 2 seconds
-- [x] Duplicate prevention (same URL, same user)
-- [x] All metadata auto-captured at save time (title, URL, domain, author, date, snippet, source type, trust tier, tab, search query, thumbnail)
-- [x] Web sources stored in new `web_sources` table (papers table NOT touched)
-- [x] Saved sources linkable to multiple projects via `project_web_sources`
-- [ ] Plan-dependent save limits enforced
+### Home Screen
+- [ ] Home screen answers "what should I resume, what matters for my project, what deserves attention next"
+- [ ] Primary sections: Continue Reading (1-3 items), For Your Active Project (2-4 items), Needs Review (unread, high-signal), Recently Saved (5-7 items)
+- [ ] Secondary sections appear only when user has relevant data: Ready to Cite, Recently Highlighted, Sent to Notebook
+- [ ] One getLibraryHome() aggregator returning all sections (4-6 database queries total)
+- [ ] Server cache (15-60s), invalidated on user mutations
 
-### Content Extraction & Annotation
-- [ ] Background content extraction via Mozilla Readability after save (save feels instant)
-- [ ] Clean HTML snapshot stored for highlighting
-- [ ] User can highlight passages in saved web sources with 5 colors (yellow, green, red, blue, purple)
-- [ ] User can add notes to highlights
-- [ ] User can add a general note to a web source
-- [ ] Highlights citable in drafts via the editor
-- [ ] Same annotation UX for web sources and academic papers
+### Workflow States
+- [ ] 4 mutually exclusive primary states: Inbox, Core, Background, Archived
+- [ ] Sources can be moved between states with card animation + undo toast
+- [ ] In filtered view: card slides/fades out when moved to different state
+- [ ] In All Sources view: state badge updates in place
+- [ ] Bulk state changes work on multi-select
+- [ ] Sidebar shows Inbox, Core, Background, Archived, All Sources, Projects, Trash with counts
 
-### Scopes
-- [ ] Scope dropdown in filter pills with built-in options (All Sources, Academic, Web, News, Discussions)
-- [ ] User can create custom Scopes with included/excluded domains, keywords, date ranges
-- [ ] Max 20 Scopes per user, free for all plans
-- [ ] Scopes can be toggled on/off and reordered
-- [ ] "Edit Scopes..." link opens settings page
+### Annotation
+- [ ] Unified library_annotations table supports highlights and notes across both source types
+- [ ] Users can highlight passages in the internal reader
+- [ ] Users can add notes to highlights
+- [ ] Two highlight styles: default (yellow) and important (library accent blue tint)
+- [ ] Annotations are searchable via command palette
 
-### Domain Preferences
-- [x] 5-level system: Mute / Lower / Neutral / Higher / Prefer
-- [x] Shield icon on each result opens Source Info panel with preference controls
-- [x] "My Sources" settings page to manage all domain preferences
-- [x] Max 1000 domain preferences, free for all plans
-- [x] Muted domains never appear in results
-- [x] Preferred domains appear near top
+### Command Palette
+- [ ] Extend existing Cmd+K with route-aware Library groups
+- [ ] Grouped results: Sources, Highlights & Notes, Projects, Commands, Search in Explore
+- [ ] Full-text search available as explicit secondary mode
 
-### On-Demand Synthesis
-- [x] Click button or press Q to generate synthesis
-- [x] Synthesis appears above results with inline citation markers
-- [x] Citation markers colored by Trust Tier
-- [x] Synthesis streams word-by-word
-- [x] Synthesis is collapsible
-- [x] Only fires when user explicitly requests (not automatic)
+### Project Organization
+- [ ] Project switching changes URL, page title, search placeholder, and source list
+- [ ] last_active_project_id stored server-side for home screen and Cmd+K boosting
+- [ ] "All Library" option always available to exit project scope
+- [ ] Library remembers last active project on return
 
-### Keyboard Navigation
-- [x] j/k or arrows to navigate results
-- [x] / to focus search bar
-- [x] 1/2/3/4 to switch tabs
-- [x] S to save, O to open, C to cite, Q to synthesize, I for info, B to block
-- [x] X to select, Shift+arrows to extend selection
-- [x] ? to show keyboard shortcuts overlay
+### Citation Handoff
+- [ ] Server-backed editor_handoffs table replaces sessionStorage bridge
+- [ ] Normalized payload for all source types, single + bulk
+- [ ] Flow: Library -> createEditorHandoff() -> navigate to Editor with handoff ID -> Editor fetches, imports, marks consumed
+- [ ] Sources auto-marked "Cited" badge after Editor consumption
+- [ ] Editor shows confirmation panel when receiving citations
 
-### Search History
-- [x] Clock icon next to search bar
-- [x] Shows recent searches (last 100, FIFO)
-- [x] Each entry shows query, tab, scope
-- [x] Delete individual or clear all
+### Explore Integration
+- [ ] "From your library" block at top of Explore results when saved sources match query
+- [ ] V1: promote existing URL overlap check to visible block
+- [ ] Fast follow: async title + notes/highlights search against Library corpus
 
-### Soft Delete
-- [ ] Deleted web sources go to Trash for 30 days
-- [ ] Highlights and notes cascade-delete with source
-- [ ] Recovery within 30 days restores everything
+### Cards and Lists
+- [ ] Source cards show title, workflow state, source/journal, read status, and project
+- [ ] Cards look the same whether source is paper or web article (unified visual treatment)
+- [ ] Trust/evidence tier shown as small dot indicator on cards
+- [ ] List loads 20-30 items with "Show more" button and counter
 
-### Navigation
-- [x] Sidebar renamed from "Discover" to "Explore"
-- [x] Route updated accordingly
+### Saving and Ingestion
+- [ ] Sources saved from Explore arrive in Library as Inbox items
+- [ ] Paste URL directly into Library triggers extraction and storage
+- [ ] PDF upload into Library supported
+- [ ] Save feedback: animated button + toast with "Add to Project" action
 
-## Should Have (v1.1)
+### Deletion and Safety
+- [ ] Deletion moves sources to Trash with undo toast (5-8 seconds)
+- [ ] Trash retains sources for 30 days with restore capability
+- [ ] Permanent deletion only available from Trash with confirmation dialog
 
-- [ ] Firecrawl API fallback for pages Readability can't extract
-- [ ] "More" tab containing Images, Videos, Podcasts (if SearXNG supports them)
-- [ ] Advanced Search modal with structured query builder
-- [ ] Result grouping (same domain) — toggleable in settings
-- [ ] Bulk actions on selected results (save all, tag all)
+### Visual Language
+- [ ] Inherited Editor palette (#FAFAF8 cream, warm charcoal ink, #6D28D9 purple brand)
+- [ ] Muted blue library accent (#4A7AB5) for Library-local elements
+- [ ] Flat bordered cards, colored dot + text workflow badges, small dot trust indicators
+- [ ] 224px fixed sidebar, 720px reader column
+- [ ] DM Sans for UI/cards (15px), Source Serif 4 for reader content (17px)
+
+## Should Have (v2.1)
+
+- [ ] Click-to-peek quick preview (Space key on focused card)
+- [ ] Density toggle UI (cards support both spacious and compact)
+- [ ] Table view (secondary view mode for power users)
+- [ ] Reader keyboard shortcuts (H highlight, T tag, N note)
+- [ ] Bulk actions multi-select UI with selection toolbar
+- [ ] "From your library" async title + notes/highlights search
 
 ## Out of Scope
 
-- Sharing web sources or public links
-- Email notifications for saved search alerts
-- Import from Readwise/Instapaper
-- Export web sources
-- Community domain rankings
-- Shareable Scopes
-- AI-suggested Scope domains
-- Self-hosted reranker
-- Real-time collaboration on annotations
-- Browser extension
+- Physical unification of papers + web_sources tables
+- TTS / audio (defer to Reading Room)
 - Offline support
-- Admin panel
+- Public sharing / annotated links
+- External export (Obsidian/Notion)
+- Auto-archive suggestions
+- Full-text search in Cmd+K default results
+- Newsletter/RSS ingestion (separate module)
+- Board/kanban view
+- EPUB support
 
 ## Source
 
-- PRD: GitHub Issue #51
-- Planning decisions: `.planning/decisions/2026-03-30-discovery-module-ux-architecture.md`
-- Reranking research: `.planning/decisions/2026-03-30-open-source-reranking-research.md`
-- UX Brief: `.planning/ux-brief.md`
-- UI Brief: `.planning/ui-brief.md`
-- Data Requirements: `.planning/data-requirements.md`
-- Infra Requirements: `.planning/infra-requirements.md`
-- Kagi Reverse Engineering: `.planning/kagi-reverse-engineering.md`
-- Competition Research: `.planning/competition-research.md`
+- PRD: GitHub Issue #65
+- Planning decisions: `.planning/decisions/2026-04-01-library-module-redesign.md`
+- Competition research: `.planning/competition-research-library.md`
+- UX Brief: `.planning/ux-brief-library.md`
+- UI Brief: `.planning/ui-brief-library.md`
+- Quality gaps: `.planning/quality-gaps/grill-decisions-library.md`
 - Ubiquitous Language: `UBIQUITOUS_LANGUAGE.md`
-- Schema: `src/lib/db/schema/explore.ts`
-- Infra: `infra/searxng/`, `INFRA_DECISIONS.md`
