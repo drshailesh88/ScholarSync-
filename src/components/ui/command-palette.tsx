@@ -146,7 +146,8 @@ export function CommandPalette() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       try {
-        const [docResults, libResults, annotResults, projResults] = await Promise.all([
+        // Use allSettled so one failing search doesn't kill the others
+        const [docResult, libResult, annotResult, projResult] = await Promise.allSettled([
           universalDocumentSearch(inputValue),
           searchLibrarySources(inputValue, 6),
           searchAnnotations(inputValue, 4),
@@ -156,10 +157,12 @@ export function CommandPalette() {
             )
           ),
         ]);
-        setSearchResults(docResults);
-        setLibraryResults(libResults);
-        setAnnotationResults(annotResults);
-        setProjectResults(projResults.slice(0, 5));
+        setSearchResults(docResult.status === "fulfilled" ? docResult.value : []);
+        setLibraryResults(libResult.status === "fulfilled" ? libResult.value : []);
+        setAnnotationResults(annotResult.status === "fulfilled" ? annotResult.value : []);
+        setProjectResults(
+          (projResult.status === "fulfilled" ? projResult.value : []).slice(0, 5)
+        );
       } catch (err) {
         console.error("Command palette search failed:", err);
         setSearchResults([]);
