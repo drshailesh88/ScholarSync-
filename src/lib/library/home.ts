@@ -119,6 +119,41 @@ export async function getLibraryCounts(): Promise<LibraryCounts> {
   return counts;
 }
 
+// ── Efficient count for pagination ─────────────────────────────
+
+/** Get total count of sources matching filters (without fetching all rows) */
+export async function getLibrarySourceCount(
+  workflowState?: "inbox" | "core" | "background" | "archived"
+): Promise<number> {
+  const userId = await getCurrentUserId();
+
+  const paperConditions = [
+    eq(userReferences.userId, userId),
+    isNull(userReferences.deletedAt),
+  ];
+  const webConditions = [
+    eq(webSources.user_id, userId),
+    isNull(webSources.deleted_at),
+  ];
+
+  if (workflowState) {
+    paperConditions.push(eq(userReferences.workflowState, workflowState));
+    webConditions.push(eq(webSources.workflow_state, workflowState));
+  }
+
+  const [paperCount] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(userReferences)
+    .where(and(...paperConditions));
+
+  const [webCount] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(webSources)
+    .where(and(...webConditions));
+
+  return (paperCount?.count ?? 0) + (webCount?.count ?? 0);
+}
+
 // ── Internal section queries ───────────────────────────────────
 
 /** Continue Reading: in-progress items with reading progress > 0, ordered by last_read_at desc */
@@ -185,7 +220,7 @@ async function getActiveProject(userId: string): Promise<LibrarySource[]> {
 }
 
 /** Needs Review: unread items in inbox, newest first */
-async function getNeedsReview(userId: string): Promise<LibrarySource[]> {
+async function getNeedsReview(_userId: string): Promise<LibrarySource[]> {
   const { getLibrarySources } = await import("./service");
   return getLibrarySources({
     workflowState: "inbox",
@@ -197,7 +232,7 @@ async function getNeedsReview(userId: string): Promise<LibrarySource[]> {
 }
 
 /** Recently Saved: all non-archived, newest first */
-async function getRecentlySaved(userId: string): Promise<LibrarySource[]> {
+async function getRecentlySaved(_userId: string): Promise<LibrarySource[]> {
   const { getLibrarySources } = await import("./service");
   return getLibrarySources({
     sortBy: "date_added",

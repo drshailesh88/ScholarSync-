@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { isNewLibraryEnabled } from "@/lib/feature-flags";
 import { getLibrarySources } from "@/lib/library/service";
+import { getLibrarySourceCount } from "@/lib/library/home";
 import { StateViewClient } from "./StateViewClient";
 import type { WorkflowState, LibrarySourceFilters } from "@/lib/library";
 
@@ -41,15 +42,10 @@ export default async function LibraryStateView({
     offset: 0,
   };
 
-  const sources = await getLibrarySources(filters);
-
-  // Get total count for pagination (fetch one extra page to detect "has more")
-  const allSources = await getLibrarySources({
-    ...filters,
-    limit: 500,
-    offset: 0,
-  });
-  const totalCount = allSources.length;
+  const [sources, totalCount] = await Promise.all([
+    getLibrarySources(filters),
+    getLibrarySourceCount(validState === "all" ? undefined : validState),
+  ]);
 
   return (
     <StateViewClient
