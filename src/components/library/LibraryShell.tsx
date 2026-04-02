@@ -2,9 +2,11 @@
 
 import { useState, useCallback } from "react";
 import { LibrarySidebar, type LibraryCounts } from "./LibrarySidebar";
+import { ProjectSwitcher } from "./ProjectSwitcher";
 import { UndoToast } from "./UndoToast";
 import { moveLibrarySourceState } from "@/lib/library/service";
 import type { WorkflowState } from "@/lib/library";
+import type { LibraryProject } from "@/lib/library/project-context";
 
 interface UndoEntry {
   libraryId: string;
@@ -15,9 +17,13 @@ interface UndoEntry {
 
 export function LibraryShell({
   counts,
+  projects,
+  activeProjectId,
   children,
 }: {
   counts: LibraryCounts;
+  projects: LibraryProject[];
+  activeProjectId: number | null;
   children: React.ReactNode;
 }) {
   const [undoEntry, setUndoEntry] = useState<UndoEntry | null>(null);
@@ -73,9 +79,19 @@ export function LibraryShell({
 
   return (
     <div className="flex h-[calc(100vh-4rem)]">
-      <LibrarySidebar counts={liveCounts} />
-      <div className="flex-1 overflow-y-auto px-6 py-4">
-        {children}
+      <LibrarySidebar counts={liveCounts} activeProjectId={activeProjectId} />
+      <div className="flex-1 overflow-y-auto">
+        {/* Library header with project switcher */}
+        <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border-subtle)]">
+          <ProjectSwitcher
+            projects={projects}
+            activeProjectId={activeProjectId}
+          />
+        </div>
+
+        <div className="px-6 py-4">
+          {children}
+        </div>
       </div>
 
       {undoEntry && (

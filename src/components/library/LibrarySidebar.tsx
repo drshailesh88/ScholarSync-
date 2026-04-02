@@ -31,14 +31,25 @@ interface SidebarItem {
   matchExact?: boolean;
 }
 
-export function LibrarySidebar({ counts }: { counts: LibraryCounts }) {
+export function LibrarySidebar({
+  counts,
+  activeProjectId,
+}: {
+  counts: LibraryCounts;
+  activeProjectId?: number | null;
+}) {
   const pathname = usePathname();
 
+  // When a project is active, scope workflow state links to the project
+  const prefix = activeProjectId
+    ? `/library/project/${activeProjectId}`
+    : "/library";
+
   const workflowItems: SidebarItem[] = [
-    { label: "Inbox", href: "/library/inbox", icon: <Tray size={18} />, count: counts.inbox },
-    { label: "Core", href: "/library/core", icon: <Star size={18} />, count: counts.core },
-    { label: "Background", href: "/library/background", icon: <Eye size={18} />, count: counts.background },
-    { label: "Archived", href: "/library/archived", icon: <Archive size={18} />, count: counts.archived },
+    { label: "Inbox", href: `${prefix}/inbox`, icon: <Tray size={18} />, count: counts.inbox },
+    { label: "Core", href: `${prefix}/core`, icon: <Star size={18} />, count: counts.core },
+    { label: "Background", href: `${prefix}/background`, icon: <Eye size={18} />, count: counts.background },
+    { label: "Archived", href: `${prefix}/archived`, icon: <Archive size={18} />, count: counts.archived },
   ];
 
   const otherItems: SidebarItem[] = [
@@ -49,17 +60,29 @@ export function LibrarySidebar({ counts }: { counts: LibraryCounts }) {
 
   const isActive = (item: SidebarItem) => {
     if (item.matchExact) return pathname === item.href;
-    return pathname === item.href || pathname.startsWith(item.href + "/");
+    // Match both project-scoped and non-project-scoped paths
+    if (pathname === item.href) return true;
+    if (pathname.startsWith(item.href + "/")) return true;
+    // Also match if the state part matches across project/non-project
+    const stateMatch = item.href.match(/\/(inbox|core|background|archived)$/);
+    if (stateMatch) {
+      const state = stateMatch[1];
+      return pathname.endsWith(`/${state}`);
+    }
+    return false;
   };
 
-  const homeActive = pathname === "/library";
+  const homeHref = activeProjectId
+    ? `/library/project/${activeProjectId}`
+    : "/library";
+  const homeActive = pathname === "/library" || pathname === homeHref;
 
   return (
     <aside className="w-56 shrink-0 flex flex-col h-full border-r border-[var(--border-subtle)] py-4">
       {/* Home link */}
       <div className="px-3 mb-2">
         <Link
-          href="/library"
+          href={homeHref}
           className={cn(
             "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors",
             homeActive
