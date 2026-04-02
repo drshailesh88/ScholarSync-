@@ -25,8 +25,8 @@ v1 — Explore Module (Phases 1-10, complete)
 ### Route Structure
 - [x] /library shows momentum-oriented home screen
 - [x] /library/inbox, /library/core, /library/background, /library/archived show workflow state views
-- [ ] /library/project/[projectId] shows project-scoped library
-- [ ] /library/project/[projectId]/inbox etc. shows project + state
+- [x] /library/project/[projectId] shows project-scoped library
+- [x] /library/project/[projectId]/inbox etc. shows project + state
 - [x] /library/item/[libraryId] shows canonical detail/reader page
 - [x] All navigation state is URL-backed (survives refresh, supports back button)
 
@@ -64,15 +64,15 @@ v1 — Explore Module (Phases 1-10, complete)
 - [ ] Annotations are searchable via command palette
 
 ### Command Palette
-- [ ] Extend existing Cmd+K with route-aware Library groups
-- [ ] Grouped results: Sources, Highlights & Notes, Projects, Commands, Search in Explore
+- [x] Extend existing Cmd+K with route-aware Library groups
+- [x] Grouped results: Sources, Highlights & Notes, Projects, Commands, Search in Explore
 - [ ] Full-text search available as explicit secondary mode
 
 ### Project Organization
-- [ ] Project switching changes URL, page title, search placeholder, and source list
-- [ ] last_active_project_id stored server-side for home screen and Cmd+K boosting
-- [ ] "All Library" option always available to exit project scope
-- [ ] Library remembers last active project on return
+- [x] Project switching changes URL, page title, search placeholder, and source list
+- [x] last_active_project_id stored server-side for home screen and Cmd+K boosting
+- [x] "All Library" option always available to exit project scope
+- [x] Library remembers last active project on return
 
 ### Citation Handoff
 - [ ] Server-backed editor_handoffs table replaces sessionStorage bridge

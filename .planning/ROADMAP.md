@@ -86,13 +86,13 @@ Risk: **MEDIUM** — text selection and anchor persistence across different cont
 **Deliverable:** Cmd+K searches sources, highlights, notes, and projects. Project switching re-scopes the entire Library.
 **Why fifth:** Command palette is the #1 re-entry mechanism. Project switching is the organizing spine.
 
-- [ ] Extend existing command-palette.tsx with route-aware Library groups
-- [ ] Implement grouped results: Sources (by title), Highlights & Notes (by text), Projects, Commands, Search in Explore (fallback)
-- [ ] Build project context switcher in Library header
-- [ ] Implement project switching: URL changes, page title changes, search placeholder changes, source list re-scopes
-- [ ] Store last_active_project_id server-side, restore on Library return
-- [ ] Ensure "All Library" option always visible
-- [ ] Write tests: Cmd+K returns correct grouped results, project switching updates URL and content, last active project persists
+- [x] Extend existing command-palette.tsx with route-aware Library groups
+- [x] Implement grouped results: Sources (by title), Highlights & Notes (by text), Projects, Commands, Search in Explore (fallback)
+- [x] Build project context switcher in Library header
+- [x] Implement project switching: URL changes, page title changes, search placeholder changes, source list re-scopes
+- [x] Store last_active_project_id server-side, restore on Library return
+- [x] Ensure "All Library" option always visible
+- [x] Write tests: Cmd+K returns correct grouped results, project switching updates URL and content, last active project persists
 
 Risk: **LOW** — extends existing cmdk infrastructure. Project switching is URL + query parameter changes.
 

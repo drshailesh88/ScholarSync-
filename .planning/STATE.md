@@ -4,7 +4,7 @@
 **Library Module Redesign** — Created 2026-04-02
 
 ## Current Phase
-Phase 13: Home Screen + Workflow State Navigation — Status: COMPLETE (2026-04-02)
+Phase 15: Command Palette + Project Switching — Status: COMPLETE (2026-04-02)
 
 ## Previous Milestone
 **Explore Module V1** — Phases 1-10 COMPLETE (PRs #52-55 + committed to main)
@@ -28,7 +28,8 @@ Phase 13: Home Screen + Workflow State Navigation — Status: COMPLETE (2026-04-
 - Phase 5: Implementation -> NOT STARTED (Phase 11 next)
 
 ## Quick Reference
-- Next action: Start Phase 14 (Annotation) or Phase 15 (Command Palette + Project Switching) — 14 depends on 12, 15 depends on 13
+- Next action: Start Phase 14 (Annotation) or Phase 16 (Citation Handoff) — 14 depends on 12, 16 depends on 11
+- Phase 15 COMPLETE: 19 tests passing, 2 bugs fixed (Promise.allSettled, project ownership verification)
 - Phase 13 COMPLETE: 23 tests passing, 3 bugs fixed (N+1 count query, UndoToast timer ref, type safety)
 - Phase 12 COMPLETE: 40 tests passing, Codex review approved, 6 bugs fixed
 - Phase 11 COMPLETE: 36 tests passing, Codex review approved, 6 bugs fixed
