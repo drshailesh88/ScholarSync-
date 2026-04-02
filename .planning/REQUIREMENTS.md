@@ -23,38 +23,38 @@ v1 — Explore Module (Phases 1-10, complete)
 - [x] Data migration: existing saved items get workflow_state=inbox, archived web sources get workflow_state=archived
 
 ### Route Structure
-- [ ] /library shows momentum-oriented home screen
-- [ ] /library/inbox, /library/core, /library/background, /library/archived show workflow state views
+- [x] /library shows momentum-oriented home screen
+- [x] /library/inbox, /library/core, /library/background, /library/archived show workflow state views
 - [ ] /library/project/[projectId] shows project-scoped library
 - [ ] /library/project/[projectId]/inbox etc. shows project + state
-- [ ] /library/item/[libraryId] shows canonical detail/reader page
-- [ ] All navigation state is URL-backed (survives refresh, supports back button)
+- [x] /library/item/[libraryId] shows canonical detail/reader page
+- [x] All navigation state is URL-backed (survives refresh, supports back button)
 
 ### Detail/Reader Page
-- [ ] Single-column layout (720px) with collapsible right workbench panel
-- [ ] Web sources display cleaned extracted content with inline highlighting support
-- [ ] Papers display abstract + metadata + PDF/full-text toggle
-- [ ] Same page shell for both source types — differences only in content rendering
-- [ ] Three modes: Focus (default, panel hidden), Working (panel open), Synthesis handoff
-- [ ] Four extraction states (pending, ready, partial, failed) each have designed surfaces
-- [ ] Graceful fallback when extraction fails: metadata and actions still work, prominent "Open original" button
-- [ ] Retry extraction available when initial result is poor
-- [ ] Reading progress tracked: scroll-based for articles, page-based for PDFs, debounced writes (10-15s + blur/route change)
+- [x] Single-column layout (720px) with collapsible right workbench panel
+- [x] Web sources display cleaned extracted content with inline highlighting support
+- [x] Papers display abstract + metadata + PDF/full-text toggle
+- [x] Same page shell for both source types — differences only in content rendering
+- [x] Three modes: Focus (default, panel hidden), Working (panel open), Synthesis handoff
+- [x] Four extraction states (pending, ready, partial, failed) each have designed surfaces
+- [x] Graceful fallback when extraction fails: metadata and actions still work, prominent "Open original" button
+- [x] Retry extraction available when initial result is poor
+- [x] Reading progress tracked: scroll-based for articles, page-based for PDFs, debounced writes (10-15s + blur/route change)
 
 ### Home Screen
-- [ ] Home screen answers "what should I resume, what matters for my project, what deserves attention next"
-- [ ] Primary sections: Continue Reading (1-3 items), For Your Active Project (2-4 items), Needs Review (unread, high-signal), Recently Saved (5-7 items)
-- [ ] Secondary sections appear only when user has relevant data: Ready to Cite, Recently Highlighted, Sent to Notebook
-- [ ] One getLibraryHome() aggregator returning all sections (4-6 database queries total)
+- [x] Home screen answers "what should I resume, what matters for my project, what deserves attention next"
+- [x] Primary sections: Continue Reading (1-3 items), For Your Active Project (2-4 items), Needs Review (unread, high-signal), Recently Saved (5-7 items)
+- [x] Secondary sections appear only when user has relevant data: Ready to Cite, Recently Highlighted, Sent to Notebook
+- [x] One getLibraryHome() aggregator returning all sections (4-6 database queries total)
 - [ ] Server cache (15-60s), invalidated on user mutations
 
 ### Workflow States
-- [ ] 4 mutually exclusive primary states: Inbox, Core, Background, Archived
-- [ ] Sources can be moved between states with card animation + undo toast
-- [ ] In filtered view: card slides/fades out when moved to different state
-- [ ] In All Sources view: state badge updates in place
+- [x] 4 mutually exclusive primary states: Inbox, Core, Background, Archived
+- [x] Sources can be moved between states with card animation + undo toast
+- [x] In filtered view: card slides/fades out when moved to different state
+- [x] In All Sources view: state badge updates in place
 - [ ] Bulk state changes work on multi-select
-- [ ] Sidebar shows Inbox, Core, Background, Archived, All Sources, Projects, Trash with counts
+- [x] Sidebar shows Inbox, Core, Background, Archived, All Sources, Projects, Trash with counts
 
 ### Annotation
 - [ ] Unified library_annotations table supports highlights and notes across both source types
@@ -87,10 +87,10 @@ v1 — Explore Module (Phases 1-10, complete)
 - [ ] Fast follow: async title + notes/highlights search against Library corpus
 
 ### Cards and Lists
-- [ ] Source cards show title, workflow state, source/journal, read status, and project
-- [ ] Cards look the same whether source is paper or web article (unified visual treatment)
-- [ ] Trust/evidence tier shown as small dot indicator on cards
-- [ ] List loads 20-30 items with "Show more" button and counter
+- [x] Source cards show title, workflow state, source/journal, read status, and project
+- [x] Cards look the same whether source is paper or web article (unified visual treatment)
+- [x] Trust/evidence tier shown as small dot indicator on cards
+- [x] List loads 20-30 items with "Show more" button and counter
 
 ### Saving and Ingestion
 - [ ] Sources saved from Explore arrive in Library as Inbox items
@@ -104,11 +104,11 @@ v1 — Explore Module (Phases 1-10, complete)
 - [ ] Permanent deletion only available from Trash with confirmation dialog
 
 ### Visual Language
-- [ ] Inherited Editor palette (#FAFAF8 cream, warm charcoal ink, #6D28D9 purple brand)
-- [ ] Muted blue library accent (#4A7AB5) for Library-local elements
-- [ ] Flat bordered cards, colored dot + text workflow badges, small dot trust indicators
-- [ ] 224px fixed sidebar, 720px reader column
-- [ ] DM Sans for UI/cards (15px), Source Serif 4 for reader content (17px)
+- [x] Inherited Editor palette (#FAFAF8 cream, warm charcoal ink, #6D28D9 purple brand)
+- [x] Muted blue library accent (#4A7AB5) for Library-local elements
+- [x] Flat bordered cards, colored dot + text workflow badges, small dot trust indicators
+- [x] 224px fixed sidebar, 720px reader column
+- [x] DM Sans for UI/cards (15px), Source Serif 4 for reader content (17px)
 
 ## Should Have (v2.1)
 

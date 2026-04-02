@@ -11,3 +11,6 @@ export type {
 
 export { adaptPaper, adaptWebSource } from "./adapter";
 export type { PaperRow, WebSourceRow } from "./adapter";
+
+export { getLibraryHome, getLibraryCounts, getLibrarySourceCount } from "./home";
+export type { LibraryHomeData } from "./home";

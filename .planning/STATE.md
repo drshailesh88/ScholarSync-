@@ -4,7 +4,7 @@
 **Library Module Redesign** — Created 2026-04-02
 
 ## Current Phase
-Phase 11: Schema + LibrarySource Adapter — Status: COMPLETE (2026-04-02)
+Phase 13: Home Screen + Workflow State Navigation — Status: COMPLETE (2026-04-02)
 
 ## Previous Milestone
 **Explore Module V1** — Phases 1-10 COMPLETE (PRs #52-55 + committed to main)
@@ -28,7 +28,9 @@ Phase 11: Schema + LibrarySource Adapter — Status: COMPLETE (2026-04-02)
 - Phase 5: Implementation -> NOT STARTED (Phase 11 next)
 
 ## Quick Reference
-- Next action: Start Phase 12 (Detail/Reader Page) or Phase 13 (Home Screen + Workflow States) — can run in parallel
+- Next action: Start Phase 14 (Annotation) or Phase 15 (Command Palette + Project Switching) — 14 depends on 12, 15 depends on 13
+- Phase 13 COMPLETE: 23 tests passing, 3 bugs fixed (N+1 count query, UndoToast timer ref, type safety)
+- Phase 12 COMPLETE: 40 tests passing, Codex review approved, 6 bugs fixed
 - Phase 11 COMPLETE: 36 tests passing, Codex review approved, 6 bugs fixed
-- Feature flag protects existing Library throughout build
+- Feature flag (NEXT_PUBLIC_NEW_LIBRARY) protects existing Library throughout build
 - Readiness score: 9.2/10

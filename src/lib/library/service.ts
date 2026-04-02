@@ -166,6 +166,56 @@ export async function moveLibrarySourceState(
   revalidatePath("/library");
 }
 
+// ── updateReadingProgress ──────────────────────────────────────
+
+/**
+ * Update reading progress (0-100) and read_status for a library source.
+ * Dispatches to the correct table based on libraryId prefix.
+ */
+export async function updateReadingProgress(
+  libraryId: string,
+  progress: number
+): Promise<void> {
+  if (!Number.isFinite(progress)) return;
+  const userId = await getCurrentUserId();
+  const { type, id } = parseLibraryId(libraryId);
+  const clamped = Math.max(0, Math.min(100, Math.round(progress)));
+  const readStatus = clamped >= 95 ? "read" : clamped > 0 ? "in_progress" : "unread";
+  const now = new Date();
+
+  if (type === "paper") {
+    await db
+      .update(userReferences)
+      .set({
+        readingProgress: clamped,
+        readStatus,
+        lastReadAt: now,
+      })
+      .where(
+        and(
+          eq(userReferences.paperId, id),
+          eq(userReferences.userId, userId),
+          isNull(userReferences.deletedAt)
+        )
+      );
+  } else {
+    await db
+      .update(webSources)
+      .set({
+        reading_progress: clamped,
+        read_status: readStatus,
+        last_read_at: now,
+      })
+      .where(
+        and(
+          eq(webSources.id, id),
+          eq(webSources.user_id, userId),
+          isNull(webSources.deleted_at)
+        )
+      );
+  }
+}
+
 // ── Internal query builders ─────────────────────────────────────
 
 async function fetchPapers(
@@ -272,7 +322,7 @@ async function getProjectIdsForPaper(
     .where(
       and(
         eq(projectPapers.paper_id, paperId),
-        eq(projects.userId, userId)
+        eq(projects.user_id, userId)
       )
     );
   return rows.map((r) => r.projectId);
@@ -289,7 +339,7 @@ async function getProjectIdsForWebSource(
     .where(
       and(
         eq(projectWebSources.web_source_id, webSourceId),
-        eq(projects.userId, userId)
+        eq(projects.user_id, userId)
       )
     );
   return rows.map((r) => r.projectId);

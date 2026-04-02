@@ -31,16 +31,16 @@ Risk: **LOW** — schema additions are non-breaking. Adapter is a thin normaliza
 **Deliverable:** User navigates to /library/item/paper_42 or /library/item/web_187, reads in clean internal reader with focus mode.
 **Why second:** The reader page is the highest-value new surface. It unlocks "internal-first" reading and proves the route structure.
 
-- [ ] Create route structure: /library/item/[libraryId]
-- [ ] Build reader page shell: single-column (720px) + collapsible right workbench
-- [ ] Implement web source reader: cleaned extracted content with Source Serif 4 typography
-- [ ] Implement paper reader: abstract + metadata + PDF/full-text toggle
-- [ ] Implement three modes: Focus (default), Working (panel open), Synthesis handoff
-- [ ] Build extraction state surfaces: pending (skeleton + progress), ready (content), partial (content + warning), failed (metadata + "Open original" + retry)
-- [ ] Implement reading progress tracking (scroll-based, debounced writes)
-- [ ] Build right workbench panel: Notes tab, Metadata tab, Highlights tab
-- [ ] Implement breadcrumb navigation: Library / Project / Source
-- [ ] Write tests: renders for both source types, handles all 4 extraction states, reading progress tracks and resumes, workbench toggles correctly
+- [x] Create route structure: /library/item/[libraryId]
+- [x] Build reader page shell: single-column (720px) + collapsible right workbench
+- [x] Implement web source reader: cleaned extracted content with Source Serif 4 typography
+- [x] Implement paper reader: abstract + metadata + PDF/full-text toggle
+- [x] Implement three modes: Focus (default), Working (panel open), Synthesis handoff
+- [x] Build extraction state surfaces: pending (skeleton + progress), ready (content), partial (content + warning), failed (metadata + "Open original" + retry)
+- [x] Implement reading progress tracking (scroll-based, debounced writes)
+- [x] Build right workbench panel: Notes tab, Metadata tab, Highlights tab
+- [x] Implement breadcrumb navigation: Library / Project / Source
+- [x] Write tests: renders for both source types, handles all 4 extraction states, reading progress tracks and resumes, workbench toggles correctly
 
 Risk: **MEDIUM** — new route structure and reader rendering for arbitrary web content. Extraction edge cases will surface.
 
@@ -50,16 +50,16 @@ Risk: **MEDIUM** — new route structure and reader rendering for arbitrary web 
 **Deliverable:** Library home shows momentum-oriented sections. Sidebar navigation with workflow states works. User triages items between states.
 **Why third:** Home screen + sidebar + workflow states form the navigational spine of the new Library.
 
-- [ ] Create route structure: /library (home), /library/inbox, /library/core, /library/background, /library/archived
-- [ ] Build Library sidebar: workflow states with counts (Inbox, Core, Background, Archived, All Sources, Projects, Trash)
-- [ ] Build getLibraryHome() aggregator: Continue Reading, Active Project, Needs Review, Recently Saved
-- [ ] Build secondary sections (earned, behavior-gated): Ready to Cite, Recently Highlighted, Sent to Notebook
-- [ ] Build source cards: unified treatment for papers and web sources (title, state badge, source/journal, read status, project, trust dot)
-- [ ] Implement workflow state transitions with card animation + undo toast
-- [ ] Implement "Show more" pagination (20-30 items, then "Show 20 more" with counter)
-- [ ] Wire URL-backed state for all views (survives refresh, back button works)
-- [ ] Build feature flag to toggle between old and new Library
-- [ ] Write tests: home sections render with correct data, state transitions work with undo, URL state persists
+- [x] Create route structure: /library (home), /library/inbox, /library/core, /library/background, /library/archived
+- [x] Build Library sidebar: workflow states with counts (Inbox, Core, Background, Archived, All Sources, Projects, Trash)
+- [x] Build getLibraryHome() aggregator: Continue Reading, Active Project, Needs Review, Recently Saved
+- [x] Build secondary sections (earned, behavior-gated): Ready to Cite, Recently Highlighted, Sent to Notebook
+- [x] Build source cards: unified treatment for papers and web sources (title, state badge, source/journal, read status, project, trust dot)
+- [x] Implement workflow state transitions with card animation + undo toast
+- [x] Implement "Show more" pagination (20-30 items, then "Show 20 more" with counter)
+- [x] Wire URL-backed state for all views (survives refresh, back button works)
+- [x] Build feature flag to toggle between old and new Library
+- [x] Write tests: home sections render with correct data, state transitions work with undo, URL state persists
 
 Risk: **MEDIUM** — aggregator query performance across two source tables. Card animation choreography for state transitions.
 
