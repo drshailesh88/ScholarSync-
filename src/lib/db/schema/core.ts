@@ -78,6 +78,7 @@ export const users = pgTable("users", {
   orcid_id: text("orcid_id"),
   institution_id: integer("institution_id"),
   onboarding_completed: boolean("onboarding_completed").default(false),
+  last_active_project_id: integer("last_active_project_id"),
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
   last_active_at: timestamp("last_active_at"),

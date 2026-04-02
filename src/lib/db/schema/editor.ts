@@ -40,6 +40,9 @@ import {
   learningStatusEnum,
   latexCompilerEnum,
   latexCompilationStatusEnum,
+  workflowStateEnum,
+  readStatusEnum,
+  handoffStatusEnum,
 } from "./enums";
 
 // ---------------------------------------------------------------------------
@@ -615,6 +618,11 @@ export const userReferences = pgTable(
     tags: jsonb("tags").default([]),
     notes: text("notes"),
     manualCitationData: jsonb("manual_citation_data"),
+    // ── Library Module: workflow + reading tracking ───────────
+    workflowState: workflowStateEnum("workflow_state").default("inbox"),
+    readingProgress: integer("reading_progress").default(0),
+    readStatus: readStatusEnum("read_status").default("unread"),
+    lastReadAt: timestamp("last_read_at"),
     createdAt: timestamp("created_at").defaultNow(),
     deletedAt: timestamp("deleted_at"),
   },
@@ -623,6 +631,7 @@ export const userReferences = pgTable(
     index("idx_user_refs_user").on(table.userId),
     index("idx_user_refs_paper").on(table.paperId),
     index("idx_user_refs_collection").on(table.collection),
+    index("idx_user_refs_workflow_state").on(table.workflowState),
   ]
 );
 
@@ -1060,5 +1069,42 @@ export const latexTrackChanges = pgTable(
     index("idx_latex_track_changes_file").on(table.latexFileId),
     index("idx_latex_track_changes_status").on(table.status),
     index("idx_latex_track_changes_author").on(table.authorId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// editor_handoffs — Server-backed citation transport between Library and Editor
+// Replaces sessionStorage bridge with durable lifecycle.
+// ---------------------------------------------------------------------------
+export const editorHandoffs = pgTable(
+  "editor_handoffs",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    documentId: integer("document_id").references(() => synthesisDocuments.id, {
+      onDelete: "set null",
+    }),
+    // ── Payload: normalized citation data for all source types ──
+    payload: jsonb("payload").notNull().$type<{
+      sources: Array<{
+        libraryId: string;
+        title: string;
+        authors?: string[];
+        year?: number;
+        journal?: string;
+        doi?: string;
+        url?: string;
+        sourceType: "paper" | "web";
+      }>;
+    }>(),
+    status: handoffStatusEnum("status").default("pending"),
+    createdAt: timestamp("created_at").defaultNow(),
+    consumedAt: timestamp("consumed_at"),
+  },
+  (table) => [
+    index("idx_editor_handoffs_user").on(table.userId),
+    index("idx_editor_handoffs_status").on(table.status),
   ]
 );

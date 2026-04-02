@@ -179,6 +179,15 @@ export const webSourceStatusEnum = pgEnum("web_source_status", ["saved", "archiv
 export const exploreTabEnum = pgEnum("explore_tab", ["academic", "web", "news", "discussions"]);
 
 // ---------------------------------------------------------------------------
+// Library Module — Workflow States & Reading
+// ---------------------------------------------------------------------------
+export const workflowStateEnum = pgEnum("workflow_state", ["inbox", "core", "background", "archived"]);
+export const readStatusEnum = pgEnum("read_status", ["unread", "in_progress", "read"]);
+export const extractionStateEnum = pgEnum("extraction_state", ["pending", "ready", "partial", "failed"]);
+export const anchorTypeEnum = pgEnum("anchor_type", ["text_offset", "css_selector", "page_position"]);
+export const handoffStatusEnum = pgEnum("handoff_status", ["pending", "consumed", "cancelled"]);
+
+// ---------------------------------------------------------------------------
 // Explore Module — Domain Preferences
 // ---------------------------------------------------------------------------
 export const domainPreferenceLevelEnum = pgEnum("domain_preference_level", [
