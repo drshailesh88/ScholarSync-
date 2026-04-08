@@ -1,6 +1,6 @@
 {
-  "id": "56fdfa9f-6443-486c-a32a-ed76c07a6f81",
-  "prevId": "b12688bc-f39b-447e-8e2c-97d2d35d7e90",
+  "id": "04649aa7-3e8b-472b-b7cb-fa74dcce512f",
+  "prevId": "56fdfa9f-6443-486c-a32a-ed76c07a6f81",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -2768,6 +2768,12 @@
           "notNull": false,
           "default": false
         },
+        "last_active_project_id": {
+          "name": "last_active_project_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -3810,6 +3816,122 @@
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.editor_handoffs": {
+      "name": "editor_handoffs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "document_id": {
+          "name": "document_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payload": {
+          "name": "payload",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "handoff_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'pending'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "consumed_at": {
+          "name": "consumed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "idx_editor_handoffs_user": {
+          "name": "idx_editor_handoffs_user",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_editor_handoffs_status": {
+          "name": "idx_editor_handoffs_status",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "editor_handoffs_user_id_users_id_fk": {
+          "name": "editor_handoffs_user_id_users_id_fk",
+          "tableFrom": "editor_handoffs",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "editor_handoffs_document_id_synthesis_documents_id_fk": {
+          "name": "editor_handoffs_document_id_synthesis_documents_id_fk",
+          "tableFrom": "editor_handoffs",
+          "tableTo": "synthesis_documents",
+          "columnsFrom": [
+            "document_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -7235,6 +7357,35 @@
           "primaryKey": false,
           "notNull": false
         },
+        "workflow_state": {
+          "name": "workflow_state",
+          "type": "workflow_state",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'inbox'"
+        },
+        "reading_progress": {
+          "name": "reading_progress",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "read_status": {
+          "name": "read_status",
+          "type": "read_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'unread'"
+        },
+        "last_read_at": {
+          "name": "last_read_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -7285,6 +7436,21 @@
           "columns": [
             {
               "expression": "collection",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_user_refs_workflow_state": {
+          "name": "idx_user_refs_workflow_state",
+          "columns": [
+            {
+              "expression": "workflow_state",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -12583,6 +12749,141 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.library_annotations": {
+      "name": "library_annotations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_type": {
+          "name": "source_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "selected_text": {
+          "name": "selected_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "annotation_color",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'yellow'"
+        },
+        "anchor_type": {
+          "name": "anchor_type",
+          "type": "anchor_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "anchor_payload": {
+          "name": "anchor_payload",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_lib_annotations_user": {
+          "name": "idx_lib_annotations_user",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_lib_annotations_source": {
+          "name": "idx_lib_annotations_source",
+          "columns": [
+            {
+              "expression": "source_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "library_annotations_user_id_users_id_fk": {
+          "name": "library_annotations_user_id_users_id_fk",
+          "tableFrom": "library_annotations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.project_web_sources": {
       "name": "project_web_sources",
       "schema": "",
@@ -13086,6 +13387,43 @@
           "notNull": false,
           "default": "'saved'"
         },
+        "workflow_state": {
+          "name": "workflow_state",
+          "type": "workflow_state",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'inbox'"
+        },
+        "reading_progress": {
+          "name": "reading_progress",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "read_status": {
+          "name": "read_status",
+          "type": "read_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'unread'"
+        },
+        "last_read_at": {
+          "name": "last_read_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "extraction_state": {
+          "name": "extraction_state",
+          "type": "extraction_state",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'pending'"
+        },
         "metadata": {
           "name": "metadata",
           "type": "jsonb",
@@ -13261,6 +13599,15 @@
         "completed",
         "failed",
         "needs_review"
+      ]
+    },
+    "public.anchor_type": {
+      "name": "anchor_type",
+      "schema": "public",
+      "values": [
+        "text_offset",
+        "css_selector",
+        "page_position"
       ]
     },
     "public.annotation_color": {
@@ -13475,6 +13822,16 @@
         "discussions"
       ]
     },
+    "public.extraction_state": {
+      "name": "extraction_state",
+      "schema": "public",
+      "values": [
+        "pending",
+        "ready",
+        "partial",
+        "failed"
+      ]
+    },
     "public.feed_status": {
       "name": "feed_status",
       "schema": "public",
@@ -13516,6 +13873,15 @@
         "processing",
         "completed",
         "failed"
+      ]
+    },
+    "public.handoff_status": {
+      "name": "handoff_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "consumed",
+        "cancelled"
       ]
     },
     "public.institution_type": {
@@ -13704,6 +14070,15 @@
         "agent_augmented",
         "snowball",
         "deep_research"
+      ]
+    },
+    "public.read_status": {
+      "name": "read_status",
+      "schema": "public",
+      "values": [
+        "unread",
+        "in_progress",
+        "read"
       ]
     },
     "public.recommendation": {
@@ -14005,6 +14380,16 @@
         "wiki",
         "video",
         "other"
+      ]
+    },
+    "public.workflow_state": {
+      "name": "workflow_state",
+      "schema": "public",
+      "values": [
+        "inbox",
+        "core",
+        "background",
+        "archived"
       ]
     }
   },
