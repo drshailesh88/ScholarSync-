@@ -6,116 +6,22 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
-import { X, CaretDown, Gear, Keyboard, SignOut, CaretLeft, CaretRight, Rss } from "@phosphor-icons/react";
+import { X, CaretDown, Gear, Keyboard, SignOut, CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { useDomain } from "@/components/providers/domain-provider";
 import { cn } from "@/lib/utils";
 import { useUIScale } from "@/hooks/use-ui-scale";
+import { BRAND } from "@/lib/config/branding";
+import { isV1SearchOnly, SEARCH_LANDING_PATH } from "@/lib/config/v1-features";
+import {
+  getVisibleNavSections,
+  svgIcons,
+  type NavIcon as NavIconType,
+} from "./nav-config";
 
 const ClerkUserButton = dynamic(
   () => import("@clerk/nextjs").then((mod) => mod.UserButton),
   { ssr: false, loading: () => <div className="w-8 h-8 rounded-full bg-white/10" /> }
 );
-
-// Icon type: either SVG inline or PNG from /sidebar-icons/
-type NavIcon = { type: "svg"; element: React.ReactNode } | { type: "png"; src: string; size?: number };
-
-interface NavItem {
-  label: string;
-  href: string;
-  icon: NavIcon;
-}
-
-interface NavSection {
-  label: string;
-  category: string; // CREATE, RESEARCH, AUDIT
-  items: NavItem[];
-}
-
-// SVG icons (matching prototype exactly)
-const svgIcons = {
-  projects: (
-    <svg viewBox="0 0 18 18" fill="none">
-      <rect x="2" y="2" width="6" height="6" rx="1.5" fill="#fff" />
-      <rect x="10" y="2" width="6" height="6" rx="1.5" fill="#fff" />
-      <rect x="2" y="10" width="6" height="6" rx="1.5" fill="#fff" />
-      <rect x="10" y="10" width="6" height="6" rx="1.5" fill="#fff" />
-    </svg>
-  ),
-  latex: (
-    <svg viewBox="0 0 18 18" fill="none">
-      <path d="M6 3.5L2 9l4 5.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M12 3.5l4 5.5-4 5.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M10.5 2.5l-3 13" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  discover: (
-    <svg viewBox="0 0 18 18" fill="none">
-      <circle cx="8" cy="8" r="5.5" stroke="#fff" strokeWidth="1.5" />
-      <path d="M12.5 12.5l3 3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  ),
-  pulse: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 11a9 9 0 0 1 9 9" />
-      <path d="M4 4a16 16 0 0 1 16 16" />
-      <circle cx="5" cy="19" r="1.5" fill="#fff" stroke="none" />
-    </svg>
-  ),
-  library: (
-    <svg viewBox="0 0 18 18" fill="none">
-      <rect x="3" y="3" width="3" height="12" rx="0.8" fill="#fff" stroke="#fff" strokeWidth="1" />
-      <rect x="7.5" y="2" width="3" height="13" rx="0.8" fill="#fff" stroke="#fff" strokeWidth="1" opacity="0.7" />
-      <rect x="12" y="4" width="3" height="11" rx="0.8" fill="#fff" stroke="#fff" strokeWidth="1" opacity="0.45" />
-    </svg>
-  ),
-  systematicReview: (
-    <svg viewBox="0 0 18 18" fill="none">
-      <path d="M3 2h12v3H3z" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M5 8h8v2.5H5z" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M7 13.5h4v2.5H7z" fill="#fff" fillOpacity="0.3" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M9 5v3M9 10.5v3" stroke="#fff" strokeWidth="1.2" />
-    </svg>
-  ),
-  audit: (
-    <svg viewBox="0 0 18 18" fill="none">
-      <path d="M9 2L3 4.5v4.5c0 4 2.5 6 6 7.5 3.5-1.5 6-3.5 6-7.5V4.5L9 2z" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M6.5 9l2 2 3.5-4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-};
-
-const navSections: NavSection[] = [
-  {
-    label: "Create",
-    category: "create",
-    items: [
-      { label: "Draft", href: "/studio", icon: { type: "png", src: "/sidebar-icons/edit.png" } },
-      { label: "LaTeX", href: "/latex", icon: { type: "svg", element: svgIcons.latex } },
-      { label: "Canvas", href: "/illustrate", icon: { type: "png", src: "/sidebar-icons/pen-tool.png" } },
-      { label: "Poster", href: "/poster", icon: { type: "png", src: "/sidebar-icons/poster.png" } },
-      { label: "Stage", href: "/presentation", icon: { type: "png", src: "/sidebar-icons/business-analyst.png", size: 20 } },
-    ],
-  },
-  {
-    label: "Research",
-    category: "research",
-    items: [
-      { label: "Explore", href: "/explore", icon: { type: "svg", element: svgIcons.discover } },
-      { label: "Reading Room", href: "/notebook", icon: { type: "png", src: "/sidebar-icons/reading-room.png" } },
-      { label: "Journal Feed", href: "/feeds", icon: { type: "svg", element: <Rss size={16} weight="bold" /> } },
-      { label: "Deep Research", href: "/deep-research", icon: { type: "png", src: "/sidebar-icons/creativity.png", size: 20 } },
-      { label: "Library", href: "/library", icon: { type: "svg", element: svgIcons.library } },
-      { label: "Systematic Review", href: "/systematic-review", icon: { type: "svg", element: svgIcons.systematicReview } },
-    ],
-  },
-  {
-    label: "Audit",
-    category: "audit",
-    items: [
-      { label: "Integrity Check", href: "/compliance", icon: { type: "svg", element: svgIcons.audit } },
-    ],
-  },
-];
 
 const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 const hasClerkKeys = Boolean(
@@ -132,7 +38,7 @@ interface AppSidebarProps {
   onToggleCollapse?: () => void;
 }
 
-function NavIcon({ icon }: { icon: NavIcon }) {
+function NavIcon({ icon }: { icon: NavIconType }) {
   if (icon.type === "svg") {
     return <div className="ss-nav-icon">{icon.element}</div>;
   }
@@ -162,16 +68,11 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
   const { scale, setScale } = useUIScale();
   const [mounted, setMounted] = useState(false);
 
-  const visibleNavSections = navSections.map((section) => ({
-    ...section,
-    items: section.items.filter((item) => {
-      if (item.href === "/systematic-review") {
-        return domain?.features.systematicReview !== false;
-      }
-
-      return true;
-    }),
-  }));
+  const searchOnly = isV1SearchOnly();
+  const visibleNavSections = getVisibleNavSections({
+    searchOnly,
+    systematicReviewEnabled: domain?.features.systematicReview !== false,
+  });
 
   // eslint-disable-next-line react-hooks/set-state-in-effect -- needed for hydration safety
   useEffect(() => setMounted(true), []);
@@ -180,9 +81,9 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
     <>
       {/* Logo */}
       <div className={cn("flex items-center shrink-0", collapsed ? "justify-center px-0 py-4" : "justify-between px-4 py-4")}>
-        <Link href="/dashboard" className="flex items-center gap-2.5 no-underline" title={collapsed ? "ScholarSync" : undefined}>
-          <div className="ss-logo-mark">S</div>
-          {!collapsed && <span className="ss-logo-text">ScholarSync</span>}
+        <Link href={SEARCH_LANDING_PATH} className="flex items-center gap-2.5 no-underline" title={collapsed ? BRAND.name : undefined}>
+          <div className="ss-logo-mark">{BRAND.name.charAt(0)}</div>
+          {!collapsed && <span className="ss-logo-text">{BRAND.name}</span>}
         </Link>
         {!collapsed && (
           <div className="flex items-center gap-1.5">
@@ -215,22 +116,24 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
       {/* Nav area — grows to fill space */}
       <div className={cn("flex-1 py-2", collapsed ? "px-1" : "px-2.5")}>
 
-        {/* Projects — always visible, no category header */}
-        <div className="mb-3">
-          <Link
-            href="/dashboard"
-            onClick={onClose}
-            className={cn(
-              "ss-nav-item no-underline",
-              collapsed && "justify-center !px-0 !gap-0",
-              (pathname === "/dashboard" || pathname === "/") && "active"
-            )}
-            title={collapsed ? "Projects" : undefined}
-          >
-            <div className="ss-nav-icon">{svgIcons.projects}</div>
-            {!collapsed && <span className="ss-nav-label">Projects</span>}
-          </Link>
-        </div>
+        {/* Projects — hidden in search-only v1 (the dashboard is a v2 surface) */}
+        {!searchOnly && (
+          <div className="mb-3">
+            <Link
+              href="/dashboard"
+              onClick={onClose}
+              className={cn(
+                "ss-nav-item no-underline",
+                collapsed && "justify-center !px-0 !gap-0",
+                (pathname === "/dashboard" || pathname === "/") && "active"
+              )}
+              title={collapsed ? "Projects" : undefined}
+            >
+              <div className="ss-nav-icon">{svgIcons.projects}</div>
+              {!collapsed && <span className="ss-nav-label">Projects</span>}
+            </Link>
+          </div>
+        )}
 
         {/* Nav sections */}
         {!visibleNavSections.length ? null : visibleNavSections.map((section) => (

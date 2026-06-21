@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRAND } from "@/lib/config/branding";
 
 export function MarketingNav() {
   return (
@@ -21,10 +22,10 @@ export function MarketingNav() {
               fontSize="20"
               fontWeight="700"
             >
-              S
+              {BRAND.name.charAt(0)}
             </text>
           </svg>
-          <span className="text-xl font-bold tracking-tight">ScholarSync</span>
+          <span className="text-xl font-bold tracking-tight">{BRAND.name}</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">

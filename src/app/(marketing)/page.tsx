@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { MarketingNav } from "@/components/layout/marketing-nav";
+import { BRAND } from "@/lib/config/branding";
 
 /* ─── Design tokens ─────────────────────────────────────────────────────── */
 const ink = "#241013";
@@ -353,14 +354,15 @@ export default function LandingPage() {
       <section className="bg-white px-9 pt-0 max-w-[1440px] mx-auto">
         <div className="flex flex-col items-center gap-5 pt-14">
           <h1 className="text-4xl md:text-[64px] font-medium leading-[0.96] text-center max-w-[900px]">
-            Where Deep Thinking Becomes Deep Work
+            Find every relevant paper in seconds
           </h1>
           <h2
             className="text-lg md:text-[22px] font-normal leading-relaxed text-center max-w-[700px]"
             style={{ color: "rgba(36,16,19,0.6)" }}
           >
-            Search the literature. Write with precision. Verify every claim.
-            Present your work. All without leaving one workspace.
+            Ask a scientific or clinical question and get ranked papers from
+            PubMed, Semantic Scholar, and OpenAlex — with filters, evidence
+            levels, and the metadata that matters.
           </h2>
         </div>
       </section>
@@ -619,7 +621,7 @@ export default function LandingPage() {
             className="flex-shrink-0 whitespace-nowrap text-sm font-medium px-7 py-3 rounded-md transition-opacity hover:opacity-90"
             style={{ background: "#fff", color: darkBg }}
           >
-            Get ScholarSync
+            Get {BRAND.name}
           </Link>
         </div>
       </section>
@@ -632,9 +634,9 @@ export default function LandingPage() {
               <Link href="/" className="flex items-center gap-2" style={{ color: ink }}>
                 <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
                   <rect width="40" height="40" rx="10" fill="#6D28D9" />
-                  <text x="50%" y="54%" textAnchor="middle" dominantBaseline="middle" fill="white" fontFamily="Source Serif 4,serif" fontSize="20" fontWeight="700">S</text>
+                  <text x="50%" y="54%" textAnchor="middle" dominantBaseline="middle" fill="white" fontFamily="Source Serif 4,serif" fontSize="20" fontWeight="700">{BRAND.name.charAt(0)}</text>
                 </svg>
-                <span className="text-lg font-bold tracking-tight">ScholarSync</span>
+                <span className="text-lg font-bold tracking-tight">{BRAND.name}</span>
               </Link>
               <p className="text-sm" style={{ color: inkMuted }}>
                 Built for researchers who take their work seriously.
@@ -664,7 +666,7 @@ export default function LandingPage() {
           </div>
           <div className="border-t border-black/[0.08] pt-6 flex justify-between items-center">
             <p className="text-xs" style={{ color: "rgba(36,16,19,0.5)" }}>
-              &copy; 2026 ScholarSync. All rights reserved.
+              &copy; 2026 {BRAND.name}. All rights reserved.
             </p>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { SquaresFour } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
+import { BRAND } from "@/lib/config/branding";
 
 export function Logo({ className }: { className?: string }) {
   return (
@@ -8,7 +9,7 @@ export function Logo({ className }: { className?: string }) {
         <SquaresFour size={18} weight="fill" />
       </div>
       <span className="font-semibold tracking-tight text-ink">
-        ScholarSync
+        {BRAND.name}
       </span>
     </div>
   );

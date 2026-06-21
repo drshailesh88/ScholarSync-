@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
     },
   },
 
+  // Next 16 builds with Turbopack by default; an explicit (empty) turbopack
+  // config silences the "webpack config without turbopack config" build error.
+  // The webpack config below still applies to the OpenNext/Cloudflare build.
+  turbopack: {},
+
   // Sentry integration via @sentry/nextjs withSentryConfig wrapper
   // (added below if SENTRY_AUTH_TOKEN is set)
 

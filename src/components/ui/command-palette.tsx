@@ -35,6 +35,7 @@ import { getLibraryProjects } from "@/lib/library/project-context";
 import type { LibrarySearchResult, AnnotationSearchResult } from "@/lib/library/search";
 import type { LibraryProject } from "@/lib/library/project-context";
 import { useUIScale } from "@/hooks/use-ui-scale";
+import { isHiddenInV1Path } from "@/lib/config/v1-features";
 
 const navigationCommands = [
   { label: "Dashboard", href: "/dashboard", icon: House },
@@ -426,7 +427,9 @@ export function CommandPalette() {
             )}
 
             <Command.Group heading="Navigation" className={groupHeadingClass}>
-              {navigationCommands.map((cmd) => {
+              {navigationCommands
+                .filter((cmd) => !isHiddenInV1Path(cmd.href))
+                .map((cmd) => {
                 const Icon = cmd.icon;
                 return (
                   <Command.Item

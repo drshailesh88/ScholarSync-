@@ -1,6 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import type { NextRequest } from "next/server";
 import { NextFetchEvent, NextResponse } from "next/server";
+import { isHiddenInV1Path, SEARCH_LANDING_PATH } from "@/lib/config/v1-features";
 
 // Security headers
 const csp = [
@@ -57,6 +58,14 @@ function isPlaywrightDevRequest(request: Request): boolean {
 const clerkProxy = clerkMiddleware(async (auth, request) => {
   if (!isPublicRoute(request)) {
     await auth.protect();
+
+    // Manan OS v1 is search-only: hidden v2 capabilities redirect to search.
+    if (isHiddenInV1Path(request.nextUrl.pathname)) {
+      const url = request.nextUrl.clone();
+      url.pathname = SEARCH_LANDING_PATH;
+      url.search = "";
+      return applySecurityHeaders(NextResponse.redirect(url));
+    }
   }
 
   const response = NextResponse.next();
