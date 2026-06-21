@@ -2,6 +2,11 @@ import type { UnifiedSearchResult } from "@/types/search";
 import { mapS2PublicationType, getEvidenceLevel } from "@/lib/search/evidence-level";
 import { resilientFetch } from "@/lib/http/resilient-fetch";
 import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
+import {
+  classifyFetchError,
+  okStatus,
+  type SourceStatus,
+} from "@/lib/search/source-status";
 
 const breaker = createCircuitBreaker({ service: "SemanticScholar", failureThreshold: 5 });
 
@@ -114,10 +119,17 @@ export async function getSemanticScholarPaper(
 export async function searchSemanticScholar(
   query: string,
   options: S2SearchOptions = {}
-): Promise<{ results: UnifiedSearchResult[]; total: number }> {
+): Promise<{ results: UnifiedSearchResult[]; total: number; status: SourceStatus }> {
   if (!breaker.canRequest()) {
     console.warn("[SemanticScholar] Circuit open — skipping");
-    return { results: [], total: 0 };
+    return {
+      results: [],
+      total: 0,
+      status: {
+        status: "error",
+        message: "Circuit breaker open — recent Semantic Scholar failures",
+      },
+    };
   }
 
   const limit = options.limit || 20;
@@ -145,10 +157,16 @@ export async function searchSemanticScholar(
 
     const results = (data.data || []).map(mapPaper);
     breaker.onSuccess();
-    return { results, total: data.total || 0 };
+    return { results, total: data.total || 0, status: okStatus() };
   } catch (error) {
     breaker.onFailure();
     console.error("[SemanticScholar] Search failed:", error);
-    return { results: [], total: 0 };
+    return {
+      results: [],
+      total: 0,
+      status: classifyFetchError(error, {
+        hasApiKey: !!process.env.SEMANTIC_SCHOLAR_API_KEY,
+      }),
+    };
   }
 }

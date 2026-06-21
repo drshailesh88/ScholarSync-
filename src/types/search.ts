@@ -1,3 +1,7 @@
+import type { SourceStatus } from "@/lib/search/source-status";
+
+export type { SourceStatus, SourceStatusKind } from "@/lib/search/source-status";
+
 export type EvidenceLevel = "I" | "II" | "III" | "IV" | "V";
 
 export interface UnifiedSearchResult {
@@ -80,6 +84,12 @@ export interface SearchResponse {
   perPage: number;
   hasMore: boolean;
   sourceCounts: Record<string, number>;
+  /**
+   * Per-source health. A source absent from this map (or marked "ok" with zero
+   * results) returned a genuine empty set; any other status means the source
+   * was degraded and its zero count must not be read as "no results".
+   */
+  sourceStatuses?: Record<string, SourceStatus>;
   searxngUnavailable?: boolean;
   augmentedQueries?: {
     pubmed: string;

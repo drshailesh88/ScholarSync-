@@ -3,6 +3,11 @@ import { mapPubMedPublicationType, getEvidenceLevel } from "@/lib/search/evidenc
 import { resilientFetch } from "@/lib/http/resilient-fetch";
 import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
 import { createKeyRotator } from "@/lib/search/api-key-rotator";
+import {
+  classifyFetchError,
+  okStatus,
+  type SourceStatus,
+} from "@/lib/search/source-status";
 
 const breaker = createCircuitBreaker({ service: "PubMed", failureThreshold: 5 });
 
@@ -57,17 +62,22 @@ function parseArticle(article: string): UnifiedSearchResult | null {
     )
     .join(" ");
 
-  // Authors
-  const authorMatches = [
-    ...article.matchAll(
-      /<Author[\s\S]*?<LastName>([\s\S]*?)<\/LastName>[\s\S]*?(?:<ForeName>([\s\S]*?)<\/ForeName>)?[\s\S]*?<\/Author>/g
-    ),
-  ];
-  const authors = authorMatches.map((m) => {
-    const lastName = stripXmlTags(m[1]);
-    const foreName = m[2] ? stripXmlTags(m[2]) : "";
-    return foreName ? `${lastName} ${foreName}` : lastName;
-  });
+  // Authors — extract each <Author> block first, then pull names from within
+  // it. A single combined regex with nested `[\s\S]*?` quantifiers and an
+  // optional ForeName group backtracks catastrophically on large article XML
+  // (modern articles with long author/reference lists can block the event loop
+  // for tens of seconds). Per-block parsing keeps this linear.
+  const authorBlocks = article.match(/<Author\b[^>]*>[\s\S]*?<\/Author>/g) || [];
+  const authors = authorBlocks
+    .map((block) => {
+      const lastMatch = block.match(/<LastName>([\s\S]*?)<\/LastName>/);
+      if (!lastMatch) return "";
+      const foreMatch = block.match(/<ForeName>([\s\S]*?)<\/ForeName>/);
+      const lastName = stripXmlTags(lastMatch[1]);
+      const foreName = foreMatch ? stripXmlTags(foreMatch[1]) : "";
+      return foreName ? `${lastName} ${foreName}` : lastName;
+    })
+    .filter(Boolean);
 
   // Journal
   const journalMatch =
@@ -140,10 +150,14 @@ function parseArticle(article: string): UnifiedSearchResult | null {
 export async function searchPubMed(
   query: string,
   options: PubMedSearchOptions = {}
-): Promise<{ results: UnifiedSearchResult[]; total: number }> {
+): Promise<{ results: UnifiedSearchResult[]; total: number; status: SourceStatus }> {
   if (!breaker.canRequest()) {
     console.warn("[PubMed] Circuit open — skipping");
-    return { results: [], total: 0 };
+    return {
+      results: [],
+      total: 0,
+      status: { status: "error", message: "Circuit breaker open — recent PubMed failures" },
+    };
   }
 
   const maxResults = options.maxResults || 20;
@@ -168,7 +182,7 @@ export async function searchPubMed(
 
     if (pmids.length === 0) {
       breaker.onSuccess();
-      return { results: [], total: 0 };
+      return { results: [], total: 0, status: okStatus() };
     }
 
     // Step 2: EFetch for full XML (with key rotation + resilient fetch)
@@ -187,10 +201,14 @@ export async function searchPubMed(
     }
 
     breaker.onSuccess();
-    return { results, total };
+    return { results, total, status: okStatus() };
   } catch (error) {
     breaker.onFailure();
     console.error("[PubMed] Search failed:", error);
-    return { results: [], total: 0 };
+    return {
+      results: [],
+      total: 0,
+      status: classifyFetchError(error, { hasApiKey: pubmedKeys.length > 0 }),
+    };
   }
 }

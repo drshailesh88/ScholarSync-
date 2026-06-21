@@ -26,10 +26,17 @@ import { getTrustTier } from "@/lib/search/trust-tier";
 import { normalizeDomain } from "@/lib/search/domain-utils";
 import type { SourceId } from "@/lib/search/domains";
 import type { UnifiedSearchResult } from "@/types/search";
+import {
+  classifyRejectionReason,
+  moreSevereStatus,
+  okStatus,
+  type SourceStatus,
+} from "@/lib/search/source-status";
 
 type SourceSearchResponse = {
   results: UnifiedSearchResult[];
   total: number;
+  status?: SourceStatus;
 };
 
 type ResultDomainPreferenceLevel = NonNullable<
@@ -62,6 +69,16 @@ const DOMAIN_PREFERENCE_WEIGHT: Record<ResultDomainPreferenceLevel, number> = {
 };
 const MAX_NON_ACADEMIC_RESULTS = 100;
 
+/**
+ * Per-source ceiling for the academic fan-out. Each source is fetched in
+ * parallel, so this is the worst-case wall-clock the slowest source can add.
+ * Measured round-trips: PubMed runs two sequential calls (esearch + efetch)
+ * that routinely total ~5s, and OpenAlex ~3.5s. The previous 4500ms cap
+ * silently killed PubMed before efetch returned, surfacing healthy sources as
+ * zero-result. 12s gives real upstreams headroom while still bounding latency.
+ */
+const SOURCE_TIMEOUT_MS = 12000;
+
 function isSearchTab(tab: string): tab is SearchTab {
   return (
     tab === "academic" ||
@@ -74,7 +91,7 @@ function isSearchTab(tab: string): tab is SearchTab {
 async function withSourceTimeout<T>(
   label: string,
   promise: Promise<T>,
-  timeoutMs = 4500
+  timeoutMs = SOURCE_TIMEOUT_MS
 ): Promise<T> {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -530,20 +547,69 @@ export async function GET(req: Request) {
     );
 
     const resultsBySource: Partial<Record<SourceId, UnifiedSearchResult[]>> = {};
+    const perDefinitionStatus: Array<{ sourceId: SourceId; status: SourceStatus }> = [];
 
     sourceDefinitions.forEach((source, index) => {
       const result = sourceResults[index];
       if (result.status === "fulfilled") {
         resultsBySource[source.sourceId] = result.value.results;
+        perDefinitionStatus.push({
+          sourceId: source.sourceId,
+          status: result.value.status ?? okStatus(),
+        });
         return;
       }
 
       resultsBySource[source.sourceId] = [];
+      perDefinitionStatus.push({
+        sourceId: source.sourceId,
+        status: classifyRejectionReason(result.reason),
+      });
       log.warn(`${source.label} search degraded`, {
         query: q,
         error: String(result.reason),
       });
     });
+
+    // PubMed raw-query fallback: when augmentation rewrote the PubMed query and
+    // that rewrite returned a *genuine* zero (status ok, not a timeout/error),
+    // retry once with the user's raw query. An over-constrained MeSH rewrite is
+    // the most common cause of an empty PubMed set even though the plain query
+    // matches papers.
+    const pubmedRewritten =
+      !!augmentedQueries?.pubmed && augmentedQueries.pubmed !== q;
+    const pubmedReturnedEmpty = (resultsBySource["pubmed"] ?? []).length === 0;
+    const pubmedHealthy = perDefinitionStatus
+      .filter((entry) => entry.sourceId === "pubmed")
+      .every((entry) => entry.status.status === "ok");
+    if (
+      domain.sources.includes("pubmed") &&
+      pubmedRewritten &&
+      pubmedReturnedEmpty &&
+      pubmedHealthy
+    ) {
+      try {
+        const rawPubmed = await withSourceTimeout(
+          "PubMed (raw fallback)",
+          searchPubMed(q, {
+            maxResults: neededPerSource,
+            page: 0,
+            yearStart,
+            yearEnd,
+          })
+        );
+        if (rawPubmed.results.length > 0) {
+          resultsBySource["pubmed"] = rawPubmed.results;
+          perDefinitionStatus.push({
+            sourceId: "pubmed",
+            status: rawPubmed.status ?? okStatus(),
+          });
+          log.info("PubMed raw-query fallback recovered results", { query: q });
+        }
+      } catch (error) {
+        log.warn("PubMed raw fallback failed", { error: String(error) });
+      }
+    }
 
     if (
       sourceDefinitions.length > 0 &&
@@ -577,6 +643,27 @@ export async function GET(req: Request) {
         source.sourceId,
         (resultsBySource[source.sourceId] ?? []).length,
       ])
+    );
+
+    // Per-source status: a source with results is "ok"; a source with zero
+    // results inherits the most severe status across its runs, so a timeout or
+    // rate-limit is never reported as a normal zero-result source.
+    const uniqueSourceIds = [
+      ...new Set(sourceDefinitions.map((source) => source.sourceId)),
+    ];
+    const sourceStatuses: Record<string, SourceStatus> = Object.fromEntries(
+      uniqueSourceIds.map((sourceId) => {
+        if ((resultsBySource[sourceId] ?? []).length > 0) {
+          return [sourceId, okStatus()];
+        }
+        const merged = perDefinitionStatus
+          .filter((entry) => entry.sourceId === sourceId)
+          .reduce<SourceStatus>(
+            (acc, entry) => moreSevereStatus(acc, entry.status),
+            okStatus()
+          );
+        return [sourceId, merged];
+      })
     );
 
     // Step 3: RRF fusion
@@ -701,6 +788,7 @@ export async function GET(req: Request) {
       perPage,
       hasMore,
       sourceCounts,
+      sourceStatuses,
       augmentedQueries,
     };
 

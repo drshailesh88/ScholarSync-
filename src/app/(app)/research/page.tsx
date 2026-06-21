@@ -35,6 +35,7 @@ import { getUserUsageStats } from "@/lib/actions/user";
 import type {
   UnifiedSearchResult,
   SearchResponse,
+  SourceStatus,
 } from "@/types/search";
 
 // ── Constants ────────────────────────────────────────────────────────
@@ -116,10 +117,38 @@ const DEFAULT_FILTERS: FilterState = {
   yearEnd: "",
 };
 
-function formatSourceCounts(sourceCounts: Record<string, number>) {
-  return Object.entries(sourceCounts)
-    .map(([sourceId, count]) => `${count} from ${SOURCE_LABELS[sourceId] ?? sourceId}`)
-    .join(", ");
+const SOURCE_STATUS_NOTE: Record<string, string> = {
+  timeout: "timed out",
+  rate_limited: "rate limited",
+  missing_config: "API key needed",
+  error: "unavailable",
+};
+
+interface SourceSummarySegment {
+  text: string;
+  degraded: boolean;
+}
+
+/**
+ * Build one segment per source. A degraded source (timeout, rate limit, missing
+ * config, error) is described by its failure mode rather than as "0 from X", so
+ * a temporary outage is never mistaken for a genuine empty result set.
+ */
+function buildSourceSummary(
+  sourceCounts: Record<string, number>,
+  sourceStatuses: Record<string, SourceStatus> = {}
+): SourceSummarySegment[] {
+  return Object.entries(sourceCounts).map(([sourceId, count]) => {
+    const label = SOURCE_LABELS[sourceId] ?? sourceId;
+    const status = sourceStatuses[sourceId]?.status ?? "ok";
+    if (status !== "ok") {
+      return {
+        text: `${label}: ${SOURCE_STATUS_NOTE[status] ?? "unavailable"}`,
+        degraded: true,
+      };
+    }
+    return { text: `${count} from ${label}`, degraded: false };
+  });
 }
 
 interface PersistedState {
@@ -132,6 +161,7 @@ interface PersistedState {
   totalResults: number;
   hasMore: boolean;
   sourceCounts: Record<string, number>;
+  sourceStatuses?: Record<string, SourceStatus>;
   augmentedQueries: SearchResponse["augmentedQueries"] | null;
   aiSummary: string | null;
 }
@@ -167,6 +197,9 @@ export default function ResearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sourceCounts, setSourceCounts] = useState<Record<string, number>>({});
+  const [sourceStatuses, setSourceStatuses] = useState<
+    Record<string, SourceStatus>
+  >({});
   const [filters, setFilters] = useState<FilterState>({ ...DEFAULT_FILTERS });
   const [sort, setSort] = useState<SortOption>("relevance");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
@@ -208,6 +241,7 @@ export default function ResearchPage() {
       setTotalResults(cached.totalResults);
       setHasMore(cached.hasMore);
       setSourceCounts(cached.sourceCounts);
+      setSourceStatuses(cached.sourceStatuses ?? {});
       setAugmentedQueries(cached.augmentedQueries);
       setAiSummary(cached.aiSummary);
       if (cached.hasSearched) {
@@ -282,6 +316,7 @@ export default function ResearchPage() {
       totalResults,
       hasMore,
       sourceCounts,
+      sourceStatuses,
       augmentedQueries,
       aiSummary,
     });
@@ -295,6 +330,7 @@ export default function ResearchPage() {
     totalResults,
     hasMore,
     sourceCounts,
+    sourceStatuses,
     augmentedQueries,
     aiSummary,
   ]);
@@ -396,6 +432,7 @@ export default function ResearchPage() {
         setTotalResults(data.total);
         setHasMore(data.hasMore);
         setSourceCounts(data.sourceCounts);
+        setSourceStatuses(data.sourceStatuses || {});
         setAugmentedQueries(data.augmentedQueries || null);
 
         saveSearchQuery({
@@ -786,7 +823,28 @@ export default function ResearchPage() {
         {hasSearched && !loading && results.length > 0 && (
           <div className="mb-4">
             <p className="text-xs text-ink-muted">
-              {formatSourceCounts(sourceCounts)} — {totalResults} total results
+              {buildSourceSummary(sourceCounts, sourceStatuses).map(
+                (segment, index) => (
+                  <span key={segment.text}>
+                    {index > 0 && ", "}
+                    <span
+                      className={
+                        segment.degraded ? "text-amber-600" : undefined
+                      }
+                      title={
+                        segment.degraded
+                          ? sourceStatuses[
+                              Object.keys(sourceCounts)[index]
+                            ]?.message
+                          : undefined
+                      }
+                    >
+                      {segment.text}
+                    </span>
+                  </span>
+                )
+              )}{" "}
+              — {totalResults} total results
             </p>
             {augmentedQueries && (
               <button

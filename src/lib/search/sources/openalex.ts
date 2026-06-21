@@ -2,6 +2,11 @@ import type { UnifiedSearchResult } from "@/types/search";
 import { mapOpenAlexType, getEvidenceLevel } from "@/lib/search/evidence-level";
 import { resilientFetch } from "@/lib/http/resilient-fetch";
 import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
+import {
+  classifyFetchError,
+  okStatus,
+  type SourceStatus,
+} from "@/lib/search/source-status";
 
 const breaker = createCircuitBreaker({ service: "OpenAlex", failureThreshold: 5 });
 
@@ -83,10 +88,14 @@ function mapWork(work: OpenAlexWork): UnifiedSearchResult {
 export async function searchOpenAlex(
   query: string,
   options: OpenAlexSearchOptions = {}
-): Promise<{ results: UnifiedSearchResult[]; total: number }> {
+): Promise<{ results: UnifiedSearchResult[]; total: number; status: SourceStatus }> {
   if (!breaker.canRequest()) {
     console.warn("[OpenAlex] Circuit open — skipping");
-    return { results: [], total: 0 };
+    return {
+      results: [],
+      total: 0,
+      status: { status: "error", message: "Circuit breaker open — recent OpenAlex failures" },
+    };
   }
 
   const limit = options.limit || 20;
@@ -118,10 +127,10 @@ export async function searchOpenAlex(
     const results = (data.results || []).map(mapWork);
 
     breaker.onSuccess();
-    return { results, total: data.meta?.count || 0 };
+    return { results, total: data.meta?.count || 0, status: okStatus() };
   } catch (error) {
     breaker.onFailure();
     console.error("[OpenAlex] Search failed:", error);
-    return { results: [], total: 0 };
+    return { results: [], total: 0, status: classifyFetchError(error) };
   }
 }

@@ -700,6 +700,79 @@ describe("GET /api/search/unified", () => {
     expect(body.error).toMatch(/timeRange/i);
   });
 
+  // ── Source status surfacing ──────────────────────────────────────
+
+  it("reports a source that returns results as ok", async () => {
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.sourceStatuses.pubmed).toEqual({ status: "ok" });
+  });
+
+  it("surfaces a rejected (timed-out) source as degraded, not a normal zero", async () => {
+    mockSearchOpenAlex.mockRejectedValueOnce(
+      new Error("OpenAlex timed out after 12000ms")
+    );
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.sourceCounts.openalex).toBe(0);
+    expect(body.sourceStatuses.openalex.status).toBe("timeout");
+  });
+
+  it("surfaces an adapter-reported rate limit instead of zero results", async () => {
+    mockSearchSemanticScholar.mockResolvedValueOnce({
+      results: [],
+      total: 0,
+      status: { status: "rate_limited", message: "Rate limited" },
+    });
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.sourceStatuses.semantic_scholar.status).toBe("rate_limited");
+  });
+
+  it("marks a genuine empty source as ok (true zero)", async () => {
+    mockSearchSemanticScholar.mockResolvedValueOnce({
+      results: [],
+      total: 0,
+      status: { status: "ok" },
+    });
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    const body = await res.json();
+    expect(body.sourceStatuses.semantic_scholar).toEqual({ status: "ok" });
+  });
+
+  it("retries PubMed with the raw query when the augmented query returns zero", async () => {
+    mockAugmentQuery.mockResolvedValueOnce({
+      pubmedQuery: "over-constrained MeSH query",
+      semanticScholarQuery: "s2",
+      openAlexQuery: "oa",
+    });
+    // First PubMed call (augmented) returns empty; raw fallback returns a hit.
+    mockSearchPubMed
+      .mockResolvedValueOnce({ results: [], total: 0, status: { status: "ok" } })
+      .mockResolvedValueOnce({
+        results: [sampleResult],
+        total: 1,
+        status: { status: "ok" },
+      });
+    mockReciprocalRankFusion.mockReturnValueOnce([sampleResult]);
+
+    const res = await GET(
+      makeRequest({ q: "transcatheter aortic valve six year outcomes" })
+    );
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    // augmented call + raw fallback call
+    expect(mockSearchPubMed).toHaveBeenCalledWith(
+      "transcatheter aortic valve six year outcomes",
+      expect.objectContaining({ page: 0 })
+    );
+    expect(body.sourceCounts.pubmed).toBe(1);
+    expect(body.sourceStatuses.pubmed.status).toBe("ok");
+  });
+
   it("strips double quotes from query when exactMatch is true", async () => {
     const res = await GET(
       makeRequest({ q: 'injection "attack" test', tab: "web", exactMatch: "true" })

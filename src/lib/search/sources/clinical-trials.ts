@@ -2,6 +2,11 @@ import type { UnifiedSearchResult } from "@/types/search";
 import { mapClinicalTrialPhase, getEvidenceLevel } from "@/lib/search/evidence-level";
 import { resilientFetch } from "@/lib/http/resilient-fetch";
 import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
+import {
+  classifyFetchError,
+  okStatus,
+  type SourceStatus,
+} from "@/lib/search/source-status";
 
 const breaker = createCircuitBreaker({ service: "ClinicalTrials", failureThreshold: 5 });
 
@@ -135,10 +140,14 @@ function extractKeywords(query: string): string {
 export async function searchClinicalTrials(
   query: string,
   options: ClinicalTrialsSearchOptions = {}
-): Promise<{ results: UnifiedSearchResult[]; total: number }> {
+): Promise<{ results: UnifiedSearchResult[]; total: number; status: SourceStatus }> {
   if (!breaker.canRequest()) {
     console.warn("[ClinicalTrials] Circuit open — skipping");
-    return { results: [], total: 0 };
+    return {
+      results: [],
+      total: 0,
+      status: { status: "error", message: "Circuit breaker open — recent ClinicalTrials.gov failures" },
+    };
   }
 
   const limit = options.limit || 20;
@@ -181,10 +190,10 @@ export async function searchClinicalTrials(
     }
 
     breaker.onSuccess();
-    return { results, total: data.totalCount || results.length };
+    return { results, total: data.totalCount || results.length, status: okStatus() };
   } catch (error) {
     breaker.onFailure();
     console.error("[ClinicalTrials] Search failed:", error);
-    return { results: [], total: 0 };
+    return { results: [], total: 0, status: classifyFetchError(error) };
   }
 }
