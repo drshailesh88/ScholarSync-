@@ -11,9 +11,11 @@ const ENV_VARS: EnvVar[] = [
   { name: "DATABASE_URL", required: true },
   { name: "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", required: "production" },
   { name: "CLERK_SECRET_KEY", required: "production" },
-  { name: "RAZORPAY_KEY_ID", required: "production" },
-  { name: "RAZORPAY_KEY_SECRET", required: "production" },
-  { name: "RAZORPAY_WEBHOOK_SECRET", required: "production" },
+  // Payments are a v2 feature — not part of the search-only v1 product, so
+  // Razorpay keys are optional. Re-require them when billing returns in v2.
+  { name: "RAZORPAY_KEY_ID", required: false },
+  { name: "RAZORPAY_KEY_SECRET", required: false },
+  { name: "RAZORPAY_WEBHOOK_SECRET", required: false },
   { name: "UPSTASH_REDIS_REST_URL", required: "production" },
   { name: "UPSTASH_REDIS_REST_TOKEN", required: "production" },
 ];

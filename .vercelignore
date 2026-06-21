@@ -1,0 +1,65 @@
+# NOTE: when this file exists, Vercel uses it INSTEAD of .gitignore for the
+# upload file list. So it must also re-exclude secrets and build artifacts.
+
+# Secrets / env — never upload
+.env
+.env.*
+
+# Dependencies & build outputs (Vercel installs/builds fresh)
+node_modules
+.next
+.open-next
+out
+build
+dist
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Local data / runtime caches
+.data
+.bg-shell
+.wrangler
+.worktrees
+
+# Tests, QA harness, coverage (not needed to build the app) — 835MB+ of qa/
+qa
+e2e
+adversary-tests
+coverage
+test-results
+blob-report
+playwright-report
+.playwright-mcp
+
+# Planning / tooling / editor workspaces
+.planning
+.taskmaster
+.obsidian
+.github
+.husky
+.vscode
+.idea
+copy-council
+feature-census
+ui-mockups
+ui-mockups-claude
+ui-mockups-codex
+ui-mockups-gemini
+ui-mockups-workspace
+
+# Sidecar services (Python/Express — not part of the v1 Next.js build)
+services
+database
+infra
+
+# Large binaries
+cloud-sql-proxy
+
+# Root-level docs and screenshots (anchored to root so public/ assets are kept)
+/*.png
+/*.md
+/*.sty
+docs
+
+# OS noise
+.DS_Store

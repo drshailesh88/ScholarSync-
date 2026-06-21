@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { BRAND } from "@/lib/config/branding";
 
 export const metadata: Metadata = {
-  title: "ScholarSync — Built for deep work",
+  title: `${BRAND.name} — ${BRAND.tagline}`,
 };
 
 export default function MarketingLayout({
