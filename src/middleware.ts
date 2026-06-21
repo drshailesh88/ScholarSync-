@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import type { NextRequest } from "next/server";
 import { NextFetchEvent, NextResponse } from "next/server";
-import { isHiddenInV1Path, SEARCH_LANDING_PATH } from "@/lib/config/v1-features";
+import { isHiddenInV1Path, isPrivateApp, SEARCH_LANDING_PATH } from "@/lib/config/v1-features";
 
 // Security headers
 const csp = [
@@ -56,6 +56,16 @@ function isPlaywrightDevRequest(request: Request): boolean {
 }
 
 const clerkProxy = clerkMiddleware(async (auth, request) => {
+  // Private-tool gate: the marketing homepage is not public. Route "/" into the
+  // app for signed-in users and to sign-in (a public route) for everyone else.
+  if (isPrivateApp() && request.nextUrl.pathname === "/") {
+    const { userId } = await auth();
+    const url = request.nextUrl.clone();
+    url.pathname = userId ? SEARCH_LANDING_PATH : "/sign-in";
+    url.search = "";
+    return applySecurityHeaders(NextResponse.redirect(url));
+  }
+
   if (!isPublicRoute(request)) {
     await auth.protect();
 

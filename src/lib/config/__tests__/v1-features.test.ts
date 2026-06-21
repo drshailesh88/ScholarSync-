@@ -78,4 +78,15 @@ describe("v1-features", () => {
     expect(isHiddenInV1Path("/studio")).toBe(false);
     expect(isHiddenInV1Path("/poster")).toBe(false);
   });
+
+  it("private-app mode is off unless explicitly enabled", async () => {
+    delete process.env.PRIVATE_APP_MODE;
+    let mod = await loadModule();
+    expect(mod.isPrivateApp()).toBe(false);
+
+    process.env.PRIVATE_APP_MODE = "true";
+    mod = await loadModule();
+    expect(mod.isPrivateApp()).toBe(true);
+    delete process.env.PRIVATE_APP_MODE;
+  });
 });

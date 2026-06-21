@@ -50,6 +50,15 @@ export function isV1SearchOnly(): boolean {
   return process.env.NEXT_PUBLIC_ENABLE_V2_MODULES !== "true";
 }
 
+/**
+ * Private-tool mode: when on, the public marketing homepage is not served —
+ * "/" routes signed-in users into the app and everyone else to sign-in, so the
+ * deployment has no public surface. Set PRIVATE_APP_MODE=true to enable.
+ */
+export function isPrivateApp(): boolean {
+  return process.env.PRIVATE_APP_MODE === "true";
+}
+
 function matchesPrefix(pathname: string, prefix: string): boolean {
   return pathname === prefix || pathname.startsWith(prefix + "/");
 }
