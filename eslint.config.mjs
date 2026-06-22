@@ -46,6 +46,7 @@ const eslintConfig = defineConfig([
     ".turbo/**",
     "dist/**",
     "**/*.config.js",
+    ".open-next/**",
   ]),
 ]);
 

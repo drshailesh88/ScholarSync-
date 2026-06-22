@@ -437,7 +437,7 @@ export function ExplorePageClient() {
         throw new Error("Save failed");
       }
     },
-    [activeSearchTab, searchQuery]
+    [activeSearchTab, searchQuery, router]
   );
 
   const handleBlock = useCallback(

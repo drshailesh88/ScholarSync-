@@ -32,14 +32,16 @@ export const HashtagMenuList = forwardRef<
   HashtagMenuListRef,
   HashtagMenuListProps
 >(function HashtagMenuList({ items, command }, ref) {
+  // Reset selectedIndex during render when items identity changes (React "adjusting
+  // state while rendering" pattern — avoids setState-in-effect).
+  const [prevItems, setPrevItems] = useState(items);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Reset selection when items change
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => {
+  if (prevItems !== items) {
+    setPrevItems(items);
     setSelectedIndex(0);
-  }, [items]);
+  }
 
   // Scroll selected item into view
   useEffect(() => {

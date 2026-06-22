@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 
 export default function LibraryItemError({
-  error,
+  error: _error,
   reset,
 }: {
   error: Error & { digest?: string };

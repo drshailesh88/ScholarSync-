@@ -39,7 +39,7 @@ function timeAgo(deletedAt: string): string {
 export function TrashViewClient({
   initialSources,
   deletedAtMap,
-  trashCount,
+  trashCount: _trashCount,
 }: TrashViewClientProps) {
   const router = useRouter();
   const [sources, setSources] = useState(initialSources);
