@@ -20,6 +20,13 @@ export interface QueryPlan {
   raw: string;
   /** Keyword-simplified PubMed query (primary). */
   pubmedPrimary: string;
+  /**
+   * Broadened core-topic query (temporal/outcome qualifiers stripped), run
+   * ALONGSIDE the primary and unioned, so a seminal trial that matches the topic
+   * but not the qualifiers ("six year outcomes") is still retrieved. Null when it
+   * would not differ from the primary.
+   */
+  pubmedBroadened: string | null;
   /** Verbatim query, used as a fallback if the primary returns 0 results. */
   pubmedFallback: string;
   /** True when the user wants the newest evidence (sort by date, not relevance). */
@@ -86,6 +93,28 @@ export function simplifyForPubMed(raw: string): string {
   return q.length >= 3 ? q : raw.trim();
 }
 
+// Temporal / generic-outcome qualifiers that narrow a query away from the
+// seminal trial (which reports e.g. 1-year results, not "six year outcomes").
+const QUALIFIER_PATTERNS: RegExp[] = [
+  /\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twelve)[- ]?year[s]?\b/gi,
+  /\b(?:long|short|mid)[- ]?term\b/gi,
+  /\bfollow[- ]?up\b/gi,
+  /\boutcomes?\b/gi,
+  /\bresults?\b/gi,
+];
+
+/**
+ * Strip temporal/outcome qualifiers from a (already simplified) query to recover
+ * the core intervention+population topic — used as a broadened companion query so
+ * landmark trials matching the topic (but not the qualifiers) are retrieved.
+ */
+export function coreTopicQuery(simplified: string): string {
+  let q = ` ${simplified} `;
+  for (const re of QUALIFIER_PATTERNS) q = q.replace(re, " ");
+  return q.replace(/\s+/g, " ").trim();
+}
+
+
 /**
  * Build a precise PubMed query for trial-acronym lookups. Bare acronyms get
  * mis-mapped by PubMed's automatic term mapping (e.g. "PARTNER" → MeSH "Sexual
@@ -123,9 +152,15 @@ export function planQuery(raw: string): QueryPlan {
       ? buildTrialPubMedQuery(trialAcronyms, trimmed)
       : simplified;
 
+  // Broaden only for non-acronym queries (acronym queries are already targeted).
+  const core = trialAcronyms.length > 0 ? "" : coreTopicQuery(simplified);
+  const pubmedBroadened =
+    core && core !== simplified && core.split(" ").length >= 2 ? core : null;
+
   return {
     raw: trimmed,
     pubmedPrimary,
+    pubmedBroadened,
     pubmedFallback: trimmed,
     recency,
     trialAcronyms,

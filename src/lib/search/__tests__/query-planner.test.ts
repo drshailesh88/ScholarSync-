@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { planQuery, simplifyForPubMed } from "../query-planner";
+import { planQuery, simplifyForPubMed, coreTopicQuery } from "../query-planner";
 
 describe("simplifyForPubMed", () => {
   it("strips natural-language filler that breaks PubMed term mapping", () => {
@@ -53,6 +53,22 @@ describe("planQuery", () => {
   it("enables ClinicalTrials linking for trial lookups", () => {
     expect(planQuery("DAPA-HF trial").wantsTrials).toBe(true);
     expect(planQuery("broad question about statins").wantsTrials).toBe(false);
+  });
+
+  it("broadens to the core topic so landmark trials are retrievable", () => {
+    // The seed query: PARTNER 3 (a 1-year trial) doesn't match "six year outcomes",
+    // so a broadened "TAVR low risk" companion query is needed to fetch it.
+    const plan = planQuery("TAVR low risk six year outcomes");
+    expect(plan.pubmedBroadened).toBe("TAVR low risk");
+    expect(coreTopicQuery("TAVR low risk six year outcomes")).toBe("TAVR low risk");
+  });
+
+  it("does not broaden when there is no qualifier to strip", () => {
+    expect(planQuery("management of heart failure").pubmedBroadened).toBeNull();
+  });
+
+  it("does not broaden acronym lookups (already targeted)", () => {
+    expect(planQuery("PARTNER 3 trial").pubmedBroadened).toBeNull();
   });
 
   it("pins trial acronyms as exact title/abstract phrases for PubMed", () => {

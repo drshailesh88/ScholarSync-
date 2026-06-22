@@ -10,6 +10,19 @@ import {
 
 const breaker = createCircuitBreaker({ service: "OpenAlex", failureThreshold: 5 });
 
+// Global in-process pacing for OpenAlex (search + enrichment = 2-3 calls/query).
+// Serializes requests with a minimum gap to stay under the polite-pool rate and
+// avoid the 429 bursts that otherwise degrade enrichment. ~7 req/s.
+const OPENALEX_MIN_INTERVAL_MS = 150;
+let openAlexGate: Promise<void> = Promise.resolve();
+function paceOpenAlex(): Promise<void> {
+  const prev = openAlexGate;
+  openAlexGate = prev.then(
+    () => new Promise<void>((resolve) => setTimeout(resolve, OPENALEX_MIN_INTERVAL_MS))
+  );
+  return prev;
+}
+
 interface OpenAlexSearchOptions {
   limit?: number;
   page?: number;
@@ -107,6 +120,7 @@ async function fetchOpenAlexBatch(
   filter: string
 ): Promise<OpenAlexEnrichWork[]> {
   const url = `https://api.openalex.org/works?filter=${filter}&per_page=50&mailto=contact@scholarsync.com&select=id,doi,ids,cited_by_count,open_access,concepts`;
+  await paceOpenAlex();
   const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 8000 });
   const data: { results?: OpenAlexEnrichWork[] } = await res.json();
   return data.results ?? [];
@@ -230,6 +244,7 @@ export async function searchOpenAlex(
   }
 
   try {
+    await paceOpenAlex();
     const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000 });
     const data: OpenAlexResponse = await res.json();
     const results = (data.results || []).map(mapWork);

@@ -18,7 +18,7 @@ import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
 import { attachRerankScores } from "@/lib/search/rerank";
-import type { SourceStatus } from "@/lib/search/source-status";
+import { okStatus, type SourceStatus } from "@/lib/search/source-status";
 import type { UnifiedSearchResult } from "@/types/search";
 
 export const SEARCH_SOURCES = ["pubmed", "semantic_scholar", "openalex"] as const;
@@ -177,35 +177,44 @@ const errorOutcome = (source: string, message: string): SourceOutcome => ({
 });
 
 /**
- * PubMed retrieval with a robust two-step strategy: try the keyword-simplified
- * query first (relevance- or date-sorted per intent); if it returns nothing AND
- * a different verbatim fallback exists, retry with the fallback. This eliminates
- * the empty-result-set failure mode for natural-language / PICO queries.
+ * PubMed retrieval with a robust multi-query strategy:
+ *  - Run the keyword-simplified PRIMARY query (relevance- or date-sorted).
+ *  - Also run the BROADENED core-topic query (qualifiers stripped) and UNION it,
+ *    so a seminal trial matching the topic but not the qualifiers ("six year
+ *    outcomes") is still retrieved, then ranked.
+ *  - If the union is empty AND a distinct verbatim FALLBACK exists, retry with it
+ *    (eliminates empty-result-sets for natural-language / PICO queries).
+ * Union dedup is handled downstream by RRF (`isSamePaper`).
  */
 async function searchPubMedPlanned(
-  primary: string,
-  fallback: string,
+  queries: { primary: string; broadened: string | null; fallback: string },
   opts: { maxResults: number; page: number; yearStart?: number; yearEnd?: number; recency: boolean }
 ): Promise<SourceOutcome> {
   const sort = opts.recency ? "date" : "relevance";
-  const first = await searchPubMed(primary, {
+  const base = {
     maxResults: opts.maxResults,
     page: opts.page,
     yearStart: opts.yearStart,
     yearEnd: opts.yearEnd,
     sort,
-  });
-  if (first.results.length > 0 || primary === fallback) {
-    return { source: "pubmed", ...first };
+  } as const;
+
+  const runs = await Promise.all(
+    [queries.primary, queries.broadened]
+      .filter((q): q is string => Boolean(q))
+      .map((q) =>
+        searchPubMed(q, base).catch(() => ({ results: [], total: 0, status: okStatus() }))
+      )
+  );
+  const merged = runs.flatMap((r) => r.results);
+  const total = Math.max(0, ...runs.map((r) => r.total));
+  const status = runs.find((r) => r.status.status === "ok")?.status ?? runs[0]?.status ?? okStatus();
+
+  if (merged.length > 0 || queries.primary === queries.fallback) {
+    return { source: "pubmed", results: merged, total, status };
   }
-  const second = await searchPubMed(fallback, {
-    maxResults: opts.maxResults,
-    page: opts.page,
-    yearStart: opts.yearStart,
-    yearEnd: opts.yearEnd,
-    sort,
-  });
-  return { source: "pubmed", ...second };
+  const fb = await searchPubMed(queries.fallback, base);
+  return { source: "pubmed", results: fb.results, total: fb.total, status: fb.status };
 }
 
 export async function runLiteratureSearch(
@@ -214,10 +223,16 @@ export async function runLiteratureSearch(
   const sources = normalizeSources(params.sources);
   const page = Math.max(0, params.page ?? 0);
   const perPage = Math.min(MAX_RESULTS, Math.max(1, params.perPage ?? DEFAULT_PER_PAGE));
+  // Over-fetch a larger candidate pool per source than the page size, so a
+  // landmark sitting just outside a source's top-N (e.g. PARTNER 3 at PubMed
+  // rank ~15) still enters the pool, gets reranked, and can reach the top page.
+  const poolPerSource = Math.min(MAX_RESULTS, Math.max(perPage, 25));
   const searchQuery = params.query || "";
   const plan = planQuery(searchQuery);
   const pmPrimary = params.pubmedQuery || plan.pubmedPrimary;
   const pmFallback = params.pubmedQuery || plan.pubmedFallback;
+  // A caller-supplied pubmedQuery overrides planning entirely (no broadening).
+  const pmBroadened = params.pubmedQuery ? null : plan.pubmedBroadened;
 
   const promises: Promise<SourceOutcome>[] = [];
 
@@ -225,13 +240,16 @@ export async function runLiteratureSearch(
     promises.push(
       withSourceTimeout(
         "PubMed",
-        searchPubMedPlanned(pmPrimary, pmFallback, {
-          maxResults: perPage,
-          page,
-          yearStart: params.yearFrom,
-          yearEnd: params.yearTo,
-          recency: plan.recency,
-        })
+        searchPubMedPlanned(
+          { primary: pmPrimary, broadened: pmBroadened, fallback: pmFallback },
+          {
+            maxResults: poolPerSource,
+            page,
+            yearStart: params.yearFrom,
+            yearEnd: params.yearTo,
+            recency: plan.recency,
+          }
+        )
       ).catch((e) => errorOutcome("pubmed", e instanceof Error ? e.message : "PubMed failed"))
     );
   }
@@ -241,7 +259,7 @@ export async function runLiteratureSearch(
       withSourceTimeout(
         "OpenAlex",
         searchOpenAlex(searchQuery, {
-          limit: perPage,
+          limit: poolPerSource,
           page: page + 1,
           yearStart: params.yearFrom,
           yearEnd: params.yearTo,
@@ -258,8 +276,8 @@ export async function runLiteratureSearch(
       withSourceTimeout(
         "Semantic Scholar",
         searchSemanticScholar(searchQuery, {
-          limit: perPage,
-          offset: page * perPage,
+          limit: poolPerSource,
+          offset: page * poolPerSource,
           yearStart: params.yearFrom,
           yearEnd: params.yearTo,
         }).then(({ results, total, status }) => ({
@@ -347,7 +365,9 @@ export async function runLiteratureSearch(
     filtered = filtered.filter((r) => r.isOpenAccess);
   }
 
-  const results: LiteraturePaper[] = filtered.map((r) => ({
+  // The full pool was over-fetched and ranked; return only the requested page.
+  const pageResults = filtered.slice(0, perPage);
+  const results: LiteraturePaper[] = pageResults.map((r) => ({
     ...r,
     url: resolvePaperUrl(r),
     id: generatePaperId(r),
@@ -362,7 +382,7 @@ export async function runLiteratureSearch(
     total: maxTotal,
     page,
     perPage,
-    hasMore: results.length >= perPage,
+    hasMore: filtered.length > perPage,
     sourceCounts,
     sourceStatuses,
     plan: {
