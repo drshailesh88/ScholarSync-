@@ -10,7 +10,11 @@
 
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
-import { searchOpenAlex, enrichCitationsByIds } from "@/lib/search/sources/openalex";
+import {
+  searchOpenAlex,
+  searchOpenAlexSemantic,
+  enrichCitationsByIds,
+} from "@/lib/search/sources/openalex";
 import { fetchCrossrefByDoi } from "@/lib/search/sources/crossref";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchTavily } from "@/lib/search/sources/tavily";
@@ -266,6 +270,27 @@ export async function runLiteratureSearch(
           onlyOpenAccess: params.fullTextOnly,
         }).then(({ results, total, status }) => ({ source: "openalex", results, total, status }))
       ).catch((e) => errorOutcome("openalex", e instanceof Error ? e.message : "OpenAlex failed"))
+    );
+
+    // Dense semantic lane (OpenAlex search.semantic) — the corpus-free fix for the
+    // lexical recall gap. Retrieves by meaning, surfacing landmarks with no shared
+    // surface terms. Fused into the pool before RRF; fails open like any source.
+    promises.push(
+      withSourceTimeout(
+        "OpenAlex Semantic",
+        searchOpenAlexSemantic(searchQuery, {
+          limit: poolPerSource,
+          yearStart: params.yearFrom,
+          yearEnd: params.yearTo,
+        }).then(({ results, total, status }) => ({
+          source: "openalex_semantic",
+          results,
+          total,
+          status,
+        }))
+      ).catch((e) =>
+        errorOutcome("openalex_semantic", e instanceof Error ? e.message : "OpenAlex semantic failed")
+      )
     );
   }
 

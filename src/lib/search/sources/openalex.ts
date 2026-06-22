@@ -207,6 +207,51 @@ export async function enrichCitationsByIds(
   return enriched;
 }
 
+/**
+ * Dense semantic retrieval via OpenAlex `search.semantic` (GTE-Large, 1024-dim,
+ * cosine over 250M+ works incl. all PubMed). This is the corpus-free fix for the
+ * lexical recall gap: it retrieves papers by MEANING, surfacing landmarks that
+ * share no surface terms with the query (e.g. CLARITY-AD for "newest evidence on
+ * lecanemab"). A separate retrieval lane fused into the candidate pool before RRF.
+ * Limits: ≤50 results, ≤2000-char query, 1 rps (handled by paceOpenAlex). Results
+ * are tagged source "openalex_semantic" so the retrieval path is traceable.
+ */
+export async function searchOpenAlexSemantic(
+  query: string,
+  options: { limit?: number; yearStart?: number; yearEnd?: number } = {}
+): Promise<{ results: UnifiedSearchResult[]; total: number; status: SourceStatus }> {
+  if (!breaker.canRequest()) {
+    return { results: [], total: 0, status: { status: "error", message: "Circuit breaker open" } };
+  }
+  const limit = Math.min(50, options.limit || 25);
+  const q = query.slice(0, 2000);
+  let url = `https://api.openalex.org/works?search.semantic=${encodeURIComponent(q)}&per_page=${limit}&mailto=contact@scholarsync.com`;
+  const filters: string[] = [];
+  if (options.yearStart && options.yearEnd) {
+    filters.push(`publication_year:${options.yearStart}-${options.yearEnd}`);
+  } else if (options.yearStart) {
+    filters.push(`publication_year:${options.yearStart}-`);
+  } else if (options.yearEnd) {
+    filters.push(`publication_year:-${options.yearEnd}`);
+  }
+  if (filters.length > 0) url += `&filter=${filters.join(",")}`;
+
+  try {
+    await paceOpenAlex();
+    const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000 });
+    const data: OpenAlexResponse = await res.json();
+    const results = (data.results || [])
+      .map(mapWork)
+      .map((r) => ({ ...r, sources: ["openalex_semantic"] }));
+    breaker.onSuccess();
+    return { results, total: data.meta?.count || results.length, status: okStatus() };
+  } catch (error) {
+    breaker.onFailure();
+    console.error("[OpenAlex] Semantic search failed:", error);
+    return { results: [], total: 0, status: classifyFetchError(error) };
+  }
+}
+
 export async function searchOpenAlex(
   query: string,
   options: OpenAlexSearchOptions = {}
