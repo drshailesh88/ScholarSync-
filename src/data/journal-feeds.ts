@@ -97,13 +97,9 @@ const MULTI_DOMAIN_JOURNAL_FEEDS: JournalDirectoryEntry[] = [
   // ═══════════════════════════════════════════════════════════════════
   // BIOLOGY
   // ═══════════════════════════════════════════════════════════════════
-  buildJournalFeed({
-    title: "Cell",
-    feedUrl: "https://www.cell.com/cell/current.rss",
-    siteUrl: "https://www.cell.com/cell/home",
-    publisher: "Cell Press",
-    category: "General Biology",
-  }),
+  // NOTE: "Cell" is intentionally omitted here — it is already a curated
+  // entry (with ISSN/specialty) in JOURNAL_FEEDS below. Listing it in both
+  // arrays produced a duplicate feedUrl.
   buildJournalFeed({
     title: "Nature Genetics",
     feedUrl: "https://www.nature.com/ng.rss",

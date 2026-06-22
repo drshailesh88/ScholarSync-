@@ -86,7 +86,7 @@ export function CommandPalette() {
   const [projectResults, setProjectResults] = useState<LibraryProject[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const { theme, setTheme } = useTheme();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

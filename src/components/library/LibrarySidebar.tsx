@@ -37,7 +37,7 @@ export function LibrarySidebar({
   counts: LibraryCounts;
   activeProjectId?: number | null;
 }) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   // When a project is active, scope workflow state links to the project
   const prefix = activeProjectId

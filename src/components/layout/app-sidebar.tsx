@@ -61,7 +61,7 @@ function NavIcon({ icon }: { icon: NavIconType }) {
 }
 
 export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobileOnly = false, collapsed = false, onToggleCollapse }: AppSidebarProps) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const domain = useDomain();
   const { theme, setTheme } = useTheme();
   const [userPanelOpen, setUserPanelOpen] = useState(false);

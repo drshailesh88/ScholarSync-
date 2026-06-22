@@ -231,7 +231,12 @@ describe("JF-307: Store -> Route path alignment", () => {
 // JF-308: Sidebar has feed navigation entry
 // =====================================================================
 describe("JF-308: Navigation entry exists", () => {
-  it("app-sidebar.tsx contains /feeds route", async () => {
+  // Skipped: the Journal Feed sidebar nav entry was intentionally removed in
+  // "simplify Manan OS to search-only v1" (commit 878f015d). The /feeds feature
+  // (pages, API, lib) still exists and is covered by the other tests in this
+  // suite; only the sidebar nav link is shelved. Re-enable when the nav entry
+  // is restored.
+  it.skip("app-sidebar.tsx contains /feeds route", async () => {
     const fs = await import("node:fs");
     const sidebarPath = "src/components/layout/app-sidebar.tsx";
     const content = fs.readFileSync(sidebarPath, "utf-8");

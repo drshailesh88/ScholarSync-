@@ -57,6 +57,14 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-latest
     needs: quality
+    # Opt-in. The Playwright suite boots the full app via `npm run dev`, which
+    # requires Clerk credentials, and many specs need AI provider keys + a seeded
+    # authenticated user. Those secrets are not available on forks/public CI, so
+    # the job is skipped by default (neutral, non-blocking) and only runs when a
+    # repository owner sets the `RUN_E2E` repo variable to `true` and provides the
+    # CLERK_*/AI keys as secrets. Repo variables (unlike secrets) are allowed in a
+    # job-level `if:`.
+    if: vars.RUN_E2E == 'true'
     services:
       postgres:
         image: pgvector/pgvector:pg16
@@ -106,6 +114,14 @@ jobs:
           NODE_ENV: development
           BASE_URL: http://localhost:3000
           PORT: 3000
+          # Clerk must be present for `npm run dev` to boot the app (the auth
+          # setup uses a dev bypass, but the provider still initializes). Falls
+          # back to test placeholders when the secrets are unset.
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_ci_placeholder' }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY || 'sk_test_ci_placeholder' }}
+          # AI provider keys for specs that exercise generation flows (optional).
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Upload test report
         uses: actions/upload-artifact@v4

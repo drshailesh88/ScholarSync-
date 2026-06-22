@@ -138,6 +138,15 @@ const { fetchAndStoreFeed, fetchDueFeeds } = await import("@/lib/feeds/feed-fetc
 
 // ── Helpers ─────────────────────────────────────────────────────────
 
+// pubDates must stay within feed-fetcher's MAX_ARTICLE_AGE_DAYS window so the
+// recency filter doesn't drop them. Compute them relative to "now" instead of
+// hardcoding calendar dates (which silently age out and break the test).
+function rssDate(daysAgo: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  return d.toUTCString();
+}
+
 const VALID_RSS = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
@@ -149,14 +158,14 @@ const VALID_RSS = `<?xml version="1.0" encoding="UTF-8"?>
       <link>https://test.com/article-1</link>
       <guid>guid-alpha-001</guid>
       <description>First test article</description>
-      <pubDate>Mon, 03 Mar 2026 08:00:00 GMT</pubDate>
+      <pubDate>${rssDate(1)}</pubDate>
     </item>
     <item>
       <title>New Article Beta</title>
       <link>https://test.com/article-2</link>
       <guid>guid-beta-002</guid>
       <description>Second test article</description>
-      <pubDate>Sun, 02 Mar 2026 08:00:00 GMT</pubDate>
+      <pubDate>${rssDate(2)}</pubDate>
     </item>
   </channel>
 </rss>`;

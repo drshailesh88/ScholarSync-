@@ -110,7 +110,10 @@ describe("JF-231: Page files", () => {
 // JF-232: Sidebar has Journal Feed entry
 // =====================================================================
 describe("JF-232: Sidebar modification", () => {
-  it("app-sidebar includes /feeds route", async () => {
+  // Skipped: Journal Feed sidebar nav entry intentionally removed in
+  // "simplify Manan OS to search-only v1" (commit 878f015d). Feature itself
+  // remains; only the sidebar link is shelved. Re-enable when restored.
+  it.skip("app-sidebar includes /feeds route", async () => {
     const fs = await import("fs");
     const content = fs.readFileSync("src/components/layout/app-sidebar.tsx", "utf-8");
     expect(content).toContain('"/feeds"');

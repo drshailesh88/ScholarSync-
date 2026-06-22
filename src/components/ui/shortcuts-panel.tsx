@@ -129,7 +129,7 @@ interface ShortcutsPanelProps {
 }
 
 export function ShortcutsPanel({ isOpen, onClose }: ShortcutsPanelProps) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const [search, setSearch] = useState("");
   const initialX = typeof window !== "undefined" ? window.innerWidth - 360 : 400;
   const [position, setPosition] = useState({ x: initialX, y: 100 });

@@ -19,7 +19,7 @@ const BUDDY_MAX_RATIO = 0.5;
 const DISTRACTION_FREE_ROUTES = ["/studio", "/latex"];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
