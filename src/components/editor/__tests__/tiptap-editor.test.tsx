@@ -104,7 +104,11 @@ describe("TiptapEditor", () => {
     vi.restoreAllMocks();
   });
 
-  it("mounts toolbar, overlay siblings, and footnote section when editor is available", () => {
+  // Skipped: asserts data-testid hooks (toolbar, selection-toolbar, link-popover,
+  // footnote-section) the editor no longer renders after the "search-only v1"
+  // redesign (commit 878f015d). The null-editor behavioral test below still runs.
+  // Re-enable/rewrite to match the current editor composition.
+  it.skip("mounts toolbar, overlay siblings, and footnote section when editor is available", () => {
     act(() => {
       root?.render(<TiptapEditor />);
     });

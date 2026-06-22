@@ -564,7 +564,10 @@ describe("P32: OPML import (Sprint 16)", () => {
 
 // ── P33: Navigation entry ────────────────────────────────────────────
 describe("P33: Sidebar navigation", () => {
-  it("sidebar has /feeds with Rss icon", () => {
+  // Skipped: Journal Feed sidebar nav entry intentionally removed in
+  // "simplify Manan OS to search-only v1" (commit 878f015d). Feature itself
+  // remains; only the sidebar link is shelved. Re-enable when restored.
+  it.skip("sidebar has /feeds with Rss icon", () => {
     const c = readFileSync("src/components/layout/app-sidebar.tsx", "utf-8");
     expect(c).toContain('"/feeds"');
     expect(c).toContain("Journal Feed");

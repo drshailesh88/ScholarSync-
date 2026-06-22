@@ -63,7 +63,12 @@ describe("Toolbar", () => {
     expect(container?.innerHTML).toBe("");
   });
 
-  it("renders the glass-panel shell, separator, and reference badge styles", () => {
+  // Skipped: these assert the pre-"search-only v1" toolbar design (glass-panel
+  // shell, inline Cite/Reference buttons + badge). The toolbar was redesigned
+  // (ss-formatting-toolbar, Docs-style collapsible; citation UI moved out) in
+  // commit 878f015d. The behavioral test below ("renders nothing when editor is
+  // null") still runs. Re-enable/rewrite if the toolbar design is revisited.
+  it.skip("renders the glass-panel shell, separator, and reference badge styles", () => {
     const { editor } = createEditorMock();
 
     act(() => {
@@ -112,7 +117,10 @@ describe("Toolbar", () => {
     expect(badge?.className).toContain("leading-none");
   });
 
-  it("uses onMouseDown prevention to preserve selection before actions", () => {
+  // Skipped: references onOpenCitationDialog/onToggleReferenceSidebar props the
+  // redesigned Toolbar (commit 878f015d) no longer accepts. Re-enable/rewrite if
+  // those toolbar actions return.
+  it.skip("uses onMouseDown prevention to preserve selection before actions", () => {
     const { editor, chainState } = createEditorMock();
     const onOpenCitationDialog = vi.fn();
     const onToggleReferenceSidebar = vi.fn();
