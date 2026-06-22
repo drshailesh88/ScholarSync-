@@ -16,7 +16,7 @@ export function ProjectSwitcher({ projects, activeProjectId }: ProjectSwitcherPr
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   const activeProject = activeProjectId
     ? projects.find((p) => p.id === activeProjectId)

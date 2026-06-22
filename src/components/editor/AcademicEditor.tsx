@@ -431,9 +431,9 @@ export function AcademicEditor({
 
           {/* Bottom info bar — Bear-style word count & reading time */}
           <div className="sticky bottom-0 z-10 flex items-center justify-end px-4 py-1.5 text-[11px] text-ink-muted/50 select-none pointer-events-none">
-            <span>{wordCount.toLocaleString()} words</span>
+            <span>{(wordCount ?? 0).toLocaleString()} words</span>
             <span className="mx-1.5">·</span>
-            <span>{Math.max(1, Math.ceil(wordCount / 238))} min read</span>
+            <span>{Math.max(1, Math.ceil((wordCount ?? 0) / 238))} min read</span>
           </div>
         </div>
 
