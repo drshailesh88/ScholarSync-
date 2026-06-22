@@ -10,6 +10,32 @@ import {
 
 const breaker = createCircuitBreaker({ service: "OpenAlex", failureThreshold: 5 });
 
+/**
+ * OpenAlex retired the email "polite pool" (Feb 2026); a free API key is now
+ * required for reliable, un-throttled access (free tier: ~1,000 search +
+ * 10,000 list calls/day). Append `&api_key=` when `OPENALEX_API_KEY` is set;
+ * fall back to mailto (rate-limited / best-effort) when it is not.
+ */
+function oaAuth(): string {
+  const key = process.env.OPENALEX_API_KEY;
+  return key
+    ? `&api_key=${encodeURIComponent(key)}`
+    : "&mailto=contact@scholarsync.com";
+}
+
+// Global in-process pacing for OpenAlex (search + enrichment = 2-3 calls/query).
+// Serializes requests with a minimum gap to stay under the polite-pool rate and
+// avoid the 429 bursts that otherwise degrade enrichment. ~7 req/s.
+const OPENALEX_MIN_INTERVAL_MS = 150;
+let openAlexGate: Promise<void> = Promise.resolve();
+function paceOpenAlex(): Promise<void> {
+  const prev = openAlexGate;
+  openAlexGate = prev.then(
+    () => new Promise<void>((resolve) => setTimeout(resolve, OPENALEX_MIN_INTERVAL_MS))
+  );
+  return prev;
+}
+
 interface OpenAlexSearchOptions {
   limit?: number;
   page?: number;
@@ -85,6 +111,160 @@ function mapWork(work: OpenAlexWork): UnifiedSearchResult {
   };
 }
 
+interface OpenAlexEnrichWork {
+  id: string;
+  ids?: { pmid?: string; doi?: string };
+  doi: string | null;
+  cited_by_count: number;
+  open_access?: { is_oa: boolean; oa_url: string | null } | null;
+  concepts?: { display_name: string; score: number }[];
+}
+
+function pmidFromOaIds(ids?: { pmid?: string }): string | undefined {
+  if (!ids?.pmid) return undefined;
+  return ids.pmid.replace("https://pubmed.ncbi.nlm.nih.gov/", "").replace(/\/$/, "");
+}
+function normDoi(doi: string | null | undefined): string | undefined {
+  if (!doi) return undefined;
+  return doi.toLowerCase().replace(/^https?:\/\/(dx\.)?doi\.org\//, "");
+}
+
+async function fetchOpenAlexBatch(
+  filter: string
+): Promise<OpenAlexEnrichWork[]> {
+  const url = `https://api.openalex.org/works?filter=${filter}&per_page=50${oaAuth()}&select=id,doi,ids,cited_by_count,open_access,concepts`;
+  await paceOpenAlex();
+  const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 8000 });
+  const data: { results?: OpenAlexEnrichWork[] } = await res.json();
+  return data.results ?? [];
+}
+
+/**
+ * Backfill citation counts (and open-access / concept metadata) on results that
+ * lack them, by looking them up in OpenAlex by PMID/DOI in batch. This is the
+ * S2-independent citation signal: PubMed returns citationCount=0, so without
+ * this the quality ranker has no citation/landmark signal. Fail-open: on any
+ * error the results are returned unchanged. Mutates in place; returns the count
+ * enriched.
+ */
+export async function enrichCitationsByIds(
+  results: UnifiedSearchResult[]
+): Promise<number> {
+  if (!breaker.canRequest()) return 0;
+  // Anything with a PMID or DOI that is missing a citation count, a PMID, or a
+  // DOI is worth a lookup (OpenAlex backfills all three from its id graph).
+  const needs = results.filter(
+    (r) => (r.pmid || r.doi) && (!r.citationCount || !r.pmid || !r.doi)
+  );
+  if (needs.length === 0) return 0;
+
+  const pmids = [...new Set(needs.map((r) => r.pmid).filter(Boolean))] as string[];
+  const dois = [
+    ...new Set(
+      needs.filter((r) => !r.pmid).map((r) => normDoi(r.doi)).filter(Boolean)
+    ),
+  ] as string[];
+
+  const byPmid = new Map<string, OpenAlexEnrichWork>();
+  const byDoi = new Map<string, OpenAlexEnrichWork>();
+  try {
+    const batches: Promise<OpenAlexEnrichWork[]>[] = [];
+    for (let i = 0; i < pmids.length; i += 50) {
+      batches.push(fetchOpenAlexBatch(`pmid:${pmids.slice(i, i + 50).join("|")}`));
+    }
+    for (let i = 0; i < dois.length; i += 50) {
+      const enc = dois.slice(i, i + 50).map((d) => encodeURIComponent(d)).join("|");
+      batches.push(fetchOpenAlexBatch(`doi:${enc}`));
+    }
+    const all = (await Promise.all(batches)).flat();
+    for (const w of all) {
+      const pmid = pmidFromOaIds(w.ids);
+      const doi = normDoi(w.doi ?? w.ids?.doi);
+      if (pmid) byPmid.set(pmid, w);
+      if (doi) byDoi.set(doi, w);
+    }
+    breaker.onSuccess();
+  } catch (error) {
+    breaker.onFailure();
+    console.error("[OpenAlex] Citation enrichment failed:", error);
+    return 0;
+  }
+
+  let enriched = 0;
+  for (const r of needs) {
+    const w =
+      (r.pmid && byPmid.get(r.pmid)) || (normDoi(r.doi) && byDoi.get(normDoi(r.doi)!));
+    if (!w) continue;
+    // Backfill a missing PMID from OpenAlex's id graph (DOI-only / OpenAlex /
+    // Crossref results that are in fact indexed in PubMed).
+    if (!r.pmid) {
+      const oaPmid = pmidFromOaIds(w.ids);
+      if (oaPmid) r.pmid = oaPmid;
+    }
+    if (!r.doi) {
+      const oaDoi = normDoi(w.doi ?? w.ids?.doi);
+      if (oaDoi) r.doi = oaDoi;
+    }
+    r.citationCount = w.cited_by_count || r.citationCount || 0;
+    if (w.open_access?.is_oa) {
+      r.isOpenAccess = true;
+      r.openAccessPdfUrl = r.openAccessPdfUrl || w.open_access.oa_url || null;
+    }
+    if (!r.openalexId) r.openalexId = w.id;
+    if (w.concepts?.length && !r.concepts?.length) {
+      r.concepts = w.concepts.filter((c) => c.score > 0.3).map((c) => c.display_name);
+    }
+    if (!r.sources.includes("openalex")) r.sources.push("openalex");
+    enriched++;
+  }
+  return enriched;
+}
+
+/**
+ * Dense semantic retrieval via OpenAlex `search.semantic` (GTE-Large, 1024-dim,
+ * cosine over 250M+ works incl. all PubMed). This is the corpus-free fix for the
+ * lexical recall gap: it retrieves papers by MEANING, surfacing landmarks that
+ * share no surface terms with the query (e.g. CLARITY-AD for "newest evidence on
+ * lecanemab"). A separate retrieval lane fused into the candidate pool before RRF.
+ * Limits: ≤50 results, ≤2000-char query, 1 rps (handled by paceOpenAlex). Results
+ * are tagged source "openalex_semantic" so the retrieval path is traceable.
+ */
+export async function searchOpenAlexSemantic(
+  query: string,
+  options: { limit?: number; yearStart?: number; yearEnd?: number } = {}
+): Promise<{ results: UnifiedSearchResult[]; total: number; status: SourceStatus }> {
+  if (!breaker.canRequest()) {
+    return { results: [], total: 0, status: { status: "error", message: "Circuit breaker open" } };
+  }
+  const limit = Math.min(50, options.limit || 25);
+  const q = query.slice(0, 2000);
+  let url = `https://api.openalex.org/works?search.semantic=${encodeURIComponent(q)}&per_page=${limit}${oaAuth()}`;
+  const filters: string[] = [];
+  if (options.yearStart && options.yearEnd) {
+    filters.push(`publication_year:${options.yearStart}-${options.yearEnd}`);
+  } else if (options.yearStart) {
+    filters.push(`publication_year:${options.yearStart}-`);
+  } else if (options.yearEnd) {
+    filters.push(`publication_year:-${options.yearEnd}`);
+  }
+  if (filters.length > 0) url += `&filter=${filters.join(",")}`;
+
+  try {
+    await paceOpenAlex();
+    const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000 });
+    const data: OpenAlexResponse = await res.json();
+    const results = (data.results || [])
+      .map(mapWork)
+      .map((r) => ({ ...r, sources: ["openalex_semantic"] }));
+    breaker.onSuccess();
+    return { results, total: data.meta?.count || results.length, status: okStatus() };
+  } catch (error) {
+    breaker.onFailure();
+    console.error("[OpenAlex] Semantic search failed:", error);
+    return { results: [], total: 0, status: classifyFetchError(error) };
+  }
+}
+
 export async function searchOpenAlex(
   query: string,
   options: OpenAlexSearchOptions = {}
@@ -101,7 +281,7 @@ export async function searchOpenAlex(
   const limit = options.limit || 20;
   const page = options.page || 1;
 
-  let url = `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per_page=${limit}&page=${page}&mailto=contact@scholarsync.com`;
+  let url = `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per_page=${limit}&page=${page}${oaAuth()}`;
 
   const filters: string[] = [];
   if (options.yearStart && options.yearEnd) {
@@ -122,6 +302,7 @@ export async function searchOpenAlex(
   }
 
   try {
+    await paceOpenAlex();
     const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000 });
     const data: OpenAlexResponse = await res.json();
     const results = (data.results || []).map(mapWork);

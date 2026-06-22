@@ -29,6 +29,13 @@ interface PubMedSearchOptions {
   page?: number;
   yearStart?: number;
   yearEnd?: number;
+  /**
+   * Result ordering. "relevance" = PubMed Best Match (semantic-ish ranking that
+   * surfaces landmark papers); "date" / undefined = MEDLINE default (most recent
+   * first). Defaults to "relevance" — recency is the wrong default for clinical
+   * literature search (it buries landmark older RCTs).
+   */
+  sort?: "relevance" | "date";
 }
 
 interface PubMedESearchResult {
@@ -164,8 +171,14 @@ export async function searchPubMed(
   const page = options.page || 0;
   const retstart = page * maxResults;
 
-  // Build search URL
+  // Build search URL. Default to PubMed Best Match ("relevance") so landmark
+  // papers surface — MEDLINE's implicit most-recent-first sort buries them.
+  const sort = options.sort ?? "relevance";
   let searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=${maxResults}&retstart=${retstart}&retmode=json&tool=scholarsync&email=contact@scholarsync.com`;
+
+  if (sort === "relevance") {
+    searchUrl += "&sort=relevance";
+  }
 
   if (options.yearStart || options.yearEnd) {
     const minDate = options.yearStart || 1900;
@@ -210,5 +223,34 @@ export async function searchPubMed(
       total: 0,
       status: classifyFetchError(error, { hasApiKey: pubmedKeys.length > 0 }),
     };
+  }
+}
+
+/**
+ * Fetch + parse PubMed records for an explicit list of PMIDs (single EFetch).
+ * Used by neighbour/citation expansion to hydrate related-article PMIDs into full
+ * results. Returns [] on error (fail-open).
+ */
+export async function fetchPubMedByPmids(
+  pmids: string[]
+): Promise<UnifiedSearchResult[]> {
+  if (pmids.length === 0 || !breaker.canRequest()) return [];
+  const ids = pmids.slice(0, 50).join(",");
+  const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${ids}&rettype=xml&retmode=xml&tool=scholarsync&email=contact@scholarsync.com`;
+  try {
+    const res = await resilientFetch(appendApiKey(fetchUrl), {}, { service: "PubMed", timeout: 15000, baseDelay: 400 });
+    const xml = await res.text();
+    const chunks = xml.match(/<PubmedArticle>[\s\S]*?<\/PubmedArticle>/g) || [];
+    const results: UnifiedSearchResult[] = [];
+    for (const chunk of chunks) {
+      const parsed = parseArticle(chunk);
+      if (parsed) results.push(parsed);
+    }
+    breaker.onSuccess();
+    return results;
+  } catch (error) {
+    breaker.onFailure();
+    console.error("[PubMed] EFetch-by-PMIDs failed:", error);
+    return [];
   }
 }

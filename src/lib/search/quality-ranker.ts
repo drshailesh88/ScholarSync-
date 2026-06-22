@@ -8,21 +8,50 @@ export interface QualityRankingConfig {
   evidenceWeight: number;
   /** Weight for citation count signal (0-1) */
   citationWeight: number;
+  /** Weight for citation velocity (citations/year) signal (0-1) */
+  velocityWeight: number;
   /** Weight for journal quartile signal (0-1) */
   journalWeight: number;
   /** Weight for original RRF score (0-1) */
   rrfWeight: number;
-  /** Weight for query relevance signal (0-1) */
+  /** Weight for query relevance signal (0-1) — cross-encoder rerank score when present */
   relevanceWeight: number;
 }
 
-const DEFAULT_CONFIG: QualityRankingConfig = {
+/**
+ * When a cross-encoder rerank score is present, relevance is a STRONG signal, so
+ * it dominates. Velocity balances landmark-vs-recency. Weights sum to 1.
+ */
+const RERANK_DOMINANT_CONFIG: QualityRankingConfig = {
+  evidenceWeight: 0.20,
+  citationWeight: 0.10,
+  velocityWeight: 0.08,
+  journalWeight: 0.10,
+  rrfWeight: 0.12,
+  relevanceWeight: 0.40,
+};
+
+/**
+ * Fallback weights when no reranker ran (relevance == weak keyword overlap), so
+ * relevance gets LESS weight and the tuned PubMed/RRF prior more. These are the
+ * EXACT validated pre-rerank weights (the ranking the LLM council scored 4/6),
+ * so the no-rerank path is provably the validated baseline — velocity is left at
+ * 0 here to keep it identical. Weights sum to 1.
+ */
+const KEYWORD_FALLBACK_CONFIG: QualityRankingConfig = {
   evidenceWeight: 0.25,
   citationWeight: 0.10,
+  velocityWeight: 0.0,
   journalWeight: 0.10,
   rrfWeight: 0.25,
   relevanceWeight: 0.30,
 };
+
+/** Pick weights based on whether a cross-encoder rerank score is available. */
+function pickConfig(results: UnifiedSearchResult[]): QualityRankingConfig {
+  const reranked = results.some((r) => typeof r.rerankScore === "number");
+  return reranked ? RERANK_DOMINANT_CONFIG : KEYWORD_FALLBACK_CONFIG;
+}
 
 // ── Signal normalizers ──────────────────────────────────────────────
 
@@ -47,6 +76,18 @@ function normalizeCitations(count: number, cap: number): number {
   const clamped = Math.min(count, cap);
   if (clamped <= 0) return 0;
   return Math.log1p(clamped) / Math.log1p(cap);
+}
+
+/** Citations per year since publication — separates fast-rising work from old-but-stale. */
+function citationVelocity(count: number, year: number, currentYear: number): number {
+  if (!count || !year) return 0;
+  const age = Math.max(1, currentYear - year + 1);
+  return count / age;
+}
+
+function normalizeVelocity(velocity: number, cap: number): number {
+  if (cap <= 0 || velocity <= 0) return 0;
+  return Math.log1p(Math.min(velocity, cap)) / Math.log1p(cap);
 }
 
 const QUARTILE_SCORES: Record<string, number> = {
@@ -133,63 +174,108 @@ export function enrichJournalQuality(
 
 // ── Quality ranking ─────────────────────────────────────────────────
 
+export interface QualitySignals {
+  evidence: number;
+  citation: number;
+  velocity: number;
+  journal: number;
+  rrf: number;
+  relevance: number;
+}
+
+export interface ScoredResult {
+  result: UnifiedSearchResult;
+  composite: number;
+  signals: QualitySignals;
+}
+
+interface ScoringContext {
+  citationCap: number;
+  velocityCap: number;
+  currentYear: number;
+  maxRrf: number;
+  queryKeywords: string[];
+  config: QualityRankingConfig;
+}
+
+function buildScoringContext(
+  results: UnifiedSearchResult[],
+  query: string | undefined,
+  config: QualityRankingConfig
+): ScoringContext {
+  const currentYear = new Date().getFullYear();
+  const citations = results.map((r) => r.citationCount || 0).sort((a, b) => a - b);
+  const p99Index = Math.floor(citations.length * 0.99);
+  const citationCap = citations[p99Index] || 1;
+  const velocities = results
+    .map((r) => citationVelocity(r.citationCount || 0, r.year, currentYear))
+    .sort((a, b) => a - b);
+  const velocityCap = velocities[Math.floor(velocities.length * 0.99)] || 1;
+  const maxRrf = Math.max(...results.map((r) => r.rrfScore ?? 0), 0.001);
+  const queryKeywords = query ? extractQueryKeywords(query) : [];
+  return { citationCap, velocityCap, currentYear, maxRrf, queryKeywords, config };
+}
+
+function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult {
+  const signals: QualitySignals = {
+    evidence: normalizeEvidence(r.evidenceLevel),
+    citation: normalizeCitations(r.citationCount || 0, ctx.citationCap),
+    velocity: normalizeVelocity(
+      citationVelocity(r.citationCount || 0, r.year, ctx.currentYear),
+      ctx.velocityCap
+    ),
+    journal: normalizeJournalQuartile(r.journalQuartile),
+    rrf: normalizeRrf(r.rrfScore, ctx.maxRrf),
+    // Prefer the cross-encoder rerank score as the relevance signal; fall back to
+    // keyword overlap only when no reranker ran (no COHERE_API_KEY).
+    relevance:
+      typeof r.rerankScore === "number"
+        ? r.rerankScore
+        : ctx.queryKeywords.length > 0
+          ? computeRelevance(r, ctx.queryKeywords)
+          : 0.5,
+  };
+  const c = ctx.config;
+  const composite =
+    c.evidenceWeight * signals.evidence +
+    c.citationWeight * signals.citation +
+    c.velocityWeight * signals.velocity +
+    c.journalWeight * signals.journal +
+    c.rrfWeight * signals.rrf +
+    c.relevanceWeight * signals.relevance;
+  return { result: r, composite, signals };
+}
+
 /**
- * Re-rank results using a weighted composite of:
- * - Evidence level (OCEBM hierarchy)
- * - Citation count (log-scaled)
- * - Journal quartile (Scimago)
- * - Original RRF score (preserves source-rank information)
- * - Query relevance (keyword overlap with the original query)
- *
- * Call this AFTER reciprocalRankFusion() and AFTER enrichJournalQuality().
- *
- * @param query - The original search query (for relevance scoring)
+ * Score + sort results by the quality composite, returning the per-signal
+ * breakdown for each so callers can build a ranking trace / explanation.
+ * Call AFTER reciprocalRankFusion() and AFTER enrichJournalQuality().
+ */
+export function rankWithTrace(
+  results: UnifiedSearchResult[],
+  query?: string,
+  config?: QualityRankingConfig
+): ScoredResult[] {
+  if (results.length === 0) return [];
+  const ctx = buildScoringContext(results, query, config ?? pickConfig(results));
+  const scored = results.map((r) => scoreResult(r, ctx));
+  scored.sort((a, b) => b.composite - a.composite);
+  return scored;
+}
+
+/**
+ * Re-rank results using a weighted composite of evidence level, citation count,
+ * journal quartile, original RRF score, and query relevance. Thin wrapper over
+ * {@link rankWithTrace} that overwrites `rrfScore` with the composite (legacy shape).
  */
 export function qualityRank(
   results: UnifiedSearchResult[],
   query?: string,
-  config: QualityRankingConfig = DEFAULT_CONFIG
+  config?: QualityRankingConfig
 ): UnifiedSearchResult[] {
   if (results.length === 0) return results;
-
-  // Compute citation cap (99th percentile)
-  const citations = results
-    .map((r) => r.citationCount || 0)
-    .sort((a, b) => a - b);
-  const p99Index = Math.floor(citations.length * 0.99);
-  const citationCap = citations[p99Index] || 1;
-
-  // Find max RRF score for normalization
-  const maxRrf = Math.max(...results.map((r) => r.rrfScore ?? 0), 0.001);
-
-  // Extract query keywords for relevance scoring
-  const queryKeywords = query ? extractQueryKeywords(query) : [];
-
-  // Score and sort
-  const scored = results.map((r) => {
-    const evidenceSignal = normalizeEvidence(r.evidenceLevel);
-    const citationSignal = normalizeCitations(r.citationCount || 0, citationCap);
-    const journalSignal = normalizeJournalQuartile(r.journalQuartile);
-    const rrfSignal = normalizeRrf(r.rrfScore, maxRrf);
-    const relevanceSignal = queryKeywords.length > 0
-      ? computeRelevance(r, queryKeywords)
-      : 0.5;
-
-    const composite =
-      config.evidenceWeight * evidenceSignal +
-      config.citationWeight * citationSignal +
-      config.journalWeight * journalSignal +
-      config.rrfWeight * rrfSignal +
-      config.relevanceWeight * relevanceSignal;
-
-    return { result: r, composite };
-  });
-
-  scored.sort((a, b) => b.composite - a.composite);
-
-  return scored.map(({ result, composite }) => ({
+  return rankWithTrace(results, query, config).map(({ result, composite }) => ({
     ...result,
-    // Preserve the composite score for debugging (overwrite rrfScore)
     rrfScore: Math.round(composite * 10000) / 10000,
   }));
 }

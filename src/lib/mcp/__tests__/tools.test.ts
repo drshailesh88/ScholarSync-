@@ -59,7 +59,9 @@ describe("search_papers tool", () => {
       page: 0,
       perPage: 10,
       hasMore: false,
-      sourceCounts: { pubmed: 1, semantic_scholar: 1 },
+      sourceCounts: { pubmed: 1, openalex: 1 },
+      sourceStatuses: { pubmed: { status: "ok" }, openalex: { status: "ok" } },
+      plan: { pubmedQuery: "TAVR low risk", recency: false, trialAcronyms: [], wantsTrials: false },
     });
   });
 
@@ -164,9 +166,11 @@ describe("get_search_capabilities tool", () => {
     expect(caps.limits.maxResults).toBe(50);
     expect(caps.outputFields).toContain("doi");
     expect(caps.outputFields).toContain("evidenceLevel");
-    // default sources flagged correctly
+    expect(caps.outputFields).toContain("whyRelevant");
+    // Default sources are PubMed + OpenAlex — Semantic Scholar is opt-in only
+    // (the system must work without it).
     const defaults = caps.sources.filter((s) => s.default).map((s) => s.id);
-    expect(defaults).toEqual(["pubmed", "semantic_scholar"]);
+    expect(defaults).toEqual(["pubmed", "openalex"]);
   });
 });
 

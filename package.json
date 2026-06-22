@@ -31,7 +31,8 @@
     "qa:dry-run": "npx tsx qa/controller.ts --dry-run",
     "ux:score": "node qa/ux-score.mjs",
     "ux:score:zone": "node qa/ux-score.mjs --zone",
-    "ux:screenshot": "npx playwright test qa/ux-screenshot.ts"
+    "ux:screenshot": "npx playwright test qa/ux-screenshot.ts",
+    "eval:search": "tsx eval/literature-search/run.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
