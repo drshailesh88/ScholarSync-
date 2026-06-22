@@ -8,7 +8,7 @@
  */
 
 import { createMcpHandler } from "mcp-handler";
-import { isValidMcpToken } from "@/lib/mcp/auth";
+import { isValidMcpToken, isMcpAuthConfigured } from "@/lib/mcp/auth";
 import {
   searchPapers,
   fetchPaper,
@@ -104,7 +104,12 @@ function unauthorized(): Response {
 }
 
 async function authedHandler(req: Request): Promise<Response> {
-  if (!isValidMcpToken(bearerFromRequest(req))) return unauthorized();
+  // Auth is opt-in. With MANAN_MCP_API_KEY unset (internal-tool mode) the
+  // endpoint is open so agents connect without friction. Set the env var to
+  // require `Authorization: Bearer <token>` — e.g. before exposing it publicly.
+  if (isMcpAuthConfigured() && !isValidMcpToken(bearerFromRequest(req))) {
+    return unauthorized();
+  }
   return handler(req);
 }
 

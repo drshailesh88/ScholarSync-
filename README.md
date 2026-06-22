@@ -167,17 +167,21 @@ lives **beside** the web app — it reuses the exact same server-side search log
 (`runLiteratureSearch`) and does **not** touch the browser/Clerk session.
 
 - **Endpoint:** `POST /api/mcp` (streamable HTTP transport)
-- **Health/debug:** `GET /api/mcp/health` (no auth, exposes no search)
+- **Health/debug:** `GET /api/mcp/health`
 - **Tools:**
   - `search_papers` — search PubMed / Semantic Scholar / OpenAlex, returns ranked papers
   - `fetch_paper` — fetch one paper by DOI, PMID, or internal id
   - `get_search_capabilities` — describe supported sources, filters, and limits
 
-### Required env vars
+### Auth (opt-in)
 
-| Var | Purpose |
-|-----|---------|
-| `MANAN_MCP_API_KEY` | Shared bearer token. Clients must send `Authorization: Bearer <token>`. Missing/invalid → `401`. Generate with `openssl rand -hex 32`. |
+This is an internal tool, so the endpoint is **open by default** — agents connect
+with no credentials. The tools only expose public literature search (no user
+data, no DB, no saved searches).
+
+To turn auth back on (e.g. before exposing it publicly), set `MANAN_MCP_API_KEY`.
+When set, every request must send `Authorization: Bearer <token>`; missing/invalid
+→ `401`. No code change needed — auth follows the env var.
 
 The search backend also benefits from (all optional) `PUBMED_API_KEY` /
 `PUBMED_API_KEYS` and `SEMANTIC_SCHOLAR_API_KEY` for higher rate limits.
@@ -185,51 +189,45 @@ The search backend also benefits from (all optional) `PUBMED_API_KEY` /
 ### Local test
 
 ```bash
-# 1. Set a token in .env.local
-echo 'MANAN_MCP_API_KEY=dev-local-mcp-token-12345' >> .env.local
-
-# 2. Build & start
+# Build & start
 npm run build && npm start            # serves on :3000
 
-# 3. Health check (no auth)
+# Health check
 curl http://localhost:3000/api/mcp/health
 
-# 4. Unauthorized call returns 401
+# List tools (open mode — no auth header needed)
 curl -i -X POST http://localhost:3000/api/mcp \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
 
-# 5. Inspect with the official MCP Inspector
+# Inspect with the official MCP Inspector
 npx @modelcontextprotocol/inspector
 #   → Transport: Streamable HTTP, URL: http://localhost:3000/api/mcp
-#   → Header:    Authorization: Bearer dev-local-mcp-token-12345
 
-# 6. Unit tests for the MCP layer
+# Unit tests for the MCP layer
 npx vitest run src/lib/mcp src/app/api/mcp
 ```
 
 ### Vercel deploy notes
 
-1. Add the env var: `vercel env add MANAN_MCP_API_KEY production` (and `preview`).
-2. Deploy: `vercel --prod`.
-3. The route runs on the Node.js runtime (`export const runtime = "nodejs"`)
-   with `maxDuration: 60`. No Redis is required (single-shot streamable HTTP).
-4. Verify: `curl https://manan-os-eta.vercel.app/api/mcp/health`.
+1. Deploy: `vercel --prod`.
+2. The route runs on the Node.js runtime (`export const runtime = "nodejs"`).
+   No Redis is required (single-shot streamable HTTP).
+3. Verify: `curl https://manan-os-eta.vercel.app/api/mcp/health`.
+4. (Optional) Lock it down later: `vercel env add MANAN_MCP_API_KEY production`,
+   redeploy, then have clients send `Authorization: Bearer <token>`.
 
 ### MCP client config example
 
-Claude Code / Cursor / Windsurf (`mcp.json`):
+Claude Code / Cursor / Windsurf (`mcp.json`) — open mode, no auth:
 
 ```json
 {
   "mcpServers": {
     "manan-os": {
       "type": "http",
-      "url": "https://manan-os-eta.vercel.app/api/mcp",
-      "headers": {
-        "Authorization": "Bearer ${MANAN_MCP_API_KEY}"
-      }
+      "url": "https://manan-os-eta.vercel.app/api/mcp"
     }
   }
 }
@@ -238,9 +236,11 @@ Claude Code / Cursor / Windsurf (`mcp.json`):
 Claude Code CLI:
 
 ```bash
-claude mcp add --transport http manan-os https://manan-os-eta.vercel.app/api/mcp \
-  --header "Authorization: Bearer $MANAN_MCP_API_KEY"
+claude mcp add --transport http manan-os https://manan-os-eta.vercel.app/api/mcp
 ```
+
+If you later enable `MANAN_MCP_API_KEY`, add the header:
+`--header "Authorization: Bearer <token>"`.
 
 ## Pricing
 

@@ -56,3 +56,22 @@ describe("/api/mcp authorization gate", () => {
     expect(res.status).not.toBe(401);
   });
 });
+
+describe("/api/mcp open mode (no key configured)", () => {
+  let original: string | undefined;
+
+  beforeAll(() => {
+    original = process.env[ENV];
+    delete process.env[ENV];
+  });
+
+  afterAll(() => {
+    if (original === undefined) delete process.env[ENV];
+    else process.env[ENV] = original;
+  });
+
+  it("does not require auth when MANAN_MCP_API_KEY is unset", async () => {
+    const res = await POST(mcpRequest());
+    expect(res.status).not.toBe(401);
+  });
+});
