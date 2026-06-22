@@ -2,6 +2,7 @@ import type { UnifiedSearchResult } from "@/types/search";
 import { mapPubMedPublicationType, getEvidenceLevel } from "@/lib/search/evidence-level";
 import { resilientFetch } from "@/lib/http/resilient-fetch";
 import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
+import { createOutboundLimiter } from "@/lib/http/outbound-limiter";
 import { createKeyRotator } from "@/lib/search/api-key-rotator";
 import {
   classifyFetchError,
@@ -16,6 +17,15 @@ const pubmedKeys: string[] =
   process.env.PUBMED_API_KEYS?.split(",") ??
   (process.env.PUBMED_API_KEY ? [process.env.PUBMED_API_KEY] : []);
 const keyRotator = createKeyRotator(pubmedKeys);
+
+// Outbound rate limiter — NCBI E-utilities allow ~10 req/s with an API key, ~3
+// without. Pacing prevents the self-inflicted 429s that otherwise pin the source
+// and trip the circuit breaker (cascade-to-empty).
+const pubmedLimiter = createOutboundLimiter({
+  service: "PubMed",
+  requestsPerSecond: pubmedKeys.length > 0 ? 9 : 2.5,
+  burst: pubmedKeys.length > 0 ? 3 : 2,
+});
 
 /** Append the next rotated API key to a PubMed URL, or return the URL unchanged if no keys. */
 function appendApiKey(url: string): string {
@@ -188,7 +198,8 @@ export async function searchPubMed(
 
   try {
     // Step 1: ESearch for PMIDs (with key rotation + resilient fetch)
-    const searchRes = await resilientFetch(appendApiKey(searchUrl), {}, { service: "PubMed", timeout: 15000, baseDelay: 400 });
+    await pubmedLimiter.acquire();
+    const searchRes = await resilientFetch(appendApiKey(searchUrl), {}, { service: "PubMed", timeout: 15000, baseDelay: 400, maxRetries: 2 });
     const searchData: PubMedESearchResult = await searchRes.json();
     const pmids = searchData.esearchresult.idlist;
     const total = parseInt(searchData.esearchresult.count, 10);
@@ -200,7 +211,8 @@ export async function searchPubMed(
 
     // Step 2: EFetch for full XML (with key rotation + resilient fetch)
     const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmids.join(",")}&rettype=xml&retmode=xml&tool=scholarsync&email=contact@scholarsync.com`;
-    const fetchRes = await resilientFetch(appendApiKey(fetchUrl), {}, { service: "PubMed", timeout: 15000, baseDelay: 400 });
+    await pubmedLimiter.acquire();
+    const fetchRes = await resilientFetch(appendApiKey(fetchUrl), {}, { service: "PubMed", timeout: 15000, baseDelay: 400, maxRetries: 2 });
     const xml = await fetchRes.text();
 
     // Parse individual articles
@@ -238,7 +250,8 @@ export async function fetchPubMedByPmids(
   const ids = pmids.slice(0, 50).join(",");
   const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${ids}&rettype=xml&retmode=xml&tool=scholarsync&email=contact@scholarsync.com`;
   try {
-    const res = await resilientFetch(appendApiKey(fetchUrl), {}, { service: "PubMed", timeout: 15000, baseDelay: 400 });
+    await pubmedLimiter.acquire();
+    const res = await resilientFetch(appendApiKey(fetchUrl), {}, { service: "PubMed", timeout: 15000, baseDelay: 400, maxRetries: 2 });
     const xml = await res.text();
     const chunks = xml.match(/<PubmedArticle>[\s\S]*?<\/PubmedArticle>/g) || [];
     const results: UnifiedSearchResult[] = [];
