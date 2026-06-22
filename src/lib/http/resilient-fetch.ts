@@ -80,10 +80,13 @@ export async function resilientFetch(
           const parsed = parseInt(retryAfter, 10);
           delay = isNaN(parsed) ? baseDelay * Math.pow(2, attempt) : parsed * 1000;
         } else {
-          delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
+          delay = baseDelay * Math.pow(2, attempt);
         }
 
-        delay = addJitter(delay);
+        // ALWAYS cap the delay — a source can return an absurd Retry-After
+        // (e.g. OpenAlex once returned ~44,500s), which would otherwise hang the
+        // request for hours. Better to give up after maxDelay and fail open.
+        delay = addJitter(Math.min(delay, maxDelay));
 
         console.warn(
           `[${service}] Retry ${attempt + 1}/${maxRetries} after ${response.status} (delay: ${Math.round(delay)}ms)`

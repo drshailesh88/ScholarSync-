@@ -85,6 +85,114 @@ function mapWork(work: OpenAlexWork): UnifiedSearchResult {
   };
 }
 
+interface OpenAlexEnrichWork {
+  id: string;
+  ids?: { pmid?: string; doi?: string };
+  doi: string | null;
+  cited_by_count: number;
+  open_access?: { is_oa: boolean; oa_url: string | null } | null;
+  concepts?: { display_name: string; score: number }[];
+}
+
+function pmidFromOaIds(ids?: { pmid?: string }): string | undefined {
+  if (!ids?.pmid) return undefined;
+  return ids.pmid.replace("https://pubmed.ncbi.nlm.nih.gov/", "").replace(/\/$/, "");
+}
+function normDoi(doi: string | null | undefined): string | undefined {
+  if (!doi) return undefined;
+  return doi.toLowerCase().replace(/^https?:\/\/(dx\.)?doi\.org\//, "");
+}
+
+async function fetchOpenAlexBatch(
+  filter: string
+): Promise<OpenAlexEnrichWork[]> {
+  const url = `https://api.openalex.org/works?filter=${filter}&per_page=50&mailto=contact@scholarsync.com&select=id,doi,ids,cited_by_count,open_access,concepts`;
+  const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 8000 });
+  const data: { results?: OpenAlexEnrichWork[] } = await res.json();
+  return data.results ?? [];
+}
+
+/**
+ * Backfill citation counts (and open-access / concept metadata) on results that
+ * lack them, by looking them up in OpenAlex by PMID/DOI in batch. This is the
+ * S2-independent citation signal: PubMed returns citationCount=0, so without
+ * this the quality ranker has no citation/landmark signal. Fail-open: on any
+ * error the results are returned unchanged. Mutates in place; returns the count
+ * enriched.
+ */
+export async function enrichCitationsByIds(
+  results: UnifiedSearchResult[]
+): Promise<number> {
+  if (!breaker.canRequest()) return 0;
+  // Anything with a PMID or DOI that is missing a citation count, a PMID, or a
+  // DOI is worth a lookup (OpenAlex backfills all three from its id graph).
+  const needs = results.filter(
+    (r) => (r.pmid || r.doi) && (!r.citationCount || !r.pmid || !r.doi)
+  );
+  if (needs.length === 0) return 0;
+
+  const pmids = [...new Set(needs.map((r) => r.pmid).filter(Boolean))] as string[];
+  const dois = [
+    ...new Set(
+      needs.filter((r) => !r.pmid).map((r) => normDoi(r.doi)).filter(Boolean)
+    ),
+  ] as string[];
+
+  const byPmid = new Map<string, OpenAlexEnrichWork>();
+  const byDoi = new Map<string, OpenAlexEnrichWork>();
+  try {
+    const batches: Promise<OpenAlexEnrichWork[]>[] = [];
+    for (let i = 0; i < pmids.length; i += 50) {
+      batches.push(fetchOpenAlexBatch(`pmid:${pmids.slice(i, i + 50).join("|")}`));
+    }
+    for (let i = 0; i < dois.length; i += 50) {
+      const enc = dois.slice(i, i + 50).map((d) => encodeURIComponent(d)).join("|");
+      batches.push(fetchOpenAlexBatch(`doi:${enc}`));
+    }
+    const all = (await Promise.all(batches)).flat();
+    for (const w of all) {
+      const pmid = pmidFromOaIds(w.ids);
+      const doi = normDoi(w.doi ?? w.ids?.doi);
+      if (pmid) byPmid.set(pmid, w);
+      if (doi) byDoi.set(doi, w);
+    }
+    breaker.onSuccess();
+  } catch (error) {
+    breaker.onFailure();
+    console.error("[OpenAlex] Citation enrichment failed:", error);
+    return 0;
+  }
+
+  let enriched = 0;
+  for (const r of needs) {
+    const w =
+      (r.pmid && byPmid.get(r.pmid)) || (normDoi(r.doi) && byDoi.get(normDoi(r.doi)!));
+    if (!w) continue;
+    // Backfill a missing PMID from OpenAlex's id graph (DOI-only / OpenAlex /
+    // Crossref results that are in fact indexed in PubMed).
+    if (!r.pmid) {
+      const oaPmid = pmidFromOaIds(w.ids);
+      if (oaPmid) r.pmid = oaPmid;
+    }
+    if (!r.doi) {
+      const oaDoi = normDoi(w.doi ?? w.ids?.doi);
+      if (oaDoi) r.doi = oaDoi;
+    }
+    r.citationCount = w.cited_by_count || r.citationCount || 0;
+    if (w.open_access?.is_oa) {
+      r.isOpenAccess = true;
+      r.openAccessPdfUrl = r.openAccessPdfUrl || w.open_access.oa_url || null;
+    }
+    if (!r.openalexId) r.openalexId = w.id;
+    if (w.concepts?.length && !r.concepts?.length) {
+      r.concepts = w.concepts.filter((c) => c.score > 0.3).map((c) => c.display_name);
+    }
+    if (!r.sources.includes("openalex")) r.sources.push("openalex");
+    enriched++;
+  }
+  return enriched;
+}
+
 export async function searchOpenAlex(
   query: string,
   options: OpenAlexSearchOptions = {}

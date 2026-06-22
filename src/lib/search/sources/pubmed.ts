@@ -29,6 +29,13 @@ interface PubMedSearchOptions {
   page?: number;
   yearStart?: number;
   yearEnd?: number;
+  /**
+   * Result ordering. "relevance" = PubMed Best Match (semantic-ish ranking that
+   * surfaces landmark papers); "date" / undefined = MEDLINE default (most recent
+   * first). Defaults to "relevance" — recency is the wrong default for clinical
+   * literature search (it buries landmark older RCTs).
+   */
+  sort?: "relevance" | "date";
 }
 
 interface PubMedESearchResult {
@@ -164,8 +171,14 @@ export async function searchPubMed(
   const page = options.page || 0;
   const retstart = page * maxResults;
 
-  // Build search URL
+  // Build search URL. Default to PubMed Best Match ("relevance") so landmark
+  // papers surface — MEDLINE's implicit most-recent-first sort buries them.
+  const sort = options.sort ?? "relevance";
   let searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=${maxResults}&retstart=${retstart}&retmode=json&tool=scholarsync&email=contact@scholarsync.com`;
+
+  if (sort === "relevance") {
+    searchUrl += "&sort=relevance";
+  }
 
   if (options.yearStart || options.yearEnd) {
     const minDate = options.yearStart || 1900;

@@ -9,19 +9,28 @@
  */
 
 import { searchPubMed } from "@/lib/search/sources/pubmed";
-import {
-  searchSemanticScholar,
-  getSemanticScholarPaper,
-} from "@/lib/search/sources/semantic-scholar";
-import { searchOpenAlex } from "@/lib/search/sources/openalex";
+import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
+import { searchOpenAlex, enrichCitationsByIds } from "@/lib/search/sources/openalex";
+import { fetchCrossrefByDoi } from "@/lib/search/sources/crossref";
+import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
+import { searchTavily } from "@/lib/search/sources/tavily";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
+import { planQuery } from "@/lib/search/query-planner";
+import { rankAndAnnotate } from "@/lib/search/pipeline";
+import { attachRerankScores } from "@/lib/search/rerank";
+import type { SourceStatus } from "@/lib/search/source-status";
 import type { UnifiedSearchResult } from "@/types/search";
 
 export const SEARCH_SOURCES = ["pubmed", "semantic_scholar", "openalex"] as const;
 export type SearchSourceId = (typeof SEARCH_SOURCES)[number];
 
-/** Sources used when a caller does not specify any. Matches historical UI behavior. */
-export const DEFAULT_SOURCES: SearchSourceId[] = ["pubmed", "semantic_scholar"];
+/**
+ * Sources used when a caller does not specify any. PubMed-first for clinical
+ * relevance, OpenAlex for citation counts + open-access links. Semantic Scholar
+ * is intentionally NOT in the default set — it is optional and the system works
+ * fully without it (it 403s / rate-limits frequently). Pass it explicitly to opt in.
+ */
+export const DEFAULT_SOURCES: SearchSourceId[] = ["pubmed", "openalex"];
 
 /** Hard ceiling on results per search, shared across web and MCP transports. */
 export const MAX_RESULTS = 50;
@@ -68,6 +77,19 @@ export interface LiteratureSearchResult {
   perPage: number;
   hasMore: boolean;
   sourceCounts: Record<string, number>;
+  /**
+   * Per-source health. A source marked anything other than "ok" was degraded —
+   * its zero count must NOT be read as "no results". Surfaced so callers can
+   * distinguish "source down" from "genuinely nothing found".
+   */
+  sourceStatuses: Record<string, SourceStatus>;
+  /** The retrieval plan used (sort strategy, expansions, trial detection). */
+  plan: {
+    pubmedQuery: string;
+    recency: boolean;
+    trialAcronyms: string[];
+    wantsTrials: boolean;
+  };
 }
 
 function withSourceTimeout<T>(
@@ -140,6 +162,52 @@ function normalizeSources(sources?: SearchSourceId[]): SearchSourceId[] {
   return allowed.length > 0 ? allowed : DEFAULT_SOURCES;
 }
 
+interface SourceOutcome {
+  source: string;
+  results: UnifiedSearchResult[];
+  total: number;
+  status: SourceStatus;
+}
+
+const errorOutcome = (source: string, message: string): SourceOutcome => ({
+  source,
+  results: [],
+  total: 0,
+  status: { status: "error", message },
+});
+
+/**
+ * PubMed retrieval with a robust two-step strategy: try the keyword-simplified
+ * query first (relevance- or date-sorted per intent); if it returns nothing AND
+ * a different verbatim fallback exists, retry with the fallback. This eliminates
+ * the empty-result-set failure mode for natural-language / PICO queries.
+ */
+async function searchPubMedPlanned(
+  primary: string,
+  fallback: string,
+  opts: { maxResults: number; page: number; yearStart?: number; yearEnd?: number; recency: boolean }
+): Promise<SourceOutcome> {
+  const sort = opts.recency ? "date" : "relevance";
+  const first = await searchPubMed(primary, {
+    maxResults: opts.maxResults,
+    page: opts.page,
+    yearStart: opts.yearStart,
+    yearEnd: opts.yearEnd,
+    sort,
+  });
+  if (first.results.length > 0 || primary === fallback) {
+    return { source: "pubmed", ...first };
+  }
+  const second = await searchPubMed(fallback, {
+    maxResults: opts.maxResults,
+    page: opts.page,
+    yearStart: opts.yearStart,
+    yearEnd: opts.yearEnd,
+    sort,
+  });
+  return { source: "pubmed", ...second };
+}
+
 export async function runLiteratureSearch(
   params: RunLiteratureSearchParams
 ): Promise<LiteratureSearchResult> {
@@ -147,43 +215,24 @@ export async function runLiteratureSearch(
   const page = Math.max(0, params.page ?? 0);
   const perPage = Math.min(MAX_RESULTS, Math.max(1, params.perPage ?? DEFAULT_PER_PAGE));
   const searchQuery = params.query || "";
-  const pmQuery = params.pubmedQuery || searchQuery;
+  const plan = planQuery(searchQuery);
+  const pmPrimary = params.pubmedQuery || plan.pubmedPrimary;
+  const pmFallback = params.pubmedQuery || plan.pubmedFallback;
 
-  const promises: Promise<{
-    source: string;
-    results: UnifiedSearchResult[];
-    total: number;
-  }>[] = [];
+  const promises: Promise<SourceOutcome>[] = [];
 
   if (sources.includes("pubmed")) {
     promises.push(
       withSourceTimeout(
         "PubMed",
-        searchPubMed(pmQuery, {
+        searchPubMedPlanned(pmPrimary, pmFallback, {
           maxResults: perPage,
           page,
           yearStart: params.yearFrom,
           yearEnd: params.yearTo,
-        }).then(({ results, total }) => ({ source: "pubmed", results, total }))
-      ).catch(() => ({ source: "pubmed", results: [], total: 0 }))
-    );
-  }
-
-  if (sources.includes("semantic_scholar")) {
-    promises.push(
-      withSourceTimeout(
-        "Semantic Scholar",
-        searchSemanticScholar(searchQuery, {
-          limit: perPage,
-          offset: page * perPage,
-          yearStart: params.yearFrom,
-          yearEnd: params.yearTo,
-        }).then(({ results, total }) => ({
-          source: "semantic_scholar",
-          results,
-          total,
-        }))
-      ).catch(() => ({ source: "semantic_scholar", results: [], total: 0 }))
+          recency: plan.recency,
+        })
+      ).catch((e) => errorOutcome("pubmed", e instanceof Error ? e.message : "PubMed failed"))
     );
   }
 
@@ -197,17 +246,70 @@ export async function runLiteratureSearch(
           yearStart: params.yearFrom,
           yearEnd: params.yearTo,
           onlyOpenAccess: params.fullTextOnly,
-        }).then(({ results, total }) => ({ source: "openalex", results, total }))
-      ).catch(() => ({ source: "openalex", results: [], total: 0 }))
+        }).then(({ results, total, status }) => ({ source: "openalex", results, total, status }))
+      ).catch((e) => errorOutcome("openalex", e instanceof Error ? e.message : "OpenAlex failed"))
+    );
+  }
+
+  // Semantic Scholar is opt-in only (never required). Used purely as an extra
+  // citation/metadata signal when explicitly requested and reachable.
+  if (sources.includes("semantic_scholar")) {
+    promises.push(
+      withSourceTimeout(
+        "Semantic Scholar",
+        searchSemanticScholar(searchQuery, {
+          limit: perPage,
+          offset: page * perPage,
+          yearStart: params.yearFrom,
+          yearEnd: params.yearTo,
+        }).then(({ results, total, status }) => ({
+          source: "semantic_scholar",
+          results,
+          total,
+          status,
+        }))
+      ).catch((e) =>
+        errorOutcome("semantic_scholar", e instanceof Error ? e.message : "Semantic Scholar failed")
+      )
+    );
+  }
+
+  // ClinicalTrials.gov linking for trial-acronym / NCT / explicit-trial queries.
+  if (plan.wantsTrials) {
+    promises.push(
+      withSourceTimeout(
+        "ClinicalTrials",
+        searchClinicalTrials(searchQuery, { limit: Math.min(5, perPage) }).then(
+          ({ results, total, status }) => ({ source: "clinical_trials", results, total, status })
+        )
+      ).catch((e) =>
+        errorOutcome("clinical_trials", e instanceof Error ? e.message : "ClinicalTrials failed")
+      )
+    );
+  }
+
+  // Optional web fallback (Tavily) for guideline / recency queries. No-op without
+  // TAVILY_API_KEY. Restricted to trusted biomedical/guideline domains and
+  // trust-tiered so it can never out-rank stable primary literature.
+  if (plan.wantsWeb && process.env.TAVILY_API_KEY) {
+    promises.push(
+      withSourceTimeout(
+        "Tavily",
+        searchTavily(searchQuery, { maxResults: 5, topic: plan.recency ? "news" : "general" }).then(
+          ({ results, total, status }) => ({ source: "web", results, total, status })
+        )
+      ).catch((e) => errorOutcome("web", e instanceof Error ? e.message : "Tavily failed"))
     );
   }
 
   const sourceResults = await Promise.all(promises);
 
   const sourceCounts: Record<string, number> = {};
+  const sourceStatuses: Record<string, SourceStatus> = {};
   let maxTotal = 0;
   for (const sr of sourceResults) {
     sourceCounts[sr.source] = sr.total;
+    sourceStatuses[sr.source] = sr.status;
     maxTotal = Math.max(maxTotal, sr.total);
   }
 
@@ -215,7 +317,27 @@ export async function runLiteratureSearch(
     sourceResults.map((sr) => ({ source: sr.source, results: sr.results }))
   );
 
-  let filtered = fused;
+  // Backfill citation counts (and OA/concepts) from OpenAlex by PMID/DOI so the
+  // quality ranker has a reliable, S2-independent citation/landmark signal even
+  // for PubMed-only results. Fail-open: ranking proceeds regardless.
+  await withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(fused), 9000).catch(
+    () => 0
+  );
+
+  // Cross-encoder rerank (Cohere): attach a semantic relevance score to the
+  // fused candidates BEFORE ranking, so the quality composite uses it as the
+  // dominant relevance signal (rather than keyword overlap). Fail-open.
+  await withSourceTimeout(
+    "Cohere rerank",
+    attachRerankScores(searchQuery, fused, 50),
+    12000
+  ).catch(() => fused);
+
+  // Rank by clinical quality (relevance[rerank] + evidence hierarchy + citations
+  // + velocity + journal) and annotate with a trace, flags, and "why relevant".
+  const ranked = rankAndAnnotate(fused, { query: searchQuery, recency: plan.recency });
+
+  let filtered = ranked;
   if (params.studyTypes && params.studyTypes.length > 0) {
     const allowedTypes = new Set(params.studyTypes);
     filtered = filtered.filter((r) => allowedTypes.has(mapStudyType(r.studyType)));
@@ -242,25 +364,54 @@ export async function runLiteratureSearch(
     perPage,
     hasMore: results.length >= perPage,
     sourceCounts,
+    sourceStatuses,
+    plan: {
+      pubmedQuery: pmPrimary,
+      recency: plan.recency,
+      trialAcronyms: plan.trialAcronyms,
+      wantsTrials: plan.wantsTrials,
+    },
   };
 }
 
+async function fetchSinglePubMed(term: string): Promise<UnifiedSearchResult | null> {
+  try {
+    const { results } = await searchPubMed(term, { maxResults: 1 });
+    return results[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /**
- * Fetch a single paper by identifier. Accepts a DOI, PMID, or an internal id
- * produced by {@link generatePaperId} (e.g. `pm_12345`, `s2_<id>`). Resolution
- * goes through Semantic Scholar's direct lookup, which understands DOI/PMID/S2
- * identifiers.
+ * Fetch a single paper by identifier — Semantic-Scholar-free. Accepts a DOI,
+ * PMID, or an internal `pm_<pmid>` id and resolves through stable primary
+ * sources in order: PubMed (by PMID or DOI), then Crossref (by DOI), then
+ * OpenAlex citation enrichment. `doi_`/`s2_`/`oa_` internal ids are lossy and
+ * cannot be reversed — callers should pass the raw `doi`/`pmid` instead.
  */
 export async function fetchPaperById(params: {
   doi?: string;
   pmid?: string;
   id?: string;
 }): Promise<LiteraturePaper | null> {
-  const identifier = resolveLookupIdentifier(params);
-  if (!identifier) return null;
+  const pmid =
+    params.pmid?.trim() ||
+    (params.id?.startsWith("pm_") ? params.id.slice(3) : undefined);
+  const doi = (params.doi ?? "")
+    .trim()
+    .replace(/^https?:\/\/(dx\.)?doi\.org\//, "")
+    .toLowerCase();
 
-  const paper = await getSemanticScholarPaper(identifier);
+  let paper: UnifiedSearchResult | null = null;
+  if (pmid) paper = await fetchSinglePubMed(`${pmid}[uid]`);
+  if (!paper && doi) {
+    paper = await fetchSinglePubMed(`${doi}[doi]`);
+    if (!paper) paper = await fetchCrossrefByDoi(doi);
+  }
   if (!paper) return null;
+
+  await enrichCitationsByIds([paper]).catch(() => 0);
 
   return {
     ...paper,
@@ -271,22 +422,4 @@ export async function fetchPaperById(params: {
     source: determineSource(paper),
     inLibrary: false,
   };
-}
-
-function resolveLookupIdentifier(params: {
-  doi?: string;
-  pmid?: string;
-  id?: string;
-}): string | null {
-  if (params.doi) return `DOI:${params.doi.replace(/^https?:\/\/doi\.org\//, "")}`;
-  if (params.pmid) return `PMID:${params.pmid}`;
-  if (params.id) {
-    if (params.id.startsWith("pm_")) return `PMID:${params.id.slice(3)}`;
-    if (params.id.startsWith("s2_")) return params.id.slice(3);
-    // `doi_` ids are lossy (non-alphanumerics were replaced) and cannot be
-    // reversed reliably — callers should pass the raw `doi` field instead.
-    if (params.id.startsWith("doi_")) return null;
-    return params.id;
-  }
-  return null;
 }

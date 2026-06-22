@@ -63,6 +63,7 @@ export interface McpPaper {
   abstract?: string;
   doi?: string;
   pmid?: string;
+  nctId?: string;
   url?: string;
   source: string;
   sources: string[];
@@ -70,6 +71,12 @@ export interface McpPaper {
   evidenceLevel?: string;
   citationCount?: number;
   relevanceScore?: number;
+  /** Deterministic one-line rationale for the ranking. */
+  whyRelevant?: string;
+  /** Missing / low-confidence metadata, surfaced not hidden (never hallucinated). */
+  flags?: string[];
+  /** Per-signal ranking breakdown (evidence, citation, journal, rrf, relevance). */
+  rankingTrace?: import("@/types/search").RankingTrace;
 }
 
 function snippetOf(paper: LiteraturePaper): string | undefined {
@@ -96,6 +103,7 @@ export function toMcpPaper(
     abstract: options.includeAbstract ? paper.abstract : undefined,
     doi: paper.doi,
     pmid: paper.pmid,
+    nctId: paper.nctId,
     url: resolvePaperUrl(paper),
     source: paper.source,
     sources: paper.sources ?? [],
@@ -103,6 +111,9 @@ export function toMcpPaper(
     evidenceLevel: paper.evidenceLevel,
     citationCount: paper.citationCount,
     relevanceScore: paper.rrfScore,
+    whyRelevant: paper.whyRelevant,
+    flags: paper.flags,
+    rankingTrace: paper.rankingTrace,
   };
 }
 
@@ -122,6 +133,8 @@ export async function searchPapers(args: SearchPapersArgs): Promise<{
   total: number;
   sources: string[];
   sourceCounts: Record<string, number>;
+  sourceStatuses?: Record<string, { status: string; message?: string }>;
+  plan?: { pubmedQuery: string; recency: boolean; trialAcronyms: string[]; wantsTrials: boolean };
   results: McpPaper[];
 }> {
   const maxResults = Math.min(MAX_RESULTS, Math.max(1, args.maxResults ?? DEFAULT_PER_PAGE));
@@ -147,6 +160,8 @@ export async function searchPapers(args: SearchPapersArgs): Promise<{
     total: search.total,
     sources: args.sources ?? DEFAULT_SOURCES,
     sourceCounts: search.sourceCounts,
+    sourceStatuses: search.sourceStatuses,
+    plan: search.plan,
     results,
   };
 }
@@ -198,12 +213,17 @@ export function getSearchCapabilities(): {
       "snippet",
       "doi",
       "pmid",
+      "nctId",
       "url",
       "source",
+      "sources",
       "studyType",
       "evidenceLevel",
       "citationCount",
       "relevanceScore",
+      "whyRelevant",
+      "flags",
+      "rankingTrace",
     ],
   };
 }

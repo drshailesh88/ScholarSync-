@@ -4,6 +4,19 @@ export type { SourceStatus, SourceStatusKind } from "@/lib/search/source-status"
 
 export type EvidenceLevel = "I" | "II" | "III" | "IV" | "V";
 
+/** Per-signal breakdown behind a paper's final ranking position (0-1 signals). */
+export interface RankingTrace {
+  composite: number;
+  evidence: number;
+  citation: number;
+  velocity: number;
+  journal: number;
+  rrf: number;
+  relevance: number;
+  /** Ordering strategy that produced this result set. */
+  strategy: "quality" | "recency";
+}
+
 export interface UnifiedSearchResult {
   // Identifiers
   doi?: string;
@@ -59,6 +72,14 @@ export interface UnifiedSearchResult {
   rerankScore?: number;
   trustTier?: "government" | "major_journalism" | "community" | "other";
   domainPreferenceLevel?: "mute" | "lower" | "neutral" | "higher" | "prefer";
+
+  // Ranking explainability (set by the ranking pipeline)
+  /** Composite score (0-1) and the per-signal breakdown that produced this paper's rank. */
+  rankingTrace?: RankingTrace;
+  /** Missing/low-confidence metadata flags — surfaced, never silently filled. */
+  flags?: string[];
+  /** Deterministic, template-generated one-liner explaining why this paper is relevant. */
+  whyRelevant?: string;
 
   // PICO (if extracted)
   pico?: {
