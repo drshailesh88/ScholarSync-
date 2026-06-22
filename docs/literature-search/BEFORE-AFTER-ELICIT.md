@@ -184,3 +184,35 @@ enrichment), so it was not a clean measurement.
 the Round-2 cross-encoder is a robust, fail-open uplift on top; and the one real
 remaining quality gap (landmark retrieval on broad queries) now has a precise,
 named fix. Re-validating the Cohere uplift cleanly requires OpenAlex pacing first.
+
+---
+
+## 6. Round 3 — dense semantic retrieval (the root-cause fix) + clean keyed eval
+
+Per the solutions council (`COUNCIL-SOLUTIONS.md`), the residual lag was **lexical-only
+stage-1 retrieval**. Fix shipped: **OpenAlex `search.semantic`** (hosted dense GTE-Large
+retrieval) as a parallel candidate lane, plus opt-in citation/PMRA expansion. Also
+discovered + fixed: **OpenAlex now requires an API key** (Feb 2026; the email pool was
+retired) — the true cause of the throttling that had corrupted earlier aggregates.
+
+Clean run with **PubMed + OpenAlex + Cohere keys** (`op-run -- npm run eval:search --label final`):
+
+| metric | baseline | clean keyed (Round 3) |
+|---|---:|---:|
+| recall@10 | 21% | **88%** (~96% excluding 2 transient throttle-zeroed queries) |
+| best-must-have in top 3 | 25% | 58% |
+| nDCG@10 / MRR | 0.22 / 0.17 | 0.62 / 0.51 |
+| DOI / PMID fill | 91% / 91% | 94% / 89% |
+| case-report rate (top 10) | 3% | 1% |
+| latency p50 / p95 | 2.0s / 2.7s | **8.4s / 20s** |
+
+**Dense lane validated:** PARTNER 3 #3 (TAVR), CLARITY-AD #2 (lecanemab),
+ticagrelor / EGDT / DAPA-CKD all #1 — landmarks lexical search missed now surface
+by *meaning*, with no corpus to host.
+
+**Honest remaining gap — latency/fragility, not recall.** Adding recall lanes made
+the pipeline call-heavy (~6–8 upstream calls/query → 8s p50; circuit breakers still
+trip under residual throttle → the 2 empty sets are 8s timeouts, all-sources-zero,
+not genuine misses). The next priority is **BACKLOG #1**: response caching, per-source
+pacing/quota, call consolidation, and breaker tuning — to make the validated recall
+gains production-grade (low latency, no cascade-to-empty under load).
