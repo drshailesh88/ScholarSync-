@@ -1,38 +1,54 @@
 # Backlog — Remaining Search-Quality Gaps
 
+## Shipped this initiative (status)
+
+**Round 1–2 (ranking & robustness):** de-Semantic-Scholar (default pubmed+openalex,
+S2 opt-in; fetch_paper via PubMed/Crossref/OpenAlex); PubMed Best-Match relevance
+sort; NL→keyword simplification; trial-acronym `[tiab]` pinning; wired the quality
+pipeline (evidence/citations/velocity/journal) + cross-encoder rerank (Cohere,
+adaptive/fail-open); OpenAlex citation+PMID/DOI backfill; retraction flag+demote;
+provenance/trace/flags; query relaxation; over-fetch; capped Retry-After.
+
+**Root-cause work (recall) — the semantic gap:**
+- ✅ **OpenAlex dense semantic lane** (`search.semantic`) — default ON. Corpus-free
+  embedding retrieval; validated to surface CLARITY-AD (lecanemab) into top-10.
+- ✅ **Citation/PMRA neighbour expansion** — shipped **opt-in** (`expandCitations`);
+  slower (sequential wave) so not default until latency work below lands.
+
+**Remaining recall work** is items 1–3 below (multi-query/HyDE, MedCPT, latency).
+
+---
+
+
 Prioritized by impact ÷ effort. Synthesizes the eval findings, the LLM-council
 verdicts, and `SEARCH-METHODOLOGY-RESEARCH.md`. Each item names the file(s) to
 touch. Items 1–4 are the highest-leverage next steps.
 
-## P0 — landmark recall (the one place Elicit still beats us)
+## P0 — close the residual recall gap the principled way
 
-The council's only losses (TAVR seed, lecanemab) were **missing the landmark RCT
-in the top 10** (PARTNER 3; CLARITY-AD). Round-2 investigation showed the TAVR
-loss is a **retrieval** gap, not a ranking one — PARTNER 3 (2019) is never *fetched*
-for "TAVR low risk six year outcomes", so no reranker can surface it.
+The root cause is lexical-only stage-1 retrieval (see ETIOLOGY.md). The general fix
+(NOT a hardcoded landmark map — that was prototyped and rejected as benchmark-gaming)
+is hosted dense retrieval + corpus-free expansion, per the solutions council.
 
-**SHIPPED in Round 2 (done):**
-- ✅ **Citation velocity** signal (`citations ÷ years-since-pub`) in the composite + trace.
-- ✅ **Cross-encoder rerank as dominant relevance** (`attachRerankScores` → composite
-  relevance 0.40), with **adaptive weights**: relevance-dominant only when a rerank
-  score is present; otherwise the *exact validated* weights (no regression risk).
-- ✅ **Recency blend** (0.65 quality / 0.35 recency) replacing the blunt year-sort.
+**SHIPPED:** OpenAlex dense semantic lane (default on); citation/PMRA expansion
+(opt-in). See COUNCIL-SOLUTIONS.md for the full ranked plan and prior art.
 
-**REMAINING (now the real top priorities):**
-1. **Landmark/seed-trial query expansion** ← *the actual fix for the TAVR loss.*
-   When the planner detects a well-known topic ("TAVR low risk"), expand retrieval
-   with canonical trial names (PARTNER, Evolut) the way drug-class→drug-name
-   expansion already works — so the landmark is *fetched*, then ranked.
-   *Impact: High · Effort: S · `query-expander.ts`, `query-planner.ts`.*
-2. **Over-fetch + rerank** — retrieve ~25–40 candidates/source, rerank, slice to the
-   page, so a landmark at PubMed rank 12 can still reach the top 10. (Preserve web
-   pagination semantics.)
-   *Impact: Med-High · Effort: S · `run-search.ts`.*
-3. **OpenAlex request pacing / shared token bucket** ← *blocks clean re-validation.*
-   Search + enrichment = 2–3 OpenAlex calls/query; under load this 429s and makes
-   eval runs slow/noisy. The absurd-`Retry-After` hang is fixed (capped); pacing is
-   the remaining piece. Until this lands, the Cohere uplift can't be measured cleanly.
-   *Impact: Med (reliability + measurability) · Effort: S · `openalex.ts`, `resilient-fetch.ts`.*
+**REMAINING (top priorities):**
+1. **Latency / OpenAlex request pacing (token bucket)** ← *blocks making expansion
+   default + clean re-validation.* Lexical + semantic + enrichment = 3–4 OpenAlex
+   calls/query; under load this 429s and pushes latency to 20–28s. The absurd-
+   `Retry-After` hang is fixed (capped) and a basic in-process pace is in, but a
+   proper shared token bucket + a short-TTL query cache are needed. Until this lands,
+   the citation-expansion lane can't be default and aggregate eval is noisy.
+   *Impact: High (perf + measurability) · Effort: S–M · `openalex.ts`, `resilient-fetch.ts`, cache.*
+2. **Multi-query / RAG-fusion + HyDE** ← *the general replacement for the rejected
+   landmark hack.* One fast LLM call → query variants (acronyms / synonyms / MeSH /
+   timepoint-stripped / PICO) + optional hypothetical-abstract; fan out existing
+   retrievers; reuse RRF. The model supplies domain knowledge for every topic.
+   *Impact: High · Effort: S · `query-planner.ts` (+ AI SDK). Fail-open.*
+3. **MedCPT on-the-fly (SOTA biomedical), behind a small sidecar** — bi-encoder KNN
+   over the query-time pool + cross-encoder rerank; A/B vs Cohere & Voyage rerank-2.5.
+   No standing index. *Impact: Med-High · Effort: L (Python/HF sidecar).*
 
 ## P1 — ranking correctness
 
