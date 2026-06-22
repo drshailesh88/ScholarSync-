@@ -12,6 +12,18 @@ import {
 const breaker = createCircuitBreaker({ service: "OpenAlex", failureThreshold: 5 });
 
 /**
+ * Strip OpenAlex full-text wildcard operators (`?` and `*`) from a free-text
+ * search term. OpenAlex's default `search` is stemmed and rejects wildcards with
+ * HTTP 400 ("Wildcards (* or ?) require exact (no-stem) search"), so a natural-
+ * language / PICO question ("...reduce cardiovascular mortality?") silently kills
+ * the whole OpenAlex lane. These characters are punctuation here, never an
+ * intended wildcard, so we drop them and collapse the resulting whitespace.
+ */
+export function sanitizeOpenAlexSearch(query: string): string {
+  return query.replace(/[?*]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+/**
  * OpenAlex retired the email "polite pool" (Feb 2026); a free API key is now
  * required for reliable, un-throttled access (free tier: ~1,000 search +
  * 10,000 list calls/day). Append `&api_key=` when `OPENALEX_API_KEY` is set;
@@ -235,7 +247,7 @@ export async function searchOpenAlexSemantic(
     return { results: [], total: 0, status: { status: "error", message: "Circuit breaker open" } };
   }
   const limit = Math.min(50, options.limit || 25);
-  const q = query.slice(0, 2000);
+  const q = sanitizeOpenAlexSearch(query).slice(0, 2000);
   let url = `https://api.openalex.org/works?search.semantic=${encodeURIComponent(q)}&per_page=${limit}${oaAuth()}`;
   const filters: string[] = [];
   if (options.yearStart && options.yearEnd) {
@@ -279,7 +291,9 @@ export async function searchOpenAlex(
   const limit = options.limit || 20;
   const page = options.page || 1;
 
-  let url = `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per_page=${limit}&page=${page}${oaAuth()}`;
+  let url = `https://api.openalex.org/works?search=${encodeURIComponent(
+    sanitizeOpenAlexSearch(query)
+  )}&per_page=${limit}&page=${page}${oaAuth()}`;
 
   const filters: string[] = [];
   if (options.yearStart && options.yearEnd) {
