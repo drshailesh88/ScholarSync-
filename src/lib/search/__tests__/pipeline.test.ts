@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { rankAndAnnotate, buildFlags, buildWhyRelevant } from "../pipeline";
+import { rankAndAnnotate, buildFlags, buildWhyRelevant, recencyRankKey } from "../pipeline";
 import type { UnifiedSearchResult } from "@/types/search";
 
 function paper(p: Partial<UnifiedSearchResult>): UnifiedSearchResult {
@@ -15,6 +15,67 @@ function paper(p: Partial<UnifiedSearchResult>): UnifiedSearchResult {
     ...p,
   };
 }
+
+describe("recencyRankKey", () => {
+  const Y0 = 2022;
+  const Y1 = 2026;
+  const span = Y1 - Y0;
+
+  it("keeps a high-quality landmark above recent low-value papers", () => {
+    // A pivotal trial (high composite, oldest year) must NOT be buried by a
+    // stream of recent but low-composite papers — recency amplifies quality, it
+    // does not substitute for it.
+    const landmark = recencyRankKey(0.83, Y0, Y0, span);
+    const recentNoise = recencyRankKey(0.5, Y1, Y0, span);
+    expect(landmark).toBeGreaterThan(recentNoise);
+  });
+
+  it("prefers the newer of two equally-strong papers", () => {
+    expect(recencyRankKey(0.6, Y1, Y0, span)).toBeGreaterThan(
+      recencyRankKey(0.6, Y0, Y0, span)
+    );
+  });
+
+  it("lets a clearly stronger recent paper outrank an older weaker one", () => {
+    expect(recencyRankKey(0.7, Y1, Y0, span)).toBeGreaterThan(
+      recencyRankKey(0.55, Y0, Y0, span)
+    );
+  });
+
+  it("returns the composite unchanged when all papers share a year (zero span)", () => {
+    expect(recencyRankKey(0.42, 2025, 2025, 0)).toBe(0.42);
+  });
+});
+
+describe("rankAndAnnotate recency ordering", () => {
+  it("does not bury a pivotal high-citation RCT under recent low-evidence papers", () => {
+    const landmark = paper({
+      title: "Lecanemab in Early Alzheimer's Disease",
+      year: 2023,
+      studyType: "Randomized Controlled Trial",
+      citationCount: 5000,
+      rerankScore: 0.8,
+      pmid: "36449413",
+    });
+    const recentNoise = [2026, 2026, 2026, 2026, 2026].map((y, i) =>
+      paper({
+        title: `Recent real-world lecanemab imaging substudy ${i}`,
+        year: y,
+        studyType: "other",
+        citationCount: 0,
+        rerankScore: 0.5,
+        pmid: `9000${i}`,
+      })
+    );
+
+    const ranked = rankAndAnnotate([...recentNoise, landmark], {
+      query: "newest evidence on lecanemab for Alzheimer disease",
+      recency: true,
+    });
+
+    expect(ranked[0].pmid).toBe("36449413");
+  });
+});
 
 describe("buildFlags", () => {
   it("flags missing metadata, never fabricates it", () => {
@@ -86,12 +147,34 @@ describe("rankAndAnnotate", () => {
     expect(ranked[0].flags).toBeDefined();
   });
 
-  it("recency strategy orders by year (newest first) and labels the trace", () => {
-    const ranked = rankAndAnnotate([landmarkRct, obscureCaseReport], {
+  it("recency strategy orders comparable-quality papers newest-first and labels the trace", () => {
+    // Recency orders papers of SIMILAR quality newest-first — but it must not let
+    // a newer low-value item leapfrog a far-higher-quality landmark (covered by
+    // the landmark-preservation test below). Here both peers are equally strong,
+    // so the newer one wins.
+    const olderPeer = paper({
+      title: "Dapagliflozin trial (earlier report)",
+      studyType: "rct",
+      evidenceLevel: "II",
+      year: 2020,
+      citationCount: 1000,
+      journal: "N Engl J Med",
+      rrfScore: 0.02,
+    });
+    const newerPeer = paper({
+      title: "Dapagliflozin trial (later report)",
+      studyType: "rct",
+      evidenceLevel: "II",
+      year: 2024,
+      citationCount: 1000,
+      journal: "N Engl J Med",
+      rrfScore: 0.02,
+    });
+    const ranked = rankAndAnnotate([olderPeer, newerPeer], {
       query: "latest dapagliflozin",
       recency: true,
     });
-    expect(ranked[0].year).toBe(2025);
+    expect(ranked[0].year).toBe(2024);
     expect(ranked[0].rankingTrace?.strategy).toBe("recency");
   });
 

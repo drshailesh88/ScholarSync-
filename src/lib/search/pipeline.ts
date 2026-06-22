@@ -117,6 +117,46 @@ export interface RankAndAnnotateOptions {
 }
 
 /**
+ * How strongly recency amplifies a paper's quality composite. The boost is
+ * MULTIPLICATIVE (`composite × (1 + RECENCY_BOOST × recencyNorm)`) rather than an
+ * additive term, so recency scales quality instead of substituting for it: a
+ * pivotal high-composite trial (e.g. CLARITY-AD) cannot be displaced from the top
+ * by a stream of recent low-value papers, while among similar-quality papers the
+ * newer one still wins. 0.5 ⇒ the newest paper is worth up to 1.5× its composite.
+ */
+export const RECENCY_BOOST = 0.5;
+
+/**
+ * Recency-aware rank key. `recencyNorm` scales the year into [0,1] over the
+ * result set (newest = 1); the composite is amplified by up to RECENCY_BOOST.
+ * A zero span (all one year) leaves the composite unchanged.
+ */
+export function recencyRankKey(
+  composite: number,
+  year: number,
+  minYear: number,
+  span: number
+): number {
+  const recencyNorm =
+    span > 0 ? Math.min(1, Math.max(0, (year - minYear) / span)) : 0;
+  return composite * (1 + RECENCY_BOOST * recencyNorm);
+}
+
+function orderByRecency(scored: ScoredResult[]): ScoredResult[] {
+  const years = scored.map((s) => s.result.year || 0).filter(Boolean);
+  const minY = years.length ? Math.min(...years) : 0;
+  const maxY = years.length ? Math.max(...years) : 0;
+  const span = Math.max(1, maxY - minY);
+  return [...scored]
+    .map((s) => ({
+      s,
+      key: recencyRankKey(s.composite, s.result.year || minY, minY, span),
+    }))
+    .sort((a, b) => b.key - a.key)
+    .map((x) => x.s);
+}
+
+/**
  * Enrich, rank, and annotate fused search results. Returns a new array; the
  * input objects are enriched in place (study type + journal quality) as a
  * deliberate, contained side effect of the enrichers.
@@ -135,22 +175,11 @@ export function rankAndAnnotate(
 
   let ordered = scored;
   if (opts.recency) {
-    // Blend recency with the quality composite rather than sorting purely by
-    // year — a high-relevance landmark (e.g. CLARITY-AD) must not be buried under
-    // newer but low-value items. recencyNorm scales year into [0,1] over the set.
-    const years = scored.map((s) => s.result.year || 0).filter(Boolean);
-    const minY = years.length ? Math.min(...years) : 0;
-    const maxY = years.length ? Math.max(...years) : 0;
-    const span = Math.max(1, maxY - minY);
-    ordered = [...scored]
-      .map((s) => {
-        const recencyNorm = ((s.result.year || minY) - minY) / span;
-        // Quality-leaning blend: a relevant, high-quality landmark must not be
-        // displaced by a maximally-recent but low-relevance item.
-        return { s, key: 0.35 * recencyNorm + 0.65 * s.composite };
-      })
-      .sort((a, b) => b.key - a.key)
-      .map((x) => x.s);
+    // Recency amplifies the quality composite multiplicatively (see
+    // recencyRankKey) instead of an additive year term — so a pivotal
+    // high-composite trial (e.g. CLARITY-AD) is not buried under a stream of
+    // recent low-value papers, while among similar-quality papers the newer wins.
+    ordered = orderByRecency(scored);
   }
 
   const annotated = ordered.map((s) =>
