@@ -1,51 +1,3131 @@
 {
-  "_note": "Elicit search_papers snapshots captured via the Elicit MCP at eval time (2026-06-22). Benchmark/calibration only — Elicit is never a Manan runtime dependency. Compact form: rank, title, year, venue, doi, pmid, citedByCount.",
+  "_note": "Elicit search snapshots (compact: rank,title,year,venue,doi,pmid,citedByCount). Benchmark/calibration only — Elicit is never a Manan runtime dependency. Captured via the Elicit API by eval/literature-search/capture-elicit.ts.",
   "tavr-low-risk-6yr": [
-    {"rank":1,"title":"Transcatheter Aortic-Valve Replacement with a Balloon-Expandable Valve in Low-Risk Patients (PARTNER 3)","year":2019,"venue":"N Engl J Med","doi":"10.1056/NEJMoa1814052","pmid":"30883058","citedByCount":3610},
-    {"rank":2,"title":"Six-Year Outcomes After Transcatheter vs Surgical Aortic Valve Replacement in Low-Risk Patients (Evolut Low Risk 6-yr)","year":2026,"venue":"J Am Coll Cardiol","doi":"10.1016/j.jacc.2026.02.5063","pmid":"41697183","citedByCount":7},
-    {"rank":3,"title":"1-Year Outcomes From the Low Risk TAVR (LRT) Study","year":2018,"venue":"Circulation","doi":"10.1161/circ.138.suppl_1.16816","pmid":null,"citedByCount":0},
-    {"rank":4,"title":"Review of Major Registries and Clinical Trials of Late Outcomes After TAVR","year":2017,"venue":"Am J Cardiol","doi":"10.1016/j.amjcard.2017.04.029","pmid":"28532778","citedByCount":9},
-    {"rank":5,"title":"Short- and intermediate-term outcomes of TAVR in low-risk patients: meta-analysis","year":2024,"venue":"Int J Cardiol Heart Vasc","doi":"10.1016/j.ijcha.2024.101458","pmid":"39045569","citedByCount":9},
-    {"rank":6,"title":"2-Year Outcomes After Transcatheter Versus Surgical AVR in Low-Risk Patients (Evolut 2-yr)","year":2022,"venue":"J Am Coll Cardiol","doi":"10.1016/j.jacc.2021.11.062","pmid":"35241222","citedByCount":84},
-    {"rank":7,"title":"TAVR in Low-Risk Patients With Symptomatic Severe Aortic Stenosis (Waksman LRT)","year":2018,"venue":"J Am Coll Cardiol","doi":"10.1016/j.jacc.2018.08.1033","pmid":"30170075","citedByCount":194},
-    {"rank":8,"title":"Outcomes 2 Years After TAVR in Patients at Low Surgical Risk (PARTNER 3 2-yr)","year":2021,"venue":"J Am Coll Cardiol","doi":"10.1016/j.jacc.2020.12.052","pmid":"33663731","citedByCount":255},
-    {"rank":9,"title":"Long-Term Results TAVR vs SAVR in Low-Risk: Systematic Review and Meta-Analysis","year":2024,"venue":"Am J Cardiol","doi":"10.1016/j.amjcard.2024.08.014","pmid":"39173988","citedByCount":15},
-    {"rank":10,"title":"Transcatheter Versus Surgical AVR in Low-Risk Patients (Kolte meta)","year":2019,"venue":"J Am Coll Cardiol","doi":"10.1016/j.jacc.2019.06.076","pmid":"31537261","citedByCount":147}
+    {
+      "rank": 1,
+      "title": "Transcatheter Aortic‐Valve Replacement with a Balloon‐Expandable Valve in Low‐Risk Patients",
+      "year": 2019,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1814052",
+      "pmid": "30883058",
+      "citedByCount": 3610
+    },
+    {
+      "rank": 2,
+      "title": "Six-Year Outcomes After Transcatheter vs Surgical Aortic Valve Replacement in Low-Risk Patients With Aortic Stenosis.",
+      "year": 2026,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/j.jacc.2026.02.5063",
+      "pmid": "41697183",
+      "citedByCount": 7
+    },
+    {
+      "rank": 3,
+      "title": "Abstract 16816: 1-Year Outcomes From the Low Risk Transcatheter Aortic Valve Replacement (LRT) Study",
+      "year": 2018,
+      "venue": "Circulation",
+      "doi": "10.1161/circ.138.suppl_1.16816",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 4,
+      "title": "Review of Major Registries and Clinical Trials of Late Outcomes After Transcatheter Aortic Valve Replacement.",
+      "year": 2017,
+      "venue": "American Journal of Cardiology",
+      "doi": "10.1016/j.amjcard.2017.04.029",
+      "pmid": "28532778",
+      "citedByCount": 9
+    },
+    {
+      "rank": 5,
+      "title": "Short- and intermediate-term outcomes of transcatheter aortic valve replacement in low-risk patients: A meta-analysis and systematic review",
+      "year": 2024,
+      "venue": "International Journal of Cardiology: Heart & Vasculature",
+      "doi": "10.1016/j.ijcha.2024.101458",
+      "pmid": "39045569",
+      "citedByCount": 9
+    },
+    {
+      "rank": 6,
+      "title": "2-Year Outcomes After Transcatheter Versus Surgical Aortic Valve Replacement in Low-Risk Patients.",
+      "year": 2022,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/j.jacc.2021.11.062",
+      "pmid": "35241222",
+      "citedByCount": 84
+    },
+    {
+      "rank": 7,
+      "title": "Transcatheter Aortic Valve Replacement in Low-Risk Patients With Symptomatic Severe Aortic Stenosis.",
+      "year": 2018,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/j.jacc.2018.08.1033",
+      "pmid": "30170075",
+      "citedByCount": 194
+    },
+    {
+      "rank": 8,
+      "title": "Outcomes 2 Years After Transcatheter Aortic Valve Replacement in Patients at Low Surgical Risk.",
+      "year": 2021,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/j.jacc.2020.12.052",
+      "pmid": "33663731",
+      "citedByCount": 255
+    },
+    {
+      "rank": 9,
+      "title": "Long-Term Results Following Transcatheter Versus Surgical Aortic Valve Replacement in Low-Risk Patients with Severe Aortic Stenosis: A Systematic Review and Meta-Analysis of Randomized Trials.",
+      "year": 2024,
+      "venue": "American Journal of Cardiology",
+      "doi": "10.1016/j.amjcard.2024.08.014",
+      "pmid": "39173988",
+      "citedByCount": 15
+    },
+    {
+      "rank": 10,
+      "title": "Transcatheter Versus Surgical Aortic Valve Replacement in Low-Risk Patients.",
+      "year": 2019,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/j.jacc.2019.06.076",
+      "pmid": "31537261",
+      "citedByCount": 147
+    }
   ],
   "exact-dapa-hf": [
-    {"rank":1,"title":"Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction (DAPA-HF)","year":2019,"venue":"N Engl J Med","doi":"10.1056/NEJMoa1911303","pmid":"31535829","citedByCount":4971},
-    {"rank":2,"title":"DAPA-HF trial: dapagliflozin evolves from a glucose-lowering agent to a therapy for heart failure","year":2020,"venue":"Drugs in Context","doi":"10.7573/dic.2019-11-3","pmid":"32165892","citedByCount":41},
-    {"rank":3,"title":"Evidence-based Appraisal of the DAPA-HF Trial","year":2020,"venue":"J Contemp Pharm Pract","doi":"10.37901/jcphp20-00011","pmid":null,"citedByCount":0}
+    {
+      "rank": 1,
+      "title": "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction.",
+      "year": 2019,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1911303",
+      "pmid": "31535829",
+      "citedByCount": 4971
+    },
+    {
+      "rank": 2,
+      "title": "The Effects of Dapagliflozin on Heart Failure With Reduced Ejection Fraction",
+      "year": 2021,
+      "venue": "Heart, Lung and Circulation",
+      "doi": "10.1016/j.hlc.2021.06.107",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 3,
+      "title": "Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction.",
+      "year": 2022,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa2206286",
+      "pmid": "36027570",
+      "citedByCount": 1610
+    },
+    {
+      "rank": 4,
+      "title": "Efficacy of Dapagliflozin on Renal Function and Outcomes in Patients With Heart Failure With Reduced Ejection Fraction",
+      "year": 2021,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 5,
+      "title": "Dapagliflozin in patients with heart failure and reduced ejection fraction",
+      "year": 2020,
+      "venue": "Internal and Emergency Medicine",
+      "doi": "10.1007/s11739-020-02297-0",
+      "pmid": "32124206",
+      "citedByCount": 52
+    },
+    {
+      "rank": 6,
+      "title": "Correction to: Dapaglifozin: A Review in Symptomatic Heart Failure with Reduced Ejection Fraction",
+      "year": 2021,
+      "venue": "American Journal of Cardiovascular Drugs",
+      "doi": "10.1007/s40256-021-00512-7",
+      "pmid": "34859355",
+      "citedByCount": 0
+    },
+    {
+      "rank": 7,
+      "title": "Dapagliflozin in patients with heart failure and reduced ejection fraction",
+      "year": 2021,
+      "venue": "Evidence-Based Practice",
+      "doi": "10.1097/EBP.0000000000001032",
+      "pmid": null,
+      "citedByCount": 44
+    },
+    {
+      "rank": 8,
+      "title": "Dapagliflozin Effects on Biomarkers, Symptoms, and Functional Status in Patients With Heart Failure With Reduced Ejection Fraction",
+      "year": 2020,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 26
+    },
+    {
+      "rank": 9,
+      "title": "Efficacy and Safety of Dapagliflozin in Men and Women With Heart Failure With Reduced Ejection Fraction: A Prespecified Analysis of the Dapagliflozin and Prevention of Adverse Outcomes in Heart Failure Trial.",
+      "year": 2021,
+      "venue": "JAMA cardiology",
+      "doi": "10.1001/jamacardio.2021.0379",
+      "pmid": "33787831",
+      "citedByCount": 39
+    },
+    {
+      "rank": 10,
+      "title": "Dapagliflozin reduced worsening HF or CV death in HF with reduced ejection fraction",
+      "year": 2020,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/ACPJ202002180-016",
+      "pmid": "32066149",
+      "citedByCount": 0
+    }
   ],
   "recency-lecanemab": [
-    {"rank":1,"title":"Lecanemab in Early Alzheimer's Disease (CLARITY-AD)","year":2022,"venue":"N Engl J Med","doi":"10.1056/NEJMoa2212948","pmid":"36449413","citedByCount":3498},
-    {"rank":2,"title":"The effectiveness and value of lecanemab for early Alzheimer disease (ICER)","year":2023,"venue":"J Manag Care Spec Pharm","doi":"10.18553/jmcp.2023.29.9.1078","pmid":"37610113","citedByCount":27},
-    {"rank":3,"title":"Lecanemab clarity AD: results from a randomised, double-blind phase 3 trial (abstract)","year":2023,"venue":"ABN Annual Meeting","doi":"10.1136/jnnp-2023-abn.139","pmid":null,"citedByCount":1},
-    {"rank":4,"title":"Lecanemab in patients with early AD: phase 2 detailed results + OLE","year":2022,"venue":"Alzheimers Res Ther","doi":"10.1186/s13195-022-01124-2","pmid":"36544184","citedByCount":232},
-    {"rank":5,"title":"A randomized, double-blind, phase 2b proof-of-concept trial of lecanemab","year":2020,"venue":"Alzheimers Res Ther","doi":"10.1186/s13195-021-00813-8","pmid":"33865446","citedByCount":676},
-    {"rank":6,"title":"Long-term safety and efficacy of lecanemab (CLARITY-AD 36-month OLE)","year":2025,"venue":"Alzheimers Dement","doi":"10.1002/alz.70905","pmid":"41355080","citedByCount":24}
+    {
+      "rank": 1,
+      "title": "Lecanemab in Early Alzheimer's Disease.",
+      "year": 2022,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa2212948",
+      "pmid": "36449413",
+      "citedByCount": 3498
+    },
+    {
+      "rank": 2,
+      "title": "Novel anti-amyloid-beta (Aβ) monoclonal antibody lecanemab for Alzheimer’s disease: A systematic review",
+      "year": 2023,
+      "venue": "International Journal of Immunopathology and Pharmacology",
+      "doi": "10.1177/03946320231209839",
+      "pmid": "37902139",
+      "citedByCount": 62
+    },
+    {
+      "rank": 3,
+      "title": "Lecanamab Ushers in a New Era of Anti‐Amyloid Therapy for Alzheimer's Disease",
+      "year": 2023,
+      "venue": "Annals of Neurology",
+      "doi": "10.1002/ana.26643",
+      "pmid": "36919987",
+      "citedByCount": 8
+    },
+    {
+      "rank": 4,
+      "title": "Lecanemab: A Humanized Monoclonal Antibody for the Treatment of Early Alzheimer Disease",
+      "year": 2023,
+      "venue": "The Annals of Pharmacotherapy",
+      "doi": "10.1177/10600280231218253",
+      "pmid": "38095619",
+      "citedByCount": 16
+    },
+    {
+      "rank": 5,
+      "title": "Evidence for lecanemab in early Alzheimer’s disease",
+      "year": 2023,
+      "venue": "Drug and therapeutics bulletin",
+      "doi": "10.1136/dtb.2023.000005",
+      "pmid": "36725282",
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "Leqembi (Lecanemab) in Early Alzheimer's Disease: A Review of Clinical\nTrial Evidence and Therapeutic Implications",
+      "year": 2026,
+      "venue": "Reviews on recent clinical trials",
+      "doi": "10.2174/0115748871418305260224075827",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 7,
+      "title": "Lecanemab: A Breakthrough in Alzheimer’s Disease Treatment",
+      "year": 2024,
+      "venue": "International Journal of Innovative Science and Research Technology",
+      "doi": "10.38124/ijisrt/ijisrt24oct022",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 8,
+      "title": "Does the Current Evidence for Lecanemab Mechanism Support a Rationale for Continued Lecanemab Dosing?",
+      "year": 2024,
+      "venue": "Alzheimer's & Dementia",
+      "doi": "10.1002/alz.092090",
+      "pmid": null,
+      "citedByCount": 1
+    },
+    {
+      "rank": 9,
+      "title": "Lecanemab reduces brain amyloid-β and delays cognitive worsening",
+      "year": 2023,
+      "venue": "Cell Reports Medicine",
+      "doi": "10.1016/j.xcrm.2023.100982",
+      "pmid": "36948153",
+      "citedByCount": 28
+    },
+    {
+      "rank": 10,
+      "title": "Developing Topics.",
+      "year": 2025,
+      "venue": "Alzheimer's & Dementia",
+      "doi": "10.1002/alz70861_108905",
+      "pmid": "41434358",
+      "citedByCount": 2
+    }
   ],
   "pico-sglt2-cv-mortality": [
-    {"rank":1,"title":"Effects of SGLT2 inhibitors on cardiovascular outcomes and mortality in type 2 diabetes","year":2019,"venue":"Medicine","doi":"10.1097/MD.0000000000018245","pmid":"31804352","citedByCount":67},
-    {"rank":2,"title":"SGLT2 inhibitors and cardiovascular outcomes: systematic review and meta-analysis","year":2018,"venue":"Eur J Prev Cardiol","doi":"10.1177/2047487318755531","pmid":"29372664","citedByCount":128},
-    {"rank":3,"title":"Cardiovascular outcomes with SGLT2 inhibitors in T2DM: meta-analysis of placebo-controlled RCTs","year":2017,"venue":"Int J Cardiol","doi":"10.1016/j.ijcard.2016.11.181","pmid":"27866027","citedByCount":67},
-    {"rank":4,"title":"Meta-Analysis of SGLT2 Inhibitors on CV Outcomes and All-Cause Mortality in T2DM","year":2016,"venue":"Am J Cardiol","doi":"10.1016/j.amjcard.2016.08.061","pmid":"27666177","citedByCount":68},
-    {"rank":5,"title":"Effects of SGLT2 inhibitors on CV disease, death and safety outcomes in T2DM - systematic review","year":2018,"venue":"Diabetes Res Clin Pract","doi":"10.1016/j.diabres.2018.03.027","pmid":"29604389","citedByCount":80},
-    {"rank":6,"title":"Effects of SGLT-2 inhibitors on mortality and CV events: comprehensive meta-analysis of RCTs","year":2016,"venue":"Acta Diabetol","doi":"10.1007/s00592-016-0892-7","pmid":"27488726","citedByCount":80}
+    {
+      "rank": 1,
+      "title": "Effects of SGLT2 inhibitors on cardiovascular outcomes and mortality in type 2 diabetes",
+      "year": 2019,
+      "venue": "Medicine",
+      "doi": "10.1097/MD.0000000000018245",
+      "pmid": "31804352",
+      "citedByCount": 67
+    },
+    {
+      "rank": 2,
+      "title": "Sodium-glucose co-transporter 2 inhibitors and cardiovascular outcomes: A systematic review and meta-analysis",
+      "year": 2018,
+      "venue": "European Journal of Preventive Cardiology",
+      "doi": "10.1177/2047487318755531",
+      "pmid": "29372664",
+      "citedByCount": 128
+    },
+    {
+      "rank": 3,
+      "title": "Systematic review and meta-analysis: SGLT2 inhibitors, blood pressure and cardiovascular outcomes",
+      "year": 2021,
+      "venue": "International Journal of Cardiology: Heart & Vasculature",
+      "doi": "10.1016/j.ijcha.2021.100725",
+      "pmid": "33659605",
+      "citedByCount": 42
+    },
+    {
+      "rank": 4,
+      "title": "Cardiovascular outcomes with sodium-glucose cotransporter-2 inhibitors in patients with type II diabetes mellitus: A meta-analysis of placebo-controlled randomized trials.",
+      "year": 2017,
+      "venue": "International Journal of Cardiology",
+      "doi": "10.1016/j.ijcard.2016.11.181",
+      "pmid": "27866027",
+      "citedByCount": 67
+    },
+    {
+      "rank": 5,
+      "title": "Meta-Analysis of Effects of Sodium-Glucose Cotransporter 2 Inhibitors on Cardiovascular Outcomes and All-Cause Mortality Among Patients With Type 2 Diabetes Mellitus.",
+      "year": 2016,
+      "venue": "American Journal of Cardiology",
+      "doi": "10.1016/j.amjcard.2016.08.061",
+      "pmid": "27666177",
+      "citedByCount": 68
+    },
+    {
+      "rank": 6,
+      "title": "COMPARATIVE EFFICACY OF SODIUM–GLUCOSE COTRANSPORTER-2 INHIBITORS VERSUS PLACEBO ON CARDIOVASCULAR MORTALITY IN ADULTS WITH HEART FAILURE: A META-ANALYSIS OF RANDOMIZED CONTROLLED TRIALS",
+      "year": 2026,
+      "venue": "International Journal of Current Pharmaceutical Research",
+      "doi": "10.22159/ijcpr.2026v18i2.8085",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 7,
+      "title": "Cardiovascular outcomes of sodium glucose cotransporter‐2 inhibitors in patients with type 2 diabetes",
+      "year": 2018,
+      "venue": "Diabetes, obesity and metabolism",
+      "doi": "10.1111/dom.13477",
+      "pmid": "30039524",
+      "citedByCount": 67
+    },
+    {
+      "rank": 8,
+      "title": "Effects of SGLT-2 inhibitors on mortality and cardiovascular events: a comprehensive meta-analysis of randomized controlled trials",
+      "year": 2016,
+      "venue": "Acta Diabetologica",
+      "doi": "10.1007/s00592-016-0892-7",
+      "pmid": "27488726",
+      "citedByCount": 80
+    },
+    {
+      "rank": 9,
+      "title": "Cardiovascular Effects of Sodium-Glucose Cotransporter-2 Inhibitors in Adults With Type 2 Diabetes.",
+      "year": 2019,
+      "venue": "Canadian Journal of Diabetes",
+      "doi": "10.1016/j.jcjd.2019.09.004",
+      "pmid": "31839265",
+      "citedByCount": 12
+    },
+    {
+      "rank": 10,
+      "title": "SGLT2 inhibitors and cardiovascular and renal outcomes: a meta-analysis and trial sequential analysis",
+      "year": 2021,
+      "venue": "Heart Failure Reviews",
+      "doi": "10.1007/s10741-021-10083-z",
+      "pmid": "33620621",
+      "citedByCount": 26
+    }
   ],
   "guideline-af-esc": [
-    {"rank":1,"title":"2016 ESC Guidelines for the management of atrial fibrillation (with EACTS)","year":2016,"venue":"Europace","doi":"10.1093/EUROPACE/EUW295","pmid":"27567465","citedByCount":4514},
-    {"rank":2,"title":"ESC Guidelines for management of atrial fibrillation (2010 Task Force)","year":2010,"venue":"Europace","doi":"10.1093/europace/euq350","pmid":"20876603","citedByCount":4090},
-    {"rank":3,"title":"2016 ESC Guidelines for the Management of Atrial Fibrillation (Rev Esp Cardiol)","year":2017,"venue":"Rev Esp Cardiol","doi":"10.1016/j.rec.2016.11.033","pmid":"28038729","citedByCount":2229},
-    {"rank":4,"title":"ESC Guidelines for management of atrial fibrillation (2010, Eur Heart J)","year":2010,"venue":"Eur Heart J","doi":"10.1093/eurheartj/ehq278","pmid":"20802247","citedByCount":3663},
-    {"rank":5,"title":"2020 ESC Guidelines for the diagnosis and management of atrial fibrillation","year":2021,"venue":"Rev Esp Cardiol","doi":"10.1016/J.REC.2021.03.009","pmid":null,"citedByCount":5955}
+    {
+      "rank": 1,
+      "title": "2016 ESC Guidelines for the management of atrial fibrillation developed in collaboration with EACTS.",
+      "year": 2016,
+      "venue": "Europace",
+      "doi": "10.1093/EUROPACE/EUW295",
+      "pmid": "27567465",
+      "citedByCount": 4514
+    },
+    {
+      "rank": 2,
+      "title": "Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC).",
+      "year": 2010,
+      "venue": "Europace",
+      "doi": "10.1093/europace/euq350",
+      "pmid": "20876603",
+      "citedByCount": 4090
+    },
+    {
+      "rank": 3,
+      "title": "2016 ESC Guidelines for the Management of Atrial Fibrillation Developed in Collaboration With EACTS.",
+      "year": 2017,
+      "venue": "Revista Española de Cardiología",
+      "doi": "10.1016/j.rec.2016.11.033",
+      "pmid": "28038729",
+      "citedByCount": 2229
+    },
+    {
+      "rank": 4,
+      "title": "Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC).",
+      "year": 2010,
+      "venue": "European Heart Journal",
+      "doi": "10.1093/eurheartj/ehq278",
+      "pmid": "20802247",
+      "citedByCount": 3663
+    },
+    {
+      "rank": 5,
+      "title": "2020 ESC Guidelines for the diagnosis and management of atrial fibrillation developed in collaboration with the European Association for Cardio-Thoracic Surgery (EACTS)",
+      "year": 2021,
+      "venue": "Revista Española de Cardiología",
+      "doi": "10.1016/J.REC.2021.03.009",
+      "pmid": null,
+      "citedByCount": 5955
+    },
+    {
+      "rank": 6,
+      "title": "2016 ESC Guidelines for the management of atrial fibrillation developed in collaboration with EACTS.",
+      "year": 2016,
+      "venue": "European Journal of Cardio-Thoracic Surgery",
+      "doi": "10.1093/EJCTS/EZW313",
+      "pmid": "27663299",
+      "citedByCount": 255
+    },
+    {
+      "rank": 7,
+      "title": "2016 ESC Guidelines for the management of atrial fibrillation developed in collaboration with EACTS.",
+      "year": 2016,
+      "venue": "European Heart Journal",
+      "doi": "10.1093/eurheartj/ehw210",
+      "pmid": "27567408",
+      "citedByCount": 5064
+    },
+    {
+      "rank": 8,
+      "title": "2012 focused update of the ESC Guidelines for the management of atrial fibrillation: an update of the 2010 ESC Guidelines for the management of atrial fibrillation. Developed with the special contribution of the European Heart Rhythm Association.",
+      "year": 2012,
+      "venue": "European Heart Journal",
+      "doi": "10.1093/eurheartj/ehs253",
+      "pmid": "22922413",
+      "citedByCount": 2993
+    },
+    {
+      "rank": 9,
+      "title": "[2024 ESC Guidelines for the management of atrial fibrillation].",
+      "year": 2025,
+      "venue": "Giornale italiano di cardiologia",
+      "doi": "10.1714/4419.44150",
+      "pmid": "39898766",
+      "citedByCount": 19
+    },
+    {
+      "rank": 10,
+      "title": "2020 ESC Guidelines for the diagnosis and management of atrial fibrillation developed in collaboration with the European Association of Cardio-Thoracic Surgery (EACTS).",
+      "year": 2020,
+      "venue": "European Heart Journal",
+      "doi": "10.1093/eurheartj/ehaa612",
+      "pmid": "32860505",
+      "citedByCount": 2155
+    }
   ],
   "compare-doac-vs-warfarin": [
-    {"rank":1,"title":"Direct-Acting Oral Anticoagulants vs. Warfarin for Preventing Strokes in AF","year":2017,"venue":"NEJM Journal Watch","doi":"10.1056/nejm-jw.NA45643","pmid":null,"citedByCount":0},
-    {"rank":2,"title":"Oral anticoagulants for prevention of stroke in AF: systematic review, network meta-analysis","year":2017,"venue":"BMJ","doi":"10.1136/bmj.j5058","pmid":"29183961","citedByCount":506},
-    {"rank":3,"title":"Oral anticoagulants for prevention of stroke in AF (network MA, companion)","year":2017,"venue":"BMJ","doi":"10.1136/bmj.j5631","pmid":"29203465","citedByCount":74},
-    {"rank":4,"title":"DOACs Versus Warfarin in AF: Patient-Level Network Meta-Analyses (COMBINE AF)","year":2022,"venue":"Circulation","doi":"10.1161/CIRCULATIONAHA.121.056355","pmid":"34985309","citedByCount":218},
-    {"rank":5,"title":"Comparison of Oral Anticoagulants vs. Warfarin for Stroke Prevention in AF: A Meta-Analysis","year":2024,"venue":"J Health Rehabil Res","doi":"10.61919/jhrr.v4i3.1606","pmid":null,"citedByCount":0},
-    {"rank":6,"title":"DOACs Versus Vitamin K Antagonists in Real-life Patients With AF: Systematic Review and Meta-analysis","year":2019,"venue":"Rev Esp Cardiol","doi":"10.1016/j.rec.2018.03.009","pmid":"29606361","citedByCount":31}
+    {
+      "rank": 1,
+      "title": "Warfarin versus DOACs in the prevention of thromboembolic stroke in patients with Afib. : Warfarin versus DOACs in the prevention of thromboembolic stroke in patients with Afib.",
+      "year": 2021,
+      "venue": null,
+      "doi": "10.5203/JCANPA.V3I7.900",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 2,
+      "title": "Oral anticoagulants for prevention of stroke in atrial fibrillation: systematic review, network meta-analysis, and cost effectiveness analysis",
+      "year": 2017,
+      "venue": "British medical journal",
+      "doi": "10.1136/bmj.j5058",
+      "pmid": "29183961",
+      "citedByCount": 506
+    },
+    {
+      "rank": 3,
+      "title": "Oral anticoagulants for prevention of stroke in atrial fibrillation: systematic review, network meta-analysis, and cost effectiveness analysis",
+      "year": 2017,
+      "venue": "British medical journal",
+      "doi": "10.1136/bmj.j5631",
+      "pmid": "29203465",
+      "citedByCount": 74
+    },
+    {
+      "rank": 4,
+      "title": "Direct-Acting Oral Anticoagulants vs. Warfarin for Preventing Strokes in Patients with Atrial Fibrillation",
+      "year": 2017,
+      "venue": "NEJM Journal Watch",
+      "doi": "10.1056/nejm-jw.NA45643",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 5,
+      "title": "Comparison of Oral Anticoagulants vs. Warfarin for Stroke Prevention in Atrial Fibrillation: A Meta-Analysis",
+      "year": 2024,
+      "venue": "Journal of Health and Rehabilitation Research",
+      "doi": "10.61919/jhrr.v4i3.1606",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "Meta-Analysis of Safety and Efficacy of Direct Oral Anticoagulants Versus Warfarin According to Time in Therapeutic Range in Atrial Fibrillation.",
+      "year": 2020,
+      "venue": "American Journal of Cardiology",
+      "doi": "10.1016/j.amjcard.2020.10.064",
+      "pmid": "33189659",
+      "citedByCount": 28
+    },
+    {
+      "rank": 7,
+      "title": "NOACs versus warfarin for stroke prevention in patients with AF: a systematic review and meta-analysis",
+      "year": 2016,
+      "venue": "Open Heart",
+      "doi": "10.1136/openhrt-2015-000279",
+      "pmid": "26848392",
+      "citedByCount": 106
+    },
+    {
+      "rank": 8,
+      "title": "Comparative effectiveness and safety of direct oral anticoagulants versus vitamin K antagonists in nonvalvular atrial fibrillation: a Canadian multicentre observational cohort study.",
+      "year": 2020,
+      "venue": "CMAJ Open",
+      "doi": "10.9778/cmajo.20200055",
+      "pmid": "33355273",
+      "citedByCount": 19
+    },
+    {
+      "rank": 9,
+      "title": "Direct Oral Anticoagulants Versus Warfarin in Patients With Atrial Fibrillation: Patient-Level Network Meta-Analyses of Randomized Clinical Trials With Interaction Testing by Age and Sex",
+      "year": 2022,
+      "venue": "Circulation",
+      "doi": "10.1161/CIRCULATIONAHA.121.056355",
+      "pmid": "34985309",
+      "citedByCount": 218
+    },
+    {
+      "rank": 10,
+      "title": "Efficacy and Safety of Direct Oral Anticoagulants (DOACs) Versus Warfarin in Atrial Fibrillation Patients with Prior Stroke: a Systematic Review and Meta-analysis",
+      "year": 2022,
+      "venue": "Cardiovascular Drugs and Therapy",
+      "doi": "10.1007/s10557-022-07336-w",
+      "pmid": "35467313",
+      "citedByCount": 5
+    }
+  ],
+  "exact-recovery-dex": [
+    {
+      "rank": 1,
+      "title": "Effect of Dexamethasone in Hospitalized Patients with COVID-19: Preliminary Report",
+      "year": 2020,
+      "venue": "medRxiv",
+      "doi": "10.1101/2020.06.22.20137273",
+      "pmid": null,
+      "citedByCount": 3282
+    },
+    {
+      "rank": 2,
+      "title": "Dexamethasone in Hospitalized Patients with Covid-19 — Preliminary Report",
+      "year": 2020,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa2021436",
+      "pmid": "32678530",
+      "citedByCount": 2355
+    },
+    {
+      "rank": 3,
+      "title": "Dexamethasone in Hospitalized Patients with Covid-19",
+      "year": 2021,
+      "venue": "Romanian Archives of Microbiology and Immunology",
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 4976
+    },
+    {
+      "rank": 4,
+      "title": "Covid-19: Low dose steroid cuts death in ventilated patients by one third, trial finds",
+      "year": 2020,
+      "venue": "British medical journal",
+      "doi": "10.1136/bmj.m2422",
+      "pmid": "32546467",
+      "citedByCount": 101
+    },
+    {
+      "rank": 5,
+      "title": "Dexamethasone in hospitalized patients with COVID-19 preliminary report: Discussions from the respirology and sleep Twitter journal club @respandsleepjc (#rsjc)",
+      "year": 2021,
+      "venue": "Canadian Journal of Respiratory Critical Care and Sleep Medicine",
+      "doi": "10.1080/24745332.2021.1920865",
+      "pmid": null,
+      "citedByCount": 9
+    },
+    {
+      "rank": 6,
+      "title": "Dexamethasone use and mortality in hospitalized patients with coronavirus disease 2019: A multicentre retrospective observational study",
+      "year": 2020,
+      "venue": "medRxiv",
+      "doi": "10.1111/bcp.14784",
+      "pmid": "33608891",
+      "citedByCount": 33
+    },
+    {
+      "rank": 7,
+      "title": "Does dexamethasone have a role for hospitalized patients with COVID-19?",
+      "year": 2020,
+      "venue": "Pharmacy Today",
+      "doi": "10.1016/j.ptdy.2020.08.010",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 8,
+      "title": "From Other Journals",
+      "year": 2020,
+      "venue": "Emergency Medicine Australasia",
+      "doi": "10.1111/1742-6723.13676",
+      "pmid": "33207398",
+      "citedByCount": 0
+    },
+    {
+      "rank": 9,
+      "title": "Dexamethasone for COVID-19: preliminary findings",
+      "year": 2020,
+      "venue": "Drug and therapeutics bulletin",
+      "doi": "10.1136/dtb.2020.000045",
+      "pmid": "32690491",
+      "citedByCount": 16
+    },
+    {
+      "rank": 10,
+      "title": "The use of dexamethasone in the treatment of COVID-19",
+      "year": 2020,
+      "venue": "Annals of Medicine and Surgery",
+      "doi": "10.1016/j.amsu.2020.07.004",
+      "pmid": "32754312",
+      "citedByCount": 39
+    }
+  ],
+  "exact-keynote-189": [
+    {
+      "rank": 1,
+      "title": "Pembrolizumab plus Chemotherapy in Metastatic Non–Small‐Cell Lung Cancer",
+      "year": 2018,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1801005",
+      "pmid": "29658856",
+      "citedByCount": 5424
+    },
+    {
+      "rank": 2,
+      "title": "Pembrolizumab plus Chemotherapy for Squamous Non–Small‐Cell Lung Cancer",
+      "year": 2018,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1810865",
+      "pmid": "30280635",
+      "citedByCount": 2956
+    },
+    {
+      "rank": 3,
+      "title": "Pembrolizumab Plus Chemotherapy in Patients With Previously Untreated Metastatic Non–small Cell Lung Cancer Without EGFR or ALK Mutations is Superior to Chemotherapy Alone",
+      "year": 2018,
+      "venue": "Clinical Pulmonary Medicine",
+      "doi": "10.1097/CPM.0000000000000274",
+      "pmid": null,
+      "citedByCount": 1
+    },
+    {
+      "rank": 4,
+      "title": "Carboplatin and pemetrexed with or without pembrolizumab for advanced, non-squamous non-small-cell lung cancer: a randomised, phase 2 cohort of the open-label KEYNOTE-021 study",
+      "year": 2016,
+      "venue": "The Lancet Oncology",
+      "doi": "10.1016/S1470-2045(16)30498-3",
+      "pmid": "27745820",
+      "citedByCount": 1299
+    },
+    {
+      "rank": 5,
+      "title": "Pembrolizumab for Metastatic Non–Small-Cell Lung Cancer",
+      "year": 2018,
+      "venue": "NEJM Journal Watch",
+      "doi": "10.1056/NEJM-JW.NA46557",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "First-line Pembrolizumab Versus Pembrolizumab Plus Chemotherapy Versus Chemotherapy Alone in Non-small-cell Lung Cancer: A Systematic Review and Network Meta-analysis.",
+      "year": 2019,
+      "venue": "Clinical Lung Cancer",
+      "doi": "10.1016/J.CLLC.2019.05.009",
+      "pmid": "31164319",
+      "citedByCount": 64
+    },
+    {
+      "rank": 7,
+      "title": "Pembrolizumab Alone or with Chemotherapy for Metastatic Non-Small-Cell Lung Cancer: A Systematic Review and Network Meta-Analysis.",
+      "year": 2022,
+      "venue": "Critical reviews in oncology/hematology",
+      "doi": "10.1016/j.critrevonc.2022.103660",
+      "pmid": "35341985",
+      "citedByCount": 14
+    },
+    {
+      "rank": 8,
+      "title": "Final analysis of KEYNOTE-189: Pemetrexed-platinum chemotherapy (chemo) with or without pembrolizumab (pembro) in patients (pts) with previously untreated metastatic nonsquamous non-small cell lung cancer (NSCLC).",
+      "year": 2020,
+      "venue": "Journal of Clinical Oncology",
+      "doi": "10.1200/jco.2020.38.15_suppl.9582",
+      "pmid": null,
+      "citedByCount": 16
+    },
+    {
+      "rank": 9,
+      "title": "More Evidence on Pembrolizumab for Metastatic Non–Small-Cell Lung Cancer",
+      "year": 2021,
+      "venue": "NEJM Journal Watch",
+      "doi": "10.1056/NEJM-JW.NA53627",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 10,
+      "title": "Pembrolizumab (Keytruda®) in combination with chemotherapy for the treatment of metastatic non-small-cell lung cancer (NSCLC)",
+      "year": 2018,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 0
+    }
+  ],
+  "acronym-dapa-hf": [
+    {
+      "rank": 1,
+      "title": "DAPA-HF trial: dapagliflozin evolves from a glucose-lowering agent to a therapy for heart failure",
+      "year": 2020,
+      "venue": "Drugs in Context",
+      "doi": "10.7573/dic.2019-11-3",
+      "pmid": "32165892",
+      "citedByCount": 41
+    },
+    {
+      "rank": 2,
+      "title": "Two Tales: One Story. EMPEROR-Reduced and DAPA-HF.",
+      "year": 2020,
+      "venue": "Circulation",
+      "doi": "10.1161/CIRCULATIONAHA.120.051122",
+      "pmid": "32969716",
+      "citedByCount": 23
+    },
+    {
+      "rank": 3,
+      "title": "A trial to evaluate the effect of the sodium–glucose co‐transporter 2 inhibitor dapagliflozin on morbidity and mortality in patients with heart failure and reduced left ventricular ejection fraction (DAPA‐HF)",
+      "year": 2019,
+      "venue": "European Journal of Heart Failure",
+      "doi": "10.1002/ejhf.1432",
+      "pmid": "30895697",
+      "citedByCount": 360
+    },
+    {
+      "rank": 4,
+      "title": "The DAPA-HF Trial: A Momentous Victory in the War against Heart Failure.",
+      "year": 2019,
+      "venue": "Cell Metabolism",
+      "doi": "10.1016/j.cmet.2019.10.008",
+      "pmid": "31693879",
+      "citedByCount": 49
+    },
+    {
+      "rank": 5,
+      "title": "Effect of dapagliflozin on ventricular arrhythmias, resuscitated cardiac arrest, or sudden death in DAPA-HF",
+      "year": 2021,
+      "venue": "European Heart Journal",
+      "doi": "10.1093/eurheartj/ehab560",
+      "pmid": "34448003",
+      "citedByCount": 195
+    },
+    {
+      "rank": 6,
+      "title": "The Dapagliflozin And Prevention of Adverse‐outcomes in Heart Failure (DAPA‐HF) trial: baseline characteristics",
+      "year": 2019,
+      "venue": "European Journal of Heart Failure",
+      "doi": "10.1002/ejhf.1548",
+      "pmid": "31309699",
+      "citedByCount": 198
+    },
+    {
+      "rank": 7,
+      "title": "Effect of Dapagliflozin in Patients With HFrEF Treated With Sacubitril/Valsartan: The DAPA-HF Trial.",
+      "year": 2020,
+      "venue": "JACC. Heart failure",
+      "doi": "10.1016/J.JCHF.2020.04.008",
+      "pmid": "32653447",
+      "citedByCount": 134
+    },
+    {
+      "rank": 8,
+      "title": "Effects of dapagliflozin in DAPA-HF according to background heart failure therapy",
+      "year": 2020,
+      "venue": "European Heart Journal",
+      "doi": "10.1093/eurheartj/ehaa183",
+      "pmid": "32221582",
+      "citedByCount": 152
+    },
+    {
+      "rank": 9,
+      "title": "Rationale and design of the DAPA-MI trial: Dapagliflozin in patients without diabetes mellitus with acute myocardial infarction.",
+      "year": 2023,
+      "venue": "American Heart Journal",
+      "doi": "10.1016/j.ahj.2023.08.008",
+      "pmid": "37648579",
+      "citedByCount": 26
+    },
+    {
+      "rank": 10,
+      "title": "Evidence-based Appraisal of the DAPA-HF Trial",
+      "year": 2020,
+      "venue": "Journal of contemporary pharmacy practice",
+      "doi": "10.37901/jcphp20-00011",
+      "pmid": null,
+      "citedByCount": 0
+    }
+  ],
+  "acronym-partner-3": [
+    {
+      "rank": 1,
+      "title": "Prevention of HIV-1 Infection with Early Antiretroviral Therapy",
+      "year": 2011,
+      "venue": "Journal of family planning and reproductive health care",
+      "doi": "10.1136/jfprhc-2012-100379",
+      "pmid": "21767103",
+      "citedByCount": 6972
+    },
+    {
+      "rank": 2,
+      "title": "Partners of people on ART - a New Evaluation of the Risks (The PARTNER study): design and methods",
+      "year": 2012,
+      "venue": "BMC Public Health",
+      "doi": "10.1186/1471-2458-12-296",
+      "pmid": "22520171",
+      "citedByCount": 38
+    },
+    {
+      "rank": 3,
+      "title": "Risk of HIV transmission through condomless sex in serodifferent gay couples with the HIV-positive partner taking suppressive antiretroviral therapy (PARTNER): final results of a multicentre, prospective, observational study",
+      "year": 2019,
+      "venue": "The Lancet",
+      "doi": "10.1016/S0140-6736(19)30418-0",
+      "pmid": "31056293",
+      "citedByCount": 795
+    },
+    {
+      "rank": 4,
+      "title": "A Review of the Partner Trials.",
+      "year": 2020,
+      "venue": "Interventional Cardiology Clinics",
+      "doi": "10.1016/j.iccl.2020.07.002",
+      "pmid": "32921370",
+      "citedByCount": 13
+    },
+    {
+      "rank": 5,
+      "title": "Motivational Interviewing to Reduce Drug Use and HIV Incidence Among Young Men Who Have Sex With Men in Relationships and Are High Priority for Pre-Exposure Prophylaxis (Project PARTNER): Randomized Controlled Trial Protocol",
+      "year": 2019,
+      "venue": "JMIR Research Protocols",
+      "doi": "10.2196/13015",
+      "pmid": "31274114",
+      "citedByCount": 22
+    },
+    {
+      "rank": 6,
+      "title": "PREVENTION No HIV transmissions with undetectable viral load : interim PARTNER study results show need for longer follow-up",
+      "year": 2014,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 7,
+      "title": "A comprehensive review of the PARTNER trial.",
+      "year": 2013,
+      "venue": "Journal of Thoracic and Cardiovascular Surgery",
+      "doi": "10.1016/j.jtcvs.2012.11.051",
+      "pmid": "23410766",
+      "citedByCount": 90
+    },
+    {
+      "rank": 8,
+      "title": "Antiretroviral treatment can reduce the risk of HIV transmission between male partners to ‘zero’",
+      "year": 2019,
+      "venue": "British medical journal",
+      "doi": "10.1136/bmj.l4915",
+      "pmid": "31455630",
+      "citedByCount": 3
+    },
+    {
+      "rank": 9,
+      "title": "The Placement of Aortic Transcatheter Valve (PARTNER) trial: clinical trialist perspective.",
+      "year": 2012,
+      "venue": "Circulation",
+      "doi": "10.1161/CIRCULATIONAHA.112.093070",
+      "pmid": "22733337",
+      "citedByCount": 6
+    },
+    {
+      "rank": 10,
+      "title": "U=U gains strength with release of PARTNER2 data.",
+      "year": 2019,
+      "venue": "AIDS (London)",
+      "doi": "10.1097/QAD.0000000000002098",
+      "pmid": "30702512",
+      "citedByCount": 8
+    }
+  ],
+  "acronym-keynote-189": [
+    {
+      "rank": 1,
+      "title": "A new era of treating advanced lung cancer is upon us.",
+      "year": 2018,
+      "venue": "Translational Lung Cancer Research",
+      "doi": "10.21037/tlcr.2018.07.03",
+      "pmid": "30393601",
+      "citedByCount": 2
+    },
+    {
+      "rank": 2,
+      "title": "The KEYNOTE-189 trial as a new paradigm making cure a reality for metastatic non-squamous non-small cell lung cancer",
+      "year": 2020,
+      "venue": "Translational Lung Cancer Research",
+      "doi": "10.21037/tlcr-20-874",
+      "pmid": "33209640",
+      "citedByCount": 2
+    },
+    {
+      "rank": 3,
+      "title": "Updated Analysis From KEYNOTE-189: Pembrolizumab or Placebo Plus Pemetrexed and Platinum for Previously Untreated Metastatic Nonsquamous Non-Small-Cell Lung Cancer.",
+      "year": 2020,
+      "venue": "Journal of Clinical Oncology",
+      "doi": "10.1200/JCO.19.03136",
+      "pmid": "32150489",
+      "citedByCount": 840
+    },
+    {
+      "rank": 4,
+      "title": "Phase III KEYNOTE-590 study of chemotherapy + pembrolizumab versus chemotherapy + placebo as first-line therapy for patients (Pts) with advanced esophageal or esophagogastric junction (E/EGJ) cancer.",
+      "year": 2018,
+      "venue": "Annals of Oncology",
+      "doi": "10.1093/ANNONC/MDY282.168",
+      "pmid": "32136612",
+      "citedByCount": 8
+    },
+    {
+      "rank": 5,
+      "title": "Abstract CT075: KEYNOTE-189: Randomized, double-blind, phase 3 study of pembrolizumab (pembro) or placebo plus pemetrexed (pem) and platinum as first-line therapy for metastatic NSCLC",
+      "year": 2018,
+      "venue": "Clinical Trials",
+      "doi": "10.1158/1538-7445.AM2018-CT075",
+      "pmid": null,
+      "citedByCount": 11
+    },
+    {
+      "rank": 6,
+      "title": "P-38 KEYNOTE-859: A randomized, double-blind, placebo-controlled phase 3 trial of first-line pembrolizumab plus chemotherapy in patients with advanced gastric or gastroesophageal junction adenocarcinoma",
+      "year": 2020,
+      "venue": "Annals of Oncology",
+      "doi": "10.1016/j.annonc.2020.04.120",
+      "pmid": null,
+      "citedByCount": 2
+    },
+    {
+      "rank": 7,
+      "title": "Phase 3 study of platinum-based chemotherapy with or without pembrolizumab for first-line metastatic, nonsquamous non-small cell lung carcinoma (NSCLC): KEYNOTE-189.",
+      "year": 2016,
+      "venue": "Journal of Clinical Oncology",
+      "doi": "10.1200/JCO.2016.34.15_SUPPL.TPS9104",
+      "pmid": null,
+      "citedByCount": 9
+    },
+    {
+      "rank": 8,
+      "title": "Phase III KEYNOTE-789 Study of Pemetrexed and Platinum With or Without Pembrolizumab for Tyrosine Kinase Inhibitor‒Resistant, EGFR–Mutant, Metastatic Nonsquamous Non–Small Cell Lung Cancer",
+      "year": 2024,
+      "venue": "Journal of Clinical Oncology",
+      "doi": "10.1200/JCO.23.02747",
+      "pmid": "39173098",
+      "citedByCount": 103
+    },
+    {
+      "rank": 9,
+      "title": "Merck’s KEYTRUDA® (pembrolizumab) Plus Pemetrexed (ALIMTA®) and Platinum Chemotherapy Reduced the Risk of Death by Half Compared with Chemotherapy Alone as First-Line Treatment for Advanced Nonsquamous NSCLC in Phase 3 KEYNOTE-189 Study",
+      "year": 2019,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 10,
+      "title": "P1.01-107 KEYNOTE-495/KeyImPaCT: Phase 2 Biomarker-Directed Study of Pembrolizumab-Based Therapy for Non–Small Cell Lung Cancer",
+      "year": 2019,
+      "venue": "Journal of Thoracic Oncology",
+      "doi": "10.1016/j.jtho.2019.08.822",
+      "pmid": null,
+      "citedByCount": 1
+    }
+  ],
+  "acronym-sprint": [
+    {
+      "rank": 1,
+      "title": "Final Report of a Trial of Intensive versus Standard Blood-Pressure Control",
+      "year": 2021,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1901281",
+      "pmid": "34010531",
+      "citedByCount": 301
+    },
+    {
+      "rank": 2,
+      "title": "The design and rationale of a multi-center clinical trial comparing two strategies for control of systolic blood pressure: The Systolic Blood Pressure Intervention Trial (SPRINT)",
+      "year": 2014,
+      "venue": "Clinical Trials",
+      "doi": "10.1177/1740774514537404",
+      "pmid": "24902920",
+      "citedByCount": 494
+    },
+    {
+      "rank": 3,
+      "title": "[The SPRINT Research. A Randomized Trial of Intensive versus Standard Blood-Pressure Control].",
+      "year": 2016,
+      "venue": "Vnitrni lekarstvi",
+      "doi": null,
+      "pmid": "26967236",
+      "citedByCount": 10
+    },
+    {
+      "rank": 4,
+      "title": "Longer-Term All-Cause and Cardiovascular Mortality With Intensive Blood Pressure Control: A Secondary Analysis of a Randomized Clinical Trial.",
+      "year": 2022,
+      "venue": "JAMA cardiology",
+      "doi": "10.1001/jamacardio.2022.3345",
+      "pmid": "36223105",
+      "citedByCount": 63
+    },
+    {
+      "rank": 5,
+      "title": "Abstract 15507: Effect of Intensive Blood Pressure Control on Residual Lifespan in the SPRINT Trial",
+      "year": 2019,
+      "venue": "Circulation",
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "Heterogeneity of treatment effect in SPRINT by age and baseline comorbidities: The greatest impact of intensive blood pressure treatment is observed among younger patients without CKD or CVD and in older patients with CKD or CVD",
+      "year": 2020,
+      "venue": "The Journal of Clinical Hypertension",
+      "doi": "10.1111/jch.13955",
+      "pmid": "33460256",
+      "citedByCount": 5
+    },
+    {
+      "rank": 7,
+      "title": "Cost-Effectiveness of Intensive versus Standard Blood-Pressure Control",
+      "year": 2017,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMsa1616035",
+      "pmid": "28834469",
+      "citedByCount": 123
+    },
+    {
+      "rank": 8,
+      "title": "SP 05-1 SHOULD THE TARGET FOR BLOOD PRESSURE REDUCTION BE LOWER IN ADULTS WITH HYPERTENSION AND A HISTORY OF CARDIOVASCULAR DISEASE",
+      "year": 2016,
+      "venue": "Journal of Hypertension",
+      "doi": "10.1097/01.hjh.0000500968.46164.4d",
+      "pmid": "27643145",
+      "citedByCount": 1
+    },
+    {
+      "rank": 9,
+      "title": "Successes of SPRINT, but Still Some Hurdles to Cross.",
+      "year": 2016,
+      "venue": "HYPERTENSION",
+      "doi": "10.1161/HYPERTENSIONAHA.115.06725",
+      "pmid": "26556815",
+      "citedByCount": 26
+    },
+    {
+      "rank": 10,
+      "title": "SP 05-1 SHOULD THE TARGET FOR BLOOD PRESSURE REDUCTION BE LOWER IN ADULTS WITH HYPERTENSION AND A HISTORY OF CARDIOVASCULAR DISEASE.",
+      "year": 2016,
+      "venue": "Journal of Hypertension",
+      "doi": null,
+      "pmid": "27754188",
+      "citedByCount": 0
+    }
+  ],
+  "broad-hfref-management": [
+    {
+      "rank": 1,
+      "title": "Heart Failure With Reduced Ejection Fraction: A Review.",
+      "year": 2020,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2020.10262",
+      "pmid": "32749493",
+      "citedByCount": 638
+    },
+    {
+      "rank": 2,
+      "title": "Management of heart failure with reduced ejection fraction",
+      "year": 2022,
+      "venue": "Heart",
+      "doi": "10.1136/heartjnl-2020-318811",
+      "pmid": "35973784",
+      "citedByCount": 28
+    },
+    {
+      "rank": 3,
+      "title": "Management of Heart Failure with Reduced Ejection Fraction.",
+      "year": 2023,
+      "venue": "Current problems in cardiology",
+      "doi": "10.1016/j.cpcardiol.2023.101596",
+      "pmid": "36681212",
+      "citedByCount": 19
+    },
+    {
+      "rank": 4,
+      "title": "Heart Failure.",
+      "year": 2015,
+      "venue": "South Dakota medicine : the journal of the South Dakota State Medical Association",
+      "doi": "10.1016/B978-012406061-6/50066-7",
+      "pmid": "26489162",
+      "citedByCount": 0
+    },
+    {
+      "rank": 5,
+      "title": "Heart failure with reduced ejection fraction.",
+      "year": 2025,
+      "venue": "The Lancet",
+      "doi": "10.1016/s0140-6736(25)01851-3",
+      "pmid": "41319669",
+      "citedByCount": 5
+    },
+    {
+      "rank": 6,
+      "title": "Medical Management of Patients With Heart Failure and Reduced Ejection Fraction",
+      "year": 2022,
+      "venue": "Korean Circulation Journal",
+      "doi": "10.4070/kcj.2021.0401",
+      "pmid": "35257531",
+      "citedByCount": 17
+    },
+    {
+      "rank": 7,
+      "title": "A Practical Guide for the Treatment of Symptomatic Heart Failure with Reduced Ejection Fraction (HFrEF)",
+      "year": 2014,
+      "venue": "Current Cardiology Reviews",
+      "doi": "10.2174/1574884708666131117125508",
+      "pmid": "24251455",
+      "citedByCount": 30
+    },
+    {
+      "rank": 8,
+      "title": "The Pathophysiology and New Advancements in the Pharmacologic and Exercise-Based Management of Heart Failure With Reduced Ejection Fraction: A Narrative Review",
+      "year": 2023,
+      "venue": "Cureus",
+      "doi": "10.7759/cureus.45719",
+      "pmid": "37868488",
+      "citedByCount": 12
+    },
+    {
+      "rank": 9,
+      "title": "Heart Failure Due to Reduced Ejection Fraction: Medical Management.",
+      "year": 2017,
+      "venue": "American Family Physician",
+      "doi": null,
+      "pmid": "28075105",
+      "citedByCount": 23
+    },
+    {
+      "rank": 10,
+      "title": "Heart Failure With Reduced Ejection Fraction: Medical Management.",
+      "year": 2025,
+      "venue": "American Family Physician",
+      "doi": null,
+      "pmid": "40834370",
+      "citedByCount": 0
+    }
+  ],
+  "broad-cap-treatment": [
+    {
+      "rank": 1,
+      "title": "Community-Acquired Pneumonia in Adults: Diagnosis and Management.",
+      "year": 2016,
+      "venue": "American Family Physician",
+      "doi": null,
+      "pmid": "27929242",
+      "citedByCount": 52
+    },
+    {
+      "rank": 2,
+      "title": "Diagnosis and Treatment of Adults With Community-Acquired Pneumonia.",
+      "year": 2020,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2019.21118",
+      "pmid": "32027358",
+      "citedByCount": 277
+    },
+    {
+      "rank": 3,
+      "title": "Diagnosis and management of community-acquired pneumonia in adults.",
+      "year": 2011,
+      "venue": "American Family Physician",
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 89
+    },
+    {
+      "rank": 4,
+      "title": "[Guidelines for management of community-acquired pneumonia in adults].",
+      "year": 2015,
+      "venue": "Medicina",
+      "doi": null,
+      "pmid": "26339883",
+      "citedByCount": 40
+    },
+    {
+      "rank": 5,
+      "title": "Clinical practice guideline for the management of community-acquired pneumonia",
+      "year": 2023,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "Diagnosis and management of community-acquired pneumonia in adults.",
+      "year": 2011,
+      "venue": "American Family Physician",
+      "doi": null,
+      "pmid": "21661712",
+      "citedByCount": 33
+    },
+    {
+      "rank": 7,
+      "title": "Guidelines for diagnosis and management of community- and hospital-acquired pneumonia in adults: Joint ICS/NCCP(I) recommendations",
+      "year": 2012,
+      "venue": "Lung India",
+      "doi": "10.4103/0970-2113.99248",
+      "pmid": "23019384",
+      "citedByCount": 118
+    },
+    {
+      "rank": 8,
+      "title": "NEUMONÍA ADQUIRIDA DE LA COMUNIDAD EN ADULTOS. RECOMENDACIONES SOBRE SU ATENCIÓN",
+      "year": 2015,
+      "venue": "Medicina-buenos Aires",
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 17
+    },
+    {
+      "rank": 9,
+      "title": "Community-acquired pneumonia in adults: initial antibiotic therapy.",
+      "year": 1997,
+      "venue": "American Family Physician",
+      "doi": null,
+      "pmid": "9262534",
+      "citedByCount": 10
+    },
+    {
+      "rank": 10,
+      "title": "Summary for Clinicians: Clinical Practice Guideline for the Diagnosis and Treatment of Community-acquired Pneumonia.",
+      "year": 2019,
+      "venue": "Annals of the American Thoracic Society",
+      "doi": "10.1513/annalsats.201909-704cme",
+      "pmid": "31770496",
+      "citedByCount": 11
+    }
+  ],
+  "broad-af-anticoagulation": [
+    {
+      "rank": 1,
+      "title": "Prevention of Stroke in Patients with Atrial Fibrillation",
+      "year": 2005,
+      "venue": "Seminars in Vascular Medicine",
+      "doi": "10.1055/s-2005-916168",
+      "pmid": "16123916",
+      "citedByCount": 34
+    },
+    {
+      "rank": 2,
+      "title": "Antithrombotic Therapy To Prevent Stroke in Patients with Atrial Fibrillation",
+      "year": 2000,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/0003-4819-132-10-200005160-00017",
+      "pmid": null,
+      "citedByCount": 76
+    },
+    {
+      "rank": 3,
+      "title": "Anticoagulation Therapy for Atrial Fibrillation",
+      "year": 2013,
+      "venue": "Seminars in Thrombosis and Hemostasis",
+      "doi": "10.1055/s-0033-1334812",
+      "pmid": "23397554",
+      "citedByCount": 20
+    },
+    {
+      "rank": 4,
+      "title": "The increasing need for anticoagulant therapy to prevent stroke in patients with atrial fibrillation.",
+      "year": 2004,
+      "venue": "Mayo Clinic proceedings",
+      "doi": "10.4065/79.7.904",
+      "pmid": "15244388",
+      "citedByCount": 45
+    },
+    {
+      "rank": 5,
+      "title": "Antithrombotic therapy in atrial fibrillation.",
+      "year": 1996,
+      "venue": "Canadian family physician Medecin de famille canadien",
+      "doi": null,
+      "pmid": "8754703",
+      "citedByCount": 18
+    },
+    {
+      "rank": 6,
+      "title": "Anticoagulation for Stroke Prevention in Patients with Atrial Fibrillation: A Review of the Literature and Current Guidelines",
+      "year": 2025,
+      "venue": "Reviews in cardiovascular medicine",
+      "doi": "10.31083/RCM39233",
+      "pmid": "40630456",
+      "citedByCount": 7
+    },
+    {
+      "rank": 7,
+      "title": "Anticoagulation strategies for stroke prevention in atrial fibrillation: a comprehensive review of current literature",
+      "year": 2025,
+      "venue": "Annals of Medicine and Surgery",
+      "doi": "10.1097/MS9.0000000000003364",
+      "pmid": "40486638",
+      "citedByCount": 1
+    },
+    {
+      "rank": 8,
+      "title": "Anticoagulation for atrial fibrillation: epidemiology informing a difficult clinical decision.",
+      "year": 1996,
+      "venue": "Proceedings of the Association of American Physicians",
+      "doi": null,
+      "pmid": "8834062",
+      "citedByCount": 8
+    },
+    {
+      "rank": 9,
+      "title": "Which drug should we use for stroke prevention in atrial fibrillation?",
+      "year": 2014,
+      "venue": "Current Opinion in Cardiology",
+      "doi": "10.1097/HCO.0000000000000065",
+      "pmid": "25029448",
+      "citedByCount": 11
+    },
+    {
+      "rank": 10,
+      "title": "Stroke prevention in atrial fibrillation",
+      "year": 1997,
+      "venue": "British medical journal",
+      "doi": "10.1136/bmj.314.7094.1563",
+      "pmid": "9186155",
+      "citedByCount": 9
+    }
+  ],
+  "pico-egdt-septic-shock": [
+    {
+      "rank": 1,
+      "title": "Early goal-directed therapy versus usual care in the management of septic shock.",
+      "year": 2017,
+      "venue": "CJEM",
+      "doi": "10.1017/cem.2016.2",
+      "pmid": "26856422",
+      "citedByCount": 0
+    },
+    {
+      "rank": 2,
+      "title": "A Randomized Trial of Protocol-Based Care for Early Septic Shock",
+      "year": 2014,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1401602",
+      "pmid": "24635773",
+      "citedByCount": 2299
+    },
+    {
+      "rank": 3,
+      "title": "Trial of early, goal-directed resuscitation for septic shock.",
+      "year": 2015,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1500896",
+      "pmid": "25776532",
+      "citedByCount": 1453
+    },
+    {
+      "rank": 4,
+      "title": "Goal-directed resuscitation for patients with early septic shock.",
+      "year": 2014,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1404380",
+      "pmid": "25272316",
+      "citedByCount": 1827
+    },
+    {
+      "rank": 5,
+      "title": "A systematic review and meta-analysis of early goal-directed therapy for septic shock: the ARISE, ProCESS and ProMISe Investigators",
+      "year": 2015,
+      "venue": "Intensive Care Medicine",
+      "doi": "10.1007/s00134-015-3822-1",
+      "pmid": "25952825",
+      "citedByCount": 349
+    },
+    {
+      "rank": 6,
+      "title": "Does Early Goal-Directed Therapy Decrease Mortality Compared with Standard Care in Patients with Septic Shock?",
+      "year": 2017,
+      "venue": "Journal of Emergency Medicine",
+      "doi": "10.1016/j.jemermed.2016.10.028",
+      "pmid": "27876325",
+      "citedByCount": 6
+    },
+    {
+      "rank": 7,
+      "title": "Early goal-directed therapy did not reduce mortality more than usual care in early septic shock",
+      "year": 2015,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/ACPJC-2015-162-6-004",
+      "pmid": "25775347",
+      "citedByCount": 2
+    },
+    {
+      "rank": 8,
+      "title": "Early goal-directed treatment versus standard care in management of early septic shock: Meta-analysis of randomized trials",
+      "year": 2016,
+      "venue": "Journal of Trauma and Acute Care Surgery",
+      "doi": "10.1097/TA.0000000000001246",
+      "pmid": "27602898",
+      "citedByCount": 9
+    },
+    {
+      "rank": 9,
+      "title": "Pooled RCTs: Early goal-directed therapy does not reduce mortality more than usual care in early septic shock",
+      "year": 2017,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/ACPJC-2017-167-2-006",
+      "pmid": "28715828",
+      "citedByCount": 0
+    },
+    {
+      "rank": 10,
+      "title": "Early goal-directed therapy vs usual care in the treatment of severe sepsis and septic shock: a systematic review and meta-analysis",
+      "year": 2015,
+      "venue": "Internal and Emergency Medicine",
+      "doi": "10.1007/s11739-015-1248-y",
+      "pmid": "25982917",
+      "citedByCount": 27
+    }
+  ],
+  "pico-oxygen-icu": [
+    {
+      "rank": 1,
+      "title": "Effect of Conservative vs Conventional Oxygen Therapy on Mortality Among Patients in an Intensive Care Unit: The Oxygen-ICU Randomized Clinical Trial.",
+      "year": 2016,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2016.11993",
+      "pmid": "27706466",
+      "citedByCount": 629
+    },
+    {
+      "rank": 2,
+      "title": "Mortality and morbidity in acutely ill adults treated with liberal versus conservative oxygen therapy (IOTA): a systematic review and meta-analysis.",
+      "year": 2018,
+      "venue": "The Lancet",
+      "doi": "10.1016/S0140-6736(18)30479-3",
+      "pmid": "29726345",
+      "citedByCount": 600
+    },
+    {
+      "rank": 3,
+      "title": "Effects of conservative versus liberal oxygen treatment in mortality of UCI patients",
+      "year": 2023,
+      "venue": "SCT Proceedings in Interdisciplinary Insights and Innovations",
+      "doi": "10.56294/piii2023152",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 4,
+      "title": "Conservative versus liberal oxygen therapy in mechanically ventilated patients: A systematic review with meta-analysis",
+      "year": 2025,
+      "venue": "Canadian journal of respiratory therapy : CJRT = Revue canadienne de la therapie respiratoire : RCTR",
+      "doi": "10.29390/001c.146707",
+      "pmid": "41281599",
+      "citedByCount": 0
+    },
+    {
+      "rank": 5,
+      "title": "Conservative versus liberal oxygen therapy for critically ill patients: A meta analysis with trial sequential analysis and clinical recommendations",
+      "year": 2025,
+      "venue": "Journal of Translational Critical Care Medicine",
+      "doi": "10.1097/jtccm-d-25-00005",
+      "pmid": null,
+      "citedByCount": 2
+    },
+    {
+      "rank": 6,
+      "title": "Effect of liberal or conservative oxygen therapy on the prognosis for mechanically ventilated intensive care unit patients: a meta-analysis",
+      "year": 2022,
+      "venue": "Sao Paulo medical journal = Revista paulista de medicina",
+      "doi": "10.1590/1516-3180.2021.0062.21092021",
+      "pmid": "35507988",
+      "citedByCount": 5
+    },
+    {
+      "rank": 7,
+      "title": "Conservative versus liberal oxygen therapy for acutely ill medical patients: A systematic review and meta-analysis.",
+      "year": 2021,
+      "venue": "International Journal of Nursing Studies",
+      "doi": "10.1016/j.ijnurstu.2021.103924",
+      "pmid": "33774265",
+      "citedByCount": 8
+    },
+    {
+      "rank": 8,
+      "title": "Effects of Conservative Versus Liberal Oxygen Therapy on the Outcomes of Critically Ill Patients: A Systematic Review and Meta-Analysis",
+      "year": 2019,
+      "venue": "Social Science Research Network",
+      "doi": "10.2139/ssrn.3315849",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 9,
+      "title": "Conservative versus Liberal Oxygenation Targets for Mechanically Ventilated Patients. A Pilot Multicenter Randomized Controlled Trial.",
+      "year": 2016,
+      "venue": "American Journal of Respiratory and Critical Care Medicine",
+      "doi": "10.1164/rccm.201505-1019OC",
+      "pmid": "26334785",
+      "citedByCount": 147
+    },
+    {
+      "rank": 10,
+      "title": "Liberal vs. Conservative Oxygen Therapy in the Acutely Ill.",
+      "year": 2019,
+      "venue": "American Family Physician",
+      "doi": null,
+      "pmid": "30600981",
+      "citedByCount": 0
+    }
+  ],
+  "recency-semaglutide-cv-2025": [
+    {
+      "rank": 1,
+      "title": "Semaglutide and Cardiovascular Outcomes in Obesity without Diabetes.",
+      "year": 2023,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa2307563",
+      "pmid": "37952131",
+      "citedByCount": 1803
+    },
+    {
+      "rank": 2,
+      "title": "Obesity and Diabetes",
+      "year": 2026,
+      "venue": "Diabetes Technology & Therapeutics",
+      "doi": "10.1177/15209156251411115",
+      "pmid": "41800639",
+      "citedByCount": 0
+    },
+    {
+      "rank": 3,
+      "title": "Semaglutide for cardiovascular event reduction in people with overweight or obesity: SELECT study baseline characteristics",
+      "year": 2022,
+      "venue": "Obesity",
+      "doi": "10.1002/oby.23621",
+      "pmid": "36502289",
+      "citedByCount": 82
+    },
+    {
+      "rank": 4,
+      "title": "Semaglutide benefits heart health regardless of weight lost",
+      "year": 2025,
+      "venue": "Pharmaceutical journal (1933)",
+      "doi": "10.1211/pj.2025.1.381190",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 5,
+      "title": "Effect of semaglutide on major cardiovascular events",
+      "year": 2024,
+      "venue": "Drug and therapeutics bulletin",
+      "doi": "10.1136/dtb.2024.000007",
+      "pmid": "38237952",
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "Semaglutide Effects on Cardiovascular Outcomes in People With Overweight or Obesity (SELECT) rationale and design.",
+      "year": 2020,
+      "venue": "American Heart Journal",
+      "doi": "10.1016/j.ahj.2020.07.008",
+      "pmid": "32916609",
+      "citedByCount": 221
+    },
+    {
+      "rank": 7,
+      "title": "Late-Breaking Science Abstracts and Featured Science Abstracts From the American Heart Association’s Scientific Sessions 2023 and Late-Breaking Abstracts in Resuscitation Science From the Resuscitation Science Symposium 2023",
+      "year": 2023,
+      "venue": "Circulation",
+      "doi": "10.1161/cir.0000000000001200",
+      "pmid": null,
+      "citedByCount": 7
+    },
+    {
+      "rank": 8,
+      "title": "Semaglutide (SUSTAIN and PIONEER) reduces cardiovascular events in type 2 diabetes across varying cardiovascular risk",
+      "year": 2020,
+      "venue": "Diabetes, obesity and metabolism",
+      "doi": "10.1111/dom.13955",
+      "pmid": "31903692",
+      "citedByCount": 162
+    },
+    {
+      "rank": 9,
+      "title": "Predicted cardiovascular risk reduction with tirzepatide vs. semaglutide: interpretative considerations from the SURMOUNT-5 post hoc analysis",
+      "year": 2026,
+      "venue": "European Heart Journal Open",
+      "doi": "10.1093/ehjopen/oeag071",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 10,
+      "title": "Cardiovascular efficacy of liraglutide and semaglutide in individuals with diabetes and peripheral artery disease",
+      "year": 2022,
+      "venue": "Diabetes, obesity and metabolism",
+      "doi": "10.1111/dom.14700",
+      "pmid": "35332654",
+      "citedByCount": 42
+    }
+  ],
+  "recency-cart-myeloma": [
+    {
+      "rank": 1,
+      "title": "CAR T-Cells in Multiple Myeloma: State of the Art and Future Directions",
+      "year": 2020,
+      "venue": "Frontiers in Oncology",
+      "doi": "10.3389/fonc.2020.01243",
+      "pmid": "32850376",
+      "citedByCount": 72
+    },
+    {
+      "rank": 2,
+      "title": "CAR T-cell therapy to treat multiple myeloma: current state and future directions",
+      "year": 2024,
+      "venue": "Cancer Metastasis Review",
+      "doi": "10.1007/s10555-024-10219-1",
+      "pmid": "39625587",
+      "citedByCount": 3
+    },
+    {
+      "rank": 3,
+      "title": "Chimeric Antigen Receptor (CAR) T-cell therapy for multiple myeloma",
+      "year": 2021,
+      "venue": "Pharmacology and Therapeutics",
+      "doi": "10.1016/j.pharmthera.2021.108007",
+      "pmid": "34582835",
+      "citedByCount": 27
+    },
+    {
+      "rank": 4,
+      "title": "Update on the current and future use of CAR‐T to treat multiple myeloma",
+      "year": 2023,
+      "venue": "European Journal of Haematology",
+      "doi": "10.1111/ejh.14145",
+      "pmid": "38099401",
+      "citedByCount": 6
+    },
+    {
+      "rank": 5,
+      "title": "CART-Cell Therapy: Recent Advances and New Evidence in Multiple Myeloma",
+      "year": 2021,
+      "venue": "Cancers",
+      "doi": "10.3390/cancers13112639",
+      "pmid": "34072068",
+      "citedByCount": 32
+    },
+    {
+      "rank": 6,
+      "title": "CAR T and CAR NK cells in multiple myeloma: expanding the targets",
+      "year": 2020,
+      "venue": "Baillière's Best Practice & Research: Clinical Haematology",
+      "doi": "10.1016/j.beha.2020.101141",
+      "pmid": "32139020",
+      "citedByCount": 43
+    },
+    {
+      "rank": 7,
+      "title": "CAR-T Therapy of Multiple Myeloma, Based on the Congresses ASH-2021 and ASCO-2022",
+      "year": 2022,
+      "venue": "Клиническая онкогематология",
+      "doi": "10.21320/2500-2139-2023-16-1-1-13",
+      "pmid": null,
+      "citedByCount": 3
+    },
+    {
+      "rank": 8,
+      "title": "Updates on CAR T cell therapy in multiple myeloma",
+      "year": 2024,
+      "venue": "Biomarker Research",
+      "doi": "10.1186/s40364-024-00634-5",
+      "pmid": "39261906",
+      "citedByCount": 15
+    },
+    {
+      "rank": 9,
+      "title": "Paving the Way toward Successful Multiple Myeloma Treatment: Chimeric Antigen Receptor T-Cell Therapy",
+      "year": 2020,
+      "venue": "Cells",
+      "doi": "10.3390/cells9040983",
+      "pmid": "32316105",
+      "citedByCount": 10
+    },
+    {
+      "rank": 10,
+      "title": "Current status of bispecific antibodies and CAR-T therapies in multiple myeloma.",
+      "year": 2024,
+      "venue": "International Immunopharmacology",
+      "doi": "10.1016/j.intimp.2024.112043",
+      "pmid": "38733817",
+      "citedByCount": 4
+    }
+  ],
+  "sr-statins-primary-prevention": [
+    {
+      "rank": 1,
+      "title": "Statins for the primary prevention of cardiovascular disease: an overview of systematic reviews",
+      "year": 2019,
+      "venue": "BMJ Open",
+      "doi": "10.1136/bmjopen-2018-023085",
+      "pmid": "31015265",
+      "citedByCount": 67
+    },
+    {
+      "rank": 2,
+      "title": "Primary prevention of cardiovascular mortality and events with statin treatments: a network meta-analysis involving more than 65,000 patients.",
+      "year": 2008,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/j.jacc.2008.08.039",
+      "pmid": "19022156",
+      "citedByCount": 449
+    },
+    {
+      "rank": 3,
+      "title": "Statins for primary prevention of cardiovascular disease: the benefits outweigh the risks",
+      "year": 2013,
+      "venue": "Current Opinion in Cardiology",
+      "doi": "10.1097/HCO.0b013e32836429e6",
+      "pmid": "23928920",
+      "citedByCount": 54
+    },
+    {
+      "rank": 4,
+      "title": "Statins for Primary Cardiovascular Disease Prevention: New Meta-Analysis",
+      "year": 2021,
+      "venue": "NEJM Journal Watch",
+      "doi": "10.1056/NEJM-JW.NA53849",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 5,
+      "title": "Primary prevention of cardiovascular diseases with statin therapy: a meta-analysis of randomized controlled trials.",
+      "year": 2006,
+      "venue": "Archives of Internal Medicine",
+      "doi": "10.1001/ARCHINTE.166.21.2307",
+      "pmid": "17130382",
+      "citedByCount": 383
+    },
+    {
+      "rank": 6,
+      "title": "Statins and Primary Prevention of Cardiovascular Disease in Women",
+      "year": 2015,
+      "venue": "American Journal of Lifestyle Medicine",
+      "doi": "10.1177/1559827613504536",
+      "pmid": null,
+      "citedByCount": 3
+    },
+    {
+      "rank": 7,
+      "title": "Statins for the primary prevention of cardiovascular disease (Review)",
+      "year": 2011,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 85
+    },
+    {
+      "rank": 8,
+      "title": "Statins for the primary prevention of cardiovascular disease.",
+      "year": 2013,
+      "venue": "Cochrane Database of Systematic Reviews",
+      "doi": "10.1002/14651858.CD004816.pub5",
+      "pmid": "23440795",
+      "citedByCount": 157
+    },
+    {
+      "rank": 9,
+      "title": "Accumulating evidence for statins in primary prevention.",
+      "year": 2013,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2013.281355",
+      "pmid": "24276744",
+      "citedByCount": 22
+    },
+    {
+      "rank": 10,
+      "title": "Statins for the primary prevention of cardiovascular disease.",
+      "year": 2011,
+      "venue": "Cochrane Database of Systematic Reviews",
+      "doi": "10.1002/14651858.CD004816.pub4",
+      "pmid": "21249663",
+      "citedByCount": 28
+    }
+  ],
+  "sr-sglt2-hf-hospitalization": [
+    {
+      "rank": 1,
+      "title": "Efficacy and safety of SGLT2 inhibitors in heart failure: systematic review and meta‐analysis",
+      "year": 2020,
+      "venue": "ESC Heart Failure",
+      "doi": "10.1002/ehf2.13169",
+      "pmid": "33586910",
+      "citedByCount": 101
+    },
+    {
+      "rank": 2,
+      "title": "SGLT2 inhibitors decrease cardiovascular death and heart failure hospitalizations in patients with heart failure: A systematic review and meta-analysis",
+      "year": 2021,
+      "venue": "EClinicalMedicine",
+      "doi": "10.1016/j.eclinm.2021.100933",
+      "pmid": "34308311",
+      "citedByCount": 125
+    },
+    {
+      "rank": 3,
+      "title": "Sodium-glucose cotransporter 2 inhibitors in patients with heart failure: a systematic review and meta-analysis of randomized trials.",
+      "year": 2021,
+      "venue": "European Heart Journal - Quality of Care and Clinical Outcomes",
+      "doi": "10.1093/ehjqcco/qcab072",
+      "pmid": "34617565",
+      "citedByCount": 19
+    },
+    {
+      "rank": 4,
+      "title": "Sodium-Glucose Cotransporter 2 Inhibitors in Heart Failure: A Meta-Analysis of Randomized Clinical Trials.",
+      "year": 2020,
+      "venue": "American Journal of Medicine",
+      "doi": "10.1016/j.amjmed.2020.04.006",
+      "pmid": "32389659",
+      "citedByCount": 27
+    },
+    {
+      "rank": 5,
+      "title": "Sodium-Glucose Cotransporter-2 (SGLT2) Inhibitors and Risk of Heart Failure Hospitalization in Type 2 Diabetes: A Systematic Review and Meta-Analysis of Randomized Controlled Trials",
+      "year": 2025,
+      "venue": "Cureus",
+      "doi": "10.7759/cureus.96456",
+      "pmid": "41384193",
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "The Role of SGLT2 Inhibitors in Heart Failure: A Systematic Review and Meta-Analysis",
+      "year": 2021,
+      "venue": "Cardiology Research and Practice",
+      "doi": "10.1155/2021/9927533",
+      "pmid": "34457360",
+      "citedByCount": 36
+    },
+    {
+      "rank": 7,
+      "title": "Cardiovascular Outcomes with SGLT-2 inhibitors in patients with heart failure with or without type 2 diabetes: A systematic review and meta-analysis of randomized controlled trials.",
+      "year": 2021,
+      "venue": "Diabetes & metabolic syndrome",
+      "doi": "10.1016/j.dsx.2021.01.006",
+      "pmid": "33503584",
+      "citedByCount": 19
+    },
+    {
+      "rank": 8,
+      "title": "Heart failure hospitalization with SGLT-2 inhibitors: a systematic review and meta-analysis of randomized controlled and observational studies",
+      "year": 2019,
+      "venue": "Expert Review of Clinical Pharmacology",
+      "doi": "10.1080/17512433.2019.1588110",
+      "pmid": "30817235",
+      "citedByCount": 31
+    },
+    {
+      "rank": 9,
+      "title": "Sodium‐glucose cotransporter 2 inhibitors in heart failure with reduced or preserved ejection fraction: a meta‐analysis",
+      "year": 2022,
+      "venue": "ESC Heart Failure",
+      "doi": "10.1002/ehf2.13805",
+      "pmid": "35112512",
+      "citedByCount": 41
+    },
+    {
+      "rank": 10,
+      "title": "Cardiovascular Outcome in Patients Treated With SGLT2 Inhibitors for Heart Failure: A Meta-Analysis",
+      "year": 2021,
+      "venue": "Frontiers in Cardiovascular Medicine",
+      "doi": "10.3389/fcvm.2021.691907",
+      "pmid": "34336954",
+      "citedByCount": 38
+    }
+  ],
+  "sr-cochrane-steroids-sepsis": [
+    {
+      "rank": 1,
+      "title": "Corticosteroids in Sepsis: An Updated Systematic Review and Meta-Analysis",
+      "year": 2018,
+      "venue": "Critical Care Medicine",
+      "doi": "10.1097/CCM.0000000000003262",
+      "pmid": "29979221",
+      "citedByCount": 219
+    },
+    {
+      "rank": 2,
+      "title": "Association of Corticosteroid Treatment With Outcomes in Adult Patients With Sepsis: A Systematic Review and Meta-analysis",
+      "year": 2019,
+      "venue": "JAMA Internal Medicine",
+      "doi": "10.1001/jamainternmed.2018.5849",
+      "pmid": "30575845",
+      "citedByCount": 169
+    },
+    {
+      "rank": 3,
+      "title": "Corticosteroids in sepsis: an updated systematic review and meta-analysis (protocol)",
+      "year": 2017,
+      "venue": "BMJ Open",
+      "doi": "10.1136/bmjopen-2017-016847",
+      "pmid": "28667229",
+      "citedByCount": 21
+    },
+    {
+      "rank": 4,
+      "title": "Corticosteroids for treating sepsis in children and adults.",
+      "year": 2019,
+      "venue": "Cochrane Database of Systematic Reviews",
+      "doi": "10.1002/14651858.CD002243.pub4",
+      "pmid": "31808551",
+      "citedByCount": 130
+    },
+    {
+      "rank": 5,
+      "title": "Corticosteroids for treating sepsis.",
+      "year": 2015,
+      "venue": "Cochrane Database of Systematic Reviews",
+      "doi": "10.1002/14651858.CD002243.pub3",
+      "pmid": "26633262",
+      "citedByCount": 188
+    },
+    {
+      "rank": 6,
+      "title": "Corticosteroids in Sepsis and Septic Shock: A Systematic Review, Pairwise, and Dose-Response Meta-Analysis",
+      "year": 2024,
+      "venue": "Critical Care Explorations",
+      "doi": "10.1097/CCE.0000000000001000",
+      "pmid": "38250247",
+      "citedByCount": 48
+    },
+    {
+      "rank": 7,
+      "title": "Corticosteroids for treating severe sepsis and septic shock.",
+      "year": 2004,
+      "venue": "Cochrane Database of Systematic Reviews",
+      "doi": "10.1002/14651858.CD002243.PUB2",
+      "pmid": "14973984",
+      "citedByCount": 127
+    },
+    {
+      "rank": 8,
+      "title": "Glucocorticosteroids for sepsis: systematic review with meta-analysis and trial sequential analysis",
+      "year": 2015,
+      "venue": "Intensive Care Medicine",
+      "doi": "10.1007/s00134-015-3899-6",
+      "pmid": "26100123",
+      "citedByCount": 103
+    },
+    {
+      "rank": 9,
+      "title": "Corticosteroids for Treating Sepsis in Children and Adults.",
+      "year": 2020,
+      "venue": "Critical Care Nurse",
+      "doi": "10.4037/ccn2020588",
+      "pmid": "32737501",
+      "citedByCount": 9
+    },
+    {
+      "rank": 10,
+      "title": "Corticosteroid Treating sepsis in Adult Patients: A systematic review and meta-analysis",
+      "year": 2020,
+      "venue": null,
+      "doi": "10.37766/inplasy2020.11.0122",
+      "pmid": null,
+      "citedByCount": 0
+    }
+  ],
+  "guideline-aortic-stenosis": [
+    {
+      "rank": 1,
+      "title": "2014 AHA/ACC Guideline for the Management of Patients With Valvular Heart Disease: executive summary: a report of the American College of Cardiology/American Heart Association Task Force on Practice Guidelines.",
+      "year": 2014,
+      "venue": "Circulation",
+      "doi": "10.1161/CIR.0000000000000029",
+      "pmid": "24589852",
+      "citedByCount": 1972
+    },
+    {
+      "rank": 2,
+      "title": "2014 AHA/ACC Guideline for the Management of Patients With Valvular Heart Disease: a report of the American College of Cardiology/American Heart Association Task Force on Practice Guidelines.",
+      "year": 2014,
+      "venue": "Circulation",
+      "doi": "10.1161/CIR.0000000000000031",
+      "pmid": "24589853",
+      "citedByCount": 1609
+    },
+    {
+      "rank": 3,
+      "title": "2014 AHA/ACC Guideline for the Management of Patients With Valvular Heart Disease: a report of the American College of Cardiology/American Heart Association Task Force on Practice Guidelines.",
+      "year": 2014,
+      "venue": "Circulation",
+      "doi": "10.1161/CIR.0000000000000031",
+      "pmid": "https://pubmed.ncbi.nlm.nih.gov/24589853",
+      "citedByCount": 863
+    },
+    {
+      "rank": 4,
+      "title": "New ACC/AHA valve guidelines: aligning definitions of aortic stenosis severity with treatment recommendations",
+      "year": 2014,
+      "venue": "Heart",
+      "doi": "10.1136/heartjnl-2013-305134",
+      "pmid": "24615508",
+      "citedByCount": 21
+    },
+    {
+      "rank": 5,
+      "title": "2020 ACC/AHA Guideline for the Management of Patients With Valvular Heart Disease: Executive Summary: A Report of the American College of Cardiology/American Heart Association Joint Committee on Clinical Practice Guidelines.",
+      "year": 2020,
+      "venue": "Circulation",
+      "doi": "10.1161/CIR.0000000000000932",
+      "pmid": "33332149",
+      "citedByCount": 1557
+    },
+    {
+      "rank": 6,
+      "title": "2020 ACC/AHA Guideline for the Management of Patients With Valvular Heart Disease: Executive Summary: A Report of the American College of Cardiology/American Heart Association Joint Committee on Clinical Practice Guidelines.",
+      "year": 2020,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/j.jacc.2020.11.035",
+      "pmid": "33342587",
+      "citedByCount": 933
+    },
+    {
+      "rank": 7,
+      "title": "AHA / ACC Guideline for the Management of Patients With Valvular Heart Disease : Executive Summary A Report of the American College of Cardiology / American Heart Association Task Force on Practice",
+      "year": 2014,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 476
+    },
+    {
+      "rank": 8,
+      "title": "2014 AHA/ACC guideline for the management of patients with valvular heart disease: a report of the American College of Cardiology/American Heart Association Task Force on Practice Guidelines.",
+      "year": 2014,
+      "venue": "Journal of Thoracic and Cardiovascular Surgery",
+      "doi": "10.1016/j.jtcvs.2014.05.014",
+      "pmid": "24939033",
+      "citedByCount": 1661
+    },
+    {
+      "rank": 9,
+      "title": "Guidelines on the management of valvular heart disease (version 2012): the Joint Task Force on the Management of Valvular Heart Disease of the European Society of Cardiology (ESC) and the European Association for Cardio-Thoracic Surgery (EACTS).",
+      "year": 2012,
+      "venue": "European Journal of Cardio-Thoracic Surgery",
+      "doi": "10.1093/ejcts/ezs455",
+      "pmid": "22922698",
+      "citedByCount": 3654
+    },
+    {
+      "rank": 10,
+      "title": "ESC/EACTS vs. ACC/AHA guidelines for the management of severe aortic stenosis.",
+      "year": 2023,
+      "venue": "European Heart Journal",
+      "doi": "10.1093/eurheartj/ehac803",
+      "pmid": "36632841",
+      "citedByCount": 79
+    }
+  ],
+  "guideline-kdigo-ckd": [
+    {
+      "rank": 1,
+      "title": "KDOQI US commentary on the 2012 KDIGO clinical practice guideline for the evaluation and management of CKD.",
+      "year": 2014,
+      "venue": "American Journal of Kidney Diseases",
+      "doi": "10.1053/j.ajkd.2014.01.416",
+      "pmid": "24647050",
+      "citedByCount": 1647
+    },
+    {
+      "rank": 2,
+      "title": "Executive summary of the KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease: known knowns and known unknowns.",
+      "year": 2024,
+      "venue": "Kidney International",
+      "doi": "10.1016/j.kint.2023.10.016",
+      "pmid": "38519239",
+      "citedByCount": 280
+    },
+    {
+      "rank": 3,
+      "title": "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease.",
+      "year": 2024,
+      "venue": "Kidney International",
+      "doi": "10.1016/j.kint.2023.10.018",
+      "pmid": "38490803",
+      "citedByCount": 1661
+    },
+    {
+      "rank": 4,
+      "title": "Interpretation of clinical practice guideline for the evaluation and management of chronic kidney disease: from K/ DOQI to KDIGO.",
+      "year": 2013,
+      "venue": "Chinese Journal of Practical Internal Medicine",
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 2
+    },
+    {
+      "rank": 5,
+      "title": "KDIGO Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease Foreword",
+      "year": 2013,
+      "venue": null,
+      "doi": null,
+      "pmid": null,
+      "citedByCount": 26
+    },
+    {
+      "rank": 6,
+      "title": "Summary of KDIGO 2012 CKD Guideline: behind the scenes, need for guidance, and a framework for moving forward.",
+      "year": 2013,
+      "venue": "Kidney International",
+      "doi": "10.1038/ki.2013.444",
+      "pmid": "24284513",
+      "citedByCount": 740
+    },
+    {
+      "rank": 7,
+      "title": "KDOQI US Commentary on the KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD.",
+      "year": 2024,
+      "venue": "American Journal of Kidney Diseases",
+      "doi": "10.1053/j.ajkd.2024.08.003",
+      "pmid": "39556063",
+      "citedByCount": 68
+    },
+    {
+      "rank": 8,
+      "title": "Evaluation and Management of Chronic Kidney Disease: Synopsis of the Kidney Disease: Improving Global Outcomes 2024 Clinical Practice Guideline",
+      "year": 2025,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/ANNALS-24-01926",
+      "pmid": "40063957",
+      "citedByCount": 24
+    },
+    {
+      "rank": 9,
+      "title": "Kidney Disease: Improving Global Outcomes",
+      "year": 2009,
+      "venue": "Nature Reviews Nephrology",
+      "doi": "10.1038/nrneph.2009.153",
+      "pmid": "19786993",
+      "citedByCount": 184
+    },
+    {
+      "rank": 10,
+      "title": "KDIGO 2018 Clinical Practice Guideline for the Prevention, Diagnosis, Evaluation, and Treatment of Hepatitis C in Chronic Kidney Disease",
+      "year": 2018,
+      "venue": "Kidney international. Supplement",
+      "doi": "10.1016/j.kisu.2018.06.001",
+      "pmid": "30675443",
+      "citedByCount": 141
+    }
+  ],
+  "lto-bariatric-diabetes": [
+    {
+      "rank": 1,
+      "title": "The Long-Term Effects of Bariatric Surgery for Type 2 Diabetes: Systematic Review and Meta-analysis of Randomized and Non-randomized Evidence",
+      "year": 2014,
+      "venue": "Obesity Surgery",
+      "doi": "10.1007/s11695-014-1460-2",
+      "pmid": "25355456",
+      "citedByCount": 163
+    },
+    {
+      "rank": 2,
+      "title": "Long-term Outcomes of Bariatric Surgery: A National Institutes of Health Symposium",
+      "year": 2014,
+      "venue": "JAMA Surgery",
+      "doi": "10.1001/jamasurg.2014.2440",
+      "pmid": "25271405",
+      "citedByCount": 307
+    },
+    {
+      "rank": 3,
+      "title": "Association of bariatric surgery with long-term remission of type 2 diabetes and with microvascular and macrovascular complications.",
+      "year": 2014,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2014.5988",
+      "pmid": "24915261",
+      "citedByCount": 1003
+    },
+    {
+      "rank": 4,
+      "title": "The Long-Term Effects of Bariatric Surgery on Type 2 Diabetes Remission, Microvascular and Macrovascular Complications, and Mortality: a Systematic Review and Meta-Analysis",
+      "year": 2017,
+      "venue": "Obesity Surgery",
+      "doi": "10.1007/s11695-017-2866-4",
+      "pmid": "28801703",
+      "citedByCount": 189
+    },
+    {
+      "rank": 5,
+      "title": "The Long-Term Outcomes Of Bariatric Surgery On Patients With Type 2 Diabetes Mellitus: A Systematic Review And Meta-Analyses.",
+      "year": 2014,
+      "venue": "Value in Health",
+      "doi": "10.1016/j.jval.2014.08.148",
+      "pmid": "27202676",
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "Long-Term Outcomes of Medical Management vs Bariatric Surgery in Type 2 Diabetes.",
+      "year": 2024,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2024.0318",
+      "pmid": "38411644",
+      "citedByCount": 199
+    },
+    {
+      "rank": 7,
+      "title": "Long-term outcomes comparing metabolic surgery to no surgery in patients with type 2 diabetes and body mass index 30-35.",
+      "year": 2020,
+      "venue": "Surgery for Obesity and Related Diseases",
+      "doi": "10.1016/j.soard.2020.01.016",
+      "pmid": "32088110",
+      "citedByCount": 18
+    },
+    {
+      "rank": 8,
+      "title": "Long-term outcomes of macrovascular diseases and metabolic indicators of bariatric surgery for severe obesity type 2 diabetes patients with a meta-analysis",
+      "year": 2019,
+      "venue": "PLoS ONE",
+      "doi": "10.1371/journal.pone.0224828",
+      "pmid": "31794559",
+      "citedByCount": 43
+    },
+    {
+      "rank": 9,
+      "title": "Bariatric Surgery as a Long-Term Treatment for Type 2 Diabetes/Metabolic Syndrome.",
+      "year": 2020,
+      "venue": "Annual Review of Medicine",
+      "doi": "10.1146/annurev-med-053117-123246",
+      "pmid": "31986081",
+      "citedByCount": 41
+    },
+    {
+      "rank": 10,
+      "title": "Bariatric surgery for type 2 diabetes: getting closer to the long-term goal",
+      "year": 2016,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2016.1884",
+      "pmid": "27002449",
+      "citedByCount": 3
+    }
+  ],
+  "lto-pci-vs-cabg-left-main": [
+    {
+      "rank": 1,
+      "title": "10-Year Outcomes of Stents Versus Coronary Artery Bypass Grafting for Left Main Coronary Artery Disease.",
+      "year": 2018,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/j.jacc.2018.09.012",
+      "pmid": "30261236",
+      "citedByCount": 83
+    },
+    {
+      "rank": 2,
+      "title": "Five-Year Outcomes after PCI or CABG for Left Main Coronary Disease.",
+      "year": 2020,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMx200004",
+      "pmid": "32160683",
+      "citedByCount": 487
+    },
+    {
+      "rank": 3,
+      "title": "Percutaneous coronary intervention versus coronary artery bypass grafting in patients with three-vessel or left main coronary artery disease: 10-year follow-up of the multicentre randomised controlled SYNTAX trial.",
+      "year": 2019,
+      "venue": "The Lancet",
+      "doi": "10.1016/S0140-6736(19)31997-X",
+      "pmid": "31488373",
+      "citedByCount": 478
+    },
+    {
+      "rank": 4,
+      "title": "Ten-Year Outcomes After Drug-Eluting Stents Versus Coronary Artery Bypass Grafting for Left Main Coronary Disease",
+      "year": 2020,
+      "venue": "Circulation",
+      "doi": "10.1161/CIRCULATIONAHA.120.046039",
+      "pmid": "32223567",
+      "citedByCount": 106
+    },
+    {
+      "rank": 5,
+      "title": "Long-Term Outcomes after Drug-Eluting Stents versus Coronary Artery Bypass Grafting for Left Main Coronary Disease: 10-Year Follow-Up of the Multicenter Randomized Controlled PRECOMBAT Trial",
+      "year": 2020,
+      "venue": "Social Science Research Network",
+      "doi": "10.2139/ssrn.3514685",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 6,
+      "title": "Five-Year Outcomes after PCI or CABG for Left Main Coronary Disease.",
+      "year": 2019,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa1909406",
+      "pmid": "31562798",
+      "citedByCount": 121
+    },
+    {
+      "rank": 7,
+      "title": "Long‐term follow‐up of percutaneous coronary intervention versus coronary artery bypass grafting in left main coronary artery disease: A systematic review and meta‐analysis",
+      "year": 2020,
+      "venue": "Catheterization and cardiovascular interventions",
+      "doi": "10.1002/ccd.29338",
+      "pmid": "33103847",
+      "citedByCount": 6
+    },
+    {
+      "rank": 8,
+      "title": "Ten-year outcomes after percutaneous coronary intervention versus coronary artery bypass grafting for multivessel or left main coronary artery disease: a systematic review and meta-analysis",
+      "year": 2023,
+      "venue": "Journal of Cardiothoracic Surgery",
+      "doi": "10.1186/s13019-023-02101-y",
+      "pmid": "36732810",
+      "citedByCount": 24
+    },
+    {
+      "rank": 9,
+      "title": "Ten-year comparative long-term outcomes of PCI versus CABG in multi-vessel coronary artery disease",
+      "year": 2024,
+      "venue": "European Heart Journal",
+      "doi": "10.1093/eurheartj/ehae666.2380",
+      "pmid": null,
+      "citedByCount": 1
+    },
+    {
+      "rank": 10,
+      "title": "Five-year outcomes of percutaneous coronary intervention versus coronary artery bypass graft surgery in patients with left main coronary artery disease: An updated meta-analysis of randomized trials and adjusted observational studies.",
+      "year": 2015,
+      "venue": "International Journal of Cardiology",
+      "doi": "10.1016/j.ijcard.2015.05.136",
+      "pmid": "26025863",
+      "citedByCount": 22
+    }
+  ],
+  "lto-dapa-ckd": [
+    {
+      "rank": 1,
+      "title": "Dapagliflozin in Patients with Chronic Kidney Disease.",
+      "year": 2020,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa2024816",
+      "pmid": "32970396",
+      "citedByCount": 3467
+    },
+    {
+      "rank": 2,
+      "title": "Dapagliflozin Reduces Adverse Renal and Cardiovascular Events in Patients With Chronic Kidney Disease",
+      "year": 2020,
+      "venue": "Journal of Clinical Outcomes Management",
+      "doi": "10.12788/jcom.0030",
+      "pmid": null,
+      "citedByCount": 1
+    },
+    {
+      "rank": 3,
+      "title": "Extrapolated longer-term effects of the DAPA-CKD trial: a modelling analysis",
+      "year": 2022,
+      "venue": "Nephrology, Dialysis and Transplantation",
+      "doi": "10.1093/ndt/gfac280",
+      "pmid": "36301617",
+      "citedByCount": 19
+    },
+    {
+      "rank": 4,
+      "title": "The long-term effects of dapagliflozin in chronic kidney disease: a time-to-event analysis",
+      "year": 2024,
+      "venue": "Nephrology, Dialysis and Transplantation",
+      "doi": "10.1093/ndt/gfae106",
+      "pmid": "38730538",
+      "citedByCount": 14
+    },
+    {
+      "rank": 5,
+      "title": "[The dapagliflozin and prevention of adverse outcomes in chronic kidney disease: results of the DAPA-CKD study].",
+      "year": 2021,
+      "venue": "Терапевтический архив",
+      "doi": "10.26442/00403660.2021.6.200891",
+      "pmid": "36286839",
+      "citedByCount": 4
+    },
+    {
+      "rank": 6,
+      "title": "Effects of dapagliflozin on major adverse kidney and cardiovascular events in patients with diabetic and non-diabetic chronic kidney disease: a prespecified analysis from the DAPA-CKD trial.",
+      "year": 2021,
+      "venue": "The Lancet Diabetes and Endocrinology",
+      "doi": "10.1016/S2213-8587(20)30369-7",
+      "pmid": "33338413",
+      "citedByCount": 405
+    },
+    {
+      "rank": 7,
+      "title": "Effect of dapagliflozin on the rate of decline in kidney function in patients with chronic kidney disease with and without type 2 diabetes: a prespecified analysis from the DAPA-CKD trial.",
+      "year": 2021,
+      "venue": "The Lancet Diabetes and Endocrinology",
+      "doi": "10.1016/S2213-8587(21)00242-4",
+      "pmid": "34619108",
+      "citedByCount": 153
+    },
+    {
+      "rank": 8,
+      "title": "Dapagliflozin And Prevention of Adverse outcomes in Chronic Kidney Disease (DAPA-CKD)",
+      "year": 2020,
+      "venue": "Journal of Cardiac Failure",
+      "doi": "10.1016/j.cardfail.2020.11.024",
+      "pmid": null,
+      "citedByCount": 4
+    },
+    {
+      "rank": 9,
+      "title": "Cognitive Behavioral Therapy Plus Placebo Is Inferior to NSAID Therapy for Arthritis Pain",
+      "year": 2020,
+      "venue": "Journal of Clinical Outcomes Management",
+      "doi": "10.12788/jcom.0029",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 10,
+      "title": "#3686 The effects of dapagliflozin on renal outcomes in diabetes mellitus type II - a systematic review and meta-analysis",
+      "year": 2025,
+      "venue": "Nephrology, Dialysis and Transplantation",
+      "doi": "10.1093/ndt/gfaf116.1905",
+      "pmid": null,
+      "citedByCount": 0
+    }
+  ],
+  "safety-vaccine-myocarditis": [
+    {
+      "rank": 1,
+      "title": "Myocarditis Cases Reported After mRNA-Based COVID-19 Vaccination in the US From December 2020 to August 2021.",
+      "year": 2022,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2021.24110",
+      "pmid": "35076665",
+      "citedByCount": 601
+    },
+    {
+      "rank": 2,
+      "title": "Risk of Myocarditis and Pericarditis among Young Adults following mRNA COVID-19 Vaccinations",
+      "year": 2022,
+      "venue": "Vaccines",
+      "doi": "10.3390/vaccines10050722",
+      "pmid": "35632478",
+      "citedByCount": 18
+    },
+    {
+      "rank": 3,
+      "title": "Myocarditis With COVID-19 mRNA Vaccines",
+      "year": 2021,
+      "venue": "Circulation",
+      "doi": "10.1161/CIRCULATIONAHA.121.056135",
+      "pmid": "34281357",
+      "citedByCount": 745
+    },
+    {
+      "rank": 4,
+      "title": "SARS-CoV-2 Vaccination and Myocarditis in a Nordic Cohort Study of 23 Million Residents",
+      "year": 2022,
+      "venue": "JAMA cardiology",
+      "doi": "10.1001/jamacardio.2022.0583",
+      "pmid": "35442390",
+      "citedByCount": 186
+    },
+    {
+      "rank": 5,
+      "title": "COVID‐19 vaccine induced myocarditis in young males: A systematic review",
+      "year": 2022,
+      "venue": "European Journal of Clinical Investigation",
+      "doi": "10.1111/eci.13947",
+      "pmid": "36576362",
+      "citedByCount": 35
+    },
+    {
+      "rank": 6,
+      "title": "Risk of myocarditis and pericarditis following coronavirus disease 2019 messenger RNA Vaccination—A nationwide study",
+      "year": 2022,
+      "venue": "medRxiv",
+      "doi": "10.1016/j.jmii.2023.01.016",
+      "pmid": "36804307",
+      "citedByCount": 9
+    },
+    {
+      "rank": 7,
+      "title": "Risk of Myocarditis After Sequential Doses of COVID-19 Vaccine and SARS-CoV-2 Infection by Age and Sex",
+      "year": 2022,
+      "venue": "Circulation",
+      "doi": "10.1161/CIRCULATIONAHA.122.059970",
+      "pmid": "35993236",
+      "citedByCount": 155
+    },
+    {
+      "rank": 8,
+      "title": "Risk of myocarditis and pericarditis after the COVID-19 mRNA vaccination in the USA: a cohort study in claims databases",
+      "year": 2022,
+      "venue": "The Lancet",
+      "doi": "10.1016/S0140-6736(22)00791-7",
+      "pmid": "35691322",
+      "citedByCount": 142
+    },
+    {
+      "rank": 9,
+      "title": "Incidence of Myocarditis/Pericarditis Following mRNA COVID-19 Vaccination Among Children and Younger Adults in the United States",
+      "year": 2022,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/M22-2274",
+      "pmid": "36191323",
+      "citedByCount": 48
+    },
+    {
+      "rank": 10,
+      "title": "COVID-19 vaccine-associated myocarditis",
+      "year": 2022,
+      "venue": "World Journal of Cardiology",
+      "doi": "10.4330/wjc.v14.i7.382",
+      "pmid": "36161056",
+      "citedByCount": 21
+    }
+  ],
+  "safety-glp1-pancreatitis": [
+    {
+      "rank": 1,
+      "title": "Glucagon‐like peptide‐1 receptor agonists and risk of acute pancreatitis in patients with type 2 diabetes",
+      "year": 2017,
+      "venue": "Diabetes, obesity and metabolism",
+      "doi": "10.1111/dom.12885",
+      "pmid": "28105738",
+      "citedByCount": 134
+    },
+    {
+      "rank": 2,
+      "title": "Risk of pancreatitis in patients treated with incretin-based therapies",
+      "year": 2014,
+      "venue": "Diabetologia",
+      "doi": "10.1007/s00125-014-3231-y",
+      "pmid": "24723174",
+      "citedByCount": 98
+    },
+    {
+      "rank": 3,
+      "title": "Glucagon-like peptide-1 receptor agonists and pancreatitis: a meta-analysis of randomized clinical trials.",
+      "year": 2014,
+      "venue": "Diabetes Research and Clinical Practice",
+      "doi": "10.1016/j.diabres.2014.01.010",
+      "pmid": "24485345",
+      "citedByCount": 108
+    },
+    {
+      "rank": 4,
+      "title": "Association of Pancreatitis with Glucagon-Like Peptide-1 Agonist Use",
+      "year": 2010,
+      "venue": "The Annals of Pharmacotherapy",
+      "doi": "10.1345/aph.1M676",
+      "pmid": "20371755",
+      "citedByCount": 98
+    },
+    {
+      "rank": 5,
+      "title": "Glucagonlike peptide 1-based therapies and risk of hospitalization for acute pancreatitis in type 2 diabetes mellitus: a population-based matched case-control study.",
+      "year": 2013,
+      "venue": "JAMA Internal Medicine",
+      "doi": "10.1001/jamainternmed.2013.2720",
+      "pmid": "23440284",
+      "citedByCount": 448
+    },
+    {
+      "rank": 6,
+      "title": "Incretin-based therapies and acute pancreatitis risk: a systematic review and meta-analysis of observational studies",
+      "year": 2015,
+      "venue": "Endocrine",
+      "doi": "10.1007/s12020-014-0386-8",
+      "pmid": "25146552",
+      "citedByCount": 64
+    },
+    {
+      "rank": 7,
+      "title": "GLP-1 receptor agonists and the risk of acute pancreatitis: a living systematic review and meta-analysis",
+      "year": 2026,
+      "venue": "medRxiv",
+      "doi": "10.64898/2026.03.19.26348844",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 8,
+      "title": "Pancreatitis Risk Associated with GLP-1 Receptor Agonists, Considered as a Single Class, in a Comorbidity-Free Subgroup of Type 2 Diabetes Patients in the United States: A Propensity Score-Matched Analysis",
+      "year": 2025,
+      "venue": "Journal of Clinical Medicine",
+      "doi": "10.3390/jcm14030944",
+      "pmid": "39941615",
+      "citedByCount": 42
+    },
+    {
+      "rank": 9,
+      "title": "Predictors of acute pancreatitis in patients treated with GLP-1 receptor agonists for weight management.",
+      "year": 2025,
+      "venue": "Pancreatology : official journal of the International Association of Pancreatology (IAP) ... [et al.]",
+      "doi": "10.1016/j.pan.2025.06.018",
+      "pmid": "40695708",
+      "citedByCount": 5
+    },
+    {
+      "rank": 10,
+      "title": "Risk of pancreatic adverse events associated with the use of glucagon-like peptide-1 receptor agonist and dipeptidyl peptidase-4 inhibitor drugs: A systematic review and meta-analysis of randomized trials",
+      "year": 2015,
+      "venue": null,
+      "doi": "10.13105/WJMA.V3.I6.254",
+      "pmid": null,
+      "citedByCount": 5
+    }
+  ],
+  "safety-sglt2-dka": [
+    {
+      "rank": 1,
+      "title": "Risk of Diabetic Ketoacidosis after Initiation of an SGLT2 Inhibitor.",
+      "year": 2017,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMc1701990",
+      "pmid": "28591538",
+      "citedByCount": 287
+    },
+    {
+      "rank": 2,
+      "title": "SGLT2 inhibitors increase risk for diabetic ketoacidosis in type 2 diabetes",
+      "year": 2020,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/ACPJ202010200-040",
+      "pmid": "33075260",
+      "citedByCount": 2
+    },
+    {
+      "rank": 3,
+      "title": "SGLT2 inhibitors and the underrecognized risk of euglycemic diabetic ketoacidosis: a clinical call for vigilance",
+      "year": 2025,
+      "venue": "Annals of Medicine and Surgery",
+      "doi": "10.1097/ms9.0000000000003890",
+      "pmid": "41180667",
+      "citedByCount": 0
+    },
+    {
+      "rank": 4,
+      "title": "SGLT2 Inhibitors: A Systematic Review of Diabetic Ketoacidosis and Related Risk Factors in the Primary Literature",
+      "year": 2017,
+      "venue": "Pharmacotherapy",
+      "doi": "10.1002/phar.1881",
+      "pmid": "27931088",
+      "citedByCount": 183
+    },
+    {
+      "rank": 5,
+      "title": "SGLT2 Inhibitors May Predispose to Ketoacidosis.",
+      "year": 2015,
+      "venue": "Journal of Clinical Endocrinology and Metabolism",
+      "doi": "10.1210/jc.2015-1884",
+      "pmid": "26086329",
+      "citedByCount": 515
+    },
+    {
+      "rank": 6,
+      "title": "Evolving evidence of diabetic ketoacidosis in patients taking sodium glucose cotransporter 2 inhibitors.",
+      "year": 2020,
+      "venue": "Journal of Clinical Endocrinology and Metabolism",
+      "doi": "10.1210/clinem/dgaa200",
+      "pmid": "32302001",
+      "citedByCount": 26
+    },
+    {
+      "rank": 7,
+      "title": "Sodium‐glucose co‐transporter‐2 inhibitors and the risk of ketoacidosis in patients with type 2 diabetes mellitus: A nationwide population‐based cohort study",
+      "year": 2018,
+      "venue": "Diabetes, obesity and metabolism",
+      "doi": "10.1111/dom.13297",
+      "pmid": "29569427",
+      "citedByCount": 51
+    },
+    {
+      "rank": 8,
+      "title": "Sodium-Glucose Cotransporter-2 Inhibitors and Risk of Diabetic Ketoacidosis Among Adults With Type 2 Diabetes: A Systematic Review and Meta-Analysis.",
+      "year": 2021,
+      "venue": "Canadian Journal of Diabetes",
+      "doi": "10.1016/j.jcjd.2021.04.006",
+      "pmid": "34116926",
+      "citedByCount": 57
+    },
+    {
+      "rank": 9,
+      "title": "Pembrolizumab for Advanced Urothelial Carcinoma.",
+      "year": 2017,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMc1704612",
+      "pmid": "https://pubmed.ncbi.nlm.nih.gov/28591524",
+      "citedByCount": 0
+    },
+    {
+      "rank": 10,
+      "title": "SGLT2 inhibitors and the risk of diabetic ketoacidosis among adults with Type 2 Diabetes: A systematic review and meta-analysis",
+      "year": 2021,
+      "venue": "medRxiv",
+      "doi": "10.1101/2021.03.17.21253796",
+      "pmid": null,
+      "citedByCount": 2
+    }
+  ],
+  "safety-fluoroquinolone-aneurysm": [
+    {
+      "rank": 1,
+      "title": "Risk of Aortic Dissection and Aortic Aneurysm in Patients Taking Oral Fluoroquinolone.",
+      "year": 2015,
+      "venue": "JAMA Internal Medicine",
+      "doi": "10.1001/jamainternmed.2015.5389",
+      "pmid": "26436523",
+      "citedByCount": 215
+    },
+    {
+      "rank": 2,
+      "title": "Aortic Dissection and Aortic Aneurysms Associated with Fluoroquinolones: A Systematic Review and Meta-Analysis.",
+      "year": 2017,
+      "venue": "American Journal of Medicine",
+      "doi": "10.1016/j.amjmed.2017.06.029",
+      "pmid": "28739200",
+      "citedByCount": 57
+    },
+    {
+      "rank": 3,
+      "title": "Fluoroquinolone use and risk of aortic aneurysm and dissection: nationwide cohort study",
+      "year": 2018,
+      "venue": "British medical journal",
+      "doi": "10.1136/bmj.k678",
+      "pmid": "29519881",
+      "citedByCount": 156
+    },
+    {
+      "rank": 4,
+      "title": "Fluoroquinolones and the risk of aortopathy: A systematic review and meta-analysis.",
+      "year": 2019,
+      "venue": "International Journal of Cardiology",
+      "doi": "10.1016/j.ijcard.2018.09.067",
+      "pmid": "30309682",
+      "citedByCount": 37
+    },
+    {
+      "rank": 5,
+      "title": "The association between fluoroquinolones and aortic dissection and aortic aneurysms: a systematic review and meta-analysis",
+      "year": 2020,
+      "venue": "Scientific Reports",
+      "doi": "10.1038/s41598-021-90692-8",
+      "pmid": "34040146",
+      "citedByCount": 18
+    },
+    {
+      "rank": 6,
+      "title": "Fluoroquinolones and the Risk of Aortic Aneurysm or Aortic Dissection: A Systematic Review and Meta-Analysis",
+      "year": 2019,
+      "venue": "Cardiovascular & Hematological Agents in Medicinal Chemistry",
+      "doi": "10.2174/1871525717666190402121958",
+      "pmid": "30947680",
+      "citedByCount": 42
+    },
+    {
+      "rank": 7,
+      "title": "Assessing fluoroquinolone‐associated aortic aneurysm and dissection: Data mining of the public version of the FDA adverse event reporting system",
+      "year": 2019,
+      "venue": "International journal of clinical practice",
+      "doi": "10.1111/ijcp.13331",
+      "pmid": "30809871",
+      "citedByCount": 56
+    },
+    {
+      "rank": 8,
+      "title": "Fluoroquinolones and Risk for Aortic Aneurysm or Dissection",
+      "year": 2020,
+      "venue": "NEJM Journal Watch",
+      "doi": "10.1056/NEJM-JW.NA52422",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 9,
+      "title": "Fluoroquinolones are associated with increased risk of aortic aneurysm or dissection: systematic review and meta-analysis.",
+      "year": 2020,
+      "venue": "Seminars in Thoracic and Cardiovascular Surgery",
+      "doi": "10.1053/j.semtcvs.2020.11.011",
+      "pmid": "33181305",
+      "citedByCount": 18
+    },
+    {
+      "rank": 10,
+      "title": "Oral fluoroquinolones and risk of aortic aneurysm or dissection: A nationwide population‐based propensity score‐matched cohort study",
+      "year": 2023,
+      "venue": "Pharmacotherapy",
+      "doi": "10.1002/phar.2841",
+      "pmid": "37381584",
+      "citedByCount": 18
+    }
+  ],
+  "compare-tirzepatide-semaglutide": [
+    {
+      "rank": 1,
+      "title": "Semaglutide vs Tirzepatide for Weight Loss in Adults With Overweight or Obesity",
+      "year": 2024,
+      "venue": "JAMA Internal Medicine",
+      "doi": "10.1001/jamainternmed.2024.2525",
+      "pmid": "38976257",
+      "citedByCount": 238
+    },
+    {
+      "rank": 2,
+      "title": "Tirzepatide as Compared with Semaglutide for the Treatment of Obesity.",
+      "year": 2025,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa2416394",
+      "pmid": "40353578",
+      "citedByCount": 276
+    },
+    {
+      "rank": 3,
+      "title": "Tirzepatide Versus Semaglutide for Weight Loss in Overweight and Obese Adults: A Systematic Review and Meta-Analysis of Direct Comparative Studies",
+      "year": 2025,
+      "venue": "Cureus",
+      "doi": "10.7759/cureus.86080",
+      "pmid": "40666599",
+      "citedByCount": 7
+    },
+    {
+      "rank": 4,
+      "title": "Comparative Efficacy of Tirzepatide vs. Semaglutide in Reducing Body Weight in Humans: A Systematic Review and Meta-Analysis of Clinical Trials and Real-World Data",
+      "year": 2025,
+      "venue": "Journal of Clinical Medicine Research",
+      "doi": "10.14740/jocmr6231",
+      "pmid": "40503067",
+      "citedByCount": 10
+    },
+    {
+      "rank": 5,
+      "title": "Tirzepatide Versus Semaglutide on Weight Loss in Type 2 Diabetes Patients: A Systematic Review and Meta‐Analysis of Direct Comparative Studies",
+      "year": 2025,
+      "venue": "Endocrinology, Diabetes & Metabolism",
+      "doi": "10.1002/edm2.70045",
+      "pmid": "40184508",
+      "citedByCount": 8
+    },
+    {
+      "rank": 6,
+      "title": "Comparative Effectiveness of Semaglutide and Tirzepatide for Weight Loss in Adults with Overweight and Obesity in the US: A Real-World Evidence Study",
+      "year": 2023,
+      "venue": "medRxiv",
+      "doi": "10.1101/2023.11.21.23298775",
+      "pmid": null,
+      "citedByCount": 11
+    },
+    {
+      "rank": 7,
+      "title": "Comparative efficacy and safety of semaglutide 2.4 mg and tirzepatide 5-15 mg in obesity with or without type 2 diabetes: A systematic review of Phase 3 clinical trials.",
+      "year": 2025,
+      "venue": "Diabetes & metabolic syndrome",
+      "doi": "10.1016/j.dsx.2025.103212",
+      "pmid": "40086043",
+      "citedByCount": 7
+    },
+    {
+      "rank": 8,
+      "title": "Head-to-head comparison of tirzepatide and semaglutide for weight loss: A systematic review and meta-analysis.",
+      "year": 2026,
+      "venue": "Obesity Research and Clinical Practice",
+      "doi": "10.1016/j.orcp.2026.02.002",
+      "pmid": "41723034",
+      "citedByCount": 0
+    },
+    {
+      "rank": 9,
+      "title": "A Review of Metabolic Health Outcomes of Tirzepatide vs Semaglutide in Obesity and Type 2 Diabetes",
+      "year": 2025,
+      "venue": "Journal",
+      "doi": "10.26685/urncst.945",
+      "pmid": null,
+      "citedByCount": 1
+    },
+    {
+      "rank": 10,
+      "title": "Comparative Efficacy and Safety of Tirzepatide versus Semaglutide: A Systematic Review and Meta-Analysis with Cardiometabolic Implications",
+      "year": 2026,
+      "venue": "Nepal Journal of Epidemiology",
+      "doi": "10.3126/nje.v16i1.92323",
+      "pmid": null,
+      "citedByCount": 0
+    }
+  ],
+  "compare-ticagrelor-clopidogrel": [
+    {
+      "rank": 1,
+      "title": "Ticagrelor versus clopidogrel in patients with acute coronary syndromes.",
+      "year": 2009,
+      "venue": "New England Journal of Medicine",
+      "doi": "10.1056/NEJMoa0904327",
+      "pmid": "19717846",
+      "citedByCount": 6284
+    },
+    {
+      "rank": 2,
+      "title": "TICAGRELOR VERSUS CLOPIDOGREL IN PATIENTS WITH NON-ST-ELEVATION ACUTE CORONARY SYNDROME: RESULTS FROM THE PLATO TRIAL",
+      "year": 2013,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/S0735-1097(13)60002-9",
+      "pmid": null,
+      "citedByCount": 7
+    },
+    {
+      "rank": 3,
+      "title": "Comparison of ticagrelor with clopidogrel in patients with a planned invasive strategy for acute coronary syndromes (PLATO): a randomised double-blind study.",
+      "year": 2010,
+      "venue": "The Lancet",
+      "doi": "10.1016/S0140-6736(09)62191-7",
+      "pmid": "20079528",
+      "citedByCount": 636
+    },
+    {
+      "rank": 4,
+      "title": "Ticagrelor versus clopidogrel in patients with acute coronary syndrome undergoing complex percutaneous coronary intervention",
+      "year": 2022,
+      "venue": "Catheterization and cardiovascular interventions",
+      "doi": "10.1002/ccd.30077",
+      "pmid": "35032148",
+      "citedByCount": 10
+    },
+    {
+      "rank": 5,
+      "title": "COMPARISON OF TICAGRELOR VERSUS PRASUGREL IN PATIENTS WITH ACUTE CORONARY SYNDROME: A META-ANALYSIS OF RANDOMIZED CONTROLLED TRIALS",
+      "year": 2020,
+      "venue": "Journal of the American College of Cardiology",
+      "doi": "10.1016/s0735-1097(20)30861-5",
+      "pmid": null,
+      "citedByCount": 1
+    },
+    {
+      "rank": 6,
+      "title": "Ticagrelor was more effective than clopidogrel, with no increase in major bleeding in acute coronary syndromes",
+      "year": 2009,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/0003-4819-151-12-200912150-02004",
+      "pmid": "https://pubmed.ncbi.nlm.nih.gov/20008753",
+      "citedByCount": 0
+    },
+    {
+      "rank": 7,
+      "title": "Clopidogrel, prasugrel or ticagrelor in patients with acute coronary syndromes undergoing percutaneous coronary intervention",
+      "year": 2016,
+      "venue": "Internal medicine journal (Print)",
+      "doi": "10.1111/imj.13041",
+      "pmid": "26909472",
+      "citedByCount": 38
+    },
+    {
+      "rank": 8,
+      "title": "Ticagrelor was more effective than clopidogrel in acute coronary syndromes with planned invasive treatment",
+      "year": 2010,
+      "venue": "Annals of Internal Medicine",
+      "doi": "10.7326/0003-4819-152-10-201005180-02004",
+      "pmid": "https://pubmed.ncbi.nlm.nih.gov/20479021",
+      "citedByCount": 1
+    },
+    {
+      "rank": 9,
+      "title": "Ticagrelor vs Clopidogrel for Patients With Acute Coronary Syndrome Undergoing Percutaneous Intervention.",
+      "year": 2021,
+      "venue": "Journal of the American Medical Association (JAMA)",
+      "doi": "10.1001/jama.2020.26020",
+      "pmid": "33651086",
+      "citedByCount": 2
+    },
+    {
+      "rank": 10,
+      "title": "Comparisons between ticagrelor and clopidogrel following percutaneous coronary intervention in patients with acute coronary syndrome: a comprehensive meta-analysis",
+      "year": 2019,
+      "venue": "Drug Design, Development and Therapy",
+      "doi": "10.2147/DDDT.S196535",
+      "pmid": "30863011",
+      "citedByCount": 28
+    }
+  ],
+  "mechanism-sglt2-cardioprotection": [
+    {
+      "rank": 1,
+      "title": "An Overview of the Cardiorenal Protective Mechanisms of SGLT2 Inhibitors",
+      "year": 2022,
+      "venue": "International Journal of Molecular Sciences",
+      "doi": "10.3390/ijms23073651",
+      "pmid": "35409011",
+      "citedByCount": 205
+    },
+    {
+      "rank": 2,
+      "title": "SGLT2 inhibitors and cardioprotection: a matter of debate and multiple hypotheses",
+      "year": 2019,
+      "venue": "Postgraduate medicine",
+      "doi": "10.1080/00325481.2019.1581971",
+      "pmid": "30757937",
+      "citedByCount": 90
+    },
+    {
+      "rank": 3,
+      "title": "Potential mechanisms responsible for cardioprotective effects of sodium–glucose co-transporter 2 inhibitors",
+      "year": 2018,
+      "venue": "Cardiovascular Diabetology",
+      "doi": "10.1186/s12933-018-0745-5",
+      "pmid": "29991346",
+      "citedByCount": 145
+    },
+    {
+      "rank": 4,
+      "title": "Reno- and cardioprotective molecular mechanisms of SGLT2 inhibitors beyond glycemic control - from bedside to bench.",
+      "year": 2023,
+      "venue": "American Journal of Physiology - Cell Physiology",
+      "doi": "10.1152/ajpcell.00177.2023",
+      "pmid": "37519230",
+      "citedByCount": 54
+    },
+    {
+      "rank": 5,
+      "title": "SGLT2 inhibitors: a focus on cardiac benefits and potential mechanisms",
+      "year": 2021,
+      "venue": "Heart Failure Reviews",
+      "doi": "10.1007/s10741-021-10079-9",
+      "pmid": "33534040",
+      "citedByCount": 32
+    },
+    {
+      "rank": 6,
+      "title": "The Potential Cardioprotective Mechanism of Sodium-Glucose Cotransporter 2 Inhibitors",
+      "year": 2019,
+      "venue": "Journal of Korean Diabetes",
+      "doi": "10.4093/JKD.2019.20.2.81",
+      "pmid": null,
+      "citedByCount": 0
+    },
+    {
+      "rank": 7,
+      "title": "Potential mechanisms underlying the cardiovascular benefits of sodium glucose cotransporter 2 inhibitors: a systematic review of data from preclinical studies",
+      "year": 2018,
+      "venue": "Cardiovascular Research",
+      "doi": "10.1093/cvr/cvy295",
+      "pmid": "30475996",
+      "citedByCount": 43
+    },
+    {
+      "rank": 8,
+      "title": "SGLT2 Inhibition in Heart Failure: Clues to Cardiac Effects?",
+      "year": 2024,
+      "venue": "Cardiology in Review",
+      "doi": "10.1097/CRD.0000000000000637",
+      "pmid": "38189526",
+      "citedByCount": 5
+    },
+    {
+      "rank": 9,
+      "title": "Cardioprotection conferred by SGLT2 inhibitors: a renal proximal tubule perspective.",
+      "year": 2019,
+      "venue": "American Journal of Physiology - Cell Physiology",
+      "doi": "10.1152/ajpcell.00275.2019",
+      "pmid": "31721613",
+      "citedByCount": 33
+    },
+    {
+      "rank": 10,
+      "title": "State-of-the-art-review Mechanisms of action of SGLT2 inhibitors and clinical implications.",
+      "year": 2024,
+      "venue": "American Journal of Hypertension",
+      "doi": "10.1093/ajh/hpae092",
+      "pmid": "39017631",
+      "citedByCount": 61
+    }
   ]
 }
