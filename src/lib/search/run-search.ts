@@ -22,6 +22,7 @@ import { expandByPmra } from "@/lib/search/sources/expansion";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
+import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
 import { attachRerankScores } from "@/lib/search/rerank";
 import { okStatus, type SourceStatus } from "@/lib/search/source-status";
 import type { UnifiedSearchResult } from "@/types/search";
@@ -228,7 +229,37 @@ async function searchPubMedPlanned(
   return { source: "pubmed", results: fb.results, total: fb.total, status: fb.status };
 }
 
+/**
+ * Cached entry point. Coalesces concurrent identical queries and serves from the
+ * two-tier cache (memory → Upstash) — cutting latency and upstream-call pressure.
+ * Only HEALTHY results (≥3 papers) are cached, so a throttle-degraded/empty
+ * response can never poison the cache; stale-if-error serves a retained result
+ * if a later compute fails. TTL 1h (literature is slow-changing).
+ */
 export async function runLiteratureSearch(
+  params: RunLiteratureSearchParams
+): Promise<LiteratureSearchResult> {
+  const key = buildCacheKey("litsearch:v1", {
+    query: params.query,
+    pubmedQuery: params.pubmedQuery,
+    sources: params.sources ? [...params.sources].sort() : undefined,
+    yearFrom: params.yearFrom,
+    yearTo: params.yearTo,
+    studyTypes: params.studyTypes ? [...params.studyTypes].sort() : undefined,
+    fullTextOnly: params.fullTextOnly,
+    page: params.page,
+    perPage: params.perPage,
+    expandCitations: params.expandCitations,
+  });
+  const { value } = await searchResultCache.getOrCompute(
+    key,
+    () => runLiteratureSearchUncached(params),
+    { ttlSeconds: 3600, staleSeconds: 6 * 3600, shouldCache: (r) => r.results.length >= 3 }
+  );
+  return value;
+}
+
+async function runLiteratureSearchUncached(
   params: RunLiteratureSearchParams
 ): Promise<LiteratureSearchResult> {
   const sources = normalizeSources(params.sources);
