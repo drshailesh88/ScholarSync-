@@ -1,6 +1,6 @@
 # LLM-Council comparison packet — Manan vs Elicit
 
-Manan results are from run `recency-fix`. Elicit results are snapshots (benchmark only).
+Manan results are from run `fix-wildcard`. Elicit results are snapshots (benchmark only).
 
 ## Scoring rubric
 
@@ -45,15 +45,15 @@ Category: long_term_outcomes. Intent: Long-term (≈6yr) outcomes of TAVR vs SAV
 - Evolut Low Risk 6-year (Forrest, JACC 2026)
 
 ### Manan top 10
-1. Six-Year Outcomes After Transcatheter vs Surgical Aortic Valve Replacement in Low-Risk Patients With Aortic Stenosis. — 2026, J Am Coll Cardiol [rct] (PMID:41697183 DOI:10.1016/j.jacc.2026.02.5063)
-2. Short- and intermediate-term outcomes of transcatheter aortic valve replacement in low-risk patients: A meta-analysis and systematic review. — 2024, Int J Cardiol Heart Vasc [meta_analysis] (PMID:39045569 DOI:10.1016/j.ijcha.2024.101458)
-3. Transcatheter vs Surgical Aortic Valve Replacement in Lower-Risk Patients: An Updated Meta-Analysis of Randomized Controlled Trials. — 2025, J Am Coll Cardiol [meta_analysis] (PMID:40044297 DOI:10.1016/j.jacc.2024.12.031)
-4. Transcatheter aortic valve replacement in low-risk patients: an updated meta-analysis of randomized controlled trials. — 2025, Int J Cardiol Heart Vasc [meta_analysis] (PMID:40453067 DOI:10.1016/j.ijcha.2025.101692)
-5. Updated 5-year outcomes of transcatheter versus surgical aortic valve replacement in patients with severe aortic stenosis at low- to intermediate-surgical risk. — 2026, Heart [meta_analysis] (PMID:41672766 DOI:10.1136/heartjnl-2025-327092)
+1. Short- and intermediate-term outcomes of transcatheter aortic valve replacement in low-risk patients: A meta-analysis and systematic review. — 2024, Int J Cardiol Heart Vasc [meta_analysis] (PMID:39045569 DOI:10.1016/j.ijcha.2024.101458)
+2. Six-Year Outcomes After Transcatheter vs Surgical Aortic Valve Replacement in Low-Risk Patients With Aortic Stenosis. — 2026, J Am Coll Cardiol [rct] (PMID:41697183 DOI:10.1016/j.jacc.2026.02.5063)
+3. TAVR in Low-Risk Patients: 1-Year Results From the LRT Trial. — 2019, JACC Cardiovasc Interv [rct] (PMID:30860059 DOI:10.1016/j.jcin.2019.03.002)
+4. Transcatheter vs Surgical Aortic Valve Replacement in Lower-Risk Patients: An Updated Meta-Analysis of Randomized Controlled Trials. — 2025, J Am Coll Cardiol [meta_analysis] (PMID:40044297 DOI:10.1016/j.jacc.2024.12.031)
+5. Three-Year Follow-Up of the NOTION-2 Trial: TAVR Versus SAVR to Treat Younger Low-Risk Patients With Tricuspid or Bicuspid Aortic Stenosis. — 2025, Circulation [rct] (PMID:40884768 DOI:10.1161/CIRCULATIONAHA.125.076678)
 6. Minimally invasive surgery versus transcatheter aortic valve replacement: a systematic review and meta-analysis. — 2021, Open Heart [meta_analysis] (PMID:33455914 DOI:10.1136/openhrt-2020-001535)
-7. Transcatheter Aortic-Valve Replacement in Low-Risk Patients at Five Years. — 2023, N Engl J Med [rct] (PMID:37874020 DOI:10.1056/NEJMoa2307447)
-8. Three-Year Follow-Up of the NOTION-2 Trial: TAVR Versus SAVR to Treat Younger Low-Risk Patients With Tricuspid or Bicuspid Aortic Stenosis. — 2025, Circulation [rct] (PMID:40884768 DOI:10.1161/CIRCULATIONAHA.125.076678)
-9. TAVR in Low-Risk Patients: 1-Year Results From the LRT Trial. — 2019, JACC Cardiovasc Interv [rct] (PMID:30860059 DOI:10.1016/j.jcin.2019.03.002)
+7. Transcatheter aortic valve replacement in low-risk patients: an updated meta-analysis of randomized controlled trials. — 2025, Int J Cardiol Heart Vasc [meta_analysis] (PMID:40453067 DOI:10.1016/j.ijcha.2025.101692)
+8. Updated 5-year outcomes of transcatheter versus surgical aortic valve replacement in patients with severe aortic stenosis at low- to intermediate-surgical risk. — 2026, Heart [meta_analysis] (PMID:41672766 DOI:10.1136/heartjnl-2025-327092)
+9. Transcatheter Aortic-Valve Replacement in Low-Risk Patients at Five Years. — 2023, N Engl J Med [rct] (PMID:37874020 DOI:10.1056/NEJMoa2307447)
 10. Transcatheter versus surgical aortic valve replacement in low- to intermediate-risk patients: a meta-analysis of reconstructed time-to-event data. — 2025, Ann Cardiothorac Surg [meta_analysis] (PMID:40270848 DOI:10.21037/acs-2024-etavr-0096)
 
 ### Elicit top 10
@@ -80,12 +80,12 @@ Category: exact_paper. Intent: Retrieve the exact DAPA-HF primary results paper 
 1. SGLT2 inhibitors in patients with heart failure with reduced ejection fraction: a meta-analysis of the EMPEROR-Reduced and DAPA-HF trials. — 2020, Lancet [meta_analysis] (PMID:32877652 DOI:10.1016/S0140-6736(20)31824-9)
 2. Time to Clinical Benefit of Dapagliflozin and Significance of Prior Heart Failure Hospitalization in Patients With Heart Failure With Reduced Ejection Fraction. — 2021, JAMA Cardiol [rct] (PMID:33595593 DOI:10.1001/jamacardio.2020.7585)
 3. Dapagliflozin Effects on Biomarkers, Symptoms, and Functional Status in Patients With Heart Failure With Reduced Ejection Fraction: The DEFINE-HF Trial. — 2019, Circulation [rct] (PMID:31524498 DOI:10.1161/CIRCULATIONAHA.119.042929)
-4. Highlights in heart failure. — 2019, ESC Heart Fail [meta_analysis] (PMID:31997538 DOI:10.1002/ehf2.12555)
-5. Dapagliflozin in heart failure with preserved and mildly reduced ejection fraction: rationale and design of the DELIVER trial. — 2021, Eur J Heart Fail [rct] (PMID:34051124 DOI:10.1002/ejhf.2249)
+4. Empagliflozin in Heart Failure with a Preserved Ejection Fraction — 2021, New England Journal of Medicine [rct] (PMID:34449189 DOI:10.1056/nejmoa2107038)
+5. Effect of Dapagliflozin on Worsening Heart Failure and Cardiovascular Death in Patients With Heart Failure With and Without Diabetes — 2020, JAMA [rct] (PMID:32219386 DOI:10.1001/jama.2020.1906)
 6. Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction. — 2019, N Engl J Med [rct] (PMID:31535829 DOI:10.1056/NEJMoa1911303)
-7. Dapagliflozin and Kidney Outcomes in Patients With Heart Failure With Mildly Reduced or Preserved Ejection Fraction: A Prespecified Analysis of the DELIVER Randomized Clinical Trial. — 2023, JAMA Cardiol [rct] (PMID:36326604 DOI:10.1001/jamacardio.2022.4210)
-8. Efficacy and Safety of Dapagliflozin in Heart Failure With Mildly Reduced or Preserved Ejection Fraction According to Age: The DELIVER Trial. — 2022, Circ Heart Fail [rct] (PMID:36029467 DOI:10.1161/CIRCHEARTFAILURE.122.010080)
-9. Effect of Empagliflozin on Worsening Heart Failure Events in Patients With Heart Failure and Preserved Ejection Fraction: EMPEROR-Preserved Trial — 2021, Circulation [rct] (PMID:34459213 DOI:10.1161/circulationaha.121.056824)
+7. Cardiovascular and Renal Outcomes with Empagliflozin in Heart Failure — 2020, New England Journal of Medicine [rct] (PMID:32865377 DOI:10.1056/nejmoa2022190)
+8. Dapagliflozin and Kidney Outcomes in Patients With Heart Failure With Mildly Reduced or Preserved Ejection Fraction: A Prespecified Analysis of the DELIVER Randomized Clinical Trial. — 2023, JAMA Cardiol [rct] (PMID:36326604 DOI:10.1001/jamacardio.2022.4210)
+9. A Trial to Evaluate the Effect of the Sodium–Glucose Co-Transporter 2 Inhibitor Dapagliflozin on Morbidity and Mortality in Patients with Heart Failure and Reduced Left Ventricular Ejection Fraction (DAPA-HF) — 2019, European Journal of Heart Failure [rct] (PMID:30895697 DOI:10.1002/ejhf.1432)
 10. Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction. — 2022, N Engl J Med [rct] (PMID:36027570 DOI:10.1056/NEJMoa2206286)
 
 ### Elicit top 10
@@ -102,16 +102,16 @@ Category: recency. Intent: Recent lecanemab efficacy/safety evidence (CLARITY-AD
 - CLARITY-AD lecanemab trial
 
 ### Manan top 10
-1. Lecanemab in Early Alzheimer’s Disease — 2022, New England Journal of Medicine [rct] (DOI:10.1056/nejmoa2212948)
-2. Aging modulates amyloid clearance kinetics during anti-amyloid therapy: evidence from real-world serial amyloid PET. — 2026, Front Aging Neurosci [cohort] (PMID:42182561 DOI:10.3389/fnagi.2026.1801267)
-3. Non-Cognitive Symptoms in Alzheimer’s Disease and Their Likely Impact on Patient Outcomes. A Scoping Review — 2025, Current Treatment Options in Neurology [systematic_review] (DOI:10.1007/s11940-025-00852-8)
-4. Lecanemab in patients with early Alzheimer’s disease: detailed results on biomarker, cognitive, and clinical effects from the randomized and open-label extension of the phase 2 proof-of-concept study — 2022, Alzheimer s Research & Therapy [rct] (DOI:10.1186/s13195-022-01124-2)
-5. Lecanemab Reduces Neuropsychiatric Symptoms and Related Regional Brain Amyloid Load in Early Alzheimer's Disease: A Preliminary Prospective Study. — 2026, CNS Neurosci Ther [cohort] (PMID:42277629 DOI:10.1002/cns.70974)
-6. Critical assessment of anti-amyloid-β monoclonal antibodies effects in Alzheimer’s disease: a systematic review and meta-analysis highlighting target engagement and clinical meaningfulness — 2024, Scientific Reports [review] (DOI:10.1038/s41598-024-75204-8)
-7. From clinical trial to clinical experience: Lecanemab therapy in a real-world case series. — 2026, Alzheimers Dement (Amst) [observational] (PMID:42255952 DOI:10.1002/dad2.70365)
-8. Lecanemab in Clinical Practice: Real-World Treatment Outcomes from a Retrospective Neurological Clinic Case Series Review in Early Alzheimer’s Disease (P12-3.008) — 2025, Neurology [case_report] (DOI:10.1212/wnl.0000000000211951)
-9. Quantitative AV-45 PET imaging for assessing treatment response to lecanemab and deep cervical lymphatic-venous anastomosis in Alzheimer's disease. — 2026, Nucl Med Commun [cohort] (PMID:42199075 DOI:10.1097/MNM.0000000000002184)
-10. The Lecanemab Clarity AD Open-Label Extension in Early Alzheimer’s Disease (P1-3.003) — 2025, Neurology [other] (DOI:10.1212/wnl.0000000000211489)
+1. Lecanemab Reduces Neuropsychiatric Symptoms and Related Regional Brain Amyloid Load in Early Alzheimer's Disease: A Preliminary Prospective Study. — 2026, CNS Neurosci Ther [cohort] (PMID:42277629 DOI:10.1002/cns.70974)
+2. Quantitative AV-45 PET imaging for assessing treatment response to lecanemab and deep cervical lymphatic-venous anastomosis in Alzheimer's disease. — 2026, Nucl Med Commun [cohort] (PMID:42199075 DOI:10.1097/MNM.0000000000002184)
+3. From clinical trial to clinical experience: Lecanemab therapy in a real-world case series. — 2026, Alzheimers Dement (Amst) [observational] (PMID:42255952 DOI:10.1002/dad2.70365)
+4. Aging modulates amyloid clearance kinetics during anti-amyloid therapy: evidence from real-world serial amyloid PET. — 2026, Front Aging Neurosci [cohort] (PMID:42182561 DOI:10.3389/fnagi.2026.1801267)
+5. Lecanemab and amyloid-related imaging abnormalities: Real-world data from a single center experience. — 2026, Alzheimers Dement (Amst) [observational] (PMID:42255953 DOI:10.1002/dad2.70377)
+6. Evaluating emerging amyloid-&#x3b2; centric drugs for the treatment of Alzheimer's disease. — 2026, Expert Opin Emerg Drugs [review] (PMID:42322185 DOI:10.1080/14728214.2026.2693701)
+7. [Advances in Anti-Dementia Therapies in Older Adults]. — 2026, Dtsch Med Wochenschr [review] (PMID:42214359 DOI:10.1055/a-2676-7649)
+8. Baseline amyloid deposition phenotypes inform the spatial distribution of early amyloid clearance with lecanemab in Alzheimer's disease. — 2026, Eur J Nucl Med Mol Imaging [other] (PMID:42297931 DOI:10.1007/s00259-026-07989-x)
+9. Lecanemab treatment modulates brain volume and cerebrospinal fluid pathways in early Alzheimer's disease: Insights from longitudinal magnetic resonance imaging. — 2026, Alzheimers Dement (Amst) [other] (PMID:42255966 DOI:10.1002/dad2.70348)
+10. Lecanemab promotes Fc receptor-dependent cell-mediated internalization and degradation of aggregated amyloid-beta in vitro and ex vivo. — 2026, Neurosci Lett [other] (PMID:42214748 DOI:10.1016/j.neulet.2026.138645)
 
 ### Elicit top 10
 1. Lecanemab in Early Alzheimer's Disease (CLARITY-AD) — 2022, N Engl J Med (PMID:36449413 DOI:10.1056/NEJMoa2212948, 3498 cites)
@@ -154,13 +154,13 @@ Category: guideline. Intent: ESC AF management guideline should rank top.
 ### Manan top 10
 1. 2016 ESC Guidelines for the management of atrial fibrillation developed in collaboration with EACTS. — 2016, Eur Heart J [guideline] (PMID:27567408 DOI:10.1093/eurheartj/ehw210)
 2. 2020 ESC Guidelines for the diagnosis and management of atrial fibrillation developed in collaboration with the European Association for Cardio-Thoracic Surgery (EACTS): The Task Force for the diagnosis and management of atrial fibrillation of the European Society of Cardiology (ESC) Developed with the special contribution of the European Heart Rhythm Association (EHRA) of the ESC. — 2021, Eur Heart J [guideline] (PMID:32860505 DOI:10.1093/eurheartj/ehaa612)
-3. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). — 2010, Eur Heart J [guideline] (PMID:20802247 DOI:10.1093/eurheartj/ehq278)
-4. Corrigendum to: 2020 ESC Guidelines for the diagnosis and management of atrial fibrillation developed in collaboration with the European Association for Cardio-Thoracic Surgery (EACTS): The Task Force for the diagnosis and management of atrial fibrillation of the European Society of Cardiology (ESC) Developed with the special contribution of the European Heart Rhythm Association (EHRA) of the ESC — 2021, European Heart Journal [guideline] (DOI:10.1093/eurheartj/ehab648)
-5. 2024 ESC Guidelines for the management of atrial fibrillation developed in collaboration with the European Association for Cardio-Thoracic Surgery (EACTS). — 2024, Eur Heart J [guideline] (PMID:39210723 DOI:10.1093/eurheartj/ehae176)
-6. ACC/AHA/ESC 2006 Guidelines for the Management of Patients With Atrial Fibrillation—Executive Summary — 2006, Journal of the American College of Cardiology [guideline] (PMID:16904574 DOI:10.1016/j.jacc.2006.07.009)
-7. 2021 ESC Guidelines for the diagnosis and treatment of acute and chronic heart failure — 2021, European Heart Journal [guideline] (PMID:34447992 DOI:10.1093/eurheartj/ehab368)
-8. ACC/AHA/ESC 2006 Guidelines for the Management of Patients With Atrial Fibrillation — 2006, Circulation [guideline] (PMID:16908781 DOI:10.1161/circulationaha.106.177292)
-9. ‘Ten Commandments’ of 2016 ESC Guidelines for the management of atrial fibrillation — 2016, European Heart Journal [guideline] (PMID:27923817 DOI:10.1093/eurheartj/ehw370)
+3. 2024 ESC Guidelines for the management of atrial fibrillation developed in collaboration with the European Association for Cardio-Thoracic Surgery (EACTS). — 2024, Eur Heart J [guideline] (PMID:39210723 DOI:10.1093/eurheartj/ehae176)
+4. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). — 2010, Eur Heart J [guideline] (PMID:20802247 DOI:10.1093/eurheartj/ehq278)
+5. ACC/AHA/ESC 2006 Guidelines for the Management of Patients With Atrial Fibrillation—Executive Summary — 2006, Journal of the American College of Cardiology [guideline] (PMID:16904574 DOI:10.1016/j.jacc.2006.07.009)
+6. ACC/AHA/ESC 2006 Guidelines for the Management of Patients With Atrial Fibrillation — 2006, Circulation [guideline] (PMID:16908781 DOI:10.1161/circulationaha.106.177292)
+7. 2011 ACCF/AHA/HRS Focused Updates Incorporated Into the ACC/AHA/ESC 2006 Guidelines for the Management of Patients With Atrial Fibrillation — 2011, Journal of the American College of Cardiology [guideline] (PMID:21392637 DOI:10.1016/j.jacc.2010.09.013)
+8. ACC/AHA/ESC guidelines for the management of patients with atrial fibrillation: executive summary — 2001, Journal of the American College of Cardiology [guideline] (PMID:11583910 DOI:10.1016/s0735-1097(01)01587-x)
+9. Acc/aha/esc guidelines for the management of patients with atrialfibrillation: executive summary a report of the american college ofcardiology/american heart association task force on practice guideli — 2001, Circulation [guideline] (— no id —)
 10. ACC/AHA/ESC guidelines for the management of patients with supraventricular arrhythmias∗∗This document does not cover atrial fibrillation; atrial fibrillation is covered in the ACC/AHA/ESC guidelines on the management of patients with atrial fibrillation found on the ACC, AHA, and ESC Web sites.—executive summary — 2003, Journal of the American College of Cardiology [review] (PMID:14563598 DOI:10.1016/j.jacc.2003.08.013)
 
 ### Elicit top 10

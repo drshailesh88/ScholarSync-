@@ -1,0 +1,50 @@
+{
+  "perQuery": [
+    {
+      "id": "tavr-low-risk-6yr",
+      "manan": {"recall": 2, "ranking": 2, "metadata": 5, "clinical_relevance": 2, "explanation": 4, "trust": 2},
+      "elicit": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
+      "winner": "elicit",
+      "note": "Elicit returns both landmarks (PARTNER 3 and Evolut 6-yr) at the top with a clean list, while Manan misses PARTNER 3 and pollutes its top 10 with off-topic mitral-leaflet and V-A ECMO papers."
+    },
+    {
+      "id": "exact-dapa-hf",
+      "manan": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
+      "elicit": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 4, "explanation": 5, "trust": 4},
+      "winner": "manan",
+      "note": "Both nail the exact DAPA-HF paper at #1 with correct identifiers, but Manan's remaining results are high-value related trials whereas Elicit returns only three items, two of which are low-value commentary/appraisal."
+    },
+    {
+      "id": "recency-lecanemab",
+      "manan": {"recall": 1, "ranking": 1, "metadata": 5, "clinical_relevance": 3, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
+      "winner": "elicit",
+      "note": "Manan chases 2026 recency items but entirely misses the CLARITY-AD landmark, while Elicit leads with CLARITY-AD plus its phase 2 and 36-month OLE follow-ups."
+    },
+    {
+      "id": "pico-sglt2-cv-mortality",
+      "manan": {"recall": 5, "ranking": 4, "metadata": 5, "clinical_relevance": 4, "explanation": 5, "trust": 5},
+      "elicit": {"recall": 3, "ranking": 4, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
+      "winner": "manan",
+      "note": "Manan supplies the defining CVOT RCTs (EMPA-REG, CANVAS, DECLARE) that directly answer the PICO outcome, which Elicit's all-meta-analysis list lacks despite being tightly on-topic."
+    },
+    {
+      "id": "guideline-af-esc",
+      "manan": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
+      "elicit": {"recall": 4, "ranking": 4, "metadata": 5, "clinical_relevance": 4, "explanation": 5, "trust": 4},
+      "winner": "manan",
+      "note": "Both rank the authoritative ESC AF guideline at #1, but Manan also surfaces the current 2024 ESC/EACTS guideline near the top while Elicit omits it and includes a duplicate translated edition."
+    },
+    {
+      "id": "compare-doac-vs-warfarin",
+      "manan": {"recall": 3, "ranking": 3, "metadata": 5, "clinical_relevance": 3, "explanation": 5, "trust": 4},
+      "elicit": {"recall": 3, "ranking": 4, "metadata": 4, "clinical_relevance": 4, "explanation": 4, "trust": 3},
+      "winner": "elicit",
+      "note": "Neither returns the four landmark RCTs (RE-LY/ROCKET-AF/ARISTOTLE/ENGAGE), but Elicit stays more consistently on the DOAC-vs-warfarin comparison whereas Manan drifts into Watchman/CKD/device-surgery items."
+    }
+  ],
+  "overall": {
+    "winner": "elicit",
+    "summary": "Elicit wins three queries (TAVR, lecanemab, DOAC-vs-warfarin) decisively on landmark recall, evidence-hierarchy ranking, and freedom from off-topic items, taking both must-have-driven landmark queries cleanly. Manan wins three (exact DAPA-HF, SGLT2 PICO, ESC AF guideline) by supplying primary CVOT RCTs and the most current guideline, but its tendency to miss landmark trials (PARTNER 3, CLARITY-AD) and admit irrelevant papers into the top 10 is the decisive weakness. Both have excellent metadata; Elicit's stronger landmark recall and cleaner lists give it the overall edge."
+  }
+}

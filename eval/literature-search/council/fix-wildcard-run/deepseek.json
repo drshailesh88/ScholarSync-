@@ -1,0 +1,134 @@
+{
+  "perQuery": [
+    {
+      "id": "tavr-low-risk-6yr",
+      "manan": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both systems retrieved both landmark papers and provided high-quality results; Manan had more recent meta-analyses but Elicit had better ranking with PARTNER 3 first."
+    },
+    {
+      "id": "exact-dapa-hf",
+      "manan": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "elicit",
+      "note": "Both found DAPA-HF, but Elicit ranked it first with high citation count, while Manan had it at position 6."
+    },
+    {
+      "id": "recency-lecanemab",
+      "manan": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 5,
+        "clinical_relevance": 2,
+        "explanation": 4,
+        "trust": 3
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "elicit",
+      "note": "Manan missed the landmark CLARITY-AD trial entirely, while Elicit included it and other key studies; Manan's results were mostly 2026 small studies."
+    },
+    {
+      "id": "pico-sglt2-cv-mortality",
+      "manan": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "elicit": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan had more recent and comprehensive meta-analyses directly addressing CV mortality, while Elicit's results were older and less focused."
+    },
+    {
+      "id": "guideline-af-esc",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan retrieved all ESC guideline versions including the latest 2024, while Elicit missed the 2024 guideline and had fewer versions."
+    },
+    {
+      "id": "compare-doac-vs-warfarin",
+      "manan": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "elicit": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both systems provided relevant meta-analyses and landmark trials; Manan had more recent studies but Elicit had the key COMBINE AF meta-analysis."
+    }
+  ],
+  "overall": {
+    "winner": "elicit",
+    "summary": "Elicit performed better on exact paper and recency queries, while Manan excelled on guideline and PICO queries. Overall, Elicit had stronger recall of landmark trials and better ranking, leading to a slight edge."
+  }
+}
