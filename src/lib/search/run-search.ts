@@ -18,6 +18,7 @@ import {
 import { fetchCrossrefByDoi } from "@/lib/search/sources/crossref";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchTavily } from "@/lib/search/sources/tavily";
+import { expandByPmra } from "@/lib/search/sources/expansion";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
@@ -64,6 +65,12 @@ export interface RunLiteratureSearchParams {
   fullTextOnly?: boolean;
   page?: number;
   perPage?: number;
+  /**
+   * Opt-in citation/PMRA neighbour expansion (a high-recall, slower mode for
+   * systematic-review-style searches). Off by default to keep the default path
+   * fast — the OpenAlex dense semantic lane already provides corpus-free recall.
+   */
+  expandCitations?: boolean;
 }
 
 export type LiteraturePaper = UnifiedSearchResult & {
@@ -346,6 +353,33 @@ export async function runLiteratureSearch(
   }
 
   const sourceResults = await Promise.all(promises);
+
+  // Wave 2 (opt-in): neighbour/citation expansion on the top seeds — a corpus-free
+  // recall booster that pulls PubMed related-articles (PMRA) of the best wave-1
+  // hits, so landmark papers related to (but not lexically matching) the query
+  // enter the pool. Sequential (depends on wave-1 seeds) and slower, so it is
+  // gated behind `expandCitations` (high-recall mode); fail-open.
+  if (params.expandCitations && sources.includes("pubmed")) {
+    const seedPmids = sourceResults
+      .flatMap((sr) => sr.results.slice(0, 5))
+      .map((r) => r.pmid)
+      .filter((p): p is string => Boolean(p));
+    if (seedPmids.length > 0) {
+      const expanded = await withSourceTimeout(
+        "PMRA expand",
+        expandByPmra(seedPmids, { limit: poolPerSource }),
+        12000
+      ).catch(() => [] as UnifiedSearchResult[]);
+      if (expanded.length > 0) {
+        sourceResults.push({
+          source: "pubmed_pmra",
+          results: expanded,
+          total: expanded.length,
+          status: okStatus(),
+        });
+      }
+    }
+  }
 
   const sourceCounts: Record<string, number> = {};
   const sourceStatuses: Record<string, SourceStatus> = {};
