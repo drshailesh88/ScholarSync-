@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { rankAndAnnotate, buildFlags, buildWhyRelevant, recencyRankKey } from "../pipeline";
+import {
+  rankAndAnnotate,
+  buildFlags,
+  buildWhyRelevant,
+  recencyRankKey,
+  exactTitleMatchIndex,
+} from "../pipeline";
 import type { UnifiedSearchResult } from "@/types/search";
 
 function paper(p: Partial<UnifiedSearchResult>): UnifiedSearchResult {
@@ -74,6 +80,81 @@ describe("rankAndAnnotate recency ordering", () => {
     });
 
     expect(ranked[0].pmid).toBe("36449413");
+  });
+});
+
+describe("exactTitleMatchIndex", () => {
+  const EXACT_QUERY =
+    "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction";
+
+  it("finds the verbatim-title paper among related results", () => {
+    const results = [
+      paper({ title: "Dapagliflozin in heart failure: a systematic review and meta-analysis" }),
+      paper({ title: "SGLT2 inhibitors and renal outcomes in type 2 diabetes" }),
+      paper({ title: "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction" }),
+    ];
+    expect(exactTitleMatchIndex(results, EXACT_QUERY)).toBe(2);
+  });
+
+  it("does not match a longer review that merely contains all query tokens", () => {
+    const results = [
+      paper({
+        title:
+          "Dapagliflozin in patients with heart failure and reduced ejection fraction: mechanisms, pivotal trials, and future directions for clinical practice",
+      }),
+    ];
+    expect(exactTitleMatchIndex(results, EXACT_QUERY)).toBe(-1);
+  });
+
+  it("returns -1 for a PICO question (not a title lookup)", () => {
+    const results = [paper({ title: "SGLT2 inhibitors and cardiovascular mortality" })];
+    expect(
+      exactTitleMatchIndex(
+        results,
+        "In adults with type 2 diabetes, do SGLT2 inhibitors reduce cardiovascular mortality?"
+      )
+    ).toBe(-1);
+  });
+
+  it("returns -1 for a short keyword / acronym query", () => {
+    const results = [paper({ title: "DAPA-HF trial primary results" })];
+    expect(exactTitleMatchIndex(results, "DAPA-HF trial")).toBe(-1);
+  });
+
+  it("returns -1 when no title is a near-exact match (broad query)", () => {
+    const results = [
+      paper({ title: "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure" }),
+    ];
+    expect(
+      exactTitleMatchIndex(results, "management of heart failure with reduced ejection fraction")
+    ).toBe(-1);
+  });
+});
+
+describe("rankAndAnnotate exact-title boosting", () => {
+  it("floats the verbatim-title paper to #1 even when its composite ranks it lower", () => {
+    const exact = paper({
+      title: "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+      year: 2019,
+      studyType: "rct",
+      citationCount: 50,
+      rerankScore: 0.6,
+      pmid: "31535829",
+    });
+    const louderRelated = [1, 2, 3, 4, 5].map((i) =>
+      paper({
+        title: `Dapagliflozin meta-analysis number ${i} in heart failure`,
+        year: 2024,
+        studyType: "meta_analysis",
+        citationCount: 4000,
+        rerankScore: 0.7,
+        pmid: `7770${i}`,
+      })
+    );
+    const ranked = rankAndAnnotate([...louderRelated, exact], {
+      query: "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+    });
+    expect(ranked[0].pmid).toBe("31535829");
   });
 });
 

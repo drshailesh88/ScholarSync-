@@ -38,6 +38,57 @@ function keywords(query: string): string[] {
   ];
 }
 
+function titleTokenSet(s: string): Set<string> {
+  return new Set(
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter(Boolean)
+  );
+}
+
+/**
+ * Index of a result whose title is a near-verbatim match of the query — i.e. the
+ * user did an exact-paper lookup by pasting a title. Uses a high Jaccard overlap
+ * (≥0.85) so only a title with essentially the SAME token set qualifies: a longer
+ * review that merely *contains* every query token is excluded. Gated to title-like
+ * queries (≥6 tokens, not a question) so keyword/acronym/PICO queries never trigger.
+ * Returns -1 when there is no exact-title match.
+ */
+export function exactTitleMatchIndex(
+  results: UnifiedSearchResult[],
+  query: string
+): number {
+  const q = query.trim();
+  if (q.endsWith("?")) return -1;
+  const qTokens = titleTokenSet(q);
+  if (qTokens.size < 6) return -1;
+  let best = -1;
+  let bestJaccard = 0;
+  for (let i = 0; i < results.length; i++) {
+    const tTokens = titleTokenSet(results[i].title ?? "");
+    if (tTokens.size === 0) continue;
+    let inter = 0;
+    for (const t of qTokens) if (tTokens.has(t)) inter++;
+    const jaccard = inter / (qTokens.size + tTokens.size - inter);
+    if (jaccard >= 0.85 && jaccard > bestJaccard) {
+      bestJaccard = jaccard;
+      best = i;
+    }
+  }
+  return best;
+}
+
+function boostExactTitle(
+  results: UnifiedSearchResult[],
+  query: string
+): UnifiedSearchResult[] {
+  const idx = exactTitleMatchIndex(results, query);
+  if (idx <= 0) return results; // no match, or already first
+  return [results[idx], ...results.slice(0, idx), ...results.slice(idx + 1)];
+}
+
 /** Missing / low-confidence metadata + integrity flags, surfaced not hidden. */
 export function buildFlags(r: UnifiedSearchResult): string[] {
   const flags = new Set<string>(r.flags ?? []);
@@ -186,9 +237,14 @@ export function rankAndAnnotate(
     annotate(s, opts.recency ? "recency" : "quality", queryTerms)
   );
 
+  // Exact-paper lookup: if the user pasted a paper title, that paper must rank #1
+  // even if related meta-analyses out-score it on citations. Field-standard
+  // exact-match boosting, gated tightly so only verbatim-title queries trigger.
+  const boosted = boostExactTitle(annotated, opts.query);
+
   // Demote (never drop) retracted papers so they cannot occupy a top slot while
   // still being surfaced with their flag. Stable: preserves order within groups.
-  return demoteRetracted(annotated);
+  return demoteRetracted(boosted);
 }
 
 function demoteRetracted(results: UnifiedSearchResult[]): UnifiedSearchResult[] {
