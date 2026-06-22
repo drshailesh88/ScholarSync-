@@ -122,6 +122,54 @@ function withSourceTimeout<T>(
   });
 }
 
+/**
+ * Global fan-out deadline (ms). A single stuck/throttled lane must not hold the
+ * whole query — at the deadline we proceed with whatever lanes have resolved
+ * (partial results), marking the rest as dropped. Caps the p95 tail.
+ */
+export const FANOUT_DEADLINE_MS = 5000;
+
+const DEADLINE = Symbol("fanout-deadline");
+
+/**
+ * Await source lanes up to a global deadline, returning PARTIAL results: lanes
+ * that resolved are used as-is; lanes still pending at the deadline are recorded
+ * as a "timeout" outcome (so they never block the query, and `sourceStatuses`
+ * shows them degraded rather than a false "ok with 0 results"). Each input
+ * promise already resolves to a SourceOutcome (never rejects).
+ */
+export async function settleWithinDeadline(
+  outcomes: Promise<SourceOutcome>[],
+  labels: string[],
+  deadlineMs: number
+): Promise<SourceOutcome[]> {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  const deadline = new Promise<typeof DEADLINE>((resolve) => {
+    timer = setTimeout(() => resolve(DEADLINE), deadlineMs);
+  });
+  try {
+    return await Promise.all(
+      outcomes.map(async (p, i) => {
+        const res = await Promise.race([p, deadline]);
+        if (res === DEADLINE) {
+          return {
+            source: labels[i] ?? `lane_${i}`,
+            results: [],
+            total: 0,
+            status: {
+              status: "timeout" as const,
+              message: `dropped: fan-out exceeded ${deadlineMs}ms`,
+            },
+          };
+        }
+        return res;
+      })
+    );
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
 const STUDY_TYPE_MAP: Record<string, string> = {
   "Randomized Controlled Trial": "rct",
   systematic_review: "systematic_review",
@@ -277,9 +325,15 @@ async function runLiteratureSearchUncached(
   const pmBroadened = params.pubmedQuery ? null : plan.pubmedBroadened;
 
   const promises: Promise<SourceOutcome>[] = [];
+  const laneLabels: string[] = [];
+  const pushLane = (label: string, p: Promise<SourceOutcome>) => {
+    promises.push(p);
+    laneLabels.push(label);
+  };
 
   if (sources.includes("pubmed")) {
-    promises.push(
+    pushLane(
+      "pubmed",
       withSourceTimeout(
         "PubMed",
         searchPubMedPlanned(
@@ -297,7 +351,8 @@ async function runLiteratureSearchUncached(
   }
 
   if (sources.includes("openalex")) {
-    promises.push(
+    pushLane(
+      "openalex",
       withSourceTimeout(
         "OpenAlex",
         searchOpenAlex(searchQuery, {
@@ -313,7 +368,8 @@ async function runLiteratureSearchUncached(
     // Dense semantic lane (OpenAlex search.semantic) — the corpus-free fix for the
     // lexical recall gap. Retrieves by meaning, surfacing landmarks with no shared
     // surface terms. Fused into the pool before RRF; fails open like any source.
-    promises.push(
+    pushLane(
+      "openalex_semantic",
       withSourceTimeout(
         "OpenAlex Semantic",
         searchOpenAlexSemantic(searchQuery, {
@@ -335,7 +391,8 @@ async function runLiteratureSearchUncached(
   // Semantic Scholar is opt-in only (never required). Used purely as an extra
   // citation/metadata signal when explicitly requested and reachable.
   if (sources.includes("semantic_scholar")) {
-    promises.push(
+    pushLane(
+      "semantic_scholar",
       withSourceTimeout(
         "Semantic Scholar",
         searchSemanticScholar(searchQuery, {
@@ -357,7 +414,8 @@ async function runLiteratureSearchUncached(
 
   // ClinicalTrials.gov linking for trial-acronym / NCT / explicit-trial queries.
   if (plan.wantsTrials) {
-    promises.push(
+    pushLane(
+      "clinical_trials",
       withSourceTimeout(
         "ClinicalTrials",
         searchClinicalTrials(searchQuery, { limit: Math.min(5, perPage) }).then(
@@ -373,7 +431,8 @@ async function runLiteratureSearchUncached(
   // TAVILY_API_KEY. Restricted to trusted biomedical/guideline domains and
   // trust-tiered so it can never out-rank stable primary literature.
   if (plan.wantsWeb && process.env.TAVILY_API_KEY) {
-    promises.push(
+    pushLane(
+      "web",
       withSourceTimeout(
         "Tavily",
         searchTavily(searchQuery, { maxResults: 5, topic: plan.recency ? "news" : "general" }).then(
@@ -383,7 +442,9 @@ async function runLiteratureSearchUncached(
     );
   }
 
-  const sourceResults = await Promise.all(promises);
+  // Await lanes up to a global deadline → partial results (a stuck/throttled lane
+  // never holds the whole query; dropped lanes are marked "timeout", not "ok").
+  const sourceResults = await settleWithinDeadline(promises, laneLabels, FANOUT_DEADLINE_MS);
 
   // Wave 2 (opt-in): neighbour/citation expansion on the top seeds — a corpus-free
   // recall booster that pulls PubMed related-articles (PMRA) of the best wave-1
@@ -433,7 +494,7 @@ async function runLiteratureSearchUncached(
   //  - enrich: OpenAlex citation/PMID/DOI backfill — the S2-independent landmark signal.
   //  - rerank: Cohere cross-encoder relevance score (dominant relevance signal).
   await Promise.all([
-    withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(fused), 9000).catch(() => 0),
+    withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(fused), 3500).catch(() => 0),
     withSourceTimeout("Cohere rerank", attachRerankScores(searchQuery, fused, 50), 4000).catch(
       () => fused
     ),
