@@ -39,6 +39,13 @@ describe("/api/mcp authorization gate", () => {
     expect(res.status).toBe(401);
   });
 
+  it("does not advertise an OAuth flow in the 401 (static bearer only)", async () => {
+    const res = await POST(mcpRequest());
+    expect(res.status).toBe(401);
+    const wwwAuth = res.headers.get("www-authenticate") ?? "";
+    expect(wwwAuth).not.toContain("resource_metadata");
+  });
+
   it("rejects a request with an invalid bearer token (401)", async () => {
     const res = await POST(mcpRequest({ Authorization: "Bearer wrong-token" }));
     expect(res.status).toBe(401);

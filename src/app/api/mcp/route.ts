@@ -7,8 +7,7 @@
  * session cookies, so the normal web auth is unaffected.
  */
 
-import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
-import { createMcpHandler, withMcpAuth } from "mcp-handler";
+import { createMcpHandler } from "mcp-handler";
 import { isValidMcpToken } from "@/lib/mcp/auth";
 import {
   searchPapers,
@@ -79,18 +78,34 @@ const handler = createMcpHandler(
   }
 );
 
-const verifyToken = async (
-  _req: Request,
-  bearerToken?: string
-): Promise<AuthInfo | undefined> => {
-  if (!isValidMcpToken(bearerToken)) return undefined;
-  return {
-    token: bearerToken as string,
-    scopes: ["literature:search"],
-    clientId: "manan-mcp-client",
-  };
-};
+function bearerFromRequest(req: Request): string | undefined {
+  const header = req.headers.get("authorization");
+  if (!header) return undefined;
+  const [scheme, token] = header.split(" ");
+  return scheme?.toLowerCase() === "bearer" ? token : undefined;
+}
 
-const authHandler = withMcpAuth(handler, verifyToken, { required: true });
+function unauthorized(): Response {
+  // Plain bearer challenge — deliberately NO OAuth `resource_metadata`, so MCP
+  // clients use the configured static token instead of attempting an OAuth flow.
+  return new Response(
+    JSON.stringify({
+      error: "unauthorized",
+      error_description: "Missing or invalid bearer token. Send: Authorization: Bearer <MANAN_MCP_API_KEY>",
+    }),
+    {
+      status: 401,
+      headers: {
+        "Content-Type": "application/json",
+        "WWW-Authenticate": 'Bearer realm="manan-os-mcp"',
+      },
+    }
+  );
+}
 
-export { authHandler as GET, authHandler as POST };
+async function authedHandler(req: Request): Promise<Response> {
+  if (!isValidMcpToken(bearerFromRequest(req))) return unauthorized();
+  return handler(req);
+}
+
+export { authedHandler as GET, authedHandler as POST };
