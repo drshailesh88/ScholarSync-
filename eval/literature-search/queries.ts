@@ -241,7 +241,17 @@ export const BENCHMARK_QUERIES: BenchmarkQuery[] = [
     recencyBiased: true,
     expectedStudyTypes: ["rct"],
     mustHaves: [
-      { label: "CLARITY-AD lecanemab trial", titleIncludes: ["lecanemab"] },
+      {
+        // Tightened from the too-loose `titleIncludes:["lecanemab"]` (which any
+        // lecanemab sub-study satisfied, giving false-positive recall) to the
+        // pivotal CLARITY-AD trial by EXACT identifier only — the titleIncludes
+        // matcher tests tokens independently, so any "...lecanemab... in early
+        // Alzheimer..." paper would still false-match. DOI verified as returned
+        // by our sources (seen at rank 1) — no hallucinated ground truth.
+        label: "CLARITY-AD — Lecanemab in Early Alzheimer's Disease (van Dyck, NEJM 2023)",
+        pmids: ["36449413"],
+        dois: ["10.1056/NEJMoa2212948"],
+      },
     ],
   },
   {
