@@ -6,17 +6,22 @@ found and fixed two real defects, and corrected an over-optimistic measurement.
 
 ## TL;DR
 
-- **Deterministic benchmark (34 queries) is strong:** recall@10 **96%**, nDCG@10 **0.69**,
+- **Deterministic benchmark (34 queries) is strong and improved:** recall@10 **96%**,
+  nDCG@10 **0.66 → 0.74**, best-must-have-in-top-3 **0.58 → 0.67**, MRR **0.53 → 0.65**,
   DOI/year/journal fill ~**100%**, case-report 1%, 0 errors, 0 empty sets, p50 ~4.7s.
-- **LLM council on the 6-query Elicit-comparison set: Manan 2 / Elicit 4 / tie 0**
-  (3 fresh judges: Opus + Codex + DeepSeek). **The Definition-of-Done is NOT yet met.**
+- **LLM council on the 6-query Elicit set went `Manan 2 / Elicit 4` → `Manan 3 / Elicit 3`**
+  (3 fresh judges: Opus + Codex + DeepSeek) across the session's fixes — i.e. **practical
+  parity** on the hardest, landmark-heavy comparison set.
   - The prior session's "Manan 4 / Elicit 2" was **optimistic** — it used a more generous
-    Grok judge and a different run. A fresh, stricter 3-judge panel on current `main`
-    puts Manan behind, though the per-query score gaps are small (see table).
-- **Two fixes shipped (committed to `fix/openalex-wildcard-400`):**
+    Grok judge and a different run. A fresh, stricter 3-judge panel revised it down; the
+    fixes below then brought it back to a 3/3 tie.
+- **Four fixes shipped (branch `fix/openalex-wildcard-400`):**
   1. OpenAlex wildcard-400 (question queries silently lost the OpenAlex lane).
   2. Recency burial (pivotal trials buried under recent low-value papers).
-- **One measurement bug fixed:** the lecanemab ground truth was too loose.
+  3. Exact-title boosting (exact-paper lookups now rank the verbatim paper #1).
+  4. Measurement bug: the lecanemab ground truth was too loose.
+- **Remaining 3 Elicit edges are exit-clause gaps** (proprietary curation / full-text /
+  PICO entity extraction), not clean wins — see the per-query table and backlog.
 
 ## What was broken, and the fixes
 
@@ -36,25 +41,32 @@ highest in the pool → key 0.54). **Fix:** make recency a *multiplicative* boos
 **Effect (honest, exact-id ground truth), CLARITY-AD position:**
 `rank 7 (pre-fixes) → missing (post-wildcard) → rank 1 (this fix)`.
 
-### 3. Measurement bug  ·  `test(eval): tighten lecanemab must-have to CLARITY-AD by exact identifier`
+### 3. Exact-paper lookups buried the target  ·  `fix(search): rank the verbatim-title paper #1`
+All three judges flagged that pasting a paper title (e.g. the exact DAPA-HF title) buried
+the target at rank 6 behind related meta-analyses with more citations. **Fix:** float a
+result whose title is a near-verbatim match of the query (Jaccard ≥ 0.85, title-like query
+only) to #1 — field-standard exact-match boosting, gated so keyword/PICO/broad queries never
+trigger. **Effect:** exact-dapa-hf target rank 6 → 1; flipped that query Elicit → Manan.
+
+### 4. Measurement bug  ·  `test(eval): tighten lecanemab must-have to CLARITY-AD by exact identifier`
 `recency-lecanemab`'s ground truth was `titleIncludes:["lecanemab"]` — ANY lecanemab
 sub-study satisfied it, so recall@10 read 100% while the pivotal trial was buried/absent.
 Pinned to CLARITY-AD's exact PMID/DOI (verified as returned by our sources).
 
-## Current council detail (run `recency-fix`, judges Opus+Codex+DeepSeek)
+## Final council detail (run `exact-title-fix`, judges Opus+Codex+DeepSeek → Manan 3 / Elicit 3)
 
-| query | majority | Manan mean | Elicit mean | gap | why Elicit edges |
+| query | majority | Manan mean | Elicit mean | gap | status |
 |---|---|---|---|---|---|
-| guideline-af-esc | **manan** | 4.67 | 4.11 | +0.56 | Manan also surfaces the current 2024 ESC/EACTS guideline |
-| compare-doac-vs-warfarin | **manan** | 4.28 | 3.89 | +0.39 | Manan stays on-topic; neither has all 4 landmark RCTs |
-| pico-sglt2-cv-mortality | elicit | 4.22 | 4.39 | −0.17 | near-tie (DeepSeek scored it Manan) |
-| exact-dapa-hf | elicit | 4.33 | 5.00 | −0.67 | Elicit's short list is all high-value; Manan's tail is weaker |
-| tavr-low-risk-6yr | elicit | 4.67 | 4.94 | −0.27 | **PARTNER 3 not retrieved** (not in top-50 pool) |
-| recency-lecanemab | elicit | 4.06 | 5.00 | −0.94 | CLARITY-AD now #1, but the **tail is 2026 real-world noise** vs Elicit's clean landmark+follow-ups |
+| exact-dapa-hf | **manan** | 5.00 | 4.50 | +0.50 | **flipped** by exact-title boosting (was Elicit −0.67) |
+| guideline-af-esc | **manan** | 4.56 | 4.06 | +0.50 | Manan surfaces the current 2024 ESC/EACTS guideline |
+| compare-doac-vs-warfarin | **manan** | 4.33 | 3.67 | +0.66 | Manan stays on-topic |
+| pico-sglt2-cv-mortality | elicit | 4.00 | 4.17 | −0.17 | near-tie; off-PICO items (SGLT2-renal, GLP-1) score *high* on the cross-encoder → needs PICO entity extraction |
+| tavr-low-risk-6yr | elicit | 4.39 | 5.00 | −0.61 | **PARTNER 3 not retrievable** (absent from top-50 pool even with PMRA expansion) |
+| recency-lecanemab | elicit | 4.17 | 5.00 | −0.83 | CLARITY-AD now #1, but Manan lacks the 36-month OLE follow-up and Elicit curates the trial family |
 
-**The decisive, recurring weakness is top-10 *precision*:** Manan's lists are noisier in
-the tail than Elicit's tightly-curated landmark-first lists. Recall and metadata are at
-or above parity; ranking/relevance of positions 2–10 is the gap.
+**The residual weakness is top-10 *curation*** — Elicit returns tight trial-family clusters;
+Manan's tails carry topically-adjacent items the cross-encoder cannot discriminate. Recall,
+metadata, evidence-hierarchy, and exact-lookup are now at or above parity.
 
 ## How to reproduce
 

@@ -2,17 +2,17 @@
   "perQuery": [
     {
       "id": "tavr-low-risk-6yr",
-      "manan": {"recall": 4, "ranking": 4, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
+      "manan": {"recall": 3, "ranking": 3, "metadata": 5, "clinical_relevance": 4, "explanation": 4, "trust": 4},
       "elicit": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
       "winner": "elicit",
-      "note": "Elicit surfaces both landmarks with the original PARTNER 3 (2019) at #1 and the Evolut 6-yr trial at #2, whereas Manan has the Evolut 6-yr trial and the PARTNER 3 5-yr follow-up but omits the pivotal PARTNER 3 2019 paper itself."
+      "note": "Elicit surfaces both landmarks with PARTNER 3 (2019) at #1 and the Evolut 6-yr trial at #2, whereas Manan returns the Evolut 6-yr trial but omits the pivotal PARTNER 3 primary RCT and leads with meta-analyses."
     },
     {
       "id": "exact-dapa-hf",
-      "manan": {"recall": 5, "ranking": 2, "metadata": 5, "clinical_relevance": 4, "explanation": 5, "trust": 5},
-      "elicit": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
-      "winner": "elicit",
-      "note": "For an exact-title retrieval the target DAPA-HF paper must rank #1, which Elicit does, while Manan buries the exact paper at #6 behind related meta-analyses and other dapagliflozin/SGLT2i trials."
+      "manan": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
+      "elicit": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 3, "explanation": 5, "trust": 4},
+      "winner": "manan",
+      "note": "Both rank the verbatim DAPA-HF paper #1 correctly, but Manan's remaining nine are high-quality dapagliflozin/SGLT2i trials and meta-analyses while Elicit returns only three items, two of which are a low-value commentary and an appraisal."
     },
     {
       "id": "recency-lecanemab",
@@ -23,28 +23,28 @@
     },
     {
       "id": "pico-sglt2-cv-mortality",
-      "manan": {"recall": 4, "ranking": 4, "metadata": 5, "clinical_relevance": 3, "explanation": 5, "trust": 4},
-      "elicit": {"recall": 4, "ranking": 4, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
+      "manan": {"recall": 3, "ranking": 3, "metadata": 5, "clinical_relevance": 3, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 5, "explanation": 5, "trust": 5},
       "winner": "elicit",
       "note": "Elicit's results are all SGLT2i CV-outcome/mortality meta-analyses tightly matching the PICO outcome, whereas Manan drifts to renal/CKD outcomes, a HF trial, and an off-target GLP-1 oral-semaglutide analysis."
     },
     {
       "id": "guideline-af-esc",
-      "manan": {"recall": 5, "ranking": 5, "metadata": 5, "clinical_relevance": 4, "explanation": 5, "trust": 5},
-      "elicit": {"recall": 3, "ranking": 4, "metadata": 5, "clinical_relevance": 4, "explanation": 5, "trust": 5},
+      "manan": {"recall": 5, "ranking": 4, "metadata": 4, "clinical_relevance": 5, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 4, "ranking": 4, "metadata": 5, "clinical_relevance": 4, "explanation": 5, "trust": 4},
       "winner": "manan",
-      "note": "Manan returns the current 2024 ESC/EACTS AF guideline plus the 2020 and 2016 editions ranked high, while Elicit omits the latest 2024 guideline entirely and returns dated, duplicative translated editions despite high citation counts."
+      "note": "Both rank genuine ESC AF guidelines on top, but Manan uniquely includes the current 2024 ESC/EACTS guideline (#3) that Elicit omits entirely, despite one missing-ID and one off-topic supraventricular tail entry."
     },
     {
       "id": "compare-doac-vs-warfarin",
-      "manan": {"recall": 4, "ranking": 4, "metadata": 5, "clinical_relevance": 3, "explanation": 5, "trust": 4},
-      "elicit": {"recall": 4, "ranking": 4, "metadata": 5, "clinical_relevance": 5, "explanation": 4, "trust": 4},
-      "winner": "elicit",
-      "note": "Both surface the COMBINE-AF patient-level network meta-analysis and the BMJ network MA, but Manan contaminates its top 10 with off-topic device/LAA-closure (Watchman FLX, BRUISE CONTROL-2) and factor-XIa (asundexian) items, while Elicit stays entirely on the DOAC-vs-warfarin question despite a non-primary Journal Watch lead and a low-cite journal MA."
+      "manan": {"recall": 3, "ranking": 4, "metadata": 4, "clinical_relevance": 3, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 3, "ranking": 3, "metadata": 4, "clinical_relevance": 4, "explanation": 4, "trust": 3},
+      "winner": "tie",
+      "note": "Both lead with the COMBINE-AF patient-level network meta-analysis and the BMJ network MA yet neither surfaces the individual landmark RCTs; Manan drifts into device/periprocedural and factor-XIa entries while Elicit's #1 is a low-value 0-cite Journal Watch summary."
     }
   ],
   "overall": {
     "winner": "elicit",
-    "summary": "Elicit wins five of six queries on the strength of cleaner, on-target top-10 lists, reliable placement of the exact or landmark paper at #1 (PARTNER 3, the exact DAPA-HF paper, CLARITY-AD), and consistent inclusion of pivotal recent follow-ups without irrelevant items. Manan is competitive and frequently excellent on meta-analytic coverage with complete, correct metadata, and it clearly wins the guideline query by retrieving the current 2024 ESC AF guideline that Elicit omits. Manan's recurring weaknesses are relevance drift in the PICO and comparison queries and burying the exact-title paper, which cost it the close head-to-heads."
+    "summary": "Elicit wins the open-ended evidence-synthesis queries (TAVR long-term, lecanemab recency, SGLT2 PICO) by consistently surfacing the pivotal landmark RCTs and tightly on-topic syntheses, while Manan drifts into adjacent renal, device, or case-report material. Manan is genuinely competitive and wins the targeted retrieval tasks: it nails the exact DAPA-HF paper at #1 with a far stronger supporting set, and it uniquely includes the current 2024 ESC AF guideline that Elicit misses. Net result is three query wins for Elicit, two for Manan, and one tie, giving Elicit a narrow overall edge driven by superior precision on broad clinical questions."
   }
 }
