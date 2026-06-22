@@ -2,6 +2,7 @@ import type { UnifiedSearchResult } from "@/types/search";
 import { mapOpenAlexType, getEvidenceLevel } from "@/lib/search/evidence-level";
 import { resilientFetch } from "@/lib/http/resilient-fetch";
 import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
+import { createOutboundLimiter } from "@/lib/http/outbound-limiter";
 import {
   classifyFetchError,
   okStatus,
@@ -23,18 +24,15 @@ function oaAuth(): string {
     : "&mailto=contact@scholarsync.com";
 }
 
-// Global in-process pacing for OpenAlex (search + enrichment = 2-3 calls/query).
-// Serializes requests with a minimum gap to stay under the polite-pool rate and
-// avoid the 429 bursts that otherwise degrade enrichment. ~7 req/s.
-const OPENALEX_MIN_INTERVAL_MS = 150;
-let openAlexGate: Promise<void> = Promise.resolve();
-function paceOpenAlex(): Promise<void> {
-  const prev = openAlexGate;
-  openAlexGate = prev.then(
-    () => new Promise<void>((resolve) => setTimeout(resolve, OPENALEX_MIN_INTERVAL_MS))
-  );
-  return prev;
-}
+// Outbound token-bucket limiter for OpenAlex (search + semantic + enrichment =
+// 2-4 calls/query). Paces to stay under the rate and prevent self-inflicted 429s,
+// while a small burst lets the lexical + semantic lanes proceed concurrently.
+const openAlexLimiter = createOutboundLimiter({
+  service: "OpenAlex",
+  requestsPerSecond: 8,
+  burst: 4,
+});
+const paceOpenAlex = () => openAlexLimiter.acquire();
 
 interface OpenAlexSearchOptions {
   limit?: number;
@@ -134,7 +132,7 @@ async function fetchOpenAlexBatch(
 ): Promise<OpenAlexEnrichWork[]> {
   const url = `https://api.openalex.org/works?filter=${filter}&per_page=50${oaAuth()}&select=id,doi,ids,cited_by_count,open_access,concepts`;
   await paceOpenAlex();
-  const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 8000 });
+  const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 8000, maxRetries: 2 });
   const data: { results?: OpenAlexEnrichWork[] } = await res.json();
   return data.results ?? [];
 }
@@ -251,7 +249,7 @@ export async function searchOpenAlexSemantic(
 
   try {
     await paceOpenAlex();
-    const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000 });
+    const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000, maxRetries: 2 });
     const data: OpenAlexResponse = await res.json();
     const results = (data.results || [])
       .map(mapWork)
@@ -303,7 +301,7 @@ export async function searchOpenAlex(
 
   try {
     await paceOpenAlex();
-    const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000 });
+    const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000, maxRetries: 2 });
     const data: OpenAlexResponse = await res.json();
     const results = (data.results || []).map(mapWork);
 
