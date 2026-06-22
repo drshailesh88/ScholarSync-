@@ -10,6 +10,19 @@ import {
 
 const breaker = createCircuitBreaker({ service: "OpenAlex", failureThreshold: 5 });
 
+/**
+ * OpenAlex retired the email "polite pool" (Feb 2026); a free API key is now
+ * required for reliable, un-throttled access (free tier: ~1,000 search +
+ * 10,000 list calls/day). Append `&api_key=` when `OPENALEX_API_KEY` is set;
+ * fall back to mailto (rate-limited / best-effort) when it is not.
+ */
+function oaAuth(): string {
+  const key = process.env.OPENALEX_API_KEY;
+  return key
+    ? `&api_key=${encodeURIComponent(key)}`
+    : "&mailto=contact@scholarsync.com";
+}
+
 // Global in-process pacing for OpenAlex (search + enrichment = 2-3 calls/query).
 // Serializes requests with a minimum gap to stay under the polite-pool rate and
 // avoid the 429 bursts that otherwise degrade enrichment. ~7 req/s.
@@ -119,7 +132,7 @@ function normDoi(doi: string | null | undefined): string | undefined {
 async function fetchOpenAlexBatch(
   filter: string
 ): Promise<OpenAlexEnrichWork[]> {
-  const url = `https://api.openalex.org/works?filter=${filter}&per_page=50&mailto=contact@scholarsync.com&select=id,doi,ids,cited_by_count,open_access,concepts`;
+  const url = `https://api.openalex.org/works?filter=${filter}&per_page=50${oaAuth()}&select=id,doi,ids,cited_by_count,open_access,concepts`;
   await paceOpenAlex();
   const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 8000 });
   const data: { results?: OpenAlexEnrichWork[] } = await res.json();
@@ -225,7 +238,7 @@ export async function searchOpenAlexSemantic(
   }
   const limit = Math.min(50, options.limit || 25);
   const q = query.slice(0, 2000);
-  let url = `https://api.openalex.org/works?search.semantic=${encodeURIComponent(q)}&per_page=${limit}&mailto=contact@scholarsync.com`;
+  let url = `https://api.openalex.org/works?search.semantic=${encodeURIComponent(q)}&per_page=${limit}${oaAuth()}`;
   const filters: string[] = [];
   if (options.yearStart && options.yearEnd) {
     filters.push(`publication_year:${options.yearStart}-${options.yearEnd}`);
@@ -268,7 +281,7 @@ export async function searchOpenAlex(
   const limit = options.limit || 20;
   const page = options.page || 1;
 
-  let url = `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per_page=${limit}&page=${page}&mailto=contact@scholarsync.com`;
+  let url = `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per_page=${limit}&page=${page}${oaAuth()}`;
 
   const filters: string[] = [];
   if (options.yearStart && options.yearEnd) {
