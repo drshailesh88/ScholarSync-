@@ -29,6 +29,13 @@ export interface QueryPlan {
   pubmedBroadened: string | null;
   /** Verbatim query, used as a fallback if the primary returns 0 results. */
   pubmedFallback: string;
+  /**
+   * Last-resort recall relaxation: the distinctive query tokens OR-ed together
+   * (generic filler dropped). Used ONLY when primary + broadened + fallback all
+   * return nothing, so an over-constrained AND-query (e.g. a multi-trial family
+   * lookup) cannot produce an empty result set. "" when relaxation adds nothing.
+   */
+  pubmedRelaxed: string;
   /** True when the user wants the newest evidence (sort by date, not relevance). */
   recency: boolean;
   /** Detected trial acronyms / registry ids (e.g. "DAPA-HF", "PARTNER 3", "NCT02675114"). */
@@ -75,8 +82,14 @@ function detectTrialAcronyms(raw: string): string[] {
     const matches = raw.match(re) ?? [];
     for (const m of matches) {
       // Skip obvious non-acronyms that slip past (e.g. "COVID-19", "SARS-CoV-2",
-      // "type-2") — those are concepts, not trial names.
-      if (/^(COVID-19|SARS-CoV-2|PD-L1|PD-1|SGLT-2|GLP-1|HER-2|TYPE-2)$/i.test(m)) continue;
+      // "type-2", "CAR-T", "B-cell") — those are concepts/biomarkers, not trials.
+      if (
+        /^(COVID-19|SARS-CoV-2|PD-L1|PD-1|SGLT-2|GLP-1|HER-2|HER2|TYPE-2|CAR-T|CAR-NK|T-CELL|B-CELL|NK-CELL|CTLA-4|IL-\d+|TNF-[A-Z]+|EGFR|ALK|BRAF|KRAS|BRCA-?\d?|PI3K|mTOR|mRNA|HLA-[A-Z0-9]+|NT-proBNP|HBA1C)$/i.test(
+          m
+        )
+      ) {
+        continue;
+      }
       found.add(m.trim());
     }
   }
@@ -138,6 +151,42 @@ export function buildTrialPubMedQuery(acronyms: string[], raw: string): string {
   return topic.length >= 3 ? `${acronymClause} AND (${topic})` : acronymClause;
 }
 
+// Generic clinical/scaffolding words that carry little retrieval signal — dropped
+// from the OR-relaxation so it keeps only distinctive entities (drugs, trials,
+// conditions). Kept small and conservative (never drops drug/trial/condition names).
+const RELAX_FILLER = new Set([
+  "the", "and", "for", "with", "from", "this", "that", "are", "was", "were",
+  "does", "did", "can", "may", "not", "but", "all", "any", "its", "their",
+  "than", "into", "over", "trial", "trials", "study", "studies", "outcome",
+  "outcomes", "result", "results", "patient", "patients", "adults", "adult",
+  "people", "therapy", "treatment", "disease", "large", "small", "effect",
+  "effects", "impact", "risk", "management", "versus", "compared", "comparison",
+  "efficacy", "safety", "use", "using", "role", "evidence", "recent", "latest",
+  "newest", "review", "analysis",
+]);
+
+/**
+ * Distinctive query tokens OR-ed together — a standard IR recall relaxation for
+ * an over-constrained AND-query. Preserves original token form (so hyphenated
+ * trial names like "EMPA-REG" survive) and drops generic filler. Returns "" when
+ * fewer than two distinctive tokens remain (relaxation would add nothing).
+ */
+export function relaxedOrQuery(raw: string): string {
+  const tokens = raw
+    .replace(/[?.!,;:()]/g, " ")
+    .split(/\s+/)
+    .map((t) => t.trim())
+    .filter((t) => t.length >= 3 && !RELAX_FILLER.has(t.toLowerCase()));
+  const seen = new Set<string>();
+  const distinct = tokens.filter((t) => {
+    const k = t.toLowerCase();
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+  return distinct.length >= 2 ? distinct.slice(0, 8).join(" OR ") : "";
+}
+
 export function planQuery(raw: string): QueryPlan {
   const trimmed = raw.trim();
   const trialAcronyms = detectTrialAcronyms(trimmed);
@@ -162,6 +211,7 @@ export function planQuery(raw: string): QueryPlan {
     pubmedPrimary,
     pubmedBroadened,
     pubmedFallback: trimmed,
+    pubmedRelaxed: relaxedOrQuery(trimmed),
     recency,
     trialAcronyms,
     isTrialLookup,
