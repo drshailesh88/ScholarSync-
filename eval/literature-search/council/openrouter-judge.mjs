@@ -60,7 +60,7 @@ async function judge() {
     body: JSON.stringify({
       model,
       temperature: 0,
-      max_tokens: 16000,
+      max_tokens: 32000,
       messages: [
         { role: "system", content: INSTRUCTION },
         { role: "user", content: packet },
