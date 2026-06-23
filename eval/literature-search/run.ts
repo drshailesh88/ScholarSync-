@@ -144,7 +144,12 @@ async function main() {
         (run.zeroSources.length ? ` [0: ${run.zeroSources.join(",")}]` : "") +
         (run.error ? ` ERR: ${run.error}` : "")
     );
-    await sleep(700); // be gentle on keyless PubMed (3 req/s)
+    // Pace between queries so a full benchmark does not SELF-throttle the shared
+    // OpenAlex/PubMed quota (2-4 OpenAlex calls/query × 87 queries trips the
+    // OpenAlex circuit breaker, degrading a whole batch and corrupting the
+    // aggregate — observed 14/87 lanes dropped at 700ms). 1500ms lets the
+    // OpenAlex token bucket refill and the breaker recover between queries.
+    await sleep(1500);
   }
 
   writeFileSync(
