@@ -1,5 +1,6 @@
 import type { UnifiedSearchResult, EvidenceLevel } from "@/types/search";
 import { lookupJournalQuality } from "./journal-quality";
+import { entityDriftPenalty } from "./entity-drift";
 
 // ── Configuration ───────────────────────────────────────────────────
 
@@ -181,6 +182,8 @@ export interface QualitySignals {
   journal: number;
   rrf: number;
   relevance: number;
+  /** Off-entity drift multiplier in (0,1] applied to the composite; 1 = no drift. */
+  entityDrift: number;
 }
 
 export interface ScoredResult {
@@ -195,6 +198,7 @@ interface ScoringContext {
   currentYear: number;
   maxRrf: number;
   queryKeywords: string[];
+  rawQuery: string;
   config: QualityRankingConfig;
 }
 
@@ -213,7 +217,15 @@ function buildScoringContext(
   const velocityCap = velocities[Math.floor(velocities.length * 0.99)] || 1;
   const maxRrf = Math.max(...results.map((r) => r.rrfScore ?? 0), 0.001);
   const queryKeywords = query ? extractQueryKeywords(query) : [];
-  return { citationCap, velocityCap, currentYear, maxRrf, queryKeywords, config };
+  return {
+    citationCap,
+    velocityCap,
+    currentYear,
+    maxRrf,
+    queryKeywords,
+    rawQuery: query ?? "",
+    config,
+  };
 }
 
 function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult {
@@ -234,15 +246,21 @@ function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult 
         : ctx.queryKeywords.length > 0
           ? computeRelevance(r, ctx.queryKeywords)
           : 0.5,
+    entityDrift: 1,
   };
   const c = ctx.config;
-  const composite =
+  const weighted =
     c.evidenceWeight * signals.evidence +
     c.citationWeight * signals.citation +
     c.velocityWeight * signals.velocity +
     c.journalWeight * signals.journal +
     c.rrfWeight * signals.rrf +
     c.relevanceWeight * signals.relevance;
+  // Gently demote (never drop) a result whose title is about a different subtype
+  // or specific drug than the query specifies — drift the cross-encoder cannot
+  // discriminate. The multiplier is recorded for the ranking trace.
+  signals.entityDrift = ctx.rawQuery ? entityDriftPenalty(ctx.rawQuery, r) : 1;
+  const composite = weighted * signals.entityDrift;
   return { result: r, composite, signals };
 }
 
