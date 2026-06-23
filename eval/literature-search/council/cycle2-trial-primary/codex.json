@@ -1,0 +1,722 @@
+{
+  "perQuery": [
+    {
+      "id": "tavr-low-risk-6yr",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A includes both landmark low-risk TAVR papers at ranks 1 and 2, while B misses the PARTNER 3 primary paper."
+    },
+    {
+      "id": "exact-dapa-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "Both retrieve the exact DAPA-HF paper first, but B has cleaner identifiers and a more relevant supporting set."
+    },
+    {
+      "id": "recency-lecanemab",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "B",
+      "note": "Both find CLARITY-AD first, but B provides more recent lecanemab evidence and fuller metadata."
+    },
+    {
+      "id": "pico-sglt2-cv-mortality",
+      "A": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A is more directly focused on SGLT2 cardiovascular outcomes and mortality in type 2 diabetes, whereas B drifts into kidney and heart-failure populations."
+    },
+    {
+      "id": "guideline-af-esc",
+      "A": {
+        "recall": 4,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 3
+      },
+      "winner": "B",
+      "note": "B ranks the 2020 and 2024 ESC AF guidelines much higher, while A buries current guidance below older duplicates."
+    },
+    {
+      "id": "compare-doac-vs-warfarin",
+      "A": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 2
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "B",
+      "note": "Neither engine retrieves the pivotal individual DOAC trials, but B leads with stronger meta-analytic evidence and fewer dubious top entries."
+    },
+    {
+      "id": "exact-recovery-dex",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 2
+      },
+      "winner": "A",
+      "note": "A places the RECOVERY dexamethasone NEJM paper first with complete identifiers, while B surrounds it with low-value commentaries and weak records."
+    },
+    {
+      "id": "exact-keynote-189",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "Both retrieve KEYNOTE-189 first, but B's supporting results are somewhat more focused on pembrolizumab plus chemotherapy in NSCLC."
+    },
+    {
+      "id": "acronym-dapa-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A resolves the acronym to the design paper, primary NEJM result, and key follow-ups, while B misses the primary trial result."
+    },
+    {
+      "id": "acronym-partner-3",
+      "A": {
+        "recall": 5,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 2
+      },
+      "B": {
+        "recall": 1,
+        "ranking": 1,
+        "metadata": 4,
+        "clinical_relevance": 1,
+        "explanation": 3,
+        "trust": 1
+      },
+      "winner": "A",
+      "note": "A contains the PARTNER 3 primary paper and follow-ups despite poor ranking, while B mostly returns unrelated HIV PARTNER studies."
+    },
+    {
+      "id": "acronym-keynote-189",
+      "A": {
+        "recall": 5,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 1,
+        "metadata": 3,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 2
+      },
+      "winner": "A",
+      "note": "A retrieves the KEYNOTE-189 primary and major follow-up papers, while B misses the landmark primary result and includes many unrelated KEYNOTE records."
+    },
+    {
+      "id": "acronym-sprint",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B includes both the SPRINT primary trial and final report, whereas A ranks the final report first but omits the primary 2015 paper."
+    },
+    {
+      "id": "broad-hfref-management",
+      "A": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A provides more useful broad HFrEF management reviews, while B is diluted by narrower comorbidity and non-management papers."
+    },
+    {
+      "id": "broad-cap-treatment",
+      "A": {
+        "recall": 4,
+        "ranking": 2,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A at least retrieves the official ATS/IDSA CAP guideline and major treatment evidence, while B relies more on summaries and lower-completeness guideline records."
+    },
+    {
+      "id": "broad-af-anticoagulation",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 1,
+        "ranking": 1,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A includes major anticoagulation trials and clinically relevant AF evidence, while B is mostly older narrative material without landmark DOAC trials."
+    },
+    {
+      "id": "pico-egdt-septic-shock",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Both are excellent, but B better respects the evidence hierarchy by leading with systematic and patient-level meta-analyses before the RCTs."
+    },
+    {
+      "id": "pico-oxygen-icu",
+      "A": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A ranks Oxygen-ICU and IOTA near the top, while B includes more off-target cardiac arrest, ECMO, and transfusion records."
+    },
+    {
+      "id": "recency-semaglutide-cv-2025",
+      "A": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 5,
+        "clinical_relevance": 2,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B retrieves SELECT and related cardiovascular-outcomes evidence, while A overemphasizes less direct 2025 obesity and real-world papers."
+    },
+    {
+      "id": "recency-cart-myeloma",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 1,
+        "metadata": 5,
+        "clinical_relevance": 2,
+        "explanation": 4,
+        "trust": 2
+      },
+      "winner": "A",
+      "note": "A is consistently focused on CAR-T therapy in multiple myeloma, while B has substantial lymphoma, microRNA, and solid-tumor drift."
+    },
+    {
+      "id": "sr-statins-primary-prevention",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A ranks high-quality primary-prevention statin meta-analyses and Cochrane evidence better than B, despite a few off-target items."
+    },
+    {
+      "id": "sr-sglt2-hf-hospitalization",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A leads with the highest-impact Lancet and EClinicalMedicine meta-analyses directly addressing heart-failure outcomes."
+    },
+    {
+      "id": "sr-cochrane-steroids-sepsis",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B includes the Cochrane reviews and major updated systematic reviews higher and more comprehensively than A."
+    },
+    {
+      "id": "guideline-aortic-stenosis",
+      "A": {
+        "recall": 5,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B ranks the 2017 update and 2020 ACC/AHA valvular guideline ahead of older duplicates, making it more clinically current."
+    },
+    {
+      "id": "guideline-kdigo-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A places the KDIGO 2024 CKD guideline and executive summary near the top, while B buries the full guideline among other KDIGO topics."
+    },
+    {
+      "id": "lto-bariatric-diabetes",
+      "A": {
+        "recall": 4,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A better covers long-term diabetes outcomes, including recent JAMA evidence, meta-analyses, and 5-year randomized follow-up."
+    },
+    {
+      "id": "lto-pci-vs-cabg-left-main",
+      "A": {
+        "recall": 4,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A has a stronger evidence hierarchy with an individual-patient meta-analysis and key SYNTAX and PRECOMBAT long-term follow-ups."
+    },
+    {
+      "id": "lto-dapa-ckd",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "B",
+      "note": "B retrieves the DAPA-CKD primary NEJM trial first and includes major long-term and prespecified renal analyses."
+    },
+    {
+      "id": "safety-vaccine-myocarditis",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Both are strong, but B ranks population-based and age-sex risk studies slightly better and includes key Israel and military cohorts."
+    },
+    {
+      "id": "safety-glp1-pancreatitis",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B prioritizes stronger meta-analytic and population-based pancreatitis evidence, while A includes more abstracts and lower-trust items."
+    },
+    {
+      "id": "safety-sglt2-dka",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "B",
+      "note": "B ranks the key DKA risk signal and systematic-review evidence higher, despite one clearly irrelevant record."
+    },
+    {
+      "id": "safety-fluoroquinolone-aneurysm",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both lists contain the major cohort studies and systematic reviews with strong ranking and complete identifiers."
+    },
+    {
+      "id": "compare-tirzepatide-semaglutide",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B ranks the head-to-head obesity evidence and major real-world comparison first, while A buries the NEJM head-to-head trial lower."
+    },
+    {
+      "id": "compare-ticagrelor-clopidogrel",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A places PLATO first and follows with relevant PLATO substudies and ACS comparisons, while B has more abstracts and off-target antiplatelet material."
+    },
+    {
+      "id": "mechanism-sglt2-cardioprotection",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A is consistently focused on mechanistic SGLT2 cardioprotection reviews and translational evidence, while B includes several unrelated clinical-outcome topics."
+    }
+  ],
+  "overall": {
+    "winner": "A",
+    "summary": "Engine A narrowly wins overall because it more often retrieved the exact landmark trial, acronym target, or high-quality systematic review in difficult broad and acronym queries. Engine B was stronger in several guideline, safety, and recency-sensitive searches, but it had more severe failures on acronym resolution and topic drift."
+  }
+}

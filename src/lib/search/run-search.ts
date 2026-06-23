@@ -502,7 +502,11 @@ async function runLiteratureSearchUncached(
 
   // Rank by clinical quality (relevance[rerank] + evidence hierarchy + citations
   // + velocity + journal) and annotate with a trace, flags, and "why relevant".
-  const ranked = rankAndAnnotate(fused, { query: searchQuery, recency: plan.recency });
+  const ranked = rankAndAnnotate(fused, {
+    query: searchQuery,
+    recency: plan.recency,
+    isTrialLookup: plan.isTrialLookup,
+  });
 
   let filtered = ranked;
   if (params.studyTypes && params.studyTypes.length > 0) {

@@ -14,6 +14,7 @@ import type { RankingTrace, UnifiedSearchResult } from "@/types/search";
 import { rankWithTrace, enrichJournalQuality, type ScoredResult } from "./quality-ranker";
 import { enrichStudyTypes } from "./study-type-detector";
 import { getEvidenceLevel } from "./evidence-level";
+import { demoteSecondaryTrialResults } from "./trial-ranking";
 
 const STOPWORDS = new Set([
   "the", "are", "what", "how", "does", "do", "and", "for", "with", "from",
@@ -171,6 +172,9 @@ export interface RankAndAnnotateOptions {
   query: string;
   /** When true, order by recency (newest first), keeping the quality trace. */
   recency?: boolean;
+  /** When true (a trial-acronym/NCT lookup), float the primary trial report above
+   *  its meta-analyses, sub-studies, and follow-ups. */
+  isTrialLookup?: boolean;
 }
 
 /**
@@ -248,9 +252,16 @@ export function rankAndAnnotate(
   // exact-match boosting, gated tightly so only verbatim-title queries trigger.
   const boosted = boostExactTitle(annotated, opts.query);
 
+  // Trial-acronym lookup: float the PRIMARY trial report above its meta-analyses,
+  // sub-studies, and follow-ups (which out-score it on citations/recency). Only
+  // raises the primary, never lowers it. Stable within groups.
+  const trialOrdered = opts.isTrialLookup
+    ? demoteSecondaryTrialResults(boosted)
+    : boosted;
+
   // Demote (never drop) retracted papers so they cannot occupy a top slot while
   // still being surfaced with their flag. Stable: preserves order within groups.
-  return demoteRetracted(boosted);
+  return demoteRetracted(trialOrdered);
 }
 
 function demoteRetracted(results: UnifiedSearchResult[]): UnifiedSearchResult[] {
