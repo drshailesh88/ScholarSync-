@@ -98,6 +98,42 @@ describe("entityDriftPenalty — off-specific-drug mismatch", () => {
   });
 });
 
+describe("entityDriftPenalty — off-outcome (adverse-event) drift", () => {
+  const PANC_Q = "GLP-1 receptor agonists and risk of acute pancreatitis";
+
+  it("demotes an efficacy-outcome MA for an adverse-event query", () => {
+    expect(
+      entityDriftPenalty(PANC_Q, {
+        title: "Cardiovascular, mortality, and kidney outcomes with GLP-1 receptor agonists",
+      })
+    ).toBeLessThan(1);
+  });
+
+  it("does NOT demote a result that covers the queried adverse outcome", () => {
+    expect(
+      entityDriftPenalty(PANC_Q, {
+        title: "GLP-1 receptor agonists and risk of acute pancreatitis: a meta-analysis",
+      })
+    ).toBe(1);
+  });
+
+  it("does NOT fire for an efficacy/PICO query that genuinely wants those outcomes", () => {
+    // The query is ABOUT cardiovascular mortality — efficacy results must NOT be demoted.
+    const q = "In adults with type 2 diabetes, do SGLT2 inhibitors reduce cardiovascular mortality?";
+    expect(
+      entityDriftPenalty(q, { title: "SGLT2 inhibitors and cardiovascular mortality outcomes" })
+    ).toBe(1);
+  });
+
+  it("fires for a ketoacidosis safety query", () => {
+    expect(
+      entityDriftPenalty("SGLT2 inhibitors and risk of diabetic ketoacidosis", {
+        title: "Cardiovascular and renal outcomes with SGLT2 inhibitors: a meta-analysis",
+      })
+    ).toBeLessThan(1);
+  });
+});
+
 describe("entityDriftPenalty — safety and bounds", () => {
   it("returns 1 for an unrelated query/result pair", () => {
     expect(

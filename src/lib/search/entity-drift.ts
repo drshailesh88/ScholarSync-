@@ -112,6 +112,28 @@ const DRUG_CLASSES: DrugClass[] = [
 
 const COMPARISON_RE = /\b(versus|vs\.?|compared (?:to|with)|head[- ]to[- ]head)\b/i;
 
+// Specific adverse-event outcomes. When the QUERY asks about one of these, a result
+// about a DIFFERENT (efficacy) outcome that never mentions the adverse event is
+// off-outcome drift (e.g. a "cardiovascular outcomes" MA for a "pancreatitis" query).
+const ADVERSE_OUTCOME_RE =
+  /\b(pancreatitis|pancreatic cancer|ketoacidosis|\bdka\b|myocarditis|pericarditis|aneurysm|dissection|amputation|fractures?|thrombo(?:sis|embolism)?|embolism|h[ae]morrhage|bleeding|malignanc(?:y|ies)|carcinoma|gangrene|rhabdomyolysis|angioedema|hypoglyc[ae]mia|retinopathy|nephrolithiasis|cholelithiasis|gallstones?)\b/i;
+
+// Efficacy / different-outcome markers in a RESULT title — the "wrong answer" shape
+// for an adverse-event query. Phrased as outcome clauses to avoid over-matching.
+const EFFICACY_OUTCOME_RE =
+  /\b(cardiovascular (?:outcomes?|disease|death|mortality|events?)|all-cause mortality|kidney (?:outcomes?|disease)|renal outcomes?|glyc[ae]mic (?:control|outcomes?)|hba1c|weight (?:loss|reduction)|heart failure hospitali[sz]ation|major adverse cardiovascular)\b/i;
+
+/** Demote a result about a different (efficacy) outcome than the adverse event the
+ *  query asks about. Returns 1 unless the query is adverse-event-specific AND the
+ *  result is off-outcome (efficacy markers, no coverage of the queried event). */
+function outcomeDriftPenalty(query: string, title: string): number {
+  const adverse = query.match(ADVERSE_OUTCOME_RE);
+  if (!adverse) return 1; // not an adverse-event query — never fire (protects PICO/efficacy queries)
+  // Coverage: the result mentions the SAME adverse outcome → not drift.
+  if (new RegExp(`\\b${adverse[0]}`, "i").test(title)) return 1;
+  return EFFICACY_OUTCOME_RE.test(title) ? OFFDRUG_PENALTY : 1;
+}
+
 /** Penalty when a result is about a different subtype than the query specifies. */
 export const CONTRAST_PENALTY = 0.65;
 /** Penalty when a result is about a different specific drug than the query names. */
@@ -157,6 +179,7 @@ export function entityDriftPenalty(
   const title = (result.title ?? "").toLowerCase();
   if (!title.trim()) return 1;
   const q = query.toLowerCase();
-  const factor = contrastPenalty(q, title) * offDrugPenalty(q, title);
+  const factor =
+    contrastPenalty(q, title) * offDrugPenalty(q, title) * outcomeDriftPenalty(q, title);
   return Math.min(1, Math.max(0.01, factor));
 }
