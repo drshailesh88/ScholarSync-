@@ -72,6 +72,12 @@ export interface RunLiteratureSearchParams {
    * fast — the OpenAlex dense semantic lane already provides corpus-free recall.
    */
   expandCitations?: boolean;
+  /**
+   * Eval-only: also return the post-enrichment/rerank candidate POOL (pre-final-
+   * ranking), so the offline harness can freeze it and re-rank deterministically.
+   * Off by default; never set on the live web/MCP path.
+   */
+  includeRawCandidates?: boolean;
 }
 
 export type LiteraturePaper = UnifiedSearchResult & {
@@ -102,6 +108,12 @@ export interface LiteratureSearchResult {
     trialAcronyms: string[];
     wantsTrials: boolean;
   };
+  /**
+   * Eval-only: the frozen post-enrichment/rerank candidate pool (present only when
+   * `includeRawCandidates` was set). Lets the offline harness re-rank a fixed pool
+   * deterministically, isolating ranking changes from live-retrieval noise.
+   */
+  rawCandidates?: UnifiedSearchResult[];
 }
 
 function withSourceTimeout<T>(
@@ -516,6 +528,12 @@ async function runLiteratureSearchUncached(
     ),
   ]);
 
+  // Eval-only: snapshot the enriched candidate pool BEFORE final ranking, so the
+  // offline harness can re-rank this exact pool deterministically.
+  const rawCandidates = params.includeRawCandidates
+    ? fused.map((r) => ({ ...r }))
+    : undefined;
+
   // Rank by clinical quality (relevance[rerank] + evidence hierarchy + citations
   // + velocity + journal) and annotate with a trace, flags, and "why relevant".
   const ranked = rankAndAnnotate(fused, {
@@ -560,6 +578,7 @@ async function runLiteratureSearchUncached(
       trialAcronyms: plan.trialAcronyms,
       wantsTrials: plan.wantsTrials,
     },
+    ...(rawCandidates ? { rawCandidates } : {}),
   };
 }
 
