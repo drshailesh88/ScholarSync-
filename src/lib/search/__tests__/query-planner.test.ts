@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { planQuery, simplifyForPubMed, coreTopicQuery } from "../query-planner";
+import { planQuery, simplifyForPubMed, coreTopicQuery, relaxedOrQuery } from "../query-planner";
 
 describe("simplifyForPubMed", () => {
   it("strips natural-language filler that breaks PubMed term mapping", () => {
@@ -55,6 +55,47 @@ describe("planQuery", () => {
     expect(planQuery("broad question about statins").wantsTrials).toBe(false);
   });
 
+  it("does not mistake CAR-T / B-cell concept tokens for trial acronyms", () => {
+    const plan = planQuery("ZUMA axicabtagene ciloleucel CAR-T trials large B-cell lymphoma");
+    expect(plan.trialAcronyms).not.toContain("CAR-T");
+    expect(plan.trialAcronyms).not.toContain("B-cell");
+  });
+});
+
+describe("relaxedOrQuery — empty-result recall relaxation", () => {
+  it("ORs the distinctive tokens and drops generic filler", () => {
+    const q = relaxedOrQuery("ZUMA axicabtagene ciloleucel CAR-T trials large B-cell lymphoma");
+    expect(q).toContain(" OR ");
+    expect(q.toLowerCase()).toContain("axicabtagene");
+    expect(q.toLowerCase()).toContain("lymphoma");
+    expect(q.toLowerCase()).not.toMatch(/\btrials\b/);
+    expect(q.toLowerCase()).not.toMatch(/\blarge\b/);
+  });
+
+  it("preserves hyphenated trial-name tokens in a multi-trial family query", () => {
+    const q = relaxedOrQuery("SGLT2 inhibitor cardiovascular outcome trials EMPA-REG DECLARE CANVAS");
+    expect(q).toContain(" OR ");
+    expect(q).toContain("EMPA-REG");
+  });
+
+  it("keeps distinctive single-word entities", () => {
+    const q = relaxedOrQuery("Evolut trials self-expanding transcatheter aortic valve replacement");
+    expect(q.toLowerCase()).toContain("evolut");
+    expect(q.toLowerCase()).toContain("transcatheter");
+  });
+
+  it("exposes the relaxed query on the plan", () => {
+    const plan = planQuery("SGLT2 inhibitor cardiovascular outcome trials EMPA-REG DECLARE CANVAS");
+    expect(plan.pubmedRelaxed).toContain(" OR ");
+  });
+
+  it("is empty for a short query with no distinctive multi-token content", () => {
+    // A 1-2 distinctive-token query gains nothing from OR-relaxation.
+    expect(relaxedOrQuery("statins")).toBe("");
+  });
+});
+
+describe("planQuery — broadening", () => {
   it("broadens to the core topic so landmark trials are retrievable", () => {
     // The seed query: PARTNER 3 (a 1-year trial) doesn't match "six year outcomes",
     // so a broadened "TAVR low risk" companion query is needed to fetch it.

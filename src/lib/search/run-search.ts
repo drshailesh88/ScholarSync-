@@ -247,7 +247,7 @@ const errorOutcome = (source: string, message: string): SourceOutcome => ({
  * Union dedup is handled downstream by RRF (`isSamePaper`).
  */
 async function searchPubMedPlanned(
-  queries: { primary: string; broadened: string | null; fallback: string },
+  queries: { primary: string; broadened: string | null; fallback: string; relaxed: string },
   opts: { maxResults: number; page: number; yearStart?: number; yearEnd?: number; recency: boolean }
 ): Promise<SourceOutcome> {
   const sort = opts.recency ? "date" : "relevance";
@@ -258,23 +258,38 @@ async function searchPubMedPlanned(
     yearEnd: opts.yearEnd,
     sort,
   } as const;
+  const safeSearch = (q: string) =>
+    searchPubMed(q, base).catch(() => ({ results: [], total: 0, status: okStatus() }));
 
   const runs = await Promise.all(
-    [queries.primary, queries.broadened]
-      .filter((q): q is string => Boolean(q))
-      .map((q) =>
-        searchPubMed(q, base).catch(() => ({ results: [], total: 0, status: okStatus() }))
-      )
+    [queries.primary, queries.broadened].filter((q): q is string => Boolean(q)).map(safeSearch)
   );
   const merged = runs.flatMap((r) => r.results);
   const total = Math.max(0, ...runs.map((r) => r.total));
   const status = runs.find((r) => r.status.status === "ok")?.status ?? runs[0]?.status ?? okStatus();
 
-  if (merged.length > 0 || queries.primary === queries.fallback) {
+  if (merged.length > 0) {
     return { source: "pubmed", results: merged, total, status };
   }
-  const fb = await searchPubMed(queries.fallback, base);
-  return { source: "pubmed", results: fb.results, total: fb.total, status: fb.status };
+
+  // Tier 2: verbatim fallback (distinct natural-language phrasing).
+  let out = { results: merged, total, status };
+  if (queries.primary !== queries.fallback) {
+    out = await safeSearch(queries.fallback);
+  }
+
+  // Tier 3: OR-relaxation — an over-constrained AND-query (e.g. a multi-trial
+  // family lookup) produced nothing; retry with the distinctive tokens OR-ed so
+  // recall never collapses to an empty result set.
+  if (
+    out.results.length === 0 &&
+    queries.relaxed &&
+    queries.relaxed !== queries.primary &&
+    queries.relaxed !== queries.fallback
+  ) {
+    out = await safeSearch(queries.relaxed);
+  }
+  return { source: "pubmed", results: out.results, total: out.total, status: out.status };
 }
 
 /**
@@ -321,8 +336,9 @@ async function runLiteratureSearchUncached(
   const plan = planQuery(searchQuery);
   const pmPrimary = params.pubmedQuery || plan.pubmedPrimary;
   const pmFallback = params.pubmedQuery || plan.pubmedFallback;
-  // A caller-supplied pubmedQuery overrides planning entirely (no broadening).
+  // A caller-supplied pubmedQuery overrides planning entirely (no broadening/relaxation).
   const pmBroadened = params.pubmedQuery ? null : plan.pubmedBroadened;
+  const pmRelaxed = params.pubmedQuery ? "" : plan.pubmedRelaxed;
 
   const promises: Promise<SourceOutcome>[] = [];
   const laneLabels: string[] = [];
@@ -337,7 +353,7 @@ async function runLiteratureSearchUncached(
       withSourceTimeout(
         "PubMed",
         searchPubMedPlanned(
-          { primary: pmPrimary, broadened: pmBroadened, fallback: pmFallback },
+          { primary: pmPrimary, broadened: pmBroadened, fallback: pmFallback, relaxed: pmRelaxed },
           {
             maxResults: poolPerSource,
             page,
