@@ -1,0 +1,1835 @@
+{
+  "perQuery": [
+    {
+      "id": "tavr-low-risk-6yr",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Engine A includes both must-have landmark papers at the top with correct ranking, while Engine B has some irrelevant entries."
+    },
+    {
+      "id": "exact-dapa-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Both engines have the must-have paper first, but Engine A has more relevant and complete metadata in the top results."
+    },
+    {
+      "id": "recency-lecanemab",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B has more recent and relevant papers near the top, better matching the recency-sensitive intent."
+    },
+    {
+      "id": "pico-sglt2-cv-mortality",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "Engine B includes more landmark CVOTs and meta-analyses relevant to the PICO question."
+    },
+    {
+      "id": "guideline-af-esc",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly rank the ESC AF guidelines at the top with complete metadata."
+    },
+    {
+      "id": "compare-doac-vs-warfarin",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "Engine A includes more relevant landmark RCTs and meta-analyses with better ranking."
+    },
+    {
+      "id": "exact-recovery-dex",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B has the must-have paper first with better metadata and fewer irrelevant entries."
+    },
+    {
+      "id": "exact-keynote-189",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the exact KEYNOTE-189 paper at the top with high-quality metadata."
+    },
+    {
+      "id": "acronym-dapa-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly resolve the DAPA-HF acronym to the landmark trial with relevant follow-ups."
+    },
+    {
+      "id": "acronym-partner-3",
+      "A": {
+        "recall": 1,
+        "ranking": 1,
+        "metadata": 3,
+        "clinical_relevance": 1,
+        "explanation": 2,
+        "trust": 1
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine A completely misses the TAVR trial, while Engine B correctly retrieves PARTNER 3 and related papers."
+    },
+    {
+      "id": "acronym-keynote-189",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes the exact KEYNOTE-189 paper at the top with better relevance and metadata."
+    },
+    {
+      "id": "acronym-sprint",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly resolve the SPRINT acronym to the landmark BP trial with relevant outcomes."
+    },
+    {
+      "id": "broad-hfref-management",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes more comprehensive guideline and landmark trial coverage for HFrEF management."
+    },
+    {
+      "id": "broad-cap-treatment",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Engine A includes IDSA/ATS guidelines and relevant RCTs, while Engine B has older or less relevant entries."
+    },
+    {
+      "id": "broad-af-anticoagulation",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "Engine A includes more landmark DOAC RCTs and is more clinically relevant for AF anticoagulation."
+    },
+    {
+      "id": "pico-egdt-septic-shock",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the ProCESS, ARISE, and ProMISe trials and relevant meta-analyses."
+    },
+    {
+      "id": "pico-oxygen-icu",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes the landmark ICU-ROX and LOCO2 trials, better addressing the PICO question."
+    },
+    {
+      "id": "recency-semaglutide-cv-2025",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 5,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "Engine A includes the SELECT trial and more recent evidence, though both have some irrelevant entries."
+    },
+    {
+      "id": "recency-cart-myeloma",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 5,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "Engine A includes more recent CAR-T reviews and trials specific to multiple myeloma."
+    },
+    {
+      "id": "sr-statins-primary-prevention",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes high-quality meta-analyses and network meta-analyses relevant to primary prevention."
+    },
+    {
+      "id": "sr-sglt2-hf-hospitalization",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include landmark SGLT2i trials and meta-analyses for HF hospitalization."
+    },
+    {
+      "id": "sr-cochrane-steroids-sepsis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the Cochrane review and relevant meta-analyses for corticosteroids in sepsis."
+    },
+    {
+      "id": "guideline-aortic-stenosis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly rank the ACC/AHA valvular heart disease guidelines at the top."
+    },
+    {
+      "id": "guideline-kdigo-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the KDIGO CKD guideline with high-quality metadata."
+    },
+    {
+      "id": "lto-bariatric-diabetes",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the STAMPEDE trial and long-term outcomes of bariatric surgery vs medical therapy."
+    },
+    {
+      "id": "lto-pci-vs-cabg-left-main",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the EXCEL, NOBLE, SYNTAX trials and relevant meta-analyses for left main disease."
+    },
+    {
+      "id": "lto-dapa-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the DAPA-CKD trial and long-term renal outcomes."
+    },
+    {
+      "id": "safety-vaccine-myocarditis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include landmark cohort studies and meta-analyses on mRNA vaccine myocarditis risk."
+    },
+    {
+      "id": "safety-glp1-pancreatitis",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes more relevant meta-analyses and cohort studies on GLP-1 RA pancreatitis risk."
+    },
+    {
+      "id": "safety-sglt2-dka",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes more landmark studies and meta-analyses on SGLT2 inhibitor DKA risk."
+    },
+    {
+      "id": "safety-fluoroquinolone-aneurysm",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include cohort studies and meta-analyses on fluoroquinolone aortic aneurysm risk."
+    },
+    {
+      "id": "compare-tirzepatide-semaglutide",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include head-to-head trials and meta-analyses comparing tirzepatide and semaglutide for weight loss."
+    },
+    {
+      "id": "compare-ticagrelor-clopidogrel",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the PLATO trial and relevant comparisons for ACS."
+    },
+    {
+      "id": "mechanism-sglt2-cardioprotection",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes more comprehensive reviews on the mechanistic basis of SGLT2 inhibitor cardioprotection."
+    },
+    {
+      "id": "psy-stard-major-depression",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly resolve the STAR*D acronym to the landmark sequenced-treatment report."
+    },
+    {
+      "id": "psy-catie-antipsychotics",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the CATIE trial for antipsychotic effectiveness in schizophrenia."
+    },
+    {
+      "id": "psy-esketamine-trd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the TRANSFORM trials and relevant meta-analyses for esketamine in TRD."
+    },
+    {
+      "id": "psy-ketamine-nmda-depression",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the Zarate ketamine RCT and mechanistic reviews for rapid antidepressant effects."
+    },
+    {
+      "id": "psy-lithium-bipolar-maintenance",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the BALANCE trial comparing lithium and valproate for bipolar maintenance."
+    },
+    {
+      "id": "psy-ssri-vs-placebo-depression",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both engines include meta-analyses on SSRIs vs placebo, though neither has the highest-quality network meta-analyses."
+    },
+    {
+      "id": "exact-flaura-osimertinib",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the FLAURA trial by exact title with high-quality metadata."
+    },
+    {
+      "id": "exact-keynote-006-melanoma",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the KEYNOTE-006 trial by exact title with high-quality metadata."
+    },
+    {
+      "id": "family-keynote-trials",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes more landmark KEYNOTE trials across tumor types, better representing the trial family."
+    },
+    {
+      "id": "onc-her2-adjuvant-residual",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the KATHERINE trial for T-DM1 in residual HER2+ breast cancer."
+    },
+    {
+      "id": "onc-immunotherapy-broad",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both engines provide overviews of checkpoint inhibitors but lack some landmark RCTs."
+    },
+    {
+      "id": "onc-car-t-lbcl-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Engine A includes the ZUMA-7 and TRANSFORM trials, directly addressing the PICO question."
+    },
+    {
+      "id": "onc-checkpoint-irae-safety",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include comprehensive meta-analyses and guidelines on immune-related adverse events."
+    },
+    {
+      "id": "exact-dawn-thrombectomy",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B has the exact DAWN paper with better metadata and fewer irrelevant entries."
+    },
+    {
+      "id": "neuro-thrombectomy-broad",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes more landmark RCTs like MR CLEAN and DEFUSE-3 for thrombectomy in LVO stroke."
+    },
+    {
+      "id": "neuro-tenecteplase-vs-alteplase",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes the EXTEND-IA TNK, AcT, and NOR-TEST trials, directly comparing tenecteplase and alteplase."
+    },
+    {
+      "id": "neuro-lecanemab-pico",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both engines include the CLARITY-AD trial and meta-analyses, though with some irrelevant entries."
+    },
+    {
+      "id": "neuro-ms-dmt-comparison",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include trials and cohorts comparing high-efficacy vs moderate-efficacy DMTs in MS."
+    },
+    {
+      "id": "neuro-epilepsy-guideline",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the AES/NCS status epilepticus guidelines."
+    },
+    {
+      "id": "exact-recovery-tocilizumab",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the RECOVERY tocilizumab trial by exact title."
+    },
+    {
+      "id": "id-hiv-prep-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Engine A includes the HPTN 083/084 trials, directly addressing the PICO question for LA cabotegravir."
+    },
+    {
+      "id": "id-sepsis-broad",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Engine A includes the Surviving Sepsis guidelines and landmark RCTs, while Engine B has less relevant entries."
+    },
+    {
+      "id": "id-antibiotic-duration-pneumonia",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include meta-analyses and RCTs comparing short vs long antibiotic courses for CAP."
+    },
+    {
+      "id": "id-paxlovid-recency",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes more recent real-world evidence and RCTs for nirmatrelvir-ritonavir in vaccinated populations."
+    },
+    {
+      "id": "id-fluoroquinolone-cdiff-safety",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include cohort studies and meta-analyses on fluoroquinolone C. difficile risk."
+    },
+    {
+      "id": "endo-surmount-obesity",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the SURMOUNT-1 trial for tirzepatide in obesity."
+    },
+    {
+      "id": "exact-select-semaglutide",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the SELECT trial by exact title with high-quality metadata."
+    },
+    {
+      "id": "endo-thyroid-guideline",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the ATA hypothyroidism guideline."
+    },
+    {
+      "id": "endo-glp1-mechanism",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes more comprehensive reviews on GLP-1 RA mechanisms for appetite and weight loss."
+    },
+    {
+      "id": "endo-t2dm-first-line-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the UKPDS and DPP trials comparing metformin vs lifestyle for new T2DM."
+    },
+    {
+      "id": "exact-dapa-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the DAPA-CKD trial by exact title."
+    },
+    {
+      "id": "neph-finerenone-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the FIDELIO-DKD and FIGARO-DKD trials for finerenone in diabetic kidney disease."
+    },
+    {
+      "id": "neph-iga-nephropathy-recency",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both engines include recent reviews on IgA nephropathy treatments but lack landmark RCTs."
+    },
+    {
+      "id": "neph-ckd-anemia-broad",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes landmark HIF-PHI RCTs and guidelines for anemia in CKD."
+    },
+    {
+      "id": "family-partner-trials",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B includes the PARTNER 1, 2, and 3 trials, better representing the TAVR trial family."
+    },
+    {
+      "id": "family-emperor-sglt2-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly resolve the EMPEROR program to its landmark empagliflozin HF trials."
+    },
+    {
+      "id": "exact-plato-ticagrelor",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the PLATO trial by exact title."
+    },
+    {
+      "id": "sr-doac-vs-warfarin-metaanalysis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include high-quality meta-analyses comparing DOACs vs warfarin for AF."
+    },
+    {
+      "id": "sr-pci-vs-cabg-metaanalysis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include patient-level meta-analyses comparing PCI vs CABG for multivessel disease."
+    },
+    {
+      "id": "guideline-esc-heart-failure",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly retrieve the ESC heart failure guideline."
+    },
+    {
+      "id": "recency-tavr-2025",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both engines include some recent TAVR outcomes but lack the latest 2025 long-term trials."
+    },
+    {
+      "id": "lto-stampede-bariatric-cardiac",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the STAMPEDE trial and long-term diabetes remission after bariatric surgery."
+    },
+    {
+      "id": "recency-esketamine-monotherapy-2025",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines include the 2025 esketamine monotherapy RCT for treatment-resistant depression."
+    },
+    {
+      "id": "family-evolut-trials",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine A has no results, while Engine B correctly retrieves the Evolut TAVR trial family."
+    },
+    {
+      "id": "family-sglt2-cvot-trials",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine A has no results, while Engine B includes the EMPA-REG, DECLARE, and CANVAS CVOTs."
+    },
+    {
+      "id": "acronym-aristotle",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly resolve the ARISTOTLE acronym to the apixaban vs warfarin AF trial."
+    },
+    {
+      "id": "acronym-empa-reg",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly resolve the EMPA-REG OUTCOME acronym to the empagliflozin CVOT."
+    },
+    {
+      "id": "family-zuma-cart-trials",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "winner": "A",
+      "note": "Engine A includes the ZUMA-1 and ZUMA-7 trials, while Engine B has no results."
+    },
+    {
+      "id": "ambiguous-ace-acronym",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Engine B surfaces multiple clinical trials named 'ACE' for disambiguation, while Engine A is narrowly focused."
+    },
+    {
+      "id": "ambiguous-cast-acronym",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly surface the Cardiac Arrhythmia Suppression Trial when 'cardiology' is specified."
+    },
+    {
+      "id": "negctrl-keynote-heart-failure",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Engine A correctly avoids KEYNOTE oncology trials and surfaces HFrEF trials, while Engine B includes some irrelevant entries."
+    },
+    {
+      "id": "negctrl-dapa-oncology",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly avoid the non-existent DAPA oncology trial and surface relevant breast cancer chemotherapy trials."
+    },
+    {
+      "id": "negctrl-recovery-orthopedics",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both engines correctly avoid the COVID-19 RECOVERY trial and surface enhanced recovery after hip replacement studies."
+    }
+  ],
+  "overall": {
+    "winner": "B",
+    "summary": "Engine B wins overall with superior performance in recency-sensitive queries, systematic reviews, and ambiguous acronym resolution, while Engine A excels in some exact paper retrievals and negative controls. Engine B demonstrated better consistency across a wider range of query types, particularly in delivering high-quality, relevant results for complex clinical questions."
+  }
+}

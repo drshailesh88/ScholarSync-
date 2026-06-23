@@ -1,0 +1,1835 @@
+{
+  "perQuery": [
+    {
+      "id": "tavr-low-risk-6yr",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A contains both required landmarks at the top with complete metadata; B misses PARTNER 3."
+    },
+    {
+      "id": "exact-dapa-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "Both retrieve the exact NEJM paper first, but A has cleaner metadata and fewer duplicates."
+    },
+    {
+      "id": "recency-lecanemab",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B ranks the landmark CLARITY-AD paper first with higher-quality supporting evidence."
+    },
+    {
+      "id": "pico-sglt2-cv-mortality",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces higher-quality meta-analyses and CVOTs relevant to the PICO question."
+    },
+    {
+      "id": "guideline-af-esc",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B correctly ranks the most recent 2024 ESC AF guideline at the top."
+    },
+    {
+      "id": "compare-doac-vs-warfarin",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "tie",
+      "note": "Both retrieve the key network meta-analysis and PLATO-related papers with comparable quality."
+    },
+    {
+      "id": "exact-recovery-dex",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B places the exact NEJM RECOVERY dexamethasone paper first with complete identifiers."
+    },
+    {
+      "id": "exact-keynote-189",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the exact NEJM KEYNOTE-189 paper as the top result."
+    },
+    {
+      "id": "acronym-dapa-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A retrieves the primary NEJM DAPA-HF paper and relevant follow-ups with better ranking."
+    },
+    {
+      "id": "acronym-partner-3",
+      "A": {
+        "recall": 1,
+        "ranking": 1,
+        "metadata": 2,
+        "clinical_relevance": 1,
+        "explanation": 1,
+        "trust": 1
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B correctly returns the PARTNER 3 NEJM paper and related TAVR follow-ups; A returns unrelated HIV PARTNER studies."
+    },
+    {
+      "id": "acronym-keynote-189",
+      "A": {
+        "recall": 3,
+        "ranking": 2,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the exact KEYNOTE-189 NEJM paper and related updates; A returns mostly commentary."
+    },
+    {
+      "id": "acronym-sprint",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A places the definitive NEJM SPRINT reports at the top with complete metadata."
+    },
+    {
+      "id": "broad-hfref-management",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns higher-quality guideline and review papers relevant to HFrEF management."
+    },
+    {
+      "id": "broad-cap-treatment",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the authoritative IDSA/ATS guideline and recent reviews first."
+    },
+    {
+      "id": "broad-af-anticoagulation",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A retrieves the key DOAC landmark trials and guidelines more directly."
+    },
+    {
+      "id": "pico-egdt-septic-shock",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the ProCESS/ARISE/ProMISe trials and meta-analyses."
+    },
+    {
+      "id": "pico-oxygen-icu",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns the key Oxygen-ICU trial and IOTA meta-analysis at the top."
+    },
+    {
+      "id": "recency-semaglutide-cv-2025",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A surfaces the SELECT trial and more recent 2025 analyses; B returns mostly protocol papers."
+    },
+    {
+      "id": "recency-cart-myeloma",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A provides more recent 2024-2025 CAR-T myeloma reviews and updates."
+    },
+    {
+      "id": "sr-statins-primary-prevention",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns higher-quality Cochrane and network meta-analyses on statins."
+    },
+    {
+      "id": "sr-sglt2-hf-hospitalization",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the key EMPEROR/DAPA-HF meta-analyses with comparable quality."
+    },
+    {
+      "id": "sr-cochrane-steroids-sepsis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the Cochrane reviews on corticosteroids in sepsis."
+    },
+    {
+      "id": "guideline-aortic-stenosis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A ranks the 2020/2021 ACC/AHA valvular guidelines higher with complete citations."
+    },
+    {
+      "id": "guideline-kdigo-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly retrieve the 2024 KDIGO CKD guideline as the top result."
+    },
+    {
+      "id": "lto-bariatric-diabetes",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both surface the key STAMPEDE/SOS long-term bariatric outcome papers."
+    },
+    {
+      "id": "lto-pci-vs-cabg-left-main",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the SYNTAX/PRECOMBAT 10-year follow-ups and meta-analyses."
+    },
+    {
+      "id": "lto-dapa-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly place the NEJM DAPA-CKD paper at the top."
+    },
+    {
+      "id": "safety-vaccine-myocarditis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both return the key JAMA and Circulation myocarditis cohort studies."
+    },
+    {
+      "id": "safety-glp1-pancreatitis",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces higher-quality meta-analyses on GLP-1 pancreatitis risk."
+    },
+    {
+      "id": "safety-sglt2-dka",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns the key NEJM and meta-analysis papers on SGLT2 DKA risk."
+    },
+    {
+      "id": "safety-fluoroquinolone-aneurysm",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the key BMJ and JAMA Internal Medicine fluoroquinolone studies."
+    },
+    {
+      "id": "compare-tirzepatide-semaglutide",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both surface the direct SURMOUNT/STEP comparative trials and meta-analyses."
+    },
+    {
+      "id": "compare-ticagrelor-clopidogrel",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly retrieve the PLATO NEJM paper as the top result."
+    },
+    {
+      "id": "mechanism-sglt2-cardioprotection",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns higher-quality mechanistic reviews on SGLT2 cardioprotection."
+    },
+    {
+      "id": "psy-stard-major-depression",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the primary STAR*D Am J Psychiatry report."
+    },
+    {
+      "id": "psy-catie-antipsychotics",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A places the landmark NEJM CATIE paper and phase-1 results at the top."
+    },
+    {
+      "id": "psy-esketamine-trd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the TRANSFORM-2 and key esketamine TRD trials."
+    },
+    {
+      "id": "psy-ketamine-nmda-depression",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the Zarate 2006 Arch Gen Psychiatry ketamine RCT."
+    },
+    {
+      "id": "psy-lithium-bipolar-maintenance",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the BALANCE Lancet trial and related meta-analyses."
+    },
+    {
+      "id": "psy-ssri-vs-placebo-depression",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces higher-quality meta-analyses and Cipriani-style network reviews."
+    },
+    {
+      "id": "exact-flaura-osimertinib",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly place the NEJM FLAURA paper at the top."
+    },
+    {
+      "id": "exact-keynote-006-melanoma",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the exact NEJM KEYNOTE-006 paper as the top result."
+    },
+    {
+      "id": "family-keynote-trials",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces multiple landmark KEYNOTE oncology trials with better ranking."
+    },
+    {
+      "id": "onc-her2-adjuvant-residual",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly retrieve the KATHERINE NEJM paper at the top."
+    },
+    {
+      "id": "onc-immunotherapy-broad",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns higher-quality broad immunotherapy reviews and guidelines."
+    },
+    {
+      "id": "onc-car-t-lbcl-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A surfaces the ZUMA-7 and TRANSFORM CAR-T trials with better ranking."
+    },
+    {
+      "id": "onc-checkpoint-irae-safety",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A retrieves the key ASCO/SITC irAE management guidelines first."
+    },
+    {
+      "id": "exact-dawn-thrombectomy",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly place the NEJM DAWN paper at the top."
+    },
+    {
+      "id": "neuro-thrombectomy-broad",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the key MR CLEAN/DAWN/DEFUSE-3 trials and guidelines."
+    },
+    {
+      "id": "neuro-tenecteplase-vs-alteplase",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B retrieves the EXTEND-IA TNK and AcT trials with superior ranking."
+    },
+    {
+      "id": "neuro-lecanemab-pico",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the CLARITY-AD and donanemab trials with better relevance."
+    },
+    {
+      "id": "neuro-ms-dmt-comparison",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the key high- vs moderate-efficacy DMT cohort studies."
+    },
+    {
+      "id": "neuro-epilepsy-guideline",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the AES and NCS status epilepticus guidelines."
+    },
+    {
+      "id": "exact-recovery-tocilizumab",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both place the Lancet RECOVERY tocilizumab paper at the top."
+    },
+    {
+      "id": "id-hiv-prep-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A surfaces the HPTN 083/084 cabotegravir PrEP trials with better ranking."
+    },
+    {
+      "id": "id-sepsis-broad",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the Surviving Sepsis Campaign guidelines and key RCTs."
+    },
+    {
+      "id": "id-antibiotic-duration-pneumonia",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns higher-quality meta-analyses on short- vs long-course CAP therapy."
+    },
+    {
+      "id": "id-paxlovid-recency",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A surfaces the most recent 2024-2025 nirmatrelvir real-world studies."
+    },
+    {
+      "id": "id-fluoroquinolone-cdiff-safety",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the key Quebec outbreak and meta-analysis papers."
+    },
+    {
+      "id": "endo-surmount-obesity",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the SURMOUNT-1 NEJM paper at the top."
+    },
+    {
+      "id": "exact-select-semaglutide",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both place the SELECT NEJM paper at the top with complete metadata."
+    },
+    {
+      "id": "endo-thyroid-guideline",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the authoritative ATA hypothyroidism guidelines first."
+    },
+    {
+      "id": "endo-glp1-mechanism",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns higher-quality mechanistic reviews on GLP-1 appetite effects."
+    },
+    {
+      "id": "endo-t2dm-first-line-pico",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the UKPDS and DPP lifestyle-vs-metformin trials with better ranking."
+    },
+    {
+      "id": "exact-dapa-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly retrieve the NEJM DAPA-CKD paper as the top result."
+    },
+    {
+      "id": "neph-finerenone-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both surface the FIDELIO/FIGARO and FIDELITY pooled analyses."
+    },
+    {
+      "id": "neph-iga-nephropathy-recency",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns more recent 2024-2025 IgA nephropathy therapeutic updates."
+    },
+    {
+      "id": "neph-ckd-anemia-broad",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the key HIF-PHI and ESA KDIGO-related papers with better ranking."
+    },
+    {
+      "id": "family-partner-trials",
+      "A": {
+        "recall": 3,
+        "ranking": 2,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B correctly retrieves the PARTNER 1/2/3 TAVR landmark papers."
+    },
+    {
+      "id": "family-emperor-sglt2-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both surface the EMPEROR-Reduced and Preserved NEJM papers."
+    },
+    {
+      "id": "exact-plato-ticagrelor",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly place the PLATO NEJM paper at the top."
+    },
+    {
+      "id": "sr-doac-vs-warfarin-metaanalysis",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B returns higher-quality network meta-analyses on DOAC vs warfarin."
+    },
+    {
+      "id": "sr-pci-vs-cabg-metaanalysis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the key patient-level PCI vs CABG meta-analyses."
+    },
+    {
+      "id": "guideline-esc-heart-failure",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the 2021/2023 ESC HF guidelines at the top."
+    },
+    {
+      "id": "recency-tavr-2025",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces more recent 2025 TAVR long-term outcome meta-analyses."
+    },
+    {
+      "id": "lto-stampede-bariatric-cardiac",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both retrieve the STAMPEDE 5-year and 10-year follow-up papers."
+    },
+    {
+      "id": "recency-esketamine-monotherapy-2025",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the 2025 JAMA Psychiatry esketamine monotherapy RCT."
+    },
+    {
+      "id": "family-evolut-trials",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B retrieves the Evolut Low Risk and SURTAVI self-expanding TAVR trials; A returns none."
+    },
+    {
+      "id": "family-sglt2-cvot-trials",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the EMPA-REG, CANVAS and DECLARE CVOT papers; A returns none."
+    },
+    {
+      "id": "acronym-aristotle",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly retrieve the ARISTOTLE NEJM apixaban paper at the top."
+    },
+    {
+      "id": "acronym-empa-reg",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the EMPA-REG OUTCOME NEJM paper at the top."
+    },
+    {
+      "id": "family-zuma-cart-trials",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "winner": "A",
+      "note": "A retrieves the ZUMA-1 and ZUMA-7 axi-cel CAR-T trials; B returns none."
+    },
+    {
+      "id": "ambiguous-ace-acronym",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B surfaces the relevant ACE-inhibitor cardiology trials and the ACE trial acronym disambiguation."
+    },
+    {
+      "id": "ambiguous-cast-acronym",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "tie",
+      "note": "Both correctly surface the Cardiac Arrhythmia Suppression Trial (CAST) papers."
+    },
+    {
+      "id": "negctrl-keynote-heart-failure",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "winner": "tie",
+      "note": "Neither engine returns irrelevant KEYNOTE oncology papers for a heart-failure query."
+    },
+    {
+      "id": "negctrl-dapa-oncology",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "winner": "tie",
+      "note": "Neither engine returns irrelevant DAPA-HF papers for an oncology query."
+    },
+    {
+      "id": "negctrl-recovery-orthopedics",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "winner": "tie",
+      "note": "Neither engine returns irrelevant RECOVERY COVID papers for an orthopedic query."
+    }
+  ],
+  "overall": {
+    "winner": "A",
+    "summary": "Engine A more consistently surfaces exact landmark papers with superior recall, ranking and metadata across exact-paper, acronym and family queries. Engine B performs better on some recency and broad guideline queries but occasionally misses required landmarks or returns lower-quality items."
+  }
+}
