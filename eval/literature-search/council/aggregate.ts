@@ -23,7 +23,8 @@ interface PerQuery {
 }
 interface Verdict { perQuery: PerQuery[]; overall: { winner: string; summary: string }; }
 
-const JUDGES = ["opus", "codex", "grok"] as const;
+const JUDGES = ["opus", "codex", "grok", "gemini", "deepseek"] as const;
+const runLabel = process.argv[2] ?? "fix-wildcard";
 const verdicts: Record<string, Verdict> = {};
 for (const j of JUDGES) {
   const p = join(HERE, `${j}.json`);
@@ -74,8 +75,8 @@ const overallWinners = present.map((j) => verdicts[j].overall.winner);
 // ── Markdown ──────────────────────────────────────────────────────────
 const md: string[] = [];
 md.push("# LLM-Council Verdict — Manan vs Elicit", "");
-md.push(`Judges: ${present.join(", ")} (cross-family: Anthropic Opus · OpenAI Codex · xAI Grok).`);
-md.push(`Manan run: \`improved\` (note: this run had the optional Cohere cross-encoder rerank **inactive** — a conservative lower bound).`, "");
+md.push(`Judges: ${present.join(", ")} (cross-family: Anthropic Opus · OpenAI Codex · Google Gemini).`);
+md.push(`Manan run: \`${runLabel}\` (current \`main\` HEAD, with the OpenAlex wildcard-400 fix and Cohere cross-encoder active).`, "");
 md.push("## Per-query majority vote", "");
 md.push(`| query | ${present.join(" | ")} | **majority** | Manan mean | Elicit mean |`);
 md.push(`|---|${present.map(() => "---").join("|")}|---|---|---|`);

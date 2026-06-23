@@ -2,15 +2,15 @@
   "judges": [
     "opus",
     "codex",
-    "grok"
+    "deepseek"
   ],
   "tally": {
-    "manan": 4,
-    "elicit": 2,
-    "tie": 0
+    "manan": 25,
+    "elicit": 7,
+    "tie": 2
   },
   "overallWinners": [
-    "elicit",
+    "manan",
     "manan",
     "manan"
   ],
@@ -20,66 +20,374 @@
       "winners": {
         "opus": "elicit",
         "codex": "elicit",
-        "grok": "elicit"
+        "deepseek": "manan"
       },
       "majority": "elicit",
-      "mananMean": 2.94,
-      "elicitMean": 5
+      "mananMean": 4.56,
+      "elicitMean": 4.61
     },
     {
       "id": "exact-dapa-hf",
       "winners": {
         "opus": "manan",
         "codex": "manan",
-        "grok": "manan"
+        "deepseek": "manan"
       },
       "majority": "manan",
-      "mananMean": 4.94,
-      "elicitMean": 4.5
+      "mananMean": 5,
+      "elicitMean": 3.89
     },
     {
       "id": "recency-lecanemab",
       "winners": {
-        "opus": "elicit",
-        "codex": "elicit",
-        "grok": "elicit"
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
       },
-      "majority": "elicit",
-      "mananMean": 2.56,
-      "elicitMean": 4.83
+      "majority": "manan",
+      "mananMean": 4.56,
+      "elicitMean": 3.89
     },
     {
       "id": "pico-sglt2-cv-mortality",
       "winners": {
-        "opus": "manan",
+        "opus": "elicit",
         "codex": "manan",
-        "grok": "manan"
+        "deepseek": "manan"
       },
       "majority": "manan",
-      "mananMean": 4.22,
-      "elicitMean": 4
+      "mananMean": 4.28,
+      "elicitMean": 3.56
     },
     {
       "id": "guideline-af-esc",
       "winners": {
         "opus": "manan",
         "codex": "manan",
-        "grok": "manan"
+        "deepseek": "tie"
       },
       "majority": "manan",
-      "mananMean": 4.33,
-      "elicitMean": 3.56
+      "mananMean": 4.72,
+      "elicitMean": 3.94
     },
     {
       "id": "compare-doac-vs-warfarin",
       "winners": {
-        "opus": "elicit",
+        "opus": "tie",
         "codex": "manan",
-        "grok": "manan"
+        "deepseek": "manan"
       },
       "majority": "manan",
-      "mananMean": 3.56,
-      "elicitMean": 3.17
+      "mananMean": 4.33,
+      "elicitMean": 3.22
+    },
+    {
+      "id": "exact-recovery-dex",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 5,
+      "elicitMean": 3.67
+    },
+    {
+      "id": "exact-keynote-189",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 5,
+      "elicitMean": 4.11
+    },
+    {
+      "id": "acronym-dapa-hf",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.67,
+      "elicitMean": 3.72
+    },
+    {
+      "id": "acronym-partner-3",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 3.5,
+      "elicitMean": 1.56
+    },
+    {
+      "id": "acronym-keynote-189",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.83,
+      "elicitMean": 2.72
+    },
+    {
+      "id": "acronym-sprint",
+      "winners": {
+        "opus": "elicit",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.39,
+      "elicitMean": 3.83
+    },
+    {
+      "id": "broad-hfref-management",
+      "winners": {
+        "opus": "elicit",
+        "codex": "elicit",
+        "deepseek": "elicit"
+      },
+      "majority": "elicit",
+      "mananMean": 3.22,
+      "elicitMean": 3.89
+    },
+    {
+      "id": "broad-cap-treatment",
+      "winners": {
+        "opus": "elicit",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 3.83,
+      "elicitMean": 3.11
+    },
+    {
+      "id": "broad-af-anticoagulation",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.44,
+      "elicitMean": 2.5
+    },
+    {
+      "id": "pico-egdt-septic-shock",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 5,
+      "elicitMean": 4.22
+    },
+    {
+      "id": "pico-oxygen-icu",
+      "winners": {
+        "opus": "tie",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.61,
+      "elicitMean": 4.06
+    },
+    {
+      "id": "recency-semaglutide-cv-2025",
+      "winners": {
+        "opus": "elicit",
+        "codex": "elicit",
+        "deepseek": "manan"
+      },
+      "majority": "elicit",
+      "mananMean": 3.72,
+      "elicitMean": 3.72
+    },
+    {
+      "id": "recency-cart-myeloma",
+      "winners": {
+        "opus": "tie",
+        "codex": "elicit",
+        "deepseek": "manan"
+      },
+      "majority": "tie",
+      "mananMean": 3.83,
+      "elicitMean": 3.61
+    },
+    {
+      "id": "sr-statins-primary-prevention",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.67,
+      "elicitMean": 3.67
+    },
+    {
+      "id": "sr-sglt2-hf-hospitalization",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 5,
+      "elicitMean": 4.11
+    },
+    {
+      "id": "sr-cochrane-steroids-sepsis",
+      "winners": {
+        "opus": "elicit",
+        "codex": "elicit",
+        "deepseek": "manan"
+      },
+      "majority": "elicit",
+      "mananMean": 4.67,
+      "elicitMean": 4.56
+    },
+    {
+      "id": "guideline-aortic-stenosis",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "tie"
+      },
+      "majority": "manan",
+      "mananMean": 4.83,
+      "elicitMean": 3.94
+    },
+    {
+      "id": "guideline-kdigo-ckd",
+      "winners": {
+        "opus": "elicit",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.67,
+      "elicitMean": 4.22
+    },
+    {
+      "id": "lto-bariatric-diabetes",
+      "winners": {
+        "opus": "manan",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.94,
+      "elicitMean": 4.11
+    },
+    {
+      "id": "lto-pci-vs-cabg-left-main",
+      "winners": {
+        "opus": "tie",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 5,
+      "elicitMean": 4.22
+    },
+    {
+      "id": "lto-dapa-ckd",
+      "winners": {
+        "opus": "tie",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.89,
+      "elicitMean": 4.22
+    },
+    {
+      "id": "safety-vaccine-myocarditis",
+      "winners": {
+        "opus": "elicit",
+        "codex": "elicit",
+        "deepseek": "manan"
+      },
+      "majority": "elicit",
+      "mananMean": 4.67,
+      "elicitMean": 4.5
+    },
+    {
+      "id": "safety-glp1-pancreatitis",
+      "winners": {
+        "opus": "elicit",
+        "codex": "elicit",
+        "deepseek": "manan"
+      },
+      "majority": "elicit",
+      "mananMean": 4.33,
+      "elicitMean": 4.11
+    },
+    {
+      "id": "safety-sglt2-dka",
+      "winners": {
+        "opus": "elicit",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.72,
+      "elicitMean": 3.78
+    },
+    {
+      "id": "safety-fluoroquinolone-aneurysm",
+      "winners": {
+        "opus": "tie",
+        "codex": "tie",
+        "deepseek": "manan"
+      },
+      "majority": "tie",
+      "mananMean": 5,
+      "elicitMean": 4.56
+    },
+    {
+      "id": "compare-tirzepatide-semaglutide",
+      "winners": {
+        "opus": "manan",
+        "codex": "tie",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 4.94,
+      "elicitMean": 4.33
+    },
+    {
+      "id": "compare-ticagrelor-clopidogrel",
+      "winners": {
+        "opus": "tie",
+        "codex": "manan",
+        "deepseek": "manan"
+      },
+      "majority": "manan",
+      "mananMean": 5,
+      "elicitMean": 4.28
+    },
+    {
+      "id": "mechanism-sglt2-cardioprotection",
+      "winners": {
+        "opus": "elicit",
+        "codex": "elicit",
+        "deepseek": "manan"
+      },
+      "majority": "elicit",
+      "mananMean": 4.5,
+      "elicitMean": 4.56
     }
   ]
 }

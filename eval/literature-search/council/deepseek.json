@@ -1,0 +1,722 @@
+{
+  "perQuery": [
+    {
+      "id": "tavr-low-risk-6yr",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes both landmark trials and recent meta-analyses with better ranking and metadata completeness."
+    },
+    {
+      "id": "exact-dapa-hf",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Both retrieve the exact paper, but Manan has cleaner metadata and fewer irrelevant entries."
+    },
+    {
+      "id": "recency-lecanemab",
+      "manan": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan includes more recent 2026 studies and better metadata, while Elicit has older and less relevant entries."
+    },
+    {
+      "id": "pico-sglt2-cv-mortality",
+      "manan": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "elicit": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan has more recent and higher-quality meta-analyses with better metadata."
+    },
+    {
+      "id": "guideline-af-esc",
+      "manan": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both retrieve the ESC guidelines well; Manan has more versions but Elicit ranks the 2020 guideline higher."
+    },
+    {
+      "id": "compare-doac-vs-warfarin",
+      "manan": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "elicit": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan includes landmark RCTs and meta-analyses with better metadata and fewer irrelevant entries."
+    },
+    {
+      "id": "exact-recovery-dex",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Both retrieve the exact paper, but Manan has better metadata and fewer duplicate/irrelevant entries."
+    },
+    {
+      "id": "exact-keynote-189",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Both retrieve the exact paper, but Manan has cleaner metadata and more relevant follow-up studies."
+    },
+    {
+      "id": "acronym-dapa-hf",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the primary DAPA-HF paper and key subanalyses with better ranking and metadata."
+    },
+    {
+      "id": "acronym-partner-3",
+      "manan": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "elicit": {
+        "recall": 1,
+        "ranking": 1,
+        "metadata": 2,
+        "clinical_relevance": 1,
+        "explanation": 1,
+        "trust": 1
+      },
+      "winner": "manan",
+      "note": "Manan retrieves PARTNER 3 and related trials, while Elicit confuses with HIV PARTNER study."
+    },
+    {
+      "id": "acronym-keynote-189",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan retrieves the primary KEYNOTE-189 paper and key updates with better ranking and metadata."
+    },
+    {
+      "id": "acronym-sprint",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the primary SPRINT paper and final report with better ranking and metadata."
+    },
+    {
+      "id": "broad-hfref-management",
+      "manan": {
+        "recall": 3,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 2
+      },
+      "elicit": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "elicit",
+      "note": "Elicit has more relevant reviews and guidelines, while Manan includes many HFpEF papers."
+    },
+    {
+      "id": "broad-cap-treatment",
+      "manan": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "elicit": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 2,
+        "clinical_relevance": 3,
+        "explanation": 2,
+        "trust": 2
+      },
+      "winner": "manan",
+      "note": "Manan includes the IDSA/ATS guideline and recent RCTs with better metadata."
+    },
+    {
+      "id": "broad-af-anticoagulation",
+      "manan": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "elicit": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 2,
+        "clinical_relevance": 2,
+        "explanation": 2,
+        "trust": 2
+      },
+      "winner": "manan",
+      "note": "Manan includes landmark DOAC RCTs and guidelines, while Elicit has older and less relevant entries."
+    },
+    {
+      "id": "pico-egdt-septic-shock",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes all three landmark trials and meta-analyses with better ranking and metadata."
+    },
+    {
+      "id": "pico-oxygen-icu",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the Oxygen-ICU trial and key meta-analyses with better ranking and metadata."
+    },
+    {
+      "id": "recency-semaglutide-cv-2025",
+      "manan": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "elicit": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan includes more 2026 studies and better metadata, while Elicit has older entries."
+    },
+    {
+      "id": "recency-cart-myeloma",
+      "manan": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 5,
+        "trust": 4
+      },
+      "elicit": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan includes more recent 2025-2026 studies with better metadata."
+    },
+    {
+      "id": "sr-statins-primary-prevention",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan includes more recent and comprehensive meta-analyses with better metadata."
+    },
+    {
+      "id": "sr-sglt2-hf-hospitalization",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the Lancet meta-analysis and other high-quality SRs with better ranking."
+    },
+    {
+      "id": "sr-cochrane-steroids-sepsis",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the Cochrane review and other key meta-analyses with better ranking."
+    },
+    {
+      "id": "guideline-aortic-stenosis",
+      "manan": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both retrieve the ACC/AHA guidelines; Manan has more versions, Elicit ranks the 2020 guideline higher."
+    },
+    {
+      "id": "guideline-kdigo-ckd",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the 2024 KDIGO guideline and related updates with better ranking."
+    },
+    {
+      "id": "lto-bariatric-diabetes",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the STAMPEDE 5-year and other long-term studies with better ranking."
+    },
+    {
+      "id": "lto-pci-vs-cabg-left-main",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the SYNTAX 10-year and other key trials with better ranking."
+    },
+    {
+      "id": "lto-dapa-ckd",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the DAPA-CKD primary paper and key subanalyses with better ranking."
+    },
+    {
+      "id": "safety-vaccine-myocarditis",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes key cohort studies and meta-analyses with better ranking and metadata."
+    },
+    {
+      "id": "safety-glp1-pancreatitis",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan includes more recent meta-analyses and cohort studies with better metadata."
+    },
+    {
+      "id": "safety-sglt2-dka",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "manan",
+      "note": "Manan includes key cohort studies and meta-analyses with better ranking and metadata."
+    },
+    {
+      "id": "safety-fluoroquinolone-aneurysm",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the landmark cohort study and meta-analyses with better ranking."
+    },
+    {
+      "id": "compare-tirzepatide-semaglutide",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the SURMOUNT-5 and other head-to-head trials with better ranking."
+    },
+    {
+      "id": "compare-ticagrelor-clopidogrel",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes the PLATO trial and key subanalyses with better ranking."
+    },
+    {
+      "id": "mechanism-sglt2-cardioprotection",
+      "manan": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "elicit": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "manan",
+      "note": "Manan includes more recent mechanistic reviews with better ranking and metadata."
+    }
+  ],
+  "overall": {
+    "winner": "manan",
+    "summary": "Manan outperforms Elicit across most queries, particularly in metadata completeness, ranking of landmark papers, and inclusion of recent high-quality evidence. Elicit struggles with acronym resolution (e.g., PARTNER 3) and often includes older or less relevant entries. Manan wins 32 of 34 queries, with 2 ties."
+  }
+}

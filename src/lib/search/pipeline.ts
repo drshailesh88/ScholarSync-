@@ -38,6 +38,57 @@ function keywords(query: string): string[] {
   ];
 }
 
+function titleTokenSet(s: string): Set<string> {
+  return new Set(
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter(Boolean)
+  );
+}
+
+/**
+ * Index of a result whose title is a near-verbatim match of the query — i.e. the
+ * user did an exact-paper lookup by pasting a title. Uses a high Jaccard overlap
+ * (≥0.85) so only a title with essentially the SAME token set qualifies: a longer
+ * review that merely *contains* every query token is excluded. Gated to title-like
+ * queries (≥6 tokens, not a question) so keyword/acronym/PICO queries never trigger.
+ * Returns -1 when there is no exact-title match.
+ */
+export function exactTitleMatchIndex(
+  results: UnifiedSearchResult[],
+  query: string
+): number {
+  const q = query.trim();
+  if (q.endsWith("?")) return -1;
+  const qTokens = titleTokenSet(q);
+  if (qTokens.size < 6) return -1;
+  let best = -1;
+  let bestJaccard = 0;
+  for (let i = 0; i < results.length; i++) {
+    const tTokens = titleTokenSet(results[i].title ?? "");
+    if (tTokens.size === 0) continue;
+    let inter = 0;
+    for (const t of qTokens) if (tTokens.has(t)) inter++;
+    const jaccard = inter / (qTokens.size + tTokens.size - inter);
+    if (jaccard >= 0.85 && jaccard > bestJaccard) {
+      bestJaccard = jaccard;
+      best = i;
+    }
+  }
+  return best;
+}
+
+function boostExactTitle(
+  results: UnifiedSearchResult[],
+  query: string
+): UnifiedSearchResult[] {
+  const idx = exactTitleMatchIndex(results, query);
+  if (idx <= 0) return results; // no match, or already first
+  return [results[idx], ...results.slice(0, idx), ...results.slice(idx + 1)];
+}
+
 /** Missing / low-confidence metadata + integrity flags, surfaced not hidden. */
 export function buildFlags(r: UnifiedSearchResult): string[] {
   const flags = new Set<string>(r.flags ?? []);
@@ -117,6 +168,46 @@ export interface RankAndAnnotateOptions {
 }
 
 /**
+ * How strongly recency amplifies a paper's quality composite. The boost is
+ * MULTIPLICATIVE (`composite × (1 + RECENCY_BOOST × recencyNorm)`) rather than an
+ * additive term, so recency scales quality instead of substituting for it: a
+ * pivotal high-composite trial (e.g. CLARITY-AD) cannot be displaced from the top
+ * by a stream of recent low-value papers, while among similar-quality papers the
+ * newer one still wins. 0.5 ⇒ the newest paper is worth up to 1.5× its composite.
+ */
+export const RECENCY_BOOST = 0.5;
+
+/**
+ * Recency-aware rank key. `recencyNorm` scales the year into [0,1] over the
+ * result set (newest = 1); the composite is amplified by up to RECENCY_BOOST.
+ * A zero span (all one year) leaves the composite unchanged.
+ */
+export function recencyRankKey(
+  composite: number,
+  year: number,
+  minYear: number,
+  span: number
+): number {
+  const recencyNorm =
+    span > 0 ? Math.min(1, Math.max(0, (year - minYear) / span)) : 0;
+  return composite * (1 + RECENCY_BOOST * recencyNorm);
+}
+
+function orderByRecency(scored: ScoredResult[]): ScoredResult[] {
+  const years = scored.map((s) => s.result.year || 0).filter(Boolean);
+  const minY = years.length ? Math.min(...years) : 0;
+  const maxY = years.length ? Math.max(...years) : 0;
+  const span = Math.max(1, maxY - minY);
+  return [...scored]
+    .map((s) => ({
+      s,
+      key: recencyRankKey(s.composite, s.result.year || minY, minY, span),
+    }))
+    .sort((a, b) => b.key - a.key)
+    .map((x) => x.s);
+}
+
+/**
  * Enrich, rank, and annotate fused search results. Returns a new array; the
  * input objects are enriched in place (study type + journal quality) as a
  * deliberate, contained side effect of the enrichers.
@@ -135,31 +226,25 @@ export function rankAndAnnotate(
 
   let ordered = scored;
   if (opts.recency) {
-    // Blend recency with the quality composite rather than sorting purely by
-    // year — a high-relevance landmark (e.g. CLARITY-AD) must not be buried under
-    // newer but low-value items. recencyNorm scales year into [0,1] over the set.
-    const years = scored.map((s) => s.result.year || 0).filter(Boolean);
-    const minY = years.length ? Math.min(...years) : 0;
-    const maxY = years.length ? Math.max(...years) : 0;
-    const span = Math.max(1, maxY - minY);
-    ordered = [...scored]
-      .map((s) => {
-        const recencyNorm = ((s.result.year || minY) - minY) / span;
-        // Quality-leaning blend: a relevant, high-quality landmark must not be
-        // displaced by a maximally-recent but low-relevance item.
-        return { s, key: 0.35 * recencyNorm + 0.65 * s.composite };
-      })
-      .sort((a, b) => b.key - a.key)
-      .map((x) => x.s);
+    // Recency amplifies the quality composite multiplicatively (see
+    // recencyRankKey) instead of an additive year term — so a pivotal
+    // high-composite trial (e.g. CLARITY-AD) is not buried under a stream of
+    // recent low-value papers, while among similar-quality papers the newer wins.
+    ordered = orderByRecency(scored);
   }
 
   const annotated = ordered.map((s) =>
     annotate(s, opts.recency ? "recency" : "quality", queryTerms)
   );
 
+  // Exact-paper lookup: if the user pasted a paper title, that paper must rank #1
+  // even if related meta-analyses out-score it on citations. Field-standard
+  // exact-match boosting, gated tightly so only verbatim-title queries trigger.
+  const boosted = boostExactTitle(annotated, opts.query);
+
   // Demote (never drop) retracted papers so they cannot occupy a top slot while
   // still being surfaced with their flag. Stable: preserves order within groups.
-  return demoteRetracted(annotated);
+  return demoteRetracted(boosted);
 }
 
 function demoteRetracted(results: UnifiedSearchResult[]): UnifiedSearchResult[] {

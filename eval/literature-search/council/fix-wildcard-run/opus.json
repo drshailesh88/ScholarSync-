@@ -1,0 +1,50 @@
+{
+  "perQuery": [
+    {
+      "id": "tavr-low-risk-6yr",
+      "manan": {"recall": 3, "ranking": 3, "metadata": 5, "clinical_relevance": 4, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 5, "ranking": 5, "metadata": 4, "clinical_relevance": 5, "explanation": 4, "trust": 4},
+      "winner": "elicit",
+      "note": "Elicit returns both landmarks with PARTNER 3 ranked #1 and the Evolut 6-yr trial at #2, whereas Manan has the Evolut 6-yr trial but omits PARTNER 3 entirely and pads its list with meta-analyses."
+    },
+    {
+      "id": "exact-dapa-hf",
+      "manan": {"recall": 5, "ranking": 2, "metadata": 5, "clinical_relevance": 4, "explanation": 5, "trust": 5},
+      "elicit": {"recall": 5, "ranking": 5, "metadata": 4, "clinical_relevance": 4, "explanation": 4, "trust": 4},
+      "winner": "elicit",
+      "note": "For an exact-title retrieval the target DAPA-HF paper must rank #1, which Elicit does, while Manan buries the exact paper at #6 behind meta-analyses and other SGLT2i trials."
+    },
+    {
+      "id": "recency-lecanemab",
+      "manan": {"recall": 2, "ranking": 2, "metadata": 5, "clinical_relevance": 3, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 5, "ranking": 5, "metadata": 4, "clinical_relevance": 5, "explanation": 4, "trust": 4},
+      "winner": "elicit",
+      "note": "Manan is impressively fresh (all 2026) but misses the foundational CLARITY-AD trial and skews to low-evidence case series, PET imaging and in-vitro work, while Elicit anchors on CLARITY-AD plus a recent 2025 36-month open-label extension."
+    },
+    {
+      "id": "pico-sglt2-cv-mortality",
+      "manan": {"recall": 4, "ranking": 3, "metadata": 5, "clinical_relevance": 3, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 4, "ranking": 4, "metadata": 4, "clinical_relevance": 5, "explanation": 4, "trust": 4},
+      "winner": "elicit",
+      "note": "Elicit's list is tightly on-PICO (SGLT2i vs placebo, CV outcomes/mortality in T2DM) whereas Manan dilutes its top 10 with off-PICO items including an oral-semaglutide GLP-1 trial and pure renal/CKD analyses."
+    },
+    {
+      "id": "guideline-af-esc",
+      "manan": {"recall": 5, "ranking": 4, "metadata": 4, "clinical_relevance": 5, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 3, "ranking": 4, "metadata": 4, "clinical_relevance": 4, "explanation": 4, "trust": 4},
+      "winner": "manan",
+      "note": "Manan surfaces the full ESC AF guideline series including the current 2024 ESC/EACTS guideline, which Elicit omits entirely while returning dated and duplicative translated editions."
+    },
+    {
+      "id": "compare-doac-vs-warfarin",
+      "manan": {"recall": 4, "ranking": 4, "metadata": 5, "clinical_relevance": 3, "explanation": 4, "trust": 4},
+      "elicit": {"recall": 4, "ranking": 3, "metadata": 4, "clinical_relevance": 4, "explanation": 4, "trust": 3},
+      "winner": "tie",
+      "note": "Manan's top results (COMBINE AF patient-level network MA, BMJ network MA) are strongest but it contaminates the top 10 with four off-topic device/perioperative items, while Elicit stays on-topic but leads with a non-primary Journal Watch summary and includes a dubious low-cite journal MA."
+    }
+  ],
+  "overall": {
+    "winner": "elicit",
+    "summary": "Elicit wins four of six queries on the strength of superior landmark recall and ranking discipline, consistently placing the must-have paper at or near the top (PARTNER 3, the exact DAPA-HF paper, CLARITY-AD) and keeping its top-10 lists tightly on-target. Manan has excellent metadata completeness and the freshest results, and it clearly wins the guideline query by retrieving the current 2024 ESC AF guideline that Elicit misses, but it repeatedly buries or omits the key landmark trial and admits off-topic items (device trials, a GLP-1 agent, in-vitro studies) into its top 10. The DOAC-vs-warfarin query is a genuine tie, with Manan's stronger top results offset by topical contamination and Elicit offset by a non-primary lead item and a dubious-journal entry."
+  }
+}

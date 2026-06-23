@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { rankAndAnnotate, buildFlags, buildWhyRelevant } from "../pipeline";
+import {
+  rankAndAnnotate,
+  buildFlags,
+  buildWhyRelevant,
+  recencyRankKey,
+  exactTitleMatchIndex,
+} from "../pipeline";
 import type { UnifiedSearchResult } from "@/types/search";
 
 function paper(p: Partial<UnifiedSearchResult>): UnifiedSearchResult {
@@ -15,6 +21,142 @@ function paper(p: Partial<UnifiedSearchResult>): UnifiedSearchResult {
     ...p,
   };
 }
+
+describe("recencyRankKey", () => {
+  const Y0 = 2022;
+  const Y1 = 2026;
+  const span = Y1 - Y0;
+
+  it("keeps a high-quality landmark above recent low-value papers", () => {
+    // A pivotal trial (high composite, oldest year) must NOT be buried by a
+    // stream of recent but low-composite papers — recency amplifies quality, it
+    // does not substitute for it.
+    const landmark = recencyRankKey(0.83, Y0, Y0, span);
+    const recentNoise = recencyRankKey(0.5, Y1, Y0, span);
+    expect(landmark).toBeGreaterThan(recentNoise);
+  });
+
+  it("prefers the newer of two equally-strong papers", () => {
+    expect(recencyRankKey(0.6, Y1, Y0, span)).toBeGreaterThan(
+      recencyRankKey(0.6, Y0, Y0, span)
+    );
+  });
+
+  it("lets a clearly stronger recent paper outrank an older weaker one", () => {
+    expect(recencyRankKey(0.7, Y1, Y0, span)).toBeGreaterThan(
+      recencyRankKey(0.55, Y0, Y0, span)
+    );
+  });
+
+  it("returns the composite unchanged when all papers share a year (zero span)", () => {
+    expect(recencyRankKey(0.42, 2025, 2025, 0)).toBe(0.42);
+  });
+});
+
+describe("rankAndAnnotate recency ordering", () => {
+  it("does not bury a pivotal high-citation RCT under recent low-evidence papers", () => {
+    const landmark = paper({
+      title: "Lecanemab in Early Alzheimer's Disease",
+      year: 2023,
+      studyType: "Randomized Controlled Trial",
+      citationCount: 5000,
+      rerankScore: 0.8,
+      pmid: "36449413",
+    });
+    const recentNoise = [2026, 2026, 2026, 2026, 2026].map((y, i) =>
+      paper({
+        title: `Recent real-world lecanemab imaging substudy ${i}`,
+        year: y,
+        studyType: "other",
+        citationCount: 0,
+        rerankScore: 0.5,
+        pmid: `9000${i}`,
+      })
+    );
+
+    const ranked = rankAndAnnotate([...recentNoise, landmark], {
+      query: "newest evidence on lecanemab for Alzheimer disease",
+      recency: true,
+    });
+
+    expect(ranked[0].pmid).toBe("36449413");
+  });
+});
+
+describe("exactTitleMatchIndex", () => {
+  const EXACT_QUERY =
+    "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction";
+
+  it("finds the verbatim-title paper among related results", () => {
+    const results = [
+      paper({ title: "Dapagliflozin in heart failure: a systematic review and meta-analysis" }),
+      paper({ title: "SGLT2 inhibitors and renal outcomes in type 2 diabetes" }),
+      paper({ title: "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction" }),
+    ];
+    expect(exactTitleMatchIndex(results, EXACT_QUERY)).toBe(2);
+  });
+
+  it("does not match a longer review that merely contains all query tokens", () => {
+    const results = [
+      paper({
+        title:
+          "Dapagliflozin in patients with heart failure and reduced ejection fraction: mechanisms, pivotal trials, and future directions for clinical practice",
+      }),
+    ];
+    expect(exactTitleMatchIndex(results, EXACT_QUERY)).toBe(-1);
+  });
+
+  it("returns -1 for a PICO question (not a title lookup)", () => {
+    const results = [paper({ title: "SGLT2 inhibitors and cardiovascular mortality" })];
+    expect(
+      exactTitleMatchIndex(
+        results,
+        "In adults with type 2 diabetes, do SGLT2 inhibitors reduce cardiovascular mortality?"
+      )
+    ).toBe(-1);
+  });
+
+  it("returns -1 for a short keyword / acronym query", () => {
+    const results = [paper({ title: "DAPA-HF trial primary results" })];
+    expect(exactTitleMatchIndex(results, "DAPA-HF trial")).toBe(-1);
+  });
+
+  it("returns -1 when no title is a near-exact match (broad query)", () => {
+    const results = [
+      paper({ title: "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure" }),
+    ];
+    expect(
+      exactTitleMatchIndex(results, "management of heart failure with reduced ejection fraction")
+    ).toBe(-1);
+  });
+});
+
+describe("rankAndAnnotate exact-title boosting", () => {
+  it("floats the verbatim-title paper to #1 even when its composite ranks it lower", () => {
+    const exact = paper({
+      title: "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+      year: 2019,
+      studyType: "rct",
+      citationCount: 50,
+      rerankScore: 0.6,
+      pmid: "31535829",
+    });
+    const louderRelated = [1, 2, 3, 4, 5].map((i) =>
+      paper({
+        title: `Dapagliflozin meta-analysis number ${i} in heart failure`,
+        year: 2024,
+        studyType: "meta_analysis",
+        citationCount: 4000,
+        rerankScore: 0.7,
+        pmid: `7770${i}`,
+      })
+    );
+    const ranked = rankAndAnnotate([...louderRelated, exact], {
+      query: "Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+    });
+    expect(ranked[0].pmid).toBe("31535829");
+  });
+});
 
 describe("buildFlags", () => {
   it("flags missing metadata, never fabricates it", () => {
@@ -86,12 +228,34 @@ describe("rankAndAnnotate", () => {
     expect(ranked[0].flags).toBeDefined();
   });
 
-  it("recency strategy orders by year (newest first) and labels the trace", () => {
-    const ranked = rankAndAnnotate([landmarkRct, obscureCaseReport], {
+  it("recency strategy orders comparable-quality papers newest-first and labels the trace", () => {
+    // Recency orders papers of SIMILAR quality newest-first — but it must not let
+    // a newer low-value item leapfrog a far-higher-quality landmark (covered by
+    // the landmark-preservation test below). Here both peers are equally strong,
+    // so the newer one wins.
+    const olderPeer = paper({
+      title: "Dapagliflozin trial (earlier report)",
+      studyType: "rct",
+      evidenceLevel: "II",
+      year: 2020,
+      citationCount: 1000,
+      journal: "N Engl J Med",
+      rrfScore: 0.02,
+    });
+    const newerPeer = paper({
+      title: "Dapagliflozin trial (later report)",
+      studyType: "rct",
+      evidenceLevel: "II",
+      year: 2024,
+      citationCount: 1000,
+      journal: "N Engl J Med",
+      rrfScore: 0.02,
+    });
+    const ranked = rankAndAnnotate([olderPeer, newerPeer], {
       query: "latest dapagliflozin",
       recency: true,
     });
-    expect(ranked[0].year).toBe(2025);
+    expect(ranked[0].year).toBe(2024);
     expect(ranked[0].rankingTrace?.strategy).toBe("recency");
   });
 
