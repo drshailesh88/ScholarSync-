@@ -13,6 +13,8 @@ export interface RankingTrace {
   journal: number;
   rrf: number;
   relevance: number;
+  /** Off-entity drift multiplier in (0,1] applied to the composite; 1 = no drift. */
+  entityDrift: number;
   /** Ordering strategy that produced this result set. */
   strategy: "quality" | "recency";
 }

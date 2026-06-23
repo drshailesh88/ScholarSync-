@@ -150,13 +150,19 @@ function annotate(
     journal: Math.round(signals.journal * 1000) / 1000,
     rrf: Math.round(signals.rrf * 1000) / 1000,
     relevance: Math.round(signals.relevance * 1000) / 1000,
+    entityDrift: Math.round(signals.entityDrift * 1000) / 1000,
     strategy,
   };
+  const flags = buildFlags(result);
+  // Surface (don't hide) that this result was demoted as off-subtype / off-drug.
+  if (signals.entityDrift < 1 && !flags.includes("off_topic_entity")) {
+    flags.push("off_topic_entity");
+  }
   return {
     ...result,
     rrfScore: trace.composite,
     rankingTrace: trace,
-    flags: buildFlags(result),
+    flags,
     whyRelevant: buildWhyRelevant(result, matched),
   };
 }
