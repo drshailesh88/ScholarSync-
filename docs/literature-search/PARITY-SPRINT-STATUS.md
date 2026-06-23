@@ -26,6 +26,7 @@ docs. All shipped changes are TDD'd, CI-green, and merged to `main` via PR.
 | 2 | Trial-primary boost (demote secondary literature) | **KEEP** (#75) | recall@10 88→96%, best-in-top-3 67→75%, council 68→71% |
 | 3 | OR-relaxation fallback (no empty result sets) | **KEEP** (#78) | empty sets 3→0; ZUMA-1 → rank 1; provably additive |
 | 4 | Acronym-collision coverage gating | **REVERT** | frozen-pool A/B: 0 best-rank change — redundant with pipeline |
+| 5 | Trial follow-up/cost/registry sub-report demotion | **KEEP** (#80) | frozen-pool A/B: partner-3 4→2, sprint 4→3 (both top-3), 0 regressions |
 
 ## Current floor (87 queries, current `main`)
 - **Deterministic (37 GT):** Manan 8 wins / 5 / 24 ties vs Elicit; recall@10 88% vs
@@ -46,16 +47,23 @@ docs. All shipped changes are TDD'd, CI-green, and merged to `main` via PR.
 | provenance/trace | present | ✓ (rankingTrace on every result) |
 
 ## Prioritized next cycles (all measurable on the reproducible harness)
-1. **Trial sub-study ranking** — partner-3 primary sits behind its own COVERED
-   "Economic Outcomes"/"N-Year Outcomes" sub-studies (cycle-2 markers miss them).
-   Extend primary-vs-secondary detection WITHOUT demoting trials whose pivotal result
-   IS an N-year report (tune via frozen-pool A/B). Targets best-in-top-3.
-2. **PMID backfill completeness** — 86% < 90% gate; DOI-only/OpenAlex results lack a
-   PMID. Add a PMID lookup (Crossref/NCBI id-convert) for DOI-only top results.
-3. **Off-outcome PICO drift** — `safety-glp1-pancreatitis` tops out with CV/kidney MAs
+1. **PMID backfill completeness** — 86% < 90% gate; DOI-only/OpenAlex results lack a
+   PMID. Add a PMID lookup (NCBI id-convert / Crossref) for DOI-only top results.
+   Also lifts DOI fill (95% < 98%). Touches run-search enrichment (serial lane).
+2. **Off-outcome PICO drift** — `safety-glp1-pancreatitis` tops out with CV/kidney MAs
    instead of the pancreatitis outcome; extend entity-drift to the query OUTCOME.
-4. **Negative-control verification** — confirm the 3 negative-control queries don't
+   Measurable on a frozen pool.
+3. **Negative-control verification** — confirm the 3 negative-control queries don't
    surface the famous-but-irrelevant trap (irrelevant-top-10 metric).
+4. **Re-measure the 87q floor + paired council** with cycles 3+5 included, then run
+   the 3 stable cycles required to satisfy Stop. Prefer paired frozen-pool councils
+   (old vs new ranker on the same pool) over noisy live re-runs.
+
+## Source reliability (cross-cutting — raised by cycles 3 & 5)
+Live runs intermittently drop the OpenAlex lane (`[0: openalex]`) to transient
+throttling, degrading pools and producing phantom metric swings. Tier-1 #1 (OpenAlex
+token-bucket / circuit-breaker / retry-on-empty) would both improve the product and
+shrink capture-time noise. High value; serial run-search lane.
 
 ## Stop criteria (not yet met)
 3 consecutive cycles where Manan beats/ties Elicit by blinded council on ≥80% of
