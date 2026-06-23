@@ -47,10 +47,23 @@ docs. All shipped changes are TDD'd, CI-green, and merged to `main` via PR.
 | hallucinated metadata | 0 | 0 ✓ |
 | provenance/trace | present | ✓ (rankingTrace on every result) |
 
+## Cumulative re-measure (after cycle 6, label `floor87-cycle6`)
+Live 87q run was **OpenAlex-throttle-degraded on 14/87 queries** → aggregate
+unreliable (best-in-top-3 read 68%, and 3 *psychiatry* queries went empty because
+BOTH lanes failed transiently — the cycle-3 trial-family empties stayed fixed). This
+is the **third** live run dominated by throttling noise. The trustworthy cumulative
+evidence is the per-cycle frozen-pool A/Bs (partner-3 4→2, sprint 4→3, pancreatitis
+2/5→4/5, empty sets 3→0). **Takeaway: source-reliability is now the dominant blocker
+for BOTH quality and measurement** — promoted to cycle 7.
+
 ## Prioritized next cycles (all measurable on the reproducible harness)
-1. **PMID backfill completeness** — 86% < 90% gate; DOI-only/OpenAlex results lack a
+1. **Source reliability (Tier-1 #1) — OpenAlex token-bucket / circuit-breaker /
+   retry-on-transient-empty.** 14/87 queries lost the OpenAlex lane in the last run,
+   degrading pools and causing phantom metric swings + transient empties. Fixes both
+   product quality and measurement noise. Highest priority.
+2. **PMID backfill completeness** — 87% < 90% gate; DOI-only/OpenAlex results lack a
    PMID. Add a PMID lookup (NCBI id-convert / Crossref) for DOI-only top results.
-   Also lifts DOI fill (95% < 98%). Touches run-search enrichment (serial lane).
+   Also lifts DOI fill (96% < 98%). Touches run-search enrichment (serial lane).
 2. **Off-outcome PICO drift** — `safety-glp1-pancreatitis` tops out with CV/kidney MAs
    instead of the pancreatitis outcome; extend entity-drift to the query OUTCOME.
    Measurable on a frozen pool.
