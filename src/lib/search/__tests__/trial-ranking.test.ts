@@ -37,6 +37,18 @@ describe("isSecondaryTrialResult", () => {
     ).toBe(true);
   });
 
+  it("flags trial follow-up / cost / QoL sub-reports as secondary", () => {
+    for (const title of [
+      "Economic Outcomes of Transcatheter Versus Surgical Aortic Valve Replacement",
+      "Five-Year Outcomes in Low-Risk Patients Undergoing Surgery in the PARTNER 3 Trial",
+      "Transcatheter or Surgical Aortic-Valve Replacement in Low-Risk Patients at 7 Years",
+      "Quality of Life After Transcatheter Aortic-Valve Replacement",
+      "The PARTNER 3 Bicuspid Registry for Transcatheter Aortic Valve Replacement",
+    ]) {
+      expect(isSecondaryTrialResult({ title, studyType: "rct" })).toBe(true);
+    }
+  });
+
   it("does NOT flag the primary trial report", () => {
     expect(
       isSecondaryTrialResult({

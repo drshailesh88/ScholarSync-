@@ -23,7 +23,7 @@ interface TrialResultLike {
 // unambiguous sub-study / design / pooled markers (NOT generic "effect of … on …"
 // phrasings, which many primary RCT titles legitimately use).
 const SECONDARY_TITLE_MARKERS =
-  /\b(according to|findings from|post[\s-]?hoc|sub[\s-]?stud(?:y|ies)|sub[\s-]?analys[ei]s|subgroup|secondary analys[ei]s|pooled analys[ei]s|individual patient data|rationale and design|design and rationale|baseline characteristics|eligible participants|echocardiographic)\b/i;
+  /\b(according to|findings from|post[\s-]?hoc|sub[\s-]?stud(?:y|ies)|sub[\s-]?analys[ei]s|subgroup|secondary analys[ei]s|pooled analys[ei]s|individual patient data|rationale and design|design and rationale|baseline characteristics|eligible participants|echocardiographic|economic outcomes?|cost[\s-]?effectiveness|quality of life|health status|(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+)[\s-]years?\b|registry)\b/i;
 
 /** True when a result is a meta-analysis/SR of, or a sub-study/follow-up of, a trial. */
 export function isSecondaryTrialResult(r: TrialResultLike): boolean {
