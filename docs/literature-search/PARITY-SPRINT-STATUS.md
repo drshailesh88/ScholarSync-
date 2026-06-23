@@ -27,6 +27,7 @@ docs. All shipped changes are TDD'd, CI-green, and merged to `main` via PR.
 | 3 | OR-relaxation fallback (no empty result sets) | **KEEP** (#78) | empty sets 3→0; ZUMA-1 → rank 1; provably additive |
 | 4 | Acronym-collision coverage gating | **REVERT** | frozen-pool A/B: 0 best-rank change — redundant with pipeline |
 | 5 | Trial follow-up/cost/registry sub-report demotion | **KEEP** (#80) | frozen-pool A/B: partner-3 4→2, sprint 4→3 (both top-3), 0 regressions |
+| 6 | Off-outcome (adverse-event) drift demotion | **KEEP** (#81) | frozen-pool A/B: glp1-pancreatitis on-outcome top-5 2/5→4/5, dka 3/5→4/5; PICO untouched |
 
 ## Current floor (87 queries, current `main`)
 - **Deterministic (37 GT):** Manan 8 wins / 5 / 24 ties vs Elicit; recall@10 88% vs
