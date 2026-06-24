@@ -5,6 +5,11 @@
 - **Author:** Shailesh Singh (with Claude Code)
 - **Scope:** The non-academic search tabs (`web`, `news`, `discussions`) served by
   `/api/search/unified`. Academic search (`run-search.ts`) is out of scope and unchanged.
+- **Methodology basis:** This sprint ports the **exact** drill that took academic search to
+  Elicit parity, as documented in `docs/literature-search/` (`PARITY-SPRINT-GOAL.md`,
+  `BASELINE-BLIND-2026-06-23.md`, `BEFORE-AFTER-ELICIT.md`, `ARCHITECTURE.md`) and the
+  `src/lib/search/__tests__/ralph-search/` harness. Section 12 maps each ported element to
+  its academic source.
 
 ---
 
@@ -12,93 +17,90 @@
 
 ScholarSync has two search worlds with very different maturity.
 
-**Academic search** (`src/lib/search/run-search.ts`) is a fusion machine: multi-source
-fan-out (PubMed, OpenAlex lexical **+** semantic, Semantic Scholar, ClinicalTrials, a
-domain-restricted Tavily fallback) → query planning → RRF fusion → OpenAlex enrichment →
-Cohere rerank → evidence-aware quality ranking → trust tiers. It is hardened (circuit
-breakers, per-lane timeouts, a global fan-out deadline with partial results, two-tier
-cache) and — critically — it is **measured**: a frozen eval harness (`ralph-search`)
-scores recall/precision/ranking/metadata/dedup, anchored to **Elicit as a blinded gold
-standard**, improved over documented cycles (`CYCLE-01…06`).
+**Academic search** (`src/lib/search/run-search.ts`) is a fusion machine *and* a measured
+one: multi-source fan-out → RRF → enrichment → Cohere rerank → evidence-aware quality
+ranking → trust tiers, improved over documented cycles against **two** evaluation layers —
+deterministic metrics **and** a blinded multi-LLM council with **Elicit as the A/B
+opponent**.
 
 **Non-academic search** (`/api/search/unified`, the `tab !== "academic"` branch →
-`fetchNonAcademicResults`) is single-source: SearXNG only → Cohere rerank → domain
-preferences → trust tier → paginate. There is **no second opinion, no domain-appropriate
-ranking machine, and — the real gap — no way to measure "better."**
+`fetchNonAcademicResults`) is single-source SearXNG → Cohere rerank → domain preferences →
+trust tier → paginate. It has **no gold standard and no eval harness of either kind** — so
+quality cannot be measured, and therefore cannot be improved deliberately.
 
-The gap is therefore not a SearXNG tweak. It is that non-academic search lacks the one
-thing that made academic improvable: **a gold standard and a frozen eval harness.**
+The gap is not a SearXNG tweak. It is the absence of the measurement rig that made academic
+improvable. **Build the rig first; let it choose the levers.**
 
 ## 2. Goal & non-goals
 
-**Goal:** Reach *decent*, profitable-to-run quality on the `web`, `news`, and
-`discussions` tabs by running the **same blinded gold-standard drill** that worked for
-academic — without adding a per-query paid-API dependency.
+**Goal:** Reach *decent*, profitable-to-run quality on `web`, `news`, `discussions` by
+running the **same two-layer drill** (deterministic + blinded council) used for academic —
+without adding any per-query paid-API dependency.
 
 **Quality floor is non-negotiable:** low operational cost with trash results is a failure.
-No user adopts a bad search. "Decent" is defined numerically in §8.
+"Decent" is a number, defined by the stop gate in §9.
 
 **Non-goals:**
 
-- Changing academic search in any way.
-- Multi-source runtime fusion (SearXNG + Tavily + Exa blended on every query). Explicitly
-  deferred — see §4. It may be revisited *only* if the harness proves a single source
-  cannot reach the target.
-- A best-in-class general web engine. The target is *decent for our users*, not "beat
-  Google."
+- Changing academic search. The academic `ralph-search` scorecard must remain unchanged.
+- Multi-source *runtime* fusion (SearXNG + Tavily + Exa blended on every query). Deferred —
+  see §4. Revisited only if the harness proves a single source cannot reach the gate.
+- A best-in-class general web engine. Target is *decent for our research-adjacent users*.
 
 ## 3. Locked decisions
 
-These were settled during the design conversation and are the spine of the sprint.
+1. **Build the measurement rig first.** Gold standard + two-layer harness + baseline, then
+   pull levers chosen by what the harness says is broken. (User: "I need a gold standard to
+   compare and then keep improving.")
 
-1. **Free engine, paid yardstick.** SearXNG (self-hosted, ~$0/query) is the sole runtime
-   engine. Paid tools are used **offline only** to build the benchmark. This mirrors the
-   academic model, where Elicit was a yardstick, never called on a user's search.
+2. **Free engine, paid yardstick.** SearXNG (self-hosted, ~$0/query) is the **sole runtime
+   engine**. Paid tools (Exa, Perplexity) are **offline / eval-time only**. This mirrors the
+   academic rule: *"Elicit is a benchmark only — never a runtime dependency"*
+   (`ARCHITECTURE.md`).
 
-2. **Cost lives in two different places, and we only avoid one of them.**
-   - *Paid search API as a runtime source* (on every user query) → the profitability
-     killer → **avoided.**
-   - *Paid tool as an offline yardstick* (~30–50 queries, once) → a few dollars total →
-     **fine.**
+3. **Two distinct gold artifacts** (this is how academic avoided self-grading, and we copy
+   it exactly):
+   - **(a) Deterministic ground-truth** — per query, a **hand-ratified** set of ideal
+     results encoded as `expectedResults` with a `mustFind` flag. Seeded by Exa / Perplexity
+     / Google, but the human ratifies and **freezes** it. Drives recall / precision / nDCG /
+     MRR. *Never auto-derived from any single tool's output.*
+   - **(b) Council opponent** — **Exa** frozen snapshots, captured offline. Used *only* as
+     the blinded A/B peer that neutral LLM judges compare our output against. Exa is the
+     opponent, **not** the answer key — so there is no self-grading.
 
-3. **Gold standard = Exa-anchored, blinded, frozen, human-ratified.** Exa (category-matched
-   per tab) seeds candidate ideal results; Perplexity is an optional sanity seed; the user
-   blind-ratifies; the result is **frozen to JSON**. The live engine is scored against the
-   frozen human set — never against live Exa — which removes the self-grading bias.
+4. **SearXNG + degradation fallback (runtime).** SearXNG every query; a single Tavily call
+   fires **only** when SearXNG is degraded/blocked/empty (rare → bounded cost). Tavily is the
+   fallback (not Exa) because `searchTavily` already exists.
 
-4. **SearXNG + degradation fallback.** SearXNG runs every query. A single Tavily call fires
-   **only** when SearXNG is degraded/blocked/empty (rare → bounded cost). Tavily is the
-   fallback (not Exa) because `searchTavily` already exists and the key is already
-   provisioned.
+5. **Per-tab rubric.** No evidence hierarchy on the open web; each tab gets its own scored
+   dimensions and weights (§6.2).
 
-5. **Per-tab rubric.** "Good" differs by tab; there is no evidence hierarchy on the open
-   web. Each tab gets its own scored dimensions and weights (§6).
+6. **Benchmark queries are research-adjacent**, with **mainstream-first class weighting**
+   (§7) so edge-case fixes can't quietly regress the bread-and-butter.
 
-6. **Benchmark queries are research-adjacent.** They match real ScholarSync users
-   (emerging-science topics, drug/treatment/trial news, methodology debates, public-health
-   discourse, preprint controversies), not general-purpose web queries.
+7. **Every runtime lever is free code/config** (§8). No improvement lever adds a per-query
+   paid dependency. All eval machinery (council, Exa snapshots, metrics) is offline.
 
-7. **Every improvement lever is free code/config.** No lever in the improvement backlog
-   (§7) introduces a per-query paid dependency.
+8. **Secrets via 1Password only.** `EXA_API_KEY` and `TAVILY_API_KEY` live in the `Dev`
+   vault; all eval/runtime access is through `op-run --`. Keys are never printed or committed.
 
 ## 4. Source roles (unambiguous)
 
 | Tool | Role | When it runs | Cost | Status |
 |---|---|---|---|---|
 | **SearXNG** | Runtime workhorse | Every query | $0/query (fixed server cost) | Integrated (`sources/searxng.ts`) |
-| **Tavily** | Runtime degradation fallback | Only when SearXNG breaker trips / returns empty | ~$0.006 × (rare) | Integrated (`sources/tavily.ts`); call with `restrictDomains: false` for general web |
-| **Exa** | Offline yardstick (gold-set seed) | Once, building the gold set | ~few $ total | Signup needed; offline only |
-| **Perplexity** | Optional offline sanity seed | Once, gold-set ratification | Optional | Not integrated; manual web UI is fine |
-| **Cohere** | Runtime rerank | Every query, fail-open | ~$0.002/query | Integrated (`rerank.ts`); no key → returns input unchanged |
+| **Tavily** | Runtime degradation fallback | Only when SearXNG breaker trips / returns empty | ~$0.006 × (rare) | Integrated (`sources/tavily.ts`); key in `Dev` vault; call `restrictDomains:false` |
+| **Exa** | **Offline council opponent** + gold-set seed | Snapshot capture, once per benchmark | ~few $ total | Key in `Dev` vault; offline only |
+| **Perplexity / Google** | Optional offline gold-set seeds | Once, gold-set ratification | optional | Manual is fine |
+| **Cohere** | Runtime rerank | Every query, fail-open | ~$0.002/query | Integrated (`rerank.ts`); no key → input unchanged |
+| **LLM council** (Opus + Codex + DeepSeek/Grok) | Offline blind judges | Once per improvement cycle | eval-time tokens | Reuse academic council infra |
 
-Why fusion is deferred (not chosen): academic *must* union sources because PubMed,
-OpenAlex, and S2 are disjoint corpora — a missed source is a missed paper. The open web is
-the opposite: SearXNG, Tavily, and Exa are three rankers over the *same* web, so unioning
-yields small marginal recall while adding cross-source dedup and heterogeneous-metadata
-noise. Single-source is the disciplined default; the harness can later justify fusion with
-evidence if a single source plateaus below target.
+Why runtime fusion is deferred: academic *must* union sources (PubMed/OpenAlex/S2 are
+disjoint corpora). The open web is three rankers over the *same* corpus, so unioning yields
+small marginal recall while adding cross-source dedup and metadata noise. Single-source is
+the disciplined default; the harness can later justify fusion with evidence.
 
-## 5. Production architecture
+## 5. Production architecture (runtime — unchanged cost profile)
 
 The `tab !== "academic"` branch of `/api/search/unified` becomes:
 
@@ -108,43 +110,44 @@ query (tab → SearXNG category: web=general, news=news, discussions=social medi
         │  breaker trips OR degraded OR results < floor
         └─ FALLBACK: single Tavily call (restrictDomains:false, topic=general|news)
   → quality layer (all free; trust-tier + dedup + domain-prefs already exist):
-        1. trust / authority ranking      (reuse + extend trust-tier.ts)
-        2. freshness / time-decay         (new; weighted per tab)
-        3. dedup + domain/outlet diversity (extend dedup.ts; cap results per domain)
-        4. spam / content-farm filter     (new; heuristic)
-        5. Cohere rerank                  (reuse rerank.ts; per-tab profile; fail-open)
-        6. domain preferences             (reuse applyDomainPreferences)
+        trust/authority ranking · freshness/time-decay · dedup + domain/outlet diversity
+        · spam/content-farm filter · Cohere rerank (per-tab profile, fail-open) · domain prefs
   → top-N to dashboard
 ```
 
-**Fallback trigger (precise):** fire the Tavily fallback when SearXNG returns
-`degraded === true`, OR returns fewer than a configured floor of results for a non-trivial
-query. Exactly one fallback call; fallback results pass through the same quality layer.
+**Fallback trigger:** SearXNG `degraded === true`, OR fewer than a configured floor of
+results for a non-trivial query. Exactly one fallback call; fallback results pass through
+the same quality layer. **Fail-open chain:** SearXNG degraded → Tavily → both fail → empty +
+existing degraded flag. No new failure modes.
 
-**Fail-open chain (no new failure modes):** SearXNG degraded → Tavily fallback → both fail
-→ return empty with the `searxngUnavailable`/degraded flag already present in the response
-contract.
+## 6. Eval harness — the first deliverable (TWO layers) ⭐
 
-**Ranking profile per tab:** the quality layer reads a per-tab weight profile (§6) so the
-same code produces tab-appropriate ordering without branching logic.
+Mirrors the academic structure: a deterministic harness (`ralph-search`) **and** a blinded
+LLM council. Both are offline.
 
-## 6. Eval harness (first deliverable) ⭐
+### 6.1 Layer 1 — Deterministic metrics
 
-Mirrors `src/lib/search/__tests__/ralph-search/` structure: frozen `cases/`, a frozen
-response `cache/`, a `scorer`, a `runner`, and a `scorecard.json`.
+Structure mirrors `src/lib/search/__tests__/ralph-search/`: frozen `cases/`, a frozen
+response `cache/`, a `scorer`, a `runner`, a `scorecard.json`.
 
-### 6.1 Gold-set construction (offline, once)
+**Case schema (per tab), adapted from `ralph-search/types.ts`:**
 
-For each benchmark query: query Exa with the tab-matched `category` (+ optional Perplexity)
-→ pool candidates → **user blind-ratifies** which results are "ideal" → freeze to a per-tab
-case JSON (query + ranked expected results + per-result notes). The frozen set is the
-scoring target; live Exa is never called during scoring.
+```
+{ id, name, tab: "web"|"news"|"discussions", queryClass, query,
+  expectedResults: [ { urlOrTitleFragment, domain?, publishedAfter?, mustFind } ],
+  rankingRules:    [ ... per-tab assertions ... ],
+  authorityChecks, freshnessChecks, diversityChecks, dedupChecks }
+```
 
-### 6.2 Per-tab rubric
+`expectedResults` is the **hand-ratified** ground-truth (decision 3a). `mustFind:true`
+counts toward recall; `mustFind:false` is a logged bonus.
 
-Dimensions are scored 0–10; a per-tab **weighted composite** produces the case score; each
-dimension emits **✓/✗ detail traces** per expected item so failures are debuggable (exactly
-like the academic `scoreDetails`).
+**Deterministic metrics** (reuse/extend `src/lib/search/eval/metrics.ts`, which already has
+`recallAtK`, `meanReciprocalRank`, `ndcgAtK` over a `MustHaveSpec`): **recall@10, precision,
+nDCG@10, MRR**, plus per-tab **authority / freshness / diversity / dedup** ratios.
+
+**Per-tab rubric** (each dimension 0–10; per-tab weighted composite; ✓/✗ detail traces per
+expected item, exactly like academic `scoreDetails`):
 
 | Dimension | Web | News | Discussions |
 |---|---|---|---|
@@ -154,92 +157,155 @@ like the academic `scoreDetails`).
 | Diversity (no single-domain flood) | ●● | ●● (outlets) | ●● (platforms: Reddit/HN/SE) |
 | Dedup (incl. same wire story) | ●● | ●●● | ●● |
 
-(`●●●` ≈ high weight, `●●` ≈ medium, `●` ≈ low. Exact numeric weights are set in the
-harness config and tuned during the sprint; weights are data, not code.)
+(`●●●` high / `●●` medium / `●` low weight. Exact numeric weights are config data, tuned
+during the sprint — never code.)
 
-### 6.3 Blinded A/B scoring
+**Determinism + the frozen-pool A/B toggle** (the CYCLE-04 lesson):
 
-Our top-10 vs the gold top-10, de-identified, scoring **recall** (did we surface the gold
-items), **precision** (are our top-10 good), and **ranking** (are the best items high).
-This reproduces the blind comparison that drove the academic sprint.
+- Freeze raw SearXNG (and fallback) responses into `cache/` (MD5(source:query:opts) keys,
+  like `ralph-search/runner.ts`). The scorer **replays cache → runs the ranking pipeline →
+  scores**, so the *ranking layer* iterates with zero live calls.
+- For any **ranking** change: **capture the candidate pool once**, then re-rank the
+  identical pool **with vs without** the change. The before/after delta is then **100%
+  attributable to code**, not live-retrieval noise. (In academic this caught a plausible
+  change that moved *zero* ranks → instant revert.)
+- Only a **retrieval** change (SearXNG engine/`settings.yml`) requires re-fetch + re-freeze.
 
-### 6.4 Determinism
+### 6.2 Layer 2 — Blinded LLM council
 
-Freeze raw SearXNG (and fallback) responses into the harness `cache/` (mirrors
-`REPRODUCIBLE-HARNESS.md`). The scorer **replays cached responses → runs the ranking
-pipeline → scores**, so the *ranking layer* iterates deterministically with zero live
-calls. Only a *retrieval* change (SearXNG engine/`settings.yml`) requires a re-fetch +
-re-freeze.
+Ports `BASELINE-BLIND-2026-06-23.md` / `PARITY-SPRINT-GOAL.md` council protocol:
 
-## 7. Improvement lever backlog (all free)
+- **Packet builder** produces, per query, two **identically-formatted, de-identified**
+  top-10 lists — **ours** vs **Exa** (the opponent) — with engine-revealing fields stripped
+  and **A/B labels randomized per query** (salted), so no judge can tell which is the system
+  under test.
+- **Three independent judges**, fresh context, cross-family: **Opus** subagent + **Codex** +
+  a third (**DeepSeek** via API, or **Grok** via OpenRouter). No judge sees another's vote;
+  no judge sees builder/implementation notes.
+- **Per-query rubric 0–5** across relevance, ranking, authority/trust, freshness,
+  diversity, explanation/usefulness. **Majority vote** per query → tally
+  *ours / opponent / tie*. **De-anonymize only after** scoring; run **one council per genuine
+  change** (never re-roll for a better number).
+- **Blinding integrity check:** judges' raw A/B picks should *not* agree on which list is
+  ours — if they can identify the system, blinding has leaked.
 
-Ordered roughly by expected impact-per-effort; the harness re-prioritizes as data arrives.
+## 7. Benchmark set & mainstream-first weighting
+
+~30–50 research-adjacent queries, split across the three tabs, each query tagged with a
+**class** and the set weighted so mainstream dominates (academic used 50/20/15/10/5):
+
+| Class | Weight | Example (research-adjacent) |
+|---|---|---|
+| Mainstream research topic | 50% | "CRISPR base editing clinical applications" |
+| Current / recency | 20% | "lecanemab FDA decision news", trial readouts |
+| Methodology / controversy discourse | 15% | "peer review reform debate", reproducibility threads |
+| Niche / long-tail | 10% | emerging sub-field queries |
+| Adversarial / negative-control | 5% | ambiguous acronyms, spam-bait, should-return-little |
+
+**Mainstream-first rule (ported verbatim in spirit):** *a change that improves an edge-case
+class but worsens any mainstream class is a BAD change — revert it.*
+
+## 8. Improvement lever backlog (all free at runtime)
+
+Ordered by expected impact-per-effort; the harness re-prioritizes from data.
 
 1. **Trust / authority ranking** — extend `trust-tier.ts`; boost credible domains, demote
-   SEO/marketing/content-farm domains. (Half-built.)
-2. **Dedup + domain/outlet diversity** — extend `dedup.ts`; collapse near-duplicates and
-   cap results per domain so one site can't flood a page.
-3. **Freshness / time-decay** — recency scoring, weighted per tab (heavy for news, light
-   for web).
-4. **Query understanding / expansion** — rule-based first; optionally one cheap, cached LLM
-   rewrite (reuse the academic `augmentQuery` pattern). Must stay cache-friendly to avoid
-   per-query cost.
-5. **SearXNG engine config** — tune enabled engines, weights, and `settings.yml` per
-   category for coverage and reliability.
-6. **Spam / content-farm filter** — heuristic removal of listicle/SEO/thin-content pages.
-7. **Rerank profile per tab** — keep Cohere (fail-open); tune `topN` and the per-tab blend;
-   a self-hosted cross-encoder is a future $0 option if a fully zero-paid runtime is wanted.
+   SEO/marketing/content-farm. (Half-built.)
+2. **Dedup + domain/outlet diversity** — extend `dedup.ts`; cap results per domain.
+3. **Freshness / time-decay** — recency scoring, weighted per tab.
+4. **Query understanding / expansion** — rule-based first; optionally one *cheap, cached* LLM
+   rewrite (reuse academic `augmentQuery`), kept cache-friendly to avoid per-query cost.
+5. **SearXNG engine config** — tune enabled engines/weights/`settings.yml` per category.
+6. **Spam / content-farm filter** — heuristic thin-content removal.
+7. **Rerank profile per tab** — keep Cohere (fail-open); tune `topN`/blend; self-hosted
+   cross-encoder is a future $0 option.
 
-## 8. Phasing & exit gate
+Every lever is **TDD, table-driven, and gated on query-class** (the academic discipline:
+`entity-drift.ts`, `trial-ranking.ts` are multiplicative, gated, unit-tested, surfaced as
+flags) so it can't regress classes it shouldn't touch.
+
+## 9. The cycle loop, keep/revert gate, and stop criteria
+
+**The cycle (ported from `PARITY-SPRINT-GOAL.md`):**
 
 ```
-Phase 0  Build harness + ratify gold set + BASELINE (current SearXNG per tab)  ← the floor
-Phase 1  Trust/authority ranking · dedup/diversity · freshness                 → re-measure
-Phase 2  Query understanding + SearXNG engine/settings.yml tuning              → re-measure
-Phase 3  Fallback wiring · spam/content-farm filter · per-tab rerank profile   → re-measure
-Cycles   Documented (CYCLE-01…) until the exit gate is met
+1. ensure/extend the benchmark
+2. run OURS + Exa (opponent) on the set
+3. deterministic metrics + blinded council
+4. identify the highest-impact lacuna (which class/tab is losing)
+5. plan ONE coherent change
+6. implement it (TDD: RED→GREEN), table-driven, gated on query-class
+7. targeted eval (affected queries) → full eval → ONE council
+8. KEEP iff (deterministic holds-or-improves) AND (council holds-or-improves)
+   AND (no mainstream regression) AND (all quality gates pass) — else REVERT
+9. when no major lacuna remains, add 25–50 fresh unseen queries and repeat
 ```
 
-**Exit gate ("decent") — proposed, tunable:** per tab, **recall@10 ≥ 70%** of the gold set
-**and weighted composite ≥ 7.5/10**. Each improvement cycle is documented like the academic
-`CYCLE-0x` notes (before/after scores, the change, kept-or-reverted).
+**Quality gates (per tab, tunable):** recall@10 ≥ 70% of gold · weighted composite ≥ 7.5 ·
+authority/diversity/dedup ratios above their floors · zero fabricated metadata.
 
-## 9. Error handling
+**Stop criteria (ported):** stop after **3 consecutive cycles** where ours beats-or-ties Exa
+by blinded council majority on **≥ 80%** of queries, all gates pass, no critical lacuna
+remains, and deterministic metrics move **< 2%** between cycles (converged).
 
-- All sources fail open (existing pattern). The fallback chain in §5 introduces no new
-  failure modes.
-- Harness: a case with a missing cache entry is skipped with a warning, never a hard fail.
-- Cohere/Tavily/SearXNG absence each degrade gracefully (no key / breaker open → empty or
-  unchanged).
+## 10. CYCLE-0x document template (one per cycle)
 
-## 10. Testing strategy
+Mirrors `CYCLE-01…06`; `CYCLE-04-REVERTED` is the model for a reverted cycle.
 
-- **Unit (TDD, one red-green at a time):** each new lever — freshness decay, diversity cap,
-  spam filter, trust-ranking extension — gets behavior tests (happy / edge / sad paths).
-- **Harness runner tests:** mirror `ralph-search/runner.test.ts` — scorer correctness on
-  fixed fixtures, deterministic replay from `cache/`.
-- **Route integration:** the non-academic branch returns correctly ranked, deduped,
-  fallback-resilient results; degraded-SearXNG triggers exactly one Tavily call.
-- **No academic regression:** academic eval (`ralph-search` scorecard) must be unchanged —
-  this sprint must not touch its code paths.
+```
+# Cycle N — <name> — KEEP | REVERT
+## Lacuna        which queries/classes are losing, the symptom, the root cause
+## Change        ONE coherent change; file(s); table-driven rules; gating; unit tests (RED→GREEN);
+                 why provably safe (can only help the targeted class)
+## Result        deterministic before→after table (recall@10, nDCG, etc.) on a FROZEN pool;
+                 council before→after (beat-or-tie %); targeted per-query rank evidence
+## Decision      KEEP or REVERT, with the gate that decided it
+```
 
-## 11. Open questions (resolve during planning / spec review)
+## 11. Phasing
 
-- Exact numeric weights per dimension per tab (start from §6.2, tune via harness).
-- Whether `engagement` should be a scored dimension for discussions (currently folded into
-  authority/community-quality).
-- The results-count floor that triggers the Tavily fallback.
-- Number of benchmark queries per tab (target ~30–50 total, research-adjacent).
-- Long-term: refresh the gold set from real user queries once the app has traction.
+```
+Phase 0  Blind baseline FIRST (unbiased): build harness + ratify gold set + capture Exa
+         snapshots; score current SearXNG per tab on deterministic + ONE blind council.   ← the floor
+Phase 1  Free cheap wins: trust/authority · dedup/diversity · freshness                    → re-run drill
+Phase 2  Query understanding + SearXNG engine/settings.yml tuning                          → re-run drill
+Phase 3  Fallback wiring · spam/content-farm filter · per-tab rerank profile               → re-run drill
+Cycles   One change each, documented (CYCLE-0x), until the stop criteria in §9 are met
+```
 
-## 12. Decision trace
+## 12. Methodology trace (ported element → academic source)
+
+| Ported element | Academic source |
+|---|---|
+| Gold standard is a benchmark, never runtime | `ARCHITECTURE.md` ("Elicit is a benchmark only") |
+| Hand-ratified `mustFind` ground-truth | `ralph-search/types.ts` `ExpectedPaper`; `BASELINE-87Q-FLOOR.md` |
+| Deterministic metrics (recall@10/nDCG/MRR) | `src/lib/search/eval/metrics.ts`; `BEFORE-AFTER-ELICIT.md` |
+| Per-dimension weighted composite + ✓/✗ traces | `ralph-search/scorer.ts`, `scorecard.json` |
+| Frozen response cache + frozen-pool A/B toggle | `ralph-search/runner.ts`; `CYCLE-04-REVERTED.md`; `REPRODUCIBLE-HARNESS.md` |
+| Blinded multi-LLM council (opponent = peer tool) | `BASELINE-BLIND-2026-06-23.md`; `PARITY-SPRINT-GOAL.md` |
+| ONE change/cycle, mainstream-first weighting | `PARITY-SPRINT-GOAL.md` |
+| Keep/revert gate + ONE council per change | `PARITY-SPRINT-GOAL.md`; `PARITY-SPRINT-STATUS.md` |
+| Convergence stop (3 cycles, ≥80%, <2%) | `PARITY-SPRINT-GOAL.md` |
+| CYCLE-0x template | `CYCLE-01…06` |
+
+## 13. Decision trace (this conversation)
 
 | Decision | Source |
 |---|---|
-| Build the measurement rig first (gold standard + harness), then pull levers | User: "I need a gold standard to compare and then keep improving" |
-| Exa-anchored gold standard | User selection: "Exa-anchored" |
-| SearXNG-only runtime + cheap degradation fallback | User selection: "SearXNG + degradation fallback" |
-| Avoid per-query paid API; offline yardstick is fine | User: low opex / profitability is paramount, but trash quality loses users |
-| Same blinded A/B drill as academic (Elicit) | User: described the academic Elicit sprint as the template |
+| Build the measurement rig first, then pull levers | User: "I need a gold standard to compare and then keep improving" |
+| Port the exact academic Elicit drill (two-layer) | User: "see the exact methodology … come back after you understand it" |
+| Exa = offline opponent (key in 1Password), not runtime | User: "exa api key is in 1password … useful for comparison" |
+| SearXNG-only runtime + cheap Tavily degradation fallback | User selection: "SearXNG + degradation fallback" |
+| Avoid per-query paid API; offline yardstick is fine | User: low opex/profitability paramount, but trash quality loses users |
 | Research-adjacent benchmark queries | User selection: "Research-adjacent" |
-| Per-tab rubric | Design proposal, accepted (no objection) |
+| Per-tab rubric | Design proposal, accepted |
+
+## 14. Open questions (resolve during planning / spec review)
+
+- Exact numeric weights per dimension per tab (start from §6.1, tune via harness).
+- Whether `engagement` is its own scored dimension for discussions (currently folded into
+  authority/community-quality).
+- The results-count floor that triggers the Tavily fallback.
+- Final benchmark query list per tab (~30–50 total, research-adjacent, class-weighted per §7).
+- Which third council judge (DeepSeek vs Grok) is primary, given availability.
+- Long-term: refresh the gold set from real user queries once the app has traction.
