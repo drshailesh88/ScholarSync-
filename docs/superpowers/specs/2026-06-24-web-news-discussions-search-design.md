@@ -61,9 +61,12 @@ without adding any per-query paid-API dependency.
 3. **Two distinct gold artifacts** (this is how academic avoided self-grading, and we copy
    it exactly):
    - **(a) Deterministic ground-truth** — per query, a **hand-ratified** set of ideal
-     results encoded as `expectedResults` with a `mustFind` flag. Seeded by Exa / Perplexity
-     / Google, but the human ratifies and **freezes** it. Drives recall / precision / nDCG /
-     MRR. *Never auto-derived from any single tool's output.*
+     results encoded as `expectedResults` with a `mustFind` flag. **Construction (objective,
+     to keep the council off vibes):** seed each must-have by *authority rule* (the
+     primary/official source — paper DOI page, gov/agency page, canonical thread) **and** by
+     *tool-consensus* (any URL ≥2 of {Exa, Perplexity, Google} surface in top-5); the human
+     then **ratifies and freezes** the seeded list. Drives recall / precision / nDCG / MRR.
+     *Never auto-derived from any single tool's output.*
    - **(b) Council opponent** — **Exa** frozen snapshots, captured offline. Used *only* as
      the blinded A/B peer that neutral LLM judges compare our output against. Exa is the
      opponent, **not** the answer key — so there is no self-grading.
@@ -173,21 +176,44 @@ during the sprint — never code.)
 
 ### 6.2 Layer 2 — Blinded LLM council
 
-Ports `BASELINE-BLIND-2026-06-23.md` / `PARITY-SPRINT-GOAL.md` council protocol:
+Directly **reuses the existing academic harness** — `council/build-blinded-packet.ts`,
+`council/aggregate-blinded.ts`, `council/openrouter-judge.mjs` are ~80% portable. Their
+**structural robustness transfers for free** and must be preserved verbatim:
 
-- **Packet builder** produces, per query, two **identically-formatted, de-identified**
-  top-10 lists — **ours** vs **Exa** (the opponent) — with engine-revealing fields stripped
-  and **A/B labels randomized per query** (salted), so no judge can tell which is the system
-  under test.
-- **Three independent judges**, fresh context, cross-family: **Opus** subagent + **Codex** +
-  a third (**DeepSeek** via API, or **Grok** via OpenRouter). No judge sees another's vote;
-  no judge sees builder/implementation notes.
-- **Per-query rubric 0–5** across relevance, ranking, authority/trust, freshness,
-  diversity, explanation/usefulness. **Majority vote** per query → tally
-  *ours / opponent / tie*. **De-anonymize only after** scoring; run **one council per genuine
-  change** (never re-roll for a better number).
-- **Blinding integrity check:** judges' raw A/B picks should *not* agree on which list is
-  ours — if they can identify the system, blinding has leaked.
+- **Un-fingerprintable blinding** — both engines rendered in *identical* format using only
+  common fields; engine-revealing fields dropped; **A/B labels randomized per query** via
+  `sha1(salt:id)`; `key.json` withheld from judges.
+- **Cross-family judges**, fresh context, **`temperature: 0`**, strict JSON: **Opus**
+  subagent + **Codex** + a third from a *different* family (**Grok**/**Gemini**/**DeepSeek**
+  via OpenRouter). Independent — no judge sees another's vote or any implementation note.
+- **Majority vote** per query → tally *ours / opponent / tie*; **de-anonymize only after**
+  scoring via `key.json`; run **one council per genuine change** (never re-roll).
+- **Blinding-integrity check:** judges' raw A/B picks should *not* agree on which list is
+  ours — if they can identify the system, blinding leaked.
+
+**What must change for the open web (the parts that decide council strength — §1's risks):**
+
+1. **Ground truth in the packet.** The packet prints the **`mustHaves`** (built per §3a:
+   authority-rule + tool-consensus, ratified) as the relevance anchor, so judges score
+   objective recall, not vibes. *Without this the council is noise.*
+2. **Objective per-tab rubric** replacing the biomedical dimensions. Each tab's `RUBRIC`
+   constant scores **0–5** on concrete, checkable dimensions: **on-topic relevance ·
+   authority/source-reputation · recency-correctness · outlet/platform diversity ·
+   dedup (incl. same wire story) · usefulness**. No "is it good?" vagueness.
+3. **Rich packet rows.** Extend the rendered `CommonRow` from title/year/venue to
+   **title + domain + publishedDate + snippet**, because judges cannot assess authority or
+   recency from a bare title (academic could lean on PMID/venue; the web can't).
+4. **A genuinely strong opponent.** `capture-exa.ts` (analogous to `capture-elicit.ts`)
+   snapshots Exa with the **tab-matched `category`/`type` and good params** so "beat-or-tie"
+   is a real bar; optionally add **Perplexity** as a second opponent to raise it further.
+   A weak opponent converges the engine to mediocre.
+
+### 6.3 Council-strength checklist (guards against a weak instrument)
+
+Before any council run counts, all must hold: ground-truth `mustHaves` present & ratified ·
+per-tab objective rubric loaded · packet rows show domain+date+snippet · ≥3 cross-family
+judges at `temp 0` · blinding-integrity check passes · opponent captured with strong params ·
+exactly one council per change. A run failing any of these is **discarded, not trusted.**
 
 ## 7. Benchmark set & mainstream-first weighting
 
@@ -282,7 +308,9 @@ Cycles   One change each, documented (CYCLE-0x), until the stop criteria in §9 
 | Deterministic metrics (recall@10/nDCG/MRR) | `src/lib/search/eval/metrics.ts`; `BEFORE-AFTER-ELICIT.md` |
 | Per-dimension weighted composite + ✓/✗ traces | `ralph-search/scorer.ts`, `scorecard.json` |
 | Frozen response cache + frozen-pool A/B toggle | `ralph-search/runner.ts`; `CYCLE-04-REVERTED.md`; `REPRODUCIBLE-HARNESS.md` |
-| Blinded multi-LLM council (opponent = peer tool) | `BASELINE-BLIND-2026-06-23.md`; `PARITY-SPRINT-GOAL.md` |
+| Blinded multi-LLM council (opponent = peer tool) | `council/build-blinded-packet.ts`, `council/aggregate-blinded.ts`, `council/openrouter-judge.mjs`; `BASELINE-BLIND-2026-06-23.md` |
+| Opponent snapshots captured offline | `capture-elicit.ts` → port as `capture-exa.ts` |
+| Cross-family judge fallback (Grok→Gemini→DeepSeek), temp 0 | `council/openrouter-judge.mjs` |
 | ONE change/cycle, mainstream-first weighting | `PARITY-SPRINT-GOAL.md` |
 | Keep/revert gate + ONE council per change | `PARITY-SPRINT-GOAL.md`; `PARITY-SPRINT-STATUS.md` |
 | Convergence stop (3 cycles, ≥80%, <2%) | `PARITY-SPRINT-GOAL.md` |
@@ -299,6 +327,8 @@ Cycles   One change each, documented (CYCLE-0x), until the stop criteria in §9 
 | Avoid per-query paid API; offline yardstick is fine | User: low opex/profitability paramount, but trash quality loses users |
 | Research-adjacent benchmark queries | User selection: "Research-adjacent" |
 | Per-tab rubric | Design proposal, accepted |
+| Ground truth = authority-rule + tool-consensus, human-ratified | User selection: "Authority-rule + tool-consensus, you ratify" |
+| Reuse the existing blinded-council harness; harden 4 open-web inputs | User: "if council is weak — results would be bad" |
 
 ## 14. Open questions (resolve during planning / spec review)
 
@@ -307,5 +337,5 @@ Cycles   One change each, documented (CYCLE-0x), until the stop criteria in §9 
   authority/community-quality).
 - The results-count floor that triggers the Tavily fallback.
 - Final benchmark query list per tab (~30–50 total, research-adjacent, class-weighted per §7).
-- Which third council judge (DeepSeek vs Grok) is primary, given availability.
+- Exact per-tab council `RUBRIC` wording and whether Perplexity joins Exa as a 2nd opponent.
 - Long-term: refresh the gold set from real user queries once the app has traction.
