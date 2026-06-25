@@ -134,9 +134,21 @@ Exit gate: nDCG@10 / recall@10 ≥ the throttled-OpenAlex floor
 | **Take the lane offline** | Unset `MEDCPT_QUERY_ENCODER_URL` (or `TURBOPUFFER_API_KEY`) — the lane returns `missing_config` and search falls back to the lexical lanes. |
 | **Tear down** | `op-run -- modal app stop manan-medcpt` (stops the encoder + cron; the Turbopuffer namespace persists until deleted separately). |
 
+## int8, precisely
+
+Turbopuffer's input vector types are `f32`/`f16` only — you do NOT write int8
+integers (that 400s: "invalid i8 value"). We write `[768]f32` vectors and
+Turbopuffer applies **int8 quantization to the ANN index automatically** (its
+"native i8", ±0.001 quality, ~4× smaller hot index). So: full vectors live as f32
+on cheap object storage; the performance-critical ANN index is int8 — satisfying
+"int8, not binary" while the live lane keeps querying with float vectors. Only the
+`year` attribute is filterable (Turbopuffer caps filterable values at 4096 bytes,
+which abstracts exceed).
+
 ## Cost shape (steady state)
 
-- Turbopuffer: object-storage-native, int8 (4× smaller); ~tens of $/mo at this scale.
+- Turbopuffer: object-storage-native; f32 vectors on cheap object storage + an
+  automatic int8 ANN index (4× smaller hot set); ~tens of $/mo at this scale.
 - Modal encoder: scale-to-zero — **$0 when idle**, A10G-seconds only while serving.
 - Freshness: a few GPU-minutes per week on the daily delta.
 - One-time: index load (egress/compute only) + the 2024–2026 backfill (~$3–15 GPU).
