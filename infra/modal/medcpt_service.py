@@ -371,18 +371,15 @@ def list_files(subdir: str = "updatefiles"):
 PRECOMPUTED_BASE = "https://ftp.ncbi.nlm.nih.gov/pub/lu/MedCPT/pubmed_embeddings"
 
 
-def _meta_field(record, *keys) -> str:
-    """Tolerant attribute lookup — the precomputed `pubmed_chunk_*.json` field names
-    differ across NCBI releases (e.g. `title`/`t`, `abstract`/`a`), so try each."""
+def _pick(record, *keys) -> str:
+    """First non-empty value among `keys`. The precomputed `pubmed_chunk_*.json`
+    uses compact keys (verified against a live chunk): t=title, a=abstract,
+    d=YYYYMMDD date, m=mesh. Fallbacks tolerate a future rename."""
     if isinstance(record, dict):
         for k in keys:
             v = record.get(k)
             if v:
                 return str(v).strip()
-    elif isinstance(record, (list, tuple)) and record:
-        idx = 0 if keys and keys[0] in ("title", "t") else 1
-        if idx < len(record) and record[idx]:
-            return str(record[idx]).strip()
     return ""
 
 
@@ -408,18 +405,23 @@ def load_chunk(n: int) -> dict:
     for i, pmid in enumerate(pmids):
         pmid = str(pmid)
         record = meta.get(pmid, {}) if isinstance(meta, dict) else {}
-        year_match = re.search(r"\d{4}", _meta_field(record, "year", "pubdate", "date"))
+        # NCBI precomputed metadata only carries t(itle)/a(bstract)/d(ate)/m(esh).
+        # journal/authors/doi are NOT in this set — the live pipeline's OpenAlex
+        # PMID enrichment + lexical-lane RRF merge backfill them for surfaced hits;
+        # the 2024-2026 freshness backfill (pubmed_parser) carries full metadata.
+        date = _pick(record, "d", "date", "pubdate")
+        year = int(date[:4]) if date[:4].isdigit() else 0
         rows.append(
             {
                 "id": pmid,
                 "vector": embeds[i].astype("float32").tolist(),
                 "pmid": pmid,
-                "title": _meta_field(record, "title", "t"),
-                "abstract": _meta_field(record, "abstract", "a"),
-                "journal": _meta_field(record, "journal", "j"),
-                "year": int(year_match.group(0)) if year_match else 0,
+                "title": _pick(record, "t", "title"),
+                "abstract": _pick(record, "a", "abstract"),
+                "journal": "",
+                "year": year,
                 "authors": [],
-                "doi": _meta_field(record, "doi"),
+                "doi": "",
             }
         )
 
