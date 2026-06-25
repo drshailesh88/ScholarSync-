@@ -52,6 +52,7 @@ export function mapExaResult(raw: ExaRawResult, rank: number): ExaFixtureItem {
 export async function captureAll(
   searchFn: ExaSearchFn,
   queries: WebBenchmarkQuery[],
+  delayMs = 1200,
 ): Promise<Record<string, ExaFixtureItem[]>> {
   const out: Record<string, ExaFixtureItem[]> = {};
   for (const q of queries) {
@@ -62,7 +63,7 @@ export async function captureAll(
     } catch (e) {
       console.log(`  ✗ ${q.id.padEnd(34)} ${e instanceof Error ? e.message : e}`);
     }
-    await new Promise((r) => setTimeout(r, 1200));
+    await new Promise((r) => setTimeout(r, delayMs));
   }
   return out;
 }
@@ -85,7 +86,8 @@ async function realExaSearch(query: string, tab: WebTab): Promise<{ results: Exa
 async function main() {
   const argv = process.argv.slice(2);
   const onlyIdx = argv.indexOf("--only");
-  const only = onlyIdx >= 0 ? argv[onlyIdx + 1].split(",").map((s) => s.trim()) : null;
+  const onlyVal = argv[onlyIdx + 1];
+  const only = onlyIdx >= 0 && onlyVal ? onlyVal.split(",").map((s) => s.trim()) : null;
   const queries = only ? BENCHMARK_QUERIES.filter((q) => only.includes(q.id)) : BENCHMARK_QUERIES;
 
   const existing = existsSync(FIXTURES)

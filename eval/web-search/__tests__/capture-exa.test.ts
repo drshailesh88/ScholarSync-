@@ -26,7 +26,7 @@ describe("captureAll", () => {
       { id: "news-x", tab: "news", queryClass: "recency", query: "q", intent: "", recencyBiased: true, mustHaves: [{ label: "a", domain: "reuters.com", rule: "consensus" }] },
     ];
     const fakeSearch = async () => ({ results: [{ title: "T", url: "https://reuters.com/x", publishedDate: "2026-06-01", text: "s" }] });
-    const out = await captureAll(fakeSearch, queries);
+    const out = await captureAll(fakeSearch, queries, 0);
     expect(out["news-x"]).toHaveLength(1);
     expect(out["news-x"][0].domain).toBe("reuters.com");
   });
