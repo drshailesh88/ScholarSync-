@@ -72,7 +72,7 @@ image = (
     .pip_install(
         "torch==2.4.1",
         "transformers==4.44.2",
-        "turbopuffer==0.5.7",
+        "turbopuffer==2.4.0",
         "pubmed_parser==0.5.1",
         "numpy==2.1.1",
         "requests==2.32.3",
