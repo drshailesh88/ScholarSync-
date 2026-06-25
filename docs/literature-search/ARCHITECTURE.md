@@ -18,6 +18,7 @@ planQuery(query)                         src/lib/search/query-planner.ts
 RETRIEVE (parallel fan-out, per-source timeout + circuit breaker)
   PubMed Best-Match (relevance|date)      sources/pubmed.ts   [REQUIRED]
   OpenAlex (citations, OA, concepts)      sources/openalex.ts [default]
+  MedCPT dense (self-hosted, by meaning)  sources/medcpt-dense.ts [internal, fail-open]
   ClinicalTrials.gov (if wantsTrials)     sources/clinical-trials.ts
   Tavily web lane (if wantsWeb + key)     sources/tavily.ts   [trust-tiered]
   Semantic Scholar (only if requested)    sources/semantic-scholar.ts [opt-in]
@@ -91,16 +92,20 @@ The eval harness IS the improvement engine. The cycle:
 Elicit's edge is a **pre-embedded ~100M-paper corpus** for dense recall. Manan
 gets first-stage recall from PubMed Best-Match (itself a LambdaMART
 learning-to-rank model trained on NIH-scale click logs) + OpenAlex citation
-recall, and closes the *precision* gap with a cross-encoder rerank on the fused
-candidates — the same technique Elicit/Consensus/Undermind use. See
-`SEARCH-METHODOLOGY-RESEARCH.md` for the evidence base. The honest framing:
-**we match Elicit's reranking, not its corpus pre-embedding** — and that is
-enough to win the majority of clinical queries (see `BEFORE-AFTER-ELICIT.md`).
+recall + the **self-hosted MedCPT dense lane** (below), and closes the
+*precision* gap with a cross-encoder rerank on the fused candidates — the same
+technique Elicit/Consensus/Undermind use. See `SEARCH-METHODOLOGY-RESEARCH.md`
+for the evidence base.
 
-The free, S2-independent path to go further: a self-hosted **MedCPT** retriever +
-cross-encoder (NCBI, trained on 255M PubMed click logs) — a drop-in `rerank.ts`
-alternative, and eventually a local embedded index for true dense first-stage
-recall (the one deferred, infra-heavy item).
+The S2-independent dense corpus is now **built, not deferred**: a self-hosted
+**MedCPT** retriever (NCBI, trained on 255M PubMed click logs) provides true
+dense first-stage recall by *meaning* — `sources/medcpt-dense.ts` encodes the
+query on a Modal-served MedCPT Query-Encoder and ANN-queries an int8 Turbopuffer
+namespace of NCBI's precomputed PubMed embeddings (kept current by a weekly Modal
+freshness updater). This **replaced the throttled OpenAlex `search.semantic`
+lane** — the lane we now own cannot be rate-limited away. The MedCPT
+Cross-Encoder remains a drop-in `rerank.ts` alternative to A/B against Cohere.
+Operational runbook: `infra/modal/OPS.md`.
 
 ## Guardrails to never regress
 
