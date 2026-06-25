@@ -458,15 +458,20 @@ def load_chunk(n: int) -> dict:
 
 
 @app.local_entrypoint()
-def load_index():
+def load_index(start: int = 0, end: int = -1):
     """Enumerate every precomputed chunk and fan `load_chunk` across them.
 
-    Run ONCE to stand up the historical (~24M, through-~2023) index:
+    Run ONCE to stand up the historical (~24M+, through-~2023) index:
         op-run -- modal run infra/modal/medcpt_service.py::load_index
-    Then run `backfill` for the 2024-2026 gap and `freshness` keeps it current.
+    Resumable: `--start N` (and optional `--end M`) restricts the chunk range, so a
+    load interrupted at chunk N can resume from there (upserts are idempotent by
+    PMID). Then run `backfill` for the 2024-2026 gap and `freshness` keeps it current.
     """
-    index = list_chunks.remote()
-    print(f"[load_index] {len(index)} precomputed chunks")
+    index = [n for n in list_chunks.remote() if n >= start and (end < 0 or n <= end)]
+    if not index:
+        print(f"[load_index] no chunks in range start={start} end={end}")
+        return
+    print(f"[load_index] loading chunks {index[0]}..{index[-1]} ({len(index)} chunks)")
     summaries = list(load_chunk.map(index))
     total = sum(s["upserted"] for s in summaries)
     print(f"[load_index] done: upserted={total} vectors across {len(summaries)} chunks")
