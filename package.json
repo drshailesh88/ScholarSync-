@@ -32,7 +32,10 @@
     "ux:score": "node qa/ux-score.mjs",
     "ux:score:zone": "node qa/ux-score.mjs --zone",
     "ux:screenshot": "npx playwright test qa/ux-screenshot.ts",
-    "eval:search": "tsx eval/literature-search/run.ts"
+    "eval:search": "tsx eval/literature-search/run.ts",
+    "eval:web:exa": "npx tsx eval/web-search/capture-exa.ts",
+    "eval:web:freeze": "npx tsx eval/web-search/capture-searxng.ts",
+    "eval:web:run": "npx tsx eval/web-search/run.ts --label baseline"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
