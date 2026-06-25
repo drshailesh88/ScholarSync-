@@ -12,9 +12,9 @@ import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import {
   searchOpenAlex,
-  searchOpenAlexSemantic,
   enrichCitationsByIds,
 } from "@/lib/search/sources/openalex";
+import { searchMedcptDense } from "@/lib/search/sources/medcpt-dense";
 import { fetchCrossrefByDoi } from "@/lib/search/sources/crossref";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchTavily } from "@/lib/search/sources/tavily";
@@ -392,26 +392,33 @@ async function runLiteratureSearchUncached(
         }).then(({ results, total, status }) => ({ source: "openalex", results, total, status }))
       ).catch((e) => errorOutcome("openalex", e instanceof Error ? e.message : "OpenAlex failed"))
     );
+  }
 
-    // Dense semantic lane (OpenAlex search.semantic) — the corpus-free fix for the
-    // lexical recall gap. Retrieves by meaning, surfacing landmarks with no shared
-    // surface terms. Fused into the pool before RRF; fails open like any source.
+  // Dense first-stage retrieval over the self-hosted MedCPT PubMed index
+  // (Turbopuffer int8 + a Modal-served MedCPT Query-Encoder) — the throttle-proof
+  // replacement for the OpenAlex `search.semantic` lane. Retrieves by MEANING,
+  // surfacing landmarks that share no surface terms with the query, and cannot be
+  // rate-limited away because we own it. Fused into the candidate pool before RRF,
+  // exactly like the lane it replaces. Runs alongside the core biomedical lexical
+  // lanes (PubMed / OpenAlex) and fails open: dormant (missing_config) until the
+  // index + encoder are configured, so it never degrades live search.
+  if (sources.includes("pubmed") || sources.includes("openalex")) {
     pushLane(
-      "openalex_semantic",
+      "medcpt_dense",
       withSourceTimeout(
-        "OpenAlex Semantic",
-        searchOpenAlexSemantic(searchQuery, {
+        "MedCPT Dense",
+        searchMedcptDense(searchQuery, {
           limit: poolPerSource,
           yearStart: params.yearFrom,
           yearEnd: params.yearTo,
         }).then(({ results, total, status }) => ({
-          source: "openalex_semantic",
+          source: "medcpt_dense",
           results,
           total,
           status,
         }))
       ).catch((e) =>
-        errorOutcome("openalex_semantic", e instanceof Error ? e.message : "OpenAlex semantic failed")
+        errorOutcome("medcpt_dense", e instanceof Error ? e.message : "MedCPT dense failed")
       )
     );
   }
