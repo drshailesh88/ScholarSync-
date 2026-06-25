@@ -48,6 +48,20 @@ describe("recallAtK / mrr / ndcgAtK", () => {
     expect(v).toBeGreaterThan(0);
     expect(v).toBeLessThanOrEqual(1);
   });
+  it("ndcg@10 penalizes missing must-haves (1 of 3 found at rank 1)", () => {
+    const items3: WebEvalItem[] = [
+      item({ url: "https://cdc.gov/flu" }),
+      item({ url: "https://a.com/1" }),
+      item({ url: "https://b.com/3" }),
+    ];
+    const threeMh = [
+      { label: "cdc", url: "https://cdc.gov/flu", rule: "authority" as const },
+      { label: "who", url: "https://who.int/flu", rule: "authority" as const },
+      { label: "nih", url: "https://nih.gov/flu", rule: "authority" as const },
+    ];
+    // DCG = 1 (one match at rank 1); IDCG over 3 ideal = 1 + 0.6309 + 0.5 = 2.1309
+    expect(ndcgAtK(items3, threeMh, 10)).toBeCloseTo(0.47, 2);
+  });
 });
 
 describe("scoreTab", () => {

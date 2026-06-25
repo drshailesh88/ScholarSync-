@@ -71,7 +71,7 @@ export function ndcgAtK(items: WebEvalItem[], mustHaves: WebMustHave[] | undefin
   let dcg = 0;
   for (const pos of relevant) dcg += 1 / Math.log2(pos + 2);
   let idcg = 0;
-  for (let i = 0; i < relevant.size; i++) idcg += 1 / Math.log2(i + 2);
+  for (let i = 0; i < mustHaves.length; i++) idcg += 1 / Math.log2(i + 2);
   return idcg === 0 ? 0 : dcg / idcg;
 }
 
