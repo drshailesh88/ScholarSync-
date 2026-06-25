@@ -119,15 +119,20 @@ def _turbopuffer_namespace():
 # "int8 not binary" constraint via Turbopuffer's native int8 ANN quantization while
 # the live lane keeps querying with float vectors. title is BM25-indexed so this same
 # namespace can later serve the optional Phase-0 lexical lane (one store, hybrid).
+# Only `year` is filterable (the live lane's recency Gte/Lte range). Everything else
+# is stored + returned but NOT filterable: Turbopuffer caps filterable attribute
+# values at 4096 bytes, and abstracts blow past that ("value too large for
+# filtering"). title keeps a BM25 (full_text_search) index for the optional Phase-0
+# lexical lane — that index is independent of the filterable index.
 TPUF_SCHEMA = {
     "vector": {"type": f"[{EMBED_DIM}]f32", "ann": True},
-    "pmid": {"type": "string"},
-    "title": {"type": "string", "full_text_search": True},
-    "abstract": {"type": "string"},
-    "journal": {"type": "string"},
+    "pmid": {"type": "string", "filterable": False},
+    "title": {"type": "string", "full_text_search": True, "filterable": False},
+    "abstract": {"type": "string", "filterable": False},
+    "journal": {"type": "string", "filterable": False},
     "year": {"type": "uint"},
-    "authors": {"type": "[]string"},
-    "doi": {"type": "string"},
+    "authors": {"type": "[]string", "filterable": False},
+    "doi": {"type": "string", "filterable": False},
 }
 
 
