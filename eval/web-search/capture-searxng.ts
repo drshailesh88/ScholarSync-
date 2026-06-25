@@ -36,6 +36,7 @@ export async function captureToCache(
   searchFn: SearxFn,
   queries: typeof BENCHMARK_QUERIES,
   dir: string,
+  delayMs = 800,
 ): Promise<number> {
   mkdirSync(dir, { recursive: true });
   let ok = 0;
@@ -49,7 +50,7 @@ export async function captureToCache(
     writeFileSync(join(dir, cacheKey(q.tab, q.query)), JSON.stringify(body, null, 2));
     ok++;
     console.log(`  ✓ ${q.id.padEnd(34)} ${resp.results.length} results`);
-    await new Promise((r) => setTimeout(r, 800));
+    await new Promise((r) => setTimeout(r, delayMs));
   }
   return ok;
 }

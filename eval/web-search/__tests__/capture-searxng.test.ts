@@ -30,12 +30,13 @@ describe("captureToCache", () => {
       results: [{ title: "Flu update", url: "https://cdc.gov/flu", domain: "cdc.gov", year: 2026, sources: ["news"] }],
       total: 1, degraded: false,
     });
-    const n = await captureToCache(fakeSearch as never, queries, dir);
+    const n = await captureToCache(fakeSearch as never, queries, dir, 0);
     expect(n).toBe(1);
     const files = readdirSync(dir).filter((f) => f.endsWith(".json"));
     expect(files).toHaveLength(1);
     const body = JSON.parse(readFileSync(join(dir, files[0]), "utf8"));
     expect(body.tab).toBe("news");
     expect(body.results[0].url).toBe("https://cdc.gov/flu");
+    expect(body.capturedAt).toBe("FROZEN");
   });
 });
