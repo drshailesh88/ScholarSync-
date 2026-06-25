@@ -1,40 +1,44 @@
 # Project State
 
-## Current Milestone
-**Library Module Redesign** — Created 2026-04-02
+## Current Initiative
+**Self-hosted MedCPT dense retrieval index** (academic search vs Elicit) — corpus build.
+Branch: `corpus-build-base` (worktree `/Users/shaileshsingh/ScholarSync-corpus`).
+Status: **provisioning complete, build NOT yet started.**
 
-## Current Phase
-Phase 17: Explore Integration + Ingestion + Polish — Status: COMPLETE (2026-04-02)
+## Why
+Academic literature search has plateaued on **source reliability / measurement**:
+OpenAlex `search.semantic` was throttled away on 14/87 queries across three live runs,
+capping recall and poisoning the benchmark. Fix = own the dense lane instead of renting
+a throttled one. See `docs/literature-search/PARITY-SPRINT-STATUS.md`.
 
-## Previous Milestone
-**Explore Module V1** — Phases 1-10 COMPLETE (PRs #52-55 + committed to main)
+## Stack (decided 2026-06-25)
+- Vectors **and** lexical/BM25: **Turbopuffer** (one store, hybrid, int8, region `aws-us-east-1`) — provisioned ✅
+- Encoders + embedding/freshness jobs: **Modal** (scale-to-zero GPU) — provisioned ✅
+- Full-text blobs: **R2** (Phase 2 only)
+- **Neon dropped** (Turbopuffer does BM25; a Neon PubMed FTS corpus was ~$hundreds/mo)
+- LanceDB-on-R2 evaluated + rejected (index lifecycle + Modal keep-warm on scale-to-zero)
+- Interim lexical: free live **PubMed E-utilities**
+- Decision record: `.planning/decisions/2026-06-25-medcpt-self-hosted-index-stack.md`
 
 ## Source Documents
-- PRD: GitHub Issue #65
-- Requirements: .planning/REQUIREMENTS.md
-- Roadmap: .planning/ROADMAP.md
-- UX Brief: .planning/ux-brief-library.md
-- UI Brief: .planning/ui-brief-library.md
-- Architecture Decisions: .planning/decisions/2026-04-01-library-module-redesign.md
-- Quality Gaps: .planning/quality-gaps/grill-decisions-library.md
-- Competition Research: .planning/competition-research-library.md
-- Ubiquitous Language: UBIQUITOUS_LANGUAGE.md
+- Build goal: `docs/literature-search/PHASE-01-BUILD-GOAL.md`
+- Research (read first): `docs/literature-search/CORPUS-RESEARCH.md`
+- Parity sprint status: `docs/literature-search/PARITY-SPRINT-STATUS.md`
+- Architecture + contracts: `docs/literature-search/ARCHITECTURE.md`
+- Eval harness: `eval/literature-search/` (87q frozen-pool)
 
-## Playbook Progress
-- Phase 1: Capture & Research (competition-research-library.md)
-- Phase 2: Grill & Interview (decisions/2026-04-01-library-module-redesign.md, grill-decisions-library.md)
-- Phase 3: Language & PRD (UBIQUITOUS_LANGUAGE.md, GitHub Issue #65)
-- Phase 4: UX & UI Design (ux-brief-library.md, ui-brief-library.md)
-- Phase 5: Implementation -> NOT STARTED (Phase 11 next)
+## Next action
+In `/Users/shaileshsingh/ScholarSync-corpus`, paste the `/goal` block from
+`PHASE-01-BUILD-GOAL.md` to start Phase 1 (MedCPT dense lane → Turbopuffer, replacing
+`openalex_semantic`). Create the Modal Secret (`HF_TOKEN` + `TURBOPUFFER_API_KEY`) when
+the build asks. TDD; per-phase feature branch + CI-green PR; lane fails open.
 
-## Quick Reference
-- Next action: Library Module Redesign COMPLETE — all 7 phases delivered
-- Phase 17 COMPLETE: URL paste, PDF upload, responsive, feature flag flipped, 16 new tests
-- Phase 16 COMPLETE: 24 tests passing, Codex review approved, 10 bugs fixed
-- Phase 15 COMPLETE: 19 tests passing, 2 bugs fixed (Promise.allSettled, project ownership verification)
-- Phase 14 COMPLETE: 64 tests passing, Codex review approved, 4 bugs fixed
-- Phase 13 COMPLETE: 23 tests passing, 3 bugs fixed (N+1 count query, UndoToast timer ref, type safety)
-- Phase 12 COMPLETE: 40 tests passing, Codex review approved, 6 bugs fixed
-- Phase 11 COMPLETE: 36 tests passing, Codex review approved, 6 bugs fixed
-- Feature flag (NEXT_PUBLIC_NEW_LIBRARY) protects existing Library throughout build
-- Readiness score: 9.2/10
+## Parallel stream (separate clone — do not disturb from here)
+**Web search vs Exa** (Explore module) lives in `/Users/shaileshsingh/ScholarSync` on
+`feat/web-news-discussions-search` (~18 uncommitted files). Different working tree;
+not part of this build.
+
+## Prior milestones (committed to main)
+- Explore Module V1 — phases 1–10 (PRs #52–55)
+- Library Module Redesign — phases 11–17 COMPLETE (2026-04-02)
+- Parity sprint — 6 ranking cycles shipped/merged (#74, #75, #78, #80, #81); cycle 4 reverted
