@@ -307,6 +307,7 @@ def process_file(url: str, year_min: int | None = None, year_max: int | None = N
                 upsert_rows=rows[start : start + 1000],
                 distance_metric="cosine_distance",
                 schema=TPUF_SCHEMA,
+                disable_backpressure=True,
             )
         upserted = len(rows)
 
@@ -391,7 +392,14 @@ def _pick(record, *keys) -> str:
     return ""
 
 
-@app.function(image=image, secrets=[SECRET], timeout=6 * 3600, retries=2, memory=16384)
+@app.function(
+    image=image,
+    secrets=[SECRET],
+    timeout=6 * 3600,
+    retries=2,
+    memory=16384,
+    max_containers=8,  # bound concurrent writers so we don't overrun Turbopuffer indexing
+)
 def load_chunk(n: int) -> dict:
     """Download one precomputed chunk (embeds + pmids + metadata) and int8-upsert it.
 
@@ -419,10 +427,15 @@ def load_chunk(n: int) -> dict:
 
     def flush(rows):
         if rows:
+            # disable_backpressure: accept writes during a bulk load even while the
+            # ANN index has a backlog (Turbopuffer processes it async) — otherwise
+            # parallel writers 429 with "indexing backlog". Safe: we don't query
+            # until the load completes.
             ns.write(
                 upsert_rows=rows,
                 distance_metric="cosine_distance",
                 schema=TPUF_SCHEMA,
+                disable_backpressure=True,
             )
 
     upserted, batch = 0, []
@@ -472,9 +485,15 @@ def load_index(start: int = 0, end: int = -1):
         print(f"[load_index] no chunks in range start={start} end={end}")
         return
     print(f"[load_index] loading chunks {index[0]}..{index[-1]} ({len(index)} chunks)")
-    summaries = list(load_chunk.map(index))
-    total = sum(s["upserted"] for s in summaries)
-    print(f"[load_index] done: upserted={total} vectors across {len(summaries)} chunks")
+    # return_exceptions: one bad chunk must not cancel the whole fan-out. Report the
+    # failures so they can be resumed (load is idempotent — upsert by PMID).
+    results = list(load_chunk.map(index, return_exceptions=True))
+    ok = [r for r in results if isinstance(r, dict)]
+    failed = [index[i] for i, r in enumerate(results) if not isinstance(r, dict)]
+    total = sum(r["upserted"] for r in ok)
+    print(f"[load_index] upserted={total} vectors across {len(ok)}/{len(index)} chunks")
+    if failed:
+        print(f"[load_index] FAILED chunks {failed} — resume with: load_chunk per id, or re-run load_index")
 
 
 @app.function(image=image, secrets=[SECRET], timeout=3600)
