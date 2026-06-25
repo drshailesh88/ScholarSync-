@@ -112,12 +112,15 @@ def _turbopuffer_namespace():
     return client.namespace(namespace)
 
 
-# Schema declares the vector column as native int8 (`[768]i8`, ann=True) so vectors
-# are stored 4x smaller at ~99% recall (±0.001) — Turbopuffer quantizes the float
-# vectors we write. title is BM25-indexed so this same namespace can later serve the
-# optional Phase-0 lexical lane (one store, hybrid search) without a migration.
+# Vectors are written as `[768]f32` with an ANN index. Turbopuffer's input vector
+# types are f32/f16 only; the int8 compression is applied AUTOMATICALLY to the ANN
+# index internally (its "native i8", ±0.001 quality, ~4x smaller hot index) — you do
+# NOT pass int8 integers (doing so 400s: "invalid i8 value"). This satisfies the
+# "int8 not binary" constraint via Turbopuffer's native int8 ANN quantization while
+# the live lane keeps querying with float vectors. title is BM25-indexed so this same
+# namespace can later serve the optional Phase-0 lexical lane (one store, hybrid).
 TPUF_SCHEMA = {
-    "vector": {"type": f"[{EMBED_DIM}]i8", "ann": True},
+    "vector": {"type": f"[{EMBED_DIM}]f32", "ann": True},
     "pmid": {"type": "string"},
     "title": {"type": "string", "full_text_search": True},
     "abstract": {"type": "string"},
@@ -383,25 +386,41 @@ def _pick(record, *keys) -> str:
     return ""
 
 
-@app.function(image=image, secrets=[SECRET], timeout=6 * 3600, retries=2)
+@app.function(image=image, secrets=[SECRET], timeout=6 * 3600, retries=2, memory=16384)
 def load_chunk(n: int) -> dict:
-    """Download one precomputed chunk (embeds + pmids + metadata) and int8-upsert it."""
-    import json
-    from io import BytesIO
+    """Download one precomputed chunk (embeds + pmids + metadata) and int8-upsert it.
 
+    Memory-bounded: the (multi-GB) `.npy` is streamed to disk and mmap-loaded, and
+    rows are built + upserted in batches of 1000 rather than materialized all at once.
+    """
     import numpy as np
 
-    embeds = np.load(
-        BytesIO(requests.get(f"{PRECOMPUTED_BASE}/embeds_chunk_{n}.npy", timeout=900).content)
-    )
+    npy_path = f"/tmp/embeds_chunk_{n}.npy"
+    with requests.get(
+        f"{PRECOMPUTED_BASE}/embeds_chunk_{n}.npy", stream=True, timeout=1800
+    ) as resp:
+        resp.raise_for_status()
+        with open(npy_path, "wb") as fh:
+            for chunk in resp.iter_content(chunk_size=1 << 20):
+                fh.write(chunk)
     pmids = requests.get(f"{PRECOMPUTED_BASE}/pmids_chunk_{n}.json", timeout=900).json()
     meta = requests.get(f"{PRECOMPUTED_BASE}/pubmed_chunk_{n}.json", timeout=900).json()
 
+    embeds = np.load(npy_path, mmap_mode="r")
     if len(pmids) != len(embeds):
         raise ValueError(f"chunk {n}: {len(pmids)} pmids vs {len(embeds)} vectors")
 
     ns = _turbopuffer_namespace()
-    rows = []
+
+    def flush(rows):
+        if rows:
+            ns.write(
+                upsert_rows=rows,
+                distance_metric="cosine_distance",
+                schema=TPUF_SCHEMA,
+            )
+
+    upserted, batch = 0, []
     for i, pmid in enumerate(pmids):
         pmid = str(pmid)
         record = meta.get(pmid, {}) if isinstance(meta, dict) else {}
@@ -411,10 +430,10 @@ def load_chunk(n: int) -> dict:
         # the 2024-2026 freshness backfill (pubmed_parser) carries full metadata.
         date = _pick(record, "d", "date", "pubdate")
         year = int(date[:4]) if date[:4].isdigit() else 0
-        rows.append(
+        batch.append(
             {
                 "id": pmid,
-                "vector": embeds[i].astype("float32").tolist(),
+                "vector": np.asarray(embeds[i], dtype="float32").tolist(),
                 "pmid": pmid,
                 "title": _pick(record, "t", "title"),
                 "abstract": _pick(record, "a", "abstract"),
@@ -424,14 +443,13 @@ def load_chunk(n: int) -> dict:
                 "doi": "",
             }
         )
-
-    for start in range(0, len(rows), 1000):
-        ns.write(
-            upsert_rows=rows[start : start + 1000],
-            distance_metric="cosine_distance",
-            schema=TPUF_SCHEMA,
-        )
-    return {"chunk": n, "upserted": len(rows)}
+        if len(batch) >= 1000:
+            flush(batch)
+            upserted += len(batch)
+            batch = []
+    flush(batch)
+    upserted += len(batch)
+    return {"chunk": n, "upserted": upserted}
 
 
 @app.local_entrypoint()
