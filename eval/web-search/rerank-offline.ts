@@ -2,6 +2,11 @@
  * Frozen-pool A/B toggle (the CYCLE-04 lesson): re-rank each frozen SearXNG pool
  * WITH and WITHOUT a candidate ranking change and report the score delta. No
  * network — the delta is 100% attributable to `transform`.
+ *
+ * This deliberately omits the Cohere rerank stage that `run.ts` applies, so the
+ * pool stays network-free and the delta is pure. Consequence: `before`/`after`
+ * here are NOT comparable to the absolute composite in `run.ts`'s scorecard — use
+ * `abToggle` for relative per-change deltas, `run.ts` for the absolute baseline.
  */
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";

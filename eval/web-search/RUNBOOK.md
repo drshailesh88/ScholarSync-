@@ -44,3 +44,11 @@ git commit -m "chore(web-eval): Phase 0 frozen baseline (gold set + Exa opponent
 SearXNG-only retrieval + the session-independent production quality layer
 (trust-tier + Cohere rerank), scored on per-tab dimensions. This is the floor every
 later CYCLE must beat — measured against the frozen gold set, never live Exa.
+
+**Reproducibility note — which mode produced the committed scorecard.** The scoring
+path is byte-reproducible only in the *no-key* mode (no `COHERE_API_KEY` → rerank is
+skipped, results pass through unchanged). Step 4 runs under `op-run`, so the key is
+present and the committed baseline includes a live Cohere rerank: still deterministic
+in practice (Cohere rerank is a scoring model, not sampling), but it carries a
+Cohere-stability assumption rather than being byte-identical on re-run. Record in the
+baseline commit which mode was used so a later CYCLE compares like with like.
