@@ -63,7 +63,14 @@ async function main() {
   const label = li >= 0 ? argv[li + 1] : "baseline";
   // Deterministic clock for reproducible recency scoring; pass via --now <ms> to override.
   const ni = argv.indexOf("--now");
-  const now = ni >= 0 ? Number(argv[ni + 1]) : Date.parse("2026-06-24T00:00:00Z");
+  let now = Date.parse("2026-06-24T00:00:00Z");
+  if (ni >= 0) {
+    const nowRaw = argv[ni + 1];
+    if (!nowRaw || Number.isNaN(Number(nowRaw))) {
+      throw new Error("--now requires a numeric millisecond epoch value");
+    }
+    now = Number(nowRaw);
+  }
 
   const card = await runFromCache({ cacheDir: DEFAULT_CACHE, label, now });
   const outDir = join(HERE, "runs", label);

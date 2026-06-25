@@ -29,5 +29,9 @@ export async function applyQualityLayer(
     const domain = r.domain ?? (r.url ? normalizeDomain(r.url) ?? undefined : undefined);
     return { ...r, domain, trustTier: r.trustTier ?? getTrustTier(domain ?? r.url) };
   });
-  return rerankResults(query, annotated);
+  try {
+    return await rerankResults(query, annotated);
+  } catch {
+    return annotated; // fail-open: trust-annotated results, original order
+  }
 }

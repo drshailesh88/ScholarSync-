@@ -19,8 +19,14 @@ describe("toEvalItems", () => {
 
 describe("applyQualityLayer", () => {
   it("is fail-open: with no COHERE_API_KEY it returns results unchanged in order", async () => {
-    const input = [r({ url: "https://a.com/1" }), r({ url: "https://b.com/2" })];
-    const out = await applyQualityLayer("flu", input);
-    expect(out.map((x) => x.url)).toEqual(["https://a.com/1", "https://b.com/2"]);
+    const orig = process.env.COHERE_API_KEY;
+    delete process.env.COHERE_API_KEY;
+    try {
+      const input = [r({ url: "https://a.com/1" }), r({ url: "https://b.com/2" })];
+      const out = await applyQualityLayer("flu", input);
+      expect(out.map((x) => x.url)).toEqual(["https://a.com/1", "https://b.com/2"]);
+    } finally {
+      if (orig !== undefined) process.env.COHERE_API_KEY = orig;
+    }
   });
 });
