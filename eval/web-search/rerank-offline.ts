@@ -23,7 +23,12 @@ export async function abToggle(opts: {
   for (const q of BENCHMARK_QUERIES) {
     const path = join(opts.cacheDir, cacheKey(q.tab, q.query));
     if (!existsSync(path)) continue;
-    const pool = JSON.parse(readFileSync(path, "utf8")) as { results: UnifiedSearchResult[] };
+    let pool: { results: UnifiedSearchResult[] };
+    try {
+      pool = JSON.parse(readFileSync(path, "utf8")) as { results: UnifiedSearchResult[] };
+    } catch (err) {
+      throw new Error(`abToggle: corrupt cache file at ${path}: ${err instanceof Error ? err.message : err}`);
+    }
     const before = scoreTab(toEvalItems(pool.results), q, opts.now).composite;
     const after = scoreTab(toEvalItems(opts.transform(q.query, pool.results)), q, opts.now).composite;
     rows.push({ id: q.id, tab: q.tab, before, after, delta: Math.round((after - before) * 10) / 10 });

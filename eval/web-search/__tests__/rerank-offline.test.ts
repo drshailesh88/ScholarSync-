@@ -30,4 +30,10 @@ describe("abToggle", () => {
     expect(row.after).toBeGreaterThanOrEqual(row.before); // recall@10 unchanged, relevance same; diversity/dedup unchanged → delta 0 or +
     expect(typeof row.delta).toBe("number");
   });
+
+  it("skips queries with no frozen pool (empty dir → no rows)", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "wsab-empty-"));
+    const rows = await abToggle({ cacheDir: dir, now: Date.parse("2026-06-24"), transform: (_q, rs) => rs });
+    expect(rows).toHaveLength(0);
+  });
 });
