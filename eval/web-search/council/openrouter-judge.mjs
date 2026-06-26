@@ -11,7 +11,8 @@
  *     --out eval/web-search/council/baseline/grok.json
  *   # --list → print available grok/deepseek/gemini model ids and exit
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 
 function arg(name, def) {
   const i = process.argv.indexOf(`--${name}`);
@@ -35,6 +36,10 @@ const INSTRUCTION =
 
 async function listModels() {
   const res = await fetch("https://openrouter.ai/api/v1/models", { headers: { Authorization: `Bearer ${KEY}` } });
+  if (!res.ok) {
+    console.error(`OpenRouter HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`);
+    process.exit(1);
+  }
   const data = await res.json();
   console.log((data.data ?? []).map((m) => m.id).filter((id) => /grok|deepseek|gemini/i.test(id)).sort().join("\n"));
 }
@@ -71,6 +76,7 @@ async function judge() {
     console.error(`empty content; raw: ${JSON.stringify(data).slice(0, 300)}`);
     process.exit(1);
   }
+  mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, text);
   console.log(`[openrouter-judge] model=${model} wrote ${outPath} (${text.length} chars)`);
 }
