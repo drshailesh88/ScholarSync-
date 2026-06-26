@@ -18,10 +18,11 @@ describe("oursIsEngineA", () => {
 describe("renderRows", () => {
   it("renders title · domain · date · snippet and marks empty lists", () => {
     expect(renderRows([])).toEqual(["_(no results)_"]);
-    const line = renderRows([row({ title: "CDC flu", domain: "cdc.gov", publishedDate: "2026-06-01", snippet: "s" })])[0];
+    const line = renderRows([row({ title: "CDC flu", domain: "cdc.gov", publishedDate: "2026-06-01", snippet: "snip-text" })])[0];
     expect(line).toContain("CDC flu");
     expect(line).toContain("cdc.gov");
     expect(line).toContain("2026-06-01");
+    expect(line).toContain("snip-text");
   });
 });
 
@@ -55,8 +56,8 @@ describe("buildPacket", () => {
 
   it("places ours under the label key says it is", () => {
     const { packet, key } = buildPacket({ pairs, queriesById, salt: "t" });
-    const aIdx = packet.indexOf("Engine A");
-    const bIdx = packet.indexOf("Engine B");
+    const aIdx = packet.indexOf("### Engine A");
+    const bIdx = packet.indexOf("### Engine B");
     const oursTitleIdx = packet.indexOf("alpha-1");
     const oursUnderA = oursTitleIdx > aIdx && oursTitleIdx < bIdx;
     expect(oursUnderA).toBe(key[q.id] === "ours");
