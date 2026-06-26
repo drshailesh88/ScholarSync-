@@ -86,6 +86,9 @@ app = modal.App(APP_NAME, image=image)
 hf_cache = modal.Volume.from_name("medcpt-hf-cache", create_if_missing=True)
 # Persists the last-processed updatefile so weekly runs are incremental.
 state = modal.Dict.from_name("medcpt-freshness-state", create_if_missing=True)
+# Per-file done-markers for the one-time gap backfill, so a preempted/restarted
+# orchestrator resumes instead of re-embedding (which would cost GPU $ again).
+backfill_state = modal.Dict.from_name("medcpt-backfill-state", create_if_missing=True)
 
 SECRET = modal.Secret.from_name(
     "manan-medcpt-secrets", required_keys=["HF_TOKEN", "TURBOPUFFER_API_KEY"]
@@ -210,9 +213,6 @@ def _split_records(records, year_min=None, year_max=None):
             continue
         if year_max is not None and year != 0 and year > year_max:
             continue
-        authors = rec.get("authors")
-        if isinstance(authors, str):
-            authors = [a.strip() for a in authors.split(";") if a.strip()]
         to_upsert.append(
             {
                 "pmid": pmid,
@@ -220,11 +220,39 @@ def _split_records(records, year_min=None, year_max=None):
                 "abstract": abstract,
                 "journal": (rec.get("journal") or "").strip(),
                 "year": year,
-                "authors": authors or [],
+                "authors": _flatten_authors(rec.get("authors")),
                 "doi": (rec.get("doi") or "").strip(),
             }
         )
     return to_upsert, to_delete
+
+
+def _flatten_authors(authors) -> list:
+    """Normalize pubmed_parser authors → list[str] (the schema's `[]string`).
+
+    With author_list=True, pubmed_parser returns a list of dicts
+    ({lastname, forename, initials, affiliation, ...}); without it, a single
+    "A; B; C" string. Turbopuffer 422s on anything but a flat string list, so
+    collapse every shape to displayable names defensively.
+    """
+    if isinstance(authors, str):
+        return [a.strip() for a in authors.split(";") if a.strip()]
+    if not isinstance(authors, list):
+        return []
+    out = []
+    for a in authors:
+        if isinstance(a, str):
+            name = a.strip()
+        elif isinstance(a, dict):
+            fore = str(a.get("forename") or a.get("firstname") or "").strip()
+            last = str(a.get("lastname") or a.get("last_name") or "").strip()
+            inits = str(a.get("initials") or "").strip()
+            name = (f"{fore} {last}".strip() or f"{last} {inits}".strip() or last).strip()
+        else:
+            name = str(a).strip()
+        if name:
+            out.append(name)
+    return out
 
 
 def _parse_year(rec) -> int:
@@ -243,20 +271,28 @@ def _list_remote_gz(subdir: str):
 # ===========================================================================
 # 1. Query-Encoder web endpoint (the live lane's encoder)
 # ===========================================================================
+# CPU, not GPU, and always-warm. The Query-Encoder embeds ONE short query at a
+# time — a single BERT forward pass that runs in well under a second on CPU. A
+# GPU here only added a ~20s scale-from-zero cold start that blew the live
+# search's 5s fan-out deadline (dropping the dense lane on the first query after
+# any idle) and would cost ~10x more to keep warm. `min_containers=1` keeps one
+# replica hot so encode latency is deterministic (no cold start) — the live
+# lane's exit gate. (Bulk article embedding still uses GPUs; that's process_file.)
 @app.cls(
-    gpu="A10G",
     image=image,
+    cpu=4.0,
     volumes={"/cache": hf_cache},
     secrets=[SECRET],
-    scaledown_window=300,  # scale to zero 5 min after the last query
+    min_containers=1,
     timeout=600,
 )
 class QueryEncoder:
     @modal.enter()
     def load(self):
         os.environ.setdefault("HF_HOME", "/cache")
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(QUERY_ENCODER_MODEL)
-        self.model = AutoModel.from_pretrained(QUERY_ENCODER_MODEL).to("cuda").eval()
+        self.model = AutoModel.from_pretrained(QUERY_ENCODER_MODEL).to(self.device).eval()
 
     @modal.fastapi_endpoint(method="POST")
     def encode(self, item: dict):
@@ -271,7 +307,7 @@ class QueryEncoder:
                 padding=True,
                 return_tensors="pt",
                 max_length=QUERY_MAX_LEN,
-            ).to("cuda")
+            ).to(self.device)
             embeds = self.model(**encoded).last_hidden_state[:, 0, :]
         return {"embedding": embeds[0].cpu().to(torch.float32).numpy().tolist()}
 
@@ -287,11 +323,19 @@ class QueryEncoder:
     secrets=[SECRET],
     timeout=6 * 3600,
     retries=2,
+    max_containers=10,  # match the workspace's 10-GPU plan cap (no over-scheduling)
 )
-def process_file(url: str, year_min: int | None = None, year_max: int | None = None) -> dict:
+def process_file(
+    url: str,
+    year_min: int | None = None,
+    year_max: int | None = None,
+    mark_done: bool = False,
+) -> dict:
     """Download one PubMed gz, parse, embed non-deleted records, upsert + delete.
 
-    Returns a small summary dict so the caller can aggregate counts.
+    Returns a small summary dict so the caller can aggregate counts. When
+    `mark_done` is set (the backfill path), records a per-file completion marker
+    so a restarted orchestrator skips it instead of re-embedding.
     """
     import pubmed_parser as pp
 
@@ -343,7 +387,10 @@ def process_file(url: str, year_min: int | None = None, year_max: int | None = N
         for start in range(0, len(to_delete), 1000):
             ns.write(deletes=to_delete[start : start + 1000])
 
-    return {"url": url, "upserted": upserted, "deleted": len(to_delete)}
+    summary = {"url": url, "upserted": upserted, "deleted": len(to_delete)}
+    if mark_done:
+        backfill_state[url] = summary
+    return summary
 
 
 # ===========================================================================
@@ -375,23 +422,93 @@ def freshness() -> dict:
 # ===========================================================================
 # 3b. One-time gap backfill (2024–2026), same pipeline, year-filtered
 # ===========================================================================
-@app.local_entrypoint()
-def backfill(year_start: int = 2024, year_end: int = 2026, subdir: str = "updatefiles"):
-    """Fill the gap not covered by NCBI's precomputed (through-~2023) embeddings.
+@app.function(image=image, secrets=[SECRET], timeout=2 * 3600, retries=2)
+def scan_file(url: str, year_min: int | None = None, year_max: int | None = None) -> dict:
+    """CPU-only: download + parse one gz and COUNT in-window records — no embedding.
 
-    Fans `process_file` across every gz in `subdir` (default updatefiles), keeping
-    only records whose publication year is in [year_start, year_end]. Run once;
-    `freshness` keeps it current thereafter.
+    Lets the backfill skip the GPU entirely for the ~1000 old baseline files that
+    contain zero 2024+ papers, instead of paying for an idle GPU on each.
     """
-    files = list_files.remote(subdir)
-    print(f"[backfill] {len(files)} files, year {year_start}-{year_end}")
-    # starmap passes (url, year_min, year_max) positionally to each process_file call.
-    summaries = list(
-        process_file.starmap([(url, year_start, year_end) for url in files])
+    import pubmed_parser as pp
+
+    local = f"/tmp/{url.rsplit('/', 1)[-1]}"
+    with requests.get(url, stream=True, timeout=600) as resp:
+        resp.raise_for_status()
+        with open(local, "wb") as fh:
+            for chunk in resp.iter_content(chunk_size=1 << 20):
+                fh.write(chunk)
+    records = pp.parse_medline_xml(
+        local, year_info_only=False, nlm_category=False, author_list=True
     )
-    total_up = sum(s["upserted"] for s in summaries)
-    total_del = sum(s["deleted"] for s in summaries)
-    print(f"[backfill] done: upserted={total_up} deleted={total_del}")
+    to_upsert, to_delete = _split_records(records, year_min=year_min, year_max=year_max)
+    return {"url": url, "kept": len(to_upsert), "deleted": len(to_delete)}
+
+
+@app.function(image=image, secrets=[SECRET], timeout=24 * 3600, retries=1)
+def backfill_server(
+    year_start: int = 2024,
+    year_end: int = 2026,
+    subdirs: tuple = ("baseline", "updatefiles"),
+) -> dict:
+    """Server-side, resumable gap backfill across the PubMed baseline + updatefiles.
+
+    Orchestrating from INSIDE a Modal function (not a local_entrypoint) makes it
+    robust to the local client disconnecting — the failure mode that stalled the
+    historical load. Two passes:
+      1. CPU `scan_file` over EVERY file → which actually hold [year_start,year_end]
+         records (so GPUs only spin where there's real work; nothing is skipped
+         blindly — a scan failure is treated as "process it" to never miss a file).
+      2. GPU `process_file` over only those files, skipping any already marked done
+         in `backfill_state` (resume after preemption without re-embedding).
+    """
+    files = []
+    for sub in subdirs:
+        files.extend(_list_remote_gz(sub))
+    print(f"[backfill] {len(files)} files across {list(subdirs)}, year {year_start}-{year_end}", flush=True)
+
+    scans = list(
+        scan_file.starmap(
+            [(u, year_start, year_end) for u in files], return_exceptions=True
+        )
+    )
+    kept = []
+    for url, s in zip(files, scans):
+        if isinstance(s, dict):
+            if s["kept"] or s["deleted"]:
+                kept.append(url)
+        else:  # scan errored — process it anyway rather than silently drop a file
+            kept.append(url)
+    print(f"[backfill] {len(kept)}/{len(files)} files hold in-window records", flush=True)
+
+    todo = [u for u in kept if u not in backfill_state]
+    print(f"[backfill] {len(todo)} to embed ({len(kept) - len(todo)} already done)", flush=True)
+
+    summaries = list(
+        process_file.starmap(
+            [(u, year_start, year_end, True) for u in todo], return_exceptions=True
+        )
+    )
+    ok = [s for s in summaries if isinstance(s, dict)]
+    failed = [todo[i] for i, s in enumerate(summaries) if not isinstance(s, dict)]
+    total_up = sum(s["upserted"] for s in ok)
+    total_del = sum(s["deleted"] for s in ok)
+    print(
+        f"[backfill] done: files={len(ok)}/{len(todo)} upserted={total_up} "
+        f"deleted={total_del} failed={len(failed)}",
+        flush=True,
+    )
+    return {"files_ok": len(ok), "upserted": total_up, "deleted": total_del, "failed": failed}
+
+
+@app.local_entrypoint()
+def backfill(year_start: int = 2024, year_end: int = 2026):
+    """Spawn the server-side `backfill_server` (fire-and-forget; survives disconnect).
+
+        op-run -- modal run infra/modal/medcpt_service.py::backfill
+    """
+    call = backfill_server.spawn(year_start=year_start, year_end=year_end)
+    print(f"[backfill] spawned backfill_server server-side: {call.object_id}")
+    print("[backfill] runs independently of this client; poll the namespace count.")
 
 
 @app.function(image=image, secrets=[SECRET], timeout=3600)
@@ -492,6 +609,91 @@ def load_chunk(n: int) -> dict:
     flush(batch)
     upserted += len(batch)
     return {"chunk": n, "upserted": upserted}
+
+
+@app.function(image=image, secrets=[SECRET], timeout=3600, memory=8192)
+def detect_missing(samples: int = 5) -> list:
+    """Return chunk numbers NOT fully present in Turbopuffer.
+
+    Runs server-side (NCBI network is reliable here, unlike ranged GETs from a
+    laptop). For each chunk it samples `samples` evenly-spaced PMIDs (always
+    including first + last) and checks id-existence; `load_chunk` upserts in
+    list order, so a present LAST pmid means that chunk finished. Cheap probe,
+    no full re-download. Use the result to drive targeted `load_chunk` reloads.
+    """
+    ns = _turbopuffer_namespace()
+
+    def present(pmid) -> bool:
+        r = ns.query(
+            rank_by=["id", "asc"], filters=["id", "Eq", str(pmid)],
+            top_k=1, include_attributes=["pmid"],
+        )
+        return len(getattr(r, "rows", r)) == 1
+
+    missing = []
+    for n in _list_chunk_numbers():
+        try:
+            pmids = requests.get(
+                f"{PRECOMPUTED_BASE}/pmids_chunk_{n}.json", timeout=900
+            ).json()
+        except Exception as exc:  # treat an unreadable manifest as incomplete
+            print(f"chunk {n}: MANIFEST-ERR {type(exc).__name__}", flush=True)
+            missing.append(n)
+            continue
+        last = len(pmids) - 1
+        idxs = sorted({round(i * last / (samples - 1)) for i in range(samples)})
+        ok = all(present(pmids[i]) for i in idxs)
+        print(f"chunk {n}: {'COMPLETE' if ok else 'INCOMPLETE'} (n={len(pmids)})", flush=True)
+        if not ok:
+            missing.append(n)
+    print(f"[detect_missing] incomplete chunks: {missing}", flush=True)
+    return missing
+
+
+@app.function(image=image, secrets=[SECRET], timeout=3600, memory=8192)
+def verify_complete(samples: int = 20) -> dict:
+    """Authoritative completeness check + expected-total reconciliation.
+
+    Returns the sum of all manifest lengths (the true expected row count from
+    NCBI's published embeddings), the live Turbopuffer `approx_row_count`, and
+    any chunk where a densely-sampled PMID is absent (catches internal gaps a
+    sparse first/last probe would miss). This tells us whether the current
+    indexed count IS the full set or a chunk is partially loaded.
+    """
+    ns = _turbopuffer_namespace()
+
+    def present(pmid) -> bool:
+        r = ns.query(
+            rank_by=["id", "asc"], filters=["id", "Eq", str(pmid)],
+            top_k=1, include_attributes=["pmid"],
+        )
+        return len(getattr(r, "rows", r)) == 1
+
+    expected_total = 0
+    per_chunk = {}
+    incomplete = []
+    for n in _list_chunk_numbers():
+        pmids = requests.get(
+            f"{PRECOMPUTED_BASE}/pmids_chunk_{n}.json", timeout=900
+        ).json()
+        expected_total += len(pmids)
+        per_chunk[n] = len(pmids)
+        last = len(pmids) - 1
+        idxs = sorted({round(i * last / (samples - 1)) for i in range(samples)})
+        miss = [pmids[i] for i in idxs if not present(pmids[i])]
+        if miss:
+            incomplete.append({"chunk": n, "missing_samples": miss[:5]})
+        print(f"chunk {n}: len={len(pmids)} missing_samples={len(miss)}/{len(idxs)}", flush=True)
+
+    approx = ns.metadata().approx_row_count
+    out = {
+        "expected_total": expected_total,
+        "approx_row_count": approx,
+        "delta": expected_total - approx,
+        "incomplete": incomplete,
+    }
+    print(f"[verify_complete] {out}", flush=True)
+    return out
 
 
 @app.function(image=image, secrets=[SECRET], timeout=24 * 3600, retries=1)
