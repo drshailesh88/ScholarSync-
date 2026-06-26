@@ -216,7 +216,7 @@ git commit -m "feat(web-council): emit per-query engine rows for the blinded pac
 - Test: `eval/web-search/council/__tests__/rubric.test.ts`
 
 **Interfaces:**
-- Consumes: `WebTab` (`../../types`).
+- Consumes: `WebTab` (`../types`).
 - Produces: `DIMS: readonly ["relevance","authority","recency","diversity","dedup","usefulness"]`; `type WebDimScores = Record<(typeof DIMS)[number], number>`; `RUBRIC_BY_TAB: Record<WebTab, string>`; `SCORING_PREAMBLE: string`; `OUTPUT_SCHEMA: string`.
 
 - [ ] **Step 1: Write the failing test**
@@ -253,7 +253,7 @@ Expected: FAIL — cannot resolve `../rubric`.
 
 ```ts
 // eval/web-search/council/rubric.ts
-import type { WebTab } from "../../types";
+import type { WebTab } from "../types";
 
 /** The six objective, checkable web dimensions (replaces the biomedical rubric). */
 export const DIMS = ["relevance", "authority", "recency", "diversity", "dedup", "usefulness"] as const;
@@ -350,10 +350,11 @@ describe("oursIsEngineA", () => {
 describe("renderRows", () => {
   it("renders title · domain · date · snippet and marks empty lists", () => {
     expect(renderRows([])).toEqual(["_(no results)_"]);
-    const line = renderRows([row({ title: "CDC flu", domain: "cdc.gov", publishedDate: "2026-06-01", snippet: "s" })])[0];
+    const line = renderRows([row({ title: "CDC flu", domain: "cdc.gov", publishedDate: "2026-06-01", snippet: "snip-text" })])[0];
     expect(line).toContain("CDC flu");
     expect(line).toContain("cdc.gov");
     expect(line).toContain("2026-06-01");
+    expect(line).toContain("snip-text");
   });
 });
 
@@ -372,9 +373,10 @@ describe("buildPacket", () => {
   it("emits a key mapping each id to which engine is 'A', and a packet that hides identity", () => {
     const { packet, key } = buildPacket({ pairs, queriesById, salt: "t" });
     expect(["ours", "exa"]).toContain(key[q.id]);
-    // packet must never name the real engines (the builder emits only "Engine A/B")
+    // packet must never name the real engines (the builder emits only "Engine A/B").
+    // Word-boundary check for the opponent so ordinary words ("exactly") don't false-positive.
     expect(packet.toLowerCase()).not.toContain("searxng");
-    expect(packet.toLowerCase()).not.toContain("exa");
+    expect(packet).not.toMatch(/\bexa\b/i);
     // packet prints the ground-truth must-haves as the relevance anchor
     expect(packet.toLowerCase()).toContain("must-have");
     // both engines appear under A/B headings
@@ -386,8 +388,8 @@ describe("buildPacket", () => {
 
   it("places ours under the label key says it is", () => {
     const { packet, key } = buildPacket({ pairs, queriesById, salt: "t" });
-    const aIdx = packet.indexOf("Engine A");
-    const bIdx = packet.indexOf("Engine B");
+    const aIdx = packet.indexOf("### Engine A");
+    const bIdx = packet.indexOf("### Engine B");
     const oursTitleIdx = packet.indexOf("alpha-1");
     const oursUnderA = oursTitleIdx > aIdx && oursTitleIdx < bIdx;
     expect(oursUnderA).toBe(key[q.id] === "ours");
@@ -1409,3 +1411,13 @@ git commit -m "chore(web-council): OpenRouter judge runner + council RUNBOOK + s
 ## Execution Handoff
 
 Plan complete and saved. This is **Plan 2 of 2** — it depends on Plan 1's harness (`queries.ts`, `quality.ts`, `run.ts`, `types.ts`, `capture-exa.ts`) being merged and on the human Phase-0 baseline run having produced `runs/<run>/queries/*.json` + `exa/fixtures.json`. Tasks 2/4/5/7 are pure and fully unit-tested; Tasks 1/3/6 isolate I/O behind exported pure cores; Task 8 is the human-run procedure + the OpenRouter seat. After implementation, the first real council is a RUNBOOK step (needs `op-run` keys + the Opus/Codex/OpenRouter judges).
+
+---
+
+## Post-implementation corrections (executed 2026-06-26)
+
+Applied during subagent-driven execution + review; this section keeps the plan honest as a re-runnable artifact.
+
+- **Import paths:** source files under `council/` import sibling-of-`council` modules with one `../` (e.g. `../types`, `../queries`), not `../../`. The code blocks above are authoritative; a few Interfaces *notes* still read `../../types`/`../../queries` — treat those as `../…` for source files (test files under `council/__tests__/` correctly use `../../`).
+- **Task 3 blinding tests (corrected above):** the identity-leak assertion uses `not.toMatch(/\bexa\b/i)` (a bare `not.toContain("exa")` false-positives on words like "exactly"); the "ours under the label" test indexes `"### Engine A"`/`"### Engine B"` section headers, not the bare `"Engine A"` which also matches the packet title.
+- **Council-strength gate is wired into the builder (final-review must-fix):** `build-blinded-packet.ts` `main()` calls `councilStrengthCheck` (preflight.ts) with the in-memory flat `key` and a `--judges` arg (default `opus,codex,grok`), and REFUSES to write a packet that fails any build-time §6.3 gate (missing ground truth, blinding field-parity fingerprint, lopsided A/B, <3 intended judges, or empty comparison set). `aggregate-blinded.ts` independently enforces the actual ≥3 valid-judge gate. Earlier drafts left these checks defined-but-uninvoked.
