@@ -112,6 +112,34 @@ def _turbopuffer_namespace():
     return client.namespace(namespace)
 
 
+def _write_with_retry(ns, **kwargs):
+    """Upsert, backing off on Turbopuffer write backpressure (429 'indexing backlog').
+
+    We rely on NATURAL backpressure (not disable_backpressure): when the index can't
+    keep up, Turbopuffer 429s and we wait, pacing writes to indexing throughput so the
+    backlog never explodes. disable_backpressure at 37M scale built a 27 GB backlog
+    that Turbopuffer then refused to write to at all — this is the durable fix.
+    """
+    import time
+    import turbopuffer
+
+    delay = 2.0
+    for _ in range(40):
+        try:
+            ns.write(**kwargs)
+            return
+        except turbopuffer.RateLimitError:
+            time.sleep(delay)
+            delay = min(45.0, delay * 1.6)
+    ns.write(**kwargs)  # final attempt; raise if still failing so the chunk is retried
+
+
+def _list_chunk_numbers():
+    """Discover available precomputed chunk numbers from the NCBI FTP index."""
+    listing = requests.get(f"{PRECOMPUTED_BASE}/", timeout=120).text
+    return sorted({int(m) for m in re.findall(r"embeds_chunk_(\d+)\.npy", listing)})
+
+
 # Vectors are written as `[768]f32` with an ANN index. Turbopuffer's input vector
 # types are f32/f16 only; the int8 compression is applied AUTOMATICALLY to the ANN
 # index internally (its "native i8", ±0.001 quality, ~4x smaller hot index) — you do
@@ -303,11 +331,11 @@ def process_file(url: str, year_min: int | None = None, year_max: int | None = N
             for r, vec in zip(to_upsert, vectors)
         ]
         for start in range(0, len(rows), 1000):
-            ns.write(
+            _write_with_retry(
+                ns,
                 upsert_rows=rows[start : start + 1000],
                 distance_metric="cosine_distance",
                 schema=TPUF_SCHEMA,
-                disable_backpressure=True,
             )
         upserted = len(rows)
 
@@ -398,7 +426,7 @@ def _pick(record, *keys) -> str:
     timeout=6 * 3600,
     retries=2,
     memory=16384,
-    max_containers=8,  # bound concurrent writers so we don't overrun Turbopuffer indexing
+    max_containers=4,  # bound concurrent writers so we don't overrun Turbopuffer indexing
 )
 def load_chunk(n: int) -> dict:
     """Download one precomputed chunk (embeds + pmids + metadata) and int8-upsert it.
@@ -427,15 +455,11 @@ def load_chunk(n: int) -> dict:
 
     def flush(rows):
         if rows:
-            # disable_backpressure: accept writes during a bulk load even while the
-            # ANN index has a backlog (Turbopuffer processes it async) — otherwise
-            # parallel writers 429 with "indexing backlog". Safe: we don't query
-            # until the load completes.
-            ns.write(
+            _write_with_retry(
+                ns,
                 upsert_rows=rows,
                 distance_metric="cosine_distance",
                 schema=TPUF_SCHEMA,
-                disable_backpressure=True,
             )
 
     upserted, batch = 0, []
@@ -470,35 +494,46 @@ def load_chunk(n: int) -> dict:
     return {"chunk": n, "upserted": upserted}
 
 
-@app.local_entrypoint()
-def load_index(start: int = 0, end: int = -1):
-    """Enumerate every precomputed chunk and fan `load_chunk` across them.
+@app.function(image=image, secrets=[SECRET], timeout=24 * 3600, retries=1)
+def load_all(start: int = 0, end: int = -1, reverse: bool = False) -> dict:
+    """Server-side fan-out of `load_chunk` across the precomputed chunks.
 
-    Run ONCE to stand up the historical (~24M+, through-~2023) index:
-        op-run -- modal run infra/modal/medcpt_service.py::load_index
-    Resumable: `--start N` (and optional `--end M`) restricts the chunk range, so a
-    load interrupted at chunk N can resume from there (upserts are idempotent by
-    PMID). Then run `backfill` for the 2024-2026 gap and `freshness` keeps it current.
+    Orchestrating the `.map()` from INSIDE a Modal function (not a local_entrypoint)
+    makes the load robust to the local client disconnecting — the cause of the
+    earlier cancellations. `reverse=True` loads high-numbered (recent-PMID) chunks
+    first, which is what the modern 87q benchmark needs. Resumable + idempotent:
+    re-run with `--start N`; upserts are keyed by PMID.
+
+    Trigger server-side (fire-and-forget, survives disconnects):
+        op-run -- python3 -c "import modal; \
+          print(modal.Function.from_name('manan-medcpt','load_all').spawn(start=0, reverse=True).object_id)"
     """
-    index = [n for n in list_chunks.remote() if n >= start and (end < 0 or n <= end)]
-    if not index:
-        print(f"[load_index] no chunks in range start={start} end={end}")
-        return
-    print(f"[load_index] loading chunks {index[0]}..{index[-1]} ({len(index)} chunks)")
-    # return_exceptions: one bad chunk must not cancel the whole fan-out. Report the
-    # failures so they can be resumed (load is idempotent — upsert by PMID).
-    results = list(load_chunk.map(index, return_exceptions=True))
+    chunks = [n for n in _list_chunk_numbers() if n >= start and (end < 0 or n <= end)]
+    if reverse:
+        chunks = list(reversed(chunks))
+    if not chunks:
+        return {"ok": 0, "failed": [], "note": f"no chunks in range {start}..{end}"}
+    print(f"[load_all] {len(chunks)} chunks (reverse={reverse}): {chunks[:3]}...{chunks[-3:]}")
+    results = list(load_chunk.map(chunks, return_exceptions=True))
     ok = [r for r in results if isinstance(r, dict)]
-    failed = [index[i] for i, r in enumerate(results) if not isinstance(r, dict)]
+    failed = [chunks[i] for i, r in enumerate(results) if not isinstance(r, dict)]
     total = sum(r["upserted"] for r in ok)
-    print(f"[load_index] upserted={total} vectors across {len(ok)}/{len(index)} chunks")
-    if failed:
-        print(f"[load_index] FAILED chunks {failed} — resume with: load_chunk per id, or re-run load_index")
+    print(f"[load_all] upserted={total} across {len(ok)}/{len(chunks)} chunks; failed={failed}")
+    return {"ok": len(ok), "failed": failed, "upserted": total}
+
+
+@app.local_entrypoint()
+def load_index(start: int = 0, end: int = -1, reverse: bool = False):
+    """Convenience wrapper — spawns the server-side `load_all` (does not block on it).
+
+        op-run -- modal run infra/modal/medcpt_service.py::load_index --reverse True
+    """
+    call = load_all.spawn(start=start, end=end, reverse=reverse)
+    print(f"[load_index] spawned load_all server-side: {call.object_id}")
+    print("[load_index] it runs independently of this client; poll the namespace count.")
 
 
 @app.function(image=image, secrets=[SECRET], timeout=3600)
 def list_chunks():
     """Discover available precomputed chunk numbers from the NCBI FTP index."""
-    listing = requests.get(f"{PRECOMPUTED_BASE}/", timeout=120).text
-    nums = sorted({int(m) for m in re.findall(r"embeds_chunk_(\d+)\.npy", listing)})
-    return nums
+    return _list_chunk_numbers()
