@@ -35,7 +35,10 @@
     "eval:search": "tsx eval/literature-search/run.ts",
     "eval:web:exa": "npx tsx eval/web-search/capture-exa.ts",
     "eval:web:freeze": "npx tsx eval/web-search/capture-searxng.ts",
-    "eval:web:run": "npx tsx eval/web-search/run.ts --label baseline"
+    "eval:web:run": "npx tsx eval/web-search/run.ts --label baseline",
+    "council:web:packet": "npx tsx eval/web-search/council/build-blinded-packet.ts",
+    "council:web:judge": "node eval/web-search/council/openrouter-judge.mjs",
+    "council:web:aggregate": "npx tsx eval/web-search/council/aggregate-blinded.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
