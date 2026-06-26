@@ -42,4 +42,16 @@ describe("checkBlinding", () => {
     expect(res.ok).toBe(false);
     expect(res.reasons.join(" ")).toMatch(/balance|lopsided/i);
   });
+
+  it("passes with >=3 balanced queries and matched field presence", () => {
+    const balanced = [
+      pair("a", [row({ snippet: "s", publishedDate: "2026-06-01" })], [row({ snippet: "s", publishedDate: "2026-06-02" })]),
+      pair("b", [row({ snippet: "s", publishedDate: "2026-06-01" })], [row({ snippet: "s", publishedDate: "2026-06-02" })]),
+      pair("c", [row({ snippet: "s", publishedDate: "2026-06-01" })], [row({ snippet: "s", publishedDate: "2026-06-02" })]),
+      pair("d", [row({ snippet: "s", publishedDate: "2026-06-01" })], [row({ snippet: "s", publishedDate: "2026-06-02" })]),
+    ];
+    const res = checkBlinding({ pairs: balanced, key: { a: "ours", b: "exa", c: "ours", d: "exa" } });
+    expect(res.ok).toBe(true);
+    expect(res.aShareOurs).toBe(0.5);
+  });
 });

@@ -31,7 +31,7 @@ export function checkBlinding(opts: {
     fieldGap[f] = Math.round(gap * 100) / 100;
     if (gap > maxGap) {
       reasons.push(
-        `field-presence gap on "${f}" is ${fieldGap[f]} (> ${maxGap}): the two engines are distinguishable by ${f}.`,
+        `field-presence gap on "${f}" is ${gap.toFixed(2)} (> ${maxGap}): the two engines are distinguishable by ${f}.`,
       );
     }
   }
