@@ -9,9 +9,9 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { BENCHMARK_QUERIES } from "./queries";
 import { cacheKey } from "./capture-searxng";
-import { applyQualityLayer, toEvalItems } from "./quality";
+import { applyQualityLayer, toEvalItems, toPacketRows } from "./quality";
 import { scoreTab, type DimensionKey } from "./metrics";
-import type { WebTab } from "./types";
+import type { WebTab, CommonRow } from "./types";
 import type { UnifiedSearchResult } from "@/types/search";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -19,7 +19,7 @@ const DEFAULT_CACHE = join(HERE, "cache");
 
 export interface Scorecard {
   label: string;
-  perQuery: Array<{ id: string; tab: WebTab; composite: number; pass: boolean; dimensions: Record<DimensionKey, number>; details: string[] }>;
+  perQuery: Array<{ id: string; tab: WebTab; composite: number; pass: boolean; dimensions: Record<DimensionKey, number>; details: string[]; rows: CommonRow[] }>;
   tabAverages: Record<WebTab, number>;
   passing: number;
   failing: number;
@@ -36,7 +36,7 @@ export async function runFromCache(opts: { cacheDir: string; label: string; now:
     const pool = JSON.parse(readFileSync(path, "utf8")) as { results: UnifiedSearchResult[] };
     const ranked = await applyQualityLayer(q.query, pool.results);
     const score = scoreTab(toEvalItems(ranked), q, opts.now);
-    perQuery.push({ id: q.id, tab: q.tab, composite: score.composite, pass: score.pass, dimensions: score.dimensions, details: score.details });
+    perQuery.push({ id: q.id, tab: q.tab, composite: score.composite, pass: score.pass, dimensions: score.dimensions, details: score.details, rows: toPacketRows(ranked) });
   }
 
   const tabs: WebTab[] = ["web", "news", "discussions"];
@@ -74,7 +74,13 @@ async function main() {
 
   const card = await runFromCache({ cacheDir: DEFAULT_CACHE, label, now });
   const outDir = join(HERE, "runs", label);
-  mkdirSync(outDir, { recursive: true });
+  mkdirSync(join(outDir, "queries"), { recursive: true });
+  for (const p of card.perQuery) {
+    writeFileSync(
+      join(outDir, "queries", `${p.id}.json`),
+      JSON.stringify({ id: p.id, tab: p.tab, query: BENCHMARK_QUERIES.find((q) => q.id === p.id)?.query ?? "", rows: p.rows }, null, 2),
+    );
+  }
   writeFileSync(join(outDir, "scorecard.json"), JSON.stringify(card, null, 2));
   console.log(`[run] label=${label} tabAverages=${JSON.stringify(card.tabAverages)} pass=${card.passing} fail=${card.failing}`);
 }

@@ -4,6 +4,7 @@ import { normalizeDomain } from "@/lib/search/domain-utils";
 import { rerankResults } from "@/lib/search/rerank";
 import type { UnifiedSearchResult } from "@/types/search";
 import type { WebEvalItem } from "./metrics";
+import type { CommonRow } from "./types";
 
 export function toEvalItems(results: UnifiedSearchResult[]): WebEvalItem[] {
   return results.map((r) => {
@@ -16,6 +17,20 @@ export function toEvalItems(results: UnifiedSearchResult[]): WebEvalItem[] {
       publishedAt: r.publishedAt ?? (r.year ? String(r.year) : undefined),
       trustTier: tier,
       abstract: r.abstract,
+    };
+  });
+}
+
+/** Render results into the blinding-safe common row shape the council packet uses. */
+export function toPacketRows(results: UnifiedSearchResult[]): CommonRow[] {
+  return results.slice(0, 10).map((r) => {
+    const domain = r.domain ?? (r.url ? normalizeDomain(r.url) ?? null : null);
+    return {
+      title: r.title ?? "",
+      url: r.url ?? "",
+      domain: domain ?? null,
+      publishedDate: r.publishedAt ?? (r.year ? String(r.year) : null),
+      snippet: r.abstract ?? null,
     };
   });
 }

@@ -1,6 +1,6 @@
 // eval/web-search/__tests__/quality.test.ts
 import { describe, it, expect } from "vitest";
-import { toEvalItems, applyQualityLayer } from "../quality";
+import { toEvalItems, applyQualityLayer, toPacketRows } from "../quality";
 import type { UnifiedSearchResult } from "@/types/search";
 
 const r = (over: Partial<UnifiedSearchResult>): UnifiedSearchResult => ({
@@ -28,5 +28,24 @@ describe("applyQualityLayer", () => {
     } finally {
       if (orig !== undefined) process.env.COHERE_API_KEY = orig;
     }
+  });
+});
+
+describe("toPacketRows", () => {
+  it("maps top-10 unified results to blinding-safe CommonRows (title/url/domain/publishedDate/snippet)", () => {
+    const rows = toPacketRows([
+      r({ url: "https://www.cdc.gov/flu", title: "Flu update", publishedAt: "2026-06-01", abstract: "snippet text" }),
+    ]);
+    expect(rows[0]).toEqual({
+      title: "Flu update",
+      url: "https://www.cdc.gov/flu",
+      domain: "cdc.gov",
+      publishedDate: "2026-06-01",
+      snippet: "snippet text",
+    });
+  });
+  it("caps at 10 rows", () => {
+    const many = Array.from({ length: 14 }, (_v, i) => r({ url: `https://a.com/${i}` }));
+    expect(toPacketRows(many)).toHaveLength(10);
   });
 });
