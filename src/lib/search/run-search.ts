@@ -141,6 +141,12 @@ function withSourceTimeout<T>(
  */
 export const FANOUT_DEADLINE_MS = 5000;
 
+// Cap for the post-fusion enrich+rerank pool. Only the top candidates by RRF
+// score can reach the returned page, so bounding both steps here keeps OpenAlex
+// enrichment to a single batch regardless of how many lanes contributed —
+// protecting the shared OpenAlex token bucket from metadata-light lanes.
+export const POST_FUSION_POOL = 50;
+
 const DEADLINE = Symbol("fanout-deadline");
 
 /**
@@ -528,11 +534,23 @@ async function runLiteratureSearchUncached(
   // accumulate. Both fail-open.
   //  - enrich: OpenAlex citation/PMID/DOI backfill — the S2-independent landmark signal.
   //  - rerank: Cohere cross-encoder relevance score (dominant relevance signal).
+  //
+  // Both are bounded to the top `POST_FUSION_POOL` candidates by RRF score, in
+  // place (slice shares object refs, so the originals in `fused` still get the
+  // mutated fields). This caps the OpenAlex enrichment at a single batch and
+  // stops a metadata-light lane (e.g. the MedCPT dense lane, whose precomputed
+  // rows carry no DOI/citation) from injecting EXTRA enrichment batches that
+  // drain OpenAlex's shared token bucket and starve the lexical search lanes of
+  // the next query's fan-out budget. Candidates past the pool are not reranked
+  // anyway, so they can never reach the returned page — enriching them is wasted.
+  const enrichRerankPool = fused.slice(0, POST_FUSION_POOL);
   await Promise.all([
-    withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(fused), 3500).catch(() => 0),
-    withSourceTimeout("Cohere rerank", attachRerankScores(searchQuery, fused, 50), 4000).catch(
-      () => fused
-    ),
+    withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(enrichRerankPool), 3500).catch(() => 0),
+    withSourceTimeout(
+      "Cohere rerank",
+      attachRerankScores(searchQuery, enrichRerankPool, POST_FUSION_POOL),
+      4000
+    ).catch(() => fused),
   ]);
 
   // Eval-only: snapshot the enriched candidate pool BEFORE final ranking, so the
