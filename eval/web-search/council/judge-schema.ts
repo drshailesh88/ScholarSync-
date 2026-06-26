@@ -23,7 +23,11 @@ export function extractJson(raw: string): unknown {
     if (start === -1 || end === -1 || end <= start) {
       throw new Error("judge reply contains no JSON object");
     }
-    return JSON.parse(trimmed.slice(start, end + 1));
+    try {
+      return JSON.parse(trimmed.slice(start, end + 1));
+    } catch {
+      throw new Error("judge reply contains no valid JSON object (parse failed after brace extraction)");
+    }
   }
 }
 
@@ -41,7 +45,11 @@ function validateScores(s: unknown, where: string): WebDimScores {
 }
 
 export function parseVerdict(raw: string): Verdict {
-  const data = extractJson(raw) as Record<string, unknown>;
+  const parsed = extractJson(raw);
+  if (typeof parsed !== "object" || parsed === null) {
+    throw new Error(`verdict must be a JSON object, got ${parsed === null ? "null" : typeof parsed}`);
+  }
+  const data = parsed as Record<string, unknown>;
   if (!Array.isArray(data.perQuery)) throw new Error("verdict.perQuery must be an array");
   const perQuery: PerQueryVerdict[] = data.perQuery.map((q, i) => {
     const row = q as Record<string, unknown>;

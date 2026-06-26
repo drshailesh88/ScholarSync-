@@ -14,6 +14,9 @@ describe("extractJson", () => {
   it("strips ```json fences and surrounding prose", () => {
     expect(extractJson('here:\n```json\n{"a":1}\n```\nthanks')).toEqual({ a: 1 });
   });
+  it("throws when input contains no JSON object", () => {
+    expect(() => extractJson("no braces here")).toThrow(/no JSON object/i);
+  });
 });
 
 describe("parseVerdict", () => {
@@ -33,5 +36,8 @@ describe("parseVerdict", () => {
   it("throws on an invalid winner", () => {
     const bad = JSON.stringify({ perQuery: [{ id: "x", A: goodScores, B: goodScores, winner: "C" }], overall: { winner: "A", summary: "s" } });
     expect(() => parseVerdict(bad)).toThrow(/winner/i);
+  });
+  it("throws on a JSON null reply", () => {
+    expect(() => parseVerdict("null")).toThrow(/object/i);
   });
 });
