@@ -15,6 +15,7 @@ describe("deanon", () => {
     expect(deanon("ours", "A")).toBe("ours");
     expect(deanon("ours", "B")).toBe("exa");
     expect(deanon("exa", "A")).toBe("exa");
+    expect(deanon("exa", "B")).toBe("ours");
     expect(deanon("tie" as never, "tie")).toBe("tie");
   });
 });
@@ -41,5 +42,15 @@ describe("aggregate", () => {
     expect(res.tally.ours).toBe(1);
     expect(res.perTab.news.beatTie).toBe(1);
     expect(res.pctBeatTie).toBe(100);
+  });
+
+  it("de-anonymizes per-engine mean scores by aIs (A-scores → ours when ours is A)", () => {
+    const hi = { relevance: 5, authority: 5, recency: 5, diversity: 5, dedup: 5, usefulness: 5 };
+    const lo = { relevance: 3, authority: 3, recency: 3, diversity: 3, dedup: 3, usefulness: 3 };
+    const v = (): Verdict => ({ perQuery: [{ id, A: hi, B: lo, winner: "A" }], overall: { winner: "A", summary: "s" } });
+    const res = aggregate({ key: { aIs: { [id]: "ours" } }, verdicts: { opus: v(), codex: v(), grok: v() }, queriesById });
+    const row = res.rows.find((r) => r.id === id)!;
+    expect(row.oursMean).toBe(5);
+    expect(row.exaMean).toBe(3);
   });
 });

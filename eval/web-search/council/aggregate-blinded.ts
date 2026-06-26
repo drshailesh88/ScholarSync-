@@ -26,13 +26,13 @@ export function deanon(aIs: "ours" | "exa", winner: "A" | "B" | "tie"): "ours" |
   return aIs === "ours" ? "exa" : "ours";
 }
 
-export function majority(winners: string[]): string {
+export function majority(winners: string[]): "ours" | "exa" | "tie" {
   const tally: Record<string, number> = {};
   for (const w of winners) tally[w] = (tally[w] ?? 0) + 1;
   const sorted = Object.entries(tally).sort((a, b) => b[1] - a[1]);
   if (sorted.length === 0) return "tie";
   if (sorted.length > 1 && sorted[0][1] === sorted[1][1]) return "tie";
-  return sorted[0][0];
+  return sorted[0][0] as "ours" | "exa" | "tie";
 }
 
 export function aggregate(opts: {
@@ -58,7 +58,7 @@ export function aggregate(opts: {
     const entries = present
       .map((j) => ({ j, q: opts.verdicts[j].perQuery.find((q) => q.id === id) }))
       .filter((e) => e.q) as { j: string; q: Verdict["perQuery"][number] }[];
-    const winners = entries.map((e) => deanon(aIs, e.q.winner));
+    const voteWinners = entries.map((e) => deanon(aIs, e.q.winner));
     const oursScores: number[] = [];
     const exaScores: number[] = [];
     for (const e of entries) {
@@ -71,7 +71,7 @@ export function aggregate(opts: {
       id,
       tab,
       winners: Object.fromEntries(entries.map((e) => [e.j, deanon(aIs, e.q.winner)])),
-      majority: majority(winners),
+      majority: majority(voteWinners),
       oursMean: Math.round(mean(oursScores) * 100) / 100,
       exaMean: Math.round(mean(exaScores) * 100) / 100,
     };
