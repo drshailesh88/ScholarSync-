@@ -13,8 +13,9 @@ import {
  *
  * Two hops, both fail-open:
  *  1. Encode the query with `ncbi/MedCPT-Query-Encoder` served on Modal
- *     (scale-to-zero GPU) → a 768-d float vector. We OWN this lane, so it can
- *     never be throttled away the way OpenAlex semantic was (14/87 queries lost).
+ *     (always-warm CPU replica — sub-second, no cold start) → a 768-d float
+ *     vector. We OWN this lane, so it can never be throttled away the way
+ *     OpenAlex semantic was (14/87 queries lost).
  *  2. Approximate-nearest-neighbour query a Turbopuffer namespace holding the
  *     NCBI precomputed MedCPT PubMed embeddings (int8-quantized at rest; queried
  *     with a float vector — quantization is transparent to the query). Returns

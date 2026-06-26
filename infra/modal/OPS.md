@@ -48,15 +48,28 @@ op-run -- modal secret create manan-medcpt-secrets \
 
 ---
 
-## 1. Deploy the encoder + schedule the freshness job
+## 1. Deploy the encoder + schedule the recurring jobs
 
 ```bash
 op-run -- modal deploy infra/modal/medcpt_service.py
 ```
 
-This serves the `QueryEncoder` web endpoint (scale-to-zero A10G) and registers
-the **weekly** `freshness` cron. Modal prints the endpoint URL, e.g.
-`https://<workspace>--manan-medcpt-queryencoder-encode.modal.run`. Copy it.
+This serves the `QueryEncoder` web endpoint and registers two crons. Modal prints
+the endpoint URL, e.g. `https://<workspace>--manan-medcpt-queryencoder-encode.modal.run`.
+Copy it.
+
+- **`QueryEncoder`** — **CPU, always-warm** (`cpu=4.0`, `min_containers=1`). The
+  query encoder is a single short BERT forward pass; on CPU it returns in well
+  under a second with no cold start. A GPU here only added a ~20s scale-from-zero
+  that blew the live search's 5s fan-out deadline (silently dropping the dense
+  lane on the first query after any idle) and cost ~10× more to keep warm. Bulk
+  *article* embedding still uses on-demand GPUs (`process_file`).
+- **`freshness`** — **weekly** cron (`FRESHNESS_CRON`, default `"0 6 * * 1"` =
+  Mon 06:00 UTC). Pulls new daily updatefiles past the stored watermark.
+- **`keep_warm`** — **every-minute** cron that probes the Turbopuffer namespace so
+  its ANN cache never cools (warm ≈0.3s vs cold ≈3.5s ANN). Object-storage reads
+  only; the lane still fails open if the namespace is ever cold, so this is a
+  latency optimization, not a correctness dependency.
 
 ---
 
@@ -122,6 +135,26 @@ Exit gate: nDCG@10 / recall@10 ≥ the throttled-OpenAlex floor
 
 ---
 
+## 6. Prove freshness on a real delta (deleted removed, new searchable)
+
+A green index isn't enough — the recurring updater must be shown to both add
+new/changed PMIDs **and** honor DeleteCitation removals. The `freshness_delta_proof`
+helper sets this up against a real NCBI updatefile; the proof then runs the real
+scheduled `freshness()` and checks the index before/after:
+
+1. Scan the trailing updatefiles for one carrying real DeleteCitation entries
+   (the newest file often has none): `freshness_delta_proof(url, plant=False)`.
+2. Plant a removable marker row for one of that file's delete PMIDs
+   (`plant=True`) — so removal is provable, not merely "already absent".
+3. Set the watermark to the file just before it, run `freshness()`, and assert:
+   the delete PMID is now **absent**, the file's kept PMID is **present**, and the
+   watermark advanced to the newest file.
+
+The repeatable orchestration lives in `scratchpad/freshness_proof.py` (run via
+`op-run -- python freshness_proof.py`). `process_file` is the exact per-file
+worker `freshness()` fans out over (`process_file.map(pending)`), so proving the
+delta through `freshness()` proves the whole pipeline.
+
 ## Routine operations
 
 | Task | How |
@@ -149,6 +182,9 @@ which abstracts exceed).
 
 - Turbopuffer: object-storage-native; f32 vectors on cheap object storage + an
   automatic int8 ANN index (4× smaller hot set); ~tens of $/mo at this scale.
-- Modal encoder: scale-to-zero — **$0 when idle**, A10G-seconds only while serving.
+- Modal encoder: one always-warm **CPU** replica (`min_containers=1`) — a few
+  $/mo, not GPU. Deterministic sub-second encode latency is the live lane's exit
+  gate, which scale-to-zero could not meet (~20s cold start dropped the lane).
+- `keep_warm`: object-storage reads only — negligible.
 - Freshness: a few GPU-minutes per week on the daily delta.
 - One-time: index load (egress/compute only) + the 2024–2026 backfill (~$3–15 GPU).

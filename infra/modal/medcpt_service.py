@@ -227,6 +227,29 @@ def _split_records(records, year_min=None, year_max=None):
     return to_upsert, to_delete
 
 
+def _extract_delete_pmids(path) -> list:
+    """Pull DeleteCitation PMIDs straight from the raw (gz) MEDLINE XML.
+
+    pubmed_parser (this version) does NOT surface <DeleteCitation> entries — it
+    yields no record with delete=True even though every updatefile ends with a
+    <DeleteCitation> block listing PMIDs NCBI has withdrawn (duplicates, errors).
+    Relying on the parser's `delete` flag therefore silently dropped every removal,
+    leaving withdrawn papers searchable forever. We parse the block ourselves so the
+    "honor delete flag → remove dropped PMIDs" guarantee actually holds, independent
+    of the parser version. Verified against real updatefiles (n1335: 19, n1420: 49,
+    n1504: 26 delete PMIDs).
+    """
+    import gzip
+
+    opener = gzip.open if str(path).endswith(".gz") else open
+    with opener(path, "rt", encoding="utf-8", errors="replace") as fh:
+        xml = fh.read()
+    pmids = []
+    for block in re.findall(r"<DeleteCitation>(.*?)</DeleteCitation>", xml, re.DOTALL):
+        pmids.extend(re.findall(r"<PMID[^>]*>(\d+)</PMID>", block))
+    return pmids
+
+
 def _flatten_authors(authors) -> list:
     """Normalize pubmed_parser authors → list[str] (the schema's `[]string`).
 
@@ -351,6 +374,9 @@ def process_file(
         local, year_info_only=False, nlm_category=False, author_list=True
     )
     to_upsert, to_delete = _split_records(records, year_min=year_min, year_max=year_max)
+    # pubmed_parser misses <DeleteCitation>; extract those PMIDs from the raw XML so
+    # withdrawn papers are actually removed (the "honor delete flag" guarantee).
+    to_delete = sorted(set(to_delete) | set(_extract_delete_pmids(local)))
 
     ns = _turbopuffer_namespace()
 
@@ -417,6 +443,39 @@ def freshness() -> dict:
     total_del = sum(s["deleted"] for s in summaries)
     print(f"[freshness] files={len(pending)} upserted={total_up} deleted={total_del}")
     return {"processed": len(pending), "upserted": total_up, "deleted": total_del}
+
+
+# ===========================================================================
+# 3c. Namespace keep-warm — deterministic dense-lane latency
+# ===========================================================================
+@app.function(image=image, secrets=[SECRET], timeout=120, schedule=modal.Cron("* * * * *"))
+def keep_warm() -> int:
+    """Keep the Turbopuffer namespace cache hot so the live dense lane's ANN
+    latency is deterministic.
+
+    A warm namespace answers ANN in ~0.3s; a cold one (evicted to object storage
+    after idle) takes ~3.5s, which — with query encoding — blows the live search's
+    5s fan-out deadline and silently drops the dense lane. Real query traffic keeps
+    it warm on its own; this cron covers idle gaps so the lane never cold-starts
+    against a user. Cheap (object-storage reads only). The lane still FAILS OPEN if
+    the namespace is ever cold, so this is a latency optimization, not a correctness
+    dependency. Fires each minute and probes for ~55s to bridge to the next run.
+    """
+    import time
+
+    ns = _turbopuffer_namespace()
+    probe = [((i % 13) - 6) / 6.0 for i in range(EMBED_DIM)]  # fixed unit-ish vector
+    end = time.time() + 55
+    n = 0
+    while time.time() < end:
+        try:
+            ns.query(rank_by=["vector", "ANN", probe], top_k=10, include_attributes=["pmid"])
+            n += 1
+        except Exception:
+            pass
+        time.sleep(3)
+    print(f"[keep_warm] {n} warm-up queries")
+    return n
 
 
 # ===========================================================================
@@ -739,3 +798,133 @@ def load_index(start: int = 0, end: int = -1, reverse: bool = False):
 def list_chunks():
     """Discover available precomputed chunk numbers from the NCBI FTP index."""
     return _list_chunk_numbers()
+
+
+@app.function(image=image, secrets=[SECRET], timeout=3600)
+def freshness_delta_proof(url: str, plant: bool = True) -> dict:
+    """Inspect (and optionally seed) a verifiable freshness delta from a real updatefile.
+
+    Parses `url` and reports its delta sizes plus a sample DeleteCitation PMID and a
+    sample new/changed PMID. With `plant=True`, also PLANTS a dummy row for one of
+    its DeleteCitation PMIDs so a subsequent run through the freshness pipeline can
+    be shown to actually REMOVE it (not merely find it already absent). With
+    `plant=False` it only counts — used to scan recent updatefiles for one that
+    carries real DeleteCitation entries.
+    """
+    import pubmed_parser as pp
+
+    local = f"/tmp/{url.rsplit('/', 1)[-1]}"
+    with requests.get(url, stream=True, timeout=600) as resp:
+        resp.raise_for_status()
+        with open(local, "wb") as fh:
+            for chunk in resp.iter_content(chunk_size=1 << 20):
+                fh.write(chunk)
+    records = pp.parse_medline_xml(local, year_info_only=False, nlm_category=False, author_list=True)
+    to_upsert, to_delete = _split_records(records)
+    to_delete = sorted(set(to_delete) | set(_extract_delete_pmids(local)))
+
+    del_pmid = to_delete[0] if to_delete else None
+    kept_pmid = to_upsert[0]["pmid"] if to_upsert else None
+
+    if plant and del_pmid:
+        ns = _turbopuffer_namespace()
+        ns.write(
+            upsert_rows=[{
+                "id": del_pmid, "vector": [0.0] * EMBED_DIM, "pmid": del_pmid,
+                "title": "FRESHNESS-PROOF PLANTED ROW", "abstract": "planted",
+                "journal": "", "year": 0, "authors": [], "doi": "",
+            }],
+            distance_metric="cosine_distance", schema=TPUF_SCHEMA,
+        )
+    return {
+        "file": url.rsplit("/", 1)[-1],
+        "del_pmid": del_pmid,
+        "kept_pmid": kept_pmid,
+        "n_upsert": len(to_upsert),
+        "n_delete": len(to_delete),
+    }
+
+
+@app.function(image=image, secrets=[SECRET], timeout=3600)
+def inspect_deletes(url: str) -> dict:
+    """Decouple the raw <DeleteCitation> count from pubmed_parser's view.
+
+    Decisively answers whether a file with no parser-reported deletes is genuinely
+    delete-free or whether pubmed_parser is silently missing them: counts raw
+    <DeleteCitation> blocks + their <PMID> children straight from the decompressed
+    XML, then compares to what _split_records (the freshness delete path) yields.
+    """
+    import gzip
+    import re as _re
+    import pubmed_parser as pp
+
+    local = f"/tmp/{url.rsplit('/', 1)[-1]}"
+    with requests.get(url, stream=True, timeout=600) as resp:
+        resp.raise_for_status()
+        with open(local, "wb") as fh:
+            for chunk in resp.iter_content(chunk_size=1 << 20):
+                fh.write(chunk)
+    with gzip.open(local, "rt", encoding="utf-8", errors="replace") as fh:
+        xml = fh.read()
+
+    blocks = _re.findall(r"<DeleteCitation>(.*?)</DeleteCitation>", xml, _re.DOTALL)
+    raw_delete_pmids = []
+    for b in blocks:
+        raw_delete_pmids.extend(_re.findall(r"<PMID[^>]*>(\d+)</PMID>", b))
+
+    records = list(pp.parse_medline_xml(local, year_info_only=False, nlm_category=False, author_list=True))
+    parser_delete = [str(r.get("pmid")) for r in records if r.get("delete")]
+    # show how the parser represents the delete flag on a sample record
+    sample_delete_field = next((repr(r.get("delete")) for r in records if r.get("delete")), None)
+    # also: do any parsed records expose a 'delete' KEY at all (regardless of value)?
+    has_delete_key = any("delete" in r for r in records[:50])
+
+    return {
+        "file": url.rsplit("/", 1)[-1],
+        "raw_delete_blocks": len(blocks),
+        "raw_delete_pmids": len(raw_delete_pmids),
+        "raw_sample_pmid": raw_delete_pmids[0] if raw_delete_pmids else None,
+        "parser_delete_count": len(parser_delete),
+        "parser_delete_field_value": sample_delete_field,
+        "parser_has_delete_key": has_delete_key,
+        "total_records": len(records),
+    }
+
+
+@app.function(image=image, secrets=[SECRET], timeout=3600)
+def scan_deletes(url: str) -> list:
+    """CPU-only: download one gz and return its <DeleteCitation> PMIDs (no embedding)."""
+    local = f"/tmp/{url.rsplit('/', 1)[-1]}"
+    with requests.get(url, stream=True, timeout=600) as resp:
+        resp.raise_for_status()
+        with open(local, "wb") as fh:
+            for chunk in resp.iter_content(chunk_size=1 << 20):
+                fh.write(chunk)
+    return _extract_delete_pmids(local)
+
+
+@app.function(image=image, secrets=[SECRET], timeout=24 * 3600)
+def purge_historical_deletes(subdirs=("baseline", "updatefiles")) -> dict:
+    """Remove every <DeleteCitation> PMID across all PubMed files (CPU-only).
+
+    The precomputed index load + the initial 2024–2026 backfill predated the
+    DeleteCitation fix (pubmed_parser silently dropped those blocks), so PMIDs NCBI
+    has withdrawn may still be searchable in the historical index. This extracts the
+    delete lists from every file in parallel and removes them by id — reconciling
+    the existing index with the now-correct freshness path. Idempotent: deleting an
+    absent id is a no-op, so it is safe to re-run.
+    """
+    files = []
+    for sub in subdirs:
+        files.extend(_list_remote_gz(sub))
+    all_deletes = set()
+    scanned = 0
+    for pmids in scan_deletes.map(files):
+        all_deletes.update(pmids)
+        scanned += 1
+    ns = _turbopuffer_namespace()
+    deletes = sorted(all_deletes)
+    for start in range(0, len(deletes), 1000):
+        ns.write(deletes=deletes[start : start + 1000])
+    print(f"[purge] files={scanned} delete_pmids={len(deletes)}")
+    return {"files": scanned, "delete_pmids": len(deletes)}
