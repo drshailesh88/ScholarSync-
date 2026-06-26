@@ -47,8 +47,12 @@ judges. Reports per-tab and overall **beat-or-tie %** vs the ≥80% stop gate.
 - blinding-integrity check passes (judges can't fingerprint ours by field presence)
 - opponent captured with strong tab-matched Exa params
 - exactly one council per change
-`build-blinded-packet.ts` enforces the rubric/rows; `blinding-check.ts` + `preflight.ts` enforce the
-integrity gates; `aggregate-blinded.ts` enforces the ≥3-judge gate. A run failing any is discarded.
+Step 1 (`build-blinded-packet.ts`) automatically runs `councilStrengthCheck` (preflight.ts) and
+REFUSES to write a packet that fails any build-time gate — ground-truth must-haves present, ≥3
+intended judges (`--judges`, default opus,codex,grok), rich rows + blinding-integrity field-parity
+(`blinding-check.ts`), and a non-empty comparison set. Step 3 (`aggregate-blinded.ts`) independently
+enforces the actual ≥3 valid-judge gate on the returned verdicts. A discardable run is never produced,
+so it cannot reach the judges.
 
 ## Keep/revert gate (design spec §9)
 KEEP a change iff deterministic metrics hold-or-improve AND the council holds-or-improves

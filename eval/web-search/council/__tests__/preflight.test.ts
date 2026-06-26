@@ -42,4 +42,10 @@ describe("councilStrengthCheck", () => {
     expect(res.ok).toBe(false);
     expect(res.failures.join(" ")).toMatch(/blinding|snippet|date/i);
   });
+
+  it("fails with no comparable pairs", () => {
+    const res = councilStrengthCheck({ pairs: [], key: {}, queriesById, judgesPresent: ["opus", "codex", "grok"] });
+    expect(res.ok).toBe(false);
+    expect(res.failures.join(" ")).toMatch(/comparable|no .* queries/i);
+  });
 });

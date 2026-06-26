@@ -21,6 +21,7 @@ import { createHash } from "node:crypto";
 import { BENCHMARK_QUERIES } from "../queries";
 import type { WebTab, WebBenchmarkQuery, CommonRow, ExaFixtureItem } from "../types";
 import { RUBRIC_BY_TAB, SCORING_PREAMBLE, OUTPUT_SCHEMA } from "./rubric";
+import { councilStrengthCheck } from "./preflight";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -31,16 +32,18 @@ export interface EnginePair {
   exa: CommonRow[];
 }
 
-function parseArgs(argv: string[]): { run: string; out: string; salt: string } {
+function parseArgs(argv: string[]): { run: string; out: string; salt: string; judges: string[] } {
   let run = "baseline";
   let out = "baseline";
   let salt = "";
+  let judges = "opus,codex,grok";
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--run") run = argv[++i];
     else if (argv[i] === "--out") out = argv[++i];
     else if (argv[i] === "--salt") salt = argv[++i];
+    else if (argv[i] === "--judges") judges = argv[++i];
   }
-  return { run, out, salt: salt || out };
+  return { run, out, salt: salt || out, judges: judges.split(",").map((s) => s.trim()).filter(Boolean) };
 }
 
 /** Deterministic per-query coin flip: is OUR engine shown as Engine A for this id? */
@@ -119,7 +122,7 @@ function exaToCommon(items: ExaFixtureItem[]): CommonRow[] {
 }
 
 function main() {
-  const { run, out, salt } = parseArgs(process.argv.slice(2));
+  const { run, out, salt, judges } = parseArgs(process.argv.slice(2));
   const queriesById = new Map(BENCHMARK_QUERIES.map((q) => [q.id, q]));
   const fixtures = JSON.parse(
     readFileSync(join(HERE, "..", "exa", "fixtures.json"), "utf8"),
@@ -135,6 +138,18 @@ function main() {
   }
 
   const { packet, key } = buildPacket({ pairs, queriesById, salt });
+
+  // §6.3 council-strength gate at the build choke point: refuse to emit a packet that
+  // would be discarded (missing ground truth, fingerprintable field-parity, lopsided A/B,
+  // <3 intended judges, or nothing to compare). key here is the flat in-memory map.
+  const strength = councilStrengthCheck({ pairs, key, queriesById, judgesPresent: judges });
+  if (!strength.ok) {
+    console.error("[council] COUNCIL-STRENGTH CHECK FAILED — packet not written (this run would be discarded):");
+    for (const f of strength.failures) console.error(`  - ${f}`);
+    process.exit(1);
+  }
+  for (const p of strength.passes) console.log(`[council] ✓ ${p}`);
+
   const outDir = join(HERE, out);
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, "PACKET.md"), packet);

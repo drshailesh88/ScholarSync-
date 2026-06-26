@@ -16,6 +16,10 @@ export function councilStrengthCheck(opts: {
   const failures: string[] = [];
   const passes: string[] = [];
 
+  // 0. there must be something to compare
+  if (opts.pairs.length === 0) failures.push("no comparable queries (need run output + Exa fixtures)");
+  else passes.push(`${opts.pairs.length} comparable queries`);
+
   // 1. ground-truth mustHaves present for every compared query
   const missing = opts.pairs.filter((p) => !(opts.queriesById.get(p.id)?.mustHaves?.length));
   if (missing.length) failures.push(`ground-truth must-haves missing for: ${missing.map((p) => p.id).join(", ")}`);
