@@ -31,6 +31,7 @@ import {
   type HydeResult,
 } from "@/lib/search/hyde";
 import { okStatus, type SourceStatus } from "@/lib/search/source-status";
+import { isTransientEmpty } from "@/lib/search/transient-empty";
 import type { UnifiedSearchResult } from "@/types/search";
 
 export const SEARCH_SOURCES = ["pubmed", "semantic_scholar", "openalex"] as const;
@@ -146,6 +147,15 @@ function withSourceTimeout<T>(
  * (partial results), marking the rest as dropped. Caps the p95 tail.
  */
 export const FANOUT_DEADLINE_MS = 5000;
+
+/**
+ * Dedicated timeout (ms) for the transient-empty recovery pass — a single fresh
+ * attempt at the owned MedCPT dense lane after the main fan-out came back empty
+ * because a lane failed transiently. Only fires on the rare empty/degraded path
+ * (~3% of queries), so a generous timeout here trades a slower tail on those for
+ * an answer instead of an empty result set.
+ */
+export const DENSE_RECOVERY_TIMEOUT_MS = 6000;
 
 // Cap for the post-fusion enrich+rerank pool. Only the top candidates by RRF
 // score can reach the returned page, so bounding both steps here keeps OpenAlex
@@ -575,6 +585,51 @@ async function runLiteratureSearchUncached(
     }
   }
 
+  let fused = reciprocalRankFusion(
+    sourceResults.map((sr) => ({ source: sr.source, results: sr.results }))
+  );
+
+  // Transient-empty recovery: an empty/degraded pool caused by a TRANSIENT lane
+  // failure (throttle / timeout / upstream error) — not a query that genuinely has
+  // no answer — gets ONE fresh attempt at the owned, throttle-proof MedCPT dense
+  // lane, whose results we merge and re-fuse. Bounded to a single extra attempt and
+  // fail-open, so it can never loop or starve the next query. Skipped for a
+  // legitimately empty result (every lane ok) or a dormant lane (missing_config),
+  // where a retry cannot help — see isTransientEmpty.
+  if (
+    (sources.includes("pubmed") || sources.includes("openalex")) &&
+    isTransientEmpty(
+      fused.length,
+      sourceResults.map((sr) => sr.status)
+    )
+  ) {
+    const recovered = await withSourceTimeout(
+      "MedCPT Dense (recovery)",
+      searchMedcptDense(searchQuery, {
+        limit: poolPerSource,
+        yearStart: params.yearFrom,
+        yearEnd: params.yearTo,
+      }).then(({ results, total, status }) => ({
+        source: "medcpt_dense_recovery",
+        results,
+        total,
+        status,
+      })),
+      DENSE_RECOVERY_TIMEOUT_MS
+    ).catch((e) =>
+      errorOutcome(
+        "medcpt_dense_recovery",
+        e instanceof Error ? e.message : "MedCPT dense recovery failed"
+      )
+    );
+    if (recovered.results.length > 0) {
+      sourceResults.push(recovered);
+      fused = reciprocalRankFusion(
+        sourceResults.map((sr) => ({ source: sr.source, results: sr.results }))
+      );
+    }
+  }
+
   const sourceCounts: Record<string, number> = {};
   const sourceStatuses: Record<string, SourceStatus> = {};
   let maxTotal = 0;
@@ -583,10 +638,6 @@ async function runLiteratureSearchUncached(
     sourceStatuses[sr.source] = sr.status;
     maxTotal = Math.max(maxTotal, sr.total);
   }
-
-  const fused = reciprocalRankFusion(
-    sourceResults.map((sr) => ({ source: sr.source, results: sr.results }))
-  );
 
   // Post-fusion enrichment + rerank run CONCURRENTLY (they mutate disjoint fields
   // of `fused`: enrichment fills citationCount/PMID/DOI/OA; rerank attaches
