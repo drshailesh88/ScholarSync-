@@ -123,3 +123,17 @@
 - Updated `infra/searxng/docker-compose.yml` to an older Compose file version (`3.3`) compatible with the remote compose runtime.
 - Added automated coverage for the deploy fallback path in `src/lib/search/__tests__/searxng-deploy.test.ts`.
 **Status:** Complete for the first Phase 1 requirement. Next step is the SearXNG source adapter and `tab` routing in `/api/search/unified`.
+
+## 2026-06-27 - Search Dependency & Resilience Pathway (defer PHASE 0)
+
+**Decision:** Own the semantic lane (MedCPT/Turbopuffer/Modal — done), keep renting the lexical lane (PubMed/OpenAlex) behind a fail-open net, and DEFER PHASE 0 (self-hosting the lexical lane as Turbopuffer BM25) until real traffic — not the test harness — proves the rented lane is the bottleneck.
+**Context:** Pre-launch, no users. We build a quality product for the first ~100 users before scaling. The throttle we kept hitting is a HARNESS artifact: the 87q benchmark bursts hundreds of API calls in ~10 min; 100 real users trickle and never burst.
+**Key findings:**
+- Throttle is a harness artifact, not a product problem (proven via per-query re-runs + union-max recall 0.905 ≥ 0.88 floor).
+- Cross-encoder sigmoid saturation + NEJM journal-quartile misses were the real ranking bugs — both fixed (recall@10 0.716 → 0.88–0.90, nDCG 0.675 → 0.71, zero 429s on the owned lane).
+- PHASE 0 is HALF-BUILT: `TPUF_SCHEMA` + `title` BM25 index + reusable ingest machinery exist; abstract BM25 indexing, metadata backfill of ~24M old rows, and `sources/pubmed-local.ts` do not.
+- Two kinds of resilience: fail-open (built, protects users now) vs throttle-immunity (PHASE 0, scale insurance — deferred).
+**PHASE 0 trigger conditions (build it WHEN any is true):** sustained real traffic throttling >~10 req/s; an NCBI/OpenAlex outage/policy/key restriction; or a search-uptime SLA independent of third parties.
+**Next sequence (~$2–9/mo total):** harness caching ($0, neutralizes the throttle where it bites) → free ranking work → multi-query/HyDE on DeepSeek (~$5/mo) → re-measure 87q.
+**Full details:** `docs/literature-search/RESILIENCE-PATHWAY.md`
+**Status:** Captured. Dense lane + freshness merged at `1dd9d6f6` (PRs #82, #83), CI green, freshness proven on a real delta. PHASE 0 deferred.
