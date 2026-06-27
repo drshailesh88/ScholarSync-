@@ -62,6 +62,11 @@ PUBMED_FTP_BASE = "https://ftp.ncbi.nlm.nih.gov/pubmed"
 # edit this and redeploy — it is the single source of truth for the schedule.
 FRESHNESS_CRON = "0 6 * * 1"
 
+# Namespace keep-warm cadence. Pre-launch this is throttled to every 5 min to keep
+# idle Modal spend low; once there is live traffic (and budget headroom) tighten to
+# "* * * * *" so the Turbopuffer ANN cache never cold-starts against a user.
+KEEP_WARM_CRON = "*/5 * * * *"
+
 # ---------------------------------------------------------------------------
 # Image + app. torch/transformers/turbopuffer/pubmed_parser are only imported on
 # the remote containers (via image.imports), so deploying this file locally needs
@@ -303,7 +308,7 @@ def _list_remote_gz(subdir: str):
 # lane's exit gate. (Bulk article embedding still uses GPUs; that's process_file.)
 @app.cls(
     image=image,
-    cpu=4.0,
+    cpu=1.0,
     volumes={"/cache": hf_cache},
     secrets=[SECRET],
     min_containers=1,
@@ -505,7 +510,7 @@ def freshness() -> dict:
 # ===========================================================================
 # 3c. Namespace keep-warm — deterministic dense-lane latency
 # ===========================================================================
-@app.function(image=image, secrets=[SECRET], timeout=120, schedule=modal.Cron("* * * * *"))
+@app.function(image=image, secrets=[SECRET], timeout=120, schedule=modal.Cron(KEEP_WARM_CRON))
 def keep_warm() -> int:
     """Keep the Turbopuffer namespace cache hot so the live dense lane's ANN
     latency is deterministic.

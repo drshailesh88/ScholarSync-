@@ -58,7 +58,7 @@ This serves the `QueryEncoder` web endpoint and registers two crons. Modal print
 the endpoint URL, e.g. `https://<workspace>--manan-medcpt-queryencoder-encode.modal.run`.
 Copy it.
 
-- **`QueryEncoder`** — **CPU, always-warm** (`cpu=4.0`, `min_containers=1`).
+- **`QueryEncoder`** — **CPU, always-warm** (`cpu=1.0`, `min_containers=1`).
   Serves two endpoints: **`encode`** (query → 768-d vector, the two-hop fallback)
   and **`search`** (query → ANN rows; encodes AND queries Turbopuffer server-side
   — the preferred one-round-trip path, see §4). The encoder is a single short BERT
