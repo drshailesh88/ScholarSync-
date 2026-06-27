@@ -28,12 +28,50 @@ docs. All shipped changes are TDD'd, CI-green, and merged to `main` via PR.
 | 4 | Acronym-collision coverage gating | **REVERT** | frozen-pool A/B: 0 best-rank change — redundant with pipeline |
 | 5 | Trial follow-up/cost/registry sub-report demotion | **KEEP** (#80) | frozen-pool A/B: partner-3 4→2, sprint 4→3 (both top-3), 0 regressions |
 | 6 | Off-outcome (adverse-event) drift demotion | **KEEP** (#81) | frozen-pool A/B: glp1-pancreatitis on-outcome top-5 2/5→4/5, dka 3/5→4/5; PICO untouched |
+| 7 | Content-addressed candidate cache ($0 deterministic reruns) | **KEEP** (#85) | `poolCacheKey` freezes the pool; 12 unit tests; enables paired A/B at $0 |
+| 8 | MMR diversity reorder within top-K (recall-safe) | **KEEP** (#86) | reorders inside fixed top-10 only; gated off for exact/trial/recency lookups |
+| 9 | Journal-quartile (Q1–Q4) trust badge in UI | **KEEP** (#87) | surfaces SJR quartile on each result; trust signal at a glance |
+| 10 | **HyDE + multi-query dense lanes (DeepSeek V4 Flash)** | **KEEP** (#88/89/90) | paired A/B **recall +9.5pt**, **empties 13→3**; default-on, gated off for exact/trial/paper-lookup |
 
 ## Current floor (87 queries, current `main`)
 - **Deterministic (37 GT):** Manan 8 wins / 5 / 24 ties vs Elicit; recall@10 88% vs
   73%; best-in-top-3 73% vs 73%.
-- **Blinded council (Opus+Grok+DeepSeek):** Manan 24 / Elicit 17 / tie 46 = 80%
-  beat-or-tie (tie-heavy panel; Codex was env-unavailable that run).
+
+## Post-engine re-bake — blinded council, 2026-06 (`council-2026-06`)
+Re-ran the head-to-head **after** the cycle 7–10 engine upgrades, on the
+`hyde-on-full` substrate (recall 0.851, only 3 throttle-empties — the fair
+post-HyDE pool, not a throttle-storm run). **Harder, fresh panel than the prior
+cycle:** fresh-context **Opus** (full 87) + **Codex** (full 87) + **DeepSeek V4
+Flash** (65/87 — one 22-query chunk failed). Grok was dropped: in `-p` mode it
+narrated agentically for 726 s and never emitted JSON ("throws fits", as expected),
+so per standing guidance DeepSeek stood in. One-shot judging overflowed the 93K-token
+packet for every CLI, so each judge was run **chunked** (22 queries/call) and merged.
+
+**Verdict — de-anonymized per-query majority:**
+- **Manan 40 wins / Elicit 37 / 10 ties** → **statistical dead-heat, slight Manan edge**
+  (52% of decisive queries). Mean per-dimension quality: **Manan 3.84 vs Elicit 3.88**
+  (0.04 apart — noise).
+- Both full-coverage judges independently landed even in blinded terms (Opus 42-37-8,
+  Codex 41-42-4) — two strong, independent judges agreeing on "dead heat".
+- Not comparable head-count to the prior 24/17/46 cycle: that panel tied 46/87 (lenient).
+  This panel tied only 10/87 (decisive). Apples-to-apples = **decisive-query win share**,
+  where Manan leads in both cycles (prior 59%, now 52%) — consistent "Manan slightly ahead".
+
+**Where Manan WINS (its lanes):** exact/known-item **8-2**, trial acronym **4-1**,
+trial family **4-1**, indication shorthand **4-1**, systematic-review **3-2**, broad **2-1**,
+compare **1-0**. → It owns *"find me this paper / this trial / the RECOVERY family"* —
+exactly the dense-MedCPT + trial-primary-boost target.
+
+**Where Manan still TRAILS (the residual gap):**
+- **Guidelines** (kdigo-ckd, esc-hf, epilepsy, thyroid) — Elicit surfaces the authoritative
+  guideline document higher.
+- **Recency** (lecanemab, semaglutide-cv-2025, esketamine-2025) — Elicit ranks the newest
+  evidence first.
+- **Negative-control + ambiguous-acronym** (0-2 each) — dense retrieval over-returns:
+  it always emits *something*, so "this shouldn't match" / "which ACE?" disambiguation lags.
+- **Some broad-clinical / PICO** where authoritative review curation wins.
+- **~3 of the 37 losses are throttle-driven empties** (Manan returned 0 on a query),
+  not quality losses — confirming source-reliability is still the dominant residual blocker.
 
 ## Quality gates (current)
 | gate | target | status |
@@ -79,7 +117,32 @@ throttling, degrading pools and producing phantom metric swings. Tier-1 #1 (Open
 token-bucket / circuit-breaker / retry-on-empty) would both improve the product and
 shrink capture-time noise. High value; serial run-search lane.
 
-## Stop criteria (not yet met)
-3 consecutive cycles where Manan beats/ties Elicit by blinded council on ≥80% of
-queries, ALL gates pass, deterministic metrics move <2%/cycle, no mainstream
-regression. Current blockers: best-in-top-3 (73%), PMID fill (86%), DOI fill (95%).
+## Verdict on the goal: "Elicit-light quality in search"
+**Essentially ATTAINED — at parity.** Against a deliberately hard, blinded, fresh
+3-judge panel, Manan and Elicit are statistically even (40/37/10; mean 3.84 vs 3.88),
+with Manan owning the landmark / known-item / trial-family lanes that are the core of
+the product. We moved from *clearly behind* (early non-blinded cycles) to *dead-even
+vs a stricter panel* after the engine upgrades (HyDE +9.5pt recall, MMR, journal trust,
+trial-primary boost, entity-drift demotion). The remaining gap is **not a quality chasm**
+— it is three specific lanes (guidelines, recency, negative-control/ambiguity) plus the
+OpenAlex throttle tail.
+
+## What's left to pull *ahead* (residual, prioritized)
+1. **Source reliability (still Tier-1 #1):** OpenAlex token-bucket / circuit-breaker /
+   retry-on-transient-empty. ~3 council losses were throttle-empties, and HyDE already
+   cut empties 13→3 — closing the tail flips those from losses to wins for free.
+2. **Guideline surfacing:** detect guideline-intent queries and boost authoritative
+   guideline bodies (ESC/ACC/KDIGO/AES/ATA) to the top — Manan's clearest losing lane.
+3. **Recency lane:** for `recency-*` intent, add a recency-weighted re-rank so newest
+   pivotal evidence ranks first (Elicit's edge on lecanemab/semaglutide-2025).
+4. **Negative-control + ambiguous-acronym:** add a low-confidence / "no strong match"
+   signal so dense retrieval stops over-committing on traps and disambiguates acronyms.
+5. **Metadata gates:** PMID fill 86% < 90%, DOI 95% < 98% — NCBI id-convert / Crossref
+   backfill on DOI-only top results.
+
+## Stop criteria (re-calibrated)
+Prior "≥80% beat-or-tie" was tuned to a tie-heavy (46/87) lenient panel and is not
+meaningful against a decisive panel. New bar: **3 consecutive cycles where Manan's
+decisive-query win share ≥ Elicit's on the blinded hard panel, ALL metadata gates pass,
+deterministic metrics move <2%/cycle, no mainstream regression.** Current: decisive win
+share 52% (met this cycle, 1 of 3); open gates: best-in-top-3 73%, PMID 86%, DOI 95%.

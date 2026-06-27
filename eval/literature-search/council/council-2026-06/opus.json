@@ -1,0 +1,1835 @@
+{
+  "perQuery": [
+    {
+      "id": "tavr-low-risk-6yr",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A has both landmarks; B misses PARTNER 3, adds irrelevant item."
+    },
+    {
+      "id": "exact-dapa-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "Both find exact paper; A's supporting list far cleaner."
+    },
+    {
+      "id": "recency-lecanemab",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A surfaces CLARITY-AD landmark; B newer but misses it."
+    },
+    {
+      "id": "pico-sglt2-cv-mortality",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "tie",
+      "note": "A adds EMPA-REG RCT; B more focused meta-analyses."
+    },
+    {
+      "id": "guideline-af-esc",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A surfaces 2020/2024 versions; B duplicate-heavy with translations."
+    },
+    {
+      "id": "compare-doac-vs-warfarin",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B leads with Circulation NMA; A's top entry dubious."
+    },
+    {
+      "id": "exact-recovery-dex",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A cleaner; B has both versions but junky tail."
+    },
+    {
+      "id": "exact-keynote-189",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Both nail exact paper; A's related list stronger."
+    },
+    {
+      "id": "acronym-dapa-hf",
+      "A": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B leads with primary NEJM; A lacks primary paper."
+    },
+    {
+      "id": "acronym-partner-3",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 2
+      },
+      "B": {
+        "recall": 1,
+        "ranking": 1,
+        "metadata": 4,
+        "clinical_relevance": 1,
+        "explanation": 2,
+        "trust": 1
+      },
+      "winner": "A",
+      "note": "A finds TAVR landmark; B returns wrong HIV PARTNER study."
+    },
+    {
+      "id": "acronym-keynote-189",
+      "A": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B has primary NEJM; A only abstracts and commentary."
+    },
+    {
+      "id": "acronym-sprint",
+      "A": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B has original 2015 plus final report; A misses original."
+    },
+    {
+      "id": "broad-hfref-management",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B cleaner review set; A scattered with dialysis tangents."
+    },
+    {
+      "id": "broad-cap-treatment",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B has ATS/IDSA guideline plus recent RCTs; A weak reviews."
+    },
+    {
+      "id": "broad-af-anticoagulation",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A has DOAC RCTs and guideline; B only narrative reviews."
+    },
+    {
+      "id": "pico-egdt-septic-shock",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both surface ProCESS/ARISE/ProMISe; minor junk on each side."
+    },
+    {
+      "id": "pico-oxygen-icu",
+      "A": {
+        "recall": 4,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A on-target Oxygen-ICU/IOTA; B includes irrelevant transfusion/fluid trials."
+    },
+    {
+      "id": "recency-semaglutide-cv-2025",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A consistently 2026 evidence; B older SELECT design papers."
+    },
+    {
+      "id": "recency-cart-myeloma",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A newer 2024-2026 evidence; B mostly 2020-2021 reviews."
+    },
+    {
+      "id": "sr-statins-primary-prevention",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B leads with Cochrane and strong network meta-analyses."
+    },
+    {
+      "id": "sr-sglt2-hf-hospitalization",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A directly targets HF hospitalization; B broader, off-outcome items."
+    },
+    {
+      "id": "sr-cochrane-steroids-sepsis",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A multiple relevant Cochrane; B newest but two irrelevant Cochranes."
+    },
+    {
+      "id": "guideline-aortic-stenosis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A ranks 2020 current guideline high; B 2014-heavy, malformed PMID."
+    },
+    {
+      "id": "guideline-kdigo-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A more focused on CKD 2024 guideline; B scatters other KDIGOs."
+    },
+    {
+      "id": "lto-bariatric-diabetes",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A includes STAMPEDE 5-year; B lacks landmark RCTs."
+    },
+    {
+      "id": "lto-pci-vs-cabg-left-main",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A coherent SYNTAX/PRECOMBAT long-term; B includes erratum entry."
+    },
+    {
+      "id": "lto-dapa-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A leads with DAPA-CKD; B ranks it sixth, mechanistic."
+    },
+    {
+      "id": "safety-vaccine-myocarditis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "winner": "A",
+      "note": "A excellent cohort/SR set; B returned no results."
+    },
+    {
+      "id": "safety-glp1-pancreatitis",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A focused on pancreatitis; B drifts to CV/kidney outcomes."
+    },
+    {
+      "id": "safety-sglt2-dka",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B clean on-topic; A has malformed irrelevant pembrolizumab entry."
+    },
+    {
+      "id": "safety-fluoroquinolone-aneurysm",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both strong, on-topic cohort and meta-analysis coverage."
+    },
+    {
+      "id": "compare-tirzepatide-semaglutide",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B has both head-to-head RCTs plus top NMAs cleanly."
+    },
+    {
+      "id": "compare-ticagrelor-clopidogrel",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A ranks PLATO first; B places it second."
+    },
+    {
+      "id": "mechanism-sglt2-cardioprotection",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B strong mechanism reviews; A returned no results."
+    },
+    {
+      "id": "psy-stard-major-depression",
+      "A": {
+        "recall": 0,
+        "ranking": 0,
+        "metadata": 0,
+        "clinical_relevance": 0,
+        "explanation": 0,
+        "trust": 0
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B has STAR*D landmark report; A returned no results."
+    },
+    {
+      "id": "psy-catie-antipsychotics",
+      "A": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B includes primary CATIE NEJM; A only secondary papers."
+    },
+    {
+      "id": "psy-esketamine-trd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A more comprehensive TRANSFORM/SUSTAIN pivotal trial coverage."
+    },
+    {
+      "id": "psy-ketamine-nmda-depression",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both include Zarate 2006 proof-of-concept and Murrough RCT."
+    },
+    {
+      "id": "psy-lithium-bipolar-maintenance",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B ranks BALANCE first with relevant comparisons; A buries it."
+    },
+    {
+      "id": "psy-ssri-vs-placebo-depression",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A on-target adult SSRI evidence; B mostly pediatric/augmentation off-target."
+    },
+    {
+      "id": "exact-flaura-osimertinib",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Both find exact paper; A stronger OS/follow-up tail."
+    },
+    {
+      "id": "exact-keynote-006-melanoma",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Both exact; A better follow-up coverage than B's abstracts."
+    },
+    {
+      "id": "family-keynote-trials",
+      "A": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B includes KEYNOTE-006 landmark; A lacks 006/189."
+    },
+    {
+      "id": "onc-her2-adjuvant-residual",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both lead with KATHERINE plus 2025 survival update."
+    },
+    {
+      "id": "onc-immunotherapy-broad",
+      "A": {
+        "recall": 3,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B clean broad ICI overview; A scattered subspecialty reviews."
+    },
+    {
+      "id": "onc-car-t-lbcl-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A leads with ZUMA-7 primary; B tangential single-arm/cost."
+    },
+    {
+      "id": "onc-checkpoint-irae-safety",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "B has ASCO guideline plus quantitative incidence meta-analyses."
+    },
+    {
+      "id": "exact-dawn-thrombectomy",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Both exact; A fuller relevant list, B sparse tail."
+    },
+    {
+      "id": "neuro-thrombectomy-broad",
+      "A": {
+        "recall": 3,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B proper overview with reviews/Cochrane; A niche adjunct RCTs."
+    },
+    {
+      "id": "neuro-tenecteplase-vs-alteplase",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A has head-to-head RCTs incl EXTEND-IA TNK; B all meta-analyses."
+    },
+    {
+      "id": "neuro-lecanemab-pico",
+      "A": {
+        "recall": 1,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B has multiple anti-amyloid RCTs; A only three weak items."
+    },
+    {
+      "id": "neuro-ms-dmt-comparison",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B focused on high-vs-escalation Lancet Neurol cohorts."
+    },
+    {
+      "id": "neuro-epilepsy-guideline",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B ranks AES guideline first; A buries authoritative guidelines."
+    },
+    {
+      "id": "exact-recovery-tocilizumab",
+      "A": {
+        "recall": 4,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "tie",
+      "note": "Both find exact paper; A clean but sparse, B fuller/junkier."
+    },
+    {
+      "id": "id-hiv-prep-pico",
+      "A": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B has HPTN 083/084 trials; A tangential preference studies."
+    },
+    {
+      "id": "id-sepsis-broad",
+      "A": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B has Rivers EGDT plus guidelines; A weak review tail."
+    },
+    {
+      "id": "id-antibiotic-duration-pneumonia",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A cleaner with umbrella review; B has metadata issues."
+    },
+    {
+      "id": "id-paxlovid-recency",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B much newer 2025-2026 evidence; A older EPIC-era observational."
+    },
+    {
+      "id": "id-fluoroquinolone-cdiff-safety",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B fluoroquinolone-specific; A general antibiotic-CDI meta-analyses."
+    },
+    {
+      "id": "endo-surmount-obesity",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Both lead with SURMOUNT-1; B higher-quality journal set."
+    },
+    {
+      "id": "exact-select-semaglutide",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "winner": "B",
+      "note": "Both exact; B stronger Nat Med/Lancet secondary analyses."
+    },
+    {
+      "id": "endo-thyroid-guideline",
+      "A": {
+        "recall": 3,
+        "ranking": 2,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B surfaces ATA/AACE guidelines; A buries them among surveys."
+    },
+    {
+      "id": "endo-glp1-mechanism",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A focused on appetite mechanisms; B off-target drug trials."
+    },
+    {
+      "id": "endo-t2dm-first-line-pico",
+      "A": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "B",
+      "note": "B has DPP landmark; A off-target and sparse."
+    },
+    {
+      "id": "exact-dapa-ckd",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "Both exact; B contaminated by irrelevant arthritis CBT item."
+    },
+    {
+      "id": "neph-finerenone-pico",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A leads with FIDELIO/FIGARO/FIDELITY; B ranks FIDELIO third."
+    },
+    {
+      "id": "neph-iga-nephropathy-recency",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B newer, more substantive NMAs and specific agents."
+    },
+    {
+      "id": "neph-ckd-anemia-broad",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B balances KDIGO/ESA/HIF-PHI; A HIF-PHI-heavy."
+    },
+    {
+      "id": "family-partner-trials",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A full PARTNER RCT family; B reviews missing PARTNER 3."
+    },
+    {
+      "id": "family-emperor-sglt2-hf",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A has both EMPEROR primaries; B mostly design papers."
+    },
+    {
+      "id": "exact-plato-ticagrelor",
+      "A": {
+        "recall": 1,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B leads with PLATO primary; A lacks the exact paper."
+    },
+    {
+      "id": "sr-doac-vs-warfarin-metaanalysis",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B has flagship BMJ/Circulation NMAs; A niche subgroups."
+    },
+    {
+      "id": "sr-pci-vs-cabg-metaanalysis",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B leads with Lancet patient-level pooled analysis; A lower-tier."
+    },
+    {
+      "id": "guideline-esc-heart-failure",
+      "A": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 1,
+        "clinical_relevance": 3,
+        "explanation": 1,
+        "trust": 2
+      },
+      "winner": "A",
+      "note": "A proper guideline entries; B malformed scraped placeholders."
+    },
+    {
+      "id": "recency-tavr-2025",
+      "A": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B all 2026 high-quality; A mixes older 2014-2019 items."
+    },
+    {
+      "id": "lto-stampede-bariatric-cardiac",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A closer STAMPEDE/Mingrone trial coverage; B meta-analysis-heavy."
+    },
+    {
+      "id": "recency-esketamine-monotherapy-2025",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "Both find 2025 RCT; A includes off-topic WHO/dosing junk."
+    },
+    {
+      "id": "family-evolut-trials",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 1,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A has Evolut Low Risk RCT; B only device registries."
+    },
+    {
+      "id": "family-sglt2-cvot-trials",
+      "A": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 4
+      },
+      "winner": "tie",
+      "note": "Both review-heavy; neither surfaces EMPA-REG primary paper."
+    },
+    {
+      "id": "acronym-aristotle",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Both lead with ARISTOTLE; A's classic substudies more useful."
+    },
+    {
+      "id": "acronym-empa-reg",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "Both lead with primary; A richer substudies, B has no-id items."
+    },
+    {
+      "id": "family-zuma-cart-trials",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 5,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "B has ZUMA-1 and ZUMA-7 primaries; A missing ZUMA-7."
+    },
+    {
+      "id": "ambiguous-ace-acronym",
+      "A": {
+        "recall": 4,
+        "ranking": 3,
+        "metadata": 3,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 4
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "A",
+      "note": "A reflects ambiguity across senses; B commits to ACE-inhibitors."
+    },
+    {
+      "id": "ambiguous-cast-acronym",
+      "A": {
+        "recall": 5,
+        "ranking": 5,
+        "metadata": 5,
+        "clinical_relevance": 5,
+        "explanation": 5,
+        "trust": 5
+      },
+      "B": {
+        "recall": 3,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 3,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "A",
+      "note": "A leads with CAST primary NEJM; B commentaries plus junk."
+    },
+    {
+      "id": "negctrl-keynote-heart-failure",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "B": {
+        "recall": 1,
+        "ranking": 1,
+        "metadata": 4,
+        "clinical_relevance": 1,
+        "explanation": 2,
+        "trust": 2
+      },
+      "winner": "A",
+      "note": "A sensibly returns HF literature; B irrelevant oncology radiotherapy."
+    },
+    {
+      "id": "negctrl-dapa-oncology",
+      "A": {
+        "recall": 2,
+        "ranking": 3,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 3
+      },
+      "B": {
+        "recall": 2,
+        "ranking": 2,
+        "metadata": 4,
+        "clinical_relevance": 2,
+        "explanation": 3,
+        "trust": 3
+      },
+      "winner": "tie",
+      "note": "Neither flags non-existence; both return tangential breast-cancer items."
+    },
+    {
+      "id": "negctrl-recovery-orthopedics",
+      "A": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 3,
+        "clinical_relevance": 4,
+        "explanation": 3,
+        "trust": 4
+      },
+      "B": {
+        "recall": 4,
+        "ranking": 4,
+        "metadata": 4,
+        "clinical_relevance": 4,
+        "explanation": 4,
+        "trust": 4
+      },
+      "winner": "B",
+      "note": "Both avoid COVID RECOVERY; B higher-quality published ERAS reviews."
+    }
+  ],
+  "overall": {
+    "winner": "A",
+    "summary": "Extremely close: Engine A won landmark-recall categories (exact papers, trial acronyms/families, negative controls), often surfacing primary RCTs B missed and avoiding false matches. Engine B won most guideline, broad-clinical, recency, and several PICO queries, surfacing authoritative guidelines, newer evidence, and primaries A lacked, with generally cleaner metadata. A edges out narrowly (about 42 wins to 37, 8 ties) on stronger landmark retrieval and two empty-result losses by B."
+  }
+}
