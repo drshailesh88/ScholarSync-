@@ -24,6 +24,7 @@ import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
 import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
 import { attachRerankScores } from "@/lib/search/rerank";
+import { generateSearchVariants, hasHyde, type HydeResult } from "@/lib/search/hyde";
 import { okStatus, type SourceStatus } from "@/lib/search/source-status";
 import type { UnifiedSearchResult } from "@/types/search";
 
@@ -365,6 +366,20 @@ async function runLiteratureSearchUncached(
     laneLabels.push(label);
   };
 
+  // LLM query expansion (HyDE + multi-query). OFF by default (HYDE_ENABLED!=="1");
+  // dormant unless a DeepSeek key is also present. One cheap LLM call yields a
+  // hypothetical abstract + alternative formulations that become EXTRA dense lanes
+  // (below), fused by RRF — closing the recall gap on under-specified queries.
+  // Bounded by a timeout and fail-open: any failure → no extra lanes → the default
+  // retrieval path is byte-for-byte unchanged. Sequential (must precede fan-out),
+  // but cached per query so repeats add nothing.
+  const hydeEnabled = process.env.HYDE_ENABLED === "1" && hasHyde();
+  const hyde: HydeResult = hydeEnabled
+    ? await withSourceTimeout("HyDE", generateSearchVariants(searchQuery), 5000).catch(
+        () => ({ variants: [] as string[] })
+      )
+    : { variants: [] };
+
   if (sources.includes("pubmed")) {
     pushLane(
       "pubmed",
@@ -427,6 +442,39 @@ async function runLiteratureSearchUncached(
         errorOutcome("medcpt_dense", e instanceof Error ? e.message : "MedCPT dense failed")
       )
     );
+
+    // HyDE / multi-query: each LLM-generated formulation (and the hypothetical
+    // abstract) runs as its OWN dense lane against the owned MedCPT index, then
+    // RRF-fuses with everything else. The dense lane is throttle-proof, so extra
+    // lanes add recall without external rate-limit pressure. Bounded by the same
+    // fan-out deadline and fail-open per lane. Empty when HyDE is off/failed.
+    const hydeDenseQueries = [
+      ...(hyde.hypotheticalAbstract ? [hyde.hypotheticalAbstract] : []),
+      ...hyde.variants,
+    ];
+    hydeDenseQueries.forEach((hq, i) => {
+      pushLane(
+        `medcpt_dense_hyde_${i}`,
+        withSourceTimeout(
+          "MedCPT Dense (HyDE)",
+          searchMedcptDense(hq, {
+            limit: poolPerSource,
+            yearStart: params.yearFrom,
+            yearEnd: params.yearTo,
+          }).then(({ results, total, status }) => ({
+            source: `medcpt_dense_hyde_${i}`,
+            results,
+            total,
+            status,
+          }))
+        ).catch((e) =>
+          errorOutcome(
+            `medcpt_dense_hyde_${i}`,
+            e instanceof Error ? e.message : "MedCPT dense (HyDE) failed"
+          )
+        )
+      );
+    });
   }
 
   // Semantic Scholar is opt-in only (never required). Used purely as an extra
