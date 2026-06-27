@@ -23,6 +23,7 @@ import {
 import { useChat } from "@ai-sdk/react";
 import { TextStreamChatTransport } from "ai";
 import { cn } from "@/lib/utils";
+import { JournalQuartileBadge } from "@/components/search/JournalQuartileBadge";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { AISynthesisPanel } from "@/components/research/AISynthesisPanel";
 import { savePaper } from "@/lib/actions/papers";
@@ -1054,6 +1055,9 @@ export default function ResearchPage() {
                           {EVIDENCE_LABELS[r.evidenceLevel] || "Level V"}
                         </span>
                       )}
+
+                      {/* Journal quartile badge (Scimago Q1–Q4) */}
+                      <JournalQuartileBadge quartile={r.journalQuartile} />
 
                       {/* Open Access badge */}
                       {r.isOpenAccess && (
