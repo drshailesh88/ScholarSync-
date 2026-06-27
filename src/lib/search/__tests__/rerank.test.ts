@@ -41,10 +41,11 @@ afterEach(() => {
 });
 
 describe("rerankResults — backend selection", () => {
-  it("uses the self-hosted MedCPT reranker when MEDCPT_RERANK_URL is set, sorting by score desc", async () => {
+  it("uses the self-hosted MedCPT reranker when MEDCPT_RERANK_URL is set, sorting by score desc and squashing logits to [0,1]", async () => {
     vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
-    // scores in INPUT order: A=0.1, B=0.9, C=0.5 → expect B, C, A
-    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [0.1, 0.9, 0.5] }));
+    // The endpoint returns raw LOGITS in INPUT order: A=-2, B=4, C=1 → sorted desc
+    // by sigmoid(logit) → B, C, A. The adapter squashes each to a [0,1] probability.
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [-2, 4, 1] }));
 
     const out = await rerankResults("q", RESULTS);
 
@@ -53,7 +54,13 @@ describe("rerankResults — backend selection", () => {
       "C relevance mid",
       "A relevance low",
     ]);
-    expect(out[0].rerankScore).toBe(0.9);
+    // top score is sigmoid(4), not the raw logit; the negative logit becomes a
+    // bounded probability in (0, 0.5), never a negative value that could dominate
+    // a weighted sum of [0,1] quality signals.
+    expect(out[0].rerankScore).toBeCloseTo(1 / (1 + Math.exp(-4)), 5);
+    expect(out[2].rerankScore).toBeCloseTo(1 / (1 + Math.exp(2)), 5);
+    expect(out[2].rerankScore).toBeGreaterThan(0);
+    expect(out[2].rerankScore).toBeLessThan(0.5);
 
     const [url, init] = mockResilientFetch.mock.calls[0];
     expect(url).toBe(MEDCPT_URL);
@@ -108,85 +115,19 @@ describe("rerankResults — backend selection", () => {
     expect(out).toBe(RESULTS);
   });
 
-  it("uses LangSearch when only LANGSEARCH_API_KEY is set, mapping documents back to order by score", async () => {
-    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
-    // returned in ranked order, by document text (LangSearch shape)
-    mockResilientFetch.mockResolvedValueOnce(
-      jsonResponse({
-        reranked_documents: [
-          { document: "B relevance high. ", score: 0.9 },
-          { document: "C relevance mid. ", score: 0.5 },
-          { document: "A relevance low. ", score: 0.1 },
-        ],
-      })
-    );
-
-    const out = await rerankResults("q", RESULTS);
-
-    expect(out.map((r) => r.title)).toEqual([
-      "B relevance high",
-      "C relevance mid",
-      "A relevance low",
-    ]);
-    expect(out[0].rerankScore).toBe(0.9);
-    const [url, init] = mockResilientFetch.mock.calls[0];
-    expect(url).toBe("https://api.langsearch.com/v1/rerank");
-    expect(JSON.parse(init.body as string)).toMatchObject({
-      model: "langsearch-reranker-v1",
-      query: "q",
-      return_documents: true,
-      documents: ["A relevance low. ", "B relevance high. ", "C relevance mid. "],
-    });
-  });
-
-  it("falls back to LangSearch when the MedCPT call throws", async () => {
+  it("falls back from MedCPT to Cohere when the MedCPT call throws and Cohere is configured", async () => {
     vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
-    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
+    vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
     mockResilientFetch.mockRejectedValueOnce(new Error("[MedCPT-Rerank] cold start timeout"));
-    mockResilientFetch.mockResolvedValueOnce(
-      jsonResponse({
-        reranked_documents: [
-          { document: "B relevance high. ", score: 0.9 },
-          { document: "A relevance low. ", score: 0.2 },
-          { document: "C relevance mid. ", score: 0.1 },
-        ],
-      })
-    );
-
-    const out = await rerankResults("q", RESULTS);
-
-    expect(mockResilientFetch).toHaveBeenCalledTimes(2);
-    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
-    expect(mockResilientFetch.mock.calls[1][0]).toBe("https://api.langsearch.com/v1/rerank");
-    expect(out[0].title).toBe("B relevance high");
-  });
-
-  it("prefers MedCPT, then LangSearch, then Cohere", async () => {
-    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
-    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
-    vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
-    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [0.1, 0.9, 0.5] }));
-
-    await rerankResults("q", RESULTS);
-
-    expect(mockResilientFetch).toHaveBeenCalledTimes(1);
-    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
-  });
-
-  it("falls back through MedCPT → LangSearch → Cohere when the first two fail", async () => {
-    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
-    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
-    vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
-    mockResilientFetch.mockRejectedValueOnce(new Error("medcpt cold start"));
-    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ reranked_documents: [] })); // langsearch: no usable scores
     mockResilientFetch.mockResolvedValueOnce(
       jsonResponse({ results: [{ index: 1, relevance_score: 0.9 }, { index: 0, relevance_score: 0.1 }] })
     );
 
     const out = await rerankResults("q", RESULTS);
 
-    expect(mockResilientFetch).toHaveBeenCalledTimes(3);
-    expect(mockResilientFetch.mock.calls[2][0]).toBe("https://api.cohere.com/v2/rerank");
+    expect(mockResilientFetch).toHaveBeenCalledTimes(2);
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
+    expect(mockResilientFetch.mock.calls[1][0]).toBe("https://api.cohere.com/v2/rerank");
     expect(out.map((r) => r.title)).toEqual(["B relevance high", "A relevance low"]);
   });
 });
@@ -194,7 +135,7 @@ describe("rerankResults — backend selection", () => {
 describe("hasReranker / attachRerankScores", () => {
   it("hasReranker reflects any configured backend", () => {
     expect(hasReranker()).toBe(false);
-    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
+    vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
     expect(hasReranker()).toBe(true);
   });
 
@@ -211,12 +152,12 @@ describe("hasReranker / attachRerankScores", () => {
     const input = [paper("A relevance low"), paper("B relevance high"), paper("C relevance mid")];
     const out = await attachRerankScores("q", input, 50);
 
-    // same order (no reordering), scores attached by identity
+    // same order (no reordering), scores attached by identity, squashed to [0,1]
     expect(out.map((r) => r.title)).toEqual([
       "A relevance low",
       "B relevance high",
       "C relevance mid",
     ]);
-    expect(out[1].rerankScore).toBe(0.9);
+    expect(out[1].rerankScore).toBeCloseTo(1 / (1 + Math.exp(-0.9)), 5);
   });
 });

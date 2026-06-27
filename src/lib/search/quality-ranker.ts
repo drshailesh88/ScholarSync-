@@ -20,26 +20,23 @@ export interface QualityRankingConfig {
 }
 
 /**
- * When a cross-encoder rerank score is present, relevance is a STRONG signal, so
- * it dominates. Velocity balances landmark-vs-recency. Weights sum to 1.
+ * Metadata-dominant weights — the EXACT validated config (the ranking the LLM
+ * council scored 4/6). The clinical-quality signals (evidence hierarchy, citations,
+ * journal, RRF prior) carry the ranking; relevance is ONE capped signal, not the
+ * ruler. Used whether or not a cross-encoder ran — the only difference is the
+ * relevance SOURCE (a [0,1]-normalized cross-encoder score when present, else
+ * keyword overlap). Weights sum to 1.
+ *
+ * This replaced a "rerank-dominant" config (relevanceWeight 0.40). The cross-encoder
+ * score now arrives already squashed to [0,1] (the reranker adapter applies the
+ * sigmoid read-out — see `rerank.ts`), so it is commensurate with the other signals;
+ * capping its weight at 0.30 keeps it from overruling the clinical-quality priors. The
+ * earlier pathology — a RAW logit (range ≈ −16…+10) summed against [0,1] signals, where
+ * a single negative logit on a trial's primary report drove the composite to ≈ −2.8 and
+ * buried the correct answer beneath acronym-mentioning secondaries — is fixed at the
+ * source (measured: trial-acronym recall 0.72 → 0.85+ on the 87q harness).
  */
-const RERANK_DOMINANT_CONFIG: QualityRankingConfig = {
-  evidenceWeight: 0.20,
-  citationWeight: 0.10,
-  velocityWeight: 0.08,
-  journalWeight: 0.10,
-  rrfWeight: 0.12,
-  relevanceWeight: 0.40,
-};
-
-/**
- * Fallback weights when no reranker ran (relevance == weak keyword overlap), so
- * relevance gets LESS weight and the tuned PubMed/RRF prior more. These are the
- * EXACT validated pre-rerank weights (the ranking the LLM council scored 4/6),
- * so the no-rerank path is provably the validated baseline — velocity is left at
- * 0 here to keep it identical. Weights sum to 1.
- */
-const KEYWORD_FALLBACK_CONFIG: QualityRankingConfig = {
+const BALANCED_CONFIG: QualityRankingConfig = {
   evidenceWeight: 0.25,
   citationWeight: 0.10,
   velocityWeight: 0.0,
@@ -47,12 +44,6 @@ const KEYWORD_FALLBACK_CONFIG: QualityRankingConfig = {
   rrfWeight: 0.25,
   relevanceWeight: 0.30,
 };
-
-/** Pick weights based on whether a cross-encoder rerank score is available. */
-function pickConfig(results: UnifiedSearchResult[]): QualityRankingConfig {
-  const reranked = results.some((r) => typeof r.rerankScore === "number");
-  return reranked ? RERANK_DOMINANT_CONFIG : KEYWORD_FALLBACK_CONFIG;
-}
 
 // ── Signal normalizers ──────────────────────────────────────────────
 
@@ -238,8 +229,10 @@ function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult 
     ),
     journal: normalizeJournalQuartile(r.journalQuartile),
     rrf: normalizeRrf(r.rrfScore, ctx.maxRrf),
-    // Prefer the cross-encoder rerank score as the relevance signal; fall back to
-    // keyword overlap only when no reranker ran (no COHERE_API_KEY).
+    // Prefer the cross-encoder rerank score as the relevance signal — it arrives
+    // already squashed to [0,1] by the reranker adapter, so it is one capped signal
+    // weighted alongside the quality priors, never a raw logit that dominates. Fall
+    // back to keyword overlap when no reranker ran.
     relevance:
       typeof r.rerankScore === "number"
         ? r.rerankScore
@@ -275,7 +268,7 @@ export function rankWithTrace(
   config?: QualityRankingConfig
 ): ScoredResult[] {
   if (results.length === 0) return [];
-  const ctx = buildScoringContext(results, query, config ?? pickConfig(results));
+  const ctx = buildScoringContext(results, query, config ?? BALANCED_CONFIG);
   const scored = results.map((r) => scoreResult(r, ctx));
   scored.sort((a, b) => b.composite - a.composite);
   return scored;
