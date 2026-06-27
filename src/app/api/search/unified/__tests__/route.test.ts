@@ -10,6 +10,7 @@ const mockSearchSemanticScholar = vi.hoisted(() => vi.fn());
 const mockSearchOpenAlex = vi.hoisted(() => vi.fn());
 const mockSearchClinicalTrials = vi.hoisted(() => vi.fn());
 const mockSearchSearXNG = vi.hoisted(() => vi.fn());
+const mockFederateNonAcademic = vi.hoisted(() => vi.fn());
 const mockReciprocalRankFusion = vi.hoisted(() => vi.fn());
 const mockRerankResults = vi.hoisted(() => vi.fn());
 const mockAugmentQuery = vi.hoisted(() => vi.fn());
@@ -65,6 +66,10 @@ vi.mock("@/lib/search/sources/clinical-trials", () => ({
 
 vi.mock("@/lib/search/sources/searxng", () => ({
   searchSearXNG: mockSearchSearXNG,
+}));
+
+vi.mock("@/lib/search/web/federate", () => ({
+  federateNonAcademic: mockFederateNonAcademic,
 }));
 
 vi.mock("@/lib/search/rank-fusion", () => ({
@@ -150,6 +155,27 @@ describe("GET /api/search/unified", () => {
         },
       ],
       total: 1,
+      degraded: false,
+    });
+
+    mockFederateNonAcademic.mockResolvedValue({
+      results: [
+        {
+          title: "Peer review reform megathread",
+          authors: [],
+          journal: "r/AskAcademia",
+          year: 2025,
+          abstract: "Community discussion",
+          citationCount: 0,
+          publicationTypes: ["discussions"],
+          isOpenAccess: false,
+          sources: ["discussions"],
+          url: "https://www.reddit.com/r/AskAcademia/comments/abc/thread/",
+          domain: "reddit.com",
+        },
+      ],
+      perSource: [],
+      perSourceRows: [],
       degraded: false,
     });
 
@@ -268,16 +294,38 @@ describe("GET /api/search/unified", () => {
     expect(body.sourceCounts).toEqual({ web: 57 });
   });
 
-  it("routes the discussions tab through SearXNG social-media search", async () => {
+  it("routes the discussions tab through the multi-source federation, not SearXNG", async () => {
     const res = await GET(
       makeRequest({ q: "climate change", tab: "discussions" })
     );
+    const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(mockSearchSearXNG).toHaveBeenCalledWith("climate change", {
-      category: "social media",
-      limit: 20,
+    expect(mockFederateNonAcademic).toHaveBeenCalledWith(
+      "climate change",
+      "discussions",
+      expect.objectContaining({ limit: 100 })
+    );
+    // Discussions no longer routes through SearXNG social-media (federation owns it).
+    expect(mockSearchSearXNG).not.toHaveBeenCalled();
+    expect(body.results[0].domain).toBe("reddit.com");
+    expect(body.sourceCounts).toEqual({ discussions: 1 });
+  });
+
+  it("surfaces federation degradation as searxngUnavailable on the discussions tab", async () => {
+    mockFederateNonAcademic.mockResolvedValueOnce({
+      results: [],
+      perSource: [],
+      perSourceRows: [],
+      degraded: true,
     });
+
+    const res = await GET(makeRequest({ q: "climate change", tab: "discussions" }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.results).toEqual([]);
+    expect(body.searxngUnavailable).toBe(true);
   });
 
   it("returns empty results with a degradation flag when SearXNG is unavailable", async () => {
