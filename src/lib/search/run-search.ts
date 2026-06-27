@@ -32,6 +32,7 @@ import {
 } from "@/lib/search/hyde";
 import { okStatus, type SourceStatus } from "@/lib/search/source-status";
 import { isTransientEmpty } from "@/lib/search/transient-empty";
+import { assessConfidence, type Confidence } from "@/lib/search/confidence";
 import type { UnifiedSearchResult } from "@/types/search";
 
 export const SEARCH_SOURCES = ["pubmed", "semantic_scholar", "openalex"] as const;
@@ -108,6 +109,12 @@ export interface LiteratureSearchResult {
    * distinguish "source down" from "genuinely nothing found".
    */
   sourceStatuses: Record<string, SourceStatus>;
+  /**
+   * Whether any result is a strong match. "low" when even the top result is only
+   * weakly relevant (negative-control / ambiguous-acronym traps), so the UI can
+   * say "no strong match" instead of over-committing. Additive — never reorders.
+   */
+  confidence: Confidence;
   /** The retrieval plan used (sort strategy, expansions, trial detection). */
   plan: {
     pubmedQuery: string;
@@ -721,6 +728,7 @@ async function runLiteratureSearchUncached(
     hasMore: filtered.length > perPage,
     sourceCounts,
     sourceStatuses,
+    confidence: assessConfidence(pageResults),
     plan: {
       pubmedQuery: pmPrimary,
       recency: plan.recency,
