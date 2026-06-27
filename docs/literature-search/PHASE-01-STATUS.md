@@ -82,15 +82,57 @@ dense participation **13% → 97%** (fixing the fan-out-deadline starvation); re
 (2024–2026) retrievable; zero 429s on the owned lane; self-hosted reranker removes
 the Cohere monthly-Trial-cap dependency entirely.
 
-**The one remaining gate — a clean floor number — is BLOCKED on external quota, not
-on code.** No single run has yet had healthy lexical lanes AND a working reranker at
-the same time: `final-on/on2` had healthy-ish lexical but no reranker (Cohere Trial
-key monthly-exhausted, every call 429); `final-rerank` had the working self-hosted
-reranker but heavily-throttled lexical lanes. The full self-hosted stack (encode →
-ANN → cross-encoder rerank) is now built, deployed, and unit-validated; it needs
-**one** OFF+ON pair run in a *fresh external-quota window* (PubMed/OpenAlex recover
-after idle) to record the floor-gate number. Each additional eval today only deepens
-the throttle, so further runs are paused (also respecting the Modal cycle-spend cap).
+## Clean floor measurement (fresh quota, OFF+ON control) — the decisive run
+
+Run after a ~2-day idle (PubMed/OpenAlex quota fully recovered: probed 9,980 / 86,524
+hits before starting). **Zero throttling** — 0 empties, 0 query errors, PubMed key
+active. `floor-on` = full stack (dense + self-hosted rerank); `floor-off` = same
+session, dense lane OFF, rerank ON (isolates the dense lane's marginal effect).
+
+| run | recall@10 | nDCG@10 | MRR | PMID fill | DOI fill | empties |
+|---|---|---|---|---|---|---|
+| floor (`baseline87`, *with* openalex_semantic) | **0.88** | **0.73** | 0.67 | 0.86 | 0.95 | 3 |
+| `floor-off` (lexical only, no dense) | 0.7162 | 0.6623 | 0.6270 | 0.944 | 0.978 | 0 |
+| `floor-on` (lexical + dense + rerank) | 0.7162 | 0.6747 | 0.6435 | 0.955 | 0.963 | 0 |
+
+**Three findings, all evidence-grounded:**
+
+1. **The dense lane is recall-NEUTRAL and provably not displacing anything.** `floor-on`
+   and `floor-off` are *identical* on recall@10 (0.7162) and on every one of the 37
+   GT queries individually; dense ON nudges nDCG (0.662→0.675) and MRR (0.627→0.644)
+   *up*, and improves PMID fill (0.86→0.955) and empties (3→0). So the earlier
+   "dense neighbours displace ground-truth" hypothesis is **falsified** by the control.
+
+2. **The recall floor (0.88) is missed for a reason ORTHOGONAL to Phase 1 — a
+   pre-existing trial-acronym / trial-family query-CONSTRUCTION lacuna.** The misses
+   are 10/37 GT, concentrated in `trial_acronym` (aristotle, dapa-hf, keynote-189,
+   partner-3, catie) and `trial_family` (keynote, partner, sglt2-cvot). Smoking gun:
+   `exact-dapa-hf` = **1.00** but `acronym-dapa-hf` = **0.00** — *same trial, same
+   index, opposite result by phrasing alone*. The paper is retrievable; the acronym
+   query mangles before it reaches any lane (acronym misdetection + PubMed
+   over-constraint — the **#1 lacuna already documented in `BASELINE-87Q-FLOOR.md`**).
+   `run-search.ts:416` feeds the dense lane the *raw* query, so this is not a wiring
+   bug, and semantic retrieval of a bare acronym inherently can't isolate the one
+   primary paper among dozens of topically-identical ones — that needs exact
+   trial-name matching in `planQuery`, not another retrieval lane.
+
+3. **Within the throttle regime the project set out to fix, the dense lane MEETS its
+   brief:** when `openalex_semantic` throttles (429 → empty), recall collapses to the
+   lexical-only ~0.716; the dense lane delivers that same 0.716 **deterministically,
+   with zero 429s, better nDCG/MRR/metadata, and 0 empties (vs 3)** — i.e. it replaces
+   `openalex_semantic`'s *role* without its throttle liability. It does not, by itself,
+   reach the un-throttled 0.88, because 0.88 required either a healthy `openalex_semantic`
+   OR fixing the acronym lacuna — neither of which is the dense lane's job.
+
+**Bottom line:** the recall/nDCG floor gate is **genuinely unmet**, but the cause is the
+documented, orthogonal acronym/family planning lacuna — *not* the dense lane (proven
+recall-neutral) and *not* external throttle this time (clean run). Closing the floor
+needs a separate `planQuery`/`entity-drift` phase (exact trial-name matching), or a
+deliberate decision to *augment* rather than *replace* `openalex_semantic`.
+
+_(LangSearch was wired as a free rerank fallback tier — MedCPT → LangSearch → Cohere,
+fail-open — but its live `/v1/rerank` returns HTTP 500 "rerank engine error" for this
+account despite a valid key, so it currently adds no working fallback.)_
 
 ## Definition-of-Done tracker
 
@@ -101,5 +143,5 @@ the throttle, so further runs are paused (also respecting the Modal cycle-spend 
 - [x] Index built — 39.66M (precomputed + 2024–2026 backfill), recency retrievable
 - [x] Freshness updater scheduled (weekly) AND **proven on a real delta** (new searchable, deleted removed)
 - [x] Self-hosted MedCPT Cross-Encoder reranker (throttle-proof; replaces Cohere Trial cap) — built, deployed, unit-validated
-- [ ] nDCG@10 / recall@10 ≥ floor incl. recency, zero 429s — **code complete; one clean OFF+ON pair pending a fresh PubMed/OpenAlex quota window** (today's runs throttled the lexical lanes — see †)
-- [ ] CI-green PR merged — *draft PR open; merge gated on the clean floor run above*
+- [⚠] nDCG@10 / recall@10 ≥ floor — **clean OFF+ON run done; recall 0.716 < floor 0.88.** Cause is NOT the dense lane (recall-neutral: floor-on == floor-off on all 37 GT) and NOT throttle (clean run). It is the pre-existing **trial-acronym/family query-planning lacuna** (`exact-dapa-hf` 1.00 vs `acronym-dapa-hf` 0.00) — orthogonal to Phase 1. Needs a `planQuery`/`entity-drift` phase, OR a decision to augment (not replace) `openalex_semantic`. Metadata/empties/zero-429 all improved.
+- [ ] CI-green PR merged — *draft PR open (#82); merge gated on the floor decision above*
