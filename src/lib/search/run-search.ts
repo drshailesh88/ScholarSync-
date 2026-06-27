@@ -33,6 +33,7 @@ import {
 import { okStatus, type SourceStatus } from "@/lib/search/source-status";
 import { isTransientEmpty } from "@/lib/search/transient-empty";
 import { assessConfidence, type Confidence } from "@/lib/search/confidence";
+import { backfillPmidsByDoi } from "@/lib/search/pmid-backfill";
 import type { UnifiedSearchResult } from "@/types/search";
 
 export const SEARCH_SOURCES = ["pubmed", "semantic_scholar", "openalex"] as const;
@@ -734,6 +735,15 @@ async function runLiteratureSearchUncached(
           4000
         ).catch(() => fused),
   ]);
+
+  // PMID backfill: OpenAlex enrichment above fills most PMIDs from its id graph,
+  // but DOI-only results not in that graph still lack one (the PMID metadata gate).
+  // Resolve the residual via NCBI esearch[AID] — bounded to a handful of the top
+  // candidates, fail-open, additive metadata only. Runs AFTER OpenAlex enrich so it
+  // only pays for the true residual.
+  await withSourceTimeout("PMID backfill", backfillPmidsByDoi(enrichRerankPool), 3000).catch(
+    () => 0
+  );
 
   // Eval-only: snapshot the enriched candidate pool BEFORE final ranking, so the
   // offline harness can re-rank this exact pool deterministically.
