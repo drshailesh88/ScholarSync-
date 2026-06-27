@@ -1,4 +1,7 @@
 # Generated eval output (reproducible via `npm run eval:search`).
 runs/
+# Local candidate-pool cache (content-addressed; re-captured on demand). Lets
+# `eval:search:cached` replay the 87q deterministically without re-spending API/GPU.
+.cache/
 # Raw judge transcripts (the parsed *.json verdicts ARE committed).
 council/raw-*.txt

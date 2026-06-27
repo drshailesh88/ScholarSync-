@@ -21,6 +21,27 @@ is replayable:
 
 Verified: re-running `rerank-offline` twice produces byte-identical rankings.
 
+## One-command cached eval (`eval:search:cached`)
+The capture → rerank dance above is now also available as a single transparent
+command backed by a **content-addressed local cache**
+(`eval/literature-search/.cache/candidates/`, gitignored):
+
+```bash
+op-run -- npm run eval:search:cached -- --label after     # first run: captures pools live ONCE, persists, scores
+npm run eval:search:cached -- --label after               # every repeat: $0, no network, deterministic
+npm run eval:search:cached -- --label after --only exact-dapa-hf,acronym-partner-3
+op-run -- npm run eval:search:cached -- --label fresh --refresh   # force a live re-capture
+```
+
+Each query's pool is keyed by `sha1(normalized-query + sources + year-window)` so
+the cache is shared across labels and runs — capture once, replay forever (TTL 30d,
+`--refresh` to override). The first run spends the API/GPU and fills the cache; every
+subsequent run reads JSON, re-applies the CURRENT `rankAndAnnotate`, and re-scores —
+identical pools, so any metric delta is 100% attributable to the ranking change. This
+is the default measurement loop for ranking work (it "pays for itself" after run one).
+The cache logic (`candidate-cache.ts`) is unit-tested (key stability, TTL, hit/miss/
+stale/refresh) so the seam itself is trustworthy.
+
 ## Paired A/B (isolates a ranking change from all noise)
 ```bash
 git stash                                                   # park the ranking change
