@@ -19,7 +19,9 @@ import { generateText } from "ai";
 import { z } from "zod";
 
 const DEEPSEEK_BASE_URL = "https://api.deepseek.com";
-const DEEPSEEK_MODEL = "deepseek-chat";
+// DeepSeek V4 Flash: fast + cheap, the right tier for a single per-query expansion
+// call. Overridable via DEEPSEEK_MODEL (e.g. "deepseek-v4-pro") without a code change.
+const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || "deepseek-v4-flash";
 const MAX_VARIANTS = 3;
 
 export interface HydeResult {
