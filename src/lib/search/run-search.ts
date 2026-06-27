@@ -12,9 +12,9 @@ import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import {
   searchOpenAlex,
-  searchOpenAlexSemantic,
   enrichCitationsByIds,
 } from "@/lib/search/sources/openalex";
+import { searchMedcptDense } from "@/lib/search/sources/medcpt-dense";
 import { fetchCrossrefByDoi } from "@/lib/search/sources/crossref";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchTavily } from "@/lib/search/sources/tavily";
@@ -140,6 +140,12 @@ function withSourceTimeout<T>(
  * (partial results), marking the rest as dropped. Caps the p95 tail.
  */
 export const FANOUT_DEADLINE_MS = 5000;
+
+// Cap for the post-fusion enrich+rerank pool. Only the top candidates by RRF
+// score can reach the returned page, so bounding both steps here keeps OpenAlex
+// enrichment to a single batch regardless of how many lanes contributed —
+// protecting the shared OpenAlex token bucket from metadata-light lanes.
+export const POST_FUSION_POOL = 50;
 
 const DEADLINE = Symbol("fanout-deadline");
 
@@ -392,26 +398,33 @@ async function runLiteratureSearchUncached(
         }).then(({ results, total, status }) => ({ source: "openalex", results, total, status }))
       ).catch((e) => errorOutcome("openalex", e instanceof Error ? e.message : "OpenAlex failed"))
     );
+  }
 
-    // Dense semantic lane (OpenAlex search.semantic) — the corpus-free fix for the
-    // lexical recall gap. Retrieves by meaning, surfacing landmarks with no shared
-    // surface terms. Fused into the pool before RRF; fails open like any source.
+  // Dense first-stage retrieval over the self-hosted MedCPT PubMed index
+  // (Turbopuffer int8 + a Modal-served MedCPT Query-Encoder) — the throttle-proof
+  // replacement for the OpenAlex `search.semantic` lane. Retrieves by MEANING,
+  // surfacing landmarks that share no surface terms with the query, and cannot be
+  // rate-limited away because we own it. Fused into the candidate pool before RRF,
+  // exactly like the lane it replaces. Runs alongside the core biomedical lexical
+  // lanes (PubMed / OpenAlex) and fails open: dormant (missing_config) until the
+  // index + encoder are configured, so it never degrades live search.
+  if (sources.includes("pubmed") || sources.includes("openalex")) {
     pushLane(
-      "openalex_semantic",
+      "medcpt_dense",
       withSourceTimeout(
-        "OpenAlex Semantic",
-        searchOpenAlexSemantic(searchQuery, {
+        "MedCPT Dense",
+        searchMedcptDense(searchQuery, {
           limit: poolPerSource,
           yearStart: params.yearFrom,
           yearEnd: params.yearTo,
         }).then(({ results, total, status }) => ({
-          source: "openalex_semantic",
+          source: "medcpt_dense",
           results,
           total,
           status,
         }))
       ).catch((e) =>
-        errorOutcome("openalex_semantic", e instanceof Error ? e.message : "OpenAlex semantic failed")
+        errorOutcome("medcpt_dense", e instanceof Error ? e.message : "MedCPT dense failed")
       )
     );
   }
@@ -521,11 +534,23 @@ async function runLiteratureSearchUncached(
   // accumulate. Both fail-open.
   //  - enrich: OpenAlex citation/PMID/DOI backfill — the S2-independent landmark signal.
   //  - rerank: Cohere cross-encoder relevance score (dominant relevance signal).
+  //
+  // Both are bounded to the top `POST_FUSION_POOL` candidates by RRF score, in
+  // place (slice shares object refs, so the originals in `fused` still get the
+  // mutated fields). This caps the OpenAlex enrichment at a single batch and
+  // stops a metadata-light lane (e.g. the MedCPT dense lane, whose precomputed
+  // rows carry no DOI/citation) from injecting EXTRA enrichment batches that
+  // drain OpenAlex's shared token bucket and starve the lexical search lanes of
+  // the next query's fan-out budget. Candidates past the pool are not reranked
+  // anyway, so they can never reach the returned page — enriching them is wasted.
+  const enrichRerankPool = fused.slice(0, POST_FUSION_POOL);
   await Promise.all([
-    withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(fused), 3500).catch(() => 0),
-    withSourceTimeout("Cohere rerank", attachRerankScores(searchQuery, fused, 50), 4000).catch(
-      () => fused
-    ),
+    withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(enrichRerankPool), 3500).catch(() => 0),
+    withSourceTimeout(
+      "Cohere rerank",
+      attachRerankScores(searchQuery, enrichRerankPool, POST_FUSION_POOL),
+      4000
+    ).catch(() => fused),
   ]);
 
   // Eval-only: snapshot the enriched candidate pool BEFORE final ranking, so the
