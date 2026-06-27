@@ -29,16 +29,19 @@ ENRICH enrichCitationsByIds (OpenAlex     sources/openalex.ts
         by PMID/DOI: citations, PMID/DOI
         backfill, OA, concepts) — fail-open
         │
+RERANK — attach bounded relevance          rerank.ts → attachRerankScores
+  MedCPT Cross-Encoder (self-hosted) →      logit squashed to [0,1] at the adapter;
+  Cohere fallback, on top ~50              one CAPPED relevance signal (no raw logit
+  (skipped for trial-acronym / recency)    that dominates). Fail-open: every backend
+        │                                  errors → keyword-overlap relevance stands
 RANK + ANNOTATE                            pipeline.ts (pure, unit-tested)
-  enrichStudyTypes → enrichJournalQuality
-  → rankWithTrace (quality composite)      quality-ranker.ts
+  enrichStudyTypes → enrichJournalQuality   (journal-quality now resolves ISO
+  → rankWithTrace (quality composite)        abbreviations, e.g. N Engl J Med → Q1)
+     relevance signal = bounded rerank      quality-ranker.ts (metadata-dominant:
+     score (w=0.30), metadata dominates     evidence/RRF 0.25, relevance 0.30)
   → flags (missing meta + retraction)      pipeline.ts buildFlags
   → whyRelevant (deterministic template)
   → demote retracted (never drop)
-        │
-RERANK (optional, fail-open)               rerank.ts crossEncoderRerank
-  Cohere rerank-v3.5 on top ~40, blended
-  0.5 with quality composite               (skipped for recency intent / no key)
         │
 FILTER studyTypes / fullTextOnly → map → LiteraturePaper (+ url, id, provenance)
         │
@@ -60,9 +63,13 @@ breakdown + strategy), `flags[]` (missing metadata / retraction), and
 3. **Ranking is a pure function** (`pipeline.ts` / `quality-ranker.ts`). It takes
    fused results + query and returns ranked+annotated results — no I/O — so every
    ranking change is unit-testable deterministically (`__tests__/pipeline.test.ts`).
-4. **The reranker is a pluggable, fail-open stage** (`rerank.ts`). Swap Cohere for
-   MedCPT/BGE behind the same `crossEncoderRerank` contract; if it errors or has
-   no key, the quality composite stands.
+4. **The reranker is a pluggable, fail-open CHAIN** (`rerank.ts`). Self-hosted
+   MedCPT Cross-Encoder (primary) → Cohere (fallback). Each backend's score is
+   normalized to a `[0,1]` relevance probability (MedCPT's logit is sigmoid-squashed
+   at the adapter; Cohere is already `[0,1]`), so it is ONE *capped* signal in the
+   metadata-dominant composite — never a raw logit that buries landmark answers.
+   If every backend errors or is unconfigured, the keyword-overlap relevance + the
+   quality composite stand — the "no model, never fails" floor.
 5. **The query planner is the single place for intent** — add new intents
    (e.g. "diagnostic accuracy", "dose") and routing there.
 
