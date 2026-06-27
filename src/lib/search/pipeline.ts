@@ -176,6 +176,9 @@ export interface RankAndAnnotateOptions {
   /** When true (a trial-acronym/NCT lookup), float the primary trial report above
    *  its meta-analyses, sub-studies, and follow-ups. */
   isTrialLookup?: boolean;
+  /** When true (a guideline/consensus lookup), float the authoritative guideline
+   *  document — newest version first — above primary literature. */
+  isGuidelineLookup?: boolean;
 }
 
 /**
@@ -265,20 +268,51 @@ export function rankAndAnnotate(
     ? demoteSecondaryTrialResults(boosted)
     : boosted;
 
+  // Guideline lookup: float the authoritative guideline document (newest version
+  // first) above primary literature. Only raises guidelines; non-guideline order
+  // preserved. Done BEFORE demoteRetracted so a retracted guideline still sinks.
+  const guidelinePromoted = opts.isGuidelineLookup
+    ? promoteGuidelines(trialOrdered)
+    : trialOrdered;
+
   // Demote (never drop) retracted papers so they cannot occupy a top slot while
   // still being surfaced with their flag. Stable: preserves order within groups.
-  const cleaned = demoteRetracted(trialOrdered);
+  const cleaned = demoteRetracted(guidelinePromoted);
 
   // Diversify the page (MMR) for BROAD topic queries only. Skipped for exact-paper
   // lookups (the user wants that one paper), trial-acronym lookups (primary-report
-  // ordering is the whole point), and recency sorts (newest-first is the intent).
+  // ordering is the whole point), guideline lookups (we want the authoritative doc
+  // + its versions clustered at top), and recency sorts (newest-first is the intent).
   // MMR reorders only WITHIN the top page, so the top-K set — and recall@k — is
   // unchanged; it only prevents a page of five near-identical findings.
   const isExactLookup = exactTitleMatchIndex(cleaned, opts.query) >= 0;
-  const shouldDiversify = !opts.isTrialLookup && !opts.recency && !isExactLookup;
+  const shouldDiversify =
+    !opts.isTrialLookup && !opts.recency && !isExactLookup && !opts.isGuidelineLookup;
   return shouldDiversify
     ? diversifyTopK(cleaned, { k: MMR_PAGE, lambda: MMR_LAMBDA, anchor: 1 })
     : cleaned;
+}
+
+/**
+ * Float clinical-practice-guideline documents to the top, newest version first.
+ * Only RAISES guidelines (they move ahead of non-guideline results); the relative
+ * order of every non-guideline result is preserved. A no-op when the pool has no
+ * guideline-typed results. Gated by `isGuidelineLookup` in rankAndAnnotate so
+ * ordinary clinical queries are untouched.
+ */
+export function promoteGuidelines(
+  results: UnifiedSearchResult[]
+): UnifiedSearchResult[] {
+  const guidelines: UnifiedSearchResult[] = [];
+  const rest: UnifiedSearchResult[] = [];
+  for (const r of results) {
+    if (r.studyType === "guideline") guidelines.push(r);
+    else rest.push(r);
+  }
+  if (guidelines.length === 0) return results;
+  // Prefer the latest version among guidelines; stable for equal years.
+  const latestFirst = [...guidelines].sort((a, b) => (b.year || 0) - (a.year || 0));
+  return [...latestFirst, ...rest];
 }
 
 function demoteRetracted(results: UnifiedSearchResult[]): UnifiedSearchResult[] {

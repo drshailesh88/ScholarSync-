@@ -637,6 +637,7 @@ async function runLiteratureSearchUncached(
     query: searchQuery,
     recency: plan.recency,
     isTrialLookup: plan.isTrialLookup,
+    isGuidelineLookup: plan.isGuidelineLookup,
   });
 
   let filtered = ranked;
