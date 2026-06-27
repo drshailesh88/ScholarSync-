@@ -267,3 +267,32 @@ export async function fetchPubMedByPmids(
     return [];
   }
 }
+
+/**
+ * Resolve a single DOI to its PubMed PMID via esearch on the Article Identifier
+ * field ([AID]). OpenAlex's id graph fills most PMIDs; this is the fallback for
+ * DOI-only results not in that graph (the PMID metadata gate). Fail-open: returns
+ * null on any error, throttle, or miss.
+ */
+export async function lookupPmidByDoi(doi: string): Promise<string | null> {
+  if (!breaker.canRequest()) return null;
+  const clean = doi.trim().replace(/^https?:\/\/(dx\.)?doi\.org\//i, "");
+  if (!clean) return null;
+  const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(
+    `${clean}[AID]`
+  )}&retmax=1&retmode=json&tool=scholarsync&email=contact@scholarsync.com`;
+  try {
+    await pubmedLimiter.acquire();
+    const res = await resilientFetch(
+      appendApiKey(url),
+      {},
+      { service: "PubMed", timeout: 8000, baseDelay: 400, maxRetries: 1 }
+    );
+    const data: PubMedESearchResult = await res.json();
+    breaker.onSuccess();
+    return data.esearchresult?.idlist?.[0] ?? null;
+  } catch {
+    breaker.onFailure();
+    return null;
+  }
+}
