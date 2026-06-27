@@ -46,6 +46,12 @@ export interface QueryPlan {
   wantsTrials: boolean;
   /** True when a web fallback (guidelines / grey literature / recency) is useful. */
   wantsWeb: boolean;
+  /**
+   * True when the query is asking for a clinical-practice guideline / consensus
+   * statement (society or agency). Ranking floats the authoritative guideline
+   * document — newest version first — to the top for these.
+   */
+  isGuidelineLookup: boolean;
   /** Drug-class → drug-name synonym query, or null. */
   supplementaryQuery: string | null;
 }
@@ -220,6 +226,7 @@ export function planQuery(raw: string): QueryPlan {
     // Web fallback helps most for guideline lookups and recency-biased queries,
     // where the authoritative artifact often lives on a society/agency site.
     wantsWeb: GUIDELINE_RE.test(trimmed) || recency,
+    isGuidelineLookup: GUIDELINE_RE.test(trimmed),
     supplementaryQuery: expansion.supplementary,
   };
 }
