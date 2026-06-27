@@ -24,7 +24,12 @@ import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
 import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
 import { attachRerankScores } from "@/lib/search/rerank";
-import { generateSearchVariants, hasHyde, type HydeResult } from "@/lib/search/hyde";
+import {
+  generateSearchVariants,
+  hasHyde,
+  isPaperLookupQuery,
+  type HydeResult,
+} from "@/lib/search/hyde";
 import { okStatus, type SourceStatus } from "@/lib/search/source-status";
 import type { UnifiedSearchResult } from "@/types/search";
 
@@ -366,14 +371,22 @@ async function runLiteratureSearchUncached(
     laneLabels.push(label);
   };
 
-  // LLM query expansion (HyDE + multi-query). OFF by default (HYDE_ENABLED!=="1");
-  // dormant unless a DeepSeek key is also present. One cheap LLM call yields a
-  // hypothetical abstract + alternative formulations that become EXTRA dense lanes
-  // (below), fused by RRF — closing the recall gap on under-specified queries.
-  // Bounded by a timeout and fail-open: any failure → no extra lanes → the default
-  // retrieval path is byte-for-byte unchanged. Sequential (must precede fan-out),
-  // but cached per query so repeats add nothing.
-  const hydeEnabled = process.env.HYDE_ENABLED === "1" && hasHyde();
+  // LLM query expansion (HyDE + multi-query). ON by default when a DeepSeek key is
+  // present (opt out with HYDE_ENABLED="0"); dormant + fail-open without a key. One
+  // cheap LLM call yields a hypothetical abstract + alternative formulations that
+  // become EXTRA dense lanes (below), fused by RRF — measured +9.5pt recall@10 and
+  // 13→3 fewer empty result sets on the 87q harness, because the owned dense lanes
+  // recover queries the rate-limited lexical lanes drop. SKIPPED for trial-acronym
+  // lookups (acronym expansion only adds noise to primary-report ranking) and for
+  // specific paper lookups (DOI/PMID/pasted-title — the target is already known),
+  // where it can't help and would just cost latency. Bounded by a timeout and
+  // fail-open: any failure → no extra lanes → default retrieval unchanged. Sequential
+  // (must precede fan-out), but cached per query so repeats add nothing.
+  const hydeEnabled =
+    process.env.HYDE_ENABLED !== "0" &&
+    hasHyde() &&
+    !plan.isTrialLookup &&
+    !isPaperLookupQuery(searchQuery);
   const hyde: HydeResult = hydeEnabled
     ? await withSourceTimeout("HyDE", generateSearchVariants(searchQuery), 5000).catch(
         () => ({ variants: [] as string[] })

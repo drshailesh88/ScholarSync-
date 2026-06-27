@@ -6,7 +6,13 @@ vi.mock("@ai-sdk/openai", () => ({
   createOpenAI: () => ({ chat: (modelId: string) => ({ modelId }) }),
 }));
 
-import { sanitizeVariants, parseHydeResponse, hasHyde, generateSearchVariants } from "../hyde";
+import {
+  sanitizeVariants,
+  parseHydeResponse,
+  isPaperLookupQuery,
+  hasHyde,
+  generateSearchVariants,
+} from "../hyde";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -40,6 +46,25 @@ describe("parseHydeResponse — tolerant JSON extraction", () => {
 
   it("throws when there is no JSON object (so the caller fails open)", () => {
     expect(() => parseHydeResponse("I cannot help with that.", "q", 3)).toThrow();
+  });
+});
+
+describe("isPaperLookupQuery — gate HyDE off where it can't help", () => {
+  it("gates a pasted paper TITLE (long, Title-Cased, no question)", () => {
+    expect(isPaperLookupQuery("Dexamethasone in Hospitalized Patients with Covid-19 RECOVERY")).toBe(true);
+    expect(isPaperLookupQuery("Pembrolizumab plus Chemotherapy in Metastatic Non-Small-Cell Lung Cancer")).toBe(true);
+  });
+
+  it("gates a bare DOI or PMID identifier", () => {
+    expect(isPaperLookupQuery("10.1056/NEJMoa2034577")).toBe(true);
+    expect(isPaperLookupQuery("33301246")).toBe(true);
+  });
+
+  it("does NOT gate an under-specified topic / PICO query (HyDE should run)", () => {
+    expect(isPaperLookupQuery("management of heart failure with reduced ejection fraction")).toBe(false);
+    expect(isPaperLookupQuery("SGLT2 inhibitors cardiovascular outcomes")).toBe(false);
+    expect(isPaperLookupQuery("does early goal-directed therapy reduce mortality in septic shock?")).toBe(false);
+    expect(isPaperLookupQuery("drugs that help the failing heart")).toBe(false);
   });
 });
 

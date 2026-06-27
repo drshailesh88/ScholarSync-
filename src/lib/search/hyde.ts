@@ -43,6 +43,33 @@ export function hasHyde(): boolean {
   return Boolean(process.env.DEEPSEEK_API_KEY);
 }
 
+const DOI_RE = /\b10\.\d{4,9}\/\S+/;
+const PMID_RE = /^\d{7,8}$/;
+
+/**
+ * True when the query is a SPECIFIC paper lookup — a DOI, a bare PMID, or a pasted
+ * paper TITLE (long, predominantly Title-Cased, not a question). HyDE can't help
+ * here: the target is already known, so expansion only adds latency/cost (and the
+ * exact-title boost downstream already floats the right paper). Conservative by
+ * design — it must NOT fire on under-specified topic/PICO queries, where HyDE earns
+ * its keep, so a lowercase/keyword/question query is never treated as a lookup.
+ */
+export function isPaperLookupQuery(query: string): boolean {
+  const q = query.trim();
+  if (!q) return false;
+  if (DOI_RE.test(q)) return true;
+  if (PMID_RE.test(q)) return true;
+  if (q.includes("?")) return false;
+  const words = q.split(/\s+/);
+  if (words.length < 6) return false;
+  // Significant words = real words (>3 chars, contain a letter). A pasted title is
+  // mostly Title-Cased; a typed topic query is mostly lowercase.
+  const sig = words.filter((w) => w.length > 3 && /[a-z]/i.test(w));
+  if (sig.length < 4) return false;
+  const capitalized = sig.filter((w) => /^[A-Z]/.test(w)).length;
+  return capitalized / sig.length >= 0.6;
+}
+
 /**
  * Clean raw LLM variants: trim, drop strings shorter than 3 chars, drop the echo
  * of the original query and any duplicates (case-insensitive), preserve order,
