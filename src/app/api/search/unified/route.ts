@@ -6,6 +6,7 @@ import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchArxiv } from "@/lib/search/sources/arxiv";
 import { searchSearXNG, type SearXNGCategory } from "@/lib/search/sources/searxng";
+import { federateNonAcademic } from "@/lib/search/web/federate";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
 import { getDomainEvidenceLevel } from "@/lib/search/evidence-level";
@@ -277,6 +278,45 @@ async function fetchNonAcademicResults(
   };
 }
 
+/** Tabs served by the multi-source federation rather than a single SearXNG call. */
+const FEDERATED_TABS = new Set<SearchTab>(["discussions"]);
+
+/**
+ * Federated non-academic path: fan out across the tab's source set, RRF-fuse on
+ * canonical URL, then run the SAME quality layer (Cohere rerank + domain
+ * preferences) the single-source path uses. The fused pool is already the full
+ * available set, so there is no incremental re-fetch loop — we page over it.
+ */
+async function fetchFederatedNonAcademicResults(
+  query: string,
+  tab: "web" | "news" | "discussions",
+  page: number,
+  perPage: number,
+  preferences: Awaited<ReturnType<typeof getDomainPreferences>>,
+  timeRange?: "24h" | "week" | "month" | "year"
+): Promise<{
+  results: UnifiedSearchResult[];
+  total: number;
+  hasMore: boolean;
+  degraded: boolean;
+}> {
+  const federation = await federateNonAcademic(query, tab, {
+    limit: MAX_NON_ACADEMIC_RESULTS,
+    timeRange,
+  });
+  const reranked = await rerankResults(query, federation.results);
+  const ranked = applyDomainPreferences(reranked, preferences);
+
+  const start = page * perPage;
+  const paged = ranked.slice(start, start + perPage);
+  return {
+    results: paged,
+    total: ranked.length,
+    hasMore: ranked.length > start + perPage,
+    degraded: federation.degraded,
+  };
+}
+
 export async function GET(req: Request) {
   const log = logger.withRequestId();
 
@@ -362,14 +402,23 @@ export async function GET(req: Request) {
         total: visibleTotal,
         hasMore,
         degraded,
-      } = await fetchNonAcademicResults(
-        effectiveQuery,
-        category,
-        page,
-        perPage,
-        userDomainPreferences,
-        timeRange as "24h" | "week" | "month" | "year" | undefined
-      );
+      } = FEDERATED_TABS.has(tabParam)
+        ? await fetchFederatedNonAcademicResults(
+            effectiveQuery,
+            tabParam,
+            page,
+            perPage,
+            userDomainPreferences,
+            timeRange as "24h" | "week" | "month" | "year" | undefined
+          )
+        : await fetchNonAcademicResults(
+            effectiveQuery,
+            category,
+            page,
+            perPage,
+            userDomainPreferences,
+            timeRange as "24h" | "week" | "month" | "year" | undefined
+          );
 
       // Apply scope domain constraints if a custom scope is active
       let scopeFilteredResults = paged;
