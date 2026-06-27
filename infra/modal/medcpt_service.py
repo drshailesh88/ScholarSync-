@@ -50,9 +50,11 @@ import modal
 APP_NAME = "manan-medcpt"
 QUERY_ENCODER_MODEL = "ncbi/MedCPT-Query-Encoder"
 ARTICLE_ENCODER_MODEL = "ncbi/MedCPT-Article-Encoder"
+CROSS_ENCODER_MODEL = "ncbi/MedCPT-Cross-Encoder"
 EMBED_DIM = 768
 QUERY_MAX_LEN = 64        # per the MedCPT Query-Encoder model card
 ARTICLE_MAX_LEN = 512     # per the MedCPT Article-Encoder model card
+CROSS_MAX_LEN = 512       # per the MedCPT Cross-Encoder model card (query+article)
 EMBED_BATCH_SIZE = 64
 
 DEFAULT_NAMESPACE = "medcpt-pubmed"
@@ -102,7 +104,11 @@ SECRET = modal.Secret.from_name(
 with image.imports():
     import requests
     import torch
-    from transformers import AutoModel, AutoTokenizer
+    from transformers import (
+        AutoModel,
+        AutoModelForSequenceClassification,
+        AutoTokenizer,
+    )
 
 
 # ===========================================================================
@@ -395,6 +401,61 @@ class QueryEncoder:
                 "doi": getattr(r, "doi", None),
             })
         return {"rows": rows}
+
+
+# ===========================================================================
+# 1b. Cross-Encoder reranker — self-hosted, throttle-proof replacement for the
+#     external (rate-limited) reranker. Scale-to-zero GPU: $0 idle, warms on use.
+# ===========================================================================
+# Reranking runs POST-fusion over the top ~50 fused candidates — NOT inside the 5s
+# fan-out deadline — so a brief warm-up is acceptable. A10G batches all 50
+# (query, title+abstract) pairs in one forward pass (~0.3-0.8s warm). Scale-to-zero
+# keeps idle cost at $0; `scaledown_window` holds the replica warm across a run's
+# ~8s query gaps so it does not cold-start mid-eval. The lane FAILS OPEN: on cold
+# start, timeout, or error the caller keeps the pre-rerank order (see rerank.ts).
+@app.cls(
+    image=image,
+    gpu="A10G",
+    volumes={"/cache": hf_cache},
+    secrets=[SECRET],
+    scaledown_window=300,
+    timeout=600,
+)
+class CrossEncoder:
+    @modal.enter()
+    def load(self):
+        os.environ.setdefault("HF_HOME", "/cache")
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.tokenizer = AutoTokenizer.from_pretrained(CROSS_ENCODER_MODEL)
+        self.model = (
+            AutoModelForSequenceClassification.from_pretrained(CROSS_ENCODER_MODEL)
+            .to(self.device)
+            .eval()
+        )
+
+    @modal.fastapi_endpoint(method="POST")
+    def rerank(self, item: dict):
+        """POST { query: str, documents: [str] } -> { scores: [float] }.
+
+        MedCPT cross-encoder relevance logit per (query, document) pair, in input
+        order (higher = more relevant). The caller pairs scores back to candidates
+        and sorts; an empty/short input returns no scores (caller keeps its order).
+        """
+        query = (item or {}).get("query", "")
+        documents = (item or {}).get("documents", [])
+        if not isinstance(query, str) or not query.strip() or not documents:
+            return {"scores": []}
+        pairs = [[query, str(d)] for d in documents]
+        with torch.no_grad():
+            encoded = self.tokenizer(
+                pairs,
+                truncation=True,
+                padding=True,
+                return_tensors="pt",
+                max_length=CROSS_MAX_LEN,
+            ).to(self.device)
+            logits = self.model(**encoded).logits.squeeze(dim=1)
+        return {"scores": logits.cpu().to(torch.float32).numpy().tolist()}
 
 
 # ===========================================================================

@@ -8,67 +8,125 @@ interface CohereRerankResponse {
   }[];
 }
 
+/** A relevance score paired to a candidate's index in the input list. */
+type RerankScore = { index: number; relevance_score: number };
+
+/** True when SOME reranker is configured (self-hosted MedCPT or Cohere). */
+export function hasReranker(): boolean {
+  return Boolean(process.env.MEDCPT_RERANK_URL || process.env.COHERE_API_KEY);
+}
+
+/**
+ * Self-hosted MedCPT Cross-Encoder (Modal, scale-to-zero). Returns a relevance
+ * score per document IN INPUT ORDER; we pair to indices, sort desc, and trim to
+ * `topN`. Throttle-proof — no external rate limit. Fail-open: a cold start that
+ * exceeds the timeout (or any error) propagates as a throw so the caller keeps
+ * the pre-rerank order.
+ */
+async function rerankMedcpt(
+  url: string,
+  query: string,
+  documents: string[],
+  topN: number
+): Promise<RerankScore[]> {
+  const res = await resilientFetch(
+    url,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, documents }),
+    },
+    { service: "MedCPT-Rerank", timeout: 15000, maxRetries: 1 }
+  );
+  const data: { scores?: number[] } = await res.json();
+  const scores = Array.isArray(data?.scores) ? data.scores : [];
+  return scores
+    .map((relevance_score, index) => ({ index, relevance_score }))
+    .sort((a, b) => b.relevance_score - a.relevance_score)
+    .slice(0, topN);
+}
+
+/** External Cohere reranker (fallback). Returns its already-sorted top-N. */
+async function rerankCohere(
+  apiKey: string,
+  query: string,
+  documents: string[],
+  topN: number
+): Promise<RerankScore[]> {
+  const response = await resilientFetch(
+    "https://api.cohere.com/v2/rerank",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "rerank-v3.5",
+        query,
+        documents,
+        top_n: topN,
+        return_documents: false,
+      }),
+    },
+    { service: "Cohere", timeout: 10000, maxRetries: 2 }
+  );
+  const data: CohereRerankResponse = await response.json();
+  return data.results;
+}
+
+/**
+ * Rerank by query↔document relevance. Prefers the self-hosted MedCPT Cross-Encoder
+ * (`MEDCPT_RERANK_URL`) — throttle-proof — and falls back to Cohere
+ * (`COHERE_API_KEY`). Fail-open: with neither configured, or on any error, returns
+ * the input unchanged.
+ */
 export async function rerankResults(
   query: string,
   results: UnifiedSearchResult[],
   topN?: number
 ): Promise<UnifiedSearchResult[]> {
+  const medcptUrl = process.env.MEDCPT_RERANK_URL;
   const apiKey = process.env.COHERE_API_KEY;
-  if (!apiKey || results.length === 0) {
+  if (results.length === 0 || (!medcptUrl && !apiKey)) {
     return results;
   }
 
+  const limit = topN || Math.min(results.length, 50);
   try {
     const documents = results.map(
       (r) => `${r.title}. ${r.abstract || r.tldr || ""}`
     );
 
-    const response = await resilientFetch(
-      "https://api.cohere.com/v2/rerank",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "rerank-v3.5",
-          query,
-          documents,
-          top_n: topN || Math.min(results.length, 50),
-          return_documents: false,
-        }),
-      },
-      { service: "Cohere", timeout: 10000, maxRetries: 2 }
-    );
+    const scored = medcptUrl
+      ? await rerankMedcpt(medcptUrl, query, documents, limit)
+      : await rerankCohere(apiKey as string, query, documents, limit);
 
-    const data: CohereRerankResponse = await response.json();
+    if (scored.length === 0) return results;
 
-    const reranked: UnifiedSearchResult[] = data.results.map((r) => ({
+    return scored.map((r) => ({
       ...results[r.index],
       rerankScore: r.relevance_score,
     }));
-
-    return reranked;
   } catch (error) {
-    console.error("Cohere rerank error:", error);
+    console.error("Rerank error:", error);
     return results;
   }
 }
 
 /**
- * Attach the Cohere cross-encoder relevance score to each candidate (top `topN`)
- * as `rerankScore`, WITHOUT reordering — so the quality ranker can use it as the
- * dominant relevance signal. Mutates and returns the input. Fail-open: with no
- * COHERE_API_KEY or on error, returns the input unchanged (scores absent → the
- * ranker falls back to keyword overlap).
+ * Attach the cross-encoder relevance score (self-hosted MedCPT or Cohere) to each
+ * candidate (top `topN`) as `rerankScore`, WITHOUT reordering — so the quality
+ * ranker can use it as the dominant relevance signal. Mutates and returns the
+ * input. Fail-open: with no reranker configured or on error, returns the input
+ * unchanged (scores absent → the ranker falls back to keyword overlap).
  */
 export async function attachRerankScores(
   query: string,
   results: UnifiedSearchResult[],
   topN = 50
 ): Promise<UnifiedSearchResult[]> {
-  if (!process.env.COHERE_API_KEY || results.length < 2) return results;
+  if (!hasReranker() || results.length < 2) return results;
   const head = results.slice(0, Math.min(results.length, topN));
   const reranked = await rerankResults(query, head, head.length);
   if (reranked === head) return results; // failed → unchanged
@@ -86,22 +144,23 @@ export async function attachRerankScores(
 }
 
 /**
- * Blended cross-encoder rerank: combine the Cohere relevance score (semantic
- * query↔document match) with the clinical-quality composite (evidence level +
- * citations + journal + RRF) from the ranking pipeline. This is the recommended
- * hybrid — the cross-encoder fixes "topically relevant but not the answer"
- * ordering, while the quality priors keep landmark/high-evidence papers on top.
+ * Blended cross-encoder rerank: combine the cross-encoder relevance score
+ * (semantic query↔document match) with the clinical-quality composite (evidence
+ * level + citations + journal + RRF) from the ranking pipeline. This is the
+ * recommended hybrid — the cross-encoder fixes "topically relevant but not the
+ * answer" ordering, while the quality priors keep landmark/high-evidence papers
+ * on top.
  *
  * Only the top `topN` candidates are sent to the cross-encoder (latency/cost);
- * the tail keeps its quality order. Fail-open: with no COHERE_API_KEY or on any
- * error, the input ordering is returned unchanged.
+ * the tail keeps its quality order. Fail-open: with no reranker configured or on
+ * any error, the input ordering is returned unchanged.
  */
 export async function crossEncoderRerank(
   query: string,
   results: UnifiedSearchResult[],
   opts: { topN?: number; weight?: number } = {}
 ): Promise<UnifiedSearchResult[]> {
-  if (!process.env.COHERE_API_KEY || results.length < 2) return results;
+  if (!hasReranker() || results.length < 2) return results;
   const topN = Math.min(results.length, opts.topN ?? 40);
   const weight = opts.weight ?? 0.5; // 0.5 = equal blend of semantic vs quality
   const head = results.slice(0, topN);

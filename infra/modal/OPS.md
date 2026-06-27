@@ -66,6 +66,12 @@ Copy it.
   here only added a ~20s scale-from-zero that blew the live search's 5s fan-out
   deadline (silently dropping the dense lane after any idle) and cost ~10× more to
   keep warm. Bulk *article* embedding still uses on-demand GPUs (`process_file`).
+- **`CrossEncoder.rerank`** — self-hosted `ncbi/MedCPT-Cross-Encoder` reranker on
+  **scale-to-zero A10G** (`$0` idle; `scaledown_window` holds it warm across a
+  run). Reranks the top ~50 fused candidates post-fusion (~0.3–0.8s warm). Wired
+  via `MEDCPT_RERANK_URL`; throttle-proof replacement for Cohere (which stays as a
+  fail-open fallback). Cold start ~20s → the lane fails open (keeps pre-rerank
+  order) on the first query after idle.
 - **`freshness`** — **weekly** cron (`FRESHNESS_CRON`, default `"0 6 * * 1"` =
   Mon 06:00 UTC). Pulls new daily updatefiles past the stored watermark.
 - **`keep_warm`** — **every-minute** cron that probes the Turbopuffer namespace so
@@ -111,6 +117,10 @@ code change** the moment they are present:
 ```
 # PREFERRED — one server-side round-trip (encode + Turbopuffer ANN on Modal).
 MEDCPT_SEARCH_URL=<the QueryEncoder.search URL from step 1>
+
+# Self-hosted reranker (throttle-proof MedCPT Cross-Encoder). When set, rerank.ts
+# uses it instead of Cohere; Cohere (COHERE_API_KEY) stays as a fail-open fallback.
+MEDCPT_RERANK_URL=<the CrossEncoder.rerank URL from step 1>
 
 # Fallback two-hop (encode on Modal, ANN from the app). Used only when
 # MEDCPT_SEARCH_URL is unset. Both paths fail open.
