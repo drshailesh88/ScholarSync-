@@ -61,6 +61,7 @@ describe("search_papers tool", () => {
       hasMore: false,
       sourceCounts: { pubmed: 1, openalex: 1 },
       sourceStatuses: { pubmed: { status: "ok" }, openalex: { status: "ok" } },
+      confidence: "ok",
       plan: { pubmedQuery: "TAVR low risk", recency: false, trialAcronyms: [], wantsTrials: false },
     });
   });
