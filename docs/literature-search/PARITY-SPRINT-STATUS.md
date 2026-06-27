@@ -127,22 +127,34 @@ trial-primary boost, entity-drift demotion). The remaining gap is **not a qualit
 — it is three specific lanes (guidelines, recency, negative-control/ambiguity) plus the
 OpenAlex throttle tail.
 
-## What's left to pull *ahead* (residual, prioritized)
-1. **Source reliability (still Tier-1 #1):** OpenAlex token-bucket / circuit-breaker /
-   retry-on-transient-empty. ~3 council losses were throttle-empties, and HyDE already
-   cut empties 13→3 — closing the tail flips those from losses to wins for free.
-2. **Guideline surfacing:** detect guideline-intent queries and boost authoritative
-   guideline bodies (ESC/ACC/KDIGO/AES/ATA) to the top — Manan's clearest losing lane.
-3. **Recency lane:** for `recency-*` intent, add a recency-weighted re-rank so newest
-   pivotal evidence ranks first (Elicit's edge on lecanemab/semaglutide-2025).
-4. **Negative-control + ambiguous-acronym:** add a low-confidence / "no strong match"
-   signal so dense retrieval stops over-committing on traps and disambiguates acronyms.
-5. **Metadata gates:** PMID fill 86% < 90%, DOI 95% < 98% — NCBI id-convert / Crossref
-   backfill on DOI-only top results.
+## Pull-ahead cycles 11–15 (the five residual gaps — all SHIPPED)
+All five "pull ahead" items are now shipped — each its own TDD'd, CI-green PR.
++34 unit tests, zero regressions (search suite 241 → 293). Two produced honest
+course-corrections (noted below) rather than the speculative fix first imagined.
+
+| # | Change | PR | Evidence / note |
+|---|---|---|---|
+| 11 | **Transient-empty recovery** — `isTransientEmpty` gate + one fresh owned-dense-lane attempt when a fan-out is empty *because* a lane failed transiently (not a genuine zero, not a dormant lane) | #92 | +9 tests; additive + fail-open; flips the ~3 council losses that were throttle-empties |
+| 12 | **Guideline-doc boost** — `isGuidelineLookup` (reuses GUIDELINE_RE) + `promoteGuidelines` floats `studyType==="guideline"`, newest-version-first; only-raises, gated | #93 | +7 tests; Manan's clearest losing lane (KDIGO/ESC/epilepsy/thyroid) |
+| 13 | **Recency-windowed dense lane** — for recency intent, an extra year-restricted query over the owned MedCPT index, RRF-fused | #94 | +4 tests. **Finding:** recency *ranking* was already correct (proven by guard tests); the gap is retrieval **freshness**, so this is a retrieval fix, not a multiplier tweak |
+| 14 | **Low-confidence signal** — `assessConfidence` → `LiteratureSearchResult.confidence="low"` when even the top rerankScore < 0.3 (with a relevance signal present) | #95 | +6 tests; pure/additive. **Decision:** cross-domain demotion / acronym sense-map deferred — high regression risk for 3–4 trap queries; need a domain ontology |
+| 15 | **PMID backfill** — `lookupPmidByDoi` (NCBI esearch `[AID]`) + `backfillPmidsByDoi` for DOI-only results OpenAlex's id graph missed; capped, deduped, fail-open, never overwrites | #96 | +8 tests; runs after OpenAlex enrich so it only pays for the residual |
+
+**Live-magnitude caveat (honest):** cycles 11/13/15 are correct and additive by
+construction, but their *measured* lift depends on conditions a unit test can't
+capture — index-snapshot freshness (13), the OpenAlex throttle tail (11), and how
+many top results are DOI-only-not-in-OpenAlex (15). A clean (non-throttled) 87q
+harness run is the way to quantify them; live runs to date are throttle-noisy.
 
 ## Stop criteria (re-calibrated)
 Prior "≥80% beat-or-tie" was tuned to a tie-heavy (46/87) lenient panel and is not
 meaningful against a decisive panel. New bar: **3 consecutive cycles where Manan's
 decisive-query win share ≥ Elicit's on the blinded hard panel, ALL metadata gates pass,
 deterministic metrics move <2%/cycle, no mainstream regression.** Current: decisive win
-share 52% (met this cycle, 1 of 3); open gates: best-in-top-3 73%, PMID 86%, DOI 95%.
+share 52% (met once, 1 of 3); open gates: best-in-top-3 73%, PMID 86%, DOI 95%.
+
+**Next measurement:** cycles 11–15 are merged but their effect on the gates (PMID
+backfill → ≥90%, guideline/recency lanes → decisive win share, transient-empty
+recovery → empty-set count) is **not yet re-measured** — it needs a clean,
+non-throttled 87q harness run + a fresh blinded council. That run is the next step
+to confirm the gates close and to start the 3-consecutive-cycle Stop count.
