@@ -32,7 +32,13 @@
     "ux:score": "node qa/ux-score.mjs",
     "ux:score:zone": "node qa/ux-score.mjs --zone",
     "ux:screenshot": "npx playwright test qa/ux-screenshot.ts",
-    "eval:search": "tsx eval/literature-search/run.ts"
+    "eval:search": "tsx eval/literature-search/run.ts",
+    "eval:web:exa": "npx tsx eval/web-search/capture-exa.ts",
+    "eval:web:freeze": "npx tsx eval/web-search/capture-searxng.ts",
+    "eval:web:run": "npx tsx eval/web-search/run.ts --label baseline",
+    "council:web:packet": "npx tsx eval/web-search/council/build-blinded-packet.ts",
+    "council:web:judge": "node eval/web-search/council/openrouter-judge.mjs",
+    "council:web:aggregate": "npx tsx eval/web-search/council/aggregate-blinded.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -196,6 +202,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "exa-js": "^2.15.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "tailwindcss": "^4",
