@@ -15,6 +15,7 @@ import { rankWithTrace, enrichJournalQuality, type ScoredResult } from "./qualit
 import { enrichStudyTypes } from "./study-type-detector";
 import { getEvidenceLevel } from "./evidence-level";
 import { demoteSecondaryTrialResults } from "./trial-ranking";
+import { diversifyTopK } from "./diversity";
 
 const STOPWORDS = new Set([
   "the", "are", "what", "how", "does", "do", "and", "for", "with", "from",
@@ -187,6 +188,11 @@ export interface RankAndAnnotateOptions {
  */
 export const RECENCY_BOOST = 0.5;
 
+/** Page size diversified by MMR, and its relevance-vs-diversity trade-off. λ high
+ *  (0.78) keeps relevance dominant — diversity only breaks near-duplicate ties. */
+export const MMR_PAGE = 10;
+export const MMR_LAMBDA = 0.78;
+
 /**
  * Recency-aware rank key. `recencyNorm` scales the year into [0,1] over the
  * result set (newest = 1); the composite is amplified by up to RECENCY_BOOST.
@@ -261,7 +267,18 @@ export function rankAndAnnotate(
 
   // Demote (never drop) retracted papers so they cannot occupy a top slot while
   // still being surfaced with their flag. Stable: preserves order within groups.
-  return demoteRetracted(trialOrdered);
+  const cleaned = demoteRetracted(trialOrdered);
+
+  // Diversify the page (MMR) for BROAD topic queries only. Skipped for exact-paper
+  // lookups (the user wants that one paper), trial-acronym lookups (primary-report
+  // ordering is the whole point), and recency sorts (newest-first is the intent).
+  // MMR reorders only WITHIN the top page, so the top-K set — and recall@k — is
+  // unchanged; it only prevents a page of five near-identical findings.
+  const isExactLookup = exactTitleMatchIndex(cleaned, opts.query) >= 0;
+  const shouldDiversify = !opts.isTrialLookup && !opts.recency && !isExactLookup;
+  return shouldDiversify
+    ? diversifyTopK(cleaned, { k: MMR_PAGE, lambda: MMR_LAMBDA, anchor: 1 })
+    : cleaned;
 }
 
 function demoteRetracted(results: UnifiedSearchResult[]): UnifiedSearchResult[] {
