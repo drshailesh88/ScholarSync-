@@ -334,6 +334,63 @@ class QueryEncoder:
             embeds = self.model(**encoded).last_hidden_state[:, 0, :]
         return {"embedding": embeds[0].cpu().to(torch.float32).numpy().tolist()}
 
+    def _embed_query(self, query: str):
+        with torch.no_grad():
+            encoded = self.tokenizer(
+                [query], truncation=True, padding=True,
+                return_tensors="pt", max_length=QUERY_MAX_LEN,
+            ).to(self.device)
+            embeds = self.model(**encoded).last_hidden_state[:, 0, :]
+        return embeds[0].cpu().to(torch.float32).numpy().tolist()
+
+    @modal.fastapi_endpoint(method="POST")
+    def search(self, item: dict):
+        """POST { query, limit?, year_start?, year_end? } -> { rows: [...] }.
+
+        Encodes the query AND runs the Turbopuffer ANN query SERVER-SIDE, so the
+        live lane makes ONE round-trip instead of two. The two-hop lane (encode
+        here, then ANN from Node) had its second fetch's promise continuation
+        starved by Node's single-threaded event loop — busy parsing the concurrent
+        PubMed/OpenAlex responses — which inflated the dense lane to 5-6s and blew
+        the 5s fan-out deadline on ~85% of queries. Collapsing to one call (the
+        heavy work runs here, next to Turbopuffer) leaves Node a single continuation
+        to schedule, keeping the lane comfortably inside the deadline.
+        """
+        query = (item or {}).get("query", "")
+        if not isinstance(query, str) or not query.strip():
+            return {"rows": []}
+        limit = int((item or {}).get("limit") or 25)
+        year_start = (item or {}).get("year_start")
+        year_end = (item or {}).get("year_end")
+
+        vector = self._embed_query(query)
+        conditions = []
+        if isinstance(year_start, int):
+            conditions.append(["year", "Gte", year_start])
+        if isinstance(year_end, int):
+            conditions.append(["year", "Lte", year_end])
+        kwargs = {
+            "rank_by": ["vector", "ANN", vector],
+            "top_k": min(max(limit, 1), 50),
+            "include_attributes": ["pmid", "title", "journal", "year", "authors", "abstract", "doi"],
+        }
+        if conditions:
+            kwargs["filters"] = ["And", conditions]
+        ns = _turbopuffer_namespace()
+        res = ns.query(**kwargs)
+        rows = []
+        for r in (res.rows or []):
+            rows.append({
+                "pmid": getattr(r, "pmid", None) or getattr(r, "id", None),
+                "title": getattr(r, "title", None),
+                "journal": getattr(r, "journal", None),
+                "year": getattr(r, "year", None),
+                "authors": getattr(r, "authors", None),
+                "abstract": getattr(r, "abstract", None),
+                "doi": getattr(r, "doi", None),
+            })
+        return {"rows": rows}
+
 
 # ===========================================================================
 # 2. Embedding pipeline (one file's worth of work — mapped for the backfill,

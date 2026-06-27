@@ -1,58 +1,90 @@
 # Phase 1 Status — Self-Hosted MedCPT Dense Lane
 
-Branch `feat/medcpt-dense-lane` (off `corpus-build-base`). Tracks the build
-against `PHASE-01-BUILD-GOAL.md` / `CORPUS-RESEARCH.md`.
+Branch `feat/medcpt-dense-lane`. Replaces the throttled OpenAlex `search.semantic`
+lane with a self-hosted MedCPT dense retrieval lane (Modal encoder → int8
+Turbopuffer ANN), plus a recurring freshness machine. Tracks
+`PHASE-01-BUILD-GOAL.md`.
 
-## Shipped (code complete, CI-green locally, fail-open proven live)
+## Shipped & operational
 
 | Deliverable | State |
 |---|---|
-| `src/lib/search/sources/medcpt-dense.ts` — live dense query lane (Modal encoder → int8 Turbopuffer ANN → `UnifiedSearchResult`), fail-open | ✅ 13 unit tests, TDD |
-| `run-search.ts` — `openalex_semantic` lane replaced by an always-on internal `medcpt_dense` lane, RRF-fused | ✅ |
-| `openalex.ts` — dead `searchOpenAlexSemantic` removed | ✅ |
-| `infra/modal/medcpt_service.py` — Query-Encoder endpoint + precomputed index loader + one freshness/backfill pipeline (weekly cron) | ✅ syntax-valid; Context7/model-card verified |
-| `infra/modal/OPS.md` — provisioning + ops runbook | ✅ |
+| `src/lib/search/sources/medcpt-dense.ts` — live dense lane (Modal encoder → int8 Turbopuffer ANN → `UnifiedSearchResult`), fail-open | ✅ 13 unit tests, TDD |
+| `run-search.ts` — `openalex_semantic` replaced by always-on internal `medcpt_dense`, RRF-fused; post-fusion enrich/rerank bounded to top-50 (`POST_FUSION_POOL`) | ✅ |
+| `infra/modal/medcpt_service.py` — CPU always-warm Query-Encoder + precomputed index load + GPU backfill + **weekly freshness cron** + namespace `keep_warm` cron | ✅ deployed |
+| **Index** — NCBI precomputed MedCPT embeddings (int8 Turbopuffer) + 2024–2026 GPU backfill | ✅ **~39.66M vectors** (35.92M precomputed + 5.58M backfill, 0 failures) |
+| **DeleteCitation handling** — `_extract_delete_pmids` (raw-XML; pubmed_parser drops `<DeleteCitation>`), wired into `process_file`; historical purge | ✅ 5,317 withdrawn PMIDs reconciled |
+| `infra/modal/OPS.md` — provisioning + ops runbook (CPU encoder, crons, freshness proof) | ✅ |
 | `SOURCE-MATRIX.md` / `ARCHITECTURE.md` — dense lane documented, semantic lane retired | ✅ |
 
-**Quality gates (local):** `tsc --noEmit` ✅ · `eslint --max-warnings 0` ✅ ·
-`vitest run` ✅ 6670 passed · Python `py_compile` ✅.
+**Quality gates (local + pre-commit hook):** `tsc --noEmit` ✅ ·
+`eslint --max-warnings 0` ✅ · `vitest run` ✅ (6670) · Python `py_compile` ✅.
 
-## Interim evidence — fail-open verified in the LIVE pipeline
+## Freshness machine — PROVEN on a real delta
 
-A real `runLiteratureSearch` call (no index provisioned yet) returns:
+One scheduled `freshness()` (weekly, `Cron("0 6 * * 1")`) pulls new PubMed
+updatefiles past a watermark, embeds new/changed title+abstract on GPU
+(`MedCPT-Article-Encoder`), upserts them, and removes DeleteCitation PMIDs.
+
+End-to-end proof through the real scheduled function (updatefile n1504):
 
 ```
-sourceStatuses.medcpt_dense = { status: "missing_config",
-  message: "MedCPT dense lane not configured (encoder URL / Turbopuffer key)" }
-sourceCounts = { pubmed: 2360, openalex: 1569, medcpt_dense: 0 }
+planted marker for real DeleteCitation PMID 41611480 → BEFORE present=True
+set watermark to n1503 → freshness() processes exactly n1504
+freshness() → {processed: 1, upserted: 24210, deleted: 26}
+AFTER  delete-PMID 41611480 present=False        ← withdrawn paper REMOVED
+AFTER  kept-PMID  18593717 present=True (real title)  ← new/changed SEARCHABLE
+watermark advanced → pubmed26n1504 (caught up; weekly cron starts clean)
+=== FRESHNESS DELTA PROOF: PASS ✅ ===
 ```
 
-→ The lane runs, is correctly **dormant**, and search succeeds on the lexical
-lanes with **zero regression**. It activates with **no code change** the moment
-`MEDCPT_QUERY_ENCODER_URL` + `TURBOPUFFER_API_KEY` are set.
+The delete path was a latent bug: `pubmed_parser` silently drops `<DeleteCitation>`
+blocks (0 detected despite 26 real in n1504), so withdrawn papers would have stayed
+searchable forever. Fixed by parsing the blocks from raw XML; a one-time
+`purge_historical_deletes` removed 5,317 PMIDs the pre-fix backfill had missed.
 
-## Remaining — operational (needs cloud creds + spend; gated)
+## Latency & recency (live namespace, warm)
 
-These are the only things between here and the full Definition of Done; all are
-in `infra/modal/OPS.md`:
+- ANN median ~0.3–0.7s warm (encode on CPU adds <0.1s) — well inside the 5s
+  fan-out deadline. `keep_warm` cron probes every minute so the namespace cache
+  never cold-starts against a user (cold ≈3.5s would drop the lane).
+- Recency retrieval verified: `year>=2024` ANN filter returns 2024/2025/**2026**
+  papers (2026 exists only via the backfill + freshness machine).
 
-1. **`HF_TOKEN`** added to the 1Password Agent Vault (if not already) →
-   `modal secret create manan-medcpt-secrets` (HF_TOKEN + TURBOPUFFER_API_KEY).
-2. `modal deploy` the encoder + weekly freshness cron.
-3. `modal run ::load_index` — load the ~24M precomputed embeddings (int8).
-4. `modal run ::backfill --year-start 2024 --year-end 2026` — recency gap (~$3–15).
-5. Set the live env vars (step 4 of OPS) → lane goes live.
-6. **AFTER 87q run:** `eval:search --label after-medcpt` and `rescore` vs the
-   throttled-OpenAlex floor (`BASELINE-87Q-FLOOR.md`), incl. recency queries.
+## 87q evidence (fresh-quota, lane live)
+
+PubMed + OpenAlex quota healthy (no zero-source throttling); the dense lane itself
+ran with **zero 429s** and deterministic ~3s in-pipeline latency. Two runs:
+
+| run | dense lane | dense participation | recall@10 | nDCG@10 | bestInTop3 | empties |
+|---|---|---|---|---|---|---|
+| floor (`baseline87`, documented) | — (openalex_semantic) | — | 0.88 | 0.73 | 0.73 | 3 |
+| `final-on` (two-hop endpoint) | live | 11/87 | 0.8784 | 0.7281 | 0.7297 | 1 |
+| `final-on2` (combined endpoint) | live | **84/87** | 0.8514 | 0.6908 | 0.7297 | **1** |
+
+**Wins already locked:** empties **3 → 1**; the combined `search` endpoint lifted
+dense participation **13% → 97%** (fixing the fan-out-deadline starvation); recency
+(2024–2026) retrievable; zero 429s on the owned lane.
+
+**Floor gate BLOCKED on the reranker.** `recall@10`/`nDCG@10` land *below* floor —
+and counter-intuitively *fall* as dense participation rises (0.878 → 0.851) —
+because **Cohere rerank is a Trial key that is monthly-exhausted** (1000 calls/mo,
+spent by the day's eval runs; every call 429s). The dense lane feeds candidates to
+the reranker, which re-promotes the true papers above semantic neighbours; with **no
+reranker**, RRF order alone lets dense neighbours displace ground-truth out of the
+top-10 (`exact_paper` recall 1.00 → 0.90). The documented floor was measured *with*
+rerank, so a fair comparison requires a working reranker. Unblock options (decision
+pending): self-host `ncbi/MedCPT-Cross-Encoder` on Modal (throttle-proof, aligns
+with the project thesis) **or** a fresh/Production Cohere key. Then re-run for the
+floor gate + the same-session `final-off` control.
 
 ## Definition-of-Done tracker
 
 - [x] `openalex_semantic` replaced by the Turbopuffer MedCPT dense lane (code + wiring)
-- [x] Fails open to current lanes (proven live)
-- [x] Every result keeps provenance (`sources: ["medcpt_dense", …]`) + ranking trace (RRF)
+- [x] Fails open to the lexical lanes (proven live: `missing_config` → search succeeds)
+- [x] Every result keeps provenance (`sources: ["medcpt_dense", …]`) + RRF ranking trace
 - [x] Secrets via env/op-run only, never hardcoded
-- [x] Freshness updater built + scheduled (weekly, configurable) — *deploy pending*
-- [ ] Index built (24M + 2024–2026 gap) — **operational, gated on spend**
-- [ ] nDCG@10 / recall@10 ≥ floor incl. recency, zero 429s — **needs live index**
-- [ ] Freshness proven on a real delta — **needs deploy**
-- [ ] CI-green PR merged — **after AFTER-evidence passes**
+- [x] Index built — 39.66M (precomputed + 2024–2026 backfill), recency retrievable
+- [x] Freshness updater scheduled (weekly) AND **proven on a real delta** (new searchable, deleted removed)
+- [ ] nDCG@10 / recall@10 ≥ floor incl. recency, zero 429s — *see 87q evidence above*
+- [ ] CI-green PR merged

@@ -227,3 +227,75 @@ describe("searchMedcptDense", () => {
     expect(results[0].authors).toEqual(["Solo A"]);
   });
 });
+
+const SEARCH_URL = "https://example-medcpt-search.modal.run";
+
+describe("searchMedcptDense — combined endpoint (MEDCPT_SEARCH_URL)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockBreaker.canRequest.mockReturnValue(true);
+    vi.stubEnv("MEDCPT_SEARCH_URL", SEARCH_URL);
+    vi.stubEnv("MEDCPT_QUERY_ENCODER_URL", ENCODER_URL);
+    vi.stubEnv("TURBOPUFFER_API_KEY", API_KEY);
+    vi.stubEnv("TURBOPUFFER_REGION", "");
+    vi.stubEnv("MEDCPT_TURBOPUFFER_NAMESPACE", "");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("makes ONE round-trip to the combined endpoint and maps the returned rows", async () => {
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ rows: SAMPLE_ROWS }));
+    const { results, total, status } = await searchMedcptDense("heart failure", { limit: 25 });
+
+    expect(status.status).toBe("ok");
+    expect(total).toBe(2);
+    expect(results[0].pmid).toBe("38000001");
+    expect(results[0].sources).toEqual(["medcpt_dense"]);
+    // One fetch only — no separate client-side Turbopuffer call.
+    expect(mockResilientFetch).toHaveBeenCalledTimes(1);
+
+    const [url, init] = mockResilientFetch.mock.calls[0];
+    expect(url).toBe(SEARCH_URL);
+    expect(init.method).toBe("POST");
+    expect(JSON.parse(init.body as string)).toMatchObject({ query: "heart failure", limit: 25 });
+  });
+
+  it("forwards a year range as year_start/year_end to the server", async () => {
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ rows: [] }));
+    await searchMedcptDense("q", { yearStart: 2024, yearEnd: 2026 });
+
+    const body = JSON.parse(mockResilientFetch.mock.calls[0][1].body as string);
+    expect(body.year_start).toBe(2024);
+    expect(body.year_end).toBe(2026);
+  });
+
+  it("prefers the combined endpoint over the two-hop path when both are configured", async () => {
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ rows: SAMPLE_ROWS }));
+    await searchMedcptDense("q");
+    // Combined: single call to the search URL, never the encoder/Turbopuffer pair.
+    expect(mockResilientFetch).toHaveBeenCalledTimes(1);
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(SEARCH_URL);
+  });
+
+  it("fails open when the combined call throws, recording a breaker failure", async () => {
+    mockResilientFetch.mockRejectedValueOnce(new Error("[MedCPT-Search] HTTP 503"));
+    const { results, total, status } = await searchMedcptDense("q");
+
+    expect(results).toEqual([]);
+    expect(total).toBe(0);
+    expect(status.status).not.toBe("ok");
+    expect(mockBreaker.onFailure).toHaveBeenCalled();
+  });
+
+  it("returns an ok empty set when the combined endpoint yields no rows", async () => {
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ rows: [] }));
+    const { results, total, status } = await searchMedcptDense("q");
+
+    expect(results).toEqual([]);
+    expect(total).toBe(0);
+    expect(status.status).toBe("ok");
+    expect(mockBreaker.onSuccess).toHaveBeenCalled();
+  });
+});

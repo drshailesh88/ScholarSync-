@@ -58,12 +58,14 @@ This serves the `QueryEncoder` web endpoint and registers two crons. Modal print
 the endpoint URL, e.g. `https://<workspace>--manan-medcpt-queryencoder-encode.modal.run`.
 Copy it.
 
-- **`QueryEncoder`** — **CPU, always-warm** (`cpu=4.0`, `min_containers=1`). The
-  query encoder is a single short BERT forward pass; on CPU it returns in well
-  under a second with no cold start. A GPU here only added a ~20s scale-from-zero
-  that blew the live search's 5s fan-out deadline (silently dropping the dense
-  lane on the first query after any idle) and cost ~10× more to keep warm. Bulk
-  *article* embedding still uses on-demand GPUs (`process_file`).
+- **`QueryEncoder`** — **CPU, always-warm** (`cpu=4.0`, `min_containers=1`).
+  Serves two endpoints: **`encode`** (query → 768-d vector, the two-hop fallback)
+  and **`search`** (query → ANN rows; encodes AND queries Turbopuffer server-side
+  — the preferred one-round-trip path, see §4). The encoder is a single short BERT
+  forward pass; on CPU it returns in well under a second with no cold start. A GPU
+  here only added a ~20s scale-from-zero that blew the live search's 5s fan-out
+  deadline (silently dropping the dense lane after any idle) and cost ~10× more to
+  keep warm. Bulk *article* embedding still uses on-demand GPUs (`process_file`).
 - **`freshness`** — **weekly** cron (`FRESHNESS_CRON`, default `"0 6 * * 1"` =
   Mon 06:00 UTC). Pulls new daily updatefiles past the stored watermark.
 - **`keep_warm`** — **every-minute** cron that probes the Turbopuffer namespace so
@@ -107,11 +109,25 @@ Set these where the app runs — Vercel project env (production) **and**
 code change** the moment they are present:
 
 ```
-MEDCPT_QUERY_ENCODER_URL=<the modal deploy URL from step 1>
+# PREFERRED — one server-side round-trip (encode + Turbopuffer ANN on Modal).
+MEDCPT_SEARCH_URL=<the QueryEncoder.search URL from step 1>
+
+# Fallback two-hop (encode on Modal, ANN from the app). Used only when
+# MEDCPT_SEARCH_URL is unset. Both paths fail open.
+MEDCPT_QUERY_ENCODER_URL=<the QueryEncoder.encode URL from step 1>
 TURBOPUFFER_API_KEY=<from 1Password>          # op:// reference in dev.env
 TURBOPUFFER_REGION=aws-us-east-1              # optional; this is the default
 MEDCPT_TURBOPUFFER_NAMESPACE=medcpt-pubmed    # optional; this is the default
 ```
+
+**Prefer `MEDCPT_SEARCH_URL`.** The two-hop lane (encode here, then ANN from the
+app) makes two sequential fetches whose promise continuations get starved by the
+app's single-threaded event loop while it parses the concurrent PubMed/OpenAlex
+responses — which inflated the dense lane to 5–6s and dropped it past the 5s
+fan-out deadline on ~85% of queries. The combined `search` endpoint does encode +
+ANN server-side (next to Turbopuffer), so the app makes ONE fetch (~3s in-pipeline)
+and the lane participates on essentially every query. Set the app's
+`MEDCPT_TIMING=1` to log `[MedCPT timing] combined=…ms` per query when diagnosing.
 
 Verify: `sourceStatuses.medcpt_dense` flips from `missing_config` → `ok` and the
 lane contributes candidates (visible in each result's `sources: ["medcpt_dense", …]`).

@@ -59,24 +59,32 @@ export interface MedcptDenseOptions {
   yearEnd?: number;
 }
 
-interface MedcptConfig {
-  encoderUrl: string;
-  apiKey: string;
-  region: string;
-  namespace: string;
-}
+type MedcptConfig =
+  | { mode: "combined"; searchUrl: string; region: string; namespace: string }
+  | { mode: "twohop"; encoderUrl: string; apiKey: string; region: string; namespace: string };
 
-/** Read config from env; returns null (→ missing_config) when not fully provisioned. */
+/**
+ * Read config from env; returns null (→ missing_config) when not provisioned.
+ *
+ * Prefers the COMBINED endpoint (`MEDCPT_SEARCH_URL`): one server-side round-trip
+ * that encodes the query AND runs the Turbopuffer ANN on Modal, so Node makes a
+ * single fetch. The two-hop path (encode here, then ANN from Node) had its second
+ * fetch's continuation starved by Node's event loop under concurrent lexical-lane
+ * parsing, inflating the lane past the fan-out deadline. Two-hop is kept as a
+ * fail-open fallback when only the encoder URL + Turbopuffer key are configured.
+ */
 function readConfig(): MedcptConfig | null {
+  const region = process.env.TURBOPUFFER_REGION || DEFAULT_REGION;
+  const namespace = process.env.MEDCPT_TURBOPUFFER_NAMESPACE || DEFAULT_NAMESPACE;
+
+  const searchUrl = process.env.MEDCPT_SEARCH_URL;
+  if (searchUrl) return { mode: "combined", searchUrl, region, namespace };
+
   const encoderUrl = process.env.MEDCPT_QUERY_ENCODER_URL;
   const apiKey = process.env.TURBOPUFFER_API_KEY;
-  if (!encoderUrl || !apiKey) return null;
-  return {
-    encoderUrl,
-    apiKey,
-    region: process.env.TURBOPUFFER_REGION || DEFAULT_REGION,
-    namespace: process.env.MEDCPT_TURBOPUFFER_NAMESPACE || DEFAULT_NAMESPACE,
-  };
+  if (encoderUrl && apiKey) return { mode: "twohop", encoderUrl, apiKey, region, namespace };
+
+  return null;
 }
 
 /** POST the query text to the Modal Query-Encoder, returning its 768-d embedding. */
@@ -105,9 +113,35 @@ type TurbopufferRow = {
   doi?: string;
 };
 
+/** POST query text to the combined Modal endpoint (encode + ANN server-side). */
+async function searchCombined(
+  searchUrl: string,
+  query: string,
+  opts: MedcptDenseOptions
+): Promise<TurbopufferRow[]> {
+  const body: Record<string, unknown> = {
+    query,
+    limit: Math.min(DEFAULT_LIMIT, opts.limit ?? DEFAULT_LIMIT),
+  };
+  if (typeof opts.yearStart === "number") body.year_start = opts.yearStart;
+  if (typeof opts.yearEnd === "number") body.year_end = opts.yearEnd;
+
+  const res = await resilientFetch(
+    searchUrl,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    },
+    { service: "MedCPT-Search", timeout: 8000, maxRetries: 1 }
+  );
+  const data: { rows?: TurbopufferRow[] } = await res.json();
+  return Array.isArray(data?.rows) ? data.rows : [];
+}
+
 /** ANN-query the Turbopuffer namespace; returns the raw matched rows (closest first). */
 async function queryTurbopuffer(
-  cfg: MedcptConfig,
+  cfg: { apiKey: string; region: string; namespace: string },
   vector: number[],
   opts: MedcptDenseOptions
 ): Promise<TurbopufferRow[]> {
@@ -201,18 +235,30 @@ export async function searchMedcptDense(
     };
   }
 
+  const timing = process.env.MEDCPT_TIMING === "1";
+  const t0 = timing ? Date.now() : 0;
   try {
-    const vector = await encodeQuery(cfg.encoderUrl, query);
-    if (!Array.isArray(vector) || vector.length === 0) {
-      breaker.onFailure();
-      return {
-        results: [],
-        total: 0,
-        status: { status: "error", message: "MedCPT encoder returned no embedding" },
-      };
+    let rows: TurbopufferRow[];
+    if (cfg.mode === "combined") {
+      rows = await searchCombined(cfg.searchUrl, query, options);
+      if (timing) console.error(`[MedCPT timing] combined=${Date.now() - t0}ms rows=${rows.length}`);
+    } else {
+      const vector = await encodeQuery(cfg.encoderUrl, query);
+      const tEnc = timing ? Date.now() : 0;
+      if (!Array.isArray(vector) || vector.length === 0) {
+        breaker.onFailure();
+        return {
+          results: [],
+          total: 0,
+          status: { status: "error", message: "MedCPT encoder returned no embedding" },
+        };
+      }
+      rows = await queryTurbopuffer(cfg, vector, options);
+      if (timing) {
+        const tAnn = Date.now();
+        console.error(`[MedCPT timing] encode=${tEnc - t0}ms ann=${tAnn - tEnc}ms total=${tAnn - t0}ms rows=${rows.length}`);
+      }
     }
-
-    const rows = await queryTurbopuffer(cfg, vector, options);
     const results = rows.map(mapRow);
     breaker.onSuccess();
     return { results, total: results.length, status: okStatus() };
