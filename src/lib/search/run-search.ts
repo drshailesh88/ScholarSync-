@@ -544,13 +544,24 @@ async function runLiteratureSearchUncached(
   // the next query's fan-out budget. Candidates past the pool are not reranked
   // anyway, so they can never reach the returned page — enriching them is wasted.
   const enrichRerankPool = fused.slice(0, POST_FUSION_POOL);
+  // The cross-encoder rerank is COUNTERPRODUCTIVE for a specific trial-acronym
+  // lookup: fed a bare acronym ("KEYNOTE-189"), it scores secondary papers that
+  // mention the acronym above the trial's PRIMARY report (whose title describes the
+  // intervention, not the acronym), demoting the canonical answer off the page
+  // (measured: the GT primary sits in the rerank pool but is pushed out of the top-10
+  // only when reranked). For these the exact-match lexical lane + clinical-quality
+  // composite + demoteSecondaryTrialResults already float the primary first, so we
+  // skip the rerank (enrichment still runs). Non-acronym queries keep it.
+  const skipRerank = plan.trialAcronyms.length > 0;
   await Promise.all([
     withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(enrichRerankPool), 3500).catch(() => 0),
-    withSourceTimeout(
-      "Cohere rerank",
-      attachRerankScores(searchQuery, enrichRerankPool, POST_FUSION_POOL),
-      4000
-    ).catch(() => fused),
+    skipRerank
+      ? Promise.resolve(fused)
+      : withSourceTimeout(
+          "Cross-encoder rerank",
+          attachRerankScores(searchQuery, enrichRerankPool, POST_FUSION_POOL),
+          4000
+        ).catch(() => fused),
   ]);
 
   // Eval-only: snapshot the enriched candidate pool BEFORE final ranking, so the
