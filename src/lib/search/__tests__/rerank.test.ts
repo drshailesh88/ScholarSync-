@@ -107,10 +107,98 @@ describe("rerankResults — backend selection", () => {
     const out = await rerankResults("q", RESULTS);
     expect(out).toBe(RESULTS);
   });
+
+  it("uses LangSearch when only LANGSEARCH_API_KEY is set, mapping documents back to order by score", async () => {
+    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
+    // returned in ranked order, by document text (LangSearch shape)
+    mockResilientFetch.mockResolvedValueOnce(
+      jsonResponse({
+        reranked_documents: [
+          { document: "B relevance high. ", score: 0.9 },
+          { document: "C relevance mid. ", score: 0.5 },
+          { document: "A relevance low. ", score: 0.1 },
+        ],
+      })
+    );
+
+    const out = await rerankResults("q", RESULTS);
+
+    expect(out.map((r) => r.title)).toEqual([
+      "B relevance high",
+      "C relevance mid",
+      "A relevance low",
+    ]);
+    expect(out[0].rerankScore).toBe(0.9);
+    const [url, init] = mockResilientFetch.mock.calls[0];
+    expect(url).toBe("https://api.langsearch.com/v1/rerank");
+    expect(JSON.parse(init.body as string)).toMatchObject({
+      model: "langsearch-reranker-v1",
+      query: "q",
+      return_documents: true,
+      documents: ["A relevance low. ", "B relevance high. ", "C relevance mid. "],
+    });
+  });
+
+  it("falls back to LangSearch when the MedCPT call throws", async () => {
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
+    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
+    mockResilientFetch.mockRejectedValueOnce(new Error("[MedCPT-Rerank] cold start timeout"));
+    mockResilientFetch.mockResolvedValueOnce(
+      jsonResponse({
+        reranked_documents: [
+          { document: "B relevance high. ", score: 0.9 },
+          { document: "A relevance low. ", score: 0.2 },
+          { document: "C relevance mid. ", score: 0.1 },
+        ],
+      })
+    );
+
+    const out = await rerankResults("q", RESULTS);
+
+    expect(mockResilientFetch).toHaveBeenCalledTimes(2);
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
+    expect(mockResilientFetch.mock.calls[1][0]).toBe("https://api.langsearch.com/v1/rerank");
+    expect(out[0].title).toBe("B relevance high");
+  });
+
+  it("prefers MedCPT, then LangSearch, then Cohere", async () => {
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
+    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
+    vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [0.1, 0.9, 0.5] }));
+
+    await rerankResults("q", RESULTS);
+
+    expect(mockResilientFetch).toHaveBeenCalledTimes(1);
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
+  });
+
+  it("falls back through MedCPT → LangSearch → Cohere when the first two fail", async () => {
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
+    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
+    vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
+    mockResilientFetch.mockRejectedValueOnce(new Error("medcpt cold start"));
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ reranked_documents: [] })); // langsearch: no usable scores
+    mockResilientFetch.mockResolvedValueOnce(
+      jsonResponse({ results: [{ index: 1, relevance_score: 0.9 }, { index: 0, relevance_score: 0.1 }] })
+    );
+
+    const out = await rerankResults("q", RESULTS);
+
+    expect(mockResilientFetch).toHaveBeenCalledTimes(3);
+    expect(mockResilientFetch.mock.calls[2][0]).toBe("https://api.cohere.com/v2/rerank");
+    expect(out.map((r) => r.title)).toEqual(["B relevance high", "A relevance low"]);
+  });
 });
 
 describe("hasReranker / attachRerankScores", () => {
-  it("hasReranker reflects either env var", () => {
+  it("hasReranker reflects any configured backend", () => {
+    expect(hasReranker()).toBe(false);
+    vi.stubEnv("LANGSEARCH_API_KEY", "lang_key");
+    expect(hasReranker()).toBe(true);
+  });
+
+  it("hasReranker reflects MEDCPT_RERANK_URL", () => {
     expect(hasReranker()).toBe(false);
     vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
     expect(hasReranker()).toBe(true);
