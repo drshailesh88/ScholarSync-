@@ -157,6 +157,21 @@ export const FANOUT_DEADLINE_MS = 5000;
  */
 export const DENSE_RECOVERY_TIMEOUT_MS = 6000;
 
+/** Window (calendar years, inclusive) for the recency-intent dense lane. */
+export const RECENCY_DENSE_WINDOW_YEARS = 3;
+
+/**
+ * Year floor for the recency-windowed dense lane — the start of the last
+ * `windowYears` calendar years (e.g. 2026 with a 3-year window → 2024, so the
+ * lane covers 2024/2025/2026). A separate, year-restricted query over the SAME
+ * owned index surfaces the freshest semantically-relevant papers, which the
+ * unfiltered (similarity-only) dense lane can bury under older high-similarity
+ * hits.
+ */
+export function recencyYearFloor(currentYear: number, windowYears: number): number {
+  return currentYear - windowYears + 1;
+}
+
 // Cap for the post-fusion enrich+rerank pool. Only the top candidates by RRF
 // score can reach the returned page, so bounding both steps here keeps OpenAlex
 // enrichment to a single batch regardless of how many lanes contributed —
@@ -465,6 +480,43 @@ async function runLiteratureSearchUncached(
         errorOutcome("medcpt_dense", e instanceof Error ? e.message : "MedCPT dense failed")
       )
     );
+
+    // Recency intent: an additional recency-WINDOWED dense lane over the same
+    // owned index. The base dense lane ranks purely by semantic similarity, so a
+    // newer pivotal paper can sit below older high-similarity hits; restricting to
+    // the last few years surfaces the freshest semantically-relevant papers into
+    // the pool. RRF-fused and additive — the unfiltered lanes still carry older
+    // landmarks, and the quality ranker still demotes recent junk — so it lifts
+    // recall of fresh evidence without burying landmarks. Throttle-proof (owned
+    // index), gated on recency intent, and only when the caller has not already
+    // constrained the year range. Its reach is bounded by the index snapshot.
+    if (plan.recency && params.yearFrom === undefined) {
+      const recentFloor = recencyYearFloor(
+        new Date().getFullYear(),
+        RECENCY_DENSE_WINDOW_YEARS
+      );
+      pushLane(
+        "medcpt_dense_recent",
+        withSourceTimeout(
+          "MedCPT Dense (recency)",
+          searchMedcptDense(searchQuery, {
+            limit: poolPerSource,
+            yearStart: recentFloor,
+            yearEnd: params.yearTo,
+          }).then(({ results, total, status }) => ({
+            source: "medcpt_dense_recent",
+            results,
+            total,
+            status,
+          }))
+        ).catch((e) =>
+          errorOutcome(
+            "medcpt_dense_recent",
+            e instanceof Error ? e.message : "MedCPT dense recency failed"
+          )
+        )
+      );
+    }
 
     // HyDE / multi-query: each LLM-generated formulation (and the hypothetical
     // abstract) runs as its OWN dense lane against the owned MedCPT index, then
