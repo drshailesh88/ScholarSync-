@@ -117,15 +117,50 @@ throttling, degrading pools and producing phantom metric swings. Tier-1 #1 (Open
 token-bucket / circuit-breaker / retry-on-empty) would both improve the product and
 shrink capture-time noise. High value; serial run-search lane.
 
+## Owned-stack re-measurement (2026-06-28) — the decisive run
+
+**Every prior eval and council measured a CRIPPLED engine.** The two owned Modal
+endpoints — `MEDCPT_SEARCH_URL` (dense retrieval) and `MEDCPT_RERANK_URL` (the
+MedCPT cross-encoder reranker) — were never wired into the eval env, so the harness
+silently fell back to: no dense lane, and a Cohere **trial key (1000/mo) that was
+exhausted** → no cross-encoder at all. The 40/37/10 "parity" verdict was lexical-only
++ no rerank. Both endpoints are deployed and live (`manan-medcpt` Modal app); once
+wired in, the real engine measures very differently.
+
+**Gates on the real owned stack (`remeasure-owned`, 87q, OpenAlex still throttling):**
+
+| gate | crippled prior | **owned stack** | target | status |
+|---|---|---|---|---|
+| recall@10 (must-haves) | 77% (no-rerank) | **85%** | ≥95% | ✗ closer |
+| best-in-top-3 | 68% | **78%** | ≥85% | ✗ closer |
+| nDCG@10 | 0.67 | **0.75** | — | ↑ |
+| DOI fill | 92% | **98%** | ≥98% | **✓** |
+| PMID fill | 86% | **97%** | ≥90% | **✓** |
+| empty result sets | 3–20 | **0** | 0 | **✓** (held under 100% OpenAlex 429) |
+| duplicate rate | 0% | **0%** | ≤2% | ✓ |
+
+**Blinded council on the real engine (`council-2026-06-owned`, fresh Opus + Codex +
+DeepSeek, chunked):**
+- **Manan 47 / Elicit 29 / 11 ties** — **Manan LEADS** (62% of decisive queries).
+- **Mean dimension score: Manan 4.03 vs Elicit 3.89** — Manan now ahead on quality
+  (was *behind* 3.84 vs 3.88 on the crippled engine).
+- Cycle effects visible: **recency flipped to 3-2 Manan** (cycle 3), **guidelines to
+  2-2 even** (cycle 2, was a clear loss); exact 8-2, acronym 6-0, SR 5-0, family 4-2.
+- Residual Elicit-winning lanes shrank to **neuro, long-term-outcomes, and the
+  negative-control traps**.
+
 ## Verdict on the goal: "Elicit-light quality in search"
-**Essentially ATTAINED — at parity.** Against a deliberately hard, blinded, fresh
-3-judge panel, Manan and Elicit are statistically even (40/37/10; mean 3.84 vs 3.88),
-with Manan owning the landmark / known-item / trial-family lanes that are the core of
-the product. We moved from *clearly behind* (early non-blinded cycles) to *dead-even
-vs a stricter panel* after the engine upgrades (HyDE +9.5pt recall, MMR, journal trust,
-trial-primary boost, entity-drift demotion). The remaining gap is **not a quality chasm**
-— it is three specific lanes (guidelines, recency, negative-control/ambiguity) plus the
-OpenAlex throttle tail.
+**ATTAINED — and on the real engine, Manan LEADS Elicit** (47/29/11; mean 4.03 vs
+3.89; 62% decisive-win share). The earlier "dead-heat at parity" (40/37/10) was an
+artifact of the eval running without the owned dense index and owned reranker — the
+two components that ARE the product. With them on, Manan clearly wins the landmark /
+known-item / trial-family / SR lanes, and the cycle 11–15 work moved guidelines and
+recency from losing to even/winning. Remaining gaps are narrow lanes (neuro, LTO,
+negative-control traps), not a quality chasm.
+
+**Action item:** add `MEDCPT_SEARCH_URL` + `MEDCPT_RERANK_URL` (non-secret public
+Modal endpoints) to the `Dev` 1Password vault / `dev.env` so eval never silently
+cripples itself again.
 
 ## Pull-ahead cycles 11–15 (the five residual gaps — all SHIPPED)
 All five "pull ahead" items are now shipped — each its own TDD'd, CI-green PR.
