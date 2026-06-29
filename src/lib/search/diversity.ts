@@ -14,6 +14,7 @@
  */
 
 import type { UnifiedSearchResult } from "@/types/search";
+import { normalizeDomain } from "@/lib/search/domain-utils";
 
 function titleTokens(title: string): Set<string> {
   return new Set(
@@ -90,4 +91,89 @@ export function diversifyTopK(
   }
 
   return [...selected, ...tail];
+}
+
+function domainKey(r: UnifiedSearchResult): string {
+  return (r.domain ?? (r.url ? normalizeDomain(r.url) ?? "" : "")).toLowerCase();
+}
+
+export interface DomainMmrOptions {
+  /** Size of the diversified window (default 10). */
+  k?: number;
+  /** Relevance-vs-diversity trade-off in [0,1]; higher favors relevance (default 0.7). */
+  lambda?: number;
+  /** Number of leading results to pin unchanged (default 0). */
+  anchor?: number;
+}
+
+/**
+ * Diversity-aware top-K SELECTION by domain (MMR). Unlike {@link diversifyTopK}
+ * (which reorders within a FIXED set on title similarity), this CHANGES the top-K
+ * set: it greedily fills K slots, penalizing each candidate by how many of its
+ * domain are already chosen, so a distinct-domain result deeper in the pool can be
+ * promoted above a redundant same-domain one. This lifts the set-based "unique
+ * domains in top-K" signal — e.g. breaks a single-outlet news flood or a
+ * single-platform discussions page. Relevance is the incoming rank (the pool is
+ * assumed sorted best-first); `lambda`↑ favors relevance over diversity. Pure
+ * function; every result is preserved (the unselected tail keeps its original order).
+ */
+export function diversifyByDomain(
+  results: UnifiedSearchResult[],
+  opts: DomainMmrOptions = {}
+): UnifiedSearchResult[] {
+  const n = results.length;
+  const k = Math.min(opts.k ?? 10, n);
+  const lambda = Math.min(1, Math.max(0, opts.lambda ?? 0.7));
+  const anchor = Math.max(0, opts.anchor ?? 0);
+  if (n < 2 || k - anchor < 2) return results;
+
+  // Incoming-rank relevance in [0,1] over the FULL pool (position 0 = 1).
+  const relevance = results.map((_, i) => (n - i) / n);
+  const counts = new Map<string, number>();
+  const out: UnifiedSearchResult[] = [];
+  for (let i = 0; i < anchor; i++) {
+    out.push(results[i]);
+    const dk = domainKey(results[i]);
+    counts.set(dk, (counts.get(dk) ?? 0) + 1);
+  }
+
+  const remaining = results.slice(anchor).map((r, i) => ({ r, idx: anchor + i }));
+
+  while (out.length < k && remaining.length > 0) {
+    let bestPos = 0;
+    let bestScore = -Infinity;
+    for (let p = 0; p < remaining.length; p++) {
+      const { r, idx } = remaining[p];
+      const redundancy = counts.get(domainKey(r)) ?? 0;
+      const mmr = lambda * relevance[idx] - (1 - lambda) * redundancy;
+      // Strictly-greater keeps it stable: earlier (higher-ranked) ties win.
+      if (mmr > bestScore) {
+        bestScore = mmr;
+        bestPos = p;
+      }
+    }
+    const chosen = remaining.splice(bestPos, 1)[0];
+    out.push(chosen.r);
+    const dk = domainKey(chosen.r);
+    counts.set(dk, (counts.get(dk) ?? 0) + 1);
+  }
+
+  return [...out, ...remaining.map((x) => x.r)];
+}
+
+// web is already domain-diverse (keyword web search rarely floods one domain) — a
+// high lambda only breaks a genuine flood. news (wire-flood) and discussions
+// (single-platform) are the flood-prone tabs, so they diversify more aggressively.
+const TAB_DIVERSITY_LAMBDA: Record<"web" | "news" | "discussions", number> = {
+  web: 0.82,
+  news: 0.6,
+  discussions: 0.6,
+};
+
+/** Tab-tuned domain diversification of the top page (k=10). */
+export function diversifyForTab(
+  results: UnifiedSearchResult[],
+  tab: "web" | "news" | "discussions"
+): UnifiedSearchResult[] {
+  return diversifyByDomain(results, { k: 10, lambda: TAB_DIVERSITY_LAMBDA[tab] });
 }
