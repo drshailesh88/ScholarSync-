@@ -11,7 +11,7 @@
 import type { UnifiedSearchResult } from "@/types/search";
 import { okStatus, classifyRejectionReason, type SourceStatus } from "@/lib/search/source-status";
 import { searchSearXNG, type SearXNGCategory } from "@/lib/search/sources/searxng";
-import { searchReddit } from "@/lib/search/sources/reddit";
+import { searchBrave } from "@/lib/search/sources/brave";
 import { searchHackerNews } from "@/lib/search/sources/hacker-news";
 import { searchStackExchange } from "@/lib/search/sources/stackexchange";
 import { reciprocalRankFusionWeb } from "./rank-fusion-web";
@@ -75,11 +75,40 @@ export function searxngSourceForTab(tab: FederatedTab): WebSource {
   };
 }
 
-const redditSource: WebSource = {
-  id: "reddit",
-  label: "Reddit",
-  run: (query, options) => searchReddit(query, { limit: options.limit }),
-};
+/**
+ * Brave as an independent index. web/news hit their dedicated endpoints; the
+ * discussions adapter rides the web endpoint with a `site:reddit.com` filter to
+ * harvest Reddit threads, since Reddit's own API is closed (403) as of 2026.
+ */
+export function braveSourceForTab(tab: FederatedTab): WebSource {
+  if (tab === "news") {
+    return {
+      id: "brave-news",
+      label: "Brave News",
+      run: (query, options) =>
+        searchBrave(query, { kind: "news", limit: options.limit, timeRange: options.timeRange }),
+    };
+  }
+  if (tab === "discussions") {
+    return {
+      id: "brave-reddit",
+      label: "Brave (Reddit)",
+      run: (query, options) =>
+        searchBrave(query, {
+          kind: "web",
+          limit: options.limit,
+          siteFilter: "reddit.com",
+          tag: "discussions",
+        }),
+    };
+  }
+  return {
+    id: "brave",
+    label: "Brave Web",
+    run: (query, options) =>
+      searchBrave(query, { kind: "web", limit: options.limit, timeRange: options.timeRange }),
+  };
+}
 
 const hackerNewsSource: WebSource = {
   id: "hacker-news",
@@ -94,15 +123,17 @@ const stackExchangeSource: WebSource = {
 };
 
 /**
- * Per-tab source set. Discussions federates the real-thread verticals; SearXNG
- * "social media" is intentionally excluded (it returns fediverse noise — no
- * Reddit/HN/SE — and measured worse). web/news stay single-SearXNG so their
- * serving path is unchanged.
+ * Per-tab source set. web/news federate SearXNG with Brave's independent index
+ * (Brave surfaces authoritative explainers + diverse outlets that SearXNG's
+ * keyword scrape misses). Discussions federates the real-thread verticals —
+ * Hacker News + Stack Exchange APIs plus Reddit threads via Brave's `site:`
+ * index (Reddit's own API is dead). SearXNG "social media" is excluded (it
+ * returns fediverse noise and measured worse).
  */
 export const SOURCES_BY_TAB: Record<FederatedTab, WebSource[]> = {
-  web: [searxngSourceForTab("web")],
-  news: [searxngSourceForTab("news")],
-  discussions: [redditSource, hackerNewsSource, stackExchangeSource],
+  web: [searxngSourceForTab("web"), braveSourceForTab("web")],
+  news: [searxngSourceForTab("news"), braveSourceForTab("news")],
+  discussions: [hackerNewsSource, stackExchangeSource, braveSourceForTab("discussions")],
 };
 
 async function withTimeout<T>(label: string, promise: Promise<T>, ms: number): Promise<T> {
