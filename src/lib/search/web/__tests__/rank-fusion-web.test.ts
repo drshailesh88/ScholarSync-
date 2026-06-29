@@ -43,4 +43,27 @@ describe("reciprocalRankFusionWeb", () => {
     const fused = reciprocalRankFusionWeb([{ source: "s1", results: a }, { source: "s2", results: b }]);
     expect(fused).toHaveLength(2);
   });
+
+  it("down-weights a supplement source so its top row sinks below an authority engine's", () => {
+    // Both sources rank their row #1. Unweighted, the tie would be broken by
+    // insertion order; with weight 0.5 the supplement's row must rank lower.
+    const authority = [row("https://authority.com/1", "authoritative", "engine")];
+    const supplement = [row("https://supplement.com/1", "fresh", "feed")];
+    const fused = reciprocalRankFusionWeb(
+      [{ source: "feed", results: supplement }, { source: "engine", results: authority }],
+      60,
+      { feed: 0.5, engine: 1 }
+    );
+    expect(fused[0].url).toBe("https://authority.com/1");
+    expect(fused[1].url).toBe("https://supplement.com/1");
+    // The supplement's contribution is exactly halved.
+    expect(fused[1].rrfScore).toBeCloseTo(0.5 / 61, 10);
+  });
+
+  it("treats a missing/default weight as 1 (unweighted behavior unchanged)", () => {
+    const a = [row("https://a.com/1", "a", "s1")];
+    const b = [row("https://b.com/1", "b", "s2")];
+    const fused = reciprocalRankFusionWeb([{ source: "s1", results: a }, { source: "s2", results: b }], 60, {});
+    expect(fused[0].rrfScore).toBeCloseTo(1 / 61, 10);
+  });
 });

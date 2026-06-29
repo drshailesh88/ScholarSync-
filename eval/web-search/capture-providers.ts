@@ -31,7 +31,16 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const CACHE_DIR = join(HERE, "cache");
 
 function sourcesForTab(tab: FederatedTab, providerFilter: string | null): WebSource[] {
+  // "searxng" alone reproduces the CYCLE-0 single-source baseline (works for tabs
+  // like discussions where SearXNG isn't in the default set).
   if (providerFilter === "searxng") return [searxngSourceForTab(tab)];
+  // A comma list (e.g. "searxng,brave-news") restricts the tab's default set by
+  // source id — used to A/B one source in/out at a fixed capture timestamp.
+  if (providerFilter) {
+    const ids = new Set(providerFilter.split(",").map((s) => s.trim()));
+    const filtered = SOURCES_BY_TAB[tab].filter((s) => ids.has(s.id));
+    if (filtered.length) return filtered;
+  }
   return SOURCES_BY_TAB[tab];
 }
 
@@ -49,13 +58,16 @@ export async function captureProviders(
   queries: typeof BENCHMARK_QUERIES,
   dir: string,
   providerFilter: string | null,
-  delayMs = 600
+  delayMs = 600,
+  // GDELT's DOC API runs 10–20s; the offline capture is not latency-sensitive, so
+  // give every source a generous ceiling to measure GDELT's quality contribution.
+  timeoutMs = 25000
 ): Promise<number> {
   mkdirSync(dir, { recursive: true });
   let ok = 0;
   for (const q of queries) {
     const sources = sourcesForTab(q.tab, providerFilter);
-    const fed = await federateWith(q.query, q.tab, sources, { limit: 30 });
+    const fed = await federateWith(q.query, q.tab, sources, { limit: 30, timeoutMs });
     if (fed.degraded) {
       console.log(`  ✗ ${q.id.padEnd(34)} federation degraded — skipped (do not freeze a degraded pool)`);
       continue;
@@ -81,10 +93,18 @@ async function main() {
   const argv = process.argv.slice(2);
   const pi = argv.indexOf("--providers");
   const providerFilter = pi >= 0 ? argv[pi + 1] : null;
-  const n = await captureProviders(BENCHMARK_QUERIES, CACHE_DIR, providerFilter);
+  // --tab <web|news|discussions> re-freezes only that tab's pools, leaving the
+  // other frozen pools (e.g. a prior council-validated baseline) untouched.
+  const ti = argv.indexOf("--tab");
+  const tabFilter = ti >= 0 ? argv[ti + 1] : null;
+  const queries = tabFilter
+    ? BENCHMARK_QUERIES.filter((q) => q.tab === tabFilter)
+    : BENCHMARK_QUERIES;
+  const n = await captureProviders(queries, CACHE_DIR, providerFilter);
   console.log(
-    `\n[providers] froze ${n}/${BENCHMARK_QUERIES.length} fused pools → ${CACHE_DIR}` +
-      (providerFilter ? ` (providers=${providerFilter})` : "")
+    `\n[providers] froze ${n}/${queries.length} fused pools → ${CACHE_DIR}` +
+      (providerFilter ? ` (providers=${providerFilter})` : "") +
+      (tabFilter ? ` (tab=${tabFilter})` : "")
   );
 }
 
