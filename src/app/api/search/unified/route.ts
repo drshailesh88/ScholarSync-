@@ -233,8 +233,8 @@ async function fetchNonAcademicResults(
     limit,
     timeRange,
   });
-  // Rerank web results with Cohere (same quality treatment as academic results)
-  let rerankedResults = await rerankResults(query, response.results);
+  // Rerank web results with the self-hosted general reranker (domain-routed, not the biomedical model)
+  let rerankedResults = await rerankResults(query, response.results, undefined, { domain: "web" });
   let rankedResults = applyDomainPreferences(rerankedResults, preferences);
 
   while (!response.degraded) {
@@ -260,7 +260,7 @@ async function fetchNonAcademicResults(
       category,
       limit,
     });
-    rerankedResults = await rerankResults(query, response.results);
+    rerankedResults = await rerankResults(query, response.results, undefined, { domain: "web" });
     rankedResults = applyDomainPreferences(rerankedResults, preferences);
   }
 
@@ -304,7 +304,7 @@ async function fetchFederatedNonAcademicResults(
     limit: MAX_NON_ACADEMIC_RESULTS,
     timeRange,
   });
-  const reranked = await rerankResults(query, federation.results);
+  const reranked = await rerankResults(query, federation.results, undefined, { domain: "web" });
   const ranked = applyDomainPreferences(reranked, preferences);
 
   const start = page * perPage;

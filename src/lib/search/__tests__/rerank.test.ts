@@ -132,6 +132,57 @@ describe("rerankResults — backend selection", () => {
   });
 });
 
+describe("rerankResults — domain routing", () => {
+  const WEB_URL = "https://example-web-rerank.modal.run";
+
+  it("web domain uses WEB_RERANK_URL, not the biomedical MedCPT reranker", async () => {
+    vi.stubEnv("WEB_RERANK_URL", WEB_URL);
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [-2, 4, 1] }));
+
+    const out = await rerankResults("q", RESULTS, undefined, { domain: "web" });
+
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(WEB_URL);
+    expect(out.map((r) => r.title)).toEqual([
+      "B relevance high",
+      "C relevance mid",
+      "A relevance low",
+    ]);
+  });
+
+  it("web domain does NOT borrow the literature MedCPT reranker (fails open when only MEDCPT is set)", async () => {
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL); // literature lane only
+    const out = await rerankResults("q", RESULTS, undefined, { domain: "web" });
+    expect(mockResilientFetch).not.toHaveBeenCalled();
+    expect(out).toBe(RESULTS); // unchanged
+  });
+
+  it("literature (default) uses MedCPT and ignores WEB_RERANK_URL", async () => {
+    vi.stubEnv("WEB_RERANK_URL", WEB_URL);
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [1, 2, 3] }));
+
+    await rerankResults("q", RESULTS);
+
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
+  });
+
+  it("web domain falls back to Cohere when WEB_RERANK_URL is unset", async () => {
+    vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
+    mockResilientFetch.mockResolvedValueOnce(
+      jsonResponse({
+        results: [
+          { index: 1, relevance_score: 0.9 },
+          { index: 0, relevance_score: 0.2 },
+        ],
+      })
+    );
+    const out = await rerankResults("q", RESULTS, undefined, { domain: "web" });
+    expect(mockResilientFetch.mock.calls[0][0]).toBe("https://api.cohere.com/v2/rerank");
+    expect(out[0].title).toBe("B relevance high");
+  });
+});
+
 describe("hasReranker / attachRerankScores", () => {
   it("hasReranker reflects any configured backend", () => {
     expect(hasReranker()).toBe(false);
