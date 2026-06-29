@@ -210,6 +210,23 @@ function applyDomainPreferences(
     .map(({ result }) => result);
 }
 
+/**
+ * Semantic cross-encoder reranking is gated to the WEB tab. WEB-COUNCIL-3 (blinded
+ * A/B): web 3-1 with the reranker (incl. demoting a catastrophic off-topic result),
+ * but news is a 2-2 wash where it demotes fresh items on a recency-first tab, and it
+ * regressed discussions. News/discussions keep their recency/diversity ordering.
+ * Fail-open: returns the input unchanged off-tab or if the reranker is down.
+ */
+async function rerankWebTabOnly(
+  query: string,
+  results: UnifiedSearchResult[],
+  isWebTab: boolean
+): Promise<UnifiedSearchResult[]> {
+  return isWebTab
+    ? rerankResults(query, results, undefined, { domain: "web" })
+    : results;
+}
+
 async function fetchNonAcademicResults(
   query: string,
   category: SearXNGCategory,
@@ -229,13 +246,14 @@ async function fetchNonAcademicResults(
       ? Math.min(Math.max(requestedVisibleCount * 3, perPage), MAX_NON_ACADEMIC_RESULTS)
       : Math.min(requestedVisibleCount, MAX_NON_ACADEMIC_RESULTS);
 
+  const isWebTab = category !== "news";
   let response = await searchSearXNG(query, {
     category,
     limit,
     timeRange,
   });
-  // Rerank web results with the self-hosted general reranker (domain-routed, not the biomedical model)
-  let rerankedResults = await rerankResults(query, response.results, undefined, { domain: "web" });
+  // Semantic rerank is gated to the web tab (see rerankWebTabOnly).
+  let rerankedResults = await rerankWebTabOnly(query, response.results, isWebTab);
   let rankedResults = applyDomainPreferences(rerankedResults, preferences);
 
   while (!response.degraded) {
@@ -261,7 +279,7 @@ async function fetchNonAcademicResults(
       category,
       limit,
     });
-    rerankedResults = await rerankResults(query, response.results, undefined, { domain: "web" });
+    rerankedResults = await rerankWebTabOnly(query, response.results, isWebTab);
     rankedResults = applyDomainPreferences(rerankedResults, preferences);
   }
 
@@ -308,7 +326,7 @@ async function fetchFederatedNonAcademicResults(
     limit: MAX_NON_ACADEMIC_RESULTS,
     timeRange,
   });
-  const reranked = await rerankResults(query, federation.results, undefined, { domain: "web" });
+  const reranked = await rerankWebTabOnly(query, federation.results, tab === "web");
   const ranked = applyDomainPreferences(reranked, preferences);
   const diversified = diversifyForTab(ranked, tab);
 
