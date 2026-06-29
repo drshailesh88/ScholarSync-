@@ -13,6 +13,7 @@ import { okStatus, classifyRejectionReason, type SourceStatus } from "@/lib/sear
 import { searchSearXNG, type SearXNGCategory } from "@/lib/search/sources/searxng";
 import { searchBrave } from "@/lib/search/sources/brave";
 import { searchNewsData } from "@/lib/search/sources/newsdata";
+import { searchExa } from "@/lib/search/sources/exa";
 import { searchHackerNews } from "@/lib/search/sources/hacker-news";
 import { searchStackExchange } from "@/lib/search/sources/stackexchange";
 import { reciprocalRankFusionWeb } from "./rank-fusion-web";
@@ -139,6 +140,24 @@ const newsDataSource: WebSource = {
     }),
 };
 
+/**
+ * Exa — a neural/embeddings web index. It surfaces authoritative documents the
+ * keyword engines (SearXNG, Brave) never return, which is the measured recall gap
+ * vs Exa-standalone. Carried at FULL weight (unlike the NewsData supplement): the
+ * whole point is to let Exa's unique URLs compete for the fused top-K so the
+ * reranker can lift them. numResults is capped to 10 inside the source to hold the
+ * cost tier. Dormant until EXA_API_KEY is set (missing_config → contributes nothing,
+ * fail-open), so wiring it changes nothing in an unkeyed environment.
+ */
+function exaSourceForTab(tab: FederatedTab): WebSource {
+  return {
+    id: "exa",
+    label: tab === "news" ? "Exa (news)" : "Exa",
+    run: (query, options) =>
+      searchExa(query, { tab, limit: options.limit, timeRange: options.timeRange }),
+  };
+}
+
 const hackerNewsSource: WebSource = {
   id: "hacker-news",
   label: "Hacker News",
@@ -154,15 +173,16 @@ const stackExchangeSource: WebSource = {
 /**
  * Per-tab source set. web/news federate SearXNG with Brave's independent index
  * (Brave surfaces authoritative explainers + diverse outlets that SearXNG's
- * keyword scrape misses); news adds NewsData.io's top-priority outlet index for
- * high-authority recent coverage. Discussions federates the real-thread verticals —
+ * keyword scrape misses) and Exa's neural index (the recall engine — it returns
+ * documents the keyword engines miss); news adds NewsData.io's top-priority outlet
+ * index for high-authority recent coverage. Discussions federates the real-thread verticals —
  * Hacker News + Stack Exchange APIs plus Reddit threads via Brave's `site:`
  * index (Reddit's own API is dead). SearXNG "social media" is excluded (it
  * returns fediverse noise and measured worse).
  */
 export const SOURCES_BY_TAB: Record<FederatedTab, WebSource[]> = {
-  web: [searxngSourceForTab("web"), braveSourceForTab("web")],
-  news: [searxngSourceForTab("news"), braveSourceForTab("news"), newsDataSource],
+  web: [searxngSourceForTab("web"), braveSourceForTab("web"), exaSourceForTab("web")],
+  news: [searxngSourceForTab("news"), braveSourceForTab("news"), newsDataSource, exaSourceForTab("news")],
   discussions: [hackerNewsSource, stackExchangeSource, braveSourceForTab("discussions")],
 };
 
