@@ -1,7 +1,12 @@
-import { describe, expect, it } from "vitest";
-import { federateWith, type WebSource } from "../federate";
+import { describe, expect, it, vi } from "vitest";
+import { federateWith, braveSourceForTab, type WebSource } from "../federate";
 import { okStatus } from "@/lib/search/source-status";
 import type { UnifiedSearchResult } from "@/types/search";
+
+vi.mock("@/lib/search/sources/brave", () => ({
+  searchBrave: vi.fn(async () => ({ results: [], total: 0, status: { status: "ok" } })),
+}));
+import { searchBrave } from "@/lib/search/sources/brave";
 
 function row(url: string, title: string): UnifiedSearchResult {
   return { title, authors: [], journal: "", year: 0, url, sources: ["discussions"], citationCount: 0, publicationTypes: ["discussions"], isOpenAccess: false };
@@ -70,5 +75,39 @@ describe("federateWith", () => {
     expect(fed.results).toHaveLength(1);
     expect(fed.results[0].url).toBe("https://hn/1");
     expect(fed.perSource.find((s) => s.id === "slow")!.status.status).toBe("timeout");
+  });
+});
+
+describe("braveSourceForTab", () => {
+  const mockBrave = vi.mocked(searchBrave);
+
+  it("web tab hits the web endpoint", async () => {
+    const src = braveSourceForTab("web");
+    expect(src.id).toBe("brave");
+    await src.run("crispr base editing", { limit: 10 });
+    expect(mockBrave).toHaveBeenCalledWith(
+      "crispr base editing",
+      expect.objectContaining({ kind: "web", limit: 10 })
+    );
+  });
+
+  it("news tab hits the news endpoint and forwards the freshness window", async () => {
+    const src = braveSourceForTab("news");
+    expect(src.id).toBe("brave-news");
+    await src.run("ozempic shortage", { limit: 10, timeRange: "week" });
+    expect(mockBrave).toHaveBeenCalledWith(
+      "ozempic shortage",
+      expect.objectContaining({ kind: "news", timeRange: "week" })
+    );
+  });
+
+  it("discussions tab scopes to reddit.com and tags results as discussions", async () => {
+    const src = braveSourceForTab("discussions");
+    expect(src.id).toBe("brave-reddit");
+    await src.run("phd burnout", { limit: 10 });
+    expect(mockBrave).toHaveBeenCalledWith(
+      "phd burnout",
+      expect.objectContaining({ kind: "web", siteFilter: "reddit.com", tag: "discussions" })
+    );
   });
 });
