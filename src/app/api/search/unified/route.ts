@@ -5,7 +5,6 @@ import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchArxiv } from "@/lib/search/sources/arxiv";
-import { searchSearXNG, type SearXNGCategory } from "@/lib/search/sources/searxng";
 import { federateNonAcademic } from "@/lib/search/web/federate";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
@@ -51,15 +50,6 @@ type SourceDefinition = {
   sourceId: SourceId;
   label: string;
   run: () => Promise<SourceSearchResponse>;
-};
-
-const SEARXNG_CATEGORY_BY_TAB: Record<
-  Exclude<SearchTab, "academic">,
-  SearXNGCategory
-> = {
-  web: "general",
-  news: "news",
-  discussions: "social media",
 };
 
 const DOMAIN_PREFERENCE_WEIGHT: Record<ResultDomainPreferenceLevel, number> = {
@@ -227,81 +217,6 @@ async function rerankWebTabOnly(
     : results;
 }
 
-async function fetchNonAcademicResults(
-  query: string,
-  category: SearXNGCategory,
-  page: number,
-  perPage: number,
-  preferences: Awaited<ReturnType<typeof getDomainPreferences>>,
-  timeRange?: "24h" | "week" | "month" | "year"
-): Promise<{
-  results: UnifiedSearchResult[];
-  total: number;
-  hasMore: boolean;
-  degraded: boolean;
-}> {
-  const requestedVisibleCount = (page + 1) * perPage;
-  let limit =
-    preferences.length > 0
-      ? Math.min(Math.max(requestedVisibleCount * 3, perPage), MAX_NON_ACADEMIC_RESULTS)
-      : Math.min(requestedVisibleCount, MAX_NON_ACADEMIC_RESULTS);
-
-  const isWebTab = category !== "news";
-  let response = await searchSearXNG(query, {
-    category,
-    limit,
-    timeRange,
-  });
-  // Semantic rerank is gated to the web tab (see rerankWebTabOnly).
-  let rerankedResults = await rerankWebTabOnly(query, response.results, isWebTab);
-  let rankedResults = applyDomainPreferences(rerankedResults, preferences);
-
-  while (!response.degraded) {
-    const fetchCeiling = Math.min(response.total, MAX_NON_ACADEMIC_RESULTS);
-    const hasEnoughVisibleResults = rankedResults.length >= requestedVisibleCount;
-    const canFetchMore = limit < fetchCeiling;
-
-    if (hasEnoughVisibleResults || !canFetchMore) {
-      break;
-    }
-
-    const nextLimit = Math.min(
-      fetchCeiling,
-      Math.max(limit + perPage * 3, requestedVisibleCount + perPage)
-    );
-
-    if (nextLimit <= limit) {
-      break;
-    }
-
-    limit = nextLimit;
-    response = await searchSearXNG(query, {
-      category,
-      limit,
-    });
-    rerankedResults = await rerankWebTabOnly(query, response.results, isWebTab);
-    rankedResults = applyDomainPreferences(rerankedResults, preferences);
-  }
-
-  const tab = category === "news" ? "news" : "web";
-  const diversified = diversifyForTab(rankedResults, tab);
-
-  const start = page * perPage;
-  const paged = diversified.slice(start, start + perPage);
-  const fetchCeiling = Math.min(response.total, MAX_NON_ACADEMIC_RESULTS);
-  const canFetchMore = !response.degraded && limit < fetchCeiling;
-  const hasMore = diversified.length > start + perPage || canFetchMore;
-
-  return {
-    results: paged,
-    total: response.total,
-    hasMore,
-    degraded: response.degraded,
-  };
-}
-
-/** Tabs served by the multi-source federation rather than a single SearXNG call. */
-const FEDERATED_TABS = new Set<SearchTab>(["discussions"]);
 
 /**
  * Federated non-academic path: fan out across the tab's source set, RRF-fuse on
@@ -416,7 +331,6 @@ export async function GET(req: Request) {
       const userDomainPreferences = usePreferences
         ? await getDomainPreferences()
         : [];
-      const category = SEARXNG_CATEGORY_BY_TAB[tabParam];
       // Wrap query in quotes for exact match (strip existing quotes to prevent injection)
       const sanitized = q.replace(/"/g, "");
       const effectiveQuery = exactMatch ? `"${sanitized}"` : q;
@@ -425,23 +339,14 @@ export async function GET(req: Request) {
         total: visibleTotal,
         hasMore,
         degraded,
-      } = FEDERATED_TABS.has(tabParam)
-        ? await fetchFederatedNonAcademicResults(
-            effectiveQuery,
-            tabParam,
-            page,
-            perPage,
-            userDomainPreferences,
-            timeRange as "24h" | "week" | "month" | "year" | undefined
-          )
-        : await fetchNonAcademicResults(
-            effectiveQuery,
-            category,
-            page,
-            perPage,
-            userDomainPreferences,
-            timeRange as "24h" | "week" | "month" | "year" | undefined
-          );
+      } = await fetchFederatedNonAcademicResults(
+        effectiveQuery,
+        tabParam,
+        page,
+        perPage,
+        userDomainPreferences,
+        timeRange as "24h" | "week" | "month" | "year" | undefined
+      );
 
       // Apply scope domain constraints if a custom scope is active
       let scopeFilteredResults = paged;

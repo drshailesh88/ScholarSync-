@@ -245,23 +245,25 @@ describe("GET /api/search/unified", () => {
     expect(mockSearchPubMed).toHaveBeenCalled();
   });
 
-  it("routes the web tab through SearXNG general search", async () => {
+  it("routes the web tab through the multi-source federation, not SearXNG directly", async () => {
     const res = await GET(makeRequest({ q: "climate change", tab: "web" }));
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(mockSearchSearXNG).toHaveBeenCalledWith("climate change", {
-      category: "general",
-      limit: 20,
-    });
+    expect(mockFederateNonAcademic).toHaveBeenCalledWith(
+      "climate change",
+      "web",
+      expect.objectContaining({ limit: 100 })
+    );
+    expect(mockSearchSearXNG).not.toHaveBeenCalled();
     expect(mockSearchPubMed).not.toHaveBeenCalled();
     expect(body.results).toHaveLength(1);
     expect(body.sourceCounts).toEqual({ web: 1 });
     expect(body.searxngUnavailable).toBe(false);
   });
 
-  it("requests enough SearXNG results to paginate page 2 and slices in the route", async () => {
-    mockSearchSearXNG.mockResolvedValueOnce({
+  it("fetches the full federation pool once and slices it to serve page 2", async () => {
+    mockFederateNonAcademic.mockResolvedValueOnce({
       results: Array.from({ length: 40 }, (_, index) => ({
         title: `Result ${index + 1}`,
         authors: [],
@@ -272,8 +274,11 @@ describe("GET /api/search/unified", () => {
         publicationTypes: ["web"],
         isOpenAccess: false,
         sources: ["web"],
+        url: `https://example.com/result-${index + 1}`,
+        domain: "example.com",
       })),
-      total: 57,
+      perSource: [],
+      perSourceRows: [],
       degraded: false,
     });
 
@@ -283,15 +288,19 @@ describe("GET /api/search/unified", () => {
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(mockSearchSearXNG).toHaveBeenCalledWith("climate change", {
-      category: "general",
-      limit: 40,
-    });
+    // Federated path calls federateNonAcademic once with limit: 100 — no incremental re-fetch.
+    expect(mockFederateNonAcademic).toHaveBeenCalledWith(
+      "climate change",
+      "web",
+      expect.objectContaining({ limit: 100 })
+    );
+    expect(mockFederateNonAcademic).toHaveBeenCalledTimes(1);
     expect(body.results).toHaveLength(20);
     expect(body.results[0].title).toBe("Result 21");
-    expect(body.total).toBe(57);
-    expect(body.hasMore).toBe(true);
-    expect(body.sourceCounts).toEqual({ web: 57 });
+    // total = diversified.length (fused pool size after preference/diversity pass), not upstream total
+    expect(body.total).toBe(40);
+    expect(body.hasMore).toBe(false);
+    expect(body.sourceCounts).toEqual({ web: 40 });
   });
 
   it("routes the discussions tab through the multi-source federation, not SearXNG", async () => {
@@ -328,10 +337,11 @@ describe("GET /api/search/unified", () => {
     expect(body.searxngUnavailable).toBe(true);
   });
 
-  it("returns empty results with a degradation flag when SearXNG is unavailable", async () => {
-    mockSearchSearXNG.mockResolvedValueOnce({
+  it("surfaces federation degradation as searxngUnavailable on the news tab", async () => {
+    mockFederateNonAcademic.mockResolvedValueOnce({
       results: [],
-      total: 0,
+      perSource: [],
+      perSourceRows: [],
       degraded: true,
     });
 
@@ -346,7 +356,7 @@ describe("GET /api/search/unified", () => {
   });
 
   it("adds trust tiers to web results", async () => {
-    mockSearchSearXNG.mockResolvedValueOnce({
+    mockFederateNonAcademic.mockResolvedValueOnce({
       results: [
         {
           title: "Reuters climate report",
@@ -362,7 +372,8 @@ describe("GET /api/search/unified", () => {
           domain: "reuters.com",
         },
       ],
-      total: 1,
+      perSource: [],
+      perSourceRows: [],
       degraded: false,
     });
 
@@ -380,7 +391,7 @@ describe("GET /api/search/unified", () => {
         level: "mute",
       },
     ]);
-    mockSearchSearXNG.mockResolvedValueOnce({
+    mockFederateNonAcademic.mockResolvedValueOnce({
       results: [
         {
           title: "Keep me",
@@ -409,7 +420,8 @@ describe("GET /api/search/unified", () => {
           domain: "reddit.com",
         },
       ],
-      total: 2,
+      perSource: [],
+      perSourceRows: [],
       degraded: false,
     });
 
@@ -417,7 +429,10 @@ describe("GET /api/search/unified", () => {
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(body.total).toBe(2);
+    // The federated path filters muted domains before computing total (total = diversified pool
+    // size after preference filtering), so the muted reddit.com result is excluded from both
+    // the results and the total count.
+    expect(body.total).toBe(1);
     expect(body.hasMore).toBe(false);
     expect(body.results).toHaveLength(1);
     expect(body.results[0].domain).toBe("reuters.com");
@@ -430,7 +445,7 @@ describe("GET /api/search/unified", () => {
         level: "prefer",
       },
     ]);
-    mockSearchSearXNG.mockResolvedValueOnce({
+    mockFederateNonAcademic.mockResolvedValueOnce({
       results: [
         {
           title: "Neutral result",
@@ -459,7 +474,8 @@ describe("GET /api/search/unified", () => {
           domain: "reuters.com",
         },
       ],
-      total: 2,
+      perSource: [],
+      perSourceRows: [],
       degraded: false,
     });
 
@@ -471,78 +487,49 @@ describe("GET /api/search/unified", () => {
     expect(body.results[1].domain).toBe("example.com");
   });
 
-  it("fetches more upstream results when muted domains thin out a later page", async () => {
+  it("federated pool is filtered by muted domains and paged correctly on a later page", async () => {
     mockGetDomainPreferences.mockResolvedValueOnce([
       {
         domain: "reddit.com",
         level: "mute",
       },
     ]);
-    mockSearchSearXNG
-      .mockResolvedValueOnce({
-        results: [
-          ...Array.from({ length: 45 }, (_, index) => ({
-            title: `Muted ${index + 1}`,
-            authors: [],
-            journal: "Reddit",
-            year: 2026,
-            abstract: "Muted result",
-            citationCount: 0,
-            publicationTypes: ["news"],
-            isOpenAccess: false,
-            sources: ["news"],
-            url: `https://www.reddit.com/r/science/comments/${index + 1}`,
-            domain: "reddit.com",
-          })),
-          ...Array.from({ length: 15 }, (_, index) => ({
-            title: `Visible ${index + 1}`,
-            authors: [],
-            journal: "Reuters",
-            year: 2026,
-            abstract: "Visible result",
-            citationCount: 0,
-            publicationTypes: ["news"],
-            isOpenAccess: false,
-            sources: ["news"],
-            url: `https://www.reuters.com/world/climate-${index + 1}`,
-            domain: "reuters.com",
-          })),
-        ],
-        total: 80,
-        degraded: false,
-      })
-      .mockResolvedValueOnce({
-        results: [
-          ...Array.from({ length: 45 }, (_, index) => ({
-            title: `Muted ${index + 1}`,
-            authors: [],
-            journal: "Reddit",
-            year: 2026,
-            abstract: "Muted result",
-            citationCount: 0,
-            publicationTypes: ["news"],
-            isOpenAccess: false,
-            sources: ["news"],
-            url: `https://www.reddit.com/r/science/comments/${index + 1}`,
-            domain: "reddit.com",
-          })),
-          ...Array.from({ length: 35 }, (_, index) => ({
-            title: `Visible ${index + 1}`,
-            authors: [],
-            journal: "Reuters",
-            year: 2026,
-            abstract: "Visible result",
-            citationCount: 0,
-            publicationTypes: ["news"],
-            isOpenAccess: false,
-            sources: ["news"],
-            url: `https://www.reuters.com/world/climate-${index + 1}`,
-            domain: "reuters.com",
-          })),
-        ],
-        total: 80,
-        degraded: false,
-      });
+    // The federation returns a single pool — 45 muted + 35 visible = 80 items total.
+    // After muted-domain filtering, 35 visible items remain. Page 1, perPage 10 slices
+    // items 11-20 of the visible set (hasMore = 35 > 20 = true).
+    mockFederateNonAcademic.mockResolvedValueOnce({
+      results: [
+        ...Array.from({ length: 45 }, (_, index) => ({
+          title: `Muted ${index + 1}`,
+          authors: [],
+          journal: "Reddit",
+          year: 2026,
+          abstract: "Muted result",
+          citationCount: 0,
+          publicationTypes: ["news"],
+          isOpenAccess: false,
+          sources: ["news"],
+          url: `https://www.reddit.com/r/science/comments/${index + 1}`,
+          domain: "reddit.com",
+        })),
+        ...Array.from({ length: 35 }, (_, index) => ({
+          title: `Visible ${index + 1}`,
+          authors: [],
+          journal: "Reuters",
+          year: 2026,
+          abstract: "Visible result",
+          citationCount: 0,
+          publicationTypes: ["news"],
+          isOpenAccess: false,
+          sources: ["news"],
+          url: `https://www.reuters.com/world/climate-${index + 1}`,
+          domain: "reuters.com",
+        })),
+      ],
+      perSource: [],
+      perSourceRows: [],
+      degraded: false,
+    });
 
     const res = await GET(
       makeRequest({ q: "climate change", tab: "news", page: "1", perPage: "10" })
@@ -550,18 +537,18 @@ describe("GET /api/search/unified", () => {
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(mockSearchSearXNG).toHaveBeenNthCalledWith(1, "climate change", {
-      category: "news",
-      limit: 60,
-    });
-    expect(mockSearchSearXNG).toHaveBeenNthCalledWith(2, "climate change", {
-      category: "news",
-      limit: 80,
-    });
+    // Federated path fetches once, no incremental re-fetch loop.
+    expect(mockFederateNonAcademic).toHaveBeenCalledTimes(1);
+    expect(mockFederateNonAcademic).toHaveBeenCalledWith(
+      "climate change",
+      "news",
+      expect.objectContaining({ limit: 100 })
+    );
     expect(body.results).toHaveLength(10);
     expect(body.results[0].title).toBe("Visible 11");
     expect(body.results[9].title).toBe("Visible 20");
-    expect(body.total).toBe(80);
+    // total = diversified pool size after muted-domain filter (35 visible remain)
+    expect(body.total).toBe(35);
     expect(body.hasMore).toBe(true);
   });
 
@@ -653,16 +640,16 @@ describe("GET /api/search/unified", () => {
 
   // ── Phase 4: Filter pills + Scope constraints ────────────────────
 
-  it("passes timeRange to SearXNG for non-academic tabs", async () => {
+  it("passes timeRange to the federation for non-academic tabs", async () => {
     const res = await GET(
       makeRequest({ q: "climate news", tab: "news", timeRange: "week" })
     );
     expect(res.status).toBe(200);
-    expect(mockSearchSearXNG).toHaveBeenCalledWith("climate news", {
-      category: "news",
-      limit: expect.any(Number),
-      timeRange: "week",
-    });
+    expect(mockFederateNonAcademic).toHaveBeenCalledWith(
+      "climate news",
+      "news",
+      expect.objectContaining({ limit: 100, timeRange: "week" })
+    );
   });
 
   it("wraps query in quotes when exactMatch is true", async () => {
@@ -670,9 +657,10 @@ describe("GET /api/search/unified", () => {
       makeRequest({ q: "climate policy", tab: "web", exactMatch: "true" })
     );
     expect(res.status).toBe(200);
-    expect(mockSearchSearXNG).toHaveBeenCalledWith(
+    expect(mockFederateNonAcademic).toHaveBeenCalledWith(
       '"climate policy"',
-      expect.objectContaining({ category: "general" })
+      "web",
+      expect.objectContaining({ limit: 100 })
     );
   });
 
@@ -826,10 +814,11 @@ describe("GET /api/search/unified", () => {
       makeRequest({ q: 'injection "attack" test', tab: "web", exactMatch: "true" })
     );
     expect(res.status).toBe(200);
-    // Should wrap sanitized query (no inner quotes) in double quotes
-    expect(mockSearchSearXNG).toHaveBeenCalledWith(
+    // Should strip inner quotes first, then wrap in double quotes to prevent injection
+    expect(mockFederateNonAcademic).toHaveBeenCalledWith(
       '"injection attack test"',
-      expect.objectContaining({ category: "general" })
+      "web",
+      expect.objectContaining({ limit: 100 })
     );
   });
 });

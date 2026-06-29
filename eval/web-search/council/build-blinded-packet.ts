@@ -32,18 +32,20 @@ export interface EnginePair {
   exa: CommonRow[];
 }
 
-function parseArgs(argv: string[]): { run: string; out: string; salt: string; judges: string[] } {
+function parseArgs(argv: string[]): { run: string; out: string; salt: string; judges: string[]; tab: string | null } {
   let run = "baseline";
   let out = "baseline";
   let salt = "";
   let judges = "opus,codex,grok";
+  let tab: string | null = null;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--run") run = argv[++i];
     else if (argv[i] === "--out") out = argv[++i];
     else if (argv[i] === "--salt") salt = argv[++i];
     else if (argv[i] === "--judges") judges = argv[++i];
+    else if (argv[i] === "--tab") tab = argv[++i];
   }
-  return { run, out, salt: salt || out, judges: judges.split(",").map((s) => s.trim()).filter(Boolean) };
+  return { run, out, salt: salt || out, judges: judges.split(",").map((s) => s.trim()).filter(Boolean), tab };
 }
 
 /** Deterministic per-query coin flip: is OUR engine shown as Engine A for this id? */
@@ -122,14 +124,15 @@ function exaToCommon(items: ExaFixtureItem[]): CommonRow[] {
 }
 
 function main() {
-  const { run, out, salt, judges } = parseArgs(process.argv.slice(2));
-  const queriesById = new Map(BENCHMARK_QUERIES.map((q) => [q.id, q]));
+  const { run, out, salt, judges, tab } = parseArgs(process.argv.slice(2));
+  const benchQueries = tab ? BENCHMARK_QUERIES.filter((q) => q.tab === tab) : BENCHMARK_QUERIES;
+  const queriesById = new Map(benchQueries.map((q) => [q.id, q]));
   const fixtures = JSON.parse(
     readFileSync(join(HERE, "..", "exa", "fixtures.json"), "utf8"),
   ) as Record<string, ExaFixtureItem[]>;
 
   const pairs: EnginePair[] = [];
-  for (const q of BENCHMARK_QUERIES) {
+  for (const q of benchQueries) {
     const exa = fixtures[q.id];
     if (!Array.isArray(exa) || exa.length === 0) continue; // no opponent → skip (fair comparison)
     const oursPath = join(HERE, "..", "runs", run, "queries", `${q.id}.json`);
