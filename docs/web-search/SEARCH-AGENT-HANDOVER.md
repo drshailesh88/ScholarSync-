@@ -200,3 +200,53 @@ federated retrieval (N sources/tab, parallel, per-source timeout+fallback)
 - ✅ Cohere rerank integration confirmed (HTTP 200 + correct reorder); Exa capture, blinded packet gates, 3-judge parse, de-anon all real-run-verified.
 - ⏳ **Real Phase-0 baseline** still needs: (a) production/paced Cohere key, (b) human ratification of the `mustHaves` gold set
   (`eval/web-search/RUNBOOK.md` §1). Then the `/goal` CYCLE loop has a trustworthy floor to climb from.
+
+---
+
+## 8. Cycle progression + WEB-COUNCIL-1 result (2026-06-29)
+
+CYCLEs 1–3 are **merged to `main`** (PRs #100 Brave federation, #101 self-hosted web
+reranker + domain-aware rerank routing, #102 domain-diversity MMR).
+
+**Deterministic composites (frozen federated pools, `eval/web-search/runs/*`):**
+
+| Run | web | news | discussions | pass |
+|-----|-----|------|-------------|------|
+| `baseline` (SearXNG-only) | 2.5 | 3.9 | 5.3 | 0/12 |
+| `cycle2-brave` (Brave + RRF) | **5.6** | **5.8** | **7.3** | 3/12 |
+| `cycle3-mmr` (domain MMR) | 5.6 | **6.2** | 7.4 | 3/12 |
+| `cycle3-reranked` (reranker ON, reverted) | 4.6 ↓ | 6.1 ↓ | 5.4 ↓ | 2/12 |
+
+- **CYCLE 2 (Brave) is the big retrieval win** — every tab roughly doubled; it took
+  discussions and web off the floor. This is the federation thesis paying out.
+- **CYCLE 3 (MMR) fixed the news wire-flood** — news +0.4 by promoting distinct
+  outlets over single-source bursts; diversity dimension went to 10.
+- **Reranker REGRESSED the deterministic gate** (`cycle3-reranked`): the composite is
+  **set-based** (it scores top-10 *membership*, not order), so a reorder can only
+  evict gold from the top-10 and the relevance/recall dimension collapses. The
+  bge-reranker (`WEB_RERANK_URL`) is therefore **deployed but disabled in `dev.env`** —
+  its value is ordering quality, which only the *council* can see, not this gate.
+
+**Blinded council `WEB-COUNCIL-1`** (judges: Opus subagent + Codex + DeepSeek; salt
+`webcouncil1`; ours-as-A 50%; scored on `cycle3-mmr`):
+
+| Tab | beat-or-tie vs Exa |
+|-----|--------------------|
+| **discussions** | **4/4 = 100%** ✅ (Reddit-via-Brave + HN + Stack Exchange won outright) |
+| web | 1/4 = 25% |
+| news | 1/4 = 25% |
+| **overall** | **ours 6 / Exa 6 / tie 0 = 50% beat-or-tie** |
+
+From **0/12 (0%)** at baseline to **50%** overall, with **discussions fully at parity-or-better**.
+
+**Remaining gap is structural, not tuning:** web + news still trail Exa because Exa
+ranks on its **own neural embeddings index** (meaning, not keywords). MMR already
+solved the news *diversity/flood* problem; what's left on web/news is **semantic
+relevance + authority**, which a keyword source (SearXNG/Brave) can't fully close.
+The honest next levers are an owned semantic index *or* graduating a semantic-capable
+runtime source — measured the same keep-or-revert way.
+
+**Production-parity gap to close:** `FEDERATED_TABS = new Set(["discussions"])` in
+`route.ts` — web/news federate in the *eval* harness but **not yet in production**.
+Shipping web/news federation to prod is the cheapest way to make the live app match
+the measured cycle2/3 wins.
