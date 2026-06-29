@@ -35,7 +35,7 @@ export function toPacketRows(results: UnifiedSearchResult[]): CommonRow[] {
   });
 }
 
-/** Trust-annotate + Cohere rerank (fail-open). Mirrors the current production non-academic path. */
+/** Trust-annotate + self-hosted web rerank (fail-open). Mirrors the production non-academic path. */
 export async function applyQualityLayer(
   query: string,
   results: UnifiedSearchResult[],
@@ -45,7 +45,7 @@ export async function applyQualityLayer(
     return { ...r, domain, trustTier: r.trustTier ?? getTrustTier(domain ?? r.url) };
   });
   try {
-    return await rerankResults(query, annotated);
+    return await rerankResults(query, annotated, undefined, { domain: "web" });
   } catch {
     return annotated; // fail-open: trust-annotated results, original order
   }

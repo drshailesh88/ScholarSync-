@@ -30,18 +30,21 @@ export function hasReranker(): boolean {
 }
 
 /**
- * Self-hosted MedCPT Cross-Encoder (Modal, scale-to-zero). The endpoint returns a
- * raw relevance LOGIT per document IN INPUT ORDER (range ≈ −16…+10); we squash each
- * to a [0,1] probability ({@link logitToProbability}) — the contract every backend's
- * `relevance_score` honors — then pair to indices, sort desc, and trim to `topN`.
- * Throttle-proof — no external rate limit. Fail-open: a cold start that exceeds the
- * timeout (or any error) propagates as a throw so the caller keeps the pre-rerank order.
+ * Self-hosted cross-encoder (Modal, scale-to-zero) — biomedical MedCPT for the
+ * literature path, general bge-reranker for the web path. Both expose the same
+ * contract: a raw relevance LOGIT per document IN INPUT ORDER (range ≈ −16…+10),
+ * which we squash to a [0,1] probability ({@link logitToProbability}) — the contract
+ * every backend's `relevance_score` honors — then pair to indices, sort desc, and
+ * trim to `topN`. Throttle-proof — no external rate limit. `service` is the
+ * circuit-breaker/log label so each domain's lane is isolated. Fail-open: a cold
+ * start that exceeds the timeout (or any error) throws so the caller keeps order.
  */
-async function rerankMedcpt(
+async function rerankSelfHosted(
   url: string,
   query: string,
   documents: string[],
-  topN: number
+  topN: number,
+  service: string
 ): Promise<RerankScore[]> {
   const res = await resilientFetch(
     url,
@@ -50,7 +53,7 @@ async function rerankMedcpt(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, documents }),
     },
-    { service: "MedCPT-Rerank", timeout: 15000, maxRetries: 1 }
+    { service, timeout: 15000, maxRetries: 1 }
   );
   const data: { scores?: number[] } = await res.json();
   const scores = Array.isArray(data?.scores) ? data.scores : [];
@@ -90,23 +93,29 @@ async function rerankCohere(
 }
 
 /**
- * Rerank by query↔document relevance through a fail-open backend CHAIN, in priority
- * order: self-hosted MedCPT Cross-Encoder (`MEDCPT_RERANK_URL`, biomedical) → Cohere
- * (`COHERE_API_KEY`, warm fallback for the scale-to-zero MedCPT cold window). Each
- * backend is tried only if configured; if it errors or yields no usable scores, the
- * next is attempted. With none configured — or all failing — the input is returned
- * unchanged, and the quality ranker falls back to keyword-overlap relevance: the
- * "no model, never fails" floor, which is the correct infra fallback for a relevance
- * signal that is one capped term in a metadata-dominant composite, not the ruler.
+ * Rerank by query↔document relevance through a fail-open backend CHAIN. The leading
+ * self-hosted backend is DOMAIN-ROUTED: the web path (`domain: "web"`) uses the
+ * general cross-encoder (`WEB_RERANK_URL`); the literature path (default) uses the
+ * biomedical MedCPT cross-encoder (`MEDCPT_RERANK_URL`) — a query is never reranked
+ * by the wrong-domain model. Each domain uses its own circuit-breaker label so an
+ * outage in one lane can't trip the other. Cohere (`COHERE_API_KEY`) is the warm
+ * fallback for either during the scale-to-zero cold window. A backend is tried only
+ * if configured; if it errors or yields no scores, the next is attempted. With none
+ * configured — or all failing — the input is returned unchanged and the quality
+ * ranker falls back to keyword-overlap relevance: the "no model, never fails" floor.
  */
 export async function rerankResults(
   query: string,
   results: UnifiedSearchResult[],
-  topN?: number
+  topN?: number,
+  opts?: { domain?: "web" | "literature" }
 ): Promise<UnifiedSearchResult[]> {
-  const medcptUrl = process.env.MEDCPT_RERANK_URL;
+  const isWeb = opts?.domain === "web";
+  const selfHostedUrl = isWeb
+    ? process.env.WEB_RERANK_URL
+    : process.env.MEDCPT_RERANK_URL;
   const cohereKey = process.env.COHERE_API_KEY;
-  if (results.length === 0 || (!medcptUrl && !cohereKey)) {
+  if (results.length === 0 || (!selfHostedUrl && !cohereKey)) {
     return results;
   }
 
@@ -116,10 +125,17 @@ export async function rerankResults(
   );
 
   const backends: { name: string; run: () => Promise<RerankScore[]> }[] = [];
-  if (medcptUrl)
+  if (selfHostedUrl)
     backends.push({
-      name: "MedCPT",
-      run: () => rerankMedcpt(medcptUrl, query, documents, limit),
+      name: isWeb ? "WebReranker" : "MedCPT",
+      run: () =>
+        rerankSelfHosted(
+          selfHostedUrl,
+          query,
+          documents,
+          limit,
+          isWeb ? "Web-Rerank" : "MedCPT-Rerank"
+        ),
     });
   if (cohereKey)
     backends.push({
