@@ -9,6 +9,7 @@ import { searchSearXNG, type SearXNGCategory } from "@/lib/search/sources/searxn
 import { federateNonAcademic } from "@/lib/search/web/federate";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
+import { diversifyForTab } from "@/lib/search/diversity";
 import { getDomainEvidenceLevel } from "@/lib/search/evidence-level";
 import { getDomainConfig } from "@/lib/search/domains";
 import { augmentQuery } from "@/lib/ai/query-augment";
@@ -264,11 +265,14 @@ async function fetchNonAcademicResults(
     rankedResults = applyDomainPreferences(rerankedResults, preferences);
   }
 
+  const tab = category === "news" ? "news" : "web";
+  const diversified = diversifyForTab(rankedResults, tab);
+
   const start = page * perPage;
-  const paged = rankedResults.slice(start, start + perPage);
+  const paged = diversified.slice(start, start + perPage);
   const fetchCeiling = Math.min(response.total, MAX_NON_ACADEMIC_RESULTS);
   const canFetchMore = !response.degraded && limit < fetchCeiling;
-  const hasMore = rankedResults.length > start + perPage || canFetchMore;
+  const hasMore = diversified.length > start + perPage || canFetchMore;
 
   return {
     results: paged,
@@ -306,13 +310,14 @@ async function fetchFederatedNonAcademicResults(
   });
   const reranked = await rerankResults(query, federation.results);
   const ranked = applyDomainPreferences(reranked, preferences);
+  const diversified = diversifyForTab(ranked, tab);
 
   const start = page * perPage;
-  const paged = ranked.slice(start, start + perPage);
+  const paged = diversified.slice(start, start + perPage);
   return {
     results: paged,
-    total: ranked.length,
-    hasMore: ranked.length > start + perPage,
+    total: diversified.length,
+    hasMore: diversified.length > start + perPage,
     degraded: federation.degraded,
   };
 }

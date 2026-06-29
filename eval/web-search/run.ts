@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import { BENCHMARK_QUERIES } from "./queries";
 import { cacheKey } from "./capture-searxng";
 import { applyQualityLayer, toEvalItems, toPacketRows } from "./quality";
+import { diversifyForTab } from "@/lib/search/diversity";
 import { scoreTab, type DimensionKey } from "./metrics";
 import type { WebTab, CommonRow } from "./types";
 import type { UnifiedSearchResult } from "@/types/search";
@@ -35,8 +36,9 @@ export async function runFromCache(opts: { cacheDir: string; label: string; now:
     }
     const pool = JSON.parse(readFileSync(path, "utf8")) as { results: UnifiedSearchResult[] };
     const ranked = await applyQualityLayer(q.query, pool.results);
-    const score = scoreTab(toEvalItems(ranked), q, opts.now);
-    perQuery.push({ id: q.id, tab: q.tab, composite: score.composite, pass: score.pass, dimensions: score.dimensions, details: score.details, rows: toPacketRows(ranked) });
+    const diversified = diversifyForTab(ranked, q.tab);
+    const score = scoreTab(toEvalItems(diversified), q, opts.now);
+    perQuery.push({ id: q.id, tab: q.tab, composite: score.composite, pass: score.pass, dimensions: score.dimensions, details: score.details, rows: toPacketRows(diversified) });
   }
 
   const tabs: WebTab[] = ["web", "news", "discussions"];

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { UnifiedSearchResult } from "@/types/search";
-import { titleSimilarity, diversifyTopK } from "../diversity";
+import { titleSimilarity, diversifyTopK, diversifyByDomain, diversifyForTab } from "../diversity";
 
 function paper(title: string, over: Partial<UnifiedSearchResult> = {}): UnifiedSearchResult {
   return {
@@ -84,5 +84,54 @@ describe("diversifyTopK — MMR reorder within the fixed top-K", () => {
     const input = [paper("alpha beta"), paper("gamma delta"), paper("epsilon zeta"), paper("eta theta")];
     const out = diversifyTopK(input, { k: 4, anchor: 1, lambda: 0.7 });
     expect(out.map((p) => p.title)).toEqual(input.map((p) => p.title));
+  });
+});
+
+describe("diversifyByDomain — domain-aware top-K selection (MMR)", () => {
+  const d = (title: string, domain: string) =>
+    paper(title, { domain, url: `https://${domain}/${title}` });
+
+  it("promotes a distinct-domain result into the top-K over a redundant same-domain one", () => {
+    const results = [d("a", "news.com"), d("b", "news.com"), d("c", "news.com"), d("x", "other.com")];
+    const out = diversifyByDomain(results, { k: 3, lambda: 0.7 });
+    const topDomains = out.slice(0, 3).map((r) => r.domain);
+    expect(new Set(topDomains).size).toBe(2); // was 1 unique (all news.com)
+    expect(topDomains).toContain("other.com"); // x pulled up from rank 4
+  });
+
+  it("leaves an all-distinct-domain list in its original order", () => {
+    const results = [d("a", "a.com"), d("b", "b.com"), d("c", "c.com")];
+    const out = diversifyByDomain(results, { k: 3, lambda: 0.7 });
+    expect(out.map((r) => r.title)).toEqual(["a", "b", "c"]);
+  });
+
+  it("pins the anchor and never drops a result", () => {
+    const results = [d("a", "x.com"), d("b", "x.com"), d("c", "y.com"), d("e", "z.com")];
+    const out = diversifyByDomain(results, { k: 3, lambda: 0.7, anchor: 1 });
+    expect(out[0].title).toBe("a"); // anchor pinned
+    expect(out).toHaveLength(4); // nothing dropped
+    expect(new Set(out.map((r) => r.title)).size).toBe(4);
+  });
+
+  it("lambda=1 (pure relevance) keeps the original order", () => {
+    const results = [d("a", "x.com"), d("b", "x.com"), d("c", "y.com")];
+    const out = diversifyByDomain(results, { k: 3, lambda: 1 });
+    expect(out.map((r) => r.title)).toEqual(["a", "b", "c"]);
+  });
+});
+
+describe("diversifyForTab", () => {
+  const d = (title: string, domain: string) =>
+    paper(title, { domain, url: `https://${domain}/${title}` });
+
+  it("breaks a single-outlet news flood by surfacing a distinct domain into the top page", () => {
+    // 12 from one wire + 1 distinct outlet deeper than the page — diversification
+    // should pull the distinct outlet into the top 10.
+    const flood = Array.from({ length: 12 }, (_, i) => d(`n${i}`, "reuters.com"));
+    const results = [...flood, d("distinct", "apnews.com")];
+    const out = diversifyForTab(results, "news");
+    const top = out.slice(0, 10);
+    expect(top.some((r) => r.domain === "apnews.com")).toBe(true);
+    expect(out).toHaveLength(13); // nothing dropped
   });
 });
