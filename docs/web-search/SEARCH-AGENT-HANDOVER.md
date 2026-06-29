@@ -341,3 +341,40 @@ request before a reranker council run (first hit cold-starts ~20s).
 the reranker (cycle 5) is the first **semantic-ordering** lever and it wins on web where
 relevance is king. The next quantitative step is a fresh ours-vs-**Exa** web council to
 re-measure the 25% web parity number now that reranking is on.
+
+---
+
+## 11. CYCLE 6 — production federation gate + web-vs-Exa re-measure (2026-06-29)
+
+**Gate opened.** `FEDERATED_TABS` now = `{web, news, discussions}` — all three
+non-academic tabs federate in **production**, matching the eval. Cycles 2–5 (Brave,
+NewsData, MMR, web reranker) now reach real users instead of living only in the harness.
+The single-source SearXNG path (`fetchNonAcademicResults`) is removed as dead code; the
+non-academic dispatch always federates. Each source is fail-open, so a missing key in
+prod degrades to the remaining sources rather than erroring.
+
+> **Prod deploy note:** for the full benefit, `BRAVE_API_KEY`, `NEWSDATA_API_KEY`, and
+> `SEARXNG_URL` must be set in the **Vercel** environment (not just local `dev.env`).
+> Without them the federation still runs but on fewer sources.
+
+**WEB-COUNCIL-4 — reranked web vs Exa** (4 web benchmark queries, salt `webcouncil4`,
+Opus + Codex + DeepSeek, `build-blinded-packet.ts --tab web` on the reranked run):
+
+| | beat-or-tie vs Exa |
+|--|--|
+| **WEB-COUNCIL-1** (un-reranked web) | 1/4 = **25%** |
+| **WEB-COUNCIL-4** (reranked web) | 0/4 win + 1 tie = **25%** |
+
+**The reranker does NOT close the Exa gap** — even though WEB-COUNCIL-3 showed it beats
+our *own* un-reranked web 3-1. The reconciliation is the key insight: **reranking
+improves the ORDER of our pool, but Exa wins on RETRIEVAL/RECALL** — its neural index
+surfaces content our keyword sources (SearXNG/Brave) never fetch, and you cannot reorder
+your way to candidates you don't have. Closing the remaining web gap to Exa is a
+*retrieval* problem — an **owned crawl+embed semantic index** — not a ranking one. That
+is a large build and is deliberately deferred at this scale (the reranker remains a real
+quality win on our own stack; it just isn't the Exa-parity lever).
+
+**Net:** the web-search arc has taken every cheap, high-leverage lever — federation +
+diversity + fresh authority + semantic ordering — and shipped them to production.
+Discussions is at Exa parity (100%); web/news trail on neural retrieval, which is the one
+remaining lever and an explicit, costed deferral.
