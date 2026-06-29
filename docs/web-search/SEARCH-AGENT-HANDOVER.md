@@ -250,3 +250,54 @@ runtime source — measured the same keep-or-revert way.
 `route.ts` — web/news federate in the *eval* harness but **not yet in production**.
 Shipping web/news federation to prod is the cheapest way to make the live app match
 the measured cycle2/3 wins.
+
+---
+
+## 9. CYCLE 4 — NewsData.io news source + WEB-COUNCIL-2 (2026-06-29)
+
+**GDELT was tried first and rejected (measured):** 12.7s best-case latency (full
+body-text scan) vs the 9s federation budget, >25s under throttle, and noisy body-text
+matching (bare multi-word → off-topic, quoted phrase → empty). Non-viable as a
+synchronous federated source — removed.
+
+**Shipped: NewsData.io** (`src/lib/search/sources/newsdata.ts`) federated into the
+news tab. Fast (~1s), real abstracts, `qInMeta` matching (title+description+keywords,
+not body → on-topic), `prioritydomain=top` (curated high-authority outlets, drops the
+conspiracy/SEO-farm noise), `removeduplicate`. Keyed: `NEWSDATA_API_KEY` (1Password
+`Agent Vault/Newsdata.io API`, free tier ~200/day).
+
+**Fusion fix — weighted RRF (`rank-fusion-web.ts`):** a recency-only feed must not
+out-vote the authority-ranked engines. NewsData carries `weight: 0.5` + a 6-row
+supplement cap so its fresh rows fill gaps below SearXNG/Brave instead of flooding the
+top-K. Web/discussions fusion is byte-identical (default weight 1).
+
+**Why the deterministic harness can't judge this (proven):** the frozen benchmark is
+historical; NewsData is recency-first (free `latest` ≈ 48h) → it returns 0 rows for
+the benchmark's stale topics. Even on fresh queries, 70% of the news composite
+(authority/recency/diversity/dedup) is pool-scored but **relevance/usefulness is
+invisible** to it — and that is exactly NewsData's value. A live A/B on trending
+queries lands at **Δ −0.02 (neutral)**: NewsData trades a hair of avg authority for
+freshness the harness can't credit.
+
+**WEB-COUNCIL-2 — blinded A/B, the right instrument** (`build-ab-news-council.ts` →
+`aggregate-ab-news.ts`; salt `webcouncil2`; 8 trending news queries; ours-WITH-NewsData
+vs ours-WITHOUT, both from the identical pipeline → naturally blinding-safe; judges
+Opus + Codex + DeepSeek):
+
+| Result | |
+|--------|--|
+| **NewsData beat-or-tie** | **7/8 = 88%** |
+| wins (treatment) | 3 — Ozempic, SCOTUS, climate |
+| losses (control) | 1 — AI-regulation |
+| ties | 4 — Fed-rates, H5N1, Gaza, markets |
+
+Opus + Codex both credited treatment for **leading with the freshest on-topic
+reporting** on the recency-decisive queries (where NewsData contributed); DeepSeek tied
+all 8 (coarse). **Verdict: KEEP** — the council confirms the news-tab lift the
+deterministic gate is blind to. Value concentrates on breaking/recency-decisive
+queries; on topics SearXNG+Brave already cover, NewsData is a harmless tie.
+
+**Tooling added:** `eval/web-search/ab-news-live.ts` (live deterministic A/B on the
+gold-independent dims), `capture-providers.ts --tab/--providers <id-list>` (one-source-
+in/out A/B at a fixed timestamp), `council/build-ab-news-council.ts` +
+`aggregate-ab-news.ts` (reusable A/B council).

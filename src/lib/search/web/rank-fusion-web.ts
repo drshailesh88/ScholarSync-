@@ -40,19 +40,27 @@ function mergeWebRows(
   };
 }
 
+/**
+ * @param weights Per-source multiplier on the RRF contribution (default 1).
+ *   A supplement source (e.g. a recency-only news feed) can be given a weight
+ *   < 1 so it fills gaps without out-voting an authority-ranked engine and
+ *   evicting high-authority rows from the fused top-K set.
+ */
 export function reciprocalRankFusionWeb(
   lists: WebSourceList[],
-  k = 60
+  k = 60,
+  weights?: Record<string, number>
 ): UnifiedSearchResult[] {
   const merged: UnifiedSearchResult[] = [];
   const scores: number[] = [];
   const keyToIdx = new Map<string, number>();
 
   for (const { source, results } of lists) {
+    const weight = weights?.[source] ?? 1;
     for (let rank = 0; rank < results.length; rank++) {
       const row = results[rank];
       const key = fusionKey(row);
-      const contribution = 1 / (k + rank + 1);
+      const contribution = weight / (k + rank + 1);
       const existingIdx = keyToIdx.get(key);
 
       if (existingIdx !== undefined) {
