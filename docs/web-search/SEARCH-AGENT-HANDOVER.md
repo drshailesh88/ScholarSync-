@@ -297,7 +297,47 @@ all 8 (coarse). **Verdict: KEEP** — the council confirms the news-tab lift the
 deterministic gate is blind to. Value concentrates on breaking/recency-decisive
 queries; on topics SearXNG+Brave already cover, NewsData is a harmless tie.
 
-**Tooling added:** `eval/web-search/ab-news-live.ts` (live deterministic A/B on the
+**Tooling added (CYCLE 4):** `eval/web-search/ab-news-live.ts` (live deterministic A/B on the
 gold-independent dims), `capture-providers.ts --tab/--providers <id-list>` (one-source-
 in/out A/B at a fixed timestamp), `council/build-ab-news-council.ts` +
 `aggregate-ab-news.ts` (reusable A/B council).
+
+---
+
+## 10. CYCLE 5 — semantic web reranker, gated to the web tab (2026-06-29)
+
+The bge-reranker-v2-m3 cross-encoder (`WEB_RERANK_URL`, deployed in CYCLE 1, Modal
+scale-to-zero) is now **ENABLED for the web tab**. It was previously disabled because
+the **set-based deterministic gate can't credit ordering** — a reorder only looks like
+gold-eviction to it (it regressed the gate web 5.6→4.6). The right instrument is the
+council.
+
+**WEB-COUNCIL-3** — blinded A/B, reranker ON vs OFF on the **same frozen web+news
+pools** (identical input → isolates the reorder exactly; `build-reranker-council.ts`
+toggles `WEB_RERANK_URL` in-process), judges Opus + Codex + DeepSeek:
+
+| Tab | reranker beat-or-tie | detail |
+|-----|---------------------|--------|
+| **web** | **3/4 (75%)** ✅ | crispr, reproducibility, aspirin win; gut-microbiome the one loss |
+| news | 2/4 (50%) — wash | demotes fresh items on a recency-first tab (retraction −0.72) |
+
+The standout: **web-reproducibility 2.22 → 4.22** — without the reranker the top result
+was a catastrophic off-topic ("Japan travel pollution"); the cross-encoder demoted it.
+That is the semantic-relevance lift the keyword stack can't do — the real Exa gap.
+
+**Wiring:** `route.ts → rerankWebTabOnly()` gates the cross-encoder to the **web tab**;
+news (recency-first) and discussions (already 100%) keep their recency/diversity
+ordering. **Fail-open-fast:** the web reranker fetch uses a 4s ceiling + no retry, so a
+scale-from-zero cold start (~20s) degrades to un-reranked results *instantly* instead of
+stalling the search — keeping a GPU warm 24/7 isn't worth it at this scale. A warm rerank
+returns in well under a second.
+
+**Eval note:** `WEB_RERANK_URL` is now in `dev.env`, so the deterministic gate's clean
+(un-reranked) baseline command must also unset it:
+`env -u MEDCPT_RERANK_URL -u COHERE_API_KEY -u WEB_RERANK_URL`. Warm the endpoint with one
+request before a reranker council run (first hit cold-starts ~20s).
+
+**Where this leaves the Exa gap:** web/news federation (cycles 2–4) lifted retrieval;
+the reranker (cycle 5) is the first **semantic-ordering** lever and it wins on web where
+relevance is king. The next quantitative step is a fresh ours-vs-**Exa** web council to
+re-measure the 25% web parity number now that reranking is on.

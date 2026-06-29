@@ -43,12 +43,13 @@ function main() {
   if (judges.length < 3) throw new Error(`need >=3 valid judges, got ${judges.length} (${judges.join(",")})`);
 
   const result = aggregate({ key, verdicts, queriesById });
-  // Relabel ours/exa → treatment/control for the report.
-  const T = "treatment(+newsdata)";
-  const C = "control(no-newsdata)";
+  // Relabel ours/exa → the run's own legend (e.g. with/without a source or reranker).
+  const T = `treatment(${key.legend?.ours ?? "ours"})`;
+  const C = `control(${key.legend?.exa ?? "exa"})`;
   const relabel = (s: string) => (s === "ours" ? T : s === "exa" ? C : s);
 
-  console.log(`\n=== WEB-COUNCIL-2 — NewsData A/B (${judges.length} judges: ${judges.join(", ")}) ===\n`);
+  console.log(`\n=== ${dir} — A/B (${judges.length} judges: ${judges.join(", ")}) ===`);
+  console.log(`legend: treatment=${key.legend?.ours ?? "ours"}, control=${key.legend?.exa ?? "exa"}\n`);
   for (const r of result.rows) {
     const w = result.rows.find((x) => x.id === r.id)!;
     console.log(

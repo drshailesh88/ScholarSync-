@@ -44,7 +44,8 @@ async function rerankSelfHosted(
   query: string,
   documents: string[],
   topN: number,
-  service: string
+  service: string,
+  fetchOpts: { timeout: number; maxRetries: number } = { timeout: 15000, maxRetries: 1 }
 ): Promise<RerankScore[]> {
   const res = await resilientFetch(
     url,
@@ -53,7 +54,7 @@ async function rerankSelfHosted(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, documents }),
     },
-    { service, timeout: 15000, maxRetries: 1 }
+    { service, ...fetchOpts }
   );
   const data: { scores?: number[] } = await res.json();
   const scores = Array.isArray(data?.scores) ? data.scores : [];
@@ -134,7 +135,12 @@ export async function rerankResults(
           query,
           documents,
           limit,
-          isWeb ? "Web-Rerank" : "MedCPT-Rerank"
+          isWeb ? "Web-Rerank" : "MedCPT-Rerank",
+          // The web reranker is GPU scale-to-zero; keeping it warm 24/7 isn't worth
+          // it at this scale. Fail-open-fast: a short ceiling + no retry means a
+          // cold start degrades to un-reranked results instantly instead of making
+          // the user wait ~30s. A warm rerank returns in well under a second.
+          isWeb ? { timeout: 4000, maxRetries: 0 } : { timeout: 15000, maxRetries: 1 }
         ),
     });
   if (cohereKey)
