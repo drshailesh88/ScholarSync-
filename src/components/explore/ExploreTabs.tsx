@@ -2,13 +2,14 @@
 
 import { cn } from "@/lib/utils";
 
-export type ExploreTab = "academic" | "web" | "news" | "discussions" | "more";
+export type ExploreTab = "academic" | "web" | "news" | "discussions" | "videos" | "more";
 
 const TAB_LABELS: Record<ExploreTab, string> = {
   academic: "Academic",
   web: "Web",
   news: "News",
   discussions: "Discussions",
+  videos: "Videos",
   more: "More",
 };
 

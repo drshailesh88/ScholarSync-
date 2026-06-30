@@ -86,7 +86,8 @@ describe("ExplorePageClient", () => {
       await flushPromises();
     });
 
-    expect(fetchMock).toHaveBeenCalledTimes(4);
+    // One parallel fetch per searchable tab: academic, web, news, discussions, videos.
+    expect(fetchMock).toHaveBeenCalledTimes(5);
     expect(container.textContent).toContain("Academic");
     expect(container.textContent).toContain("academic result");
     expect(container.textContent).toContain("1 results in");
