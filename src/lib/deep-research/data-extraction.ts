@@ -1,13 +1,16 @@
 /**
  * Structured Data Extraction for Deep Research.
  *
- * Uses AI (claude-haiku via getSmallModel) to extract structured data
- * from paper abstracts: study design, sample size, effect sizes,
- * p-values, population characteristics, and follow-up duration.
+ * Uses the small model (via getSmallModel) to extract structured data from paper
+ * abstracts: study design, sample size, effect sizes, p-values, population
+ * characteristics, and follow-up duration. Fails over to a funded fallback model
+ * (DeepSeek V4 Flash) so a dead/throttled primary key can't silently empty the
+ * evidence tables.
  */
 
+import type { LanguageModel } from "ai";
 import { generateText } from "ai";
-import { getSmallModel } from "@/lib/ai/models";
+import { AI_PROVIDER, getSmallModel, getSmallModelFallback } from "@/lib/ai/models";
 import type { UnifiedSearchResult } from "@/types/search";
 import type { ExtractedPaperData, ResearchProgressCallback } from "./types";
 
@@ -56,8 +59,44 @@ function parseExtractionJSON(text: string): Partial<ExtractedPaperData> | null {
   }
 }
 
+/** Run one extraction against a given model; null when nothing extractable. */
+async function runExtraction(
+  model: LanguageModel,
+  paper: UnifiedSearchResult,
+  paperId: string
+): Promise<ExtractedPaperData | null> {
+  const { text } = await generateText({
+    model,
+    system: EXTRACTION_SYSTEM_PROMPT,
+    prompt: `Paper title: "${paper.title}"
+Authors: ${paper.authors?.slice(0, 5).join(", ") || "Unknown"}
+Year: ${paper.year || "Unknown"}
+Journal: ${paper.journal || "Unknown"}
+
+Abstract:
+${paper.abstract}`,
+    maxOutputTokens: 1000,
+  });
+
+  const parsed = parseExtractionJSON(text);
+  if (!parsed || Object.keys(parsed).length === 0) return null;
+
+  return {
+    paperId,
+    studyDesign: parsed.studyDesign,
+    sampleSize: parsed.sampleSize,
+    effectSizes: parsed.effectSizes,
+    pValues: parsed.pValues,
+    populationCharacteristics: parsed.populationCharacteristics,
+    followUpDuration: parsed.followUpDuration,
+    keyFindings: parsed.keyFindings,
+  };
+}
+
 /**
- * Extract structured data from a single paper's abstract.
+ * Extract structured data from a single paper's abstract. Tries the primary
+ * small model; on error (e.g. a dead/throttled provider key) it fails over to the
+ * funded fallback so the evidence tables don't silently come back empty.
  */
 async function extractSinglePaper(
   paper: UnifiedSearchResult
@@ -67,34 +106,24 @@ async function extractSinglePaper(
   const paperId = paper.doi || paper.pmid || paper.s2Id || paper.title.slice(0, 50);
 
   try {
-    const { text } = await generateText({
-      model: getSmallModel(),
-      system: EXTRACTION_SYSTEM_PROMPT,
-      prompt: `Paper title: "${paper.title}"
-Authors: ${paper.authors?.slice(0, 5).join(", ") || "Unknown"}
-Year: ${paper.year || "Unknown"}
-Journal: ${paper.journal || "Unknown"}
-
-Abstract:
-${paper.abstract}`,
-      maxOutputTokens: 1000,
-    });
-
-    const parsed = parseExtractionJSON(text);
-    if (!parsed || Object.keys(parsed).length === 0) return null;
-
-    return {
-      paperId,
-      studyDesign: parsed.studyDesign,
-      sampleSize: parsed.sampleSize,
-      effectSizes: parsed.effectSizes,
-      pValues: parsed.pValues,
-      populationCharacteristics: parsed.populationCharacteristics,
-      followUpDuration: parsed.followUpDuration,
-      keyFindings: parsed.keyFindings,
-    };
-  } catch (error) {
-    console.warn(`[DataExtraction] Failed to extract data for "${paper.title}":`, error);
+    return await runExtraction(getSmallModel(), paper, paperId);
+  } catch (primaryError) {
+    const fallback = getSmallModelFallback();
+    if (fallback) {
+      try {
+        return await runExtraction(fallback, paper, paperId);
+      } catch (fallbackError) {
+        console.warn(
+          `[DataExtraction] primary and fallback both failed for "${paper.title}":`,
+          fallbackError
+        );
+        return null;
+      }
+    }
+    console.warn(
+      `[DataExtraction] Failed to extract data for "${paper.title}" (no fallback configured):`,
+      primaryError
+    );
     return null;
   }
 }
@@ -160,6 +189,17 @@ export async function extractStructuredData(
     if (i + batchSize < papersWithAbstracts.length) {
       await sleep(200);
     }
+  }
+
+  // Loud alarm: extracting from real abstracts but getting nothing back means the
+  // small model AND its fallback are failing (dead/throttled keys) — the evidence
+  // tables would silently be empty. Make that visible instead of swallowing it.
+  if (papersWithAbstracts.length > 0 && results.size === 0) {
+    console.error(
+      `[DataExtraction] 0/${papersWithAbstracts.length} papers extracted — the small model ` +
+        `(AI_PROVIDER=${AI_PROVIDER}) and DeepSeek fallback both produced nothing. ` +
+        `Evidence tables will be empty; check the provider/DEEPSEEK_API_KEY keys.`
+    );
   }
 
   onProgress?.(
