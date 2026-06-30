@@ -6,6 +6,7 @@ import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchArxiv } from "@/lib/search/sources/arxiv";
 import { federateNonAcademic } from "@/lib/search/web/federate";
+import { searchYouTube } from "@/lib/search/sources/youtube";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
 import { diversifyForTab } from "@/lib/search/diversity";
@@ -44,7 +45,7 @@ type ResultDomainPreferenceLevel = NonNullable<
   UnifiedSearchResult["domainPreferenceLevel"]
 >;
 
-type SearchTab = "academic" | "web" | "news" | "discussions";
+type SearchTab = "academic" | "web" | "news" | "discussions" | "videos";
 
 type SourceDefinition = {
   sourceId: SourceId;
@@ -76,7 +77,8 @@ function isSearchTab(tab: string): tab is SearchTab {
     tab === "academic" ||
     tab === "web" ||
     tab === "news" ||
-    tab === "discussions"
+    tab === "discussions" ||
+    tab === "videos"
   );
 }
 
@@ -226,7 +228,7 @@ async function rerankWebTabOnly(
  */
 async function fetchFederatedNonAcademicResults(
   query: string,
-  tab: "web" | "news" | "discussions",
+  tab: "web" | "news" | "discussions" | "videos",
   page: number,
   perPage: number,
   preferences: Awaited<ReturnType<typeof getDomainPreferences>>,
@@ -237,6 +239,19 @@ async function fetchFederatedNonAcademicResults(
   hasMore: boolean;
   degraded: boolean;
 }> {
+  // Videos is a single-source tab (YouTube) — no federation/rerank/diversity, just
+  // YouTube's own relevance order paged through the shared response pipeline.
+  if (tab === "videos") {
+    const yt = await searchYouTube(query, { limit: MAX_NON_ACADEMIC_RESULTS });
+    const start = page * perPage;
+    return {
+      results: yt.results.slice(start, start + perPage),
+      total: yt.results.length,
+      hasMore: yt.results.length > start + perPage,
+      degraded: yt.status.status !== "ok" && yt.results.length === 0,
+    };
+  }
+
   const federation = await federateNonAcademic(query, tab, {
     limit: MAX_NON_ACADEMIC_RESULTS,
     timeRange,
@@ -330,7 +345,7 @@ export async function GET(req: Request) {
 
   if (!isSearchTab(tabParam)) {
     return NextResponse.json(
-      { error: "Query parameter 'tab' must be academic, web, news, or discussions" },
+      { error: "Query parameter 'tab' must be academic, web, news, discussions, or videos" },
       { status: 400 }
     );
   }
