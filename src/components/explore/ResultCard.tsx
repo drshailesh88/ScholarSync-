@@ -7,6 +7,7 @@ import type { UnifiedSearchResult } from "@/types/search";
 import type { ExploreTab } from "./ExploreTabs";
 import { ActionsMenu, type ActionsMenuCallbacks } from "./ActionsMenu";
 import { SourceInfoPanel } from "./SourceInfoPanel";
+import { VideoTakeaways } from "./VideoTakeaways";
 import type { DomainPreferenceLevel } from "@/lib/actions/domain-preferences";
 
 type SupportedTab = Exclude<ExploreTab, "more">;
@@ -336,6 +337,9 @@ export const ResultCard = memo(function ResultCard({
           {snippet}
         </p>
       ) : null}
+
+      {/* Videos tab: distill the lecture into transcript + key takeaways on demand */}
+      {tab === "videos" && <VideoTakeaways url={result.url} />}
 
       {/* Source Info Panel — inline expansion */}
       {showInfoPanel && (

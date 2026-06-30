@@ -17,7 +17,7 @@ const VIDEO_ID_RE = /^[A-Za-z0-9_-]{6,20}$/;
 
 type SummaryPayload =
   | { error: "no_transcript" | "missing_config" | "summarize_failed" | "transcript_error"; message: string }
-  | { lang: string; summary: string; keyPoints: string[]; topics: string[] };
+  | { lang: string; transcript: string; summary: string; keyPoints: string[]; topics: string[] };
 
 export async function POST(req: NextRequest) {
   let userId: string;
@@ -58,9 +58,9 @@ export async function POST(req: NextRequest) {
         }
         const notes = await summarizeTranscript(t.transcript);
         if (!notes) {
-          return { error: "summarize_failed", message: "Could not produce study notes from the transcript" };
+          return { error: "summarize_failed", message: "Could not distill the transcript" };
         }
-        return { lang: t.transcript.lang, ...notes };
+        return { lang: t.transcript.lang, transcript: t.transcript.text, ...notes };
       },
       { ttlSeconds: SUMMARY_TTL_SECONDS, shouldCache: (v) => !("error" in v) }
     );

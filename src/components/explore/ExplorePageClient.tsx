@@ -42,6 +42,7 @@ const SEARCHABLE_TABS: SearchableExploreTab[] = [
   "web",
   "news",
   "discussions",
+  "videos",
 ];
 
 function createEmptyTabState(): TabState {
@@ -60,6 +61,7 @@ function buildInitialTabState(): Record<SearchableExploreTab, TabState> {
     web: createEmptyTabState(),
     news: createEmptyTabState(),
     discussions: createEmptyTabState(),
+    videos: createEmptyTabState(),
   };
 }
 
@@ -164,6 +166,7 @@ export function ExplorePageClient() {
     web: 0,
     news: 0,
     discussions: 0,
+    videos: 0,
     more: 0,
   });
   const [tabState, setTabState] = useState<Record<SearchableExploreTab, TabState>>(
@@ -230,6 +233,7 @@ export function ExplorePageClient() {
       web: 0,
       news: 0,
       discussions: 0,
+      videos: 0,
       more: 0,
     });
 
@@ -358,6 +362,7 @@ export function ExplorePageClient() {
           web: 0,
           news: 0,
           discussions: 0,
+          videos: 0,
           more: 0,
         });
         setIsSearching(true);
@@ -462,7 +467,7 @@ export function ExplorePageClient() {
       setHasSearched(true);
       setIsSearching(true);
       setError(null);
-      setCurrentPageByTab({ academic: 0, web: 0, news: 0, discussions: 0, more: 0 });
+      setCurrentPageByTab({ academic: 0, web: 0, news: 0, discussions: 0, videos: 0, more: 0 });
 
       const startedAt = performance.now();
       Promise.allSettled(
@@ -553,7 +558,7 @@ export function ExplorePageClient() {
       setHasSearched(true);
       setIsSearching(true);
       setError(null);
-      setCurrentPageByTab({ academic: 0, web: 0, news: 0, discussions: 0, more: 0 });
+      setCurrentPageByTab({ academic: 0, web: 0, news: 0, discussions: 0, videos: 0, more: 0 });
 
       const startedAt = performance.now();
       Promise.allSettled(
