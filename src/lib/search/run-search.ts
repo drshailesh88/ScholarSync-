@@ -705,7 +705,8 @@ async function runLiteratureSearchUncached(
   // post-fusion critical path ~30-45% and shrinks the window where lane timeouts
   // accumulate. Both fail-open.
   //  - enrich: OpenAlex citation/PMID/DOI backfill — the S2-independent landmark signal.
-  //  - rerank: Cohere cross-encoder relevance score (dominant relevance signal).
+  //  - rerank: OpenRouter cohere/rerank-4-pro relevance score (managed, always-warm,
+  //    ~1.2s; the dominant relevance signal). MedCPT is off the critical path now.
   //
   // Both are bounded to the top `POST_FUSION_POOL` candidates by RRF score, in
   // place (slice shares object refs, so the originals in `fused` still get the
