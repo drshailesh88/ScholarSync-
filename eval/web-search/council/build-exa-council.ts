@@ -29,15 +29,30 @@ import { buildPacket, type EnginePair } from "./build-blinded-packet";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const WEB_RERANK_URL = "https://shailesh-greatest--manan-web-reranker-webreranker-rerank.modal.run";
 
-/** Production web/news arm: federate everything → trust + web rerank → diversify. */
-async function fusionRows(query: string, tab: "web" | "news"): Promise<{ rows: CommonRow[]; exaCount: number; poolSize: number }> {
+/**
+ * Production web/news arm, mirroring the route exactly: a primary-led web list
+ * (Exa leading) keeps its native order — NO cross-encoder rerank, since the rerank
+ * is what diluted it — then diversify. A non-primary tab (news) still goes through
+ * trust + web rerank → diversify.
+ */
+async function fusionRows(
+  query: string,
+  tab: "web" | "news",
+): Promise<{ rows: CommonRow[]; exaCount: number; poolSize: number; primaryLed: boolean }> {
   const fed = await federateWith(query, tab, SOURCES_BY_TAB[tab], { limit: 30, timeoutMs: 15000 });
-  process.env.WEB_RERANK_URL = WEB_RERANK_URL;
-  const ranked = await applyQualityLayer(query, fed.results);
-  delete process.env.WEB_RERANK_URL;
-  const diversified = diversifyForTab(ranked, tab);
+  // Primary-led (Exa on web): serve Exa's native order VERBATIM — no rerank, no
+  // diversity (both diluted it). Non-primary (news): trust + web rerank → diversify.
+  let rows: CommonRow[];
+  if (fed.primaryLed) {
+    rows = toPacketRows(fed.results);
+  } else {
+    process.env.WEB_RERANK_URL = WEB_RERANK_URL;
+    const ranked = await applyQualityLayer(query, fed.results);
+    delete process.env.WEB_RERANK_URL;
+    rows = toPacketRows(diversifyForTab(ranked, tab));
+  }
   const exaCount = fed.perSource.find((s) => s.id === "exa")?.count ?? 0;
-  return { rows: toPacketRows(diversified), exaCount, poolSize: fed.results.length };
+  return { rows, exaCount, poolSize: fed.results.length, primaryLed: fed.primaryLed };
 }
 
 /** Control: raw standalone Exa, exactly as Exa ranks it. */
@@ -46,22 +61,26 @@ async function rawExaRows(query: string, tab: "web" | "news"): Promise<CommonRow
   return toPacketRows(results);
 }
 
-function parseArgs(argv: string[]): { out: string; salt: string } {
+function parseArgs(argv: string[]): { out: string; salt: string; tab: string | null } {
   let out = "WEB-COUNCIL-5";
   let salt = "";
+  let tab: string | null = null;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--out") out = argv[++i];
     else if (argv[i] === "--salt") salt = argv[++i];
+    else if (argv[i] === "--tab") tab = argv[++i];
   }
-  return { out, salt: salt || out };
+  return { out, salt: salt || out, tab };
 }
 
 async function main() {
-  const { out, salt } = parseArgs(process.argv.slice(2));
+  const { out, salt, tab: tabFilter } = parseArgs(process.argv.slice(2));
   const queriesById = new Map<string, WebBenchmarkQuery>();
   const pairs: EnginePair[] = [];
 
-  const targets = BENCHMARK_QUERIES.filter((q) => q.tab === "web" || q.tab === "news");
+  const targets = BENCHMARK_QUERIES.filter(
+    (q) => (q.tab === "web" || q.tab === "news") && (!tabFilter || q.tab === tabFilter),
+  );
   for (const q of targets) {
     const tab = q.tab as "web" | "news";
     const treatment = await fusionRows(q.query, tab);
@@ -71,10 +90,10 @@ async function main() {
       continue;
     }
     queriesById.set(q.id, q);
-    // "ours" = fusion incl. Exa (treatment); "exa" = raw standalone Exa (control).
+    // "ours" = our fused/primary-led pipeline (treatment); "exa" = raw standalone Exa (control).
     pairs.push({ id: q.id, tab: q.tab, ours: treatment.rows, exa: control });
     console.log(
-      `  ✓ ${q.id.padEnd(30)} ${tab}  exaInPool=${treatment.exaCount} pool=${treatment.poolSize}  (t=${treatment.rows.length} c=${control.length})`,
+      `  ✓ ${q.id.padEnd(30)} ${tab}  exaInPool=${treatment.exaCount} primaryLed=${treatment.primaryLed} pool=${treatment.poolSize}  (t=${treatment.rows.length} c=${control.length})`,
     );
   }
 
@@ -85,7 +104,7 @@ async function main() {
   writeFileSync(
     join(outDir, "key.json"),
     JSON.stringify(
-      { run: "exa-ab", salt, generatedFrom: "build-exa-council.ts", legend: { ours: "fusion+rerank (incl exa)", exa: "raw exa" }, aIs: key },
+      { run: "exa-ab", salt, generatedFrom: "build-exa-council.ts", legend: { ours: "ours (exa-primary on web)", exa: "raw exa" }, aIs: key },
       null,
       2,
     ),
