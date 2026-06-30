@@ -44,6 +44,18 @@ function getOpenAI() {
   return _openai;
 }
 
+// DeepSeek is OpenAI-compatible — used only as the small-model FALLBACK (below).
+let _deepseek: ReturnType<typeof createOpenAI> | null = null;
+function getDeepSeek() {
+  if (!_deepseek) {
+    _deepseek = createOpenAI({
+      baseURL: "https://api.deepseek.com",
+      apiKey: process.env.DEEPSEEK_API_KEY!,
+    });
+  }
+  return _deepseek;
+}
+
 // ── LangFuse tracing helper ────────────────────────────────────────
 // Creates a LangFuse trace for each model invocation.
 // Call traceGeneration() before your LLM call, end it after.
@@ -136,6 +148,18 @@ export function getSmallModel() {
   }
   // GLM-4-Flash retired; use GLM-5
   return getZhipu()("glm-5");
+}
+
+/**
+ * Funded fallback for the small-model tasks (deep-research extraction/perspectives)
+ * when the {@link getSmallModel} provider errors — e.g. a dead or throttled key that
+ * would otherwise SILENTLY zero the evidence tables. DeepSeek V4 Flash (cheap, fast)
+ * via its OpenAI-compatible /chat/completions endpoint (`.chat()`); overridable with
+ * DEEPSEEK_MODEL. Returns null when DEEPSEEK_API_KEY is unset (no fallback available).
+ */
+export function getSmallModelFallback() {
+  if (!process.env.DEEPSEEK_API_KEY) return null;
+  return getDeepSeek().chat(process.env.DEEPSEEK_MODEL || "deepseek-v4-flash");
 }
 
 /** High-quality model for complex reasoning (deep research, analysis). */

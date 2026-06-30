@@ -49,6 +49,38 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * Fetch from Semantic Scholar with retry/backoff. S2's unauthenticated graph API
+ * rate-limits aggressively (HTTP 429), and a single 429 used to silently zero a
+ * whole traversal. Retry on 429 / 5xx / network error with exponential backoff so
+ * transient throttling recovers instead of dropping ~80 citation papers. Returns
+ * the final Response (which the caller still checks for `.ok`), or null if every
+ * attempt threw.
+ */
+async function fetchS2WithRetry(url: string, attempts = 3): Promise<Response | null> {
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    try {
+      const res = await fetch(url, {
+        headers: getS2Headers(),
+        signal: AbortSignal.timeout(15000),
+      });
+      if ((res.status === 429 || res.status >= 500) && attempt < attempts - 1) {
+        await sleep(800 * 2 ** attempt);
+        continue;
+      }
+      return res;
+    } catch (error) {
+      if (attempt < attempts - 1) {
+        await sleep(800 * 2 ** attempt);
+        continue;
+      }
+      console.warn(`[CitationTraversal] fetch failed after ${attempts} attempts (${url}):`, error);
+      return null;
+    }
+  }
+  return null;
+}
+
 function mapCitationPaper(paper: S2CitationPaper): UnifiedSearchResult | null {
   if (!paper.title || !paper.paperId) return null;
 
@@ -80,13 +112,9 @@ async function fetchCitations(
   const url = `https://api.semanticscholar.org/graph/v1/paper/${encodeURIComponent(paperId)}/citations?fields=${CITATION_FIELDS}&limit=${limit}`;
 
   try {
-    const res = await fetch(url, {
-      headers: getS2Headers(),
-      signal: AbortSignal.timeout(15000),
-    });
-
-    if (!res.ok) {
-      console.warn(`[CitationTraversal] Citations fetch failed for ${paperId}: HTTP ${res.status}`);
+    const res = await fetchS2WithRetry(url);
+    if (!res || !res.ok) {
+      if (res) console.warn(`[CitationTraversal] Citations fetch failed for ${paperId}: HTTP ${res.status}`);
       return [];
     }
 
@@ -118,13 +146,9 @@ async function fetchReferences(
   const url = `https://api.semanticscholar.org/graph/v1/paper/${encodeURIComponent(paperId)}/references?fields=${CITATION_FIELDS}&limit=${limit}`;
 
   try {
-    const res = await fetch(url, {
-      headers: getS2Headers(),
-      signal: AbortSignal.timeout(15000),
-    });
-
-    if (!res.ok) {
-      console.warn(`[CitationTraversal] References fetch failed for ${paperId}: HTTP ${res.status}`);
+    const res = await fetchS2WithRetry(url);
+    if (!res || !res.ok) {
+      if (res) console.warn(`[CitationTraversal] References fetch failed for ${paperId}: HTTP ${res.status}`);
       return [];
     }
 
