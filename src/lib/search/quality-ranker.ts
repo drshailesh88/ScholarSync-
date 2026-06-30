@@ -37,13 +37,28 @@ export interface QualityRankingConfig {
  * source (measured: trial-acronym recall 0.72 → 0.85+ on the 87q harness).
  */
 const BALANCED_CONFIG: QualityRankingConfig = {
-  evidenceWeight: 0.25,
-  citationWeight: 0.10,
+  evidenceWeight: 0.16,
+  citationWeight: 0.07,
   velocityWeight: 0.0,
-  journalWeight: 0.10,
-  rrfWeight: 0.25,
-  relevanceWeight: 0.30,
+  journalWeight: 0.07,
+  rrfWeight: 0.20,
+  relevanceWeight: 0.50,
 };
+
+/**
+ * Relevance GATE. The weighted composite alone let off-topic mega-cited papers
+ * (e.g. PRISMA: Level I, Q1, 83k citations) out-score a perfectly relevant but
+ * recent, 0-citation paper, because the clinical priors maxed out while relevance
+ * was just one term. The gate makes relevance NECESSARY: the whole composite is
+ * multiplied by min(1, relevance / FLOOR), so a paper the cross-encoder scores
+ * below the floor is crushed no matter how prestigious it is, while everything at
+ * or above the floor is unpenalized and ordered by the quality priors as before.
+ */
+const RELEVANCE_GATE_FLOOR = 0.45;
+
+function relevanceGate(relevance: number): number {
+  return Math.min(1, relevance / RELEVANCE_GATE_FLOOR);
+}
 
 // ── Signal normalizers ──────────────────────────────────────────────
 
@@ -253,7 +268,7 @@ function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult 
   // or specific drug than the query specifies — drift the cross-encoder cannot
   // discriminate. The multiplier is recorded for the ranking trace.
   signals.entityDrift = ctx.rawQuery ? entityDriftPenalty(ctx.rawQuery, r) : 1;
-  const composite = weighted * signals.entityDrift;
+  const composite = weighted * signals.entityDrift * relevanceGate(signals.relevance);
   return { result: r, composite, signals };
 }
 
