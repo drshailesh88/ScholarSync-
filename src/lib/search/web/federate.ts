@@ -13,9 +13,11 @@ import { okStatus, classifyRejectionReason, type SourceStatus } from "@/lib/sear
 import { searchSearXNG, type SearXNGCategory } from "@/lib/search/sources/searxng";
 import { searchBrave } from "@/lib/search/sources/brave";
 import { searchNewsData } from "@/lib/search/sources/newsdata";
+import { searchExa } from "@/lib/search/sources/exa";
 import { searchHackerNews } from "@/lib/search/sources/hacker-news";
 import { searchStackExchange } from "@/lib/search/sources/stackexchange";
 import { reciprocalRankFusionWeb } from "./rank-fusion-web";
+import { canonicalUrl } from "./canonical-url";
 
 export type FederatedTab = "web" | "news" | "discussions";
 
@@ -42,6 +44,15 @@ export interface WebSource {
    * engines and flooding the fused top-K.
    */
   weight?: number;
+  /**
+   * When set and this source returns results, its NATIVE order LEADS the fused
+   * list and the other sources fill the deduped tail below it — no RRF blend over
+   * the head, and the caller skips the cross-encoder rerank (`primaryLed`). Used
+   * for a neural engine (Exa) whose own ranking measured better than our fusion +
+   * rerank: blending it co-equal and reranking diluted it. If the primary returns
+   * nothing (unkeyed/down), federation falls back to normal weighted RRF.
+   */
+  primary?: boolean;
 }
 
 export interface FederationResult {
@@ -50,6 +61,13 @@ export interface FederationResult {
   /** Per-source raw rows — debug/provenance only (e.g. the capture provider tag). */
   perSourceRows: Array<{ id: string; results: UnifiedSearchResult[] }>;
   degraded: boolean;
+  /**
+   * True when a `primary` source led the ordering (its native order preserved at
+   * the head). The caller MUST NOT cross-encoder-rerank a primary-led list — the
+   * rerank is what diluted the primary engine's ranking. False → normal RRF, the
+   * caller may rerank.
+   */
+  primaryLed: boolean;
 }
 
 const DEFAULT_SOURCE_TIMEOUT_MS = 9000;
@@ -139,6 +157,28 @@ const newsDataSource: WebSource = {
     }),
 };
 
+/**
+ * Exa — a neural/embeddings web index. It surfaces authoritative documents the
+ * keyword engines (SearXNG, Brave) never return. WEB-COUNCIL-5 measured that
+ * blending Exa co-equal and then reranking DILUTED it (council 5: raw Exa 6/2), and
+ * so did domain-diversity (council 6: 3/1). So on the **web** tab Exa is PRIMARY: its
+ * native top-10 leads VERBATIM and SearXNG/Brave fill the deduped tail (positions 11+)
+ * + serve as the unkeyed fallback; the caller (`primaryLed`) skips BOTH the rerank and
+ * the diversity that diluted it. On **news** (a measured tie) Exa stays a co-equal RRF
+ * source. numResults is capped to 10 inside the source to hold the cost tier. Dormant
+ * until EXA_API_KEY is set (missing_config → contributes nothing, fail-open) — on web,
+ * an unkeyed Exa simply falls back to keyword RRF + rerank + diversity.
+ */
+function exaSourceForTab(tab: FederatedTab): WebSource {
+  return {
+    id: "exa",
+    label: tab === "news" ? "Exa (news)" : "Exa",
+    primary: tab === "web",
+    run: (query, options) =>
+      searchExa(query, { tab, limit: options.limit, timeRange: options.timeRange }),
+  };
+}
+
 const hackerNewsSource: WebSource = {
   id: "hacker-news",
   label: "Hacker News",
@@ -154,15 +194,16 @@ const stackExchangeSource: WebSource = {
 /**
  * Per-tab source set. web/news federate SearXNG with Brave's independent index
  * (Brave surfaces authoritative explainers + diverse outlets that SearXNG's
- * keyword scrape misses); news adds NewsData.io's top-priority outlet index for
- * high-authority recent coverage. Discussions federates the real-thread verticals —
+ * keyword scrape misses) and Exa's neural index (the recall engine — it returns
+ * documents the keyword engines miss); news adds NewsData.io's top-priority outlet
+ * index for high-authority recent coverage. Discussions federates the real-thread verticals —
  * Hacker News + Stack Exchange APIs plus Reddit threads via Brave's `site:`
  * index (Reddit's own API is dead). SearXNG "social media" is excluded (it
  * returns fediverse noise and measured worse).
  */
 export const SOURCES_BY_TAB: Record<FederatedTab, WebSource[]> = {
-  web: [searxngSourceForTab("web"), braveSourceForTab("web")],
-  news: [searxngSourceForTab("news"), braveSourceForTab("news"), newsDataSource],
+  web: [searxngSourceForTab("web"), braveSourceForTab("web"), exaSourceForTab("web")],
+  news: [searxngSourceForTab("news"), braveSourceForTab("news"), newsDataSource, exaSourceForTab("news")],
   discussions: [hackerNewsSource, stackExchangeSource, braveSourceForTab("discussions")],
 };
 
@@ -209,11 +250,34 @@ export async function federateWith(
     .filter((s) => s.results.length > 0)
     .map((s) => ({ source: s.id, results: s.results }));
 
-  // Single contributing source → passthrough (no reorder, no rrfScore) so a
-  // one-source federation is byte-identical to the legacy direct call.
   const weights = Object.fromEntries(sources.map((s) => [s.id, s.weight ?? 1]));
-  const results =
-    lists.length <= 1 ? (lists[0]?.results ?? []) : reciprocalRankFusionWeb(lists, 60, weights);
+
+  // A `primary` source that returned results LEADS in its native order; the other
+  // sources fill the deduped tail (RRF'd among themselves). No rerank downstream
+  // (`primaryLed`) so the primary engine's measured-better ranking survives intact.
+  const primaryId = sources.find((s) => s.primary)?.id;
+  const primaryList = primaryId ? lists.find((l) => l.source === primaryId) : undefined;
+
+  let results: UnifiedSearchResult[];
+  let primaryLed = false;
+  if (primaryList && primaryList.results.length > 0) {
+    const seen = new Set(primaryList.results.map((r) => (r.url ? canonicalUrl(r.url) : r.title)));
+    const rest = lists.filter((l) => l.source !== primaryId);
+    const restFused =
+      rest.length === 0
+        ? []
+        : rest.length === 1
+          ? rest[0].results
+          : reciprocalRankFusionWeb(rest, 60, weights);
+    const tail = restFused.filter((r) => !seen.has(r.url ? canonicalUrl(r.url) : r.title));
+    results = [...primaryList.results, ...tail];
+    primaryLed = true;
+  } else {
+    // Single contributing source → passthrough (no reorder, no rrfScore) so a
+    // one-source federation is byte-identical to the legacy direct call.
+    results =
+      lists.length <= 1 ? (lists[0]?.results ?? []) : reciprocalRankFusionWeb(lists, 60, weights);
+  }
 
   const anyOk = settled.some((s) => s.status.status === "ok");
   const degraded = !anyOk && results.length === 0;
@@ -223,6 +287,7 @@ export async function federateWith(
     perSource: settled.map((s) => ({ id: s.id, label: s.label, count: s.results.length, status: s.status })),
     perSourceRows: settled.map((s) => ({ id: s.id, results: s.results })),
     degraded,
+    primaryLed,
   };
 }
 

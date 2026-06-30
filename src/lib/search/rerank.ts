@@ -139,8 +139,13 @@ export async function rerankResults(
           // The web reranker is GPU scale-to-zero; keeping it warm 24/7 isn't worth
           // it at this scale. Fail-open-fast: a short ceiling + no retry means a
           // cold start degrades to un-reranked results instantly instead of making
-          // the user wait ~30s. A warm rerank returns in well under a second.
-          isWeb ? { timeout: 4000, maxRetries: 0 } : { timeout: 15000, maxRetries: 1 }
+          // the user wait ~30s. A warm rerank returns in well under a second. The
+          // ceiling is env-tunable (WEB_RERANK_TIMEOUT_MS) so an offline/batch context
+          // — or a future always-warm deploy — can absorb the cold start; production
+          // leaves it unset and keeps the 4s fast-fail.
+          isWeb
+            ? { timeout: Number(process.env.WEB_RERANK_TIMEOUT_MS) || 4000, maxRetries: 0 }
+            : { timeout: 15000, maxRetries: 1 }
         ),
     });
   if (cohereKey)

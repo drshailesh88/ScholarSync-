@@ -78,6 +78,40 @@ describe("federateWith", () => {
   });
 });
 
+describe("federateWith — primary-led ordering", () => {
+  function primarySource(id: string, results: UnifiedSearchResult[]): WebSource {
+    return { id, label: id, primary: true, run: async () => ({ results, total: results.length, status: okStatus() }) };
+  }
+
+  it("leads with the primary source's native order, then appends the deduped tail", async () => {
+    const exa = [row("https://exa/1", "e1"), row("https://exa/2", "e2")];
+    const kw = [row("https://exa/1", "dup of e1"), row("https://kw/1", "k1")];
+    const fed = await federateWith("q", "web", [
+      okSource("searxng", kw),
+      primarySource("exa", exa),
+    ]);
+    expect(fed.primaryLed).toBe(true);
+    // Exa's two results lead in native order; only the non-duplicate keyword row tails.
+    expect(fed.results.map((r) => r.url)).toEqual([
+      "https://exa/1",
+      "https://exa/2",
+      "https://kw/1",
+    ]);
+    // The primary head is the SAME objects, unreordered (no rrfScore stamped on it).
+    expect(fed.results[0]).toBe(exa[0]);
+    expect(fed.results[0].rrfScore).toBeUndefined();
+  });
+
+  it("falls back to RRF (primaryLed false) when the primary source returns nothing", async () => {
+    const fed = await federateWith("q", "web", [
+      okSource("searxng", [row("https://kw/1", "k1")]),
+      primarySource("exa", []), // unkeyed / empty
+    ]);
+    expect(fed.primaryLed).toBe(false);
+    expect(fed.results.map((r) => r.url)).toEqual(["https://kw/1"]);
+  });
+});
+
 describe("braveSourceForTab", () => {
   const mockBrave = vi.mocked(searchBrave);
 

@@ -241,9 +241,18 @@ async function fetchFederatedNonAcademicResults(
     limit: MAX_NON_ACADEMIC_RESULTS,
     timeRange,
   });
-  const reranked = await rerankWebTabOnly(query, federation.results, tab === "web");
+  // A primary-led list (Exa leading the web tab) keeps its native order VERBATIM:
+  // WEB-COUNCIL-5/6 showed every processing layer DILUTED it — the cross-encoder
+  // rerank (council 5) and then domain-diversity (council 6, which pulled keyword
+  // tail junk up into the visible top-10). So when Exa leads we skip BOTH; Exa's
+  // own top-10 is the page (matching raw Exa, which beat every processed variant),
+  // and the deduped keyword tail rides positions 11+ as breadth. Rerank + diversity
+  // still run on the keyword-only fallback (Exa unkeyed/empty → primaryLed false).
+  const reranked = federation.primaryLed
+    ? federation.results
+    : await rerankWebTabOnly(query, federation.results, tab === "web");
   const ranked = applyDomainPreferences(reranked, preferences);
-  const diversified = diversifyForTab(ranked, tab);
+  const diversified = federation.primaryLed ? ranked : diversifyForTab(ranked, tab);
 
   const start = page * perPage;
   const paged = diversified.slice(start, start + perPage);
