@@ -359,7 +359,7 @@ async function searchPubMedPlanned(
 export async function runLiteratureSearch(
   params: RunLiteratureSearchParams
 ): Promise<LiteratureSearchResult> {
-  const key = buildCacheKey("litsearch:v1", {
+  const key = buildCacheKey("litsearch:v2", {
     query: params.query,
     pubmedQuery: params.pubmedQuery,
     sources: params.sources ? [...params.sources].sort() : undefined,
