@@ -17,19 +17,19 @@ function paper(over: Partial<UnifiedSearchResult>): UnifiedSearchResult {
   } as UnifiedSearchResult;
 }
 
-describe("quality-ranker — cross-encoder relevance is a bounded signal, not the ruler", () => {
-  it("does not let a low cross-encoder score bury a landmark RCT", () => {
-    // The primary trial report: the cross-encoder scored it low (it describes the
-    // intervention, not the trial acronym), but it is a high-evidence, highly cited
-    // RCT. The score arrives squashed to [0,1] (sigmoid(-7) ≈ 0.001) so it is one
-    // capped term; the clinical-quality priors must keep the primary on top.
+describe("quality-ranker — relevance gates the ranking; clinical priors order the relevant results", () => {
+  it("keeps a RELEVANT landmark RCT on top via its clinical priors", () => {
+    // An on-topic primary trial: the cross-encoder gives it a solid score, so it
+    // clears the relevance gate and its high evidence/citations/journal lift it above
+    // a less-relevant secondary. Realistic [0,1] scores — not the obsolete raw-logit
+    // 0.001 pathology, which the squashed reranker read-out no longer produces.
     const primary = paper({
       title: "Primary RCT",
       evidenceLevel: "I",
       citationCount: 5000,
       journalQuartile: "Q1",
       rrfScore: 0.9,
-      rerankScore: 0.001,
+      rerankScore: 0.55,
     });
     const secondary = paper({
       title: "Secondary sub-study",
@@ -37,11 +37,37 @@ describe("quality-ranker — cross-encoder relevance is a bounded signal, not th
       citationCount: 50,
       journalQuartile: "Q3",
       rrfScore: 0.3,
-      rerankScore: 0.88,
+      rerankScore: 0.5,
     });
 
     const ranked = qualityRank([secondary, primary], "primary rct");
     expect(ranked[0].title).toBe("Primary RCT");
+  });
+
+  it("relevance gate: an off-topic mega-cited paper cannot bury a relevant recent one", () => {
+    // The real-world failure this fixes: a generic methods paper (PRISMA) maxes every
+    // quality prior — Level I, Q1, 80k citations — but the cross-encoder correctly
+    // scores it near-zero for the actual clinical topic. The gate must crush it below
+    // a perfectly relevant, recent, zero-citation paper instead of crowning it.
+    const offTopic = paper({
+      title: "Off-topic mega-cited",
+      evidenceLevel: "I",
+      citationCount: 80000,
+      journalQuartile: "Q1",
+      rrfScore: 0.9,
+      rerankScore: 0.08,
+    });
+    const relevant = paper({
+      title: "Relevant recent paper",
+      evidenceLevel: "V",
+      citationCount: 0,
+      journalQuartile: null,
+      rrfScore: 0.4,
+      rerankScore: 0.92,
+    });
+
+    const ranked = qualityRank([offTopic, relevant], "the specific clinical topic");
+    expect(ranked[0].title).toBe("Relevant recent paper");
   });
 
   it("keeps the cross-encoder a meaningful but bounded signal (prefers the higher score, all else equal)", () => {
