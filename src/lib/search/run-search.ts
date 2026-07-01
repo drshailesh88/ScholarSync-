@@ -174,7 +174,7 @@ function withSourceTimeout<T>(
  * guaranteed floor and awaited on its own longer timeout (DENSE_FLOOR_TIMEOUT_MS).
  * Only the lexical lanes and the recency/HyDE dense lanes race this deadline.
  */
-export const FANOUT_DEADLINE_MS = 8000;
+export const FANOUT_DEADLINE_MS = 6000;
 
 /**
  * Guaranteed-floor timeout (ms) for the BASE MedCPT dense lane. This lane is
@@ -184,7 +184,7 @@ export const FANOUT_DEADLINE_MS = 8000;
  * longer than FANOUT_DEADLINE_MS so a dense lane finishing just past the fan-out
  * ceiling still contributes rather than collapsing recall to whatever survived.
  */
-export const DENSE_FLOOR_TIMEOUT_MS = 9000;
+export const DENSE_FLOOR_TIMEOUT_MS = 7000;
 
 /**
  * Dedicated timeout (ms) for the transient-empty recovery pass — a single fresh
@@ -449,7 +449,7 @@ async function runLiteratureSearchUncached(
     !plan.isTrialLookup &&
     !isPaperLookupQuery(searchQuery);
   const hyde: HydeResult = hydeEnabled
-    ? await withSourceTimeout("HyDE", generateSearchVariants(searchQuery), 5000).catch(
+    ? await withSourceTimeout("HyDE", generateSearchVariants(searchQuery), 3000).catch(
         () => ({ variants: [] as string[] })
       )
     : { variants: [] };

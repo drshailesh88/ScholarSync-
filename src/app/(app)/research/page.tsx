@@ -410,7 +410,7 @@ export default function ResearchPage() {
       abortRef.current = controller;
 
       // Enforce a 15-second client-side timeout
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const timeoutId = setTimeout(() => controller.abort(), 25000);
 
       setLoading(true);
       setError(null);
