@@ -107,7 +107,10 @@ export type LiteraturePaper = UnifiedSearchResult & {
 
 export interface LiteratureSearchResult {
   results: LiteraturePaper[];
+  /** Navigable result count (capped to {@link MAX_NAVIGABLE_RESULTS}) — drives pagination. */
   total: number;
+  /** True cross-source match count (uncapped) — for an honest "N papers matched" context line. */
+  matchedTotal: number;
   page: number;
   perPage: number;
   hasMore: boolean;
@@ -213,6 +216,13 @@ export function recencyYearFloor(currentYear: number, windowYears: number): numb
 // Cap for the post-fusion rerank pool. Only the top candidates by RRF score can
 // reach the returned page, so reranking beyond this is wasted work.
 export const POST_FUSION_POOL = 50;
+
+// Cap the navigable page count. `total` used to be the largest source's raw hit
+// count (millions), so the UI showed "page 2 of 340,000 pages" — but we only fetch
+// + fuse + rerank a bounded pool per page, source APIs cap deep pagination (~10k
+// offset), and relevance degrades fast past the first pages. Bound navigable pages
+// to an honest depth; the true cross-source match count is surfaced as `matchedTotal`.
+export const MAX_NAVIGABLE_RESULTS = 200;
 
 const DEADLINE = Symbol("fanout-deadline");
 
@@ -835,12 +845,14 @@ async function runLiteratureSearchUncached(
     inLibrary: false,
   }));
 
+  const navigableTotal = Math.min(maxTotal, MAX_NAVIGABLE_RESULTS);
   return {
     results,
-    total: maxTotal,
+    total: navigableTotal,
+    matchedTotal: maxTotal,
     page,
     perPage,
-    hasMore: filtered.length > perPage,
+    hasMore: filtered.length > perPage && (page + 1) * perPage < navigableTotal,
     sourceCounts,
     sourceStatuses,
     confidence: assessConfidence(pageResults),

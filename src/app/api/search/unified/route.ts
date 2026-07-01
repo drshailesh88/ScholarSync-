@@ -478,6 +478,7 @@ export async function GET(req: Request) {
     const response: SearchResponse = {
       results,
       total,
+      matchedTotal: literature.matchedTotal,
       page,
       perPage,
       hasMore,

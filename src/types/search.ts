@@ -102,7 +102,10 @@ export interface SearchFilters {
 
 export interface SearchResponse {
   results: UnifiedSearchResult[];
+  /** Navigable result count (capped) — drives pagination. */
   total: number;
+  /** True cross-source match count (uncapped) — for an honest "N papers matched" line. */
+  matchedTotal?: number;
   page: number;
   perPage: number;
   hasMore: boolean;
