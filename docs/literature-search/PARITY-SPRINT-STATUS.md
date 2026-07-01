@@ -193,3 +193,22 @@ backfill → ≥90%, guideline/recency lanes → decisive win share, transient-e
 recovery → empty-set count) is **not yet re-measured** — it needs a clean,
 non-throttled 87q harness run + a fresh blinded council. That run is the next step
 to confirm the gates close and to start the 3-consecutive-cycle Stop count.
+
+## Live-resilience verification (2026-06-29)
+After wiring the owned MedCPT endpoints into `dev.env` (`MEDCPT_SEARCH_URL`,
+`MEDCPT_RERANK_URL` — non-secret public Modal URLs), an 8-query smoke through the
+**real app pipeline** (`searchPapers`) happened to land during a **total OpenAlex
+outage** (HTTP 504 on every call, all retries exhausted). Result — the engine held:
+
+- **0 empties** — 8/8 queries returned a full n=10 despite `openalex:0` across the board.
+- The **owned dense lane carried it**: `medcpt_dense:25` on 6/8 queries; the recency
+  query fired `medcpt_dense_recent:25` (cycle-3 lane activating as designed); the two
+  dense-miss queries were backfilled by the `web` lane + PubMed to n=10.
+- **PMID fill 91%** (≥90% gate held) and DOI 89% even with OpenAlex — the richest
+  metadata source — fully dark; cycle-15 NCBI PMID backfill is what kept PMID above gate.
+- recall@10 75% / best-in-top-3 75% under this worst case (vs 85%/78% with OpenAlex up).
+
+**Takeaway:** the throttle-proof owned dense lane + transient-empty recovery (cycle 11)
++ PMID backfill (cycle 15) make the engine degrade *gracefully* through a full upstream
+outage rather than cascade-to-empty. The wired owned stack is confirmed engaged in the
+real code path, not just reachable.
