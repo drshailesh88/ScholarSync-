@@ -10,6 +10,8 @@
 
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchEuropePMC } from "@/lib/search/sources/europepmc";
+import { searchScopus } from "@/lib/search/sources/scopus";
+import { searchSpringer } from "@/lib/search/sources/springer";
 import { searchMedcptDense } from "@/lib/search/sources/medcpt-dense";
 import { fetchCrossrefByDoi } from "@/lib/search/sources/crossref";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
@@ -32,18 +34,26 @@ import { assessConfidence, type Confidence } from "@/lib/search/confidence";
 import { backfillPmidsByDoi } from "@/lib/search/pmid-backfill";
 import type { UnifiedSearchResult } from "@/types/search";
 
-export const SEARCH_SOURCES = ["pubmed", "europepmc"] as const;
+export const SEARCH_SOURCES = ["pubmed", "europepmc", "scopus", "springer"] as const;
 export type SearchSourceId = (typeof SEARCH_SOURCES)[number];
 
 /**
  * Sources used when a caller does not specify any. PubMed-first for clinical
  * relevance; Europe PMC for open-access links AND native citation counts (its
- * `citedByCount` replaces the dropped OpenAlex citation-enrichment step). Both
- * are throttle-tolerant biomedical lexical lanes. OpenAlex and Semantic Scholar
- * were removed from the pipeline; the owned MedCPT dense lane is the recall
- * backbone and always contributes (see the guaranteed-floor logic below).
+ * `citedByCount` replaces the dropped OpenAlex citation-enrichment step). Scopus
+ * adds broad multidisciplinary coverage plus its own `citedby-count`; Springer
+ * Nature adds book/journal full text and open-access PDFs. All four are
+ * throttle-tolerant lexical lanes, each key-gated so an unconfigured lane stays
+ * inert (missing_config) rather than degrading search. OpenAlex and Semantic
+ * Scholar were removed from the pipeline; the owned MedCPT dense lane is the
+ * recall backbone and always contributes (see the guaranteed-floor logic below).
  */
-export const DEFAULT_SOURCES: SearchSourceId[] = ["pubmed", "europepmc"];
+export const DEFAULT_SOURCES: SearchSourceId[] = [
+  "pubmed",
+  "europepmc",
+  "scopus",
+  "springer",
+];
 
 /** Hard ceiling on results per search, shared across web and MCP transports. */
 export const MAX_RESULTS = 50;
@@ -480,6 +490,44 @@ async function runLiteratureSearchUncached(
           yearEnd: params.yearTo,
         }).then(({ results, total, status }) => ({ source: "europepmc", results, total, status }))
       ).catch((e) => errorOutcome("europepmc", e instanceof Error ? e.message : "Europe PMC failed"))
+    );
+  }
+
+  // Scopus (Elsevier): a broad multidisciplinary lexical lane carrying its own
+  // `citedby-count`. Wired exactly like the PubMed / Europe PMC lanes — same year
+  // filters and withSourceTimeout pattern, fed into the same RRF fusion. Key-gated
+  // internally: without ELSEVIER_API_KEY / SCOPUS_API_KEY it returns an empty
+  // missing_config outcome and never throws, so it is safe to always include here.
+  if (sources.includes("scopus")) {
+    pushLane(
+      "scopus",
+      withSourceTimeout(
+        "Scopus",
+        searchScopus(searchQuery, {
+          limit: poolPerSource,
+          yearStart: params.yearFrom,
+          yearEnd: params.yearTo,
+        }).then(({ results, total, status }) => ({ source: "scopus", results, total, status }))
+      ).catch((e) => errorOutcome("scopus", e instanceof Error ? e.message : "Scopus failed"))
+    );
+  }
+
+  // Springer Nature: journal/book full text with native open-access PDF links.
+  // Wired exactly like the other lexical lanes — same year filters and
+  // withSourceTimeout pattern, fused via the same RRF. Key-gated internally:
+  // without SPRINGER_API_KEY it returns an empty missing_config outcome and never
+  // throws, so it is safe to always include in the fan-out.
+  if (sources.includes("springer")) {
+    pushLane(
+      "springer",
+      withSourceTimeout(
+        "Springer",
+        searchSpringer(searchQuery, {
+          limit: poolPerSource,
+          yearStart: params.yearFrom,
+          yearEnd: params.yearTo,
+        }).then(({ results, total, status }) => ({ source: "springer", results, total, status }))
+      ).catch((e) => errorOutcome("springer", e instanceof Error ? e.message : "Springer failed"))
     );
   }
 

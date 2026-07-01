@@ -149,9 +149,14 @@ export async function searchScopus(
 
   const count = Math.min(opts.limit || 20, MAX_COUNT);
   const start = opts.start ?? 0;
-  const view = opts.view ?? "COMPLETE";
+  // STANDARD is the entitlement a plain API key carries; COMPLETE needs an
+  // institutional subscription token (X-ELS-Insttoken) and 401s without it.
+  const view = opts.view ?? "STANDARD";
 
-  let searchQuery = query;
+  // Field-scope the query to title/abstract/keywords — a bare term string searches
+  // everything (affiliations, refs) and dilutes relevance; TITLE-ABS-KEY is the
+  // standard relevance search and is what a plain key is entitled to run.
+  let searchQuery = `TITLE-ABS-KEY(${query})`;
   if (opts.yearStart || opts.yearEnd) {
     const startYear = opts.yearStart || 1900;
     const endYear = opts.yearEnd || new Date().getFullYear();
