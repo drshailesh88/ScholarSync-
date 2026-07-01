@@ -209,6 +209,7 @@ export default function ResearchPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [page, setPage] = useState(0);
   const [totalResults, setTotalResults] = useState(0);
+  const [matchedTotal, setMatchedTotal] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [augmentedQueries, setAugmentedQueries] = useState<
     SearchResponse["augmentedQueries"] | null
@@ -431,6 +432,7 @@ export default function ResearchPage() {
         const data: SearchResponse = await res.json();
         setResults(data.results);
         setTotalResults(data.total);
+        setMatchedTotal(data.matchedTotal ?? data.total);
         setHasMore(data.hasMore);
         setSourceCounts(data.sourceCounts);
         setSourceStatuses(data.sourceStatuses || {});
@@ -845,7 +847,9 @@ export default function ResearchPage() {
                   </span>
                 )
               )}{" "}
-              — {totalResults} total results
+              — {matchedTotal > totalResults
+                ? `${matchedTotal.toLocaleString()} papers matched across sources · showing the top ${totalResults}`
+                : `${totalResults} results`}
             </p>
             {augmentedQueries && (
               <button

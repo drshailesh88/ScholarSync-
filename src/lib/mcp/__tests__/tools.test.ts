@@ -56,6 +56,7 @@ describe("search_papers tool", () => {
     mockedRun.mockResolvedValue({
       results: [makePaper()],
       total: 1,
+      matchedTotal: 1,
       page: 0,
       perPage: 10,
       hasMore: false,
