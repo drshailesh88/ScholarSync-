@@ -242,6 +242,12 @@ export function ExplorePageClient() {
       SEARCHABLE_TABS.map(async (tab) => [tab, await fetchSearchPage(trimmedQuery, tab, 0, filters)] as const)
     );
 
+    // A newer search superseded this one while its lanes were in flight (a slow lane
+    // or an upstream outage widens this window to many seconds). Discard these stale
+    // results instead of overwriting the current search — otherwise the older, slower
+    // search lands last and the UI shows the PREVIOUS query's results.
+    if (searchCounterRef.current !== thisSearch) return;
+
     const nextTabState = buildInitialTabState();
     let successCount = 0;
 
