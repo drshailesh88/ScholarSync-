@@ -127,8 +127,17 @@ describe("search_papers input schema", () => {
     expect(() => schema.parse({ query: "x", maxResults: 51 })).toThrow();
   });
 
+  it("accepts the valid sources (pubmed, europepmc, scopus, springer)", () => {
+    expect(() =>
+      schema.parse({
+        query: "x",
+        sources: ["pubmed", "europepmc", "scopus", "springer"],
+      })
+    ).not.toThrow();
+  });
+
   it("rejects unknown sources", () => {
-    expect(() => schema.parse({ query: "x", sources: ["scopus"] })).toThrow();
+    expect(() => schema.parse({ query: "x", sources: ["openalex"] })).toThrow();
   });
 });
 
@@ -162,14 +171,17 @@ describe("get_search_capabilities tool", () => {
     expect(caps.sources.map((s) => s.id)).toEqual([
       "pubmed",
       "europepmc",
+      "scopus",
+      "springer",
     ]);
     expect(caps.limits.maxResults).toBe(50);
     expect(caps.outputFields).toContain("doi");
     expect(caps.outputFields).toContain("evidenceLevel");
     expect(caps.outputFields).toContain("whyRelevant");
-    // Both active literature sources (PubMed + Europe PMC) are on by default.
+    // All four active literature sources (PubMed + Europe PMC + Scopus + Springer)
+    // are on by default.
     const defaults = caps.sources.filter((s) => s.default).map((s) => s.id);
-    expect(defaults).toEqual(["pubmed", "europepmc"]);
+    expect(defaults).toEqual(["pubmed", "europepmc", "scopus", "springer"]);
   });
 });
 

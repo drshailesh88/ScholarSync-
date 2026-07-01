@@ -232,4 +232,8 @@ const SOURCE_DESCRIPTIONS: Record<SearchSourceId, string> = {
   pubmed: "PubMed / MEDLINE — biomedical literature with MeSH and evidence levels",
   europepmc:
     "Europe PMC — biomedical literature and preprints with native citation counts and open-access links",
+  scopus:
+    "Scopus (Elsevier) — broad multidisciplinary abstracts and citation counts",
+  springer:
+    "Springer Nature — journal and book full text with open-access PDF links",
 };
