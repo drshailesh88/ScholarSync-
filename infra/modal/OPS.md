@@ -68,16 +68,24 @@ Copy it.
   keep warm. Bulk *article* embedding still uses on-demand GPUs (`process_file`).
 - **`CrossEncoder.rerank`** — self-hosted `ncbi/MedCPT-Cross-Encoder` reranker on
   **scale-to-zero A10G** (`$0` idle; `scaledown_window` holds it warm across a
-  run). Reranks the top ~50 fused candidates post-fusion (~0.3–0.8s warm). Wired
-  via `MEDCPT_RERANK_URL`; throttle-proof replacement for Cohere (which stays as a
-  fail-open fallback). Cold start ~20s → the lane fails open (keeps pre-rerank
-  order) on the first query after idle.
+  run). **RETIRED from the live critical path** — the live academic reranker is now
+  OpenRouter `cohere/rerank-4-pro` (managed, always-warm, ~1.2s, ~$0.0025/search;
+  see `docs/literature-search/RERANKER-DECISION.md`). This A10G reranker stays
+  deployed but **scale-to-zero as an opt-in / break-glass fallback only**: it is
+  reached via `MEDCPT_RERANK_URL` **only when `ACADEMIC_USE_MEDCPT_RERANK=1`**.
+  **Do NOT add a `min_containers` / keep-warm to this reranker** — keeping it warm
+  24/7 is exactly the ~$540–800/mo of idle A10G the OpenRouter switch eliminated.
+  Cold start ~20s → if ever opted in it fails open (keeps pre-rerank order) on the
+  first query after idle. Retiring the reranker does **not** touch retrieval — the
+  MedCPT DENSE lane (`MEDCPT_SEARCH_URL`, below) is unchanged and stays live.
 - **`freshness`** — **weekly** cron (`FRESHNESS_CRON`, default `"0 6 * * 1"` =
   Mon 06:00 UTC). Pulls new daily updatefiles past the stored watermark.
-- **`keep_warm`** — **every-minute** cron that probes the Turbopuffer namespace so
-  its ANN cache never cools (warm ≈0.3s vs cold ≈3.5s ANN). Object-storage reads
-  only; the lane still fails open if the namespace is ever cold, so this is a
-  latency optimization, not a correctness dependency.
+- **`keep_warm`** — cron (`KEEP_WARM_CRON`, default `*/5 * * * *`) that probes the
+  Turbopuffer namespace so its ANN cache never cools (warm ≈0.3s vs cold ≈3.5s ANN).
+  **Scoped to the DENSE lane only — it does NOT warm the CrossEncoder reranker**
+  (that GPU is retired to scale-to-zero; see above). Object-storage reads only; the
+  lane still fails open if the namespace is ever cold, so this is a latency
+  optimization, not a correctness dependency.
 
 ---
 
@@ -118,9 +126,13 @@ code change** the moment they are present:
 # PREFERRED — one server-side round-trip (encode + Turbopuffer ANN on Modal).
 MEDCPT_SEARCH_URL=<the QueryEncoder.search URL from step 1>
 
-# Self-hosted reranker (throttle-proof MedCPT Cross-Encoder). When set, rerank.ts
-# uses it instead of Cohere; Cohere (COHERE_API_KEY) stays as a fail-open fallback.
-MEDCPT_RERANK_URL=<the CrossEncoder.rerank URL from step 1>
+# OPTIONAL self-hosted reranker (MedCPT Cross-Encoder), RETIRED from the live path.
+# The live academic reranker is OpenRouter cohere/rerank-4-pro (OPENROUTER_API_KEY) —
+# see docs/literature-search/RERANKER-DECISION.md. Leave MEDCPT_RERANK_URL UNSET for
+# the normal config. Only set it AND ACADEMIC_USE_MEDCPT_RERANK=1 to opt the scale-to-
+# zero A10G cross-encoder back onto the critical path (break-glass; accepts ~20s cold).
+# MEDCPT_RERANK_URL=<the CrossEncoder.rerank URL from step 1>
+# ACADEMIC_USE_MEDCPT_RERANK=1
 
 # Fallback two-hop (encode on Modal, ANN from the app). Used only when
 # MEDCPT_SEARCH_URL is unset. Both paths fail open.
@@ -211,6 +223,11 @@ which abstracts exceed).
 - Modal encoder: one always-warm **CPU** replica (`min_containers=1`) — a few
   $/mo, not GPU. Deterministic sub-second encode latency is the live lane's exit
   gate, which scale-to-zero could not meet (~20s cold start dropped the lane).
-- `keep_warm`: object-storage reads only — negligible.
+- `keep_warm`: object-storage reads only — negligible. (Dense lane only; it does
+  not warm the reranker.)
+- **Cross-Encoder reranker: $0 idle.** Retired from the live path (OpenRouter
+  cohere/rerank-4-pro is now the live academic reranker) and left **scale-to-zero**,
+  it avoids the ~$540–800/mo of idle A10G a 24/7 keep-warm would cost. The live
+  reranker cost moves to OpenRouter at ~$0.0025/search.
 - Freshness: a few GPU-minutes per week on the daily delta.
 - One-time: index load (egress/compute only) + the 2024–2026 backfill (~$3–15 GPU).

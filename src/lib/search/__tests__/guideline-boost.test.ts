@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { planQuery } from "../query-planner";
 import { promoteGuidelines, rankAndAnnotate } from "../pipeline";
-import type { UnifiedSearchResult } from "@/types/search";
+import type { RankingTrace, UnifiedSearchResult } from "@/types/search";
 
 function paper(p: Partial<UnifiedSearchResult>): UnifiedSearchResult {
   return {
@@ -14,6 +14,21 @@ function paper(p: Partial<UnifiedSearchResult>): UnifiedSearchResult {
     isOpenAccess: false,
     sources: ["pubmed"],
     ...p,
+  };
+}
+
+function trace(over: Partial<RankingTrace>): RankingTrace {
+  return {
+    composite: 0,
+    evidence: 0,
+    citation: 0,
+    velocity: 0,
+    journal: 0,
+    rrf: 0,
+    relevance: 0,
+    entityDrift: 1,
+    strategy: "quality",
+    ...over,
   };
 }
 
@@ -69,6 +84,78 @@ describe("promoteGuidelines", () => {
       paper({ title: "B", studyType: "cohort" }),
     ];
     expect(promoteGuidelines(list).map((r) => r.title)).toEqual(["A", "B"]);
+  });
+
+  it("does NOT float an off-topic guideline that fails the relevance floor", () => {
+    const list = [
+      paper({
+        title: "On-topic RCT",
+        studyType: "rct",
+        citationCount: 100,
+        rankingTrace: trace({ relevance: 0.9, composite: 0.6 }),
+      }),
+      paper({
+        title: "Off-topic guideline",
+        studyType: "guideline",
+        year: 2024,
+        rankingTrace: trace({ relevance: 0.1, composite: 0.05 }),
+      }),
+    ];
+    const out = promoteGuidelines(list);
+    expect(out[0].title).toBe("On-topic RCT");
+    expect(out.map((r) => r.title)).toEqual(["On-topic RCT", "Off-topic guideline"]);
+  });
+
+  it("does NOT float a guideline flagged with off_topic_entity drift", () => {
+    const list = [
+      paper({ title: "On-topic RCT", studyType: "rct" }),
+      paper({
+        title: "Drifted guideline",
+        studyType: "guideline",
+        year: 2024,
+        flags: ["off_topic_entity"],
+      }),
+    ];
+    expect(promoteGuidelines(list)[0].title).toBe("On-topic RCT");
+  });
+
+  it("still floats an on-topic guideline that clears the relevance floor", () => {
+    const list = [
+      paper({
+        title: "Strong RCT",
+        studyType: "rct",
+        rankingTrace: trace({ relevance: 0.8, composite: 0.5 }),
+      }),
+      paper({
+        title: "On-topic guideline",
+        studyType: "guideline",
+        year: 2024,
+        rankingTrace: trace({ relevance: 0.7, composite: 0.4 }),
+      }),
+    ];
+    expect(promoteGuidelines(list)[0].title).toBe("On-topic guideline");
+  });
+
+  it("orders promoted guidelines by composite, newest year only as tie-breaker", () => {
+    const list = [
+      paper({
+        title: "2012 high-composite guideline",
+        studyType: "guideline",
+        year: 2012,
+        rankingTrace: trace({ relevance: 0.9, composite: 0.7 }),
+      }),
+      paper({
+        title: "2024 low-composite guideline",
+        studyType: "guideline",
+        year: 2024,
+        rankingTrace: trace({ relevance: 0.9, composite: 0.3 }),
+      }),
+    ];
+    // Higher composite wins even though it is older; year is only a tie-breaker.
+    expect(promoteGuidelines(list).map((r) => r.title)).toEqual([
+      "2012 high-composite guideline",
+      "2024 low-composite guideline",
+    ]);
   });
 });
 

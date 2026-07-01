@@ -11,7 +11,12 @@
  */
 
 import type { RankingTrace, UnifiedSearchResult } from "@/types/search";
-import { rankWithTrace, enrichJournalQuality, type ScoredResult } from "./quality-ranker";
+import {
+  rankWithTrace,
+  enrichJournalQuality,
+  RELEVANCE_GATE_FLOOR,
+  type ScoredResult,
+} from "./quality-ranker";
 import { enrichStudyTypes } from "./study-type-detector";
 import { getEvidenceLevel } from "./evidence-level";
 import { demoteSecondaryTrialResults } from "./trial-ranking";
@@ -294,25 +299,58 @@ export function rankAndAnnotate(
 }
 
 /**
- * Float clinical-practice-guideline documents to the top, newest version first.
- * Only RAISES guidelines (they move ahead of non-guideline results); the relative
- * order of every non-guideline result is preserved. A no-op when the pool has no
- * guideline-typed results. Gated by `isGuidelineLookup` in rankAndAnnotate so
- * ordinary clinical queries are untouched.
+ * A guideline is only floated to the top if it actually answers the query. An
+ * "ESC heart-failure guideline" must not surface for a kidney-transplant search
+ * just because it is typed as a guideline. Promotion is RELEVANCE-AWARE: a
+ * guideline is eligible only when it is not demonstrably off-topic, i.e. it carries
+ * no off_topic_entity drift flag AND (its lexical/model relevance is unknown, or it
+ * clears the relevance floor). An off-topic guideline is left in place and ordered
+ * by its quality composite like any other result — never raised.
+ */
+function isPromotableGuideline(r: UnifiedSearchResult): boolean {
+  if (r.studyType !== "guideline") return false;
+  if (r.flags?.includes("off_topic_entity")) return false;
+  const relevance = r.rankingTrace?.relevance;
+  if (typeof relevance === "number" && relevance < RELEVANCE_GATE_FLOOR) return false;
+  return true;
+}
+
+/**
+ * Composite-descending comparator with year as a TIE-BREAKER only. The input is
+ * already composite-sorted, so this preserves the quality order among guidelines
+ * and only uses the newer version to break an otherwise-equal ranking (so the 2024
+ * edition floats above the 2012 one when their composites are equal).
+ */
+function byCompositeThenYear(
+  a: UnifiedSearchResult,
+  b: UnifiedSearchResult
+): number {
+  const ca = a.rankingTrace?.composite ?? a.rrfScore ?? 0;
+  const cb = b.rankingTrace?.composite ?? b.rrfScore ?? 0;
+  if (cb !== ca) return cb - ca;
+  return (b.year || 0) - (a.year || 0);
+}
+
+/**
+ * Float clinical-practice-guideline documents to the top, ordered by quality
+ * composite with the newest version as a tie-breaker. Only RAISES guidelines that
+ * are relevant (see {@link isPromotableGuideline}); off-topic guidelines and every
+ * non-guideline result keep their relative order. A no-op when the pool has no
+ * promotable guideline. Gated by `isGuidelineLookup` in rankAndAnnotate so ordinary
+ * clinical queries are untouched.
  */
 export function promoteGuidelines(
   results: UnifiedSearchResult[]
 ): UnifiedSearchResult[] {
-  const guidelines: UnifiedSearchResult[] = [];
+  const promotable: UnifiedSearchResult[] = [];
   const rest: UnifiedSearchResult[] = [];
   for (const r of results) {
-    if (r.studyType === "guideline") guidelines.push(r);
+    if (isPromotableGuideline(r)) promotable.push(r);
     else rest.push(r);
   }
-  if (guidelines.length === 0) return results;
-  // Prefer the latest version among guidelines; stable for equal years.
-  const latestFirst = [...guidelines].sort((a, b) => (b.year || 0) - (a.year || 0));
-  return [...latestFirst, ...rest];
+  if (promotable.length === 0) return results;
+  const ordered = [...promotable].sort(byCompositeThenYear);
+  return [...ordered, ...rest];
 }
 
 function demoteRetracted(results: UnifiedSearchResult[]): UnifiedSearchResult[] {

@@ -54,10 +54,32 @@ const BALANCED_CONFIG: QualityRankingConfig = {
  * below the floor is crushed no matter how prestigious it is, while everything at
  * or above the floor is unpenalized and ordered by the quality priors as before.
  */
-const RELEVANCE_GATE_FLOOR = 0.45;
+export const RELEVANCE_GATE_FLOOR = 0.45;
 
-function relevanceGate(relevance: number): number {
-  return Math.min(1, relevance / RELEVANCE_GATE_FLOOR);
+/**
+ * Stricter gate floor for the LEXICAL fallback. A real cross-encoder rerankScore is
+ * a calibrated topical-relevance probability, so the 0.45 floor is meaningful for it.
+ * A keyword-overlap score is NOT a probability — a generic paper that shares a couple
+ * of filler words ("management", "treatment") can post a deceptively high overlap. So
+ * when relevance is lexical we demand a higher overlap before treating the paper as
+ * "relevant", as defense-in-depth: an off-topic high-citation paper cannot ride a few
+ * shared generic words past the gate even if the reranker signal is ever missing.
+ */
+export const LEXICAL_RELEVANCE_GATE_FLOOR = 0.6;
+
+/**
+ * Where the relevance signal came from:
+ *  - "model"   — a real cross-encoder rerankScore (calibrated [0,1] probability)
+ *  - "lexical" — keyword-overlap fallback (NOT a probability; gated more strictly)
+ *  - "neutral" — no query keywords to score against (gate is a no-op)
+ */
+export type RelevanceSource = "model" | "lexical" | "neutral";
+
+function relevanceGate(relevance: number, source: RelevanceSource): number {
+  if (source === "neutral") return 1; // nothing to gate on — leave the composite intact
+  const floor =
+    source === "lexical" ? LEXICAL_RELEVANCE_GATE_FLOOR : RELEVANCE_GATE_FLOOR;
+  return Math.min(1, relevance / floor);
 }
 
 // ── Signal normalizers ──────────────────────────────────────────────
@@ -138,8 +160,41 @@ function extractQueryKeywords(query: string): string[] {
 }
 
 /**
- * Compute keyword overlap between a paper and the query.
- * Returns 0-1 ratio: (matched keywords) / (total query keywords).
+ * Generic clinical "filler" tokens. They survive stopword removal (they are not
+ * grammatical glue) yet carry almost no discriminative power for WHICH paper is on
+ * topic — every clinical corpus is saturated with them. Matching one of these is
+ * weak evidence of relevance, so they are heavily down-weighted in the lexical
+ * overlap score. Listed in both singular and plural so exact-token matching is
+ * enough (no fragile stemming that would also catch "advanced", "patient-reported").
+ */
+const GENERIC_FILLER_TOKENS = new Set([
+  "recent", "advance", "advances", "management", "treatment", "treatments",
+  "guideline", "guidelines", "recommendation", "recommendations", "role", "roles",
+  "update", "updates", "overview", "overviews", "clinical", "patient", "patients",
+]);
+
+const GENERIC_TOKEN_WEIGHT = 0.25;
+const DISTINCTIVE_TOKEN_WEIGHT = 1.5;
+const BASELINE_TOKEN_WEIGHT = 1.0;
+
+/**
+ * Relevance weight of a single query token. Generic filler is nearly discounted;
+ * long tokens (≥8 chars — drug names, conditions, mechanisms like "tocilizumab",
+ * "empagliflozin", "ferroptosis") are treated as rare/distinctive and up-weighted,
+ * so matching one of them is strong evidence of on-topic relevance.
+ */
+function keywordWeight(kw: string): number {
+  if (GENERIC_FILLER_TOKENS.has(kw)) return GENERIC_TOKEN_WEIGHT;
+  return kw.length >= 8 ? DISTINCTIVE_TOKEN_WEIGHT : BASELINE_TOKEN_WEIGHT;
+}
+
+/**
+ * Weighted keyword overlap between a paper and the query, in [0,1]. Unlike a plain
+ * matched/total ratio, each token contributes its discriminative weight: a paper
+ * that matches only generic filler ("management", "treatment") scores near zero,
+ * while one that matches the distinctive disease/drug terms scores near one. This
+ * is the LEXICAL fallback used only when no cross-encoder rerankScore is available;
+ * it must never let a few shared generic words masquerade as semantic relevance.
  */
 function computeRelevance(
   result: UnifiedSearchResult,
@@ -154,8 +209,14 @@ function computeRelevance(
     .join(" ")
     .toLowerCase();
 
-  const matchCount = queryKeywords.filter((kw) => text.includes(kw)).length;
-  return matchCount / queryKeywords.length;
+  let matchedWeight = 0;
+  let totalWeight = 0;
+  for (const kw of queryKeywords) {
+    const w = keywordWeight(kw);
+    totalWeight += w;
+    if (text.includes(kw)) matchedWeight += w;
+  }
+  return totalWeight > 0 ? matchedWeight / totalWeight : 0;
 }
 
 // ── Journal quality enrichment ──────────────────────────────────────
@@ -234,7 +295,28 @@ function buildScoringContext(
   };
 }
 
+/**
+ * Resolve the relevance signal AND where it came from. A real cross-encoder
+ * rerankScore (already squashed to [0,1] by the reranker adapter) is the calibrated
+ * "model" signal; absent it we fall back to the weighted keyword overlap ("lexical"),
+ * which the gate treats far more conservatively. With no query keywords there is
+ * nothing to gate on ("neutral").
+ */
+function resolveRelevance(
+  r: UnifiedSearchResult,
+  ctx: ScoringContext
+): { value: number; source: RelevanceSource } {
+  if (typeof r.rerankScore === "number") {
+    return { value: r.rerankScore, source: "model" };
+  }
+  if (ctx.queryKeywords.length > 0) {
+    return { value: computeRelevance(r, ctx.queryKeywords), source: "lexical" };
+  }
+  return { value: 0.5, source: "neutral" };
+}
+
 function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult {
+  const relevance = resolveRelevance(r, ctx);
   const signals: QualitySignals = {
     evidence: normalizeEvidence(r.evidenceLevel),
     citation: normalizeCitations(r.citationCount || 0, ctx.citationCap),
@@ -244,16 +326,7 @@ function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult 
     ),
     journal: normalizeJournalQuartile(r.journalQuartile),
     rrf: normalizeRrf(r.rrfScore, ctx.maxRrf),
-    // Prefer the cross-encoder rerank score as the relevance signal — it arrives
-    // already squashed to [0,1] by the reranker adapter, so it is one capped signal
-    // weighted alongside the quality priors, never a raw logit that dominates. Fall
-    // back to keyword overlap when no reranker ran.
-    relevance:
-      typeof r.rerankScore === "number"
-        ? r.rerankScore
-        : ctx.queryKeywords.length > 0
-          ? computeRelevance(r, ctx.queryKeywords)
-          : 0.5,
+    relevance: relevance.value,
     entityDrift: 1,
   };
   const c = ctx.config;
@@ -268,7 +341,11 @@ function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult 
   // or specific drug than the query specifies — drift the cross-encoder cannot
   // discriminate. The multiplier is recorded for the ranking trace.
   signals.entityDrift = ctx.rawQuery ? entityDriftPenalty(ctx.rawQuery, r) : 1;
-  const composite = weighted * signals.entityDrift * relevanceGate(signals.relevance);
+  // The gate is SIGNAL-AWARE: a model rerankScore is gated at the calibrated 0.45
+  // floor; a lexical overlap is gated more strictly so generic word matches cannot
+  // pass as cross-encoder-grade relevance.
+  const composite =
+    weighted * signals.entityDrift * relevanceGate(signals.relevance, relevance.source);
   return { result: r, composite, signals };
 }
 

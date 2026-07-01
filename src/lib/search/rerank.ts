@@ -8,12 +8,46 @@ interface CohereRerankResponse {
   }[];
 }
 
+/** OpenRouter's rerank endpoint mirrors Cohere's v2 shape: a `results` array that
+ * pairs each input document back to a [0,1] `relevance_score` by its input `index`
+ * (the `document` echo is optional and ignored — we map by index, never by text). */
+interface OpenRouterRerankResponse {
+  results: {
+    index: number;
+    relevance_score: number;
+    document?: { text: string };
+  }[];
+  usage?: { search_units?: number; cost?: number };
+}
+
 /** A relevance score paired to a candidate's index in the input list. The score
- * is ALWAYS a [0,1] relevance probability regardless of backend — Cohere returns
- * that natively; the MedCPT cross-encoder returns a raw logit which we squash here
- * (see {@link logitToProbability}) so downstream ranking treats every backend the
- * same and never sees an unbounded value. */
+ * is ALWAYS a [0,1] relevance probability regardless of backend — OpenRouter and
+ * Cohere return that natively; the MedCPT cross-encoder returns a raw logit which we
+ * squash here (see {@link logitToProbability}) so downstream ranking treats every
+ * backend the same and never sees an unbounded value. */
 type RerankScore = { index: number; relevance_score: number };
+
+/** The OpenRouter rerank model for the academic literature path. Env-overridable
+ * via ACADEMIC_RERANK_MODEL; cohere/rerank-4-pro returns a [0,1] relevance score
+ * already commensurate with the quality-ranker's relevance signal. Read lazily (not
+ * a module-load constant) so tests/deploys can override it via the environment. */
+function academicRerankModel(): string {
+  return process.env.ACADEMIC_RERANK_MODEL || "cohere/rerank-4-pro";
+}
+
+/** Cap each document sent to a reranker. Title + abstract past a few thousand chars
+ * adds cost/latency without sharpening the relevance signal (the model truncates
+ * internally anyway), so we bound it before the wire. */
+const RERANK_DOC_MAX_CHARS = 2000;
+
+/** Title + abstract (or TLDR), trimmed to {@link RERANK_DOC_MAX_CHARS}, as the unit
+ * of text every reranker scores against the query. */
+function buildRerankDocument(result: UnifiedSearchResult): string {
+  const doc = `${result.title}. ${result.abstract || result.tldr || ""}`;
+  return doc.length > RERANK_DOC_MAX_CHARS
+    ? doc.slice(0, RERANK_DOC_MAX_CHARS)
+    : doc;
+}
 
 /** Squash a cross-encoder relevance logit (MedCPT range ≈ −16…+10) into the [0,1]
  * probability that `relevance_score` is contracted to carry. Sigmoid is the standard
@@ -24,9 +58,15 @@ function logitToProbability(logit: number): number {
   return 1 / (1 + Math.exp(-logit));
 }
 
-/** True when SOME reranker is configured (self-hosted MedCPT or Cohere). */
+/** True when SOME reranker is configured. OpenRouter is the PRIMARY literature
+ * backend (managed, always-warm); the self-hosted MedCPT cross-encoder and
+ * Cohere-direct remain optional fallbacks. */
 export function hasReranker(): boolean {
-  return Boolean(process.env.MEDCPT_RERANK_URL || process.env.COHERE_API_KEY);
+  return Boolean(
+    process.env.OPENROUTER_API_KEY ||
+      process.env.MEDCPT_RERANK_URL ||
+      process.env.COHERE_API_KEY
+  );
 }
 
 /**
@@ -64,6 +104,48 @@ async function rerankSelfHosted(
     .slice(0, topN);
 }
 
+/**
+ * OpenRouter rerank — the PRIMARY, managed/always-warm literature reranker
+ * (model {@link academicRerankModel}, default cohere/rerank-4-pro). POSTs the
+ * candidate documents and reads back a [0,1] `relevance_score` per document, paired
+ * to its input position by the response `index`. Warm latency ≈ 1.2s, ~$0.0025 per
+ * search. Fail-open: a non-200 or timeout throws (resilientFetch) so the caller
+ * advances to the next backend instead of returning empty results.
+ */
+async function rerankOpenRouter(
+  apiKey: string,
+  query: string,
+  documents: string[],
+  topN: number
+): Promise<RerankScore[]> {
+  const response = await resilientFetch(
+    "https://openrouter.ai/api/v1/rerank",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: academicRerankModel(),
+        query,
+        documents,
+        top_n: topN,
+      }),
+    },
+    { service: "OpenRouter-Rerank", timeout: 4000, maxRetries: 1 }
+  );
+  const data: OpenRouterRerankResponse = await response.json();
+  const results = Array.isArray(data?.results) ? data.results : [];
+  return results
+    .filter(
+      (r) =>
+        typeof r?.index === "number" &&
+        typeof r?.relevance_score === "number"
+    )
+    .map((r) => ({ index: r.index, relevance_score: r.relevance_score }));
+}
+
 /** External Cohere reranker (fallback). Returns its already-sorted top-N. */
 async function rerankCohere(
   apiKey: string,
@@ -94,16 +176,25 @@ async function rerankCohere(
 }
 
 /**
- * Rerank by query↔document relevance through a fail-open backend CHAIN. The leading
- * self-hosted backend is DOMAIN-ROUTED: the web path (`domain: "web"`) uses the
- * general cross-encoder (`WEB_RERANK_URL`); the literature path (default) uses the
- * biomedical MedCPT cross-encoder (`MEDCPT_RERANK_URL`) — a query is never reranked
- * by the wrong-domain model. Each domain uses its own circuit-breaker label so an
- * outage in one lane can't trip the other. Cohere (`COHERE_API_KEY`) is the warm
- * fallback for either during the scale-to-zero cold window. A backend is tried only
- * if configured; if it errors or yields no scores, the next is attempted. With none
- * configured — or all failing — the input is returned unchanged and the quality
- * ranker falls back to keyword-overlap relevance: the "no model, never fails" floor.
+ * Rerank by query↔document relevance through a fail-open backend CHAIN.
+ *
+ * LITERATURE path (default domain): OpenRouter `cohere/rerank-4-pro`
+ * (`OPENROUTER_API_KEY`) is the PRIMARY, always-warm reranker (~1.2s, ~$0.0025) — it
+ * is on the critical path so a real `rerankScore` is attached on every normal search.
+ * The self-hosted MedCPT cross-encoder (`MEDCPT_RERANK_URL`, Modal A10G scale-to-zero,
+ * ~20s cold) is DROPPED off the critical path: it is only attempted when explicitly
+ * opted in via `ACADEMIC_USE_MEDCPT_RERANK=1`. Cohere-direct (`COHERE_API_KEY`)
+ * remains a tertiary fallback. Order: OpenRouter → [MedCPT if flagged] → Cohere.
+ *
+ * WEB path (`domain: "web"`): unchanged — the general cross-encoder (`WEB_RERANK_URL`)
+ * leads, Cohere-direct backs it up. A query is never reranked by the wrong-domain
+ * model and each domain uses its own circuit-breaker label so an outage in one lane
+ * can't trip the other.
+ *
+ * A backend is tried only if configured/enabled; if it errors or yields no scores,
+ * the next is attempted. With none configured — or all failing — the input is
+ * returned unchanged and the quality ranker falls back to keyword-overlap relevance:
+ * the "no model, never fails" floor.
  */
 export async function rerankResults(
   query: string,
@@ -112,21 +203,43 @@ export async function rerankResults(
   opts?: { domain?: "web" | "literature" }
 ): Promise<UnifiedSearchResult[]> {
   const isWeb = opts?.domain === "web";
+  const openRouterKey = process.env.OPENROUTER_API_KEY;
   const selfHostedUrl = isWeb
     ? process.env.WEB_RERANK_URL
     : process.env.MEDCPT_RERANK_URL;
   const cohereKey = process.env.COHERE_API_KEY;
-  if (results.length === 0 || (!selfHostedUrl && !cohereKey)) {
+
+  // OpenRouter is the literature primary; the web path keeps its own reranker chain.
+  const openRouterEnabled = !isWeb && Boolean(openRouterKey);
+  // The self-hosted MedCPT cross-encoder is DROPPED to scale-to-zero — for the
+  // literature path it is on the critical path ONLY when explicitly opted in. The web
+  // reranker (its own scale-to-zero GPU) stays its domain's primary as before.
+  const selfHostedEnabled = isWeb
+    ? Boolean(selfHostedUrl)
+    : Boolean(selfHostedUrl) && process.env.ACADEMIC_USE_MEDCPT_RERANK === "1";
+
+  if (
+    results.length === 0 ||
+    (!openRouterEnabled && !selfHostedEnabled && !cohereKey)
+  ) {
     return results;
   }
 
   const limit = topN || Math.min(results.length, 50);
-  const documents = results.map(
-    (r) => `${r.title}. ${r.abstract || r.tldr || ""}`
-  );
+  const documents = results.map(buildRerankDocument);
 
   const backends: { name: string; run: () => Promise<RerankScore[]> }[] = [];
-  if (selfHostedUrl)
+
+  // 1. OpenRouter (primary, literature) — managed, always-warm, ~1.2s.
+  if (openRouterEnabled && openRouterKey)
+    backends.push({
+      name: "OpenRouter",
+      run: () => rerankOpenRouter(openRouterKey, query, documents, limit),
+    });
+
+  // 2. Self-hosted cross-encoder — web: WEB_RERANK_URL (primary); literature: MedCPT
+  //    only when ACADEMIC_USE_MEDCPT_RERANK=1.
+  if (selfHostedEnabled && selfHostedUrl)
     backends.push({
       name: isWeb ? "WebReranker" : "MedCPT",
       run: () =>
@@ -136,18 +249,18 @@ export async function rerankResults(
           documents,
           limit,
           isWeb ? "Web-Rerank" : "MedCPT-Rerank",
-          // The web reranker is GPU scale-to-zero; keeping it warm 24/7 isn't worth
-          // it at this scale. Fail-open-fast: a short ceiling + no retry means a
-          // cold start degrades to un-reranked results instantly instead of making
-          // the user wait ~30s. A warm rerank returns in well under a second. The
-          // ceiling is env-tunable (WEB_RERANK_TIMEOUT_MS) so an offline/batch context
-          // — or a future always-warm deploy — can absorb the cold start; production
-          // leaves it unset and keeps the 4s fast-fail.
+          // Both self-hosted rerankers are GPU scale-to-zero; keeping them warm 24/7
+          // isn't worth it at this scale. The web lane fail-open-fasts (short ceiling,
+          // no retry) so a cold start degrades to un-reranked results instantly. The
+          // literature MedCPT lane is opt-in (ACADEMIC_USE_MEDCPT_RERANK) and, when
+          // on, absorbs the cold start with a longer ceiling + one retry. Warm: <1s.
           isWeb
             ? { timeout: Number(process.env.WEB_RERANK_TIMEOUT_MS) || 4000, maxRetries: 0 }
             : { timeout: 15000, maxRetries: 1 }
         ),
     });
+
+  // 3. Cohere-direct — tertiary fallback for either domain.
   if (cohereKey)
     backends.push({
       name: "Cohere",
@@ -158,6 +271,7 @@ export async function rerankResults(
     try {
       const scored = await backend.run();
       if (scored.length === 0) continue;
+      console.info(`[Rerank] scored by ${backend.name} (${scored.length} docs)`);
       return scored.map((r) => ({
         ...results[r.index],
         rerankScore: r.relevance_score,

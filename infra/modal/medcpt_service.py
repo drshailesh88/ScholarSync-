@@ -404,15 +404,27 @@ class QueryEncoder:
 
 
 # ===========================================================================
-# 1b. Cross-Encoder reranker — self-hosted, throttle-proof replacement for the
-#     external (rate-limited) reranker. Scale-to-zero GPU: $0 idle, warms on use.
+# 1b. Cross-Encoder reranker — RETIRED from the live critical path.
 # ===========================================================================
-# Reranking runs POST-fusion over the top ~50 fused candidates — NOT inside the 5s
-# fan-out deadline — so a brief warm-up is acceptable. A10G batches all 50
-# (query, title+abstract) pairs in one forward pass (~0.3-0.8s warm). Scale-to-zero
-# keeps idle cost at $0; `scaledown_window` holds the replica warm across a run's
-# ~8s query gaps so it does not cold-start mid-eval. The lane FAILS OPEN: on cold
-# start, timeout, or error the caller keeps the pre-rerank order (see rerank.ts).
+# DEPRECATED FROM THE LIVE PATH: the live academic reranker is now OpenRouter
+# `cohere/rerank-4-pro` (managed, always-warm, ~1.2s, ~$0.0025/search; see
+# src/lib/search/rerank.ts and docs/literature-search/RERANKER-DECISION.md). That
+# solved the cold-start, idle-GPU cost, and Cohere-key blocker in one move, so this
+# self-hosted A10G cross-encoder no longer needs to be kept warm.
+#
+# It stays deployed but SCALE-TO-ZERO ($0 idle) as an opt-in / break-glass fallback:
+# rerank.ts only calls MEDCPT_RERANK_URL when ACADEMIC_USE_MEDCPT_RERANK=1. Do NOT add
+# a min_containers / keep-warm here — keeping this GPU warm 24/7 is exactly the
+# ~$540-800/mo of idle A10G the OpenRouter switch eliminated. NOTE: retiring the
+# reranker does NOT touch retrieval — the MedCPT DENSE lane (CPU QueryEncoder /
+# MEDCPT_SEARCH_URL, §1 below) stays live and unchanged.
+#
+# When opted in: reranking runs POST-fusion over the top ~50 fused candidates — NOT
+# inside the 5s fan-out deadline — so a brief warm-up is acceptable. A10G batches all
+# 50 (query, title+abstract) pairs in one forward pass (~0.3-0.8s warm). Scale-to-zero
+# keeps idle cost at $0; `scaledown_window` holds the replica warm across a run's ~8s
+# query gaps so it does not cold-start mid-eval. The lane FAILS OPEN: on cold start,
+# timeout, or error the caller keeps the pre-rerank order (see rerank.ts).
 @app.cls(
     image=image,
     gpu="A10G",
@@ -575,6 +587,11 @@ def freshness() -> dict:
 def keep_warm() -> int:
     """Keep the Turbopuffer namespace cache hot so the live dense lane's ANN
     latency is deterministic.
+
+    SCOPE: this warms the DENSE retrieval lane ONLY (Turbopuffer ANN namespace).
+    It deliberately does NOT warm the CrossEncoder reranker — that GPU is retired
+    from the live path and stays scale-to-zero (the live reranker is OpenRouter
+    cohere/rerank-4-pro; see §1b and docs/literature-search/RERANKER-DECISION.md).
 
     A warm namespace answers ANN in ~0.3s; a cold one (evicted to object storage
     after idle) takes ~3.5s, which — with query encoding — blows the live search's
