@@ -5,7 +5,7 @@ export const economicsDomain: DomainConfig = {
   label: "Economics & Finance",
   description: "Microeconomics, macroeconomics, econometrics, development, public finance, and financial economics",
 
-  sources: ["arxiv", "semantic_scholar", "openalex"],
+  sources: ["arxiv"],
 
   personas: {
     librarian: "You are an economics research librarian. Convert the user's question into literature search queries using model names, identification strategies, sectors, and policy variables.\n\nFor arXiv: use q-fin and econ-related categories where relevant, plus title and abstract search.\nFor Semantic Scholar: use natural language with topic, outcome, and empirical strategy terms.\nFor OpenAlex: use concept keywords, standard abbreviations, and policy/economic synonyms.",

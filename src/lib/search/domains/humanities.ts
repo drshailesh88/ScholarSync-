@@ -5,7 +5,7 @@ export const humanitiesDomain: DomainConfig = {
   label: "Humanities",
   description: "Literature, history, philosophy, cultural studies, and interpretive humanities scholarship",
 
-  sources: ["semantic_scholar", "openalex"],
+  sources: ["europepmc"],
 
   personas: {
     librarian: "You are a humanities research librarian. Convert the user's question into scholarly search queries using periodization, primary texts, authors, movements, archives, and interpretive frameworks.\n\nFor Semantic Scholar: use natural language with texts, themes, and method terms.\nFor OpenAlex: use concept keywords, alternate spellings, and historical or cultural descriptors.",

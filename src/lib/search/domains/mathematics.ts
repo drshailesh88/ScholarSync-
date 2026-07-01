@@ -5,7 +5,7 @@ export const mathematicsDomain: DomainConfig = {
   label: "Mathematics",
   description: "Pure mathematics, applied mathematics, statistics, and mathematical modeling",
 
-  sources: ["arxiv", "semantic_scholar", "openalex"],
+  sources: ["arxiv"],
 
   personas: {
     librarian: "You are a mathematics research librarian. Convert the user's question into precise searches using theorem names, problem classes, notation words, and subfield labels.\n\nFor arXiv: use math.* categories and ti: or abs: for exact concepts.\nFor Semantic Scholar: use descriptive mathematical language.\nFor OpenAlex: use concept keywords and standard theorem or method names.",

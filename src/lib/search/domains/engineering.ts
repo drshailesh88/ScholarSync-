@@ -5,7 +5,7 @@ export const engineeringDomain: DomainConfig = {
   label: "Engineering",
   description: "Electrical, mechanical, civil, materials, robotics, and applied systems engineering",
 
-  sources: ["arxiv", "semantic_scholar", "openalex"],
+  sources: ["arxiv"],
 
   personas: {
     librarian: "You are an engineering research librarian. Convert the user's question into technical search queries using device names, materials, standards, performance metrics, and application contexts.\n\nFor arXiv: use category codes when relevant, especially for robotics, controls, or systems.\nFor Semantic Scholar: use natural language with component, process, and performance terms.\nFor OpenAlex: use concept keywords, abbreviations, and application-specific synonyms.",

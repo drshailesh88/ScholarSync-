@@ -5,7 +5,7 @@ export const environmentalDomain: DomainConfig = {
   label: "Environmental Science",
   description: "Climate science, sustainability, ecology, environmental engineering, and earth system impacts",
 
-  sources: ["semantic_scholar", "openalex"],
+  sources: ["europepmc"],
 
   personas: {
     librarian: "You are an environmental science research librarian. Convert the user's question into search queries using pollutant, ecosystem, climate variable, geography, and method terms.\n\nFor Semantic Scholar: use natural language with system, exposure, scale, and method terms.\nFor OpenAlex: use concept keywords, environmental synonyms, and region-specific descriptors.",

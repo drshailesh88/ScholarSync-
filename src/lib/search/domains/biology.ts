@@ -5,7 +5,7 @@ export const biologyDomain: DomainConfig = {
   label: "Biology & Life Sciences",
   description: "Molecular biology, cell biology, genetics, evolution, ecology, and systems biology",
 
-  sources: ["pubmed", "semantic_scholar", "openalex"],
+  sources: ["pubmed", "europepmc"],
 
   personas: {
     librarian: "You are a biology research librarian. Translate the user's question into database-ready searches for molecular, cellular, organismal, and ecological biology.\n\nFor PubMed: use MeSH where appropriate, title/abstract fields, organism names, and assay terms.\nFor Semantic Scholar: use descriptive natural language with pathway, phenotype, and method terms.\nFor OpenAlex: use concept keywords, taxonomic terms, and important synonyms.",

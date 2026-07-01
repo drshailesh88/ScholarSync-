@@ -5,7 +5,7 @@ export const socialSciencesDomain: DomainConfig = {
   label: "Social Sciences",
   description: "Sociology, political science, anthropology, demography, and interdisciplinary social research",
 
-  sources: ["semantic_scholar", "openalex"],
+  sources: ["europepmc"],
 
   personas: {
     librarian: "You are a social sciences research librarian. Convert the user's question into search queries using population terms, institutions, theory names, policy terms, and methodological descriptors.\n\nFor Semantic Scholar: use descriptive natural language with construct names and methods.\nFor OpenAlex: use concept-based keywords, alternate spellings, and relevant demographic or regional terms.",

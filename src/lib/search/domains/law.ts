@@ -5,7 +5,7 @@ export const lawDomain: DomainConfig = {
   label: "Law & Legal Studies",
   description: "Constitutional law, public law, private law, comparative law, and legal theory",
 
-  sources: ["semantic_scholar", "openalex"],
+  sources: ["europepmc"],
 
   personas: {
     librarian: "You are a legal research librarian. Convert the user's question into literature search queries using doctrines, jurisdictions, statutes, cases, and policy terms.\n\nFor Semantic Scholar: use natural language with doctrine names, jurisdictions, and issue framing.\nFor OpenAlex: use concept keywords, legal synonyms, and comparative-law terminology.",

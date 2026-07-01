@@ -42,12 +42,14 @@ describe("getDomainConfig", () => {
     expect(config.features).toBeDefined();
   });
 
-  it("medicine config sources include all 4 expected sources", () => {
+  it("medicine config routes through the good pipeline sources (PubMed + Europe PMC)", () => {
     const config = getDomainConfig("medicine");
     expect(config.sources).toContain("pubmed");
-    expect(config.sources).toContain("semantic_scholar");
-    expect(config.sources).toContain("openalex");
-    expect(config.sources).toContain("clinical_trials");
+    expect(config.sources).toContain("europepmc");
+    // The deprecated fan-out sources are no longer part of the academic pipeline.
+    expect(config.sources).not.toContain("semantic_scholar");
+    expect(config.sources).not.toContain("openalex");
+    expect(config.sources).not.toContain("clinical_trials");
   });
 
   it("medicine evidence hierarchy has exactly 5 levels", () => {

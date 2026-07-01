@@ -5,7 +5,7 @@ export const educationDomain: DomainConfig = {
   label: "Education",
   description: "Teaching, learning sciences, curriculum, teacher development, educational policy, and assessment",
 
-  sources: ["semantic_scholar", "openalex"],
+  sources: ["europepmc"],
 
   personas: {
     librarian: "You are an education research librarian. Convert the user's question into search queries using learner groups, instructional interventions, settings, outcomes, and methodology terms.\n\nFor Semantic Scholar: use natural language with pedagogy, assessment, and implementation terms.\nFor OpenAlex: use concept keywords, educational levels, and common instructional synonyms.",

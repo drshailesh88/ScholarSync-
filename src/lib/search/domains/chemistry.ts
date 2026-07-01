@@ -5,7 +5,7 @@ export const chemistryDomain: DomainConfig = {
   label: "Chemistry",
   description: "Organic, inorganic, physical, analytical, materials, and chemical biology research",
 
-  sources: ["semantic_scholar", "openalex"],
+  sources: ["europepmc"],
 
   personas: {
     librarian: "You are a chemistry research librarian. Convert the user's question into precise database-ready searches using compound names, reaction classes, catalyst terms, spectroscopy methods, and material names.\n\nFor Semantic Scholar: use descriptive chemistry phrases, named reactions, and property terms.\nFor OpenAlex: use concept-based keywords with synonyms and common abbreviations.",

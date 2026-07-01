@@ -5,7 +5,7 @@ export const psychologyDomain: DomainConfig = {
   label: "Psychology & Behavioral Science",
   description: "Clinical, cognitive, developmental, social, and experimental psychology",
 
-  sources: ["pubmed", "semantic_scholar", "openalex"],
+  sources: ["pubmed", "europepmc"],
 
   personas: {
     librarian: "You are a psychology research librarian. Convert the user's question into search queries using constructs, scales, populations, interventions, and study-design terminology.\n\nFor PubMed: use MeSH where relevant and combine mental health terms, populations, and outcomes.\nFor Semantic Scholar: use natural language with constructs, paradigms, and validated measures.\nFor OpenAlex: use concept keywords and discipline-standard synonyms.",
