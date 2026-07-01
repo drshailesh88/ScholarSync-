@@ -270,7 +270,11 @@ export async function searchOpenAlex(
 
   try {
     await paceOpenAlex();
-    const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 15000, maxRetries: 2 });
+    // Fail fast: a search lane races the fan-out deadline, so retrying a down/slow
+    // OpenAlex (2 retries × 15s ≈ 45s) only starves the other lanes' event-loop
+    // continuations without ever landing in time. One 6s attempt — if it's up it
+    // answers well under that; if it's down we drop it and lean on PubMed + dense.
+    const res = await resilientFetch(url, {}, { service: "OpenAlex", timeout: 6000, maxRetries: 0 });
     const data: OpenAlexResponse = await res.json();
     const results = (data.results || []).map(mapWork);
 

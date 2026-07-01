@@ -153,8 +153,16 @@ function withSourceTimeout<T>(
  * Global fan-out deadline (ms). A single stuck/throttled lane must not hold the
  * whole query — at the deadline we proceed with whatever lanes have resolved
  * (partial results), marking the rest as dropped. Caps the p95 tail.
+ *
+ * Set to 8s (was 5s): the owned MedCPT dense lane is the recall backbone — when
+ * the lexical lanes are throttled or an upstream (OpenAlex) is down, the dense
+ * lane alone returns the right papers. Under prod serverless latency + event-loop
+ * contention from a slow lane, dense and PubMed were finishing just past 5s and
+ * being dropped, collapsing the pool to whatever fast junk lane survived. 8s gives
+ * the good lanes room; a lane that resolves early still returns immediately (this
+ * is a ceiling, not a floor), so it only lengthens the degraded/one-lane-down tail.
  */
-export const FANOUT_DEADLINE_MS = 5000;
+export const FANOUT_DEADLINE_MS = 8000;
 
 /**
  * Dedicated timeout (ms) for the transient-empty recovery pass — a single fresh
