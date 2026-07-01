@@ -18,6 +18,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { BENCHMARK_QUERIES, CATEGORY_COUNTS, type BenchmarkQuery } from "./queries";
 import { searchPapers } from "@/lib/mcp/tools";
+import type { SearchSourceId } from "@/lib/search/run-search";
 import { computeQueryMetrics, type EvalResultItem } from "@/lib/search/eval/metrics";
 import { buildSummaryMd, buildSummaryJson, type QueryRun } from "./report";
 
@@ -39,7 +40,7 @@ interface CliArgs {
   label: string;
   only?: string[];
   max: number;
-  sources?: ("pubmed" | "semantic_scholar" | "openalex")[];
+  sources?: SearchSourceId[];
 }
 
 function parseArgs(argv: string[]): CliArgs {

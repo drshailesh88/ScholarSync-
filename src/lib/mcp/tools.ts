@@ -230,6 +230,6 @@ export function getSearchCapabilities(): {
 
 const SOURCE_DESCRIPTIONS: Record<SearchSourceId, string> = {
   pubmed: "PubMed / MEDLINE — biomedical literature with MeSH and evidence levels",
-  semantic_scholar: "Semantic Scholar — cross-disciplinary papers with citation metrics and TLDRs",
-  openalex: "OpenAlex — open catalog of scholarly works across all disciplines",
+  europepmc:
+    "Europe PMC — biomedical literature and preprints with native citation counts and open-access links",
 };

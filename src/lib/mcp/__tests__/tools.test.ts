@@ -59,8 +59,8 @@ describe("search_papers tool", () => {
       page: 0,
       perPage: 10,
       hasMore: false,
-      sourceCounts: { pubmed: 1, openalex: 1 },
-      sourceStatuses: { pubmed: { status: "ok" }, openalex: { status: "ok" } },
+      sourceCounts: { pubmed: 1, europepmc: 1 },
+      sourceStatuses: { pubmed: { status: "ok" }, europepmc: { status: "ok" } },
       confidence: "ok",
       plan: { pubmedQuery: "TAVR low risk", recency: false, trialAcronyms: [], wantsTrials: false },
     });
@@ -100,12 +100,12 @@ describe("search_papers tool", () => {
   it("forwards sources and year filters to the search backend", async () => {
     await searchPapers({
       query: "x",
-      sources: ["openalex"],
+      sources: ["europepmc"],
       yearFrom: 2020,
       yearTo: 2026,
     });
     expect(mockedRun).toHaveBeenCalledWith(
-      expect.objectContaining({ sources: ["openalex"], yearFrom: 2020, yearTo: 2026 })
+      expect.objectContaining({ sources: ["europepmc"], yearFrom: 2020, yearTo: 2026 })
     );
   });
 });
@@ -161,17 +161,15 @@ describe("get_search_capabilities tool", () => {
     const caps = getSearchCapabilities();
     expect(caps.sources.map((s) => s.id)).toEqual([
       "pubmed",
-      "semantic_scholar",
-      "openalex",
+      "europepmc",
     ]);
     expect(caps.limits.maxResults).toBe(50);
     expect(caps.outputFields).toContain("doi");
     expect(caps.outputFields).toContain("evidenceLevel");
     expect(caps.outputFields).toContain("whyRelevant");
-    // Default sources are PubMed + OpenAlex — Semantic Scholar is opt-in only
-    // (the system must work without it).
+    // Both active literature sources (PubMed + Europe PMC) are on by default.
     const defaults = caps.sources.filter((s) => s.default).map((s) => s.id);
-    expect(defaults).toEqual(["pubmed", "openalex"]);
+    expect(defaults).toEqual(["pubmed", "europepmc"]);
   });
 });
 

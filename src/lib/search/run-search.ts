@@ -1,19 +1,15 @@
 /**
  * Server-side literature search orchestration.
  *
- * Single source of truth for fanning out to PubMed / Semantic Scholar / OpenAlex,
- * fusing with RRF, filtering, and normalizing results. Both the web API route
- * (`/api/research/search`) and the MCP tool (`/api/mcp`) call this — neither
- * reimplements the search logic, and neither performs auth here (auth lives at
- * each transport's boundary).
+ * Single source of truth for fanning out to PubMed / Europe PMC (plus the owned
+ * MedCPT dense lane), fusing with RRF, filtering, and normalizing results. Both
+ * the web API route (`/api/research/search`) and the MCP tool (`/api/mcp`) call
+ * this — neither reimplements the search logic, and neither performs auth here
+ * (auth lives at each transport's boundary).
  */
 
 import { searchPubMed } from "@/lib/search/sources/pubmed";
-import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
-import {
-  searchOpenAlex,
-  enrichCitationsByIds,
-} from "@/lib/search/sources/openalex";
+import { searchEuropePMC } from "@/lib/search/sources/europepmc";
 import { searchMedcptDense } from "@/lib/search/sources/medcpt-dense";
 import { fetchCrossrefByDoi } from "@/lib/search/sources/crossref";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
@@ -36,16 +32,18 @@ import { assessConfidence, type Confidence } from "@/lib/search/confidence";
 import { backfillPmidsByDoi } from "@/lib/search/pmid-backfill";
 import type { UnifiedSearchResult } from "@/types/search";
 
-export const SEARCH_SOURCES = ["pubmed", "semantic_scholar", "openalex"] as const;
+export const SEARCH_SOURCES = ["pubmed", "europepmc"] as const;
 export type SearchSourceId = (typeof SEARCH_SOURCES)[number];
 
 /**
  * Sources used when a caller does not specify any. PubMed-first for clinical
- * relevance, OpenAlex for citation counts + open-access links. Semantic Scholar
- * is intentionally NOT in the default set — it is optional and the system works
- * fully without it (it 403s / rate-limits frequently). Pass it explicitly to opt in.
+ * relevance; Europe PMC for open-access links AND native citation counts (its
+ * `citedByCount` replaces the dropped OpenAlex citation-enrichment step). Both
+ * are throttle-tolerant biomedical lexical lanes. OpenAlex and Semantic Scholar
+ * were removed from the pipeline; the owned MedCPT dense lane is the recall
+ * backbone and always contributes (see the guaranteed-floor logic below).
  */
-export const DEFAULT_SOURCES: SearchSourceId[] = ["pubmed", "openalex"];
+export const DEFAULT_SOURCES: SearchSourceId[] = ["pubmed", "europepmc"];
 
 /** Hard ceiling on results per search, shared across web and MCP transports. */
 export const MAX_RESULTS = 50;
@@ -78,7 +76,7 @@ export interface RunLiteratureSearchParams {
   /**
    * Opt-in citation/PMRA neighbour expansion (a high-recall, slower mode for
    * systematic-review-style searches). Off by default to keep the default path
-   * fast — the OpenAlex dense semantic lane already provides corpus-free recall.
+   * fast — the owned MedCPT dense semantic lane already provides corpus-free recall.
    */
   expandCitations?: boolean;
   /**
@@ -155,14 +153,28 @@ function withSourceTimeout<T>(
  * (partial results), marking the rest as dropped. Caps the p95 tail.
  *
  * Set to 8s (was 5s): the owned MedCPT dense lane is the recall backbone — when
- * the lexical lanes are throttled or an upstream (OpenAlex) is down, the dense
+ * the lexical lanes are throttled or an upstream (Europe PMC) is down, the dense
  * lane alone returns the right papers. Under prod serverless latency + event-loop
  * contention from a slow lane, dense and PubMed were finishing just past 5s and
  * being dropped, collapsing the pool to whatever fast junk lane survived. 8s gives
  * the good lanes room; a lane that resolves early still returns immediately (this
  * is a ceiling, not a floor), so it only lengthens the degraded/one-lane-down tail.
+ *
+ * NOTE: the BASE MedCPT dense lane is NOT bound by this deadline — it is the
+ * guaranteed floor and awaited on its own longer timeout (DENSE_FLOOR_TIMEOUT_MS).
+ * Only the lexical lanes and the recency/HyDE dense lanes race this deadline.
  */
 export const FANOUT_DEADLINE_MS = 8000;
+
+/**
+ * Guaranteed-floor timeout (ms) for the BASE MedCPT dense lane. This lane is
+ * CPU-warm, owned, and outage-proof, so it must NEVER be dropped by the fan-out
+ * deadline race — it is awaited independently on this longer budget and always
+ * merged into the fused pool, even when every lexical lane was dropped. Slightly
+ * longer than FANOUT_DEADLINE_MS so a dense lane finishing just past the fan-out
+ * ceiling still contributes rather than collapsing recall to whatever survived.
+ */
+export const DENSE_FLOOR_TIMEOUT_MS = 9000;
 
 /**
  * Dedicated timeout (ms) for the transient-empty recovery pass — a single fresh
@@ -188,10 +200,8 @@ export function recencyYearFloor(currentYear: number, windowYears: number): numb
   return currentYear - windowYears + 1;
 }
 
-// Cap for the post-fusion enrich+rerank pool. Only the top candidates by RRF
-// score can reach the returned page, so bounding both steps here keeps OpenAlex
-// enrichment to a single batch regardless of how many lanes contributed —
-// protecting the shared OpenAlex token bucket from metadata-light lanes.
+// Cap for the post-fusion rerank pool. Only the top candidates by RRF score can
+// reach the returned page, so reranking beyond this is wasted work.
 export const POST_FUSION_POOL = 50;
 
 const DEADLINE = Symbol("fanout-deadline");
@@ -453,19 +463,23 @@ async function runLiteratureSearchUncached(
     );
   }
 
-  if (sources.includes("openalex")) {
+  // Europe PMC: a second throttle-tolerant biomedical lexical lane (replaces the
+  // dropped OpenAlex lane). Wired exactly like the PubMed lane — same year filters
+  // and withSourceTimeout pattern, fed into the same RRF fusion. Carries native
+  // `citedByCount`, so citation counts come from here (and later Scopus) instead
+  // of the removed OpenAlex citation-enrichment step, and native open-access links.
+  if (sources.includes("europepmc")) {
     pushLane(
-      "openalex",
+      "europepmc",
       withSourceTimeout(
-        "OpenAlex",
-        searchOpenAlex(searchQuery, {
+        "Europe PMC",
+        searchEuropePMC(searchQuery, {
           limit: poolPerSource,
           page: page + 1,
           yearStart: params.yearFrom,
           yearEnd: params.yearTo,
-          onlyOpenAccess: params.fullTextOnly,
-        }).then(({ results, total, status }) => ({ source: "openalex", results, total, status }))
-      ).catch((e) => errorOutcome("openalex", e instanceof Error ? e.message : "OpenAlex failed"))
+        }).then(({ results, total, status }) => ({ source: "europepmc", results, total, status }))
+      ).catch((e) => errorOutcome("europepmc", e instanceof Error ? e.message : "Europe PMC failed"))
     );
   }
 
@@ -473,14 +487,21 @@ async function runLiteratureSearchUncached(
   // (Turbopuffer int8 + a Modal-served MedCPT Query-Encoder) — the throttle-proof
   // replacement for the OpenAlex `search.semantic` lane. Retrieves by MEANING,
   // surfacing landmarks that share no surface terms with the query, and cannot be
-  // rate-limited away because we own it. Fused into the candidate pool before RRF,
-  // exactly like the lane it replaces. Runs alongside the core biomedical lexical
-  // lanes (PubMed / OpenAlex) and fails open: dormant (missing_config) until the
-  // index + encoder are configured, so it never degrades live search.
-  if (sources.includes("pubmed") || sources.includes("openalex")) {
-    pushLane(
-      "medcpt_dense",
-      withSourceTimeout(
+  // rate-limited away because we own it. Fused into the candidate pool before RRF.
+  // Runs alongside the core biomedical lexical lanes (PubMed / Europe PMC) and
+  // fails open: dormant (missing_config) until the index + encoder are configured,
+  // so it never degrades live search.
+  const runsDense = sources.includes("pubmed") || sources.includes("europepmc");
+
+  // GUARANTEED FLOOR: the BASE similarity dense lane is the outage-proof recall
+  // backbone, so it must NEVER be dropped by the fan-out deadline race. Unlike the
+  // other lanes it is NOT pushed into `promises` — it is started here (in parallel
+  // with everything else) and awaited AFTER settleWithinDeadline on its own longer
+  // DENSE_FLOOR_TIMEOUT_MS budget, then always merged into the fused pool even when
+  // every lexical lane was dropped. The recency/HyDE dense lanes below stay on the
+  // normal fan-out deadline — only this base lane is the floor.
+  const baseDensePromise: Promise<SourceOutcome> | null = runsDense
+    ? withSourceTimeout(
         "MedCPT Dense",
         searchMedcptDense(searchQuery, {
           limit: poolPerSource,
@@ -491,12 +512,14 @@ async function runLiteratureSearchUncached(
           results,
           total,
           status,
-        }))
+        })),
+        DENSE_FLOOR_TIMEOUT_MS
       ).catch((e) =>
         errorOutcome("medcpt_dense", e instanceof Error ? e.message : "MedCPT dense failed")
       )
-    );
+    : null;
 
+  if (runsDense) {
     // Recency intent: an additional recency-WINDOWED dense lane over the same
     // owned index. The base dense lane ranks purely by semantic similarity, so a
     // newer pivotal paper can sit below older high-similarity hits; restricting to
@@ -568,30 +591,6 @@ async function runLiteratureSearchUncached(
     });
   }
 
-  // Semantic Scholar is opt-in only (never required). Used purely as an extra
-  // citation/metadata signal when explicitly requested and reachable.
-  if (sources.includes("semantic_scholar")) {
-    pushLane(
-      "semantic_scholar",
-      withSourceTimeout(
-        "Semantic Scholar",
-        searchSemanticScholar(searchQuery, {
-          limit: poolPerSource,
-          offset: page * poolPerSource,
-          yearStart: params.yearFrom,
-          yearEnd: params.yearTo,
-        }).then(({ results, total, status }) => ({
-          source: "semantic_scholar",
-          results,
-          total,
-          status,
-        }))
-      ).catch((e) =>
-        errorOutcome("semantic_scholar", e instanceof Error ? e.message : "Semantic Scholar failed")
-      )
-    );
-  }
-
   // ClinicalTrials.gov linking for trial-acronym / NCT / explicit-trial queries.
   if (plan.wantsTrials) {
     pushLane(
@@ -625,6 +624,14 @@ async function runLiteratureSearchUncached(
   // Await lanes up to a global deadline → partial results (a stuck/throttled lane
   // never holds the whole query; dropped lanes are marked "timeout", not "ok").
   const sourceResults = await settleWithinDeadline(promises, laneLabels, FANOUT_DEADLINE_MS);
+
+  // GUARANTEED FLOOR: merge the BASE MedCPT dense lane independently of the fan-out
+  // deadline. It was started in parallel above and is awaited here on its own longer
+  // budget, so it ALWAYS contributes to the fused pool — even when every lexical lane
+  // was dropped at FANOUT_DEADLINE_MS. This is the outage-proof recall backbone.
+  if (baseDensePromise) {
+    sourceResults.push(await baseDensePromise);
+  }
 
   // Wave 2 (opt-in): neighbour/citation expansion on the top seeds — a corpus-free
   // recall booster that pulls PubMed related-articles (PMRA) of the best wave-1
@@ -665,7 +672,7 @@ async function runLiteratureSearchUncached(
   // legitimately empty result (every lane ok) or a dormant lane (missing_config),
   // where a retry cannot help — see isTransientEmpty.
   if (
-    (sources.includes("pubmed") || sources.includes("openalex")) &&
+    runsDense &&
     isTransientEmpty(
       fused.length,
       sourceResults.map((sr) => sr.status)
@@ -707,23 +714,15 @@ async function runLiteratureSearchUncached(
     maxTotal = Math.max(maxTotal, sr.total);
   }
 
-  // Post-fusion enrichment + rerank run CONCURRENTLY (they mutate disjoint fields
-  // of `fused`: enrichment fills citationCount/PMID/DOI/OA; rerank attaches
-  // rerankScore). Running them in parallel instead of back-to-back cuts the
-  // post-fusion critical path ~30-45% and shrinks the window where lane timeouts
-  // accumulate. Both fail-open.
-  //  - enrich: OpenAlex citation/PMID/DOI backfill — the S2-independent landmark signal.
+  // Post-fusion rerank. Citation counts now come natively from Europe PMC's
+  // `citedByCount` (and later Scopus) on each result, so the former OpenAlex
+  // citation-enrichment step is gone — there is no separate metadata backfill to
+  // run concurrently here. Bounded to the top `POST_FUSION_POOL` candidates by RRF
+  // score, in place (slice shares object refs, so the originals in `fused` still
+  // get the mutated rerankScore). Candidates past the pool are never reranked, so
+  // they can't reach the returned page anyway. Fail-open.
   //  - rerank: OpenRouter cohere/rerank-4-pro relevance score (managed, always-warm,
   //    ~1.2s; the dominant relevance signal). MedCPT is off the critical path now.
-  //
-  // Both are bounded to the top `POST_FUSION_POOL` candidates by RRF score, in
-  // place (slice shares object refs, so the originals in `fused` still get the
-  // mutated fields). This caps the OpenAlex enrichment at a single batch and
-  // stops a metadata-light lane (e.g. the MedCPT dense lane, whose precomputed
-  // rows carry no DOI/citation) from injecting EXTRA enrichment batches that
-  // drain OpenAlex's shared token bucket and starve the lexical search lanes of
-  // the next query's fan-out budget. Candidates past the pool are not reranked
-  // anyway, so they can never reach the returned page — enriching them is wasted.
   const enrichRerankPool = fused.slice(0, POST_FUSION_POOL);
   // The cross-encoder rerank is COUNTERPRODUCTIVE for a specific trial-acronym
   // lookup: fed a bare acronym ("KEYNOTE-189"), it scores secondary papers that
@@ -732,24 +731,21 @@ async function runLiteratureSearchUncached(
   // (measured: the GT primary sits in the rerank pool but is pushed out of the top-10
   // only when reranked). For these the exact-match lexical lane + clinical-quality
   // composite + demoteSecondaryTrialResults already float the primary first, so we
-  // skip the rerank (enrichment still runs). Non-acronym queries keep it.
+  // skip the rerank. Non-acronym queries keep it.
   const skipRerank = plan.trialAcronyms.length > 0;
-  await Promise.all([
-    withSourceTimeout("OpenAlex enrich", enrichCitationsByIds(enrichRerankPool), 3500).catch(() => 0),
-    skipRerank
-      ? Promise.resolve(fused)
-      : withSourceTimeout(
-          "Cross-encoder rerank",
-          attachRerankScores(searchQuery, enrichRerankPool, POST_FUSION_POOL),
-          4000
-        ).catch(() => fused),
-  ]);
+  if (!skipRerank) {
+    await withSourceTimeout(
+      "Cross-encoder rerank",
+      attachRerankScores(searchQuery, enrichRerankPool, POST_FUSION_POOL),
+      4000
+    ).catch(() => fused);
+  }
 
-  // PMID backfill: OpenAlex enrichment above fills most PMIDs from its id graph,
-  // but DOI-only results not in that graph still lack one (the PMID metadata gate).
-  // Resolve the residual via NCBI esearch[AID] — bounded to a handful of the top
-  // candidates, fail-open, additive metadata only. Runs AFTER OpenAlex enrich so it
-  // only pays for the true residual.
+  // PMID backfill: PubMed and Europe PMC (MEDLINE records) carry PMIDs natively,
+  // but DOI-only results (Crossref, preprints, non-MEDLINE Europe PMC sources)
+  // still lack one (the PMID metadata gate). Resolve the residual via NCBI
+  // esearch[AID] — bounded to a handful of the top candidates, fail-open, additive
+  // metadata only.
   await withSourceTimeout("PMID backfill", backfillPmidsByDoi(enrichRerankPool), 3000).catch(
     () => 0
   );
@@ -820,11 +816,10 @@ async function fetchSinglePubMed(term: string): Promise<UnifiedSearchResult | nu
 }
 
 /**
- * Fetch a single paper by identifier — Semantic-Scholar-free. Accepts a DOI,
- * PMID, or an internal `pm_<pmid>` id and resolves through stable primary
- * sources in order: PubMed (by PMID or DOI), then Crossref (by DOI), then
- * OpenAlex citation enrichment. `doi_`/`s2_`/`oa_` internal ids are lossy and
- * cannot be reversed — callers should pass the raw `doi`/`pmid` instead.
+ * Fetch a single paper by identifier. Accepts a DOI, PMID, or an internal
+ * `pm_<pmid>` id and resolves through stable primary sources in order: PubMed
+ * (by PMID or DOI), then Crossref (by DOI). `doi_`/`s2_`/`oa_` internal ids are
+ * lossy and cannot be reversed — callers should pass the raw `doi`/`pmid` instead.
  */
 export async function fetchPaperById(params: {
   doi?: string;
@@ -846,8 +841,6 @@ export async function fetchPaperById(params: {
     if (!paper) paper = await fetchCrossrefByDoi(doi);
   }
   if (!paper) return null;
-
-  await enrichCitationsByIds([paper]).catch(() => 0);
 
   return {
     ...paper,
