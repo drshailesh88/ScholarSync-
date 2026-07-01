@@ -5,18 +5,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // ---------------------------------------------------------------------------
 const mockGetCurrentUserId = vi.hoisted(() => vi.fn());
 const mockCheckRateLimit = vi.hoisted(() => vi.fn());
-const mockSearchPubMed = vi.hoisted(() => vi.fn());
-const mockSearchSemanticScholar = vi.hoisted(() => vi.fn());
-const mockSearchOpenAlex = vi.hoisted(() => vi.fn());
-const mockSearchClinicalTrials = vi.hoisted(() => vi.fn());
+const mockRunLiteratureSearch = vi.hoisted(() => vi.fn());
 const mockSearchSearXNG = vi.hoisted(() => vi.fn());
 const mockFederateNonAcademic = vi.hoisted(() => vi.fn());
-const mockReciprocalRankFusion = vi.hoisted(() => vi.fn());
 const mockRerankResults = vi.hoisted(() => vi.fn());
 const mockAugmentQuery = vi.hoisted(() => vi.fn());
-const mockEnrichStudyTypes = vi.hoisted(() => vi.fn());
-const mockQualityRank = vi.hoisted(() => vi.fn());
-const mockExpandQueryForDomain = vi.hoisted(() => vi.fn());
 const mockGetDomainPreferences = vi.hoisted(() => vi.fn());
 const mockGetUserScopes = vi.hoisted(() => vi.fn());
 
@@ -48,20 +41,11 @@ vi.mock("@/lib/logger", () => ({
   },
 }));
 
-vi.mock("@/lib/search/sources/pubmed", () => ({
-  searchPubMed: mockSearchPubMed,
-}));
-
-vi.mock("@/lib/search/sources/semantic-scholar", () => ({
-  searchSemanticScholar: mockSearchSemanticScholar,
-}));
-
-vi.mock("@/lib/search/sources/openalex", () => ({
-  searchOpenAlex: mockSearchOpenAlex,
-}));
-
-vi.mock("@/lib/search/sources/clinical-trials", () => ({
-  searchClinicalTrials: mockSearchClinicalTrials,
+// The academic tab delegates ALL retrieval/fusion/rerank/quality-rank to the
+// shared literature pipeline (the "good pipeline"). The route only augments the
+// query for display and layers trust/scope/sort on top.
+vi.mock("@/lib/search/run-search", () => ({
+  runLiteratureSearch: mockRunLiteratureSearch,
 }));
 
 vi.mock("@/lib/search/sources/searxng", () => ({
@@ -72,36 +56,12 @@ vi.mock("@/lib/search/web/federate", () => ({
   federateNonAcademic: mockFederateNonAcademic,
 }));
 
-vi.mock("@/lib/search/rank-fusion", () => ({
-  reciprocalRankFusion: mockReciprocalRankFusion,
-}));
-
 vi.mock("@/lib/search/rerank", () => ({
   rerankResults: mockRerankResults,
 }));
 
-vi.mock("@/lib/search/evidence-level", () => ({
-  getEvidenceLevel: vi.fn().mockReturnValue({ level: "II" }),
-}));
-
 vi.mock("@/lib/ai/query-augment", () => ({
   augmentQuery: mockAugmentQuery,
-}));
-
-vi.mock("@/lib/search/journal-quality", () => ({
-  lookupJournalQuality: vi.fn().mockReturnValue(null),
-}));
-
-vi.mock("@/lib/search/study-type-detector", () => ({
-  enrichStudyTypes: mockEnrichStudyTypes,
-}));
-
-vi.mock("@/lib/search/quality-ranker", () => ({
-  qualityRank: mockQualityRank,
-}));
-
-vi.mock("@/lib/search/query-expander", () => ({
-  expandQueryForDomain: mockExpandQueryForDomain,
 }));
 
 vi.mock("@/lib/actions/domain-preferences", () => ({
@@ -130,16 +90,37 @@ const sampleResult = {
   source: "pubmed",
 };
 
+function literatureResult(overrides: Record<string, unknown> = {}) {
+  return {
+    results: [sampleResult],
+    total: 1,
+    page: 0,
+    perPage: 20,
+    hasMore: false,
+    sourceCounts: { pubmed: 1, europepmc: 0 },
+    sourceStatuses: {
+      pubmed: { status: "ok" },
+      europepmc: { status: "ok" },
+    },
+    confidence: "high",
+    plan: {
+      pubmedQuery: "augmented pubmed",
+      recency: false,
+      trialAcronyms: [],
+      wantsTrials: false,
+    },
+    ...overrides,
+  };
+}
+
 describe("GET /api/search/unified", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockGetCurrentUserId.mockResolvedValue("dev_user_001");
     mockCheckRateLimit.mockResolvedValue(null);
 
-    mockSearchPubMed.mockResolvedValue({ results: [sampleResult], total: 1 });
-    mockSearchSemanticScholar.mockResolvedValue({ results: [], total: 0 });
-    mockSearchOpenAlex.mockResolvedValue({ results: [], total: 0 });
-    mockSearchClinicalTrials.mockResolvedValue({ results: [], total: 0 });
+    mockRunLiteratureSearch.mockResolvedValue(literatureResult());
+
     mockSearchSearXNG.mockResolvedValue({
       results: [
         {
@@ -179,7 +160,6 @@ describe("GET /api/search/unified", () => {
       degraded: false,
     });
 
-    mockReciprocalRankFusion.mockReturnValue([sampleResult]);
     mockRerankResults.mockImplementation((_q: string, r: unknown[]) => r);
     mockAugmentQuery.mockResolvedValue({
       pubmedQuery: "augmented pubmed",
@@ -187,16 +167,6 @@ describe("GET /api/search/unified", () => {
       openAlexQuery: "augmented oa",
     });
 
-    // New module defaults
-    mockEnrichStudyTypes.mockReturnValue(0);
-    mockQualityRank.mockImplementation(
-      (results: unknown[]) => results,
-    );
-    mockExpandQueryForDomain.mockReturnValue({
-      original: "test",
-      supplementary: null,
-      expansions: [],
-    });
     mockGetDomainPreferences.mockResolvedValue([]);
     mockGetUserScopes.mockResolvedValue([]);
   });
@@ -237,13 +207,173 @@ describe("GET /api/search/unified", () => {
     expect(res.status).toBe(401);
   });
 
-  it("keeps academic search as the default tab", async () => {
+  // ── Academic tab → the shared literature pipeline ────────────────
+
+  it("keeps academic search as the default tab and routes it through runLiteratureSearch", async () => {
     const res = await GET(makeRequest({ q: "diabetes treatment review" }));
 
     expect(res.status).toBe(200);
     expect(mockSearchSearXNG).not.toHaveBeenCalled();
-    expect(mockSearchPubMed).toHaveBeenCalled();
+    expect(mockFederateNonAcademic).not.toHaveBeenCalled();
+    expect(mockRunLiteratureSearch).toHaveBeenCalledTimes(1);
   });
+
+  it("maps academic search params onto the runLiteratureSearch call", async () => {
+    const res = await GET(
+      makeRequest({
+        q: "SGLT2 inhibitors heart failure outcomes",
+        yearStart: "2018",
+        yearEnd: "2024",
+        studyTypes: "rct,meta_analysis",
+        openAccessOnly: "true",
+        page: "0",
+        perPage: "20",
+      })
+    );
+
+    expect(res.status).toBe(200);
+    // The augmented PubMed query (display + planner override) is threaded in as
+    // pubmedQuery; year/study-type/full-text/paging map straight through.
+    expect(mockRunLiteratureSearch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: "SGLT2 inhibitors heart failure outcomes",
+        pubmedQuery: "augmented pubmed",
+        yearFrom: 2018,
+        yearTo: 2024,
+        studyTypes: ["rct", "meta_analysis"],
+        fullTextOnly: true,
+        page: 0,
+        perPage: 20,
+      })
+    );
+  });
+
+  it("maps the pipeline result into the academic search response", async () => {
+    mockRunLiteratureSearch.mockResolvedValueOnce(
+      literatureResult({
+        results: [
+          { title: "Paper A", sources: ["pubmed"], year: 2023 },
+          { title: "Paper B", sources: ["europepmc"], year: 2022 },
+        ],
+        total: 42,
+        hasMore: true,
+        sourceCounts: { pubmed: 30, europepmc: 12 },
+        sourceStatuses: {
+          pubmed: { status: "ok" },
+          europepmc: { status: "rate_limited", message: "throttled" },
+        },
+      })
+    );
+
+    const res = await GET(makeRequest({ q: "heart failure outcomes trial" }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.results.map((r: { title: string }) => r.title)).toEqual([
+      "Paper A",
+      "Paper B",
+    ]);
+    expect(body.total).toBe(42);
+    expect(body.sourceCounts).toEqual({ pubmed: 30, europepmc: 12 });
+    expect(body.sourceStatuses.europepmc.status).toBe("rate_limited");
+    expect(body.searxngUnavailable).toBe(false);
+    // hasMore is recomputed from total vs (page + 1) * perPage: 42 > 20 → true.
+    expect(body.hasMore).toBe(true);
+    // Augmentation is still surfaced for the "we searched for…" display chips.
+    expect(body.augmentedQueries.pubmed).toBe("augmented pubmed");
+  });
+
+  it("passes the pipeline's per-source health through unchanged", async () => {
+    mockRunLiteratureSearch.mockResolvedValueOnce(
+      literatureResult({
+        sourceStatuses: {
+          pubmed: { status: "ok" },
+          europepmc: { status: "timeout", message: "dropped: fan-out exceeded" },
+        },
+      })
+    );
+
+    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.sourceStatuses.pubmed).toEqual({ status: "ok" });
+    expect(body.sourceStatuses.europepmc.status).toBe("timeout");
+  });
+
+  it("applies scope domain filter on academic results", async () => {
+    mockGetUserScopes.mockResolvedValueOnce([
+      {
+        id: 42,
+        name: "Gov Only",
+        includedDomains: ["nih.gov"],
+        excludedDomains: [],
+        includedKeywords: [],
+        excludedKeywords: [],
+        dateFrom: null,
+        dateTo: null,
+        region: null,
+        isActive: true,
+        sortOrder: 0,
+        createdAt: null,
+        updatedAt: null,
+      },
+    ]);
+
+    mockRunLiteratureSearch.mockResolvedValueOnce(
+      literatureResult({
+        results: [
+          { title: "NIH paper", domain: "nih.gov", sources: ["pubmed"] },
+          { title: "Harvard paper", domain: "harvard.edu", sources: ["europepmc"] },
+        ],
+        total: 2,
+        sourceCounts: { pubmed: 1, europepmc: 1 },
+      })
+    );
+
+    const res = await GET(makeRequest({ q: "heart disease", scopeId: "42" }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    // Only the NIH result should survive the scope filter.
+    expect(body.results).toHaveLength(1);
+    expect(body.results[0].title).toBe("NIH paper");
+  });
+
+  it("sorts by trust tier when sort=trust", async () => {
+    mockRunLiteratureSearch.mockResolvedValueOnce(
+      literatureResult({
+        results: [
+          { title: "Community post", domain: "reddit.com", trustTier: "community", sources: ["europepmc"] },
+          { title: "Government report", domain: "nih.gov", trustTier: "government", sources: ["pubmed"] },
+          { title: "News article", domain: "reuters.com", trustTier: "major_journalism", sources: ["europepmc"] },
+        ],
+        total: 3,
+      })
+    );
+
+    const res = await GET(makeRequest({ q: "climate change", sort: "trust" }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.results[0].title).toBe("Government report");
+    expect(body.results[1].title).toBe("News article");
+    expect(body.results[2].title).toBe("Community post");
+  });
+
+  it("serves the academic tab even when augmentation is disabled (no pubmedQuery override)", async () => {
+    const res = await GET(
+      makeRequest({ q: "diabetes treatment review", augment: "false" })
+    );
+
+    expect(res.status).toBe(200);
+    expect(mockAugmentQuery).not.toHaveBeenCalled();
+    expect(mockRunLiteratureSearch).toHaveBeenCalledWith(
+      expect.objectContaining({ pubmedQuery: undefined })
+    );
+    const body = await res.json();
+    expect(body.augmentedQueries).toBeUndefined();
+  });
+
+  // ── Non-academic tabs (federation) ───────────────────────────────
 
   it("routes the web tab through the multi-source federation, not SearXNG directly", async () => {
     const res = await GET(makeRequest({ q: "climate change", tab: "web" }));
@@ -256,7 +386,8 @@ describe("GET /api/search/unified", () => {
       expect.objectContaining({ limit: 100 })
     );
     expect(mockSearchSearXNG).not.toHaveBeenCalled();
-    expect(mockSearchPubMed).not.toHaveBeenCalled();
+    // The web tab must never fall into the academic literature pipeline.
+    expect(mockRunLiteratureSearch).not.toHaveBeenCalled();
     expect(body.results).toHaveLength(1);
     expect(body.sourceCounts).toEqual({ web: 1 });
     expect(body.searxngUnavailable).toBe(false);
@@ -552,93 +683,7 @@ describe("GET /api/search/unified", () => {
     expect(body.hasMore).toBe(true);
   });
 
-  // ── Slice 1: enrichStudyTypes() ──────────────────────────────────
-
-  it("calls enrichStudyTypes on fused results before evidence assignment", async () => {
-    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
-    expect(res.status).toBe(200);
-    expect(mockEnrichStudyTypes).toHaveBeenCalledTimes(1);
-    // Should be called with the fused results array
-    expect(mockEnrichStudyTypes).toHaveBeenCalledWith(expect.any(Array));
-  });
-
-  it("degrades gracefully when enrichStudyTypes throws", async () => {
-    mockEnrichStudyTypes.mockImplementation(() => {
-      throw new Error("detector crash");
-    });
-    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.results).toBeDefined();
-  });
-
-  // ── Slice 2: qualityRank() ───────────────────────────────────────
-
-  it("calls qualityRank with fused results and query string", async () => {
-    const query = "diabetes treatment review";
-    const res = await GET(makeRequest({ q: query }));
-    expect(res.status).toBe(200);
-    expect(mockQualityRank).toHaveBeenCalledTimes(1);
-    expect(mockQualityRank).toHaveBeenCalledWith(expect.any(Array), query);
-  });
-
-  it("degrades gracefully when qualityRank throws", async () => {
-    mockQualityRank.mockImplementation(() => {
-      throw new Error("ranker crash");
-    });
-    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.results).toBeDefined();
-  });
-
-  // ── Slice 3: expandQueryForDomain() ──────────────────────────────
-
-  it("calls expandQueryForDomain with query and domain config", async () => {
-    const res = await GET(makeRequest({ q: "SGLT2 inhibitors heart failure" }));
-    expect(res.status).toBe(200);
-    expect(mockExpandQueryForDomain).toHaveBeenCalledTimes(1);
-    expect(mockExpandQueryForDomain).toHaveBeenCalledWith(
-      "SGLT2 inhibitors heart failure",
-      expect.objectContaining({ sources: expect.any(Array) }),
-    );
-  });
-
-  it("fires supplementary PubMed search when expansion returns supplementary query", async () => {
-    mockExpandQueryForDomain.mockReturnValue({
-      original: "SGLT2 inhibitors heart failure",
-      supplementary: "(empagliflozin OR dapagliflozin) AND (sglt2 heart failure)",
-      expansions: [{ term: "SGLT2 inhibitors", synonyms: ["empagliflozin", "dapagliflozin"] }],
-    });
-    const res = await GET(makeRequest({ q: "SGLT2 inhibitors heart failure" }));
-    expect(res.status).toBe(200);
-    // PubMed should have been called twice: once for original, once for supplementary
-    expect(mockSearchPubMed).toHaveBeenCalledTimes(2);
-  });
-
-  it("does not fire supplementary search when expansion returns null", async () => {
-    mockExpandQueryForDomain.mockReturnValue({
-      original: "test query",
-      supplementary: null,
-      expansions: [],
-    });
-    const res = await GET(makeRequest({ q: "some generic query without drugs" }));
-    expect(res.status).toBe(200);
-    // PubMed should only be called once (original query)
-    expect(mockSearchPubMed).toHaveBeenCalledTimes(1);
-  });
-
-  it("degrades gracefully when expandQueryForDomain throws", async () => {
-    mockExpandQueryForDomain.mockImplementation(() => {
-      throw new Error("expander crash");
-    });
-    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.results).toBeDefined();
-  });
-
-  // ── Phase 4: Filter pills + Scope constraints ────────────────────
+  // ── Filter pills + Scope constraints ─────────────────────────────
 
   it("passes timeRange to the federation for non-academic tabs", async () => {
     const res = await GET(
@@ -676,57 +721,6 @@ describe("GET /api/search/unified", () => {
     expect(mockGetDomainPreferences).not.toHaveBeenCalled();
   });
 
-  it("applies scope domain filter on academic results", async () => {
-    mockGetUserScopes.mockResolvedValueOnce([
-      {
-        id: 42,
-        name: "Gov Only",
-        includedDomains: ["nih.gov"],
-        excludedDomains: [],
-        includedKeywords: [],
-        excludedKeywords: [],
-        dateFrom: null,
-        dateTo: null,
-        region: null,
-        isActive: true,
-        sortOrder: 0,
-        createdAt: null,
-        updatedAt: null,
-      },
-    ]);
-
-    mockReciprocalRankFusion.mockReturnValueOnce([
-      { title: "NIH paper", domain: "nih.gov", sources: ["pubmed"] },
-      { title: "Harvard paper", domain: "harvard.edu", sources: ["openalex"] },
-    ]);
-
-    const res = await GET(
-      makeRequest({ q: "heart disease", scopeId: "42" })
-    );
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    // Only the NIH result should survive the scope filter
-    expect(body.results).toHaveLength(1);
-    expect(body.results[0].title).toBe("NIH paper");
-  });
-
-  it("sorts by trust tier when sort=trust", async () => {
-    mockReciprocalRankFusion.mockReturnValueOnce([
-      { title: "Community post", domain: "reddit.com", trustTier: "community", sources: ["openalex"] },
-      { title: "Government report", domain: "nih.gov", trustTier: "government", sources: ["pubmed"] },
-      { title: "News article", domain: "reuters.com", trustTier: "major_journalism", sources: ["openalex"] },
-    ]);
-
-    const res = await GET(
-      makeRequest({ q: "climate change", sort: "trust" })
-    );
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.results[0].title).toBe("Government report");
-    expect(body.results[1].title).toBe("News article");
-    expect(body.results[2].title).toBe("Community post");
-  });
-
   it("rejects invalid timeRange values", async () => {
     const res = await GET(
       makeRequest({ q: "test", tab: "web", timeRange: "invalid" })
@@ -734,79 +728,6 @@ describe("GET /api/search/unified", () => {
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.error).toMatch(/timeRange/i);
-  });
-
-  // ── Source status surfacing ──────────────────────────────────────
-
-  it("reports a source that returns results as ok", async () => {
-    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
-    const body = await res.json();
-    expect(res.status).toBe(200);
-    expect(body.sourceStatuses.pubmed).toEqual({ status: "ok" });
-  });
-
-  it("surfaces a rejected (timed-out) source as degraded, not a normal zero", async () => {
-    mockSearchOpenAlex.mockRejectedValueOnce(
-      new Error("OpenAlex timed out after 12000ms")
-    );
-    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
-    const body = await res.json();
-    expect(res.status).toBe(200);
-    expect(body.sourceCounts.openalex).toBe(0);
-    expect(body.sourceStatuses.openalex.status).toBe("timeout");
-  });
-
-  it("surfaces an adapter-reported rate limit instead of zero results", async () => {
-    mockSearchSemanticScholar.mockResolvedValueOnce({
-      results: [],
-      total: 0,
-      status: { status: "rate_limited", message: "Rate limited" },
-    });
-    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
-    const body = await res.json();
-    expect(res.status).toBe(200);
-    expect(body.sourceStatuses.semantic_scholar.status).toBe("rate_limited");
-  });
-
-  it("marks a genuine empty source as ok (true zero)", async () => {
-    mockSearchSemanticScholar.mockResolvedValueOnce({
-      results: [],
-      total: 0,
-      status: { status: "ok" },
-    });
-    const res = await GET(makeRequest({ q: "diabetes treatment review" }));
-    const body = await res.json();
-    expect(body.sourceStatuses.semantic_scholar).toEqual({ status: "ok" });
-  });
-
-  it("retries PubMed with the raw query when the augmented query returns zero", async () => {
-    mockAugmentQuery.mockResolvedValueOnce({
-      pubmedQuery: "over-constrained MeSH query",
-      semanticScholarQuery: "s2",
-      openAlexQuery: "oa",
-    });
-    // First PubMed call (augmented) returns empty; raw fallback returns a hit.
-    mockSearchPubMed
-      .mockResolvedValueOnce({ results: [], total: 0, status: { status: "ok" } })
-      .mockResolvedValueOnce({
-        results: [sampleResult],
-        total: 1,
-        status: { status: "ok" },
-      });
-    mockReciprocalRankFusion.mockReturnValueOnce([sampleResult]);
-
-    const res = await GET(
-      makeRequest({ q: "transcatheter aortic valve six year outcomes" })
-    );
-    const body = await res.json();
-    expect(res.status).toBe(200);
-    // augmented call + raw fallback call
-    expect(mockSearchPubMed).toHaveBeenCalledWith(
-      "transcatheter aortic valve six year outcomes",
-      expect.objectContaining({ page: 0 })
-    );
-    expect(body.sourceCounts.pubmed).toBe(1);
-    expect(body.sourceStatuses.pubmed.status).toBe("ok");
   });
 
   it("strips double quotes from query when exactMatch is true", async () => {

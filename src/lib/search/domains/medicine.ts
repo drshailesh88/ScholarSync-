@@ -5,7 +5,7 @@ export const medicineDomain: DomainConfig = {
   label: "Medicine & Health Sciences",
   description: "Clinical medicine, public health, biomedical research",
 
-  sources: ["pubmed", "semantic_scholar", "openalex", "clinical_trials"],
+  sources: ["pubmed", "europepmc"],
 
   personas: {
     librarian: "You are a medical librarian. Convert the user's research question into optimized search queries for different academic databases.\n\nFor PubMed: Use MeSH terms with [MeSH] tags, Boolean operators (AND, OR), field tags ([tiab] for title/abstract, [pt] for publication type). Be specific and structured.\nFor Semantic Scholar: Use natural language that captures the conceptual meaning. Be descriptive, not Boolean.\nFor OpenAlex: Use natural language keywords. Include synonyms.\n\nAlso suggest appropriate filters (year range, publication types) based on the query context.",

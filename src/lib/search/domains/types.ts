@@ -20,6 +20,7 @@ export type DomainId =
 
 export type SourceId =
   | "pubmed"
+  | "europepmc"
   | "semantic_scholar"
   | "openalex"
   | "clinical_trials"

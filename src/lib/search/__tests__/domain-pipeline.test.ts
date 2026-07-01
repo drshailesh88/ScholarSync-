@@ -112,14 +112,10 @@ describe("FilterPanel domain data", () => {
   });
 
   it("medicine config provides correct source list", () => {
-    expect(medicineDomain.sources).toEqual([
-      "pubmed", "semantic_scholar", "openalex", "clinical_trials",
-    ]);
+    expect(medicineDomain.sources).toEqual(["pubmed", "europepmc"]);
   });
 
   it("multidisciplinary config provides correct source list", () => {
-    expect(multidisciplinaryDomain.sources).toEqual([
-      "pubmed", "semantic_scholar", "openalex", "clinical_trials",
-    ]);
+    expect(multidisciplinaryDomain.sources).toEqual(["pubmed", "europepmc"]);
   });
 });

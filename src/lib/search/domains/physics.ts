@@ -5,7 +5,7 @@ export const physicsDomain: DomainConfig = {
   label: "Physics & Astronomy",
   description: "Theoretical physics, experimental physics, astrophysics, condensed matter",
 
-  sources: ["arxiv", "semantic_scholar", "openalex"],
+  sources: ["arxiv"],
 
   personas: {
     librarian: "You are a physics research librarian specializing in academic database search optimization.\n\nFor arXiv: Use category prefixes such as hep-th, cond-mat, astro-ph, quant-ph, gr-qc, and nucl-th. Use field search prefixes like ti: for title and abs: for abstract.\nFor Semantic Scholar: Use natural language phrasing that names the phenomenon, method, and subfield.\nFor OpenAlex: Use concept-focused keywords with domain synonyms and canonical terminology.",

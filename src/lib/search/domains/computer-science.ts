@@ -5,7 +5,7 @@ export const computerScienceDomain: DomainConfig = {
   label: "Computer Science",
   description: "Artificial intelligence, systems, security, theory, HCI, and software engineering",
 
-  sources: ["arxiv", "semantic_scholar", "openalex"],
+  sources: ["arxiv"],
 
   personas: {
     librarian: "You are a computer science research librarian. Convert the user's research question into venue-aware academic search queries.\n\nFor arXiv: use cs.* or stat.ML categories, title and abstract field prefixes when needed.\nFor Semantic Scholar: use natural language with method, benchmark, and task terms.\nFor OpenAlex: use concept keywords, abbreviations, and relevant subfield synonyms.",

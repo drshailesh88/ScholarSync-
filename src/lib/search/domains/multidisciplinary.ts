@@ -5,7 +5,7 @@ export const multidisciplinaryDomain: DomainConfig = {
   label: "Multidisciplinary / Not Sure",
   description: "Search across all scientific disciplines",
 
-  sources: ["pubmed", "semantic_scholar", "openalex", "clinical_trials"],
+  sources: ["pubmed", "europepmc"],
   // Note: arxiv will be added here once the arXiv adapter is built (Issue #20)
 
   personas: {

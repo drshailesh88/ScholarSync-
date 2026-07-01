@@ -24,6 +24,7 @@ const DEFAULT_SOURCES: ResearchSearchFilters["sources"] = ["pubmed", "semantic_s
 
 const SOURCE_LABELS: Record<string, string> = {
   pubmed: "PubMed",
+  europepmc: "Europe PMC",
   semantic_scholar: "Semantic Scholar",
   openalex: "OpenAlex",
   clinical_trials: "ClinicalTrials.gov",

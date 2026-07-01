@@ -12,8 +12,10 @@ describe("domain feature flags", () => {
     expect(getDomainConfig("multidisciplinary").features.picoExtraction).toBe(false);
   });
 
-  it("disables clinical trials search for multidisciplinary", () => {
-    expect(getDomainConfig("medicine").sources).toContain("clinical_trials");
+  it("keeps clinical trials search enabled for medicine but off for multidisciplinary", () => {
+    // Clinical trials moved off the academic fan-out to the dedicated
+    // /api/search/clinical-trials route; the capability flag still gates it.
+    expect(getDomainConfig("medicine").features.clinicalTrialsSearch).toBe(true);
     expect(getDomainConfig("multidisciplinary").features.clinicalTrialsSearch).toBe(false);
   });
 
