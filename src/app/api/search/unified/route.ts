@@ -18,6 +18,11 @@ import { getTrustTier } from "@/lib/search/trust-tier";
 import { normalizeDomain } from "@/lib/search/domain-utils";
 import type { UnifiedSearchResult } from "@/types/search";
 
+// The academic tab fans out across 4 lexical lanes + the owned dense floor + a
+// cross-encoder rerank; a multi-source literature search legitimately runs ~8-12s.
+// Give the function room so Vercel doesn't kill it at the ~10s default.
+export const maxDuration = 60;
+
 type ResultDomainPreferenceLevel = NonNullable<
   UnifiedSearchResult["domainPreferenceLevel"]
 >;
