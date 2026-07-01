@@ -1,20 +1,16 @@
 import { NextResponse } from "next/server";
-import { runLiteratureSearch } from "@/lib/search/run-search";
 
-// A low-traffic serverless app scales to zero, so the FIRST user search after idle
-// pays a cold start (Modal dense endpoint + the function itself) and can blow past
-// the client abort. This cron exercises the real literature pipeline on a schedule
-// so the owned dense lane, the reranker, and the upstream connections stay warm and
-// the result cache stays primed. Scheduled from vercel.json.
+// Keep the owned MedCPT dense endpoint warm so the first user search after idle
+// gets a dense contribution (and low latency) instead of a cold miss. Deliberately
+// LEAN: it only pings the Modal combined-search endpoint — no PubMed/Scopus/Springer
+// calls and NO OpenRouter rerank — so the cron itself costs effectively nothing.
+// Scheduled every 5 min from vercel.json (Vercel Pro).
 export const maxDuration = 30;
 export const dynamic = "force-dynamic";
 
-const WARM_QUERY = "recent advances in cardiology";
-
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
-  // Vercel Cron sends `Authorization: Bearer <CRON_SECRET>`. If the secret is
-  // configured, require it — so the endpoint can't be spammed to run searches.
+  // Vercel Cron sends `Authorization: Bearer <CRON_SECRET>`.
   if (secret) {
     const auth = request.headers.get("authorization");
     if (auth !== `Bearer ${secret}`) {
@@ -22,16 +18,29 @@ export async function GET(request: Request) {
     }
   }
 
+  const searchUrl = process.env.MEDCPT_SEARCH_URL;
+  if (!searchUrl) {
+    return NextResponse.json({ ok: false, reason: "MEDCPT_SEARCH_URL not set" });
+  }
+
   const startedAt = Date.now();
   try {
-    const r = await runLiteratureSearch({ query: WARM_QUERY, perPage: 1 });
+    // Match the dense lane's contract: POST { query } to the combined endpoint.
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000);
+    const res = await fetch(searchUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: "warm" }),
+      signal: controller.signal,
+    }).finally(() => clearTimeout(timer));
     return NextResponse.json({
-      ok: true,
+      ok: res.ok,
+      status: res.status,
       warmedMs: Date.now() - startedAt,
-      sources: Object.keys(r.sourceCounts),
     });
   } catch (error) {
-    // Never fail the cron — a warm miss is not an incident.
+    // A warm miss is never an incident.
     return NextResponse.json({
       ok: false,
       warmedMs: Date.now() - startedAt,
