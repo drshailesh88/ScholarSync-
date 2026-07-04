@@ -213,9 +213,19 @@ export function recencyYearFloor(currentYear: number, windowYears: number): numb
   return currentYear - windowYears + 1;
 }
 
-// Cap for the post-fusion rerank pool. Only the top candidates by RRF score can
-// reach the returned page, so reranking beyond this is wasted work.
+// Cap for the metadata-backfill pool (PMID resolution). Bounded to the top
+// candidates by RRF score, since a deep candidate can't reach the returned page.
 export const POST_FUSION_POOL = 50;
+
+// Cap for the cross-encoder rerank pool (Lever 1 / F2). The reranker scores the
+// WHOLE fused pool in a single call — Cohere/OpenRouter accept ≤1000 docs per
+// request and bill per search, not per doc, so 50→200 is one call at the same
+// cost — and this cap sits above the largest pools we observe (~190), so the
+// entire ranked region carries a calibrated model score and no un-reranked
+// lexical tail can out-sort it. Reranking only the top 50 (the old behavior) left
+// candidates 50+ on saturating keyword-overlap relevance that beat rank-5 model
+// scores — the documented F2 inversion.
+export const RERANK_POOL_CAP = 200;
 
 // Cap the navigable page count. `total` used to be the largest source's raw hit
 // count (millions), so the UI showed "page 2 of 340,000 pages" — but we only fetch
@@ -781,7 +791,13 @@ async function runLiteratureSearchUncached(
   // they can't reach the returned page anyway. Fail-open.
   //  - rerank: OpenRouter cohere/rerank-4-pro relevance score (managed, always-warm,
   //    ~1.2s; the dominant relevance signal). MedCPT is off the critical path now.
-  const enrichRerankPool = fused.slice(0, POST_FUSION_POOL);
+  // LEVER 1: rerank the WHOLE fused pool (bounded by RERANK_POOL_CAP), not just
+  // the top POST_FUSION_POOL. One reranker call scores every candidate, so a
+  // landmark that RRF ranked past 50 (single-lane PubMed hits especially) is
+  // judged on calibrated relevance instead of falling back to saturating lexical
+  // overlap — and the pipeline's rerank-window boundary keeps any un-reranked
+  // tail strictly below the scored set.
+  const rerankPool = fused.slice(0, RERANK_POOL_CAP);
   // The cross-encoder rerank is COUNTERPRODUCTIVE for a specific trial-acronym
   // lookup: fed a bare acronym ("KEYNOTE-189"), it scores secondary papers that
   // mention the acronym above the trial's PRIMARY report (whose title describes the
@@ -794,8 +810,8 @@ async function runLiteratureSearchUncached(
   if (!skipRerank) {
     await withSourceTimeout(
       "Cross-encoder rerank",
-      attachRerankScores(searchQuery, enrichRerankPool, POST_FUSION_POOL),
-      4000
+      attachRerankScores(searchQuery, rerankPool, rerankPool.length),
+      6000
     ).catch(() => fused);
   }
 
@@ -804,9 +820,11 @@ async function runLiteratureSearchUncached(
   // still lack one (the PMID metadata gate). Resolve the residual via NCBI
   // esearch[AID] — bounded to a handful of the top candidates, fail-open, additive
   // metadata only.
-  await withSourceTimeout("PMID backfill", backfillPmidsByDoi(enrichRerankPool), 3000).catch(
-    () => 0
-  );
+  await withSourceTimeout(
+    "PMID backfill",
+    backfillPmidsByDoi(fused.slice(0, POST_FUSION_POOL)),
+    3000
+  ).catch(() => 0);
 
   // Eval-only: snapshot the enriched candidate pool BEFORE final ranking, so the
   // offline harness can re-rank this exact pool deterministically.
