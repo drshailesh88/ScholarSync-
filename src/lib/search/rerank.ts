@@ -209,18 +209,23 @@ export async function rerankResults(
     : process.env.MEDCPT_RERANK_URL;
   const cohereKey = process.env.COHERE_API_KEY;
 
-  // OpenRouter is the literature primary; the web path keeps its own reranker chain.
+  // The self-hosted cross-encoder is the PRIMARY reranker for BOTH domains:
+  //   web → WEB_RERANK_URL, literature → MedCPT (MEDCPT_RERANK_URL).
+  // It is free (Modal GPU, scale-to-zero, $0 idle) and biomedical-SOTA. It absorbs a
+  // ~20s cold start (longer ceiling + one retry) then serves <1s warm; on cold-start
+  // failure the chain falls through to a paid fallback or the keyword-overlap floor.
+  // `ACADEMIC_USE_MEDCPT_RERANK` is retained only as an escape hatch to force it OFF.
+  const selfHostedEnabled =
+    Boolean(selfHostedUrl) &&
+    (isWeb || process.env.ACADEMIC_USE_MEDCPT_RERANK !== "0");
+  // Paid fallbacks (literature only): OpenRouter cohere/rerank-4-pro, then Cohere-direct.
+  // Used only if the free self-hosted lane is absent or failing — kept off the primary
+  // path so a pre-revenue product never bleeds per-search reranker spend.
   const openRouterEnabled = !isWeb && Boolean(openRouterKey);
-  // The self-hosted MedCPT cross-encoder is DROPPED to scale-to-zero — for the
-  // literature path it is on the critical path ONLY when explicitly opted in. The web
-  // reranker (its own scale-to-zero GPU) stays its domain's primary as before.
-  const selfHostedEnabled = isWeb
-    ? Boolean(selfHostedUrl)
-    : Boolean(selfHostedUrl) && process.env.ACADEMIC_USE_MEDCPT_RERANK === "1";
 
   if (
     results.length === 0 ||
-    (!openRouterEnabled && !selfHostedEnabled && !cohereKey)
+    (!selfHostedEnabled && !openRouterEnabled && !cohereKey)
   ) {
     return results;
   }
@@ -230,15 +235,7 @@ export async function rerankResults(
 
   const backends: { name: string; run: () => Promise<RerankScore[]> }[] = [];
 
-  // 1. OpenRouter (primary, literature) — managed, always-warm, ~1.2s.
-  if (openRouterEnabled && openRouterKey)
-    backends.push({
-      name: "OpenRouter",
-      run: () => rerankOpenRouter(openRouterKey, query, documents, limit),
-    });
-
-  // 2. Self-hosted cross-encoder — web: WEB_RERANK_URL (primary); literature: MedCPT
-  //    only when ACADEMIC_USE_MEDCPT_RERANK=1.
+  // 1. Self-hosted cross-encoder (PRIMARY, free) — web: WEB_RERANK_URL; literature: MedCPT.
   if (selfHostedEnabled && selfHostedUrl)
     backends.push({
       name: isWeb ? "WebReranker" : "MedCPT",
@@ -249,18 +246,24 @@ export async function rerankResults(
           documents,
           limit,
           isWeb ? "Web-Rerank" : "MedCPT-Rerank",
-          // Both self-hosted rerankers are GPU scale-to-zero; keeping them warm 24/7
-          // isn't worth it at this scale. The web lane fail-open-fasts (short ceiling,
-          // no retry) so a cold start degrades to un-reranked results instantly. The
-          // literature MedCPT lane is opt-in (ACADEMIC_USE_MEDCPT_RERANK) and, when
-          // on, absorbs the cold start with a longer ceiling + one retry. Warm: <1s.
+          // GPU scale-to-zero on both lanes. The web lane fail-open-fasts (short
+          // ceiling, no retry) so a cold start degrades to un-reranked results
+          // instantly. The literature MedCPT lane absorbs its ~20s cold start with a
+          // longer ceiling + one retry. Warm: <1s.
           isWeb
             ? { timeout: Number(process.env.WEB_RERANK_TIMEOUT_MS) || 4000, maxRetries: 0 }
             : { timeout: 15000, maxRetries: 1 }
         ),
     });
 
-  // 3. Cohere-direct — tertiary fallback for either domain.
+  // 2. OpenRouter cohere/rerank-4-pro (paid FALLBACK, literature only) — managed, ~1.2s.
+  if (openRouterEnabled && openRouterKey)
+    backends.push({
+      name: "OpenRouter",
+      run: () => rerankOpenRouter(openRouterKey, query, documents, limit),
+    });
+
+  // 3. Cohere-direct — last-resort paid fallback for either domain.
   if (cohereKey)
     backends.push({
       name: "Cohere",

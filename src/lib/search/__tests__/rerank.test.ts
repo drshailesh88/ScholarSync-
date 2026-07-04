@@ -52,7 +52,7 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe("rerankResults — OpenRouter primary (literature)", () => {
+describe("rerankResults — literature reranker chain (MedCPT-primary, free-first)", () => {
   it("maps relevance_score back to each input document by index and sorts desc", async () => {
     vi.stubEnv("OPENROUTER_API_KEY", OPENROUTER_KEY);
     // OpenRouter returns top_n results already sorted by relevance: B (idx 1) > C
@@ -100,49 +100,51 @@ describe("rerankResults — OpenRouter primary (literature)", () => {
     expect(body.model).toBe("cohere/rerank-4-experimental");
   });
 
-  it("is PREFERRED over MedCPT and Cohere when all are configured", async () => {
-    vi.stubEnv("OPENROUTER_API_KEY", OPENROUTER_KEY);
+  it("MedCPT (free self-hosted) is PREFERRED over paid OpenRouter and Cohere for literature", async () => {
+    // Free-first: when the self-hosted MedCPT URL is present it is the primary; the
+    // paid lanes are never called unless it fails. No opt-in flag required.
     vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
-    vi.stubEnv("ACADEMIC_USE_MEDCPT_RERANK", "1"); // even when MedCPT is explicitly enabled
+    vi.stubEnv("OPENROUTER_API_KEY", OPENROUTER_KEY);
     vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
-    mockResilientFetch.mockResolvedValueOnce(rerankResponse([[1, 0.9], [0, 0.1]]));
+    // MedCPT returns raw logits in INPUT order.
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [0.1, 4, 1] }));
 
     await rerankResults("q", RESULTS);
 
     expect(mockResilientFetch).toHaveBeenCalledTimes(1);
-    expect(mockResilientFetch.mock.calls[0][0]).toBe(OPENROUTER_URL);
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
   });
 
-  it("does NOT call MedCPT on the critical path unless ACADEMIC_USE_MEDCPT_RERANK=1", async () => {
-    // OpenRouter down, MedCPT URL present but NOT flagged → skip MedCPT, fall to Cohere.
-    vi.stubEnv("OPENROUTER_API_KEY", OPENROUTER_KEY);
+  it("uses MedCPT by default (no flag) and only falls to a paid lane when it fails", async () => {
+    // MedCPT present WITHOUT ACADEMIC_USE_MEDCPT_RERANK → still primary; on cold-start
+    // failure it falls through to the paid OpenRouter fallback.
     vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
+    vi.stubEnv("OPENROUTER_API_KEY", OPENROUTER_KEY);
     vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
-    mockResilientFetch.mockRejectedValueOnce(new Error("[OpenRouter-Rerank] HTTP 503"));
+    mockResilientFetch.mockRejectedValueOnce(new Error("[MedCPT-Rerank] cold start timeout"));
     mockResilientFetch.mockResolvedValueOnce(rerankResponse([[1, 0.9], [0, 0.1]]));
 
     await rerankResults("q", RESULTS);
 
     expect(mockResilientFetch).toHaveBeenCalledTimes(2);
-    expect(mockResilientFetch.mock.calls[0][0]).toBe(OPENROUTER_URL);
-    // second call skipped MedCPT entirely and went straight to Cohere
-    expect(mockResilientFetch.mock.calls[1][0]).toBe(COHERE_URL);
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
+    // fell to the paid fallback only after the free lane failed
+    expect(mockResilientFetch.mock.calls[1][0]).toBe(OPENROUTER_URL);
   });
 
-  it("falls OpenRouter → MedCPT (when flagged) → Cohere", async () => {
-    vi.stubEnv("OPENROUTER_API_KEY", OPENROUTER_KEY);
+  it("falls MedCPT → OpenRouter → Cohere", async () => {
     vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
-    vi.stubEnv("ACADEMIC_USE_MEDCPT_RERANK", "1");
+    vi.stubEnv("OPENROUTER_API_KEY", OPENROUTER_KEY);
     vi.stubEnv("COHERE_API_KEY", COHERE_KEY);
-    mockResilientFetch.mockRejectedValueOnce(new Error("[OpenRouter-Rerank] HTTP 503"));
     mockResilientFetch.mockRejectedValueOnce(new Error("[MedCPT-Rerank] cold start timeout"));
+    mockResilientFetch.mockRejectedValueOnce(new Error("[OpenRouter-Rerank] HTTP 402"));
     mockResilientFetch.mockResolvedValueOnce(rerankResponse([[1, 0.9], [0, 0.1]]));
 
     const out = await rerankResults("q", RESULTS);
 
     expect(mockResilientFetch).toHaveBeenCalledTimes(3);
-    expect(mockResilientFetch.mock.calls[0][0]).toBe(OPENROUTER_URL);
-    expect(mockResilientFetch.mock.calls[1][0]).toBe(MEDCPT_URL);
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
+    expect(mockResilientFetch.mock.calls[1][0]).toBe(OPENROUTER_URL);
     expect(mockResilientFetch.mock.calls[2][0]).toBe(COHERE_URL);
     expect(out.map((r) => r.title)).toEqual(["B relevance high", "A relevance low"]);
   });
@@ -175,10 +177,9 @@ describe("rerankResults — OpenRouter primary (literature)", () => {
   });
 });
 
-describe("rerankResults — MedCPT optional / Cohere tertiary", () => {
-  it("uses MedCPT (squashing logits to [0,1]) only when flagged and OpenRouter absent", async () => {
+describe("rerankResults — MedCPT default primary / Cohere tertiary", () => {
+  it("uses MedCPT (squashing logits to [0,1]) by default when MEDCPT_RERANK_URL is set", async () => {
     vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
-    vi.stubEnv("ACADEMIC_USE_MEDCPT_RERANK", "1");
     // raw LOGITS in INPUT order: A=-2, B=4, C=1 → sorted desc by sigmoid → B, C, A.
     mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [-2, 4, 1] }));
 
@@ -195,8 +196,9 @@ describe("rerankResults — MedCPT optional / Cohere tertiary", () => {
     expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
   });
 
-  it("ignores MEDCPT_RERANK_URL when the flag is not set, falling open with no other backend", async () => {
-    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL); // present but NOT flagged
+  it("ACADEMIC_USE_MEDCPT_RERANK=0 forces the MedCPT lane OFF (escape hatch)", async () => {
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL); // present but explicitly disabled
+    vi.stubEnv("ACADEMIC_USE_MEDCPT_RERANK", "0");
     const out = await rerankResults("q", RESULTS);
     expect(out).toBe(RESULTS);
     expect(mockResilientFetch).not.toHaveBeenCalled();
