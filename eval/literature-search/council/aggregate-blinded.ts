@@ -118,8 +118,23 @@ function main() {
   const mananBeatsOrTies = tally.manan + tally.tie;
   const pctBeatTie = rows.length ? Math.round((mananBeatsOrTies / rows.length) * 100) : 0;
 
+  // The project's own stop gate: Manan must beat-or-tie Elicit on ≥ 80% of
+  // queries. This is the HONEST headline — a raw win count (e.g. "47 wins")
+  // flatters the system by hiding the ties and losses the gate is defined over.
+  const STOP_GATE_PCT = 80;
+  const gatePass = pctBeatTie >= STOP_GATE_PCT;
+  const verdictLine = `${gatePass ? "PASS" : "FAIL"} — Manan beats-or-ties Elicit on ${mananBeatsOrTies}/${rows.length} queries (${pctBeatTie}%), gate ≥ ${STOP_GATE_PCT}%`;
+
   const md: string[] = [];
   md.push("# BLINDED LLM-Council Verdict — Manan vs Elicit", "");
+  md.push(`## ${gatePass ? "✅ PASS" : "❌ FAIL"} — ${pctBeatTie}% beat-or-tie vs ${STOP_GATE_PCT}% gate`, "");
+  md.push(
+    `Manan beats-or-ties Elicit on **${mananBeatsOrTies} of ${rows.length}** queries ` +
+      `(**${pctBeatTie}%**). Stop gate is **≥ ${STOP_GATE_PCT}%** → **${gatePass ? "PASS" : "FAIL"}**.`,
+    "",
+    `_Raw split (wins are NOT the gate): Manan ${tally.manan} · Elicit ${tally.elicit} · tie ${tally.tie}._`,
+    ""
+  );
   md.push(`Cycle dir: \`${dir}\` · Manan run: \`${key.run}\` · blinding salt: \`${key.salt}\``);
   md.push(`Judges (isolated, blinded A/B): ${present.join(", ")}.`, "");
   md.push("## Per-query majority vote (de-anonymized)", "");
@@ -132,10 +147,10 @@ function main() {
   }
   md.push("");
   md.push("## Tally (by per-query majority)", "");
-  md.push(`- **Manan wins: ${tally.manan}**`);
+  md.push(`- **Manan beats-or-ties: ${mananBeatsOrTies}/${rows.length} = ${pctBeatTie}% → ${gatePass ? "PASS" : "FAIL"}** (stop gate ≥ ${STOP_GATE_PCT}%)`);
+  md.push(`- Manan wins: ${tally.manan}`);
   md.push(`- Elicit wins: ${tally.elicit}`);
-  md.push(`- Ties: ${tally.tie}`);
-  md.push(`- **Manan beats-or-ties: ${mananBeatsOrTies}/${rows.length} = ${pctBeatTie}%** (Stop gate ≥ 80%)`, "");
+  md.push(`- Ties: ${tally.tie}`, "");
   md.push("## Judge overall summaries (blinded — A/B)", "");
   for (const j of present) md.push(`- **${j}:** winner=${verdicts[j].overall.winner} — ${verdicts[j].overall.summary}`);
   md.push("");
@@ -144,13 +159,24 @@ function main() {
   writeFileSync(
     join(cycleDir, "council-summary.json"),
     JSON.stringify(
-      { dir, run: key.run, salt: key.salt, judges: present, tally, mananBeatsOrTies, pctBeatTie, rows },
+      {
+        dir,
+        run: key.run,
+        salt: key.salt,
+        judges: present,
+        gate: { metric: "pctBeatTie", threshold: STOP_GATE_PCT, value: pctBeatTie, pass: gatePass },
+        tally,
+        mananBeatsOrTies,
+        pctBeatTie,
+        rows,
+      },
       null,
       2
     )
   );
+  console.log(`[council] ${verdictLine}`);
   console.log(
-    `[council] dir=${dir} judges=${present.join("+")} → Manan ${tally.manan} / Elicit ${tally.elicit} / tie ${tally.tie} · beat-or-tie ${pctBeatTie}%`
+    `[council]   raw split — Manan ${tally.manan} / Elicit ${tally.elicit} / tie ${tally.tie} (dir=${dir}, judges=${present.join("+")})`
   );
 }
 
