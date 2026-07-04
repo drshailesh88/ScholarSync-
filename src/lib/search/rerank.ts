@@ -252,7 +252,7 @@ export async function rerankResults(
           // longer ceiling + one retry. Warm: <1s.
           isWeb
             ? { timeout: Number(process.env.WEB_RERANK_TIMEOUT_MS) || 4000, maxRetries: 0 }
-            : { timeout: 15000, maxRetries: 1 }
+            : { timeout: Number(process.env.MEDCPT_RERANK_TIMEOUT_MS) || 25000, maxRetries: 1 }
         ),
     });
 
