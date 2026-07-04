@@ -16,11 +16,22 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { BENCHMARK_QUERIES, CATEGORY_COUNTS, type BenchmarkQuery } from "./queries";
+import { BENCHMARK_QUERIES, CATEGORY_COUNTS, type MustHave } from "./queries";
+import { HELDOUT_QUERIES, HELDOUT_DOMAIN_COUNTS } from "./queries-heldout";
 import { searchPapers } from "@/lib/mcp/tools";
 import type { SearchSourceId } from "@/lib/search/run-search";
 import { computeQueryMetrics, type EvalResultItem } from "@/lib/search/eval/metrics";
 import { buildSummaryMd, buildSummaryJson, type QueryRun } from "./report";
+
+/** The minimal shape the runner needs — satisfied by both the clinical training
+ * benchmark (queries.ts) and the held-out set (queries-heldout.ts). */
+interface EvalQuery {
+  id: string;
+  query: string;
+  category: string;
+  mustHaves?: MustHave[];
+  domain?: string;
+}
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -41,18 +52,22 @@ interface CliArgs {
   only?: string[];
   max: number;
   sources?: SearchSourceId[];
+  heldout: boolean;
 }
 
 function parseArgs(argv: string[]): CliArgs {
-  const out: CliArgs = { label: "run", max: 10 };
+  const out: CliArgs = { label: "", max: 10, heldout: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--label") out.label = argv[++i];
     else if (a === "--only") out.only = argv[++i].split(",").map((s) => s.trim());
     else if (a === "--max") out.max = parseInt(argv[++i], 10) || 10;
+    else if (a === "--heldout") out.heldout = true;
     else if (a === "--sources")
       out.sources = argv[++i].split(",").map((s) => s.trim()) as CliArgs["sources"];
   }
+  // Default label differs by set so a held-out run never overwrites a training run.
+  if (!out.label) out.label = out.heldout ? "heldout" : "run";
   return out;
 }
 
@@ -71,7 +86,7 @@ function toEvalItems(results: Array<Record<string, unknown>>): EvalResultItem[] 
   }));
 }
 
-async function runQuery(q: BenchmarkQuery, args: CliArgs): Promise<QueryRun> {
+async function runQuery(q: EvalQuery, args: CliArgs): Promise<QueryRun> {
   const started = Date.now();
   try {
     const res = await searchPapers({
@@ -112,9 +127,21 @@ async function runQuery(q: BenchmarkQuery, args: CliArgs): Promise<QueryRun> {
 async function main() {
   loadEnv();
   const args = parseArgs(process.argv.slice(2));
-  const selected = args.only
-    ? BENCHMARK_QUERIES.filter((q) => args.only!.includes(q.id))
-    : BENCHMARK_QUERIES;
+
+  // Held-out set is measured SEPARATELY — never mixed into the training aggregate.
+  const pool: EvalQuery[] = args.heldout ? HELDOUT_QUERIES : BENCHMARK_QUERIES;
+  if (args.heldout) {
+    const overlap = HELDOUT_QUERIES.filter((q) =>
+      BENCHMARK_QUERIES.some((t) => t.id === q.id)
+    );
+    if (overlap.length) {
+      console.error(
+        `[eval] FATAL: held-out ids overlap training set: ${overlap.map((o) => o.id).join(", ")}`
+      );
+      process.exit(1);
+    }
+  }
+  const selected = args.only ? pool.filter((q) => args.only!.includes(q.id)) : pool;
 
   if (selected.length === 0) {
     console.error("No queries selected. Check --only ids.");
@@ -125,11 +152,14 @@ async function main() {
   mkdirSync(join(outDir, "queries"), { recursive: true });
 
   console.log(
-    `[eval] label=${args.label} queries=${selected.length} max=${args.max} sources=${
-      args.sources?.join("+") ?? "default"
-    }`
+    `[eval] label=${args.label}${args.heldout ? " (HELD-OUT — reported separately)" : ""} ` +
+      `queries=${selected.length} max=${args.max} sources=${args.sources?.join("+") ?? "default"}`
   );
-  console.log(`[eval] categories: ${JSON.stringify(CATEGORY_COUNTS)}`);
+  console.log(
+    args.heldout
+      ? `[eval] domains: ${JSON.stringify(HELDOUT_DOMAIN_COUNTS)}`
+      : `[eval] categories: ${JSON.stringify(CATEGORY_COUNTS)}`
+  );
 
   const runs: QueryRun[] = [];
   for (const q of selected) {
@@ -159,6 +189,42 @@ async function main() {
   );
   writeFileSync(join(outDir, "summary.md"), buildSummaryMd(args.label, runs));
   console.log(`\n[eval] wrote ${outDir}/summary.{json,md}`);
+
+  // Held-out: also break generalization down BY DOMAIN, since the whole point of
+  // this set is to expose where the (clinically-tuned) heuristics have no priors.
+  if (args.heldout) {
+    const domainOf = new Map(HELDOUT_QUERIES.map((q) => [q.id, q.domain]));
+    const byDomain = new Map<string, { recall: number[]; ndcg: number[] }>();
+    for (const r of runs) {
+      const d = domainOf.get(r.id) ?? "unknown";
+      if (!byDomain.has(d)) byDomain.set(d, { recall: [], ndcg: [] });
+      const bucket = byDomain.get(d)!;
+      if (r.metrics.recallAt10 !== null) bucket.recall.push(r.metrics.recallAt10);
+      if (r.metrics.ndcgAt10 !== null) bucket.ndcg.push(r.metrics.ndcgAt10);
+    }
+    const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
+    const perDomain = [...byDomain.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([domain, b]) => ({
+        domain,
+        queries: b.recall.length,
+        recallAt10: avg(b.recall),
+        ndcgAt10: avg(b.ndcg),
+      }));
+    writeFileSync(
+      join(outDir, "by-domain.json"),
+      JSON.stringify({ label: args.label, perDomain }, null, 2)
+    );
+    console.log("\n[eval] held-out generalization by domain:");
+    for (const d of perDomain) {
+      console.log(
+        `  ${d.domain.padEnd(18)} n=${String(d.queries).padStart(2)} ` +
+          `recall@10=${pct(d.recallAt10).padStart(4)} nDCG@10=${
+            d.ndcgAt10 === null ? "—" : d.ndcgAt10.toFixed(2)
+          }`
+      );
+    }
+  }
 }
 
 main().catch((err) => {
