@@ -1,4 +1,9 @@
-export { getDomainConfig, getRegisteredDomains, isDomainRegistered } from "./registry";
+export {
+  getDomainConfig,
+  getRegisteredDomains,
+  isDomainRegistered,
+  rerankProfileForDomain,
+} from "./registry";
 export type {
   DomainConfig,
   DomainId,

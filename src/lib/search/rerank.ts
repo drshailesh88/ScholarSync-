@@ -200,11 +200,18 @@ export async function rerankResults(
   query: string,
   results: UnifiedSearchResult[],
   topN?: number,
-  opts?: { domain?: "web" | "literature" }
+  opts?: { domain?: "web" | "literature"; rerankProfile?: "biomedical" | "general" }
 ): Promise<UnifiedSearchResult[]> {
   const isWeb = opts?.domain === "web";
   const openRouterKey = process.env.OPENROUTER_API_KEY;
-  const selfHostedUrl = isWeb
+  // Reranker routing: web + non-biomedical literature (CS/econ/psych/stats) use the
+  // general bge-reranker (WEB_RERANK_URL); biomedical literature uses MedCPT. A
+  // PubMed-trained cross-encoder is off-distribution for non-clinical papers, so
+  // routing them to the general model is what lifts multi-domain recall.
+  const useGeneralReranker =
+    isWeb ||
+    (opts?.rerankProfile === "general" && Boolean(process.env.WEB_RERANK_URL));
+  const selfHostedUrl = useGeneralReranker
     ? process.env.WEB_RERANK_URL
     : process.env.MEDCPT_RERANK_URL;
   const cohereKey = process.env.COHERE_API_KEY;
@@ -235,17 +242,18 @@ export async function rerankResults(
 
   const backends: { name: string; run: () => Promise<RerankScore[]> }[] = [];
 
-  // 1. Self-hosted cross-encoder (PRIMARY, free) — web: WEB_RERANK_URL; literature: MedCPT.
+  // 1. Self-hosted cross-encoder (PRIMARY, free) — biomedical literature: MedCPT;
+  //    web + non-biomedical literature: bge (WEB_RERANK_URL).
   if (selfHostedEnabled && selfHostedUrl)
     backends.push({
-      name: isWeb ? "WebReranker" : "MedCPT",
+      name: isWeb ? "WebReranker" : useGeneralReranker ? "BGE" : "MedCPT",
       run: () =>
         rerankSelfHosted(
           selfHostedUrl,
           query,
           documents,
           limit,
-          isWeb ? "Web-Rerank" : "MedCPT-Rerank",
+          isWeb ? "Web-Rerank" : useGeneralReranker ? "BGE-Rerank" : "MedCPT-Rerank",
           // GPU scale-to-zero on both lanes. The web lane fail-open-fasts (short
           // ceiling, no retry) so a cold start degrades to un-reranked results
           // instantly. The literature MedCPT lane absorbs its ~20s cold start with a
@@ -296,11 +304,15 @@ export async function rerankResults(
 export async function attachRerankScores(
   query: string,
   results: UnifiedSearchResult[],
-  topN = 50
+  topN = 50,
+  opts?: { rerankProfile?: "biomedical" | "general" }
 ): Promise<UnifiedSearchResult[]> {
   if (!hasReranker() || results.length < 2) return results;
   const head = results.slice(0, Math.min(results.length, topN));
-  const reranked = await rerankResults(query, head, head.length);
+  const reranked = await rerankResults(query, head, head.length, {
+    domain: "literature",
+    rerankProfile: opts?.rerankProfile,
+  });
   if (reranked === head) return results; // failed → unchanged
   // rerankResults returns the head reordered with rerankScore; map scores back
   // onto the original objects by identity.

@@ -46,6 +46,26 @@ export function getDomainConfig(domainId?: string | null): DomainConfig {
 }
 
 /**
+ * Which cross-encoder reranks this domain's academic results.
+ *   - "biomedical": the free MedCPT cross-encoder (trained on PubMed) — for domains
+ *     whose literature lives in PubMed (medicine, biology).
+ *   - "general": the free bge-reranker-v2-m3 (general/multilingual) — for everything
+ *     else (CS, economics, psychology, statistics, physics, …), where a PubMed-trained
+ *     model is off-distribution. This is what lifts non-clinical recall.
+ * Defaults to "biomedical" only for null/absent domain (medicine is the app default);
+ * any KNOWN-non-biomedical or unregistered discipline routes to "general".
+ */
+const BIOMEDICAL_RERANK_DOMAINS = new Set(["medicine", "biology"]);
+
+export function rerankProfileForDomain(
+  domainId?: string | null
+): "biomedical" | "general" {
+  if (!domainId) return "biomedical";
+  const norm = domainId.trim().toLowerCase().replace(/-/g, "_");
+  return BIOMEDICAL_RERANK_DOMAINS.has(norm) ? "biomedical" : "general";
+}
+
+/**
  * Get all registered domain IDs (for onboarding picker, etc.)
  */
 export function getRegisteredDomains(): DomainId[] {

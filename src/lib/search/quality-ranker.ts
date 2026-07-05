@@ -1,6 +1,5 @@
 import type { UnifiedSearchResult, EvidenceLevel } from "@/types/search";
 import { lookupJournalQuality } from "./journal-quality";
-import { entityDriftPenalty } from "./entity-drift";
 
 // ── Configuration ───────────────────────────────────────────────────
 
@@ -44,6 +43,39 @@ const BALANCED_CONFIG: QualityRankingConfig = {
   rrfWeight: 0.20,
   relevanceWeight: 0.50,
 };
+
+/**
+ * Ranking intent — the one fact the ranker cannot infer from the query text, so the
+ * UI captures it (the "Landmark / Latest / Exhaustive" chip) and passes it down. It
+ * only re-weights the tie-breaker signals; relevance stays dominant in every mode.
+ *   - "landmark": the user wants the foundational trials. Nearly triples the citation
+ *     weight (0.07 → 0.18, drawn from RRF) so a heavily-cited landmark floats past the
+ *     recent lookalikes the cross-encoder ties it with. Resolves the measured
+ *     "PARTNER trials" vs "six-year outcomes" ambiguity (same paper, opposite intent).
+ *   - "recent": the user wants the newest evidence. Citations are near-muted (0.07 →
+ *     0.02) so a 3,000-cite classic can't crowd out this year's trial; recency ordering
+ *     is driven separately via the recency flag.
+ *   - "balanced" (default): the validated config, used when no intent is given.
+ */
+export type RankingIntent = "landmark" | "recent" | "balanced";
+
+const LANDMARK_CONFIG: QualityRankingConfig = {
+  ...BALANCED_CONFIG,
+  citationWeight: 0.18,
+  rrfWeight: 0.09,
+};
+
+const RECENT_CONFIG: QualityRankingConfig = {
+  ...BALANCED_CONFIG,
+  citationWeight: 0.02,
+  rrfWeight: 0.25,
+};
+
+export function configForIntent(intent?: RankingIntent): QualityRankingConfig {
+  if (intent === "landmark") return LANDMARK_CONFIG;
+  if (intent === "recent") return RECENT_CONFIG;
+  return BALANCED_CONFIG;
+}
 
 /**
  * Relevance GATE. The weighted composite alone let off-topic mega-cited papers
@@ -337,15 +369,16 @@ function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult 
     c.journalWeight * signals.journal +
     c.rrfWeight * signals.rrf +
     c.relevanceWeight * signals.relevance;
-  // Gently demote (never drop) a result whose title is about a different subtype
-  // or specific drug than the query specifies — drift the cross-encoder cannot
-  // discriminate. The multiplier is recorded for the ranking trace.
-  signals.entityDrift = ctx.rawQuery ? entityDriftPenalty(ctx.rawQuery, r) : 1;
+  // Entity-drift penalty RETIRED (2026-07): its hardcoded drug/subtype tables were
+  // fit to cardiology/endo/onc benchmark queries and don't transfer to other domains
+  // (empty tables → no effect). The restored citation signal + whole-pool rerank now
+  // do the general work; kept as a neutral trace field (always 1) pending deletion.
+  signals.entityDrift = 1;
   // The gate is SIGNAL-AWARE: a model rerankScore is gated at the calibrated 0.45
   // floor; a lexical overlap is gated more strictly so generic word matches cannot
   // pass as cross-encoder-grade relevance.
   const composite =
-    weighted * signals.entityDrift * relevanceGate(signals.relevance, relevance.source);
+    weighted * relevanceGate(signals.relevance, relevance.source);
   return { result: r, composite, signals };
 }
 

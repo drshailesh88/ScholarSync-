@@ -10,6 +10,8 @@
 
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchEuropePMC } from "@/lib/search/sources/europepmc";
+import { searchArxiv } from "@/lib/search/sources/arxiv";
+import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchScopus } from "@/lib/search/sources/scopus";
 import { searchSpringer } from "@/lib/search/sources/springer";
 import { searchMedcptDense } from "@/lib/search/sources/medcpt-dense";
@@ -21,6 +23,8 @@ import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { enrichCitationsByIds } from "@/lib/search/sources/openalex";
 import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
+import type { RankingIntent } from "@/lib/search/quality-ranker";
+import { rerankProfileForDomain } from "@/lib/search/domains";
 import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
 import { attachRerankScores } from "@/lib/search/rerank";
 import {
@@ -35,7 +39,7 @@ import { assessConfidence, type Confidence } from "@/lib/search/confidence";
 import { backfillPmidsByDoi } from "@/lib/search/pmid-backfill";
 import type { UnifiedSearchResult } from "@/types/search";
 
-export const SEARCH_SOURCES = ["pubmed", "europepmc", "scopus", "springer"] as const;
+export const SEARCH_SOURCES = ["pubmed", "europepmc", "scopus", "springer", "semantic_scholar"] as const;
 export type SearchSourceId = (typeof SEARCH_SOURCES)[number];
 
 /**
@@ -45,15 +49,18 @@ export type SearchSourceId = (typeof SEARCH_SOURCES)[number];
  * adds broad multidisciplinary coverage plus its own `citedby-count`; Springer
  * Nature adds book/journal full text and open-access PDFs. All four are
  * throttle-tolerant lexical lanes, each key-gated so an unconfigured lane stays
- * inert (missing_config) rather than degrading search. OpenAlex and Semantic
- * Scholar were removed from the pipeline; the owned MedCPT dense lane is the
- * recall backbone and always contributes (see the guaranteed-floor logic below).
+ * inert (missing_config) rather than degrading search. Semantic Scholar (~200M
+ * all-field papers) is re-added as a cross-domain lane that helps medicine AND
+ * non-medical — fail-open with its own circuit breaker, so it is a bonus source and
+ * never critical. The owned MedCPT dense lane remains the recall backbone and always
+ * contributes (see the guaranteed-floor logic below).
  */
 export const DEFAULT_SOURCES: SearchSourceId[] = [
   "pubmed",
   "europepmc",
   "scopus",
   "springer",
+  "semantic_scholar",
 ];
 
 /** Hard ceiling on results per search, shared across web and MCP transports. */
@@ -84,6 +91,17 @@ export interface RunLiteratureSearchParams {
   fullTextOnly?: boolean;
   page?: number;
   perPage?: number;
+  /**
+   * Ranking intent from the UI (Landmark/Latest chip): re-weights the citation vs
+   * recency tie-breaker the cross-encoder can't resolve. Defaults to balanced.
+   */
+  rankingIntent?: RankingIntent;
+  /**
+   * Scientific discipline of the query (medicine, computer_science, …). Routes the
+   * reranker: biomedical → MedCPT, everything else → the general bge model. Defaults
+   * to biomedical (medicine) when absent.
+   */
+  domainId?: string;
   /**
    * Opt-in citation/PMRA neighbour expansion (a high-recall, slower mode for
    * systematic-review-style searches). Off by default to keep the default path
@@ -552,6 +570,42 @@ async function runLiteratureSearchUncached(
     );
   }
 
+  // Semantic Scholar (S2AG): ~200M all-field papers — a cross-domain lexical lane that
+  // helps medicine AND non-medical retrieval. Key-gated via SEMANTIC_SCHOLAR_API_KEY
+  // (works unauthenticated at a lower rate). Fail-open with its own circuit breaker and
+  // RRF-fused, so it is a BONUS source, never critical — an S2 outage/throttle just
+  // degrades the pool rather than breaking search (the lesson from its 2025 key death).
+  if (sources.includes("semantic_scholar")) {
+    pushLane(
+      "semantic_scholar",
+      withSourceTimeout(
+        "Semantic Scholar",
+        searchSemanticScholar(searchQuery, {
+          limit: poolPerSource,
+          yearStart: params.yearFrom,
+          yearEnd: params.yearTo,
+        }).then(({ results, total, status }) => ({ source: "semantic_scholar", results, total, status }))
+      ).catch((e) => errorOutcome("semantic_scholar", e instanceof Error ? e.message : "Semantic Scholar failed"))
+    );
+  }
+
+  // arXiv: preprint lane for NON-biomedical disciplines (CS / physics / math / stats /
+  // econ), where the landmark papers are arXiv-native and no other lane indexes them
+  // (measured: ResNet / AlexNet / word2vec / LASSO were missed by every lane). Free,
+  // no key, stable public infrastructure. Gated to the general reranker profile so the
+  // live biomedical path (PubMed-covered) is unchanged; fail-open, RRF-fused.
+  if (rerankProfileForDomain(params.domainId) === "general") {
+    pushLane(
+      "arxiv",
+      withSourceTimeout(
+        "arXiv",
+        searchArxiv(searchQuery, { maxResults: poolPerSource }).then(
+          ({ results, total }) => ({ source: "arxiv", results, total, status: okStatus() })
+        )
+      ).catch((e) => errorOutcome("arxiv", e instanceof Error ? e.message : "arXiv failed"))
+    );
+  }
+
   // Dense first-stage retrieval over the self-hosted MedCPT PubMed index
   // (Turbopuffer int8 + a Modal-served MedCPT Query-Encoder) — the throttle-proof
   // replacement for the OpenAlex `search.semantic` lane. Retrieves by MEANING,
@@ -821,7 +875,9 @@ async function runLiteratureSearchUncached(
       ? Promise.resolve(null)
       : withSourceTimeout(
           "Cross-encoder rerank",
-          attachRerankScores(searchQuery, rerankPool, rerankPool.length),
+          attachRerankScores(searchQuery, rerankPool, rerankPool.length, {
+            rerankProfile: rerankProfileForDomain(params.domainId),
+          }),
           6000
         ).catch(() => fused),
     withSourceTimeout(
@@ -855,6 +911,7 @@ async function runLiteratureSearchUncached(
     recency: plan.recency,
     isTrialLookup: plan.isTrialLookup,
     isGuidelineLookup: plan.isGuidelineLookup,
+    rankingIntent: params.rankingIntent,
   });
 
   let filtered = ranked;

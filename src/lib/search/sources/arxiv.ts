@@ -46,9 +46,16 @@ function parseEntry(entry: string): UnifiedSearchResult | null {
   const yearMatch = publishedStr.match(/(\d{4})/);
   const year = yearMatch ? parseInt(yearMatch[1], 10) : 0;
 
-  // DOI
+  // DOI — prefer the published journal DOI; otherwise fall back to arXiv's canonical
+  // DOI (10.48550/arXiv.<id>, version stripped) so dedup + must-have matching work for
+  // preprints that were never formally published.
   const doiMatch = entry.match(/<arxiv:doi[^>]*>([\s\S]*?)<\/arxiv:doi>/);
-  const doi = doiMatch ? collapseWhitespace(doiMatch[1]) : undefined;
+  const cleanArxivId = arxivId.replace(/v\d+$/, "");
+  const doi = doiMatch
+    ? collapseWhitespace(doiMatch[1])
+    : cleanArxivId
+      ? `10.48550/arXiv.${cleanArxivId}`
+      : undefined;
 
   // Primary category for journal field
   const primaryCatMatch = entry.match(/<arxiv:primary_category[^>]*term="([^"]*)"/)
@@ -104,7 +111,9 @@ export async function searchArxiv(
     searchQuery = `all:${encodeURIComponent(query)}`;
   }
 
-  const url = `http://export.arxiv.org/api/query?search_query=${searchQuery}&start=${start}&max_results=${maxResults}&sortBy=${sortBy}&sortOrder=descending`;
+  // HTTPS is required: arXiv now 301-redirects http:// to https:// and returns an
+  // empty body on the redirect, which silently broke this lane.
+  const url = `https://export.arxiv.org/api/query?search_query=${searchQuery}&start=${start}&max_results=${maxResults}&sortBy=${sortBy}&sortOrder=descending`;
 
   try {
     const res = await resilientFetch(url, {}, { service: "arXiv", timeout: 15000, baseDelay: 3000 });

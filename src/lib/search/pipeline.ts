@@ -14,12 +14,13 @@ import type { RankingTrace, UnifiedSearchResult } from "@/types/search";
 import {
   rankWithTrace,
   enrichJournalQuality,
+  configForIntent,
   RELEVANCE_GATE_FLOOR,
   type ScoredResult,
+  type RankingIntent,
 } from "./quality-ranker";
 import { enrichStudyTypes } from "./study-type-detector";
 import { getEvidenceLevel } from "./evidence-level";
-import { demoteSecondaryTrialResults } from "./trial-ranking";
 import { diversifyTopK } from "./diversity";
 
 const STOPWORDS = new Set([
@@ -184,6 +185,9 @@ export interface RankAndAnnotateOptions {
   /** When true (a guideline/consensus lookup), float the authoritative guideline
    *  document — newest version first — above primary literature. */
   isGuidelineLookup?: boolean;
+  /** Intent captured by the UI (Landmark/Latest chip): re-weights the citation vs
+   *  recency tie-breaker the cross-encoder can't resolve. Defaults to balanced. */
+  rankingIntent?: RankingIntent;
 }
 
 /**
@@ -268,11 +272,18 @@ export function rankAndAnnotate(
   enrichStudyTypes(results);
   enrichJournalQuality(results);
 
-  const scored = rankWithTrace(results, opts.query);
+  // Intent-aware weighting: the UI's Landmark/Latest chip re-weights the tie-breaker
+  // (citation vs recency) that the cross-encoder cannot resolve. Defaults to balanced.
+  const scored = rankWithTrace(
+    results,
+    opts.query,
+    configForIntent(opts.rankingIntent)
+  );
   const queryTerms = keywords(opts.query);
 
+  const recencyOrder = opts.recency || opts.rankingIntent === "recent";
   let ordered = scored;
-  if (opts.recency) {
+  if (recencyOrder) {
     // Recency amplifies the quality composite multiplicatively (see
     // recencyRankKey) instead of an additive year term — so a pivotal
     // high-composite trial (e.g. CLARITY-AD) is not buried under a stream of
@@ -285,7 +296,7 @@ export function rankAndAnnotate(
   ordered = rerankedAboveTail(ordered);
 
   const annotated = ordered.map((s) =>
-    annotate(s, opts.recency ? "recency" : "quality", queryTerms)
+    annotate(s, recencyOrder ? "recency" : "quality", queryTerms)
   );
 
   // Exact-paper lookup: if the user pasted a paper title, that paper must rank #1
@@ -293,12 +304,11 @@ export function rankAndAnnotate(
   // exact-match boosting, gated tightly so only verbatim-title queries trigger.
   const boosted = boostExactTitle(annotated, opts.query);
 
-  // Trial-acronym lookup: float the PRIMARY trial report above its meta-analyses,
-  // sub-studies, and follow-ups (which out-score it on citations/recency). Only
-  // raises the primary, never lowers it. Stable within groups.
-  const trialOrdered = opts.isTrialLookup
-    ? demoteSecondaryTrialResults(boosted)
-    : boosted;
+  // Trial secondary-report demotion RETIRED (2026-07): its title-marker table
+  // ("registry", "N-year", "economic outcomes") was reverse-engineered from specific
+  // benchmark trials. The restored citation signal already floats a trial's primary
+  // report (heavily cited) above its sub-studies; kept out of the path pending deletion.
+  const trialOrdered = boosted;
 
   // Guideline lookup: float the authoritative guideline document (newest version
   // first) above primary literature. Only raises guidelines; non-guideline order

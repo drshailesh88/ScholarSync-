@@ -125,6 +125,8 @@ export interface SearchPapersArgs {
   yearTo?: number;
   studyTypes?: string[];
   includeAbstract?: boolean;
+  /** Discipline (medicine, computer_science, …) — routes the reranker (MedCPT vs bge). */
+  domainId?: string;
 }
 
 export async function searchPapers(args: SearchPapersArgs): Promise<{
@@ -146,6 +148,7 @@ export async function searchPapers(args: SearchPapersArgs): Promise<{
     yearFrom: args.yearFrom,
     yearTo: args.yearTo,
     studyTypes: args.studyTypes,
+    domainId: args.domainId,
     perPage: maxResults,
     page: 0,
   });
@@ -236,4 +239,6 @@ const SOURCE_DESCRIPTIONS: Record<SearchSourceId, string> = {
     "Scopus (Elsevier) — broad multidisciplinary abstracts and citation counts",
   springer:
     "Springer Nature — journal and book full text with open-access PDF links",
+  semantic_scholar:
+    "Semantic Scholar — ~200M all-field papers with citation counts, spanning medicine and non-medical disciplines",
 };

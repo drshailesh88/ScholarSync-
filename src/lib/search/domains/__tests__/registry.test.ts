@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { getDomainConfig, getRegisteredDomains, isDomainRegistered } from "../registry";
+import {
+  getDomainConfig,
+  getRegisteredDomains,
+  isDomainRegistered,
+  rerankProfileForDomain,
+} from "../registry";
 import { medicineDomain } from "../medicine";
 import { getDomainEvidenceLevel } from "../../evidence-level";
 
@@ -109,5 +114,28 @@ describe("isDomainRegistered", () => {
 
   it("returns false for unknown domain", () => {
     expect(isDomainRegistered("nonexistent")).toBe(false);
+  });
+});
+
+describe("rerankProfileForDomain — routes the cross-encoder by discipline", () => {
+  it("routes biomedical disciplines (medicine, biology) to MedCPT", () => {
+    expect(rerankProfileForDomain("medicine")).toBe("biomedical");
+    expect(rerankProfileForDomain("biology")).toBe("biomedical");
+  });
+
+  it("routes non-biomedical disciplines to the general bge model", () => {
+    for (const d of ["computer_science", "economics", "psychology", "statistics", "physics"]) {
+      expect(rerankProfileForDomain(d)).toBe("general");
+    }
+  });
+
+  it("defaults to biomedical only when the domain is absent (medicine is the app default)", () => {
+    expect(rerankProfileForDomain()).toBe("biomedical");
+    expect(rerankProfileForDomain(null)).toBe("biomedical");
+  });
+
+  it("normalizes hyphen/underscore and case, and routes unknown disciplines to general", () => {
+    expect(rerankProfileForDomain("Computer-Science")).toBe("general");
+    expect(rerankProfileForDomain("nonexistent")).toBe("general");
   });
 });
