@@ -16,16 +16,39 @@ const REVIEWERS = [
 ];
 
 interface BatchSpec {
+  id: string;
   source: string;
   size: number;
   duplicates: number;
+  ai?: boolean;
 }
 
 const BATCHES: BatchSpec[] = [
-  { source: "PubMed", size: 214, duplicates: 11 },
-  { source: "Embase, +2", size: 142, duplicates: 9 },
-  { source: "AI search", size: 56, duplicates: 4 },
+  { id: "batch-pubmed", source: "PubMed", size: 214, duplicates: 11 },
+  { id: "batch-embase", source: "Embase, +2", size: 142, duplicates: 9 },
+  { id: "batch-ai", source: "AI search", size: 56, duplicates: 4, ai: true },
 ];
+
+/** Uncertain duplicate pairs left in the pool for human review. */
+const UNCERTAIN_DUPES: Record<
+  number,
+  { title: string; year: number; ofRefId: number; matchedOn: string[] }
+> = {
+  275: {
+    title:
+      "Dapagliflozin in Patients with Heart Failure and a Reduced Ejection Fraction (DAPA-HF)",
+    year: 2019,
+    ofRefId: 1660,
+    matchedOn: ["title", "year", "first author"],
+  },
+  276: {
+    title:
+      "Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction (DELIVER)",
+    year: 2022,
+    ofRefId: 1904,
+    matchedOn: ["title", "authors"],
+  },
+};
 
 /** Screening-pool targets (sum = 388 non-duplicate candidates). */
 const TARGETS = { advanced: 124, irrelevant: 76, conflict: 74, noVotes: 114 };
@@ -151,10 +174,11 @@ export function createMockReview(): SrReview {
   for (const batch of BATCHES) {
     for (let i = 0; i < batch.size; i += 1) {
       sequence += 1;
-      const isDuplicate = i >= batch.size - batch.duplicates;
-      const exemplar = isDuplicate
+      const isAutoMerged = i >= batch.size - batch.duplicates;
+      const exemplar = isAutoMerged
         ? undefined
         : EXEMPLARS.find((e) => e.slot === poolIndex);
+      const uncertain = isAutoMerged ? undefined : UNCERTAIN_DUPES[poolIndex];
 
       const base: Candidate = exemplar
         ? {
@@ -167,24 +191,39 @@ export function createMockReview(): SrReview {
             doi: exemplar.doi,
             abstract: exemplar.abstract,
             source: batch.source,
+            batchId: batch.id,
             aiSuggestion: aiSuggestionFor(poolIndex),
             ta: { votes: votesFor(poolIndex) },
           }
         : {
             id: `cand-${sequence}`,
             refId: 1000 + sequence,
-            title: `${FILLER_TOPICS[sequence % FILLER_TOPICS.length]} — cohort ${sequence}`,
-            authors: ["Study Group"],
+            title: uncertain
+              ? uncertain.title
+              : `${FILLER_TOPICS[sequence % FILLER_TOPICS.length]} — cohort ${sequence}`,
+            authors: uncertain ? ["McMurray JJV", "Solomon SD"] : ["Study Group"],
             journal: "Journal of Cardiac Failure",
-            year: 2018 + (sequence % 8),
+            year: uncertain ? uncertain.year : 2018 + (sequence % 8),
             source: batch.source,
-            isDuplicate: isDuplicate || undefined,
-            aiSuggestion: isDuplicate ? undefined : aiSuggestionFor(poolIndex),
-            ta: { votes: isDuplicate ? [] : votesFor(poolIndex) },
+            batchId: batch.id,
+            dupe: isAutoMerged
+              ? {
+                  status: "auto_merged",
+                  matchedOn: ["title", "year", "volume", "authors"],
+                }
+              : uncertain
+                ? {
+                    status: "needs_review",
+                    matchedOn: uncertain.matchedOn,
+                    ofRefId: uncertain.ofRefId,
+                  }
+                : undefined,
+            aiSuggestion: isAutoMerged ? undefined : aiSuggestionFor(poolIndex),
+            ta: { votes: isAutoMerged ? [] : votesFor(poolIndex) },
           };
 
       candidates.push(base);
-      if (!isDuplicate) poolIndex += 1;
+      if (!isAutoMerged) poolIndex += 1;
     }
   }
 
@@ -193,6 +232,12 @@ export function createMockReview(): SrReview {
     title: "SGLT2 inhibitors & heart failure",
     shortTitle: "SGLT2i & HF",
     reviewers: REVIEWERS,
+    batches: BATCHES.map(({ id, source, ai }) => ({
+      id,
+      source,
+      target: "screen" as const,
+      ai,
+    })),
     candidates,
   };
 }
@@ -213,6 +258,7 @@ export function createEmptyReview(): SrReview {
     title: "Untitled systematic review",
     shortTitle: "New review",
     reviewers: REVIEWERS,
+    batches: [],
     candidates: [],
   };
 }

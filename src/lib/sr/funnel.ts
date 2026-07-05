@@ -1,5 +1,5 @@
 import { deriveTaStatus } from "./screening";
-import type { Candidate, SrReview } from "./types";
+import { isRemovedDuplicate, type Candidate, type SrReview } from "./types";
 
 export interface ScreeningBreakdown {
   total: number;
@@ -26,7 +26,7 @@ export interface FunnelSummary {
 }
 
 function screeningPool(candidates: Candidate[]): Candidate[] {
-  return candidates.filter((candidate) => !candidate.isDuplicate);
+  return candidates.filter((candidate) => !isRemovedDuplicate(candidate));
 }
 
 /** Live counts for the Review Summary funnel, derived from the vote record. */

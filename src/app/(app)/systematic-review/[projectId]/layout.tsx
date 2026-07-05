@@ -1,4 +1,4 @@
-import { SrShell } from "@/components/sr/sr-shell";
+import { SrShellContainer } from "@/components/sr/sr-shell-container";
 import { getReviewById } from "@/lib/sr/fixtures";
 import { deriveFunnelSummary } from "@/lib/sr/funnel";
 
@@ -13,16 +13,15 @@ export default async function SrReviewLayout({
 }: SrReviewLayoutProps) {
   const { projectId } = await params;
   const review = getReviewById(projectId);
-  const summary = deriveFunnelSummary(review);
 
   return (
-    <SrShell
+    <SrShellContainer
       reviewId={projectId}
       projectTitle={review.shortTitle}
       projectMeta={`Cochrane-style review · ${review.reviewers.length} reviewers`}
-      summary={summary}
+      initialSummary={deriveFunnelSummary(review)}
     >
       {children}
-    </SrShell>
+    </SrShellContainer>
   );
 }

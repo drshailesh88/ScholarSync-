@@ -15,7 +15,9 @@ function cand(
     title: `Study ${id}`,
     authors: ["Author A"],
     source: "PubMed",
-    isDuplicate: opts.isDuplicate,
+    dupe: opts.isDuplicate
+      ? { status: "auto_merged", matchedOn: ["title", "year"] }
+      : undefined,
     ta: {
       votes: votes.map(([reviewerId, vote]) => ({ reviewerId, vote })),
       resolution: opts.resolution,
@@ -32,6 +34,7 @@ function review(candidates: Candidate[]): SrReview {
       { id: "emma", name: "Emma Reyes", initials: "ER" },
       { id: "kat", name: "Katherine Ng", initials: "KN" },
     ],
+    batches: [],
     candidates,
   };
 }
