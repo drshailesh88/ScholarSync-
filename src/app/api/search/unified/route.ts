@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { SearchResponse } from "@/types/search";
 import { runLiteratureSearch } from "@/lib/search/run-search";
 import { federateNonAcademic } from "@/lib/search/web/federate";
-import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
+import { searchResultCache, buildCacheKey, type CacheHit } from "@/lib/search/result-cache";
 import { nonAcademicCacheTtl, shouldCacheFederatedList } from "@/lib/search/web/cache-policy";
 import { searchYouTube } from "@/lib/search/sources/youtube";
 import { rerankResults } from "@/lib/search/rerank";
@@ -179,19 +179,29 @@ async function rerankWebTabOnly(
  * is what gets cached — every page and every user of the same query then shares one
  * paid fan-out. Preferences, diversity, and paging are applied per-request afterwards.
  */
+interface NonAcademicList {
+  results: UnifiedSearchResult[];
+  degraded: boolean;
+  primaryLed: boolean;
+  /** Per-source contribution, for telemetry (which lanes fired, which were empty/down). */
+  perSource: { id: string; count: number; ok: boolean }[];
+}
+
 async function computeNonAcademicList(
   query: string,
   tab: "web" | "news" | "discussions" | "videos",
   timeRange?: "24h" | "week" | "month" | "year"
-): Promise<{ results: UnifiedSearchResult[]; degraded: boolean; primaryLed: boolean }> {
+): Promise<NonAcademicList> {
   // Videos is a single-source tab (YouTube) — no federation/rerank; just YouTube's own
   // relevance order. Caching it also shields the scarce 100-searches/day YouTube quota.
   if (tab === "videos") {
     const yt = await searchYouTube(query, { limit: MAX_NON_ACADEMIC_RESULTS });
+    const ok = yt.status.status === "ok";
     return {
       results: yt.results,
-      degraded: yt.status.status !== "ok" && yt.results.length === 0,
+      degraded: !ok && yt.results.length === 0,
       primaryLed: false,
+      perSource: [{ id: "youtube", count: yt.results.length, ok }],
     };
   }
 
@@ -209,7 +219,16 @@ async function computeNonAcademicList(
   const reranked = federation.primaryLed
     ? federation.results
     : await rerankWebTabOnly(query, federation.results, tab === "web");
-  return { results: reranked, degraded: federation.degraded, primaryLed: federation.primaryLed };
+  return {
+    results: reranked,
+    degraded: federation.degraded,
+    primaryLed: federation.primaryLed,
+    perSource: federation.perSource.map((s) => ({
+      id: s.id,
+      count: s.count,
+      ok: s.status.status === "ok",
+    })),
+  };
 }
 
 async function fetchFederatedNonAcademicResults(
@@ -224,12 +243,15 @@ async function fetchFederatedNonAcademicResults(
   total: number;
   hasMore: boolean;
   degraded: boolean;
+  primaryLed: boolean;
+  perSource: { id: string; count: number; ok: boolean }[];
+  cacheHit: CacheHit;
 }> {
   // Cache the query-global fan-out (keyed by tab+query+timeRange, per-tab TTL). The
   // paid tabs (Exa/Brave/NewsData/YouTube) were previously uncached — this is the
   // single biggest cost lever. Degraded/empty responses are never cached.
   const cacheKey = buildCacheKey("websearch:v1", { tab, query, timeRange: timeRange ?? "" });
-  const { value: list } = await searchResultCache.getOrCompute(
+  const { value: list, hit: cacheHit } = await searchResultCache.getOrCompute(
     cacheKey,
     () => computeNonAcademicList(query, tab, timeRange),
     {
@@ -240,6 +262,7 @@ async function fetchFederatedNonAcademicResults(
   );
 
   const start = page * perPage;
+  const telemetry = { primaryLed: list.primaryLed, perSource: list.perSource, cacheHit };
 
   // Videos: raw YouTube order, paged — no preferences/diversity (unchanged behavior).
   if (tab === "videos") {
@@ -248,6 +271,7 @@ async function fetchFederatedNonAcademicResults(
       total: list.results.length,
       hasMore: list.results.length > start + perPage,
       degraded: list.degraded,
+      ...telemetry,
     };
   }
 
@@ -261,6 +285,7 @@ async function fetchFederatedNonAcademicResults(
     total: diversified.length,
     hasMore: diversified.length > start + perPage,
     degraded: list.degraded,
+    ...telemetry,
   };
 }
 
@@ -348,6 +373,9 @@ export async function GET(req: Request) {
         total: visibleTotal,
         hasMore,
         degraded,
+        primaryLed,
+        perSource,
+        cacheHit,
       } = await fetchFederatedNonAcademicResults(
         effectiveQuery,
         tabParam,
@@ -356,6 +384,18 @@ export async function GET(req: Request) {
         userDomainPreferences,
         timeRange as "24h" | "week" | "month" | "year" | undefined
       );
+
+      // Telemetry: makes the silent web-tab degradation visible. On the web tab,
+      // `primaryLed: false` means Exa did NOT lead (down/throttled/unkeyed) and we fell
+      // back to the keyword stack — alert on a drop in the Exa-led rate. Also surfaces
+      // per-source contribution and cache effectiveness.
+      log.info("Non-academic search served", {
+        tab: tabParam,
+        primaryLed,
+        cacheHit,
+        degraded,
+        sources: perSource,
+      });
 
       // Apply scope domain constraints if a custom scope is active
       let scopeFilteredResults = paged;
