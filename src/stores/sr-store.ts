@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { getReviewById } from "@/lib/sr/fixtures";
-import type { Candidate, SrReview, TaVote } from "@/lib/sr/types";
+import { canRecordExclusion } from "@/lib/sr/fulltext";
+import type {
+  Candidate,
+  FullTextVote,
+  SrReview,
+  TaVote,
+} from "@/lib/sr/types";
 
 /**
  * Client state for the SR module. Holds the active review (seeded from the
@@ -19,6 +25,12 @@ interface SrStoreState {
     candidateId: string,
     resolverId: string,
     decision: TaVote,
+  ) => void;
+  castFullTextVote: (
+    candidateId: string,
+    reviewerId: string,
+    vote: FullTextVote,
+    reasonCode?: string,
   ) => void;
 }
 
@@ -95,6 +107,32 @@ export const useSrStore = create<SrStoreState>((set, get) => ({
           resolvedBy: resolverId,
         },
       })),
+    });
+  },
+
+  castFullTextVote: (candidateId, reviewerId, vote, reasonCode) => {
+    // Excluding without a structured reason is not a valid record.
+    if (vote === "exclude" && !canRecordExclusion(reasonCode)) return;
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: updateCandidate(review, candidateId, (candidate) => {
+        const decisions = (candidate.fullText?.decisions ?? []).filter(
+          (d) => d.reviewerId !== reviewerId,
+        );
+        return {
+          ...candidate,
+          fullText: {
+            ...candidate.fullText,
+            decisions: [
+              ...decisions,
+              vote === "exclude"
+                ? { reviewerId, vote, reasonCode }
+                : { reviewerId, vote },
+            ],
+          },
+        };
+      }),
     });
   },
 

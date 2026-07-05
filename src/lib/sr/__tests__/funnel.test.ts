@@ -40,6 +40,7 @@ function review(candidates: Candidate[]): SrReview {
       highlightInclude: [],
       highlightExclude: [],
     },
+    exclusionReasons: [],
     batches: [],
     candidates,
   };

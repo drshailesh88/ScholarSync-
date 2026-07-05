@@ -1,4 +1,10 @@
-import type { Candidate, SrReview, TaVote, TaVoteRecord } from "./types";
+import type {
+  Candidate,
+  FullTextState,
+  SrReview,
+  TaVote,
+  TaVoteRecord,
+} from "./types";
 
 /**
  * Deterministic mock review used while the SR module runs on mock data.
@@ -187,6 +193,47 @@ const EXEMPLARS: Exemplar[] = [
   },
 ];
 
+const EXCLUSION_REASONS = [
+  { code: "wrong_population", label: "Wrong population" },
+  { code: "wrong_intervention", label: "Wrong intervention" },
+  { code: "wrong_comparator", label: "Wrong comparator" },
+  { code: "wrong_outcome", label: "Wrong outcome" },
+  { code: "wrong_design", label: "Wrong study design" },
+  { code: "abstract_only", label: "Conference abstract only" },
+  { code: "duplicate", label: "Duplicate" },
+];
+
+/**
+ * Seed the full-text state for a study that advanced from screening. The
+ * advanced studies (ftIndex 0..123) split into a consistent set of buckets:
+ * 55 to-review (incl. the DAPA-HF exemplar), 40 awaiting-other, 6 conflicts,
+ * 23 excluded.
+ */
+function fullTextStateFor(ftIndex: number): FullTextState | undefined {
+  // ftIndex 0 is the DAPA-HF exemplar — left untouched (first to review).
+  if (ftIndex === 0) return { decisions: [] };
+  if (ftIndex <= 23) {
+    return {
+      decisions: [
+        { reviewerId: "you", vote: "exclude", reasonCode: "wrong_population" },
+        { reviewerId: "emma", vote: "exclude", reasonCode: "wrong_population" },
+      ],
+    };
+  }
+  if (ftIndex <= 29) {
+    return {
+      decisions: [
+        { reviewerId: "you", vote: "include" },
+        { reviewerId: "emma", vote: "exclude", reasonCode: "wrong_outcome" },
+      ],
+    };
+  }
+  if (ftIndex <= 69) {
+    return { decisions: [{ reviewerId: "you", vote: "include" }] };
+  }
+  return { decisions: [] };
+}
+
 const ANKER_SLOT = 274;
 
 /**
@@ -284,6 +331,10 @@ export function createMockReview(): SrReview {
             aiSuggestion: aiSuggestionFor(poolIndex),
             aiReasoning: reasoningFor(poolIndex, exemplar.refId),
             ta: { votes: votesFor(poolIndex) },
+            fullText:
+              poolIndex < TARGETS.advanced
+                ? fullTextStateFor(poolIndex)
+                : undefined,
           }
         : {
             id: `cand-${sequence}`,
@@ -313,6 +364,10 @@ export function createMockReview(): SrReview {
               ? undefined
               : reasoningFor(poolIndex, 1000 + sequence),
             ta: { votes: isAutoMerged ? [] : votesFor(poolIndex) },
+            fullText:
+              !isAutoMerged && poolIndex < TARGETS.advanced
+                ? fullTextStateFor(poolIndex)
+                : undefined,
           };
 
       candidates.push(base);
@@ -326,6 +381,7 @@ export function createMockReview(): SrReview {
     shortTitle: "SGLT2i & HF",
     reviewers: REVIEWERS,
     criteria: CRITERIA,
+    exclusionReasons: EXCLUSION_REASONS,
     batches: BATCHES.map(({ id, source, ai }) => ({
       id,
       source,
@@ -353,6 +409,7 @@ export function createEmptyReview(): SrReview {
     shortTitle: "New review",
     reviewers: REVIEWERS,
     criteria: CRITERIA,
+    exclusionReasons: EXCLUSION_REASONS,
     batches: [],
     candidates: [],
   };

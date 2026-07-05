@@ -75,6 +75,35 @@ describe("sr-store", () => {
     expect(after.ta.resolvedBy).toBe("you");
   });
 
+  it("records a full-text include for the current reviewer", () => {
+    const dapa = store().review!.candidates.find((c) => c.refId === 1660)!;
+    store().castFullTextVote(dapa.id, "you", "include");
+    const after = store().review!.candidates.find((c) => c.refId === 1660)!;
+    expect(after.fullText?.decisions).toContainEqual({
+      reviewerId: "you",
+      vote: "include",
+    });
+  });
+
+  it("refuses a full-text exclude with no structured reason", () => {
+    const dapa = store().review!.candidates.find((c) => c.refId === 1660)!;
+    const before = dapa.fullText?.decisions.length ?? 0;
+    store().castFullTextVote(dapa.id, "you", "exclude");
+    const after = store().review!.candidates.find((c) => c.refId === 1660)!;
+    expect(after.fullText?.decisions.length).toBe(before);
+  });
+
+  it("records a full-text exclude with a reason code", () => {
+    const dapa = store().review!.candidates.find((c) => c.refId === 1660)!;
+    store().castFullTextVote(dapa.id, "you", "exclude", "wrong_design");
+    const after = store().review!.candidates.find((c) => c.refId === 1660)!;
+    expect(after.fullText?.decisions).toContainEqual({
+      reviewerId: "you",
+      vote: "exclude",
+      reasonCode: "wrong_design",
+    });
+  });
+
   it("undoing an import removes the whole batch from the review", () => {
     store().undoImport("batch-ai");
 

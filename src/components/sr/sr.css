@@ -1216,6 +1216,37 @@
   margin-top: 7px;
 }
 
+/* ---- full-text: mandatory exclusion-reason block ---- */
+.sr-module .vote:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.sr-module .reqblock {
+  border: 1px solid var(--excln);
+  background: var(--excbg);
+  border-radius: 11px;
+  padding: 14px;
+  margin-top: 4px;
+}
+.sr-module .reqblock .h {
+  font-size: 10px;
+  color: var(--exc);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.sr-module .reqblock select {
+  width: 100%;
+  margin-top: 9px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  border: 1px solid var(--excln);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--paper);
+  color: var(--ink2);
+}
+
 /* ---- import ledger & duplicate queue ---- */
 .sr-module .ledger {
   display: flex;

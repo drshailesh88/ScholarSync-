@@ -9,4 +9,5 @@ export const BUILT_STAGES: readonly SrStageId[] = [
   "import",
   "screen",
   "conflicts",
+  "fulltext",
 ];

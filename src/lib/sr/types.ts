@@ -21,6 +21,30 @@ export interface TaState {
   resolvedBy?: string;
 }
 
+/** Full-text decision is binary; excluding requires a structured reason. */
+export type FullTextVote = "include" | "exclude";
+
+export interface FullTextDecision {
+  reviewerId: string;
+  vote: FullTextVote;
+  /** Exclusion-reason code — required whenever vote is `exclude`. */
+  reasonCode?: string;
+}
+
+export interface FullTextState {
+  decisions: FullTextDecision[];
+  resolution?: FullTextVote;
+  resolutionReasonCode?: string;
+}
+
+/** A managed, hierarchical exclusion reason (the PRISMA "with reasons" list). */
+export interface ExclusionReason {
+  code: string;
+  label: string;
+  /** Parent code for hierarchy; absent for top-level reasons. */
+  parent?: string;
+}
+
 /**
  * Dual-reviewer routing outcome for a study at title & abstract screening.
  * - `advanced`   — both votes positive → moves to full-text review
@@ -109,6 +133,7 @@ export interface Candidate {
    */
   aiSuggestion?: TaVote;
   ta: TaState;
+  fullText?: FullTextState;
 }
 
 export interface SrReview {
@@ -117,6 +142,7 @@ export interface SrReview {
   shortTitle: string;
   reviewers: Reviewer[];
   criteria: ReviewCriteria;
+  exclusionReasons: ExclusionReason[];
   batches: ImportBatch[];
   candidates: Candidate[];
 }
