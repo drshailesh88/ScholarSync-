@@ -94,6 +94,7 @@ async function runQuery(q: EvalQuery, args: CliArgs): Promise<QueryRun> {
       maxResults: args.max,
       sources: args.sources,
       includeAbstract: true,
+      domainId: q.domain,
     });
     const latencyMs = Date.now() - started;
     const items = toEvalItems(res.results as unknown as Array<Record<string, unknown>>);

@@ -22,6 +22,7 @@ import { enrichCitationsByIds } from "@/lib/search/sources/openalex";
 import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
 import type { RankingIntent } from "@/lib/search/quality-ranker";
+import { rerankProfileForDomain } from "@/lib/search/domains";
 import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
 import { attachRerankScores } from "@/lib/search/rerank";
 import {
@@ -90,6 +91,12 @@ export interface RunLiteratureSearchParams {
    * recency tie-breaker the cross-encoder can't resolve. Defaults to balanced.
    */
   rankingIntent?: RankingIntent;
+  /**
+   * Scientific discipline of the query (medicine, computer_science, …). Routes the
+   * reranker: biomedical → MedCPT, everything else → the general bge model. Defaults
+   * to biomedical (medicine) when absent.
+   */
+  domainId?: string;
   /**
    * Opt-in citation/PMRA neighbour expansion (a high-recall, slower mode for
    * systematic-review-style searches). Off by default to keep the default path
@@ -827,7 +834,9 @@ async function runLiteratureSearchUncached(
       ? Promise.resolve(null)
       : withSourceTimeout(
           "Cross-encoder rerank",
-          attachRerankScores(searchQuery, rerankPool, rerankPool.length),
+          attachRerankScores(searchQuery, rerankPool, rerankPool.length, {
+            rerankProfile: rerankProfileForDomain(params.domainId),
+          }),
           6000
         ).catch(() => fused),
     withSourceTimeout(

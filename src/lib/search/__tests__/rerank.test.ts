@@ -250,6 +250,32 @@ describe("rerankResults — domain routing (web path unchanged)", () => {
     expect(mockResilientFetch.mock.calls[0][0]).toBe(COHERE_URL);
     expect(out[0].title).toBe("B relevance high");
   });
+
+  it("literature with a GENERAL profile (CS/econ/psych) reranks with bge (WEB_RERANK_URL), not MedCPT", async () => {
+    vi.stubEnv("WEB_RERANK_URL", WEB_URL);
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [-2, 4, 1] }));
+
+    await rerankResults("q", RESULTS, undefined, {
+      domain: "literature",
+      rerankProfile: "general",
+    });
+
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(WEB_URL);
+  });
+
+  it("literature with a BIOMEDICAL profile still reranks with MedCPT", async () => {
+    vi.stubEnv("WEB_RERANK_URL", WEB_URL);
+    vi.stubEnv("MEDCPT_RERANK_URL", MEDCPT_URL);
+    mockResilientFetch.mockResolvedValueOnce(jsonResponse({ scores: [-2, 4, 1] }));
+
+    await rerankResults("q", RESULTS, undefined, {
+      domain: "literature",
+      rerankProfile: "biomedical",
+    });
+
+    expect(mockResilientFetch.mock.calls[0][0]).toBe(MEDCPT_URL);
+  });
 });
 
 describe("hasReranker / attachRerankScores", () => {

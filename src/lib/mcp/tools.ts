@@ -125,6 +125,8 @@ export interface SearchPapersArgs {
   yearTo?: number;
   studyTypes?: string[];
   includeAbstract?: boolean;
+  /** Discipline (medicine, computer_science, …) — routes the reranker (MedCPT vs bge). */
+  domainId?: string;
 }
 
 export async function searchPapers(args: SearchPapersArgs): Promise<{
@@ -146,6 +148,7 @@ export async function searchPapers(args: SearchPapersArgs): Promise<{
     yearFrom: args.yearFrom,
     yearTo: args.yearTo,
     studyTypes: args.studyTypes,
+    domainId: args.domainId,
     perPage: maxResults,
     page: 0,
   });
