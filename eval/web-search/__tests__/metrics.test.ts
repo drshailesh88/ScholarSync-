@@ -81,4 +81,27 @@ describe("scoreTab", () => {
     expect(typeof s.pass).toBe("boolean");
     expect(s.dimensions.authority).toBeGreaterThan(0);
   });
+
+  it("relevance is ORDERING-AWARE: the same must-have ranked higher scores better (a set-based gate would tie them)", () => {
+    const webQ: WebBenchmarkQuery = {
+      id: "web-x", tab: "web", queryClass: "mainstream", query: "flu", intent: "", recencyBiased: false,
+      mustHaves: [{ label: "cdc", url: "https://cdc.gov/flu", rule: "authority" }],
+    };
+    const now = new Date("2026-06-24").getTime();
+    const rankedHigh: WebEvalItem[] = [
+      item({ url: "https://cdc.gov/flu" }),
+      item({ url: "https://a.com/1" }),
+      item({ url: "https://b.com/2" }),
+    ];
+    const rankedLow: WebEvalItem[] = [
+      item({ url: "https://a.com/1" }),
+      item({ url: "https://b.com/2" }),
+      item({ url: "https://cdc.gov/flu" }),
+    ];
+    // Identical set membership → identical recall@10; only the RANK differs.
+    expect(recallAtK(rankedHigh, webQ.mustHaves, 10)).toBe(recallAtK(rankedLow, webQ.mustHaves, 10));
+    const high = scoreTab(rankedHigh, webQ, now);
+    const low = scoreTab(rankedLow, webQ, now);
+    expect(high.dimensions.relevance).toBeGreaterThan(low.dimensions.relevance);
+  });
 });
