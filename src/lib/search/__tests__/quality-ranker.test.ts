@@ -148,3 +148,27 @@ describe("quality-ranker — signal-aware gate: lexical fallback is not a cross-
     expect(on.signals.relevance).toBeGreaterThan(0.7);
   });
 });
+
+describe("quality-ranker — citation signal breaks a reranker tie (Lever: citation enrichment)", () => {
+  it("a high-citation landmark outranks a zero-citation lookalike at equal reranker relevance", () => {
+    // When the cross-encoder saturates (on-topic papers all tie at rr≈1.0), the
+    // citation count is the tie-breaker that lifts a foundational trial into the
+    // top-10. This ONLY works if the pipeline actually populates citationCount —
+    // which the OpenAlex enrichCitationsByIds wiring restores (single-lane PubMed
+    // landmarks like PARTNER 3 arrive with citationCount=0 otherwise).
+    const landmark = paper({
+      title: "Empagliflozin outcomes trial in heart failure",
+      citationCount: 4767,
+      rerankScore: 0.95,
+      rrfScore: 0.02,
+    });
+    const lookalike = paper({
+      title: "Empagliflozin sub-analysis in heart failure",
+      citationCount: 0,
+      rerankScore: 0.95,
+      rrfScore: 0.02,
+    });
+    const ranked = qualityRank([lookalike, landmark], "empagliflozin heart failure");
+    expect(ranked[0].title).toBe("Empagliflozin outcomes trial in heart failure");
+  });
+});

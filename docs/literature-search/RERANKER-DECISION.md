@@ -1,7 +1,20 @@
 # Academic Reranker Decision — OpenRouter `cohere/rerank-4-pro`
 
+> **SUPERSEDED 2026-07-04 → free self-hosted MedCPT cross-encoder is now PRIMARY.**
+> The paid OpenRouter account ran out of credits (HTTP 402) and took live academic
+> reranking down to the keyword-overlap floor; the Cohere fallback was rate-limited
+> (429). For a pre-revenue product a per-search paid reranker is the wrong dependency.
+> The free `ncbi/MedCPT-Cross-Encoder` on Modal (A10G, scale-to-zero, **$0 idle**,
+> biomedical-SOTA, same embedding space as the corpus) is now the literature primary,
+> enabled by default whenever `MEDCPT_RERANK_URL` is set (no opt-in flag). The paid
+> lanes are demoted to optional fallbacks. Trade accepted: a ~20s cold start after
+> idle (absorbed by a longer ceiling + one retry; fails open to the tail if it misses)
+> in exchange for zero per-search spend. Escape hatch: `ACADEMIC_USE_MEDCPT_RERANK=0`
+> forces the MedCPT lane off. See `src/lib/search/rerank.ts`. The rationale below is
+> retained for history but no longer describes the live config.
+
 **Date:** 2026-06-29
-**Status:** Adopted (live)
+**Status:** SUPERSEDED 2026-07-04 (see banner above)
 **Scope:** Literature/academic search reranking only. **Retrieval is unchanged.**
 
 ## Decision

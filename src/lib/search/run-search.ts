@@ -18,6 +18,7 @@ import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { searchTavily } from "@/lib/search/sources/tavily";
 import { expandByPmra } from "@/lib/search/sources/expansion";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
+import { enrichCitationsByIds } from "@/lib/search/sources/openalex";
 import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
 import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
@@ -213,9 +214,19 @@ export function recencyYearFloor(currentYear: number, windowYears: number): numb
   return currentYear - windowYears + 1;
 }
 
-// Cap for the post-fusion rerank pool. Only the top candidates by RRF score can
-// reach the returned page, so reranking beyond this is wasted work.
+// Cap for the metadata-backfill pool (PMID resolution). Bounded to the top
+// candidates by RRF score, since a deep candidate can't reach the returned page.
 export const POST_FUSION_POOL = 50;
+
+// Cap for the cross-encoder rerank pool (Lever 1 / F2). The reranker scores the
+// WHOLE fused pool in a single call — Cohere/OpenRouter accept ≤1000 docs per
+// request and bill per search, not per doc, so 50→200 is one call at the same
+// cost — and this cap sits above the largest pools we observe (~190), so the
+// entire ranked region carries a calibrated model score and no un-reranked
+// lexical tail can out-sort it. Reranking only the top 50 (the old behavior) left
+// candidates 50+ on saturating keyword-overlap relevance that beat rank-5 model
+// scores — the documented F2 inversion.
+export const RERANK_POOL_CAP = 200;
 
 // Cap the navigable page count. `total` used to be the largest source's raw hit
 // count (millions), so the UI showed "page 2 of 340,000 pages" — but we only fetch
@@ -772,16 +783,22 @@ async function runLiteratureSearchUncached(
     maxTotal = Math.max(maxTotal, sr.total);
   }
 
-  // Post-fusion rerank. Citation counts now come natively from Europe PMC's
-  // `citedByCount` (and later Scopus) on each result, so the former OpenAlex
-  // citation-enrichment step is gone — there is no separate metadata backfill to
-  // run concurrently here. Bounded to the top `POST_FUSION_POOL` candidates by RRF
+  // Post-fusion rerank + citation enrichment (run concurrently below). Europe PMC and
+  // Scopus carry `citedByCount` natively, but PubMed-only and dense-only results do
+  // not — so OpenAlex backfills citations by PMID/DOI to give the composite its
+  // landmark signal. Bounded to the top `POST_FUSION_POOL` candidates by RRF
   // score, in place (slice shares object refs, so the originals in `fused` still
   // get the mutated rerankScore). Candidates past the pool are never reranked, so
   // they can't reach the returned page anyway. Fail-open.
   //  - rerank: OpenRouter cohere/rerank-4-pro relevance score (managed, always-warm,
   //    ~1.2s; the dominant relevance signal). MedCPT is off the critical path now.
-  const enrichRerankPool = fused.slice(0, POST_FUSION_POOL);
+  // LEVER 1: rerank the WHOLE fused pool (bounded by RERANK_POOL_CAP), not just
+  // the top POST_FUSION_POOL. One reranker call scores every candidate, so a
+  // landmark that RRF ranked past 50 (single-lane PubMed hits especially) is
+  // judged on calibrated relevance instead of falling back to saturating lexical
+  // overlap — and the pipeline's rerank-window boundary keeps any un-reranked
+  // tail strictly below the scored set.
+  const rerankPool = fused.slice(0, RERANK_POOL_CAP);
   // The cross-encoder rerank is COUNTERPRODUCTIVE for a specific trial-acronym
   // lookup: fed a bare acronym ("KEYNOTE-189"), it scores secondary papers that
   // mention the acronym above the trial's PRIMARY report (whose title describes the
@@ -791,22 +808,39 @@ async function runLiteratureSearchUncached(
   // composite + demoteSecondaryTrialResults already float the primary first, so we
   // skip the rerank. Non-acronym queries keep it.
   const skipRerank = plan.trialAcronyms.length > 0;
-  if (!skipRerank) {
-    await withSourceTimeout(
-      "Cross-encoder rerank",
-      attachRerankScores(searchQuery, enrichRerankPool, POST_FUSION_POOL),
-      4000
-    ).catch(() => fused);
-  }
+  // LEVER 2 (citation signal): backfill citation counts on the pool via OpenAlex by
+  // PMID/DOI, concurrently with the rerank. The cross-encoder saturates on-topic
+  // papers at ~1.0, so the citation count is the tie-breaker that floats a
+  // foundational trial into the top-10 — but single-lane PubMed landmarks (PARTNER 3,
+  // Evolut, ARISTOTLE) arrive with citationCount=0. This restores the dormant signal
+  // the quality composite already log-normalizes. Fail-open: OpenAlex has a circuit
+  // breaker and returns 0 when unreachable, so a bad key/outage is never worse than
+  // the current zero-citation state. Mutates in place (shared refs with `fused`).
+  await Promise.all([
+    skipRerank
+      ? Promise.resolve(null)
+      : withSourceTimeout(
+          "Cross-encoder rerank",
+          attachRerankScores(searchQuery, rerankPool, rerankPool.length),
+          6000
+        ).catch(() => fused),
+    withSourceTimeout(
+      "Citation enrichment",
+      enrichCitationsByIds(rerankPool),
+      5000
+    ).catch(() => 0),
+  ]);
 
   // PMID backfill: PubMed and Europe PMC (MEDLINE records) carry PMIDs natively,
   // but DOI-only results (Crossref, preprints, non-MEDLINE Europe PMC sources)
   // still lack one (the PMID metadata gate). Resolve the residual via NCBI
   // esearch[AID] — bounded to a handful of the top candidates, fail-open, additive
   // metadata only.
-  await withSourceTimeout("PMID backfill", backfillPmidsByDoi(enrichRerankPool), 3000).catch(
-    () => 0
-  );
+  await withSourceTimeout(
+    "PMID backfill",
+    backfillPmidsByDoi(fused.slice(0, POST_FUSION_POOL)),
+    3000
+  ).catch(() => 0);
 
   // Eval-only: snapshot the enriched candidate pool BEFORE final ranking, so the
   // offline harness can re-rank this exact pool deterministically.

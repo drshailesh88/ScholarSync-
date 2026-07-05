@@ -158,6 +158,68 @@ describe("rankAndAnnotate exact-title boosting", () => {
   });
 });
 
+describe("rankAndAnnotate rerank-window boundary (Lever 1 / F2)", () => {
+  it("keeps a reranked (model-scored) paper above an un-reranked lexical match", () => {
+    // F2: today only the top of the pool is reranked, so a candidate PAST the
+    // rerank depth falls back to keyword-overlap relevance, which SATURATES (~1.0)
+    // on a couple of shared distinctive words and out-sorts a calibrated
+    // cross-encoder score (0.4–0.7). The fix: any candidate the reranker scored
+    // (a model rerankScore) sorts strictly ABOVE any candidate it did not — never
+    // interleaved by raw composite.
+    const query = "empagliflozin cardiovascular outcomes heart failure";
+    const reranked = paper({
+      title: "Empagliflozin outcome trial in heart failure",
+      studyType: "rct",
+      evidenceLevel: "II",
+      year: 2020,
+      citationCount: 100,
+      rerankScore: 0.55, // calibrated model relevance
+      rrfScore: 0.02,
+      pmid: "RERANKED",
+    });
+    const lexicalTail = paper({
+      title:
+        "Empagliflozin cardiovascular outcomes heart failure: a narrative overview",
+      studyType: "narrative_review",
+      evidenceLevel: "III",
+      year: 2021,
+      citationCount: 200,
+      // no rerankScore → un-reranked tail; lexical overlap saturates on the
+      // shared distinctive tokens (empagliflozin, cardiovascular, heart, failure).
+      rrfScore: 0.02,
+      pmid: "LEXICAL",
+    });
+    const ranked = rankAndAnnotate([lexicalTail, reranked], { query });
+    expect(ranked[0].pmid).toBe("RERANKED");
+  });
+
+  it("is a no-op when no candidate was reranked (fail-open lexical floor preserved)", () => {
+    // With the reranker absent (or skipped), NO candidate carries a model score,
+    // so the boundary must not reorder — the lexical composite alone decides.
+    const strong = paper({
+      title: "Dapagliflozin in heart failure with reduced ejection fraction",
+      studyType: "rct",
+      evidenceLevel: "II",
+      citationCount: 5000,
+      journal: "N Engl J Med",
+      rrfScore: 0.03,
+      pmid: "STRONG",
+    });
+    const weak = paper({
+      title: "An unrelated case report",
+      studyType: "case_report",
+      evidenceLevel: "IV",
+      citationCount: 0,
+      rrfScore: 0.01,
+      pmid: "WEAK",
+    });
+    const ranked = rankAndAnnotate([weak, strong], {
+      query: "dapagliflozin heart failure reduced ejection fraction",
+    });
+    expect(ranked[0].pmid).toBe("STRONG");
+  });
+});
+
 describe("buildFlags", () => {
   it("flags missing metadata, never fabricates it", () => {
     const flags = buildFlags(paper({ title: "x", doi: undefined, pmid: undefined, citationCount: 0 }));

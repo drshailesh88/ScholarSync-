@@ -217,6 +217,29 @@ export function recencyRankKey(
   return composite * (1 + RECENCY_BOOST * recencyNorm);
 }
 
+/**
+ * Hard rerank-window boundary (Lever 1 / F2). Any candidate the cross-encoder
+ * scored (a model `rerankScore`) is placed strictly ABOVE any candidate it did
+ * NOT score — the un-reranked tail beyond the rerank depth, whose relevance is a
+ * saturating keyword-overlap fallback that can otherwise out-sort a calibrated
+ * model score. Stable within each partition, so the incoming composite order is
+ * preserved inside the reranked set and inside the tail. A no-op when every
+ * candidate was reranked (the common case now that the whole pool is reranked) or
+ * none was (reranker absent / skipped → all lexical → single partition). This is
+ * the "reranked-on-top, non-reranked strictly below" window semantics the IR
+ * literature converges on (Elasticsearch #120670; sbert/BEIR/Cohere).
+ */
+function rerankedAboveTail(scored: ScoredResult[]): ScoredResult[] {
+  const reranked: ScoredResult[] = [];
+  const tail: ScoredResult[] = [];
+  for (const s of scored) {
+    if (typeof s.result.rerankScore === "number") reranked.push(s);
+    else tail.push(s);
+  }
+  if (reranked.length === 0 || tail.length === 0) return scored;
+  return [...reranked, ...tail];
+}
+
 function orderByRecency(scored: ScoredResult[]): ScoredResult[] {
   const years = scored.map((s) => s.result.year || 0).filter(Boolean);
   const minY = years.length ? Math.min(...years) : 0;
@@ -256,6 +279,10 @@ export function rankAndAnnotate(
     // recent low-value papers, while among similar-quality papers the newer wins.
     ordered = orderByRecency(scored);
   }
+  // Enforce the rerank-window boundary on the composite order: a calibrated
+  // model relevance never loses its slot to a saturating lexical-overlap score
+  // from an un-reranked tail candidate. No-op in the common all-reranked path.
+  ordered = rerankedAboveTail(ordered);
 
   const annotated = ordered.map((s) =>
     annotate(s, opts.recency ? "recency" : "quality", queryTerms)
