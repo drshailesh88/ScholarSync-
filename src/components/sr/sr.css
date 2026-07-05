@@ -2240,3 +2240,21 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Funnel-viz — the distinctive narrowing count cascade (Review Summary hero).
+   A tapering staircase of hairline bars; our data-editorial identity, not a stage list. */
+.sr-module .funnelviz { display: flex; flex-direction: column; gap: 6px; margin: 22px 0 12px; }
+.sr-module .funnelviz .fbar {
+  display: flex; align-items: baseline; gap: 12px;
+  height: 46px; padding: 0 16px; min-width: 150px;
+  border: 1px solid var(--line); border-radius: var(--r-md); background: var(--rail);
+}
+.sr-module .funnelviz .fbar .fbar-n {
+  font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--ink); line-height: 1;
+}
+.sr-module .funnelviz .fbar .fbar-l {
+  font-family: var(--sans); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+}
+.sr-module .funnelviz .fbar.included { background: var(--accentbg); border-color: var(--accentln); }
+.sr-module .funnelviz .fbar.included .fbar-n { color: var(--accent); }

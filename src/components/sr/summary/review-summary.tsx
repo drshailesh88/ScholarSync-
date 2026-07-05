@@ -84,6 +84,33 @@ export function ReviewSummary(props: ReviewSummaryProps) {
             <span className="sysrec">Human vote = system of record</span>
           </div>
 
+          <div
+            className="funnelviz"
+            role="img"
+            aria-label="Review funnel — imported narrowing to included"
+          >
+            {[
+              { l: "Imported", n: summary.imported },
+              { l: "Deduplicated", n: summary.imported - summary.duplicatesRemoved },
+              { l: "Full-text", n: fullText.toAssess },
+              { l: "Included", n: summary.ai.suggestedInclude, inc: true },
+            ].map((s) => (
+              <div
+                key={s.l}
+                className={s.inc ? "fbar included" : "fbar"}
+                style={{
+                  width: `${Math.max(
+                    32,
+                    Math.round((s.n / (summary.imported || 1)) * 100),
+                  )}%`,
+                }}
+              >
+                <span className="fbar-n">{s.n.toLocaleString()}</span>
+                <span className="fbar-l">{s.l}</span>
+              </div>
+            ))}
+          </div>
+
           <div className="funnel">
             <FunnelStageCard
               name="Import references"
