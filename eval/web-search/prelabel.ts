@@ -112,7 +112,8 @@ function arg(name: string, fallback: string): string {
 async function main() {
   const model = arg("model", "deepseek-chat");
   const goldDir = join(process.cwd(), "eval/web-search/gold");
-  const tabs = ["web", "news", "discussions"];
+  const onlyTab = arg("tab", "");
+  const tabs = (onlyTab ? [onlyTab] : ["web", "news", "discussions"]).filter(Boolean);
 
   for (const tab of tabs) {
     const poolFile = join(goldDir, `pool-${tab}.json`);

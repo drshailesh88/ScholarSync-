@@ -19,6 +19,8 @@ import { BENCHMARK_QUERIES } from "./queries";
 import { searchExa } from "@/lib/search/sources/exa";
 import { searchBrave } from "@/lib/search/sources/brave";
 import { searchTavily } from "@/lib/search/sources/tavily";
+import { searchHackerNews } from "@/lib/search/sources/hacker-news";
+import { searchStackExchange } from "@/lib/search/sources/stackexchange";
 import type { FederatedTab } from "@/lib/search/web/federate";
 
 export interface PooledDoc {
@@ -63,13 +65,29 @@ async function fetchPanel(
   tab: FederatedTab
 ): Promise<{ engine: string; results: { url?: string; title: string }[] }[]> {
   const limit = 10;
-  const braveOpts =
-    tab === "discussions"
-      ? { kind: "web" as const, limit, siteFilter: "reddit.com" }
-      : { kind: (tab === "news" ? "news" : "web") as "news" | "web", limit };
+  // Discussions is a FORUM tab — its gold must be threads, not web articles. Pool from
+  // the discussion sources (Hacker News + Stack Exchange + Brave/reddit), matching what
+  // the tab actually retrieves, instead of Exa/Tavily general web (which produced an
+  // article-vs-thread mismatch that tanked the deterministic gate).
+  if (tab === "discussions") {
+    const [hn, se, reddit] = await Promise.all([
+      searchHackerNews(query, { limit }).then((r) => r.results).catch(() => []),
+      searchStackExchange(query, { limit }).then((r) => r.results).catch(() => []),
+      searchBrave(query, { kind: "web", limit, siteFilter: "reddit.com" })
+        .then((r) => r.results)
+        .catch(() => []),
+    ]);
+    return [
+      { engine: "hackernews", results: hn },
+      { engine: "stackexchange", results: se },
+      { engine: "brave-reddit", results: reddit },
+    ];
+  }
   const [exa, brave, tavily] = await Promise.all([
     searchExa(query, { tab, limit }).then((r) => r.results).catch(() => []),
-    searchBrave(query, braveOpts).then((r) => r.results).catch(() => []),
+    searchBrave(query, { kind: tab === "news" ? "news" : "web", limit })
+      .then((r) => r.results)
+      .catch(() => []),
     searchTavily(query, { maxResults: limit, topic: tab === "news" ? "news" : "general" })
       .then((r) => r.results)
       .catch(() => []),
@@ -85,8 +103,11 @@ async function main() {
   const outDir = join(process.cwd(), "eval/web-search/gold");
   mkdirSync(outDir, { recursive: true });
   const byTab = new Map<string, unknown[]>();
+  const ti = process.argv.indexOf("--tab");
+  const onlyTab = ti >= 0 ? process.argv[ti + 1] : null;
 
   for (const q of BENCHMARK_QUERIES) {
+    if (onlyTab && q.tab !== onlyTab) continue;
     const panel = await fetchPanel(q.query, q.tab);
     const pool = poolCandidates(panel);
     const arr = byTab.get(q.tab) ?? [];
