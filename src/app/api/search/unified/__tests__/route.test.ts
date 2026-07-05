@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { searchResultCache } from "@/lib/search/result-cache";
 
 // ---------------------------------------------------------------------------
 // Hoisted mocks
@@ -116,6 +117,9 @@ function literatureResult(overrides: Record<string, unknown> = {}) {
 describe("GET /api/search/unified", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Non-academic results are now cached (process-global); reset it between tests so
+    // one case's fan-out can't be served to the next, just as mocks are reset.
+    searchResultCache._mem.clear();
     mockGetCurrentUserId.mockResolvedValue("dev_user_001");
     mockCheckRateLimit.mockResolvedValue(null);
 
@@ -177,6 +181,24 @@ describe("GET /api/search/unified", () => {
     const body = await res.json();
     expect(body.results).toBeDefined();
     expect(body.total).toBeGreaterThanOrEqual(0);
+  });
+
+  it("caches the non-academic fan-out — a repeat query is served from cache, not re-fetched", async () => {
+    await GET(makeRequest({ q: "quantum computing breakthrough", tab: "web" }));
+    await GET(makeRequest({ q: "quantum computing breakthrough", tab: "web" }));
+    expect(mockFederateNonAcademic).toHaveBeenCalledTimes(1);
+  });
+
+  it("never caches a degraded fan-out — the next request retries instead of serving a bad result", async () => {
+    mockFederateNonAcademic.mockResolvedValue({
+      results: [],
+      perSource: [],
+      perSourceRows: [],
+      degraded: true,
+    });
+    await GET(makeRequest({ q: "obscure sparse topic xyz", tab: "web" }));
+    await GET(makeRequest({ q: "obscure sparse topic xyz", tab: "web" }));
+    expect(mockFederateNonAcademic).toHaveBeenCalledTimes(2);
   });
 
   it("returns 400 when query is missing", async () => {
