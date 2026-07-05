@@ -45,6 +45,11 @@ interface SrStoreState {
     domainId: string,
     judgment: RobJudgment,
   ) => void;
+  resolveExtractionCell: (
+    candidateId: string,
+    fieldId: string,
+    value: string,
+  ) => void;
 }
 
 function updateCandidate(
@@ -194,6 +199,28 @@ export const useSrStore = create<SrStoreState>((set, get) => ({
         ...domain,
         judgment,
       })),
+    });
+  },
+
+  resolveExtractionCell: (candidateId, fieldId, value) => {
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: {
+        ...review,
+        extractions: review.extractions.map((extraction) =>
+          extraction.candidateId === candidateId
+            ? {
+                ...extraction,
+                fields: extraction.fields.map((field) =>
+                  field.id === fieldId
+                    ? { ...field, finalValue: value }
+                    : field,
+                ),
+              }
+            : extraction,
+        ),
+      },
     });
   },
 

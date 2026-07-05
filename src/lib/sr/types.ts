@@ -68,6 +68,28 @@ export interface RobAssessment {
   domains: RobDomainAssessment[];
 }
 
+/** One field in the dual-reviewer extraction grid. */
+export interface ExtractionField {
+  id: string;
+  section: string;
+  label: string;
+  reviewer1: string;
+  reviewer2: string;
+  /** Reviewer 2 recorded the paper as silent — a designed "Not reported". */
+  reviewer2NotReported?: boolean;
+  /** AI pre-filled Final value + the source passage it came from. */
+  aiFinal?: { value: string; sourceQuote: string };
+  /** The two reviewers disagree — Final needs a human decision. */
+  conflict?: boolean;
+  /** Human-resolved Final value (once a conflict is reconciled). */
+  finalValue?: string;
+}
+
+export interface ExtractionState {
+  candidateId: string;
+  fields: ExtractionField[];
+}
+
 /**
  * Dual-reviewer routing outcome for a study at title & abstract screening.
  * - `advanced`   — both votes positive → moves to full-text review
@@ -167,6 +189,7 @@ export interface SrReview {
   criteria: ReviewCriteria;
   exclusionReasons: ExclusionReason[];
   robAssessments: RobAssessment[];
+  extractions: ExtractionState[];
   batches: ImportBatch[];
   candidates: Candidate[];
 }

@@ -104,6 +104,17 @@ describe("sr-store", () => {
     });
   });
 
+  it("resolving an extraction cell clears the conflict with a final value", () => {
+    const emperor = store().review!.candidates.find((c) => c.refId === 2241)!;
+    store().resolveExtractionCell(emperor.id, "sample_size", "5,988");
+
+    const extraction = store().review!.extractions.find(
+      (e) => e.candidateId === emperor.id,
+    )!;
+    const field = extraction.fields.find((f) => f.id === "sample_size")!;
+    expect(field.finalValue).toBe("5,988");
+  });
+
   it("undoing an import removes the whole batch from the review", () => {
     store().undoImport("batch-ai");
 

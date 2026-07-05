@@ -1,5 +1,6 @@
 import type {
   Candidate,
+  ExtractionState,
   FullTextState,
   RobAssessment,
   RobDomainAssessment,
@@ -277,6 +278,99 @@ function reasoningFor(poolIndex: number, refId: number) {
   };
 }
 
+/** Seed the consensus extraction grid for EMPEROR-Preserved (3 conflicts). */
+function buildExtraction(candidateId: string): ExtractionState {
+  return {
+    candidateId,
+    fields: [
+      {
+        id: "study_id",
+        section: "General information",
+        label: "Study ID",
+        reviewer1: "EMPEROR-Preserved",
+        reviewer2: "EMPEROR-Preserved",
+        aiFinal: {
+          value: "EMPEROR-Preserved",
+          sourceQuote:
+            "EMPEROR-Preserved (Empagliflozin Outcome Trial in Patients With Chronic Heart Failure With a Preserved Ejection Fraction).",
+        },
+      },
+      {
+        id: "study_type",
+        section: "General information",
+        label: "Study type",
+        reviewer1: "RCT",
+        reviewer2: "RCT",
+        aiFinal: {
+          value: "RCT",
+          sourceQuote:
+            "In this randomised, double-blind trial, we assigned 5,988 patients…",
+        },
+      },
+      {
+        id: "sample_size",
+        section: "General information",
+        label: "Sample size",
+        reviewer1: "5,988",
+        reviewer2: "5,888",
+        conflict: true,
+      },
+      {
+        id: "intervention",
+        section: "General information",
+        label: "Intervention",
+        reviewer1: "Empagliflozin",
+        reviewer2: "Empagliflozin 10 mg",
+        aiFinal: {
+          value: "Empagliflozin 10 mg",
+          sourceQuote: "…to receive empagliflozin (10 mg once daily) or placebo.",
+        },
+      },
+      {
+        id: "ef_category",
+        section: "Characteristics & outcomes",
+        label: "EF category",
+        reviewer1: "HFpEF",
+        reviewer2: "HFpEF >40%",
+        aiFinal: {
+          value: "HFpEF (EF >40%)",
+          sourceQuote:
+            "…an ejection fraction of more than 40% (heart failure with preserved ejection fraction).",
+        },
+      },
+      {
+        id: "follow_up",
+        section: "Characteristics & outcomes",
+        label: "Follow-up",
+        reviewer1: "26.2 months",
+        reviewer2: "2.2 years",
+        conflict: true,
+      },
+      {
+        id: "diabetes",
+        section: "Characteristics & outcomes",
+        label: "Diabetes status",
+        reviewer1: "Mixed",
+        reviewer2: "",
+        reviewer2NotReported: true,
+        conflict: true,
+      },
+      {
+        id: "primary_hr",
+        section: "Characteristics & outcomes",
+        label: "Primary HR (HF hosp.)",
+        reviewer1: "0.73",
+        reviewer2: "0.73 [0.61–0.88]",
+        aiFinal: {
+          value: "0.73 (0.61–0.88)",
+          sourceQuote:
+            "…a lower risk of hospitalisation for heart failure (hazard ratio 0.73; 95% CI 0.61–0.88).",
+        },
+      },
+    ],
+  };
+}
+
 type RobJ = "low" | "some_concerns" | "high";
 
 /** Seed RoB 2 assessments for the four named exemplar studies, in display order. */
@@ -426,6 +520,9 @@ export function createMockReview(): SrReview {
     criteria: CRITERIA,
     exclusionReasons: EXCLUSION_REASONS,
     robAssessments: buildRobAssessments(idByRefId),
+    extractions: idByRefId.has(2241)
+      ? [buildExtraction(idByRefId.get(2241)!)]
+      : [],
     batches: BATCHES.map(({ id, source, ai }) => ({
       id,
       source,
@@ -455,6 +552,7 @@ export function createEmptyReview(): SrReview {
     criteria: CRITERIA,
     exclusionReasons: EXCLUSION_REASONS,
     robAssessments: [],
+    extractions: [],
     batches: [],
     candidates: [],
   };

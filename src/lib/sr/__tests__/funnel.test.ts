@@ -42,6 +42,7 @@ function review(candidates: Candidate[]): SrReview {
     },
     exclusionReasons: [],
     robAssessments: [],
+    extractions: [],
     batches: [],
     candidates,
   };
