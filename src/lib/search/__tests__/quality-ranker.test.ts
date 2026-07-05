@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { UnifiedSearchResult } from "@/types/search";
-import { qualityRank, rankWithTrace } from "../quality-ranker";
+import { qualityRank, rankWithTrace, configForIntent } from "../quality-ranker";
 
 function paper(over: Partial<UnifiedSearchResult>): UnifiedSearchResult {
   return {
@@ -170,5 +170,27 @@ describe("quality-ranker — citation signal breaks a reranker tie (Lever: citat
     });
     const ranked = qualityRank([lookalike, landmark], "empagliflozin heart failure");
     expect(ranked[0].title).toBe("Empagliflozin outcomes trial in heart failure");
+  });
+});
+
+describe("quality-ranker — ranking intent flips the citation vs recency tie-breaker", () => {
+  const classic = () =>
+    paper({ title: "Landmark trial", citationCount: 4000, rerankScore: 0.9, rrfScore: 0.02, sources: ["pubmed"] });
+  const recentLookalike = () =>
+    paper({ title: "Recent lookalike", citationCount: 5, year: 2026, rerankScore: 0.9, rrfScore: 0.08, sources: ["openalex", "pubmed"] });
+
+  it("balanced intent lets the recent two-lane lookalike win (the ambiguous default)", () => {
+    const ranked = qualityRank([classic(), recentLookalike()], "trial", configForIntent("balanced"));
+    expect(ranked[0].title).toBe("Recent lookalike");
+  });
+
+  it("landmark intent floats the heavily-cited classic above the recent lookalike", () => {
+    const ranked = qualityRank([recentLookalike(), classic()], "trial", configForIntent("landmark"));
+    expect(ranked[0].title).toBe("Landmark trial");
+  });
+
+  it("recent intent keeps the newest paper on top (citations near-muted)", () => {
+    const ranked = qualityRank([classic(), recentLookalike()], "trial", configForIntent("recent"));
+    expect(ranked[0].title).toBe("Recent lookalike");
   });
 });

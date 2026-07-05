@@ -21,6 +21,7 @@ import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { enrichCitationsByIds } from "@/lib/search/sources/openalex";
 import { planQuery } from "@/lib/search/query-planner";
 import { rankAndAnnotate } from "@/lib/search/pipeline";
+import type { RankingIntent } from "@/lib/search/quality-ranker";
 import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
 import { attachRerankScores } from "@/lib/search/rerank";
 import {
@@ -84,6 +85,11 @@ export interface RunLiteratureSearchParams {
   fullTextOnly?: boolean;
   page?: number;
   perPage?: number;
+  /**
+   * Ranking intent from the UI (Landmark/Latest chip): re-weights the citation vs
+   * recency tie-breaker the cross-encoder can't resolve. Defaults to balanced.
+   */
+  rankingIntent?: RankingIntent;
   /**
    * Opt-in citation/PMRA neighbour expansion (a high-recall, slower mode for
    * systematic-review-style searches). Off by default to keep the default path
@@ -855,6 +861,7 @@ async function runLiteratureSearchUncached(
     recency: plan.recency,
     isTrialLookup: plan.isTrialLookup,
     isGuidelineLookup: plan.isGuidelineLookup,
+    rankingIntent: params.rankingIntent,
   });
 
   let filtered = ranked;

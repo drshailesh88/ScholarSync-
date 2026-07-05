@@ -14,8 +14,10 @@ import type { RankingTrace, UnifiedSearchResult } from "@/types/search";
 import {
   rankWithTrace,
   enrichJournalQuality,
+  configForIntent,
   RELEVANCE_GATE_FLOOR,
   type ScoredResult,
+  type RankingIntent,
 } from "./quality-ranker";
 import { enrichStudyTypes } from "./study-type-detector";
 import { getEvidenceLevel } from "./evidence-level";
@@ -184,6 +186,9 @@ export interface RankAndAnnotateOptions {
   /** When true (a guideline/consensus lookup), float the authoritative guideline
    *  document — newest version first — above primary literature. */
   isGuidelineLookup?: boolean;
+  /** Intent captured by the UI (Landmark/Latest chip): re-weights the citation vs
+   *  recency tie-breaker the cross-encoder can't resolve. Defaults to balanced. */
+  rankingIntent?: RankingIntent;
 }
 
 /**
@@ -268,11 +273,18 @@ export function rankAndAnnotate(
   enrichStudyTypes(results);
   enrichJournalQuality(results);
 
-  const scored = rankWithTrace(results, opts.query);
+  // Intent-aware weighting: the UI's Landmark/Latest chip re-weights the tie-breaker
+  // (citation vs recency) that the cross-encoder cannot resolve. Defaults to balanced.
+  const scored = rankWithTrace(
+    results,
+    opts.query,
+    configForIntent(opts.rankingIntent)
+  );
   const queryTerms = keywords(opts.query);
 
+  const recencyOrder = opts.recency || opts.rankingIntent === "recent";
   let ordered = scored;
-  if (opts.recency) {
+  if (recencyOrder) {
     // Recency amplifies the quality composite multiplicatively (see
     // recencyRankKey) instead of an additive year term — so a pivotal
     // high-composite trial (e.g. CLARITY-AD) is not buried under a stream of
@@ -285,7 +297,7 @@ export function rankAndAnnotate(
   ordered = rerankedAboveTail(ordered);
 
   const annotated = ordered.map((s) =>
-    annotate(s, opts.recency ? "recency" : "quality", queryTerms)
+    annotate(s, recencyOrder ? "recency" : "quality", queryTerms)
   );
 
   // Exact-paper lookup: if the user pasted a paper title, that paper must rank #1
