@@ -1,10 +1,31 @@
 import { createClient } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
-import type { WorkflowTab } from "@/stores/systematic-review-store";
 
 // ---------------------------------------------------------------------------
 // Liveblocks type definitions for systematic review collaboration rooms
 // ---------------------------------------------------------------------------
+
+/** Which workflow tab a collaborator is currently viewing. */
+export type WorkflowTab =
+  | "strategy"
+  | "import"
+  | "screening"
+  | "prisma"
+  | "rob2"
+  | "rob"
+  | "extraction"
+  | "meta_analysis"
+  | "nma"
+  | "snowball"
+  | "export"
+  | "living"
+  | "protocol"
+  | "prospero"
+  | "grade"
+  | "cerqual"
+  | "manuscript"
+  | "gap_map"
+  | "audit";
 
 /** Each collaborator's real-time presence in an SR project */
 export type SRPresence = {

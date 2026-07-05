@@ -9,8 +9,8 @@ import {
   useSREventListener,
   useSRStatus,
   type SRRoomEvent,
+  type WorkflowTab,
 } from "@/lib/liveblocks/sr-config";
-import type { WorkflowTab } from "@/stores/systematic-review-store";
 
 // ---------------------------------------------------------------------------
 // Activity Feed Types
