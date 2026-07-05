@@ -9,8 +9,8 @@ describe("config/branding", () => {
     delete process.env.NEXT_PUBLIC_BRAND_NAME;
     delete process.env.NEXT_PUBLIC_BRAND_TAGLINE;
     const { BRAND } = await import("../branding");
-    expect(BRAND.name).toBe("Manan OS");
-    expect(BRAND.tagline).toContain("Literature Search");
+    expect(BRAND.name).toBe("Slate");
+    expect(BRAND.tagline).toContain("Research desk");
   });
 
   it("uses env overrides", async () => {
