@@ -6,8 +6,9 @@
 
 **Skin authority:** `docs/design/design.md` (frozen). Decisions log: `docs/design/research/2026-07-04-nav-pattern-research.md`.
 
-**Written specs (design = spec; render in Paper when live):** Home + Composer are drawn in Paper (✅). The remaining surfaces are fully specified in `docs/design/specs/` — buildable now:
-- `explore-search-states.md` · `deep-research-states.md` · `projects-library-inbox-states.md` · `editor-states.md` · `global-auth-settings-states.md`
+**Written specs (design = spec).** The **entire app** is specified in `docs/design/specs/` — durable, engineer- and Fable-usable, not Paper-dependent:
+- `home-states.md` · `composer-states.md` · `explore-search-states.md` · `deep-research-states.md` · `projects-library-inbox-states.md` · `editor-states.md` · `global-auth-settings-states.md`
+- Paper artboards exist for Home + Composer (20) and Explore·Populated; the rest render from these specs when convenient.
 - Adopted interaction craft: `docs/design/CRAFT-ADDENDUM.md` · reference corpus map: `docs/design/reference/SCREEN-CORPUS-INDEX.md`
 
 ---
