@@ -1,14 +1,29 @@
 "use client";
 
-import { ErrorDisplay } from "@/components/ui/error-display";
+import { AlertTriangle } from "lucide-react";
 
-export default function SystematicReviewProjectError({ error, reset }: { error: Error; reset: () => void }) {
+export default function SrStageError({
+  error,
+  reset,
+}: {
+  error: Error;
+  reset: () => void;
+}) {
   return (
-    <ErrorDisplay
-      title="Systematic Review unavailable"
-      message="We couldn't load the systematic review page. Please try again."
-      error={error}
-      onRetry={reset}
-    />
+    <div className="cv-inner wide">
+      <div className="stateblock error" role="alert">
+        <AlertTriangle size={18} aria-hidden />
+        <h3>This stage could not load</h3>
+        <p>
+          {error.message ||
+            "Something went wrong while loading the review. Your decisions are saved — retry to pick up where you left off."}
+        </p>
+        <div className="actions">
+          <button type="button" className="btn pri" onClick={reset}>
+            Retry
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

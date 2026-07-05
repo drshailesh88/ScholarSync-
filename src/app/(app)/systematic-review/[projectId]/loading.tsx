@@ -1,11 +1,21 @@
-import { Skeleton } from "@/components/ui/skeleton";
-
-export default function SystematicReviewProjectLoading() {
+/** Skeleton for any SR stage — mirrors the funnel rhythm, never a spinner. */
+export default function SrStageLoading() {
   return (
-    <div className="space-y-4">
-      <Skeleton className="h-8 w-48 rounded-xl" />
-      <Skeleton className="h-24 w-full rounded-2xl" />
-      <Skeleton className="h-24 w-full rounded-2xl" />
+    <div className="cv-inner wide">
+      <div className="skel" style={{ width: 220, height: 12 }} />
+      <div className="skel" style={{ width: 340, height: 34, marginTop: 10 }} />
+      <div className="skel" style={{ width: 520, height: 14, marginTop: 12 }} />
+      <div
+        className="skel"
+        style={{ height: 64, marginTop: 24, borderRadius: 11 }}
+      />
+      {[0, 1, 2, 3].map((row) => (
+        <div
+          key={row}
+          className="skel"
+          style={{ height: 58, marginTop: 12, borderRadius: 12 }}
+        />
+      ))}
     </div>
   );
 }
