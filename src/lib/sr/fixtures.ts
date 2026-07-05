@@ -15,6 +15,58 @@ const REVIEWERS = [
   { id: "you", name: "Shailesh S.", initials: "SS" },
 ];
 
+const CRITERIA = {
+  inclusion: [
+    "Adults with heart failure",
+    "SGLT2-inhibitor intervention",
+    "Randomised controlled trial",
+    "Reports HF hospitalisation or mortality",
+  ],
+  exclusion: [
+    "Conference abstract only",
+    "Non-human / mechanistic",
+    "eGFR <20 populations",
+  ],
+  highlightInclude: [
+    "SGLT2 inhibitors",
+    "heart failure",
+    "randomised, double-blind trial",
+    "ejection fraction of more than 40%",
+    "HF hospitalisation",
+    "preserved ejection fraction",
+    "dapagliflozin",
+    "ejection fraction >40%",
+  ],
+  highlightExclude: ["eGFR below 20"],
+};
+
+const ANKER_REASONING = {
+  score: 4.9,
+  verdict: "yes" as const,
+  criteria: [
+    {
+      label: "Population",
+      detail: "adults with HF (HFpEF, EF >40%)",
+      met: true,
+    },
+    {
+      label: "Intervention",
+      detail: "empagliflozin, an SGLT2 inhibitor",
+      met: true,
+    },
+    {
+      label: "Design",
+      detail: "randomised, double-blind RCT (n=5,988)",
+      met: true,
+    },
+    {
+      label: "Outcome",
+      detail: "reports HF hospitalisation & CV death",
+      met: true,
+    },
+  ],
+};
+
 interface BatchSpec {
   id: string;
   source: string;
@@ -135,8 +187,45 @@ const EXEMPLARS: Exemplar[] = [
   },
 ];
 
+const ANKER_SLOT = 274;
+
+/**
+ * The AI's own read of a study, independent of the human vote buckets. It
+ * suggests include on 124 studies total — the 123 most-confident plus the
+ * Anker exemplar (a still-to-screen study the AI would include).
+ */
+function aiSuggestsInclude(poolIndex: number): boolean {
+  return poolIndex === ANKER_SLOT || poolIndex < TARGETS.advanced - 1;
+}
+
 function aiSuggestionFor(poolIndex: number): TaVote {
-  return poolIndex < TARGETS.advanced ? "yes" : "no";
+  return aiSuggestsInclude(poolIndex) ? "yes" : "no";
+}
+
+function reasoningFor(poolIndex: number, refId: number) {
+  if (refId === 2241) return ANKER_REASONING;
+  const include = aiSuggestsInclude(poolIndex);
+  return {
+    score: include ? 4.2 : 1.6,
+    verdict: (include ? "yes" : "no") as TaVote,
+    criteria: [
+      {
+        label: "Population",
+        detail: include ? "adults with heart failure" : "no HF population",
+        met: include,
+      },
+      {
+        label: "Intervention",
+        detail: include ? "SGLT2 inhibitor" : "not an SGLT2 inhibitor",
+        met: include,
+      },
+      {
+        label: "Design",
+        detail: include ? "randomised controlled trial" : "not an RCT",
+        met: include,
+      },
+    ],
+  };
 }
 
 function votesFor(poolIndex: number): TaVoteRecord[] {
@@ -193,6 +282,7 @@ export function createMockReview(): SrReview {
             source: batch.source,
             batchId: batch.id,
             aiSuggestion: aiSuggestionFor(poolIndex),
+            aiReasoning: reasoningFor(poolIndex, exemplar.refId),
             ta: { votes: votesFor(poolIndex) },
           }
         : {
@@ -219,6 +309,9 @@ export function createMockReview(): SrReview {
                   }
                 : undefined,
             aiSuggestion: isAutoMerged ? undefined : aiSuggestionFor(poolIndex),
+            aiReasoning: isAutoMerged
+              ? undefined
+              : reasoningFor(poolIndex, 1000 + sequence),
             ta: { votes: isAutoMerged ? [] : votesFor(poolIndex) },
           };
 
@@ -232,6 +325,7 @@ export function createMockReview(): SrReview {
     title: "SGLT2 inhibitors & heart failure",
     shortTitle: "SGLT2i & HF",
     reviewers: REVIEWERS,
+    criteria: CRITERIA,
     batches: BATCHES.map(({ id, source, ai }) => ({
       id,
       source,
@@ -258,6 +352,7 @@ export function createEmptyReview(): SrReview {
     title: "Untitled systematic review",
     shortTitle: "New review",
     reviewers: REVIEWERS,
+    criteria: CRITERIA,
     batches: [],
     candidates: [],
   };

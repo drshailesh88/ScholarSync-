@@ -44,6 +44,25 @@ describe("sr-store", () => {
     expect(deriveFunnelSummary(review).screening.total).toBe(388);
   });
 
+  it("casting a blinded vote records it for the current reviewer", () => {
+    const anker = store().review!.candidates.find((c) => c.refId === 2241)!;
+    expect(anker.ta.votes).toHaveLength(0);
+
+    store().castTaVote(anker.id, "you", "yes");
+
+    const after = store().review!.candidates.find((c) => c.refId === 2241)!;
+    expect(after.ta.votes).toEqual([{ reviewerId: "you", vote: "yes" }]);
+  });
+
+  it("re-voting replaces the reviewer's own vote instead of stacking", () => {
+    const anker = store().review!.candidates.find((c) => c.refId === 2241)!;
+    store().castTaVote(anker.id, "you", "yes");
+    store().castTaVote(anker.id, "you", "no");
+
+    const after = store().review!.candidates.find((c) => c.refId === 2241)!;
+    expect(after.ta.votes).toEqual([{ reviewerId: "you", vote: "no" }]);
+  });
+
   it("undoing an import removes the whole batch from the review", () => {
     store().undoImport("batch-ai");
 

@@ -42,6 +42,27 @@ export interface Reviewer {
   initials: string;
 }
 
+export interface AiCriterion {
+  label: string;
+  detail: string;
+  met: boolean;
+}
+
+export interface AiReasoning {
+  /** Inclusion score out of 5, e.g. 4.9. */
+  score: number;
+  verdict: TaVote;
+  criteria: AiCriterion[];
+}
+
+/** Eligibility criteria + the terms highlighted in abstracts. */
+export interface ReviewCriteria {
+  inclusion: string[];
+  exclusion: string[];
+  highlightInclude: string[];
+  highlightExclude: string[];
+}
+
 /**
  * Duplicate detection state (Covidence model: match on title · year ·
  * volume · authors). High-confidence pairs auto-merge; uncertain pairs
@@ -80,6 +101,8 @@ export interface Candidate {
   source: string;
   batchId?: string;
   dupe?: DupeRecord;
+  /** AI inclusion-score + per-criterion reasoning shown in the assist rail. */
+  aiReasoning?: AiReasoning;
   /**
    * AI pre-vote shown as a ringed suggestion only — it never advances a
    * study on its own; the human vote is the system of record.
@@ -93,6 +116,7 @@ export interface SrReview {
   title: string;
   shortTitle: string;
   reviewers: Reviewer[];
+  criteria: ReviewCriteria;
   batches: ImportBatch[];
   candidates: Candidate[];
 }

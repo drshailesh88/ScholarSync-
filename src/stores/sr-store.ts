@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { getReviewById } from "@/lib/sr/fixtures";
-import type { Candidate, SrReview } from "@/lib/sr/types";
+import type { Candidate, SrReview, TaVote } from "@/lib/sr/types";
 
 /**
  * Client state for the SR module. Holds the active review (seeded from the
@@ -14,6 +14,7 @@ interface SrStoreState {
   mergeDuplicate: (candidateId: string) => void;
   markNotDuplicate: (candidateId: string) => void;
   undoImport: (batchId: string) => void;
+  castTaVote: (candidateId: string, reviewerId: string, vote: TaVote) => void;
 }
 
 function updateCandidate(
@@ -56,6 +57,23 @@ export const useSrStore = create<SrStoreState>((set, get) => ({
       review: updateCandidate(review, candidateId, (candidate) => ({
         ...candidate,
         dupe: candidate.dupe && { ...candidate.dupe, status: "kept" },
+      })),
+    });
+  },
+
+  castTaVote: (candidateId, reviewerId, vote) => {
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: updateCandidate(review, candidateId, (candidate) => ({
+        ...candidate,
+        ta: {
+          ...candidate.ta,
+          votes: [
+            ...candidate.ta.votes.filter((v) => v.reviewerId !== reviewerId),
+            { reviewerId, vote },
+          ],
+        },
       })),
     });
   },

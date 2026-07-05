@@ -34,6 +34,12 @@ function review(candidates: Candidate[]): SrReview {
       { id: "emma", name: "Emma Reyes", initials: "ER" },
       { id: "kat", name: "Katherine Ng", initials: "KN" },
     ],
+    criteria: {
+      inclusion: [],
+      exclusion: [],
+      highlightInclude: [],
+      highlightExclude: [],
+    },
     batches: [],
     candidates,
   };

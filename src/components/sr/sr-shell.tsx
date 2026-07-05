@@ -85,7 +85,7 @@ export function SrShell({
       />
       <main className="canvas">
         {offline ? (
-          <div className="cv-inner wide" style={{ paddingBottom: 0 }}>
+          <div className="offline-wrap">
             <div className="offlinebar" role="status">
               <WifiOff size={13} aria-hidden />
               Offline — showing the cached view. Decisions will sync when you
