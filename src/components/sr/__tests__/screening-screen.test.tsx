@@ -112,6 +112,38 @@ describe("ScreeningScreen", () => {
     expect(anker.ta.votes[0].vote).toBe("maybe");
   });
 
+  it("shows the AI score-threshold slider and live tally (Elicit parity)", () => {
+    const text = container.textContent ?? "";
+    expect(text).toMatch(/score threshold/i);
+    expect(text).toMatch(/evaluated/i);
+    expect(text).toContain("388"); // evaluated
+    expect(text).toContain("124"); // AI-suggested include at the default cut
+    const slider = container.querySelector(
+      'input[type="range"]',
+    ) as HTMLInputElement | null;
+    expect(slider).not.toBeNull();
+  });
+
+  it("re-partitions the tally as the threshold slider moves", () => {
+    const slider = container.querySelector(
+      'input[type="range"]',
+    ) as HTMLInputElement;
+    act(() => {
+      const setter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        "value",
+      )!.set!;
+      setter.call(slider, "4.5");
+      slider.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    // At 4.5 only the top-scoring exemplar clears the cut.
+    expect(container.textContent).toContain("1 included");
+  });
+
+  it("keeps the human vote as the system of record even with the slider", () => {
+    expect(container.textContent).toMatch(/system of record/i);
+  });
+
   it("shows an all-caught-up state when nothing is left to screen", () => {
     // Vote through the whole queue.
     for (let i = 0; i < 114; i += 1) key("y");

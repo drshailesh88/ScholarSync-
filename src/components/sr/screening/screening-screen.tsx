@@ -7,6 +7,10 @@ import {
   deriveScreeningQueue,
   otherReviewerBlindState,
 } from "@/lib/sr/screening-queue";
+import {
+  DEFAULT_SCORE_THRESHOLD,
+  deriveScoreTally,
+} from "@/lib/sr/score-threshold";
 import type { TaVote } from "@/lib/sr/types";
 import { useSrStore } from "@/stores/sr-store";
 import { SrStageSkeleton } from "../sr-skeleton";
@@ -26,6 +30,7 @@ export function ScreeningScreen({ reviewId }: { reviewId: string }) {
   const castTaVote = useSrStore((state) => state.castTaVote);
   const [cursor, setCursor] = useState(0);
   const [screenedToday, setScreenedToday] = useState(0);
+  const [threshold, setThreshold] = useState(DEFAULT_SCORE_THRESHOLD);
 
   const queue = review
     ? deriveScreeningQueue(review, CURRENT_REVIEWER_ID)
@@ -163,6 +168,9 @@ export function ScreeningScreen({ reviewId }: { reviewId: string }) {
         blind={blind}
         screenedToday={screenedToday}
         remaining={queue.tabs.toScreen}
+        threshold={threshold}
+        tally={deriveScoreTally(review, threshold)}
+        onThresholdChange={setThreshold}
       />
     </div>
   );
