@@ -7,6 +7,7 @@ import { nonAcademicCacheTtl, shouldCacheFederatedList } from "@/lib/search/web/
 import { searchYouTube } from "@/lib/search/sources/youtube";
 import { rerankResults } from "@/lib/search/rerank";
 import { diversifyForTab } from "@/lib/search/diversity";
+import { applyNewsAuthorityFloor } from "@/lib/search/web/news-authority";
 import { getDomainConfig } from "@/lib/search/domains";
 import { augmentQuery } from "@/lib/ai/query-augment";
 import { getCurrentUserId } from "@/lib/auth";
@@ -280,10 +281,17 @@ async function fetchFederatedNonAcademicResults(
   // pollution). Primary-led lists keep their native order (no diversity), as before.
   const ranked = applyDomainPreferences(list.results, preferences);
   const diversified = list.primaryLed ? ranked : diversifyForTab(ranked, tab);
+  // News authority floor: a reputation guarantee (not a ranking lever) — surface only
+  // credible outlets so a low-trust result can't embarrass a non-core tab. Min-results
+  // safeguard backfills so the tab is never emptied. NEWS_AUTHORITY_FLOOR=0 disables it.
+  const floored =
+    tab === "news" && process.env.NEWS_AUTHORITY_FLOOR !== "0"
+      ? applyNewsAuthorityFloor(diversified)
+      : diversified;
   return {
-    results: diversified.slice(start, start + perPage),
-    total: diversified.length,
-    hasMore: diversified.length > start + perPage,
+    results: floored.slice(start, start + perPage),
+    total: floored.length,
+    hasMore: floored.length > start + perPage,
     degraded: list.degraded,
     ...telemetry,
   };
