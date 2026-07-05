@@ -63,6 +63,18 @@ describe("sr-store", () => {
     expect(after.ta.votes).toEqual([{ reviewerId: "you", vote: "no" }]);
   });
 
+  it("resolving a conflict records the agreed final decision and routes it", () => {
+    const conflict = store().review!.candidates.find(
+      (c) => c.refId === 1904,
+    )!;
+
+    store().resolveConflict(conflict.id, "you", "yes");
+
+    const after = store().review!.candidates.find((c) => c.refId === 1904)!;
+    expect(after.ta.resolution).toBe("yes");
+    expect(after.ta.resolvedBy).toBe("you");
+  });
+
   it("undoing an import removes the whole batch from the review", () => {
     store().undoImport("batch-ai");
 

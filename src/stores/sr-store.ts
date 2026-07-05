@@ -15,6 +15,11 @@ interface SrStoreState {
   markNotDuplicate: (candidateId: string) => void;
   undoImport: (batchId: string) => void;
   castTaVote: (candidateId: string, reviewerId: string, vote: TaVote) => void;
+  resolveConflict: (
+    candidateId: string,
+    resolverId: string,
+    decision: TaVote,
+  ) => void;
 }
 
 function updateCandidate(
@@ -73,6 +78,21 @@ export const useSrStore = create<SrStoreState>((set, get) => ({
             ...candidate.ta.votes.filter((v) => v.reviewerId !== reviewerId),
             { reviewerId, vote },
           ],
+        },
+      })),
+    });
+  },
+
+  resolveConflict: (candidateId, resolverId, decision) => {
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: updateCandidate(review, candidateId, (candidate) => ({
+        ...candidate,
+        ta: {
+          ...candidate.ta,
+          resolution: decision,
+          resolvedBy: resolverId,
         },
       })),
     });
