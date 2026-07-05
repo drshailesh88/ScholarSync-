@@ -174,15 +174,22 @@ describe("get_search_capabilities tool", () => {
       "europepmc",
       "scopus",
       "springer",
+      "semantic_scholar",
     ]);
     expect(caps.limits.maxResults).toBe(50);
     expect(caps.outputFields).toContain("doi");
     expect(caps.outputFields).toContain("evidenceLevel");
     expect(caps.outputFields).toContain("whyRelevant");
-    // All four active literature sources (PubMed + Europe PMC + Scopus + Springer)
-    // are on by default.
+    // All five active literature sources (PubMed + Europe PMC + Scopus + Springer +
+    // Semantic Scholar) are on by default.
     const defaults = caps.sources.filter((s) => s.default).map((s) => s.id);
-    expect(defaults).toEqual(["pubmed", "europepmc", "scopus", "springer"]);
+    expect(defaults).toEqual([
+      "pubmed",
+      "europepmc",
+      "scopus",
+      "springer",
+      "semantic_scholar",
+    ]);
   });
 });
 
