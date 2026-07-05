@@ -10,6 +10,7 @@
  */
 import type { UnifiedSearchResult } from "@/types/search";
 import { okStatus, classifyRejectionReason, type SourceStatus } from "@/lib/search/source-status";
+import { sourceBudget } from "@/lib/search/web/source-budget";
 import { searchSearXNG, type SearXNGCategory } from "@/lib/search/sources/searxng";
 import { searchBrave } from "@/lib/search/sources/brave";
 import { searchNewsData } from "@/lib/search/sources/newsdata";
@@ -231,7 +232,20 @@ export async function federateWith(
 
   const settled = await Promise.all(
     sources.map(async (source) => {
+      // Paid-source budget guardrail: once a metered family (Exa/Brave/NewsData) hits
+      // its daily cap, skip it and let the federation degrade to the remaining free
+      // lanes rather than spend more. Free sources are never capped.
+      if (!(await sourceBudget.canSpend(source.id))) {
+        return {
+          id: source.id,
+          label: source.label,
+          results: [] as UnifiedSearchResult[],
+          total: 0,
+          status: { status: "rate_limited" as const, message: "daily budget cap reached" },
+        };
+      }
       try {
+        await sourceBudget.recordSpend(source.id);
         const r = await withTimeout(source.id, source.run(query, options), timeoutMs);
         return { id: source.id, label: source.label, ...r };
       } catch (error) {

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { federateWith, braveSourceForTab, type WebSource } from "../federate";
 import { okStatus } from "@/lib/search/source-status";
+import { sourceBudget } from "../source-budget";
 import type { UnifiedSearchResult } from "@/types/search";
 
 vi.mock("@/lib/search/sources/brave", () => ({
@@ -109,6 +110,30 @@ describe("federateWith — primary-led ordering", () => {
     ]);
     expect(fed.primaryLed).toBe(false);
     expect(fed.results.map((r) => r.url)).toEqual(["https://kw/1"]);
+  });
+});
+
+describe("federateWith — paid-source budget guardrail", () => {
+  it("skips a source over its daily budget (marks it rate_limited) without ever calling it, and still serves the free lanes", async () => {
+    const cappedRun = vi.fn(async () => ({
+      results: [row("https://exa/1", "exa result")],
+      total: 1,
+      status: okStatus(),
+    }));
+    const capped: WebSource = { id: "exa", label: "Exa", run: cappedRun };
+    const free = okSource("searxng", [row("https://sx/1", "free result")]);
+
+    const spy = vi
+      .spyOn(sourceBudget, "canSpend")
+      .mockImplementation(async (id: string) => id !== "exa");
+
+    const fed = await federateWith("q", "web", [capped, free]);
+
+    expect(cappedRun).not.toHaveBeenCalled();
+    expect(fed.perSource.find((s) => s.id === "exa")?.status.status).toBe("rate_limited");
+    expect(fed.results.some((r) => r.url === "https://sx/1")).toBe(true);
+
+    spy.mockRestore();
   });
 });
 
