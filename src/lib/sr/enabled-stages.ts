@@ -12,4 +12,5 @@ export const BUILT_STAGES: readonly SrStageId[] = [
   "fulltext",
   "rob",
   "extract",
+  "prisma",
 ];

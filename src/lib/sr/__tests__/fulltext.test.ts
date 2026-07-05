@@ -18,18 +18,21 @@ describe("canRecordExclusion", () => {
 describe("deriveFullTextQueue", () => {
   const queue = deriveFullTextQueue(review, "you");
 
-  it("only assesses studies that advanced from title & abstract", () => {
+  it("only assesses the 124 studies that advanced from title & abstract", () => {
+    const assessed = review.candidates.filter((c) => c.fullText).length;
+    expect(assessed).toBe(124);
+    // The four visible tabs cover everything except the 12 already-included.
     expect(
       queue.tabs.toReview +
         queue.tabs.awaitingOther +
         queue.tabs.conflicts +
         queue.tabs.excluded,
-    ).toBe(124);
+    ).toBe(112);
   });
 
   it("counts the reviewer's tab buckets", () => {
     expect(queue.tabs).toEqual({
-      toReview: 55,
+      toReview: 43,
       conflicts: 6,
       awaitingOther: 40,
       excluded: 23,

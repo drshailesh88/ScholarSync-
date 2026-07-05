@@ -208,14 +208,23 @@ const EXCLUSION_REASONS = [
 
 /**
  * Seed the full-text state for a study that advanced from screening. The
- * advanced studies (ftIndex 0..123) split into a consistent set of buckets:
- * 55 to-review (incl. the DAPA-HF exemplar), 40 awaiting-other, 6 conflicts,
- * 23 excluded.
+ * 124 advanced studies (ftIndex 0..123) split into a consistent set of
+ * buckets so every downstream count agrees:
+ *   12 included · 23 excluded-with-reasons · 6 conflicts · 40 awaiting-other
+ *   · 43 still to review (incl. the DAPA-HF exemplar at ftIndex 0).
  */
 function fullTextStateFor(ftIndex: number): FullTextState | undefined {
   // ftIndex 0 is the DAPA-HF exemplar — left untouched (first to review).
   if (ftIndex === 0) return { decisions: [] };
-  if (ftIndex <= 23) {
+  if (ftIndex <= 12) {
+    return {
+      decisions: [
+        { reviewerId: "you", vote: "include" },
+        { reviewerId: "emma", vote: "include" },
+      ],
+    };
+  }
+  if (ftIndex <= 35) {
     return {
       decisions: [
         { reviewerId: "you", vote: "exclude", reasonCode: "wrong_population" },
@@ -223,7 +232,7 @@ function fullTextStateFor(ftIndex: number): FullTextState | undefined {
       ],
     };
   }
-  if (ftIndex <= 29) {
+  if (ftIndex <= 41) {
     return {
       decisions: [
         { reviewerId: "you", vote: "include" },
@@ -231,7 +240,7 @@ function fullTextStateFor(ftIndex: number): FullTextState | undefined {
       ],
     };
   }
-  if (ftIndex <= 69) {
+  if (ftIndex <= 81) {
     return { decisions: [{ reviewerId: "you", vote: "include" }] };
   }
   return { decisions: [] };
