@@ -11,6 +11,7 @@
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchEuropePMC } from "@/lib/search/sources/europepmc";
 import { searchArxiv } from "@/lib/search/sources/arxiv";
+import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchScopus } from "@/lib/search/sources/scopus";
 import { searchSpringer } from "@/lib/search/sources/springer";
 import { searchMedcptDense } from "@/lib/search/sources/medcpt-dense";
@@ -38,7 +39,7 @@ import { assessConfidence, type Confidence } from "@/lib/search/confidence";
 import { backfillPmidsByDoi } from "@/lib/search/pmid-backfill";
 import type { UnifiedSearchResult } from "@/types/search";
 
-export const SEARCH_SOURCES = ["pubmed", "europepmc", "scopus", "springer"] as const;
+export const SEARCH_SOURCES = ["pubmed", "europepmc", "scopus", "springer", "semantic_scholar"] as const;
 export type SearchSourceId = (typeof SEARCH_SOURCES)[number];
 
 /**
@@ -48,15 +49,18 @@ export type SearchSourceId = (typeof SEARCH_SOURCES)[number];
  * adds broad multidisciplinary coverage plus its own `citedby-count`; Springer
  * Nature adds book/journal full text and open-access PDFs. All four are
  * throttle-tolerant lexical lanes, each key-gated so an unconfigured lane stays
- * inert (missing_config) rather than degrading search. OpenAlex and Semantic
- * Scholar were removed from the pipeline; the owned MedCPT dense lane is the
- * recall backbone and always contributes (see the guaranteed-floor logic below).
+ * inert (missing_config) rather than degrading search. Semantic Scholar (~200M
+ * all-field papers) is re-added as a cross-domain lane that helps medicine AND
+ * non-medical — fail-open with its own circuit breaker, so it is a bonus source and
+ * never critical. The owned MedCPT dense lane remains the recall backbone and always
+ * contributes (see the guaranteed-floor logic below).
  */
 export const DEFAULT_SOURCES: SearchSourceId[] = [
   "pubmed",
   "europepmc",
   "scopus",
   "springer",
+  "semantic_scholar",
 ];
 
 /** Hard ceiling on results per search, shared across web and MCP transports. */
@@ -563,6 +567,25 @@ async function runLiteratureSearchUncached(
           yearEnd: params.yearTo,
         }).then(({ results, total, status }) => ({ source: "springer", results, total, status }))
       ).catch((e) => errorOutcome("springer", e instanceof Error ? e.message : "Springer failed"))
+    );
+  }
+
+  // Semantic Scholar (S2AG): ~200M all-field papers — a cross-domain lexical lane that
+  // helps medicine AND non-medical retrieval. Key-gated via SEMANTIC_SCHOLAR_API_KEY
+  // (works unauthenticated at a lower rate). Fail-open with its own circuit breaker and
+  // RRF-fused, so it is a BONUS source, never critical — an S2 outage/throttle just
+  // degrades the pool rather than breaking search (the lesson from its 2025 key death).
+  if (sources.includes("semantic_scholar")) {
+    pushLane(
+      "semantic_scholar",
+      withSourceTimeout(
+        "Semantic Scholar",
+        searchSemanticScholar(searchQuery, {
+          limit: poolPerSource,
+          yearStart: params.yearFrom,
+          yearEnd: params.yearTo,
+        }).then(({ results, total, status }) => ({ source: "semantic_scholar", results, total, status }))
+      ).catch((e) => errorOutcome("semantic_scholar", e instanceof Error ? e.message : "Semantic Scholar failed"))
     );
   }
 

@@ -239,4 +239,6 @@ const SOURCE_DESCRIPTIONS: Record<SearchSourceId, string> = {
     "Scopus (Elsevier) — broad multidisciplinary abstracts and citation counts",
   springer:
     "Springer Nature — journal and book full text with open-access PDF links",
+  semantic_scholar:
+    "Semantic Scholar — ~200M all-field papers with citation counts, spanning medicine and non-medical disciplines",
 };
