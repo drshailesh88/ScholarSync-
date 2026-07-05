@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type { SearchResponse } from "@/types/search";
 import { runLiteratureSearch } from "@/lib/search/run-search";
 import { federateNonAcademic } from "@/lib/search/web/federate";
+import { searchResultCache, buildCacheKey } from "@/lib/search/result-cache";
+import { nonAcademicCacheTtl, shouldCacheFederatedList } from "@/lib/search/web/cache-policy";
 import { searchYouTube } from "@/lib/search/sources/youtube";
 import { rerankResults } from "@/lib/search/rerank";
 import { diversifyForTab } from "@/lib/search/diversity";
@@ -171,29 +173,25 @@ async function rerankWebTabOnly(
  * preferences) the single-source path uses. The fused pool is already the full
  * available set, so there is no incremental re-fetch loop — we page over it.
  */
-async function fetchFederatedNonAcademicResults(
+/**
+ * The query-global, cacheable part of a non-academic search: the expensive fan-out
+ * (+ web-tab rerank), independent of the user's domain preferences and the page. This
+ * is what gets cached — every page and every user of the same query then shares one
+ * paid fan-out. Preferences, diversity, and paging are applied per-request afterwards.
+ */
+async function computeNonAcademicList(
   query: string,
   tab: "web" | "news" | "discussions" | "videos",
-  page: number,
-  perPage: number,
-  preferences: Awaited<ReturnType<typeof getDomainPreferences>>,
   timeRange?: "24h" | "week" | "month" | "year"
-): Promise<{
-  results: UnifiedSearchResult[];
-  total: number;
-  hasMore: boolean;
-  degraded: boolean;
-}> {
-  // Videos is a single-source tab (YouTube) — no federation/rerank/diversity, just
-  // YouTube's own relevance order paged through the shared response pipeline.
+): Promise<{ results: UnifiedSearchResult[]; degraded: boolean; primaryLed: boolean }> {
+  // Videos is a single-source tab (YouTube) — no federation/rerank; just YouTube's own
+  // relevance order. Caching it also shields the scarce 100-searches/day YouTube quota.
   if (tab === "videos") {
     const yt = await searchYouTube(query, { limit: MAX_NON_ACADEMIC_RESULTS });
-    const start = page * perPage;
     return {
-      results: yt.results.slice(start, start + perPage),
-      total: yt.results.length,
-      hasMore: yt.results.length > start + perPage,
+      results: yt.results,
       degraded: yt.status.status !== "ok" && yt.results.length === 0,
+      primaryLed: false,
     };
   }
 
@@ -211,16 +209,58 @@ async function fetchFederatedNonAcademicResults(
   const reranked = federation.primaryLed
     ? federation.results
     : await rerankWebTabOnly(query, federation.results, tab === "web");
-  const ranked = applyDomainPreferences(reranked, preferences);
-  const diversified = federation.primaryLed ? ranked : diversifyForTab(ranked, tab);
+  return { results: reranked, degraded: federation.degraded, primaryLed: federation.primaryLed };
+}
+
+async function fetchFederatedNonAcademicResults(
+  query: string,
+  tab: "web" | "news" | "discussions" | "videos",
+  page: number,
+  perPage: number,
+  preferences: Awaited<ReturnType<typeof getDomainPreferences>>,
+  timeRange?: "24h" | "week" | "month" | "year"
+): Promise<{
+  results: UnifiedSearchResult[];
+  total: number;
+  hasMore: boolean;
+  degraded: boolean;
+}> {
+  // Cache the query-global fan-out (keyed by tab+query+timeRange, per-tab TTL). The
+  // paid tabs (Exa/Brave/NewsData/YouTube) were previously uncached — this is the
+  // single biggest cost lever. Degraded/empty responses are never cached.
+  const cacheKey = buildCacheKey("websearch:v1", { tab, query, timeRange: timeRange ?? "" });
+  const { value: list } = await searchResultCache.getOrCompute(
+    cacheKey,
+    () => computeNonAcademicList(query, tab, timeRange),
+    {
+      ttlSeconds: nonAcademicCacheTtl(tab),
+      staleSeconds: 6 * 3600,
+      shouldCache: shouldCacheFederatedList,
+    }
+  );
 
   const start = page * perPage;
-  const paged = diversified.slice(start, start + perPage);
+
+  // Videos: raw YouTube order, paged — no preferences/diversity (unchanged behavior).
+  if (tab === "videos") {
+    return {
+      results: list.results.slice(start, start + perPage),
+      total: list.results.length,
+      hasMore: list.results.length > start + perPage,
+      degraded: list.degraded,
+    };
+  }
+
+  // Per-request (cheap, user-specific): domain preferences + diversity + paging run
+  // OUTSIDE the cache so the cache stays query-global (high hit rate, no per-user
+  // pollution). Primary-led lists keep their native order (no diversity), as before.
+  const ranked = applyDomainPreferences(list.results, preferences);
+  const diversified = list.primaryLed ? ranked : diversifyForTab(ranked, tab);
   return {
-    results: paged,
+    results: diversified.slice(start, start + perPage),
     total: diversified.length,
     hasMore: diversified.length > start + perPage,
-    degraded: federation.degraded,
+    degraded: list.degraded,
   };
 }
 
