@@ -147,9 +147,10 @@ describe("searchArxiv", () => {
     // First and third entries have DOIs
     expect(results[0].doi).toBe("10.1103/PhysRevLett.130.123401");
     expect(results[2].doi).toBe("10.1007/s11128-023-03891-x");
-    // Second and fourth entries have no DOI
-    expect(results[1].doi).toBeUndefined();
-    expect(results[3].doi).toBeUndefined();
+    // Second and fourth entries have no PUBLISHED DOI → fall back to the canonical
+    // arXiv DOI (10.48550/arXiv.<id>, version stripped) so dedup + matching still work.
+    expect(results[1].doi).toBe("10.48550/arXiv.2305.67890");
+    expect(results[3].doi).toMatch(/^10\.48550\/arXiv\./);
   });
 
   it("extracts fieldsOfStudy from category terms", async () => {

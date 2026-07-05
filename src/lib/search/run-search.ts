@@ -10,6 +10,7 @@
 
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchEuropePMC } from "@/lib/search/sources/europepmc";
+import { searchArxiv } from "@/lib/search/sources/arxiv";
 import { searchScopus } from "@/lib/search/sources/scopus";
 import { searchSpringer } from "@/lib/search/sources/springer";
 import { searchMedcptDense } from "@/lib/search/sources/medcpt-dense";
@@ -562,6 +563,23 @@ async function runLiteratureSearchUncached(
           yearEnd: params.yearTo,
         }).then(({ results, total, status }) => ({ source: "springer", results, total, status }))
       ).catch((e) => errorOutcome("springer", e instanceof Error ? e.message : "Springer failed"))
+    );
+  }
+
+  // arXiv: preprint lane for NON-biomedical disciplines (CS / physics / math / stats /
+  // econ), where the landmark papers are arXiv-native and no other lane indexes them
+  // (measured: ResNet / AlexNet / word2vec / LASSO were missed by every lane). Free,
+  // no key, stable public infrastructure. Gated to the general reranker profile so the
+  // live biomedical path (PubMed-covered) is unchanged; fail-open, RRF-fused.
+  if (rerankProfileForDomain(params.domainId) === "general") {
+    pushLane(
+      "arxiv",
+      withSourceTimeout(
+        "arXiv",
+        searchArxiv(searchQuery, { maxResults: poolPerSource }).then(
+          ({ results, total }) => ({ source: "arxiv", results, total, status: okStatus() })
+        )
+      ).catch((e) => errorOutcome("arxiv", e instanceof Error ? e.message : "arXiv failed"))
     );
   }
 
