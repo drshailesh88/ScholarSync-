@@ -45,6 +45,29 @@ export interface ExclusionReason {
   parent?: string;
 }
 
+/** RoB 2 per-domain and overall judgment (the traffic light). */
+export type RobJudgment = "low" | "some_concerns" | "high";
+
+export type RobSignalAnswer =
+  | "yes"
+  | "probably_yes"
+  | "probably_no"
+  | "no"
+  | "no_information";
+
+export interface RobDomainAssessment {
+  domainId: string;
+  judgment?: RobJudgment;
+  signallingAnswers: Record<string, RobSignalAnswer>;
+  /** AI-suggested justification drawn from the methods text. */
+  aiJustification?: string;
+}
+
+export interface RobAssessment {
+  candidateId: string;
+  domains: RobDomainAssessment[];
+}
+
 /**
  * Dual-reviewer routing outcome for a study at title & abstract screening.
  * - `advanced`   — both votes positive → moves to full-text review
@@ -143,6 +166,7 @@ export interface SrReview {
   reviewers: Reviewer[];
   criteria: ReviewCriteria;
   exclusionReasons: ExclusionReason[];
+  robAssessments: RobAssessment[];
   batches: ImportBatch[];
   candidates: Candidate[];
 }

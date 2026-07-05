@@ -4,6 +4,8 @@ import { canRecordExclusion } from "@/lib/sr/fulltext";
 import type {
   Candidate,
   FullTextVote,
+  RobJudgment,
+  RobSignalAnswer,
   SrReview,
   TaVote,
 } from "@/lib/sr/types";
@@ -32,6 +34,17 @@ interface SrStoreState {
     vote: FullTextVote,
     reasonCode?: string,
   ) => void;
+  answerRobSignal: (
+    candidateId: string,
+    domainId: string,
+    questionKey: string,
+    answer: RobSignalAnswer,
+  ) => void;
+  setRobJudgment: (
+    candidateId: string,
+    domainId: string,
+    judgment: RobJudgment,
+  ) => void;
 }
 
 function updateCandidate(
@@ -43,6 +56,29 @@ function updateCandidate(
     ...review,
     candidates: review.candidates.map((candidate) =>
       candidate.id === candidateId ? update(candidate) : candidate,
+    ),
+  };
+}
+
+function updateRobDomain(
+  review: SrReview,
+  candidateId: string,
+  domainId: string,
+  update: (
+    domain: SrReview["robAssessments"][number]["domains"][number],
+  ) => SrReview["robAssessments"][number]["domains"][number],
+): SrReview {
+  return {
+    ...review,
+    robAssessments: review.robAssessments.map((assessment) =>
+      assessment.candidateId === candidateId
+        ? {
+            ...assessment,
+            domains: assessment.domains.map((domain) =>
+              domain.domainId === domainId ? update(domain) : domain,
+            ),
+          }
+        : assessment,
     ),
   };
 }
@@ -133,6 +169,31 @@ export const useSrStore = create<SrStoreState>((set, get) => ({
           },
         };
       }),
+    });
+  },
+
+  answerRobSignal: (candidateId, domainId, questionKey, answer) => {
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: updateRobDomain(review, candidateId, domainId, (domain) => ({
+        ...domain,
+        signallingAnswers: {
+          ...domain.signallingAnswers,
+          [questionKey]: answer,
+        },
+      })),
+    });
+  },
+
+  setRobJudgment: (candidateId, domainId, judgment) => {
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: updateRobDomain(review, candidateId, domainId, (domain) => ({
+        ...domain,
+        judgment,
+      })),
     });
   },
 

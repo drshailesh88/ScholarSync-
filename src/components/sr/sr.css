@@ -1247,6 +1247,155 @@
   color: var(--ink2);
 }
 
+/* ---- risk of bias (RoB 2) ---- */
+.sr-module .robhdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--accentln);
+  background: var(--accentbg);
+  border-radius: 11px;
+  padding: 13px 17px;
+  margin-top: 14px;
+}
+.sr-module .robhdr .nm {
+  font-size: 13px;
+  font-weight: 600;
+}
+.sr-module .robdomain {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--paper);
+  margin-bottom: 9px;
+  overflow: hidden;
+}
+.sr-module .robhead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 16px;
+  cursor: pointer;
+  width: 100%;
+  background: none;
+  border: 0;
+  font-family: var(--sans);
+  color: inherit;
+  text-align: left;
+}
+.sr-module .robhead .light {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex: none;
+}
+.sr-module .robhead .nm {
+  font-weight: 600;
+  font-size: 13px;
+}
+.sr-module .robhead .j {
+  margin-left: auto;
+  font-size: 11.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.sr-module .robhead .chev {
+  color: var(--muted);
+  display: inline-flex;
+  transition: transform var(--motion-micro) var(--ease-inout);
+}
+.sr-module .robdomain.open .robhead .chev {
+  transform: rotate(90deg);
+}
+.sr-module .robbody {
+  padding: 2px 16px 16px;
+  border-top: 1px solid var(--line2);
+}
+.sr-module .robq {
+  margin: 13px 0 0;
+}
+.sr-module .robq .qt {
+  font-size: 12.5px;
+  color: var(--ink3);
+}
+.sr-module .opts {
+  display: flex;
+  gap: 7px;
+  margin-top: 7px;
+  flex-wrap: wrap;
+}
+.sr-module .opt {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 11px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--ink3);
+  background: var(--paper);
+  font-family: var(--sans);
+}
+.sr-module .opt.sel {
+  background: var(--active);
+  border-color: var(--line);
+  color: var(--ink);
+  font-weight: 600;
+}
+.sr-module .robjust {
+  margin-top: 13px;
+  border: 1px solid var(--accentln);
+  background: var(--accentbg);
+  border-radius: 9px;
+  padding: 11px 13px;
+  font-size: 12px;
+  color: var(--ink3);
+  line-height: 1.55;
+}
+.sr-module .robjust b {
+  color: var(--ink);
+}
+.sr-module .studylist .sl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans);
+  color: inherit;
+}
+.sr-module .studylist .sl.on {
+  border-color: var(--line);
+  background: var(--active);
+}
+.sr-module .studylist .sl .lt {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex: none;
+}
+.sr-module .studylist .sl .st {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink2);
+  display: block;
+}
+.sr-module .studylist .sl .sy {
+  font-size: 11px;
+  color: var(--muted);
+  display: block;
+}
+.sr-module .studylist .sl .ov {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+}
+
 /* ---- import ledger & duplicate queue ---- */
 .sr-module .ledger {
   display: flex;

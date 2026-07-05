@@ -1,6 +1,8 @@
 import type {
   Candidate,
   FullTextState,
+  RobAssessment,
+  RobDomainAssessment,
   SrReview,
   TaVote,
   TaVoteRecord,
@@ -275,6 +277,45 @@ function reasoningFor(poolIndex: number, refId: number) {
   };
 }
 
+type RobJ = "low" | "some_concerns" | "high";
+
+/** Seed RoB 2 assessments for the four named exemplar studies, in display order. */
+function buildRobAssessments(idByRefId: Map<number, string>): RobAssessment[] {
+  const domainJudgments: Array<[number, RobJ[]]> = [
+    // EMPEROR-Preserved (Anker) → some concerns from missing outcome data.
+    [2241, ["low", "low", "some_concerns", "low", "low"]],
+    [1660, ["low", "low", "low", "low", "low"]], // DAPA-HF → low
+    [1904, ["low", "low", "low", "low", "low"]], // DELIVER → low
+    [2310, ["some_concerns", "high", "some_concerns", "low", "high"]], // meta → high
+  ];
+  const domainIds = [
+    "randomisation",
+    "deviations",
+    "missing",
+    "measurement",
+    "selection",
+  ];
+  const justifications: Record<string, string> = {
+    randomisation:
+      '"Computer-generated 1:1 randomisation, stratified by region and diabetes status; concealment via an interactive web system."',
+    missing:
+      '"Vital status was ascertained for 99.6% of participants; a small excess of withdrawals in the placebo group."',
+  };
+
+  return domainJudgments
+    .filter(([refId]) => idByRefId.has(refId))
+    .map(([refId, judgments]): RobAssessment => ({
+      candidateId: idByRefId.get(refId)!,
+      domains: domainIds.map((domainId, index): RobDomainAssessment => ({
+        domainId,
+        judgment: judgments[index],
+        signallingAnswers:
+          domainId === "randomisation" ? { "0": "yes", "1": "yes" } : {},
+        aiJustification: justifications[domainId],
+      })),
+    }));
+}
+
 function votesFor(poolIndex: number): TaVoteRecord[] {
   const { advanced, irrelevant, conflict } = TARGETS;
   const [a, b] = VOTER_PAIRS[poolIndex % VOTER_PAIRS.length];
@@ -375,6 +416,8 @@ export function createMockReview(): SrReview {
     }
   }
 
+  const idByRefId = new Map(candidates.map((c) => [c.refId, c.id]));
+
   return {
     id: MOCK_REVIEW_ID,
     title: "SGLT2 inhibitors & heart failure",
@@ -382,6 +425,7 @@ export function createMockReview(): SrReview {
     reviewers: REVIEWERS,
     criteria: CRITERIA,
     exclusionReasons: EXCLUSION_REASONS,
+    robAssessments: buildRobAssessments(idByRefId),
     batches: BATCHES.map(({ id, source, ai }) => ({
       id,
       source,
@@ -410,6 +454,7 @@ export function createEmptyReview(): SrReview {
     reviewers: REVIEWERS,
     criteria: CRITERIA,
     exclusionReasons: EXCLUSION_REASONS,
+    robAssessments: [],
     batches: [],
     candidates: [],
   };
