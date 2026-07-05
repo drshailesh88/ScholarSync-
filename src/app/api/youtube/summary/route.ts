@@ -3,8 +3,8 @@ import { isAIConfigured } from "@/lib/ai/models";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { createResultCache } from "@/lib/search/result-cache";
-import { fetchYouTubeTranscript } from "@/lib/search/sources/youtube-transcript";
-import { summarizeTranscript } from "@/lib/youtube/study-notes";
+import { fetchYouTubeTranscript, type TranscriptSegment } from "@/lib/search/sources/youtube-transcript";
+import { summarizeTranscript, type VideoStudyNotes } from "@/lib/youtube/study-notes";
 
 // Transcripts and their summaries are immutable per video → cache hard. First
 // request pays the Supadata + LLM cost; everyone after (any user) is a cache hit.
@@ -17,7 +17,7 @@ const VIDEO_ID_RE = /^[A-Za-z0-9_-]{6,20}$/;
 
 type SummaryPayload =
   | { error: "no_transcript" | "missing_config" | "summarize_failed" | "transcript_error"; message: string }
-  | { lang: string; transcript: string; summary: string; keyPoints: string[]; topics: string[] };
+  | { lang: string; availableLangs: string[]; transcript: string; segments: TranscriptSegment[]; notes: VideoStudyNotes };
 
 export async function POST(req: NextRequest) {
   let userId: string;
@@ -60,7 +60,13 @@ export async function POST(req: NextRequest) {
         if (!notes) {
           return { error: "summarize_failed", message: "Could not distill the transcript" };
         }
-        return { lang: t.transcript.lang, transcript: t.transcript.text, ...notes };
+        return {
+          lang: t.transcript.lang,
+          availableLangs: t.transcript.availableLangs,
+          transcript: t.transcript.text,
+          segments: t.transcript.segments,
+          notes,
+        };
       },
       { ttlSeconds: SUMMARY_TTL_SECONDS, shouldCache: (v) => !("error" in v) }
     );

@@ -17,8 +17,29 @@
   --color-brand-hover: var(--brand-hover);
   --color-library-accent: var(--library-accent);
   --color-library-accent-tint: var(--library-accent-tint);
+  /* Frozen design.md §2/§3 tokens (Slate) — used by new/reskinned surfaces. */
+  --color-paper: var(--paper);
+  --color-rail: var(--rail);
+  --color-line: var(--line);
+  --color-line2: var(--line2);
+  --color-active: var(--active);
+  --color-ink2: var(--ink2);
+  --color-ink3: var(--ink3);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accentbg: var(--accentbg);
+  --color-accentln: var(--accentln);
+  --color-inc: var(--inc);
+  --color-incbg: var(--incbg);
+  --color-may: var(--may);
+  --color-maybg: var(--maybg);
+  --color-exc: var(--exc);
+  --color-excbg: var(--excbg);
+  --color-con: var(--con);
+  --color-conbg: var(--conbg);
   --font-sans: var(--font-sans-family);
   --font-serif: var(--font-serif-family);
+  --font-mono: var(--font-mono-family);
 }
 
 :root {
@@ -27,7 +48,7 @@
   --background: #FAFAF8;
   --surface: #FAFAF8;
   --surface-raised: #F0F0EC;
-  --ink: rgb(55, 53, 47);
+  --ink: #1A1D21;
   --ink-muted: rgba(55, 53, 47, 0.5);
   --border: rgba(55, 53, 47, 0.08);
   --border-color: rgba(55, 53, 47, 0.08);
@@ -43,7 +64,25 @@
   --trust-other: rgba(55, 53, 47, 0.2);
   --font-sans-family: "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif;
   --font-serif-family: "Source Serif 4", "Merriweather", Georgia, serif;
+  --font-mono-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --editor-selection: rgba(66, 133, 244, 0.2);
+
+  /* --- Frozen design.md §2 tokens (Slate, LIGHT) — the app's canonical skin --- */
+  --ink2: #23262B;
+  --ink3: #3a3f47;
+  --muted: #9098a3;
+  --paper: #FCFCFD;
+  --rail: #F8F8FA;
+  --line: #E4E5E9;
+  --line2: #EEEFF2;
+  --active: #ECEDF0;
+  --accent: #3D5A80;   /* AI features + links ONLY */
+  --accentbg: #ECF0F5;
+  --accentln: #C9D5E3;
+  --inc: #2F6F4F; --incbg: #E7F0EA; --incln: #BCD6C6;  /* include / verified (Jade) */
+  --may: #8A6D3B; --maybg: #F3ECDD; --mayln: #E0D2B4;  /* maybe / caution (Amber) */
+  --exc: #9B4A3A; --excbg: #F2E3DF; --excln: #E2C4BB;  /* exclude / error (Tomato) */
+  --con: #7A4A86; --conbg: #F0E8F3; --conln: #DEC9E4;  /* conflict / decision (Violet) */
 
   /* --- Library Module Accent Colors --- */
   --library-accent: #4A7AB5;
@@ -61,11 +100,28 @@
   --background: #1C1B1A;
   --surface: #1C1B1A;
   --surface-raised: #2A2826;
-  --ink: #EDEBE8;
+  --ink: #ECEDEF;
   --ink-muted: #A8A29E;
   --border: rgba(255, 255, 255, 0.10);
   --border-color: rgba(255, 255, 255, 0.10);
   --border-subtle: rgba(255, 255, 255, 0.06);
+
+  /* --- Frozen design.md §3 tokens (Slate, DARK) --- */
+  --ink2: #E2E3E6;
+  --ink3: #C4C7CC;
+  --muted: #9BA1AC;
+  --paper: #0E0F11;
+  --rail: #121316;
+  --line: #292B30;
+  --line2: #202226;
+  --active: #1E2024;
+  --accent: #8BA6C9;
+  --accentbg: #1A2230;
+  --accentln: #2A3646;
+  --inc: #5FB389; --incbg: #16261E; --incln: #244634;
+  --may: #D8B66A; --maybg: #2A2417; --mayln: #453B22;
+  --exc: #E08A78; --excbg: #2A1B17; --excln: #46312A;
+  --con: #B79BD0; --conbg: #241C2A; --conln: #3C3145;
   --glass: rgba(28, 27, 26, 0.85);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glow: #8B7BF4;
