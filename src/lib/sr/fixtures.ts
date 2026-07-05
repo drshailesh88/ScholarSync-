@@ -24,18 +24,93 @@ const REVIEWERS = [
   { id: "you", name: "Shailesh S.", initials: "SS" },
 ];
 
+const PROTOCOL = {
+  researchQuestion:
+    "In adults with heart failure, do SGLT2 inhibitors reduce heart-failure hospitalisation and cardiovascular mortality across the ejection-fraction spectrum?",
+  pico: {
+    population: "Adults (≥18y) with chronic heart failure, any ejection fraction",
+    intervention: "An SGLT2 inhibitor (e.g. empagliflozin, dapagliflozin)",
+    comparator: "Placebo or standard care",
+    outcome: "HF hospitalisation and cardiovascular mortality",
+    studyDesign: "Randomised controlled trials",
+  },
+  status: "draft" as const,
+  criteria: [
+    {
+      id: "inc-population",
+      kind: "include" as const,
+      label: "Adults with heart failure",
+      instruction:
+        "Include studies enrolling adults (≥18y) with a diagnosis of heart failure, any ejection fraction.",
+      answerStructure: "yes_no_maybe" as const,
+    },
+    {
+      id: "inc-intervention",
+      kind: "include" as const,
+      label: "SGLT2-inhibitor intervention",
+      instruction:
+        "Include studies where the intervention is an SGLT2 inhibitor (empagliflozin, dapagliflozin, canagliflozin, …).",
+      answerStructure: "yes_no_maybe" as const,
+    },
+    {
+      id: "inc-design",
+      kind: "include" as const,
+      label: "Randomised controlled trial",
+      instruction: "Include randomised controlled trials only.",
+      answerStructure: "yes_no_maybe" as const,
+    },
+    {
+      id: "inc-outcome",
+      kind: "include" as const,
+      label: "Reports HF hospitalisation or mortality",
+      instruction:
+        "Include studies reporting heart-failure hospitalisation or cardiovascular / all-cause mortality.",
+      answerStructure: "yes_no_maybe" as const,
+    },
+    {
+      id: "exc-abstract",
+      kind: "exclude" as const,
+      label: "Conference abstract only",
+      instruction: "Exclude records available only as a conference abstract.",
+      answerStructure: "yes_no_maybe" as const,
+    },
+    {
+      id: "exc-nonhuman",
+      kind: "exclude" as const,
+      label: "Non-human / mechanistic",
+      instruction: "Exclude non-human, in-vitro, or purely mechanistic studies.",
+      answerStructure: "yes_no_maybe" as const,
+    },
+    {
+      id: "exc-egfr",
+      kind: "exclude" as const,
+      label: "eGFR <20 populations",
+      instruction: "Exclude studies restricted to populations with eGFR below 20.",
+      answerStructure: "yes_no_maybe" as const,
+    },
+  ],
+};
+
+const EMPTY_PROTOCOL = {
+  researchQuestion: "",
+  pico: {
+    population: "",
+    intervention: "",
+    comparator: "",
+    outcome: "",
+    studyDesign: "",
+  },
+  status: "draft" as const,
+  criteria: [],
+};
+
 const CRITERIA = {
-  inclusion: [
-    "Adults with heart failure",
-    "SGLT2-inhibitor intervention",
-    "Randomised controlled trial",
-    "Reports HF hospitalisation or mortality",
-  ],
-  exclusion: [
-    "Conference abstract only",
-    "Non-human / mechanistic",
-    "eGFR <20 populations",
-  ],
+  inclusion: PROTOCOL.criteria
+    .filter((c) => c.kind === "include")
+    .map((c) => c.label),
+  exclusion: PROTOCOL.criteria
+    .filter((c) => c.kind === "exclude")
+    .map((c) => c.label),
   highlightInclude: [
     "SGLT2 inhibitors",
     "heart failure",
@@ -526,6 +601,7 @@ export function createMockReview(): SrReview {
     title: "SGLT2 inhibitors & heart failure",
     shortTitle: "SGLT2i & HF",
     reviewers: REVIEWERS,
+    protocol: PROTOCOL,
     criteria: CRITERIA,
     exclusionReasons: EXCLUSION_REASONS,
     robAssessments: buildRobAssessments(idByRefId),
@@ -558,6 +634,7 @@ export function createEmptyReview(): SrReview {
     title: "Untitled systematic review",
     shortTitle: "New review",
     reviewers: REVIEWERS,
+    protocol: EMPTY_PROTOCOL,
     criteria: CRITERIA,
     exclusionReasons: EXCLUSION_REASONS,
     robAssessments: [],

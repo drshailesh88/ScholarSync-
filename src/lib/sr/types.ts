@@ -133,6 +133,39 @@ export interface ReviewCriteria {
 }
 
 /**
+ * Elicit's "column-as-a-question" output shape. Eligibility criteria are
+ * `yes_no_maybe`; extraction columns may be free text or a controlled list.
+ */
+export type AnswerStructure = "any" | "specified" | "yes_no_maybe";
+
+/** One eligibility criterion — a screening question the AI evaluates. */
+export interface EligibilityCriterion {
+  id: string;
+  kind: "include" | "exclude";
+  label: string;
+  /** Natural-language instruction the AI screens against (Elicit primitive). */
+  instruction: string;
+  answerStructure: AnswerStructure;
+}
+
+export interface Pico {
+  population: string;
+  intervention: string;
+  comparator: string;
+  outcome: string;
+  studyDesign: string;
+}
+
+/** SR1 — the review protocol: research question, AI-drafted PICO, criteria. */
+export interface Protocol {
+  researchQuestion: string;
+  pico: Pico;
+  criteria: EligibilityCriterion[];
+  /** `draft` until the human approves/locks every field. */
+  status: "draft" | "approved";
+}
+
+/**
  * Duplicate detection state (Covidence model: match on title · year ·
  * volume · authors). High-confidence pairs auto-merge; uncertain pairs
  * queue for human review and stay in the pool until merged.
@@ -186,6 +219,7 @@ export interface SrReview {
   title: string;
   shortTitle: string;
   reviewers: Reviewer[];
+  protocol: Protocol;
   criteria: ReviewCriteria;
   exclusionReasons: ExclusionReason[];
   robAssessments: RobAssessment[];

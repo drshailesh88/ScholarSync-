@@ -82,6 +82,7 @@ export function SrShell({
         items={items}
         projectTitle={projectTitle}
         projectMeta={projectMeta}
+        reviewId={reviewId}
       />
       <main className="canvas">
         {offline ? (

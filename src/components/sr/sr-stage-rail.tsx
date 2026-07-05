@@ -8,6 +8,8 @@ interface SrStageRailProps {
   items: StageRailItem[];
   projectTitle: string;
   projectMeta: string;
+  /** Review id, used to link the settings-side protocol editor. */
+  reviewId?: string;
 }
 
 function StageBadge({ item }: { item: StageRailItem }) {
@@ -69,6 +71,7 @@ export function SrStageRail({
   items,
   projectTitle,
   projectMeta,
+  reviewId,
 }: SrStageRailProps) {
   const [summary, ...stages] = items;
   const prismaItem = items.find((item) => item.id === "prisma");
@@ -94,6 +97,9 @@ export function SrStageRail({
       <div className="railfoot">
         {prismaItem?.href ? <Link href={prismaItem.href}>PRISMA</Link> : null}
         {exportItem?.href ? <Link href={exportItem.href}>Export</Link> : null}
+        {reviewId ? (
+          <Link href={`/systematic-review/${reviewId}/protocol`}>Settings</Link>
+        ) : null}
       </div>
     </aside>
   );

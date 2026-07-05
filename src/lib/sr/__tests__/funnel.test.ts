@@ -34,6 +34,18 @@ function review(candidates: Candidate[]): SrReview {
       { id: "emma", name: "Emma Reyes", initials: "ER" },
       { id: "kat", name: "Katherine Ng", initials: "KN" },
     ],
+    protocol: {
+      researchQuestion: "",
+      pico: {
+        population: "",
+        intervention: "",
+        comparator: "",
+        outcome: "",
+        studyDesign: "",
+      },
+      criteria: [],
+      status: "draft",
+    },
     criteria: {
       inclusion: [],
       exclusion: [],

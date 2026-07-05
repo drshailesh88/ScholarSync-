@@ -115,6 +115,54 @@ describe("sr-store", () => {
     expect(field.finalValue).toBe("5,988");
   });
 
+  it("edits the research question and PICO fields on the protocol", () => {
+    store().setResearchQuestion("New question about SGLT2i");
+    store().setPicoField("population", "Adults with HFpEF");
+    const p = store().review!.protocol;
+    expect(p.researchQuestion).toBe("New question about SGLT2i");
+    expect(p.pico.population).toBe("Adults with HFpEF");
+  });
+
+  it("edits a criterion's label, instruction, and answer structure", () => {
+    store().updateCriterion("inc-design", {
+      instruction: "RCTs and quasi-RCTs.",
+      answerStructure: "specified",
+    });
+    const c = store().review!.protocol.criteria.find(
+      (x) => x.id === "inc-design",
+    )!;
+    expect(c.instruction).toBe("RCTs and quasi-RCTs.");
+    expect(c.answerStructure).toBe("specified");
+  });
+
+  it("adds a criterion and keeps the screening criteria in sync", () => {
+    const before = store().review!.protocol.criteria.length;
+    store().addCriterion({
+      kind: "include",
+      label: "Human participants",
+      instruction: "Human studies only.",
+      answerStructure: "yes_no_maybe",
+    });
+    const review = store().review!;
+    expect(review.protocol.criteria).toHaveLength(before + 1);
+    // The screening panel derives from the protocol — one source of truth.
+    expect(review.criteria.inclusion).toContain("Human participants");
+  });
+
+  it("removes a criterion and updates the derived screening criteria", () => {
+    store().removeCriterion("exc-egfr");
+    const review = store().review!;
+    expect(
+      review.protocol.criteria.some((c) => c.id === "exc-egfr"),
+    ).toBe(false);
+    expect(review.criteria.exclusion).not.toContain("eGFR <20 populations");
+  });
+
+  it("approving the protocol locks it", () => {
+    store().approveProtocol();
+    expect(store().review!.protocol.status).toBe("approved");
+  });
+
   it("undoing an import removes the whole batch from the review", () => {
     store().undoImport("batch-ai");
 

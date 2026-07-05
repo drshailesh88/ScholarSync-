@@ -1,9 +1,13 @@
 import { create } from "zustand";
 import { getReviewById } from "@/lib/sr/fixtures";
 import { canRecordExclusion } from "@/lib/sr/fulltext";
+import { deriveScreeningCriteria } from "@/lib/sr/protocol";
 import type {
   Candidate,
+  EligibilityCriterion,
   FullTextVote,
+  Pico,
+  Protocol,
   RobJudgment,
   RobSignalAnswer,
   SrReview,
@@ -50,6 +54,15 @@ interface SrStoreState {
     fieldId: string,
     value: string,
   ) => void;
+  setResearchQuestion: (question: string) => void;
+  setPicoField: (key: keyof Pico, value: string) => void;
+  updateCriterion: (
+    criterionId: string,
+    patch: Partial<Omit<EligibilityCriterion, "id">>,
+  ) => void;
+  addCriterion: (criterion: Omit<EligibilityCriterion, "id">) => void;
+  removeCriterion: (criterionId: string) => void;
+  approveProtocol: () => void;
 }
 
 function updateCandidate(
@@ -62,6 +75,31 @@ function updateCandidate(
     candidates: review.candidates.map((candidate) =>
       candidate.id === candidateId ? update(candidate) : candidate,
     ),
+  };
+}
+
+function withProtocol(
+  review: SrReview,
+  patch: Partial<Protocol>,
+): SrReview {
+  return { ...review, protocol: { ...review.protocol, ...patch } };
+}
+
+/** Update the protocol criteria and re-derive the screening panel's criteria. */
+function withCriteria(
+  review: SrReview,
+  criteria: EligibilityCriterion[],
+): SrReview {
+  const protocol = { ...review.protocol, criteria };
+  const derived = deriveScreeningCriteria(protocol);
+  return {
+    ...review,
+    protocol,
+    criteria: {
+      ...review.criteria,
+      inclusion: derived.inclusion,
+      exclusion: derived.exclusion,
+    },
   };
 }
 
@@ -200,6 +238,64 @@ export const useSrStore = create<SrStoreState>((set, get) => ({
         judgment,
       })),
     });
+  },
+
+  setResearchQuestion: (question) => {
+    const { review } = get();
+    if (!review) return;
+    set({ review: withProtocol(review, { researchQuestion: question }) });
+  },
+
+  setPicoField: (key, value) => {
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: withProtocol(review, {
+        pico: { ...review.protocol.pico, [key]: value },
+      }),
+    });
+  },
+
+  updateCriterion: (criterionId, patch) => {
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: withCriteria(
+        review,
+        review.protocol.criteria.map((c) =>
+          c.id === criterionId ? { ...c, ...patch } : c,
+        ),
+      ),
+    });
+  },
+
+  addCriterion: (criterion) => {
+    const { review } = get();
+    if (!review) return;
+    const id = `crit-${review.protocol.criteria.length + 1}-${criterion.kind}`;
+    set({
+      review: withCriteria(review, [
+        ...review.protocol.criteria,
+        { ...criterion, id },
+      ]),
+    });
+  },
+
+  removeCriterion: (criterionId) => {
+    const { review } = get();
+    if (!review) return;
+    set({
+      review: withCriteria(
+        review,
+        review.protocol.criteria.filter((c) => c.id !== criterionId),
+      ),
+    });
+  },
+
+  approveProtocol: () => {
+    const { review } = get();
+    if (!review) return;
+    set({ review: withProtocol(review, { status: "approved" }) });
   },
 
   resolveExtractionCell: (candidateId, fieldId, value) => {
