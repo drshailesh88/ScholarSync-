@@ -1247,6 +1247,151 @@
   color: var(--ink2);
 }
 
+/* ---- report ---- */
+.sr-module .report {
+  max-width: 720px;
+}
+.sr-module .rtitle {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.4px;
+  margin-top: 10px;
+}
+.sr-module .rmeta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 12px;
+  font-family: var(--mono);
+}
+.sr-module .rlead {
+  font-size: 15px;
+  color: var(--ink2);
+  line-height: 1.75;
+  margin-top: 18px;
+  border-left: 3px solid var(--line);
+  padding: 4px 0 4px 18px;
+}
+.sr-module .rlead .lb {
+  font-weight: 600;
+}
+.sr-module .rh {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 30px 0 4px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.sr-module .rp {
+  font-size: 14.5px;
+  color: var(--ink2);
+  line-height: 1.8;
+  margin-top: 12px;
+}
+.sr-module .ci {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--accent);
+  background: var(--accentbg);
+  border: 1px solid var(--accentln);
+  border-radius: 3px;
+  padding: 0 3px;
+  cursor: pointer;
+  vertical-align: super;
+}
+.sr-module .rtbl {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 12px;
+}
+.sr-module .rtr {
+  display: grid;
+  grid-template-columns: 1.5fr 0.8fr 1fr 0.7fr 0.9fr;
+}
+.sr-module .rtr > div {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line2);
+  border-right: 1px solid var(--line2);
+}
+.sr-module .rtr > div:last-child {
+  border-right: none;
+}
+.sr-module .rtr:last-child > div {
+  border-bottom: none;
+}
+.sr-module .rtr.h > div {
+  background: var(--rail);
+  font-size: 9.5px;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.sr-module .rtr .mono {
+  font-family: var(--mono);
+}
+
+/* ---- export ---- */
+.sr-module .exgrid {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+}
+.sr-module .excard {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 18px;
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  background: var(--paper);
+  font-family: var(--sans);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.sr-module .excard:hover {
+  background: var(--active);
+}
+.sr-module .excard .ic {
+  color: var(--ink3);
+  display: inline-flex;
+}
+.sr-module .excard .t {
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 10px;
+}
+.sr-module .excard .m {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.sr-module .note {
+  border: 1px solid var(--accentln);
+  background: var(--accentbg);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-top: 18px;
+}
+.sr-module .note b {
+  font-size: 13px;
+  color: var(--ink);
+}
+.sr-module .note p {
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 1.65;
+  margin-top: 6px;
+}
+
 /* ---- PRISMA flow ---- */
 .sr-module .prisma {
   display: flex;
