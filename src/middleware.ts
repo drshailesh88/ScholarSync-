@@ -11,7 +11,7 @@ const csp = [
   "img-src 'self' data: blob: https://img.clerk.com https://*.clerk.accounts.dev https://*.googleusercontent.com",
   "font-src 'self' data: https://*.clerk.accounts.dev",
   "connect-src 'self' https://api.clerk.io https://*.clerk.accounts.dev https://api.anthropic.com https://api.openai.com https://eutils.ncbi.nlm.nih.gov https://api.semanticscholar.org https://api.openalex.org https://api.copyleaks.com https://checkout.razorpay.com https://lumberjack.razorpay.com https://*.upstash.io https://*.sentry.io https://*.ingest.sentry.io https://*.i.posthog.com https://us.i.posthog.com",
-  "frame-src https://checkout.razorpay.com https://accounts.clerk.dev https://*.clerk.accounts.dev",
+  "frame-src https://checkout.razorpay.com https://accounts.clerk.dev https://*.clerk.accounts.dev https://www.youtube.com https://www.youtube-nocookie.com",
   "worker-src 'self' blob:",
 ].join("; ");
 
