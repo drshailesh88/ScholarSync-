@@ -142,9 +142,16 @@ function dedupScore(top: WebEvalItem[]): number {
 
 export function scoreTab(items: WebEvalItem[], q: WebBenchmarkQuery, now: number): TabScore {
   const top = items.slice(0, 10);
+  // Relevance is ORDERING-AWARE: nDCG@10 (rank-discounted) rather than recall@10
+  // (set membership). A set-based gate ties a must-have at rank 1 with one at rank 10
+  // and so cannot credit a reranker that improves ORDER — the reason the web reranker
+  // falsely "regressed" the gate. nDCG rewards ranking gold higher while still
+  // penalizing misses (its idcg normalization). recall@10 + mrr stay in `details`.
   const recall = recallAtK(items, q.mustHaves, 10) ?? 0;
+  const ndcg = ndcgAtK(items, q.mustHaves, 10) ?? 0;
+  const rr = mrr(items, q.mustHaves) ?? 0;
   const dimensions: Record<DimensionKey, number> = {
-    relevance: recall * 10,
+    relevance: ndcg * 10,
     authority: authorityScore(top),
     recency: recencyScore(top, q.tab, now),
     diversity: diversityScore(top),
@@ -160,7 +167,7 @@ export function scoreTab(items: WebEvalItem[], q: WebBenchmarkQuery, now: number
         dimensions.dedup * w.dedup) * 10,
     ) / 10;
   const details = [
-    `recall@10=${(recall * 100).toFixed(0)}% (${q.mustHaves.length} must-haves)`,
+    `ndcg@10=${(ndcg * 100).toFixed(0)}% recall@10=${(recall * 100).toFixed(0)}% mrr=${rr.toFixed(2)} (${q.mustHaves.length} must-haves)`,
     `authority=${dimensions.authority.toFixed(1)} recency=${dimensions.recency.toFixed(1)} diversity=${dimensions.diversity.toFixed(1)} dedup=${dimensions.dedup.toFixed(1)}`,
   ];
   return { dimensions, composite, pass: composite >= PASS_THRESHOLD, details };
