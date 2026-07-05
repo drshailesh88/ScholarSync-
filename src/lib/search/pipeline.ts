@@ -21,7 +21,6 @@ import {
 } from "./quality-ranker";
 import { enrichStudyTypes } from "./study-type-detector";
 import { getEvidenceLevel } from "./evidence-level";
-import { demoteSecondaryTrialResults } from "./trial-ranking";
 import { diversifyTopK } from "./diversity";
 
 const STOPWORDS = new Set([
@@ -305,12 +304,11 @@ export function rankAndAnnotate(
   // exact-match boosting, gated tightly so only verbatim-title queries trigger.
   const boosted = boostExactTitle(annotated, opts.query);
 
-  // Trial-acronym lookup: float the PRIMARY trial report above its meta-analyses,
-  // sub-studies, and follow-ups (which out-score it on citations/recency). Only
-  // raises the primary, never lowers it. Stable within groups.
-  const trialOrdered = opts.isTrialLookup
-    ? demoteSecondaryTrialResults(boosted)
-    : boosted;
+  // Trial secondary-report demotion RETIRED (2026-07): its title-marker table
+  // ("registry", "N-year", "economic outcomes") was reverse-engineered from specific
+  // benchmark trials. The restored citation signal already floats a trial's primary
+  // report (heavily cited) above its sub-studies; kept out of the path pending deletion.
+  const trialOrdered = boosted;
 
   // Guideline lookup: float the authoritative guideline document (newest version
   // first) above primary literature. Only raises guidelines; non-guideline order

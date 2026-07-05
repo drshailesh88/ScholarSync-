@@ -1,6 +1,5 @@
 import type { UnifiedSearchResult, EvidenceLevel } from "@/types/search";
 import { lookupJournalQuality } from "./journal-quality";
-import { entityDriftPenalty } from "./entity-drift";
 
 // ── Configuration ───────────────────────────────────────────────────
 
@@ -370,15 +369,16 @@ function scoreResult(r: UnifiedSearchResult, ctx: ScoringContext): ScoredResult 
     c.journalWeight * signals.journal +
     c.rrfWeight * signals.rrf +
     c.relevanceWeight * signals.relevance;
-  // Gently demote (never drop) a result whose title is about a different subtype
-  // or specific drug than the query specifies — drift the cross-encoder cannot
-  // discriminate. The multiplier is recorded for the ranking trace.
-  signals.entityDrift = ctx.rawQuery ? entityDriftPenalty(ctx.rawQuery, r) : 1;
+  // Entity-drift penalty RETIRED (2026-07): its hardcoded drug/subtype tables were
+  // fit to cardiology/endo/onc benchmark queries and don't transfer to other domains
+  // (empty tables → no effect). The restored citation signal + whole-pool rerank now
+  // do the general work; kept as a neutral trace field (always 1) pending deletion.
+  signals.entityDrift = 1;
   // The gate is SIGNAL-AWARE: a model rerankScore is gated at the calibrated 0.45
   // floor; a lexical overlap is gated more strictly so generic word matches cannot
   // pass as cross-encoder-grade relevance.
   const composite =
-    weighted * signals.entityDrift * relevanceGate(signals.relevance, relevance.source);
+    weighted * relevanceGate(signals.relevance, relevance.source);
   return { result: r, composite, signals };
 }
 
