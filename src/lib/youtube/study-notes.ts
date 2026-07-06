@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { getSmallModel } from "@/lib/ai/models";
+import { getFastNotesModel } from "@/lib/ai/models";
 import type { YouTubeTranscript } from "@/lib/search/sources/youtube-transcript";
 
 /** Every note element carries a `timestamp` in SECONDS → seeks the video (the atomic unit). */
@@ -115,7 +115,7 @@ export async function summarizeTranscript(
   transcript: YouTubeTranscript
 ): Promise<VideoStudyNotes | null> {
   const { text } = await generateText({
-    model: getSmallModel(),
+    model: getFastNotesModel(),
     system: SYSTEM_PROMPT,
     prompt: `Transcript:\n${toTimestampedText(transcript)}`,
     maxOutputTokens: 2000,

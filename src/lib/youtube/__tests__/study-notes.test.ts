@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 
 const generateText = vi.fn();
 vi.mock("ai", () => ({ generateText: (args: unknown) => generateText(args) }));
-vi.mock("@/lib/ai/models", () => ({ getSmallModel: () => ({ __id: "small" }) }));
+vi.mock("@/lib/ai/models", () => ({ getFastNotesModel: () => ({ __id: "fast" }) }));
 
 import { parseStudyNotes, summarizeTranscript } from "../study-notes";
 

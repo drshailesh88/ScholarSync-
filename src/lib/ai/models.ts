@@ -151,6 +151,20 @@ export function getSmallModel() {
 }
 
 /**
+ * Fast, high-quality model for LATENCY-SENSITIVE structured tasks (video notes). The
+ * provider default can be slow (GLM-5 measured ~110s on a lecture transcript), which is
+ * unusable for an interactive reading room. Prefer Anthropic Haiku (fast + strong on
+ * structured JSON), then DeepSeek V4 Flash, then the provider small model — independent of
+ * AI_PROVIDER so a slow default never gates the UI.
+ */
+export function getFastNotesModel() {
+  if (process.env.ANTHROPIC_API_KEY) return getAnthropic()("claude-haiku-4-5-20251001");
+  const fallback = getSmallModelFallback();
+  if (fallback) return fallback;
+  return getSmallModel();
+}
+
+/**
  * Funded fallback for the small-model tasks (deep-research extraction/perspectives)
  * when the {@link getSmallModel} provider errors — e.g. a dead or throttled key that
  * would otherwise SILENTLY zero the evidence tables. DeepSeek V4 Flash (cheap, fast)
