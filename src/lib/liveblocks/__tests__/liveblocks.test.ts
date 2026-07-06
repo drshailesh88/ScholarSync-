@@ -5,7 +5,6 @@ const createRoomContext = vi.fn(() => ({ RoomProvider: "RP", useRoom: "UR" }));
 
 vi.mock("@liveblocks/client", () => ({ createClient, LiveMap: class {}, LiveObject: class {} }));
 vi.mock("@liveblocks/react", () => ({ createRoomContext }));
-vi.mock("@/stores/systematic-review-store", () => ({}));
 
 describe("liveblocks config", () => {
   it("creates client + room context for presentation and SR", async () => {

@@ -20,7 +20,7 @@ import {
 
 const ClerkUserButton = dynamic(
   () => import("@clerk/nextjs").then((mod) => mod.UserButton),
-  { ssr: false, loading: () => <div className="w-8 h-8 rounded-full bg-white/10" /> }
+  { ssr: false, loading: () => <div className="w-8 h-8 rounded-full bg-surface-raised" /> }
 );
 
 const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -93,7 +93,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
                   new CustomEvent("scholarsync:open-command-palette")
                 )
               }
-              className="hidden md:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/[0.08] text-[10px] text-white/30 font-mono hover:text-white/50 hover:bg-white/[0.1] transition-colors"
+              className="hidden md:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-surface-raised border border-border text-[10px] text-ink-muted font-mono hover:text-ink hover:bg-surface transition-colors"
               title="Search (⌘K)"
             >
               ⌘K
@@ -102,7 +102,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
               <button
                 onClick={onClose}
                 className={cn(
-                  "p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors",
+                  "p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface transition-colors",
                   !mobileOnly && "md:hidden"
                 )}
               >
@@ -139,7 +139,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
         {!visibleNavSections.length ? null : visibleNavSections.map((section) => (
           <div key={section.label} className={cn("mb-4", collapsed && "mb-2")}>
             {!collapsed && <div className="ss-section-label">{section.label}</div>}
-            {collapsed && <div className="w-5 mx-auto my-2 border-t border-white/[0.06]" />}
+            {collapsed && <div className="w-5 mx-auto my-2 border-t border-border" />}
             <div className="space-y-0.5">
               {section.items.map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -170,7 +170,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
         <div className={cn("px-2 shrink-0", collapsed ? "flex justify-center" : "")}>
           <button
             onClick={onToggleCollapse}
-            className="hidden md:flex items-center justify-center w-full p-1.5 rounded-md text-white/25 hover:text-white/60 hover:bg-white/[0.06] transition-colors"
+            className="hidden md:flex items-center justify-center w-full p-1.5 rounded-md text-ink-muted hover:text-ink hover:bg-surface transition-colors"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? <CaretRight size={14} /> : <CaretLeft size={14} />}
@@ -179,7 +179,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
       )}
 
       {/* Bottom — user area with expandable panel */}
-      <div className={cn("shrink-0 mt-auto", collapsed ? "px-1 py-3" : "px-3 py-3")} style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className={cn("shrink-0 mt-auto", collapsed ? "px-1 py-3" : "px-3 py-3")} style={{ borderTop: "1px solid var(--sb-border)" }}>
         <div
           className={cn("ss-user-area", collapsed && "justify-center !px-0 !gap-0")}
           onClick={() => !collapsed && setUserPanelOpen(!userPanelOpen)}
@@ -195,7 +195,7 @@ export function AppSidebar({ open, onClose, onShortcutsOpen, width = 224, mobile
           )}
           {!collapsed && (
             <>
-              <span className="text-[12px] text-white/50">Dr. Singh</span>
+              <span className="text-[12px] text-ink-muted">Dr. Singh</span>
               <CaretDown
                 size={12}
                 className="ss-user-chevron"

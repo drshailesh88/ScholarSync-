@@ -221,146 +221,106 @@ mark.library-highlight--important:hover {
 
 /* ===== ScholarSync Design System (from prototype) ===== */
 
-/* Sidebar — warm charcoal editorial palette */
+/* Sidebar — theme-aware: ink-on-paper (light default) · warm charcoal (dark) */
 .ss-sidebar {
-  background: #1E1D1C;
+  --sb-bg: #F8F8FA;
+  --sb-border: #E4E5E9;
+  --sb-text: #1A1D21;
+  --sb-text-muted: rgba(26,29,33,0.60);
+  --sb-text-faint: rgba(26,29,33,0.38);
+  --sb-hover: rgba(26,29,33,0.05);
+  --sb-active: rgba(26,29,33,0.08);
+  --sb-icon-filter: brightness(0) opacity(0.55);
+  --sb-accent: #3D5A80;
+  background: var(--sb-bg);
+  border-right: 1px solid var(--sb-border);
 }
-
-/* Sidebar nav item — clean flat hover */
+.dark .ss-sidebar {
+  --sb-bg: #1E1D1C;
+  --sb-border: rgba(255,255,255,0.08);
+  --sb-text: #ffffff;
+  --sb-text-muted: rgba(255,255,255,0.55);
+  --sb-text-faint: rgba(255,255,255,0.25);
+  --sb-hover: rgba(255,255,255,0.06);
+  --sb-active: rgba(255,255,255,0.08);
+  --sb-icon-filter: brightness(0) invert(1) opacity(0.6);
+}
 .ss-nav-item {
   display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   cursor: pointer; border-radius: 6px; position: relative;
-  color: rgba(255,255,255,0.5);
-  transition: all 0.2s ease;
+  color: var(--sb-text-muted); transition: all 0.2s ease;
 }
-.ss-nav-item:hover {
-  color: rgba(255,255,255,0.85);
-  background: rgba(255,255,255,0.06);
-}
+.ss-nav-item:hover { color: var(--sb-text); background: var(--sb-hover); }
 .ss-nav-item:active { transform: scale(0.98); transition-duration: 0.08s; }
-.ss-nav-item.active {
-  color: rgba(255,255,255,0.95);
-  background: rgba(255,255,255,0.08);
-}
+.ss-nav-item.active { color: var(--sb-text); background: var(--sb-active); }
 .ss-nav-item.active::before {
   content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-  width: 3px; height: 16px; border-radius: 0 3px 3px 0;
-  background: var(--glow);
+  width: 3px; height: 16px; border-radius: 0 3px 3px 0; background: var(--sb-accent);
 }
-
-/* Sidebar nav icon */
 .ss-nav-icon {
   width: 18px; height: 18px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   transition: opacity 0.25s ease, filter 0.25s ease;
 }
 .ss-nav-icon svg { width: 18px; height: 18px; opacity: 0.6; }
-.ss-nav-item:hover .ss-nav-icon svg { opacity: 0.85; }
+.ss-nav-item:hover .ss-nav-icon svg { opacity: 0.9; }
 .ss-nav-item.active .ss-nav-icon svg { opacity: 1; }
-.ss-nav-icon img {
-  width: 18px; height: 18px; object-fit: contain;
-  filter: brightness(0) invert(1) opacity(0.6);
-}
-.ss-nav-item:hover .ss-nav-icon img { filter: brightness(0) invert(1) opacity(0.85); }
-.ss-nav-item.active .ss-nav-icon img { filter: brightness(0) invert(1) opacity(1); }
-.ss-nav-item.active .ss-nav-icon { filter: brightness(1.1); }
-
-/* Sidebar section labels */
+.ss-nav-icon img { width: 18px; height: 18px; object-fit: contain; filter: var(--sb-icon-filter); }
 .ss-section-label {
-  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.25);
+  font-size: 10px; font-weight: 600; color: var(--sb-text-faint);
   text-transform: uppercase; letter-spacing: 0.08em; padding: 0 12px; margin-bottom: 6px;
 }
-
-/* Sidebar nav label */
-.ss-nav-label {
-  font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.55);
-  white-space: nowrap;
-}
-.ss-nav-item:hover .ss-nav-label { color: rgba(255,255,255,0.95); }
-.ss-nav-item.active .ss-nav-label { font-weight: 500; color: #fff; }
-
-/* Sidebar user area */
+.ss-nav-label { font-size: 13px; font-weight: 400; color: var(--sb-text-muted); white-space: nowrap; }
+.ss-nav-item:hover .ss-nav-label { color: var(--sb-text); }
+.ss-nav-item.active .ss-nav-label { font-weight: 500; color: var(--sb-text); }
 .ss-user-area {
   display: flex; align-items: center; gap: 10px; padding: 8px 12px;
-  cursor: pointer; border-radius: 6px;
-  transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer; border-radius: 6px; transition: background 0.25s cubic-bezier(0.4,0,0.2,1);
 }
-.ss-user-area:hover { background: rgba(255,255,255,0.07); }
-
-/* Sidebar logo */
+.ss-user-area:hover { background: var(--sb-hover); }
 .ss-logo-mark {
-  width: 28px; height: 28px; background: var(--brand); border-radius: 8px;
+  width: 28px; height: 28px; background: var(--sb-accent); border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-serif-family); font-size: 15px; font-weight: 700; color: #fff;
 }
-.ss-logo-text {
-  font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.95); letter-spacing: -0.01em;
-}
-
-/* Sidebar user dropdown panel */
-.ss-user-panel {
-  display: none; padding: 6px 10px 4px; margin-top: 4px;
-}
+.ss-logo-text { font-size: 14px; font-weight: 600; color: var(--sb-text); letter-spacing: -0.01em; }
+.ss-user-panel { display: none; padding: 6px 10px 4px; margin-top: 4px; }
 .ss-user-panel.open { display: block; }
 .ss-user-panel-item {
   display: flex; align-items: center; justify-content: space-between;
   padding: 7px 10px; border-radius: 6px; cursor: pointer;
-  font-size: 12px; color: rgba(255,255,255,0.45);
-  transition: all 0.15s ease;
+  font-size: 12px; color: var(--sb-text-muted); transition: all 0.15s ease;
 }
-.ss-user-panel-item:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); }
+.ss-user-panel-item:hover { color: var(--sb-text); background: var(--sb-hover); }
 .ss-user-panel-item svg { width: 14px; height: 14px; }
-
-/* Theme toggle switch for sidebar */
 .ss-theme-switch {
   width: 38px; height: 22px; border-radius: 11px;
-  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.15);
-  position: relative; cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  background: var(--sb-active); border: 1px solid var(--sb-border);
+  position: relative; cursor: pointer; transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 .ss-theme-switch::after {
   content: ''; position: absolute; top: 1.5px; left: 2px;
   width: 17px; height: 17px; border-radius: 50%;
-  background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  background: var(--sb-accent); box-shadow: 0 1px 4px rgba(0,0,0,0.2);
   transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
 }
-.ss-theme-switch.dark { background: #2A2927; border-color: rgba(255,255,255,0.15); }
-.ss-theme-switch.dark::after { transform: translateX(15px); background: #e0ddd8; }
-
-/* Text size toggle */
+.ss-theme-switch.dark::after { transform: translateX(15px); }
 .ss-text-size-toggle {
   display: flex; align-items: center; gap: 2px;
-  background: rgba(255,255,255,0.1); border-radius: 6px; padding: 2px; margin-left: auto;
+  background: var(--sb-hover); border-radius: 6px; padding: 2px; margin-left: auto;
 }
 .ss-text-size-opt {
   padding: 3px 7px; border-radius: 4px; cursor: pointer;
-  color: rgba(255,255,255,0.4); font-weight: 600;
-  transition: all 0.15s ease;
+  color: var(--sb-text-faint); font-weight: 600; transition: all 0.15s ease;
 }
-.ss-text-size-opt:hover { color: rgba(255,255,255,0.6); }
-.ss-text-size-opt.active { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); }
-
-
-/* User chevron */
-.ss-user-chevron {
-  color: rgba(255,255,255,0.25); transition: all 0.2s ease; margin-left: auto;
-}
-.ss-user-area:hover .ss-user-chevron { color: rgba(255,255,255,0.5); }
-
-/* Sidebar lean scrollbar — barely visible, appears on hover/scroll */
-.ss-sidebar ::-webkit-scrollbar {
-  width: 4px;
-}
-.ss-sidebar ::-webkit-scrollbar-track {
-  background: transparent;
-}
-.ss-sidebar ::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.12);
-  border-radius: 4px;
-}
-.ss-sidebar ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.2);
-}
+.ss-text-size-opt:hover { color: var(--sb-text-muted); }
+.ss-text-size-opt.active { background: var(--sb-active); color: var(--sb-text); }
+.ss-user-chevron { color: var(--sb-text-faint); transition: all 0.2s ease; margin-left: auto; }
+.ss-user-area:hover .ss-user-chevron { color: var(--sb-text-muted); }
+.ss-sidebar ::-webkit-scrollbar { width: 4px; }
+.ss-sidebar ::-webkit-scrollbar-track { background: transparent; }
+.ss-sidebar ::-webkit-scrollbar-thumb { background: var(--sb-active); border-radius: 4px; }
+.ss-sidebar ::-webkit-scrollbar-thumb:hover { background: var(--sb-text-faint); }
 
 /* ===== Systematic Review Design System ===== */
 

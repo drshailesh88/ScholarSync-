@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { X, PaperPlaneRight } from "@phosphor-icons/react";
+import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
 
@@ -74,10 +75,12 @@ export function BuddyFab({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 z-[200] w-[52px] h-[52px] rounded-full shadow-lg hover:shadow-xl hover:scale-[1.08] transition-all overflow-hidden cursor-pointer"
-      title="Open Buddy"
+      aria-label="Open Buddy — AI assistant"
+      title="Ask Buddy"
+      className="fixed bottom-6 right-6 z-[200] flex items-center gap-2 h-11 rounded-xl border border-border bg-surface-raised px-4 text-sm font-medium text-ink shadow-md transition-all hover:border-brand/40 hover:shadow-lg"
     >
-      <Image src="/buddy-icon.png" alt="Buddy" width={52} height={52} className="w-full h-full object-cover" />
+      <Sparkles size={16} className="text-brand" aria-hidden />
+      Ask
     </button>
   );
 }

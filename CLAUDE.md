@@ -26,6 +26,13 @@ We follow Matt Pocock's engineering process combined with self-annealing QA:
 - `docs/handover-context.md` — project state
 - GitHub Issues: `gh issue list --state open`
 
+## Design System & Reference (read before any UI work)
+- `docs/design/design.md` — **the frozen skin authority.** Ink-first, hairline, Source Serif 4 / DM Sans / JetBrains Mono, Lucide icons, §8 motion budget. Every pixel obeys this.
+- `docs/design/CRAFT-ADDENDUM.md` — adopted **interaction craft** (side-peek, tables, ⌘K, hover-reveal, in-editor composer, act-on-selection, Deep Research agent legibility), each in our tokens + §8 motion jobs.
+- `docs/design/reference/SCREEN-CORPUS-INDEX.md` — the **design memory**: 1,898 torn-down real-app screens (Notion, Langdock, Covidence, Elicit, Superhuman…) at `~/S_S_a_2/*-screens/`. Consult it whenever a UI decision needs a reference; it maps our surfaces → best corpus.
+- `docs/design/STATE-INVENTORY.md` — the per-surface state coverage tracker (empty/loading/error/offline/…).
+- **Cornerstone rule:** *Steal the UX and the craft — never the UI skin.* Reference apps inform flows/patterns/motion; design.md owns every pixel. No competitor colour, chrome, or emoji ever ships.
+
 ## Skills Available (.claude/skills/)
 grill-me, ubiquitous-language, write-a-prd, prd-to-issues, tdd, qa, design-an-interface, improve-codebase-architecture, triage-issue, git-guardrails
 
